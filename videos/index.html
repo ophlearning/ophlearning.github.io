@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>教學影片 · ophlearning</title>
+<meta name="description" content="眼科教學影片：手術步驟與眼科概念的教學動畫，附章節跳轉與參考文獻。Editor：基隆長庚 張博淳。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='17' cy='16' r='11' fill='none' stroke='%234B3CA0' stroke-width='2.4'/%3E%3Cpath d='M8.5 9.5a9 9 0 0 0 0 13' fill='none' stroke='%234B3CA0' stroke-width='2.4'/%3E%3Cellipse cx='10.5' cy='16' rx='2' ry='4' fill='%234B3CA0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: list view (category chips + video cards) and detail view (player, chapters, references), switched by URL hash; same palette as the index */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-soft:#ECE9F8;
+  --t-sclera:#F5F0EC; --t-cornea:#E2E0F1; --t-lens:#E6ECF7; --t-iris:#7C5342; --t-nerve:#EFD488; --t-muscle:#C55367; --t-stroke:rgba(44,32,74,.5);
+  --screen:#0B0A10;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-soft:#2A2545;
+  --t-sclera:#3B3647; --t-cornea:#302B44; --t-lens:#2A3147; --t-iris:#6C4839; --t-nerve:#8B7538; --t-muscle:#A8435A; --t-stroke:rgba(232,226,248,.38);
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-soft:#2A2545;
+  --t-sclera:#3B3647; --t-cornea:#302B44; --t-lens:#2A3147; --t-iris:#6C4839; --t-nerve:#8B7538; --t-muscle:#A8435A; --t-stroke:rgba(232,226,248,.38);
+  color-scheme:dark }
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}
+.wrap{max-width:960px;margin:0 auto;padding-inline:20px;padding-block:40px 48px;display:flex;flex-direction:column;gap:32px}
+.crumb{font-size:13.5px;color:var(--ink-2);text-decoration:none;align-self:flex-start}
+.crumb:hover,.back:hover{color:var(--accent)}
+header{display:flex;flex-direction:column;gap:10px}
+h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:34px;letter-spacing:.04em;line-height:1.15}
+.en{font-family:var(--f-display);font-style:italic;font-weight:500;color:var(--muted);font-size:.55em;margin-left:10px;letter-spacing:0}
+.lede{margin:0;max-width:60ch;color:var(--ink-2);font-size:16px}
+.editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em}
+.editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+
+/* list view */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{font:inherit;font-size:13.5px;color:var(--ink-2);background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:4px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.chip .n{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.chip[aria-pressed="true"] .n{color:var(--surface);opacity:.8}
+.vlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.vcard{display:grid;grid-template-columns:240px minmax(0,1fr);gap:20px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;text-decoration:none;transition:border-color .15s}
+.vcard:hover{border-color:var(--accent)}
+.poster{position:relative;border-radius:8px;overflow:hidden;background:var(--screen);aspect-ratio:16/9}
+.poster img{display:block;width:100%;height:100%;object-fit:cover}
+.poster .play{position:absolute;inset:0;margin:auto;width:44px;height:44px}
+.dur{position:absolute;right:6px;bottom:6px;font-family:var(--f-mono);font-size:11.5px;background:var(--ink);color:var(--paper);border-radius:4px;padding:0 6px;opacity:.88}
+.cat{font-size:12px;letter-spacing:.08em;color:var(--muted)}
+.vcard h2{margin:2px 0 0;font-family:var(--f-title);font-size:21px;font-weight:600;letter-spacing:.04em;line-height:1.35}
+.vcard h2 .en{font-size:15px;margin-left:8px}
+.vcard p{margin:6px 0 10px;color:var(--ink-2);font-size:14.5px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-size:12px;border:1px solid var(--line-2);border-radius:999px;padding:1px 9px;color:var(--ink-2)}
+.empty{margin:0;padding:28px 20px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px}
+
+/* detail view */
+.detail{display:flex;flex-direction:column;gap:16px}
+.back{font-size:13.5px;color:var(--ink-2);text-decoration:none;align-self:flex-start}
+.detail h2{margin:0;font-family:var(--f-title);font-size:26px;font-weight:600;letter-spacing:.04em;line-height:1.35}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.screen{border-radius:10px;overflow:hidden;background:var(--screen);border:1px solid var(--line)}
+.screen video,.screen iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:var(--screen)}
+.sum{margin:0;color:var(--ink-2);max-width:68ch}
+.note{margin:0;font-size:13.5px;color:var(--ink-2);background:var(--accent-soft);border-radius:8px;padding:10px 14px}
+.sec-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px;display:flex;align-items:center;gap:10px}
+.sec-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.chapters{list-style:none;margin:0;padding:0;columns:2 300px;column-gap:28px}
+.grp{break-inside:avoid;margin-bottom:14px}
+.grp-h{font-size:12.5px;font-weight:600;color:var(--ink-2);letter-spacing:.04em;padding:0 10px 4px}
+.grp ol{list-style:none;margin:0;padding:0}
+.ch{font:inherit;font-size:14px;color:var(--ink);background:none;border:0;border-radius:6px;padding:5px 10px;width:100%;text-align:left;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;align-items:baseline}
+.ch:hover{background:var(--accent-soft)}
+.ch .ts{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.ch[aria-current="true"]{background:var(--accent-soft);font-weight:500}
+.ch[aria-current="true"] .ts{color:var(--accent)}
+.refs{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.refs summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--ink-2)}
+.refs ol{margin:10px 0 2px;padding-left:24px;font-size:13.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:4px}
+.refs a{font-family:var(--f-mono);font-size:12px;color:var(--accent);word-break:break-all}
+
+footer{border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--muted)}
+footer a{color:var(--ink-2)}
+@media (max-width:560px){
+  .wrap{padding-inline:16px;padding-block:28px 36px;gap:26px}
+  h1{font-size:28px}
+  .vcard{grid-template-columns:minmax(0,1fr);gap:14px;padding:14px}
+  .detail h2{font-size:22px}
+}
+@media (prefers-reduced-motion: reduce){ .vcard{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="crumb" href="../">← ophlearning</a>
+  <header>
+    <h1>教學影片<span class="en">Teaching videos</span></h1>
+    <p class="lede">手術步驟與眼科概念的教學動畫。每支影片附章節跳轉與參考文獻，可以邊看邊對照出處。</p>
+    <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+  </header>
+
+  <main>
+    <section id="list-view" aria-label="影片列表">
+      <div class="chips" id="chips" role="group" aria-label="分類"></div>
+      <ul class="vlist" id="vlist"></ul>
+      <p class="empty" id="empty" hidden>這個分類還沒有影片。</p>
+    </section>
+
+    <article class="detail" id="detail-view" hidden>
+      <a class="back" href="#">← 所有影片</a>
+      <h2 id="d-title"></h2>
+      <div class="meta" id="d-meta"></div>
+      <div class="screen" id="d-screen"></div>
+      <p class="sum" id="d-sum"></p>
+      <p class="note" id="d-note" hidden></p>
+      <h3 class="sec-h" id="d-ch-h">章節</h3>
+      <ol class="chapters" id="d-chapters"></ol>
+      <details class="refs" id="d-refs-box">
+        <summary id="d-refs-sum">參考文獻</summary>
+        <ol id="d-refs"></ol>
+      </details>
+    </article>
+  </main>
+
+  <footer>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。全文見 <a href="https://github.com/ophlearning/ophlearning.github.io/blob/main/LICENSE">LICENSE</a>。</span>
+    <span>教材內容僅供學習參考，不能取代臨床判斷；數值請以最新版教科書與文獻為準。</span>
+  </footer>
+</div>
+
+<script>
+/* 分類：新增分類就在這裡加一行 */
+const CATS = [
+  {id:'surgery', zh:'手術動畫'},
+  {id:'anatomy', zh:'解剖與生理'},
+  {id:'exam',    zh:'檢查與診斷'},
+];
+
+/* 影片清單：type 'mp4' 是影片檔（放在 media/），type 'anim' 是程式動畫（src 指向動畫頁面）
+   chapters 的時間以秒為單位；refs 的 doi 或 url 擇一 */
+const VIDEOS = [
+  {
+    id:'dmek', type:'mp4', cat:'surgery',
+    zh:'DMEK 手術教學', en:'Descemet membrane endothelial keratoplasty',
+    src:'media/dmek.mp4', poster:'media/dmek.jpg', dur:636,
+    short:'從選病人、準備 graft、手術步驟到術後照顧，走一遍 DMEK。',
+    sum:'用文獻的標準做法，帶你走一遍 DMEK：選病人、準備 graft、手術步驟，到術後照顧。手術步驟以 Chen 與 Terry 2019 年發表的 step-by-step 做法為主線。',
+    note:'各院做法不同的地方，影片中標「因院而異」；跟刀時請對照你們科的實際做法。',
+    tags:['角膜移植'],
+    chapters:[
+      {g:'', items:[[0,'片頭']]},
+      {g:'1　臨床決策', items:[[15,'只換壞掉的那一層'],[38,'適應症'],[60,'DMEK vs DSEK vs PK'],[89,'要特別小心的眼睛']]},
+      {g:'2　Graft preparation', items:[[107,'Graft 的基本規則'],[137,'主刀自剝：SCUBA'],[175,'Eye bank 處理與裝填']]},
+      {g:'3　手術步驟', items:[[207,'準備與切口'],[232,'Descemetorhexis'],[259,'縮瞳與 inferior PI'],[291,'注入 graft'],[318,'判斷方向'],[357,'攤開與置中'],[392,'打氣固定'],[442,'Triple DMEK'],[473,'術中狀況：第一步']]},
+      {g:'4　術後照顧', items:[[500,'術後早期'],[530,'追蹤與 rebubble'],[566,'類固醇與預期結果']]},
+      {g:'5　跟刀清單', items:[[602,'跟刀時觀察這九件事'],[624,'參考文獻']]},
+    ],
+    refs:[
+      {c:'Melles GRJ, et al. Cornea 2006;25:987-990.', doi:'10.1097/01.ico.0000248385.16896.34'},
+      {c:'Kemer OE, et al. Turk J Ophthalmol 2021;51:381-392.', doi:'10.4274/tjo.galenos.2021.28227'},
+      {c:'Anshu A, et al. Ophthalmology 2012;119:536-540.', doi:'10.1016/j.ophtha.2011.09.019'},
+      {c:'Chamberlain W, et al. (DETECT) Ophthalmology 2019;126:19-26.', doi:'10.1016/j.ophtha.2018.05.019'},
+      {c:'Deng SX, et al. (AAO OTA) Ophthalmology 2018;125:295-310.', doi:'10.1016/j.ophtha.2017.08.015'},
+      {c:'Chen SY, Terry MA. Taiwan J Ophthalmol 2019;9:18-26.', doi:'10.4103/tjo.tjo_108_18'},
+      {c:'Siddiqui A, Chamberlain WD. Curr Opin Ophthalmol 2022;33:324-331.', doi:'10.1097/ICU.0000000000000865'},
+      {c:'Ariño-Gutierrez M, et al. J Clin Med 2023;12:6316.', doi:'10.3390/jcm12196316'},
+      {c:'Brissette A, et al. Cornea 2015;34:557-559.', doi:'10.1097/ICO.0000000000000394'},
+      {c:'Franco de Moraes Filho L, et al. Cureus 2025;17:e76817.', doi:'10.7759/cureus.76817'},
+      {c:'Gorovoy IR, et al. Cornea 2014;33:683-685.', doi:'10.1097/ICO.0000000000000135'},
+      {c:'Veldman PB, et al. Ophthalmology 2016;123:161-164.', doi:'10.1016/j.ophtha.2015.08.044'},
+      {c:'Baydoun L, Dapena I, Liarakos V, et al. Fundamentals in Five: Standardized No-Touch DMEK for Beginners. CRST Global, Oct 2015.', url:'https://crstodayeurope.com/topics/cornea/fundamentals-in-five-standardized-no-touch-dmek-for-beginners/47399/'},
+      {c:'Kruse FE, et al. Cornea 2011;30:580-587.', doi:'10.1097/ico.0b013e3182000e2e'},
+      {c:'Steindor F, et al. Cornea 2026;45:174-179.', doi:'10.1097/ICO.0000000000003810'},
+      {c:'Bardan AS, et al. J Curr Ophthalmol 2020;32:142-148.', doi:'10.4103/JOCO.JOCO_102_20'},
+      {c:'Marques RE, et al. Cornea 2018;37:691-697.', doi:'10.1097/ICO.0000000000001581'},
+      {c:'Mukhija R, et al. Indian J Ophthalmol 2023;71:707-716.', doi:'10.4103/ijo.IJO_1245_22'},
+      {c:'Gonzalez A, et al. Cornea 2016;35:1391-1395.', doi:'10.1097/ICO.0000000000001015'},
+      {c:'Maier AKB, et al. Cornea 2016;35:308-312.', doi:'10.1097/ICO.0000000000000740'},
+      {c:'Parker JS, et al. Cornea 2023;42:32-35.', doi:'10.1097/ICO.0000000000003000'},
+      {c:'Roberts HW, et al. Eye 2023;37:3492-3495.', doi:'10.1038/s41433-023-02542-8'},
+      {c:'Dirisamer M, et al. Arch Ophthalmol 2012;130:280-291.', doi:'10.1001/archophthalmol.2011.343'},
+      {c:'Price MO, et al. Cornea 2014;33:880-886.', doi:'10.1097/ICO.0000000000000206'},
+    ],
+  },
+];
+
+/* ---------- app ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = t => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0');
+const catName = id => (CATS.find(c => c.id === id) || {zh:''}).zh;
+const nChapters = v => v.chapters ? v.chapters.reduce((n, g) => n + g.items.length, 0) : 0;
+const PLAY = '<svg class="play" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="21" fill="var(--surface)" opacity=".92"/><path d="M18 14.5L30.5 22L18 29.5Z" fill="var(--accent)"/></svg>';
+let cat = 'all';
+
+function renderChips(){
+  const all = [{id:'all', zh:'全部'}, ...CATS];
+  $('#chips').innerHTML = all.map(c => {
+    const n = c.id === 'all' ? VIDEOS.length : VIDEOS.filter(v => v.cat === c.id).length;
+    return `<button type="button" class="chip" data-cat="${c.id}" aria-pressed="${c.id === cat}">${esc(c.zh)}<span class="n">${n}</span></button>`;
+  }).join('');
+}
+
+function renderList(){
+  renderChips();
+  const list = VIDEOS.filter(v => cat === 'all' || v.cat === cat);
+  $('#vlist').innerHTML = list.map(v => {
+    const tags = [...(v.tags || [])];
+    if (nChapters(v)) tags.push(nChapters(v) + ' 個章節');
+    if (v.refs && v.refs.length) tags.push(v.refs.length + ' 篇文獻');
+    return `<li><a class="vcard" href="#${encodeURIComponent(v.id)}">
+      <div class="poster">${v.poster ? `<img src="${esc(v.poster)}" alt="" loading="lazy">` : ''}${PLAY}${v.dur ? `<span class="dur">${fmt(v.dur)}</span>` : ''}</div>
+      <div>
+        <div class="cat">${esc(catName(v.cat))}</div>
+        <h2>${esc(v.zh)}<span class="en">${esc(v.en)}</span></h2>
+        <p>${esc(v.short)}</p>
+        <div class="tags">${tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+      </div>
+    </a></li>`;
+  }).join('');
+  $('#empty').hidden = list.length > 0;
+}
+
+function renderDetail(v){
+  $('#d-title').innerHTML = `${esc(v.zh)}<span class="en">${esc(v.en)}</span>`;
+  const meta = [catName(v.cat)];
+  if (v.dur) meta.push('片長 ' + fmt(v.dur));
+  if (nChapters(v)) meta.push(nChapters(v) + ' 個章節');
+  if (v.refs && v.refs.length) meta.push(v.refs.length + ' 篇參考文獻');
+  $('#d-meta').innerHTML = meta.map(m => `<span>${esc(m)}</span>`).join('');
+
+  const screen = $('#d-screen');
+  if (v.type === 'anim') {
+    screen.innerHTML = `<iframe src="${esc(v.src)}" title="${esc(v.zh)}" loading="lazy"></iframe>`;
+  } else {
+    screen.innerHTML = `<video controls preload="metadata" playsinline ${v.poster ? `poster="${esc(v.poster)}"` : ''} src="${esc(v.src)}"></video>`;
+  }
+  $('#d-sum').textContent = v.sum || v.short;
+  $('#d-note').hidden = !v.note;
+  $('#d-note').textContent = v.note || '';
+
+  const video = screen.querySelector('video');
+  const hasCh = !!(v.chapters && v.chapters.length);
+  $('#d-ch-h').hidden = $('#d-chapters').hidden = !hasCh;
+  $('#d-chapters').innerHTML = hasCh ? v.chapters.map(g => `<li class="grp">
+      ${g.g ? `<div class="grp-h">${esc(g.g)}</div>` : ''}
+      <ol>${g.items.map(([t, label]) => `<li><button type="button" class="ch" data-t="${t}" ${video ? '' : 'disabled'}><span class="ts">${fmt(t)}</span><span>${esc(label)}</span></button></li>`).join('')}</ol>
+    </li>`).join('') : '';
+
+  const refs = v.refs || [];
+  $('#d-refs-box').hidden = !refs.length;
+  $('#d-refs-sum').textContent = `參考文獻（${refs.length} 篇）`;
+  $('#d-refs').innerHTML = refs.map(r => {
+    const href = r.doi ? 'https://doi.org/' + r.doi : r.url;
+    const label = r.doi ? 'doi:' + r.doi : '連結';
+    return `<li>${esc(r.c)} <a href="${esc(href)}" target="_blank" rel="noopener">${esc(label)}</a></li>`;
+  }).join('');
+
+  if (video && hasCh) {
+    const btns = [...document.querySelectorAll('#d-chapters .ch')];
+    const times = btns.map(b => +b.dataset.t);
+    const mark = () => {
+      let i = -1;
+      times.forEach((t, k) => { if (video.currentTime + 0.3 >= t) i = k; });
+      btns.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
+    };
+    video.addEventListener('timeupdate', mark);
+    video.addEventListener('seeked', mark);
+    btns.forEach(b => b.addEventListener('click', () => {
+      video.currentTime = +b.dataset.t;
+      video.play().catch(() => {});
+    }));
+  }
+  document.title = `${v.zh} · 教學影片 · ophlearning`;
+}
+
+function route(){
+  const id = decodeURIComponent(location.hash.slice(1));
+  const v = VIDEOS.find(x => x.id === id);
+  const prev = $('#d-screen video');
+  if (prev) prev.pause();
+  $('#list-view').hidden = !!v;
+  $('#detail-view').hidden = !v;
+  if (v) renderDetail(v);
+  else { $('#d-screen').innerHTML = ''; document.title = '教學影片 · ophlearning'; renderList(); }
+  window.scrollTo(0, 0);
+}
+
+$('#chips').addEventListener('click', e => {
+  const b = e.target.closest('.chip');
+  if (!b) return;
+  cat = b.dataset.cat;
+  renderList();
+});
+addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
