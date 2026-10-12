@@ -1,0 +1,2288 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>眼解剖圖譜</title>
+<meta name="description" content="互動式眼睛解剖：眼球切面、angle、角膜、視網膜、眼眶、眼瞼與淚道，附臨床連結、重點數值與測驗。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: atlas plate — figure stage on the left, specimen card on the right; cool paper, hematoxylin-violet UI accent, cobalt-filter (light) / fluorescein (dark) selection */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --hl:#0A6FD8; --hl-soft:rgba(10,111,216,.16); --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-cornea:#E2E0F1; --t-sclera:#F5F0EC; --t-collagen:#EFC6D3; --t-conj:#F1CFD9; --t-uvea:#8E604B; --t-iris:#7C5342;
+  --t-pig:#4A3028; --t-cb:#B98673; --t-muscle:#C55367; --t-muscle-2:#DC8496; --t-retina:#B7A6E0; --t-lens:#E6ECF7;
+  --t-nuc:#D3D9EA; --t-fluid:#E8F0F8; --t-vit:#EEF3F6; --t-nerve:#EFD488; --t-sheath:#E2C29E; --t-art:#C23A4B;
+  --t-vein:#4C62AF; --t-fat:#F4E1A4; --t-bone:#E2D8C4; --t-bone-2:#CDBFA6; --t-gland:#E3A6B8; --t-skin:#EAC3AC;
+  --t-nuclear:#7B67C1; --t-plex:#EDC1D2; --t-air:#FBFAFD;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
+  --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-muscle-2:#B95F72; --t-retina:#5D4D91; --t-lens:#2A3147;
+  --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029; --t-nerve:#8B7538; --t-sheath:#6D5541; --t-art:#E0596A;
+  --t-vein:#7286D8; --t-fat:#6A5A2F; --t-bone:#4A4335; --t-bone-2:#5C5341; --t-gland:#8A4D61; --t-skin:#7A5848;
+  --t-nuclear:#6552B5; --t-plex:#6E4560; --t-air:#16131E; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
+  --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-muscle-2:#B95F72; --t-retina:#5D4D91; --t-lens:#2A3147;
+  --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029; --t-nerve:#8B7538; --t-sheath:#6D5541; --t-art:#E0596A;
+  --t-vein:#7286D8; --t-fat:#6A5A2F; --t-bone:#4A4335; --t-bone-2:#5C5341; --t-gland:#8A4D61; --t-skin:#7A5848;
+  --t-nuclear:#6552B5; --t-plex:#6E4560; --t-air:#16131E; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+.btn.primary .ct{background:rgba(255,255,255,.2);color:inherit}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tab:hover{color:var(--ink)}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.tog select{border:0;background:transparent;font:inherit;color:var(--ink);padding:0}
+.fig{background:var(--fig-bg);position:relative;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:560px}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.extra:empty{display:none}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}
+.selbar i{font-family:var(--f-display)}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip i{font-family:var(--f-display);font-size:12.5px}
+
+/* figure styling */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+[data-s]{cursor:pointer;transition:opacity .18s}
+.fig svg.has-sel .shape:not(.on){opacity:.66}
+.fig svg.has-sel .lab:not(.on){opacity:.5}
+.shape.on{stroke:var(--hl)!important;stroke-width:2.6px!important;stroke-opacity:1!important}
+.hit{fill:none;stroke:transparent}
+.hit.on{stroke:var(--hl);stroke-opacity:.42}
+.hit.dot{fill:transparent;stroke:none}
+.hit.dot.on{fill:var(--hl);fill-opacity:.35}
+.multi .shape.on{animation:none}
+@media (prefers-reduced-motion: no-preference){
+  .shape.on{animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{stroke-opacity:.45}}
+}
+.lab line{stroke:var(--ink-2);stroke-width:.9;opacity:.75}
+.lab circle{fill:var(--ink)}
+.lab text{font-size:15px;paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.lab.on text{fill:var(--hl);font-weight:600}
+.lab.on line{stroke:var(--hl);opacity:1;stroke-width:1.4}
+.lab.on circle{fill:var(--hl)}
+.nolab .lab,.quiz-on .lab{display:none}
+.lab text.val{font-family:var(--f-mono);font-size:12.5px;fill:var(--muted);stroke-width:3px}
+.hitf{fill:transparent;stroke:none}
+.hitf.on{fill:var(--hl);fill-opacity:.22}
+.deco{pointer-events:none}
+.dim text{font-family:var(--f-mono);font-size:12px;fill:var(--accent)}
+.dim line,.dim path{stroke:var(--accent);fill:none;stroke-width:1}
+.note text{font-family:var(--f-body);font-size:12px;fill:var(--muted)}
+.ovl{pointer-events:none}
+.ovl .tool{stroke:var(--accent);stroke-width:2.2;fill:none}
+.ovl .toolfill{fill:var(--accent);opacity:.9}
+.ovl text{font-family:var(--f-mono);font-size:12px;fill:var(--accent)}
+.zoom{cursor:pointer}
+.zoom rect{fill:none;stroke:var(--accent);stroke-dasharray:5 4;stroke-width:1.3}
+.zoom text{font-family:var(--f-body);font-size:12.5px;fill:var(--accent);font-weight:500}
+.zoom:hover rect{stroke-width:2.2}
+.q-ok{stroke:var(--ok)!important;stroke-width:3px!important}
+.q-bad{stroke:var(--bad)!important;stroke-width:3px!important}
+.hit.q-ok{stroke-opacity:.5}.hit.q-bad{stroke-opacity:.5}
+.hit.dot.q-ok{fill:var(--ok);fill-opacity:.4}.hit.dot.q-bad{fill:var(--bad);fill-opacity:.4}
+
+/* tissue classes */
+.c-cornea{fill:var(--t-cornea);stroke:var(--t-stroke);stroke-width:1}
+.c-sclera{fill:var(--t-sclera);stroke:var(--t-stroke);stroke-width:1}
+.c-coll{fill:var(--t-collagen);stroke:var(--t-stroke);stroke-width:.8}
+.c-conj{fill:var(--t-conj);stroke:var(--t-stroke);stroke-width:.6}
+.c-uvea{fill:var(--t-uvea);stroke:var(--t-stroke);stroke-width:.6}
+.c-iris{fill:var(--t-iris);stroke:var(--t-stroke);stroke-width:.8}
+.c-pig{fill:var(--t-pig);stroke:none}
+.c-cb{fill:var(--t-cb);stroke:var(--t-stroke);stroke-width:.8}
+.c-mus{fill:var(--t-muscle);stroke:var(--t-stroke);stroke-width:.8}
+.c-mus2{fill:var(--t-muscle-2);stroke:var(--t-stroke);stroke-width:.8}
+.c-ret{fill:var(--t-retina);stroke:var(--t-stroke);stroke-width:.6}
+.c-lens{fill:var(--t-lens);stroke:none}
+.c-nuc{fill:var(--t-nuc);stroke:var(--t-stroke-2);stroke-width:.8}
+.c-cap{fill:none;stroke:var(--t-stroke);stroke-width:1.6}
+.c-fluid{fill:var(--t-fluid);stroke:none}
+.c-vit{fill:var(--t-vit);stroke:none}
+.c-nerve{fill:var(--t-nerve);stroke:var(--t-stroke);stroke-width:.8}
+.c-sheath{fill:var(--t-sheath);stroke:var(--t-stroke);stroke-width:.8}
+.c-art{fill:none;stroke:var(--t-art);stroke-width:2}
+.c-vein{fill:none;stroke:var(--t-vein);stroke-width:2}
+.c-artf{fill:var(--t-art);stroke:var(--t-stroke);stroke-width:.6}
+.c-veinf{fill:var(--t-vein);stroke:var(--t-stroke);stroke-width:.6}
+.c-fat{fill:var(--t-fat);stroke:var(--t-stroke-2);stroke-width:.8}
+.c-bone{fill:var(--t-bone);stroke:var(--t-stroke);stroke-width:1}
+.c-bone2{fill:var(--t-bone-2);stroke:var(--t-stroke);stroke-width:1}
+.c-gland{fill:var(--t-gland);stroke:var(--t-stroke);stroke-width:.8}
+.c-skin{fill:var(--t-skin);stroke:var(--t-stroke);stroke-width:.8}
+.c-line{fill:none;stroke:var(--t-stroke);stroke-width:1.4}
+.c-thin{fill:none;stroke:var(--t-stroke);stroke-width:.8}
+.c-dash{fill:none;stroke:var(--t-stroke);stroke-width:1.2;stroke-dasharray:5 4}
+.c-white{fill:var(--fig-bg);stroke:var(--t-stroke);stroke-width:.8}
+.c-nuclear{fill:var(--t-nuclear);stroke:none}
+.c-plex{fill:var(--t-plex);stroke:none}
+.c-zon{fill:none;stroke:var(--t-stroke);stroke-width:.7}
+.c-axis{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:2 5}
+.pat-stroke{stroke:var(--t-stroke);fill:none}
+.pat-fill{fill:var(--t-stroke)}
+
+/* OCT mode */
+.oct .fig-bgrect{fill:#050506}
+.oct text{fill:#E9E7F0}
+.oct .lab text{stroke:#050506}
+.oct .lab line{stroke:#9a97a6}
+.oct .lab circle{fill:#e9e7f0}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.nums{width:100%;border-collapse:collapse;font-size:13.5px}
+.nums td{padding:6px 0;border-bottom:1px dashed var(--line);vertical-align:top}
+.nums td.v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;padding-left:10px;color:var(--ink);font-size:13px}
+.nums td.r{font-size:11px;color:var(--muted);text-align:right;padding-left:10px;white-space:nowrap}
+.rel{display:flex;flex-wrap:wrap;gap:6px}
+.empty-card{padding:28px 22px;color:var(--muted);font-size:14px}
+.steps{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px;background:var(--surface-2)}
+.steps .t{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.step{display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start;text-align:left;border:1px solid transparent;background:transparent;border-radius:8px;padding:6px 8px;cursor:pointer;font-size:14px;color:var(--ink-2)}
+.step .n{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:2px}
+.step[aria-current="true"]{background:var(--surface);border-color:var(--accent);color:var(--ink)}
+.step[aria-current="true"] .n{color:var(--accent)}
+.stepbox{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.stepbox h3{margin:0;font-size:17px}
+.stepbox ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.prompt .q i{font-family:var(--f-display);font-weight:500}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt i{font-family:var(--f-display);color:var(--ink-2)}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft);color:var(--ink)}
+.fb.bad{background:var(--bad-soft);color:var(--ink)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(980px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+.sheet input[type=search]{border:1px solid var(--line-2);border-radius:999px;padding:6px 14px;background:var(--surface-2);color:var(--ink);font:inherit;font-size:14px;min-width:0;width:240px;max-width:100%}
+.ntab{width:100%;border-collapse:collapse;font-size:13.5px}
+.ntab th{position:sticky;top:0;background:var(--surface);text-align:left;font-weight:500;color:var(--muted);font-size:12px;letter-spacing:.06em;padding:10px 8px;border-bottom:1px solid var(--line-2)}
+.ntab td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.ntab tr.grp td{background:var(--surface-2);font-size:12px;letter-spacing:.08em;color:var(--accent);font-weight:600;padding-top:12px}
+.ntab tr[data-go]{cursor:pointer}
+.ntab tr[data-go]:hover td{background:var(--accent-soft)}
+.ntab td.v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ntab td.r{color:var(--muted);font-size:12px;white-space:nowrap}
+.ntab .s i{font-family:var(--f-display);color:var(--muted);font-size:12.5px;display:block}
+
+/* extras */
+.gonio{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:14px;align-items:start}
+.gstack{display:flex;flex-direction:column;border-radius:8px;overflow:hidden;border:1px solid var(--line-2)}
+.gstack button{border:0;text-align:left;padding:0 10px;font-size:12.5px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gstack button span:last-child{font-family:var(--f-display);font-style:italic;font-size:12px;opacity:.8}
+.gstack button.on{outline:2px solid var(--hl);outline-offset:-2px}
+.gnote{font-size:13px;color:var(--ink-2);display:flex;flex-direction:column;gap:6px}
+.gnote b{color:var(--ink)}
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.gaze{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-width:420px}
+.gaze button{border:1px solid var(--line-2);background:var(--surface-2);border-radius:8px;padding:8px 4px;cursor:pointer;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:56px;justify-content:center}
+.gaze button b{font-family:var(--f-display);font-size:15px;font-weight:600}
+.gaze button small{font-size:11px;color:var(--muted)}
+.gaze .ctr{background:transparent;border-style:dashed;cursor:default;color:var(--muted)}
+.gaze button.on{border-color:var(--hl);background:var(--hl-soft)}
+.xrow{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-start}
+.syn{display:flex;flex-wrap:wrap;gap:8px}
+.spec{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.spec svg{width:150px;height:auto;border-radius:8px;cursor:pointer;flex:none}
+.spec p{margin:0;font-size:13px;color:var(--ink-2);max-width:56ch;flex:1;min-width:200px}
+.tip{position:fixed;z-index:30;pointer-events:none;background:var(--ink);color:var(--paper);font-size:13px;padding:5px 9px;border-radius:6px;max-width:260px;line-height:1.35}
+.tip i{font-family:var(--f-display);opacity:.85}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .fig svg{min-width:520px}
+  .gonio{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>眼解剖圖譜</h1>
+      <span class="sub">Ocular anatomy · 臨床實用版 · 以右眼 OD 繪製</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-nums">數值總表</button>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="解剖區域"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="解剖圖">
+      <div class="stage-bar">
+        <div class="grp" id="subs"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於數值：</b>表中為眼科教科書與文獻常用的近似值；「對照」欄是建議查核的 BCSC 分冊（或原始文獻），不代表該分冊的逐字數值。不同版本與量測方法會有差異，請以最新版教科書與文獻為準。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span><b>關於圖：</b>眼球總覽與 angle 圖依主要尺寸（角膜曲率與直徑、ACD、lens 厚度、Spiral of Tillaux、ora serrata 位置）近似比例繪製；本圖眼軸（角膜至 foveal RPE）約 22.4 mm，略短於成人平均約 23.5 mm。細微分層（角膜、視網膜）厚度為示意放大，真實厚度見各層數值。</span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-nums" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="nums-title">
+    <div class="hd">
+      <h2 id="nums-title">重點數值總表</h2>
+      <div class="row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input type="search" id="nums-q" placeholder="搜尋，例如 Tillaux、ECD、Shaffer">
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="nums-body"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title" style="width:min(560px,100%)">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<div class="tip" id="tip" hidden></div>
+<script>
+/* ---------- structure cards ----------
+   n: [項目, 數值, 對照]  dx: 疾病  ex: 檢查  op: 手術／處置  rel: 相關結構 */
+const DATA = {
+  cornea: { en: 'Cornea', zh: '角膜',
+    def: '無血管、透明的前方屈光面，提供全眼約 2/3 屈光力；在 limbus 與 sclera、conjunctiva 交接。',
+    n: [['水平直徑 HVID', '約 11.5–12.5 mm', 'BCSC 8'], ['垂直直徑', '約 10.5–11 mm', 'BCSC 8'], ['中央厚度 CCT', '約 540–550 μm', 'BCSC 8'], ['周邊厚度', '較中央厚，近 limbus 約 0.7–1.0 mm', 'BCSC 8'], ['前／後表面曲率半徑', '約 7.8／6.5 mm', 'BCSC 3'], ['屈光力', '約 43 D（全眼約 60 D）', 'BCSC 3']],
+    dx: ['Corneal edema：Fuchs dystrophy、PBK（術後 endothelium 失代償）', 'Keratoconus：中央或下方變薄前凸，Vogt striae、Fleischer ring', 'Infectious keratitis：contact lens 配戴者要想到 Pseudomonas、Acanthamoeba', 'CCT 影響 Goldmann IOP：CCT 薄會低估 IOP，glaucoma 風險評估要一起看'],
+    ex: ['Slit lamp optic section：判斷病灶位在 epithelium、stroma 還是 endothelium', 'Pachymetry、topography／tomography（Pentacam）', 'Specular microscopy 看 endothelium'],
+    op: ['Phaco 主切口與 side port 都在周邊 clear cornea', 'PK／DALK／DSAEK／DMEK 依受損層次選擇'],
+    rel: ['epithelium', 'stroma', 'endothelium', 'limbus', 'ac'] },
+  limbus: { en: 'Limbus', zh: '角膜緣',
+    def: 'cornea 與 sclera／conjunctiva 的過渡帶，含 limbal epithelial stem cells（palisades of Vogt）；其深部內側就是 TM 與 Schlemm canal。',
+    n: [['寬度', '約 1–2 mm', 'BCSC 8']],
+    dx: ['Limbal stem cell deficiency（化學傷、SJS、長期 contact lens）→ conjunctivalization、持續性上皮缺損', 'Pterygium、limbal dermoid', 'OSSN（ocular surface squamous neoplasia）好發處'],
+    ex: ['Slit lamp 看 palisades of Vogt 是否存在', 'Gonioscopy 的 Schwalbe line（Descemet membrane 終點）標示 limbus 內面的前界（角膜側）'],
+    op: ['IVI、pars plana 入口距離都從 limbus 起算', 'Trabeculectomy scleral flap、tube 進入點都在 limbus', 'Phaco 切口選 clear corneal、limbal 或 scleral tunnel，影響散光與傷口穩定度'],
+    rel: ['cornea', 'conj', 'tm', 'schlemm', 'pars_plana'] },
+  sclera: { en: 'Sclera', zh: '鞏膜',
+    def: '緻密 type I collagen 構成的外層 tunic，維持眼球形狀並作為 EOM 附著點；後方與視神經的 dura 相連，在 scleral canal 形成 lamina cribrosa。',
+    n: [['最薄處', '約 0.3 mm（rectus insertion 後方）', 'BCSC 2'], ['Equator', '約 0.4–0.6 mm', 'BCSC 2'], ['最厚處', '約 1.0 mm（視神經周圍）', 'BCSC 2']],
+    dx: ['Scleritis：深紫紅、劇痛、夜間痛醒，常合併全身性疾病（RA、GPA 等），需全身評估', '鈍傷 globe rupture 好發於 sclera 薄弱處：rectus insertion 後方／equator 附近、limbus、視神經穿出處與舊手術切口', 'High myopia 的 posterior staphyloma', 'Blue sclera：osteogenesis imperfecta'],
+    ex: ['Phenylephrine 點眼：episcleral 血管會變白、scleral 血管不會', 'B-scan T-sign（posterior scleritis）'],
+    op: ['斜視手術縫在 insertion 後方的最薄處，注意 scleral perforation', 'Scleral buckle 縫合固定在 sclera'],
+    rel: ['episclera', 'tenon', 'lamina', 'lr', 'mr'] },
+  conj: { en: 'Conjunctiva', zh: '結膜', lab: 'Conjunctiva',
+    def: '覆蓋 sclera（bulbar）與眼瞼內面（palpebral）的黏膜，在 fornix 反折；含 goblet cells 分泌 mucin。',
+    dx: ['Conjunctivitis：papillae（過敏、細菌、contact lens）vs follicles（viral、chlamydia、藥物）', 'Subconjunctival hemorrhage、chemosis', 'Pterygium、OSSN、conjunctival melanoma／PAM'],
+    ex: ['Slit lamp 加 fluorescein／lissamine green 染色', '翻開上眼瞼檢查 tarsal conjunctiva'],
+    op: ['IVI 前以 povidone-iodine 消毒結膜囊', 'Trabeculectomy conjunctival flap（fornix-based vs limbus-based）', 'Pterygium excision 加 conjunctival autograft'],
+    rel: ['tenon', 'palp_conj', 'tear_mucin', 'limbus'] },
+  tenon: { en: "Tenon's capsule", zh: '眼球筋膜',
+    def: '包覆眼球、從 limbus 附近延伸到視神經的纖維膜；rectus muscles 穿過它，並把眼球與 orbital fat 分隔。',
+    dx: ['Posterior scleritis 的 T-sign（sub-Tenon 積液）', 'Trabeculectomy 後 Tenon cyst（encapsulated bleb）'],
+    op: ['Sub-Tenon anesthesia、sub-Tenon triamcinolone', '斜視手術要打開 Tenon 才鉤得到肌肉；後方 Tenon 撕破 → orbital fat 脫出、粘黏'],
+    rel: ['conj', 'sclera', 'lr', 'mr'] },
+  episclera: { en: 'Episclera', zh: '鞏膜上層',
+    def: 'sclera 表面富含血管的疏鬆結締組織，位於 Tenon 下方；episcleral veins 接收 aqueous veins 回流。',
+    n: [['Episcleral venous pressure', '約 6–9 mmHg（常引約 8 mmHg，依量測方法而異）', 'BCSC 10']],
+    dx: ['Episcleritis：鮮紅、輕痛、可推動，多為自限性', 'EVP 上升（carotid-cavernous fistula、Sturge–Weber）→ IOP 上升、episcleral veins 擴張'],
+    ex: ['Phenylephrine 點眼後 episcleral 充血會變白（scleritis 不會）'],
+    rel: ['sclera', 'collector', 'tenon'] },
+  ac: { en: 'Anterior chamber', zh: '前房',
+    def: 'cornea 後表面與 iris／lens 前表面之間、充滿 aqueous humor 的空間。',
+    n: [['中央深度 ACD', '約 3.0 mm', 'BCSC 2'], ['Aqueous 生成', '約 2–3 μL/min（白天；夜間約 1 μL/min）', 'BCSC 10'], ['正常 IOP', '約 10–21 mmHg', 'BCSC 10']],
+    dx: ['Hyphema、hypopyon；cells／flare 依 SUN 分級', 'Shallow AC：angle closure、wound leak、aqueous misdirection、choroidal effusion'],
+    ex: ['Van Herick：周邊 ACD 與 CCT 比較', 'AS-OCT、biometry 的 ACD（hyperope、老年較淺）'],
+    op: ['Phaco 全程靠 OVD 與灌流維持 AC 深度', '術中 AC 突然變淺：先找 wound leak、posterior pressure，必要時排除 suprachoroidal hemorrhage'],
+    rel: ['cornea', 'iris', 'angle_recess', 'pc', 'endothelium'] },
+  pc: { en: 'Posterior chamber', zh: '後房',
+    def: 'iris 後面、lens 前表面、zonules 與 ciliary processes 之間的狹小空間；aqueous 由 ciliary processes 分泌到這裡，再經 pupil 流入前房。',
+    dx: ['Pupillary block：aqueous 積在後房 → iris bombé → angle closure', 'Plateau iris、aqueous misdirection（malignant glaucoma）'],
+    ex: ['UBM 可看後房、ciliary body 與 iris 的位置關係'],
+    op: ['LPI 打通後房與前房，解除 pupillary block', 'Ciliary sulcus 是後房最周邊，可放三片式 IOL'],
+    rel: ['iris', 'ciliary_processes', 'zonules', 'sulcus', 'ac'] },
+  iris: { en: 'Iris', zh: '虹膜',
+    def: 'uvea 最前端，由 stroma、sphincter、dilator 與後方雙層 pigment epithelium 組成，調節瞳孔大小。',
+    n: [['直徑', '約 12 mm', 'BCSC 2']],
+    dx: ['Iridodialysis：iris root 最薄，鈍傷時從 ciliary body 撕脫', 'Anterior uveitis → posterior synechiae', 'Rubeosis iridis（NVI）：先出現在 pupil margin 與 angle', 'Iris nevus／melanoma、iris cyst'],
+    ex: ['Slit lamp transillumination：PDS、PXF、albinism', 'Gonioscopy 看 iris insertion 與周邊輪廓（plateau、bombé）'],
+    op: ['IFIS（tamsulosin 等 α1 blocker）：iris billowing、往切口脫出、進行性縮瞳 → 術前問藥史；intracameral phenylephrine／epinephrine、Healon5 類 OVD、降低 flow，必要時 iris hooks、Malyugin ring', 'LPI 位置選周邊 iris crypt'],
+    rel: ['sphincter', 'dilator', 'ipe', 'ciliary_body', 'angle_recess'] },
+  ciliary_body: { en: 'Ciliary body', zh: '睫狀體',
+    def: 'iris 與 choroid 之間的 uvea。前段 pars plicata（ciliary processes 分泌 aqueous、zonules 附著），後段 pars plana；ciliary muscle 負責 accommodation。',
+    n: [['總寬度', '約 6 mm', 'BCSC 2'], ['Pars plicata／pars plana', '約 2 mm／4 mm', 'BCSC 2'], ['Ciliary processes', '約 70–80 個', 'BCSC 2']],
+    dx: ['Cyclodialysis cleft：ciliary body 從 scleral spur 剝離 → hypotony', 'Ciliary body melanoma：sentinel vessels、lens 被推擠', 'Aqueous misdirection、plateau iris（ciliary processes 前旋）'],
+    ex: ['UBM 是主要影像工具'],
+    op: ['Cyclophotocoagulation 破壞 ciliary epithelium，降低 aqueous 生成', 'IVI 與 PPV 走 pars plana'],
+    rel: ['ciliary_processes', 'ciliary_muscle', 'pars_plana', 'zonules', 'spur'] },
+  pars_plana: { en: 'Pars plana', zh: '睫狀體平坦部',
+    def: 'ciliary body 後段的平坦部分，後接 ora serrata；血管少、沒有 retina，是進入 vitreous cavity 的安全通道。',
+    n: [['寬度', '約 4 mm（temporal 較寬）', 'BCSC 2'], ['IVI／trocar 位置（成人）', 'limbus 後 3.0–3.5 mm（pseudophakic／aphakic）、3.5–4.0 mm（phakic）', 'BCSC 12']],
+    dx: ['Pars planitis（intermediate uveitis）：snowballs、snowbanks'],
+    op: ['IVI、PPV trocar 的位置', '太前 → 傷到 lens 或 ciliary processes 出血；太後 → retinal tear、RD'],
+    rel: ['ora', 'vitreous_base', 'ciliary_body', 'vitreous'] },
+  ora: { en: 'Ora serrata', zh: '鋸齒緣',
+    def: '感光視網膜的前緣，接續 pars plana 的無色素上皮；邊緣呈鋸齒狀（dentate processes 與 ora bays）。',
+    n: [['距 limbus', 'nasal 約 5.75–6 mm、temporal 約 6.5–7 mm（文獻略有差異）', 'BCSC 12']],
+    dx: ['Retinal dialysis：整體最常見於 inferotemporal（不少無明確外傷史）；superonasal dialysis 與外傷關聯明顯較高，看到要想到 trauma', 'Enclosed ora bay、meridional fold 附近較易有 retinal break'],
+    ex: ['要 scleral depression 加 indirect ophthalmoscopy 才看得到'],
+    op: ['Pars plana 入口必須在 ora 前方'],
+    rel: ['pars_plana', 'vitreous_base', 'retina'] },
+  choroid: { en: 'Choroid', zh: '脈絡膜',
+    def: 'retina 與 sclera 之間的富血管層，供應 outer retina（photoreceptors、RPE）。由內到外：choriocapillaris、Sattler、Haller layer。',
+    n: [['Vortex veins', '通常 4–8 條（多為 4–5 條），於 equator 後方穿出 sclera', 'BCSC 2']],
+    dx: ['Suprachoroidal hemorrhage（術中爆發性出血）、choroidal effusion／detachment', 'Choroidal nevus／melanoma', 'Pachychoroid spectrum：CSC、PCV', 'High myopia：choroid 變薄、lacquer cracks', 'Choroidal rupture：鈍傷後以 disc 為中心的弧形裂痕'],
+    ex: ['EDI-OCT／SS-OCT 量厚度、ICGA、B-scan'],
+    op: ['Expulsive hemorrhage 危險因子：high myopia、glaucoma／高眼壓、抗凝血、術中眼壓驟降'],
+    rel: ['choriocapillaris', 'sattler', 'haller', 'bruch', 'lpca', 'suprachoroid'] },
+  retina: { en: 'Neurosensory retina', zh: '視網膜', lab: 'Retina',
+    def: '從 ora serrata 到 disc 的神經感覺層；inner retina 由 CRA 供應，outer retina（photoreceptors）靠 choroid。',
+    n: [['Rods／cones', 'rods 約 0.9–1.2 億／cones 約 460–640 萬（不同研究計數不同）', 'BCSC 2'], ['RGC axons', '約 120 萬', 'BCSC 2']],
+    dx: ['RRD：neurosensory retina 與 RPE 分離（subretinal space 積液）', 'CRAO：inner retina 缺血變白、cherry-red spot', 'DR、RVO、AMD'],
+    ex: ['Dilated fundus exam、OCT、FA'],
+    rel: ['nfl', 'onl', 'rpe', 'srs', 'macula'] },
+  macula: { en: 'Macula', zh: '黃斑',
+    def: '後極部含 xanthophyll、ganglion cells 多層的區域；臨床上大約是 temporal vascular arcades 之間。',
+    n: [['直徑', '約 5.5 mm', 'BCSC 12'], ['Fovea 中心距 disc 中心', '約 4 mm temporal、略低約 0.8 mm', 'BCSC 12']],
+    dx: ['AMD、DME、CSC、ERM、macular hole、CME'],
+    ex: ['OCT macula、Amsler grid、FA／ICGA'],
+    rel: ['fovea', 'henle', 'gcl'] },
+  fovea: { en: 'Fovea / foveola', zh: '中心凹', lab: 'Fovea',
+    def: '黃斑中央約 1.5 mm 的凹陷，inner retina 向周邊推開；正中央的 foveola（約 0.35 mm）只有 cones、沒有 inner retinal layers，是解析度最高處；FAZ（約 0.5 mm）略大於 foveola。',
+    n: [['Fovea 直徑', '約 1.5 mm', 'BCSC 12'], ['Foveola 直徑', '約 0.35 mm', 'BCSC 12'], ['FAZ 直徑', '約 0.5 mm（個體差異大）', 'BCSC 12']],
+    dx: ['Macular hole：VMT 牽拉，依 Gass 或 IVTS 分期', 'Cherry-red spot：foveola 沒有 GCL 覆蓋，透出 choroid 顏色', 'Solar／laser maculopathy'],
+    ex: ['OCT 看 foveal contour', 'OCTA：FAZ 擴大（DR、RVO）'],
+    op: ['PPV 加 ILM peeling 加 gas 治療 FTMH'],
+    rel: ['macula', 'henle', 'onl', 'ilm', 'hyaloid'] },
+  disc: { en: 'Optic disc', zh: '視神經盤',
+    def: 'RGC axons 匯集離開眼球處，沒有 photoreceptors，形成生理盲點。',
+    n: [['直徑', '約 1.5–2 mm（垂直略長）', 'BCSC 5'], ['盲點位置', '注視點 temporal 約 15°', 'BCSC 5']],
+    dx: ['Glaucomatous cupping：ISNT rule 被破壞、notch、disc hemorrhage', 'Papilledema（ICP 上升）vs 其他 optic disc edema', 'NAION：small crowded disc（disc at risk）', 'Optic disc pit（合併 serous maculopathy）、coloboma、morning glory'],
+    ex: ['Fundus C/D ratio、OCT RNFL／BMO-MRW、visual field'],
+    rel: ['lamina', 'optic_nerve', 'cra', 'nfl'] },
+  lamina: { en: 'Lamina cribrosa', zh: '篩板',
+    def: 'sclera 在 scleral canal 形成的多孔膠原板，axons 由此穿出；過了 lamina 之後 axons 才有 myelin，所以視神經在眼球後變粗。',
+    n: [['眼球後視神經直徑', '約 3 mm（有 myelin）', 'BCSC 5']],
+    dx: ['Glaucoma：lamina 受壓後彎、孔洞變形，是 axon 受損的主要部位', 'CRVO：CRV 在 lamina 附近受壓'],
+    ex: ['EDI-OCT 可看 lamina 深度與缺損'],
+    rel: ['disc', 'optic_nerve', 'sclera', 'cra'] },
+  optic_nerve: { en: 'Optic nerve (CN II)', zh: '視神經', lab: 'Optic nerve',
+    def: '由約 120 萬 RGC axons 組成的中樞神經白質，外包 pia、arachnoid、dura；myelin 來自 oligodendrocytes。',
+    n: [['總長', '約 50 mm', 'BCSC 5'], ['Intraocular／intraorbital', '約 1 mm／25–30 mm', 'BCSC 5'], ['Intracanalicular／intracranial', '約 4–10 mm（常引約 9 mm）／約 10–16 mm', 'BCSC 5'], ['眼球後到 optic canal', '約 18 mm（神經呈 S 形，留有餘裕）', 'BCSC 7']],
+    dx: ['Optic neuritis：RAPD、色覺下降、眼動痛', 'Compressive optic neuropathy：orbital apex 病灶、TED', 'Traumatic optic neuropathy：canal 段被固定在骨管內，最易受傷', 'Papilledema：subarachnoid space 與顱內相通'],
+    ex: ['RAPD、color vision、visual field、MRI orbit（fat-suppressed 加 contrast）'],
+    op: ['Retrobulbar block 風險：視神經穿刺、經 subarachnoid space 造成 brainstem anesthesia', 'Optic nerve sheath fenestration（IIH）'],
+    rel: ['disc', 'lamina', 'onsheath', 'cra', 'optic_canal'] },
+  onsheath: { en: 'Optic nerve sheath', zh: '視神經鞘', lab: 'Nerve sheath',
+    def: '腦膜的延伸：外層 dura、中間 arachnoid、內層 pia；dura 與 sclera 相連，subarachnoid space 的 CSF 與顱內相通。',
+    dx: ['Papilledema：ICP 經 subarachnoid space 傳到 disc', 'Optic nerve sheath meningioma：CT／MRI tram-track sign'],
+    ex: ['眼部超音波量 ONSD，可間接評估 ICP'],
+    op: ['Optic nerve sheath fenestration'],
+    rel: ['optic_nerve', 'sclera'] },
+  cra: { en: 'CRA / CRV', zh: '視網膜中央動靜脈',
+    def: 'CRA 是 ophthalmic artery 的分支，在眼球後約 10–12 mm（範圍約 6–15 mm）由 inferomedial 側穿入視神經，沿中央走到 disc 分支，供應 inner retina；CRV 伴行，回流到 superior ophthalmic vein 或 cavernous sinus。',
+    n: [['進入視神經處', '眼球後約 10–12 mm（範圍約 6–15 mm）', 'BCSC 12'], ['Cilioretinal artery', '眼底鏡約 15–25%；FA 研究約 30–40% 的眼', 'BCSC 12']],
+    dx: ['CRAO：cherry-red spot；有 cilioretinal artery 時中央視力可能保留；要排除 GCA', 'CRVO：四象限 flame hemorrhage、disc edema', 'IVI 後 IOP 驟升可能影響 CRA 灌流'],
+    ex: ['FA：retinal arterial filling 延遲、AV transit time 延長；若 choroidal filling 也延遲，要想到 ophthalmic／carotid 阻塞', 'IVI 後確認視神經灌流：視力回到 HM／CF（依術前視力），或看到 disc 灌流'],
+    rel: ['ophth_a', 'disc', 'optic_nerve', 'nfl'] },
+  lens: { en: 'Crystalline lens', zh: '水晶體', lab: 'Lens (cortex)',
+    def: '無血管、無神經的雙凸透明體，由 zonules 懸吊；終生生長，新纖維由 equator 的 lens epithelium 往內堆疊，外層即 cortex。',
+    n: [['赤道直徑', '約 9–10 mm', 'BCSC 11'], ['中央厚度', '約 4 mm，隨年齡增厚', 'BCSC 11'], ['屈光力', '約 20 D', 'BCSC 3']],
+    dx: ['Cataract：nuclear、cortical（spokes）、PSC（steroid、DM、年輕人眩光）', 'Ectopia lentis：Marfan 多往 superotemporal、homocystinuria 多往 inferonasal；PXF、外傷', 'Phacomorphic／phacolytic glaucoma'],
+    ex: ['Slit lamp 加 retroillumination（cortical、PSC 最清楚）、LOCS III 分級'],
+    op: ['Phaco：CCC → hydrodissection → nucleus → I/A cortex → IOL in the bag', 'Subincisional cortex 最難吸乾淨'],
+    rel: ['nucleus', 'capsule', 'lens_epi', 'zonules'] },
+  nucleus: { en: 'Lens nucleus', zh: '晶體核', lab: 'Nucleus',
+    def: '最早形成的中央纖維（embryonic、fetal、adult nucleus），隨年齡硬化、變黃褐。',
+    dx: ['Nuclear sclerosis → myopic shift（老花患者突然看近變好，second sight）', 'Brunescent／black cataract：phaco 能量高，endothelium 與切口熱傷風險上升'],
+    op: ['Divide & conquer、stop & chop、horizontal／vertical chop', 'Hydrodelineation 在 endonucleus 與 epinucleus 之間，出現 golden ring'],
+    rel: ['lens', 'capsule'] },
+  capsule: { en: 'Lens capsule', zh: '晶體囊', lab: 'Capsule',
+    def: 'lens epithelium 的 basement membrane，包住整個 lens；zonules 附著在 equator 附近的前、後囊。前囊較厚，posterior pole 最薄（僅數 μm）。',
+    dx: ['PCO：殘留 lens epithelial cells 增生 → Nd:YAG capsulotomy', 'PXF：前囊表面 exfoliation material 呈 bull’s-eye 分布', 'Anterior capsular phimosis（PXF、uveitis、RP）'],
+    op: ['CCC 約 5–5.5 mm，360° 覆蓋 IOL optic 邊緣', 'Posterior capsule rupture → vitreous loss → anterior vitrectomy，IOL 改 sulcus 或 optic capture', 'Posterior polar cataract：後囊可能已變薄或有缺損，一般不做 hydrodissection，改做 hydrodelineation 並盡量不轉核'],
+    rel: ['lens', 'lens_epi', 'zonules', 'wieger', 'berger', 'sulcus'] },
+  zonules: { en: 'Zonules (of Zinn)', zh: '懸韌帶', lab: 'Zonules',
+    def: 'fibrillin 構成的纖維，從 ciliary processes 之間與 pars plana 延伸到 lens equator 前後，把 ciliary muscle 的張力傳給 lens。',
+    dx: ['Zonular weakness／dialysis：PXF、外傷、Marfan（fibrillin-1）、高度近視、RP', 'Phacodonesis、ectopia lentis'],
+    ex: ['散瞳後看 lens 邊緣與 phacodonesis；術中 CCC 時前囊出現放射狀皺摺，提示 zonule 弱'],
+    op: ['CTR（capsular tension ring）、capsular hooks', 'Hydrodissection、轉核與 I/A 時避免對 zonules 施力過大'],
+    rel: ['capsule', 'ciliary_processes', 'pars_plana', 'ciliary_muscle'] },
+  vitreous: { en: 'Vitreous', zh: '玻璃體',
+    def: '佔眼球體積約 80% 的透明凝膠，主要為水、type II collagen 與 hyaluronic acid。',
+    n: [['體積', '約 4 mL', 'BCSC 12']],
+    dx: ['PVD：Weiss ring、floaters；急性 PVD 要散瞳詳查周邊有無 retinal tear', 'Vitreous hemorrhage、endophthalmitis、asteroid hyalosis'],
+    ex: ['Slit lamp 看 anterior vitreous：色素顆粒（Shafer sign）提示 retinal break', 'B-scan（介質混濁時）'],
+    op: ['PPV；PCR 時 anterior vitrectomy', 'IVI 把藥打進 vitreous cavity'],
+    rel: ['vitreous_base', 'hyaloid', 'cloquet', 'berger', 'ant_hyaloid'] },
+  vitreous_base: { en: 'Vitreous base', zh: '玻璃體基部',
+    def: '跨越 ora serrata 前後的環狀帶，vitreous 與 pars plana、周邊 retina 緊密附著，PVD 時也不會分離。',
+    dx: ['鈍傷造成 vitreous base avulsion，是外傷的特徵表現', 'Retinal tear 多發生在 vitreous base 後緣', 'PVR 由此收縮牽拉'],
+    op: ['PPV 時 base 無法完全切除，需在 scleral depression 下 shave'],
+    rel: ['ora', 'pars_plana', 'vitreous'] },
+  cloquet: { en: "Cloquet's canal", zh: '玻璃體管',
+    def: '胚胎 hyaloid artery 退化後留下的通道，從 disc 延伸到 lens 後方的 Berger space。',
+    dx: ['Mittendorf dot：posterior capsule 上的 hyaloid 殘留點', 'Bergmeister papilla：disc 上的殘留組織', 'PFV（persistent fetal vasculature）：小眼球、白瞳'],
+    rel: ['berger', 'disc', 'vitreous'] },
+  lr: { en: 'Lateral rectus', zh: '外直肌',
+    def: '起於 annulus of Zinn（橫跨 SOF），止於 limbus 後約 6.9 mm；CN VI 支配，唯一作用為 abduction。',
+    n: [['Insertion 距 limbus（Spiral of Tillaux）', '約 6.9 mm', 'BCSC 6'], ['Anterior ciliary arteries', '1 條（其他 rectus 各 2 條）', 'BCSC 6']],
+    dx: ['CN VI palsy：esotropia 在看遠與往患側看時加重', 'Duane syndrome：abduction 受限、內轉時眼裂變小', 'TED 較少侵犯 LR'],
+    op: ['LR recession／resection', '只有 1 條 anterior ciliary artery：多條 rectus 同時手術要評估 anterior segment ischemia'],
+    rel: ['mr', 'cn6', 'annulus', 'sr', 'ir'] },
+  mr: { en: 'Medial rectus', zh: '內直肌',
+    def: '起於 annulus of Zinn，止於 limbus 後約 5.5 mm（四條 rectus 中最靠近 limbus）；CN III inferior division 支配，adduction。',
+    n: [['Insertion 距 limbus（Spiral of Tillaux）', '約 5.5 mm', 'BCSC 6']],
+    dx: ['INO：MLF 病灶 → 同側 adduction 不足、對側 abducting nystagmus', 'TED 常侵犯（僅次於 IR）', 'Medial wall fracture 可夾住 MR'],
+    op: ['MR 與 oblique muscles 沒有 fascial 連結，手術或外傷時最容易 lost／slipped muscle'],
+    rel: ['lr', 'cn3i', 'medial_wall', 'annulus'] },
+  lpca: { en: 'Long posterior ciliary a. & n.', zh: '長後睫狀動脈與神經', lab: 'LPCA / long ciliary n.',
+    def: '沿 3、9 點鐘方向在 suprachoroidal space 往前走，到 ciliary body 參與形成 major arterial circle；long ciliary nerves 帶角膜感覺與 dilator 的交感纖維。',
+    dx: ['Fundus 周邊 3、9 點鐘可見黃白色線狀結構，是辨認水平 meridian 的地標', 'PRP 時 3、9 點鐘水平 meridian 避免重打，減少疼痛與神經損傷'],
+    rel: ['choroid', 'mac', 'dilator', 'suprachoroid'] },
+
+  schwalbe: { en: "Schwalbe's line", zh: 'Schwalbe 線',
+    def: 'Descemet membrane 的周邊終點，是 gonioscopy 中 angle 最前方的結構，也是 cornea 與 TM 的交界。',
+    dx: ['Posterior embryotoxon：突出、前移的 Schwalbe line；約 10–15% 正常人可見，也見於 Axenfeld–Rieger', 'Sampaolesi line：PXF、PDS 在 Schwalbe line 附近的色素沉積'],
+    ex: ['Gonioscopy 用 corneal wedge：兩條角膜光帶的交會點就是 Schwalbe line'],
+    rel: ['tm', 'descemet', 'angle_recess'] },
+  tm: { en: 'Trabecular meshwork', zh: '小樑網',
+    def: '位於 Schwalbe line 與 scleral spur 之間的濾網，分 uveal、corneoscleral、juxtacanalicular（JCT）三部分；JCT 是 conventional outflow 主要的阻力所在。',
+    dx: ['POAG：outflow 阻力上升', 'Pigment dispersion：TM 濃密均勻色素', 'PXF、steroid response', 'Angle recession：鈍傷後 TM 受損，可在多年後發生 glaucoma'],
+    ex: ['Gonioscopy：前段 non-pigmented TM、後段 pigmented（functional）TM'],
+    op: ['SLT、ALT', 'MIGS（iStent、Kahook Dual Blade、GATT）繞過或切開 TM'],
+    rel: ['schlemm', 'spur', 'schwalbe', 'collector'] },
+  schlemm: { en: 'Schlemm canal', zh: '許萊姆氏管',
+    def: 'TM 外側的環狀內皮管道，收集 aqueous 後經 collector channels、aqueous veins 流入 episcleral veins。',
+    dx: ['EVP 上升（carotid-cavernous fistula、Sturge–Weber）→ gonioscopy 可見 Schlemm canal 內血液逆流'],
+    ex: ['Gonioscopy 時 goniolens 壓迫 episcleral veins，Schlemm canal 會充血變紅'],
+    op: ['Trabeculotomy、GATT、canaloplasty、iStent 都以 Schlemm canal 為目標'],
+    rel: ['tm', 'collector', 'episclera'] },
+  collector: { en: 'Collector channels', zh: '集液管', lab: 'Collector channel',
+    def: 'Schlemm canal 外壁的開口，經 intrascleral plexus 與 aqueous veins 連到 episcleral veins。',
+    n: [['Goldmann equation', 'IOP = (F − U)/C + EVP', 'BCSC 10']],
+    dx: ['EVP 升高會直接抬高 IOP；Schlemm canal 系 MIGS 的效果也受下游 collector channels 與 EVP 限制'],
+    rel: ['schlemm', 'episclera'] },
+  spur: { en: 'Scleral spur', zh: '鞏膜突',
+    def: 'sclera 向內的環狀突起，ciliary muscle longitudinal fibers 附著於此；肌肉收縮拉開 TM、增加 outflow（pilocarpine 的機轉）。',
+    dx: ['Cyclodialysis cleft：ciliary body 從 spur 剝離 → hypotony', 'Angle recession：spur 後方的 ciliary body band 變寬'],
+    ex: ['Gonioscopy：TM 後方的白色線', 'AS-OCT 的關鍵地標：AOD500、TISA 都從 spur 起算'],
+    rel: ['tm', 'ciliary_muscle', 'cbb'] },
+  cbb: { en: 'Ciliary body band', zh: '睫狀體帶',
+    def: 'gonioscopy 中 scleral spur 與 iris root 之間可見的 ciliary body 前表面（灰褐色帶）；看得到代表 angle 開得很寬。',
+    dx: ['Angle recession：CBB 異常變寬、不規則，要與對側比較', 'Iris processes 可跨過 CBB'],
+    ex: ['看得到 CBB 大致對應 Shaffer grade 4（grade 3 一般只看到 scleral spur）'],
+    rel: ['spur', 'iris', 'angle_recess'] },
+  angle_recess: { en: 'Anterior chamber angle', zh: '前房角', lab: 'Angle recess',
+    def: 'cornea 後表面與 iris 前表面的交角，aqueous 從這裡進入 TM。Gonioscopy 由前到後：Schwalbe line → TM → scleral spur → CBB → iris root。',
+    n: [['Shaffer grade 4', '35–45°（可見 CBB）', 'BCSC 10'], ['Grade 3', '20–35°（可見 spur）', 'BCSC 10'], ['Grade 2', '約 20°（可見 TM）', 'BCSC 10'], ['Grade 1', '≤ 10°（只見 Schwalbe line，或加前段 TM）', 'BCSC 10'], ['Grade 0', 'closed', 'BCSC 10']],
+    dx: ['PACS／PAC／PACG；acute angle closure', 'Plateau iris configuration／syndrome', 'Neovascular glaucoma（NVA）'],
+    ex: ['Gonioscopy：indentation 區分 appositional 與 synechial closure', 'Van Herick、AS-OCT'],
+    op: ['LPI、lens extraction（最能加深 angle）、goniosynechialysis'],
+    rel: ['tm', 'spur', 'cbb', 'iris', 'schwalbe'] },
+  descemet: { en: 'Descemet membrane', zh: '德士密膜', thk: '≈ 10–12 μm',
+    def: 'endothelium 的 basement membrane，終生增厚；周邊終止於 Schwalbe line。',
+    n: [['厚度', '出生約 3 μm → 成人約 10–12 μm（隨年齡增厚，文獻數值不一）', 'BCSC 8']],
+    dx: ['Descemet detachment：phaco 切口處常見', 'Striate keratopathy（Descemet folds）：術後角膜水腫', 'Haab striae：先天性 glaucoma，呈水平或同心圓排列（產鉗傷多為垂直或斜向）', 'Acute hydrops：keratoconus 的 Descemet 破裂', 'Guttae：Fuchs dystrophy 的 Descemet 贅生物'],
+    op: ['DMEK 移植的就是 Descemet 加 endothelium', 'Descemet detachment 以 air 或 SF6 tamponade'],
+    rel: ['endothelium', 'dua', 'schwalbe'] },
+  ciliary_muscle: { en: 'Ciliary muscle', zh: '睫狀肌',
+    def: '平滑肌（longitudinal、radial、circular 三組），由 parasympathetic（CN III → ciliary ganglion → short ciliary nerves）支配；收縮使 zonules 放鬆、lens 變凸，產生 accommodation。',
+    dx: ['Presbyopia（主要是 lens 硬化）', 'Accommodative spasm（pseudomyopia）', 'Cycloplegia：atropine、cyclopentolate 用於兒童 refraction 與 uveitis 止痛'],
+    op: ['Pilocarpine：longitudinal fibers 拉動 scleral spur → TM 打開、outflow 增加'],
+    rel: ['spur', 'zonules', 'ciliary_processes'] },
+  ciliary_processes: { en: 'Ciliary processes (pars plicata)', zh: '睫狀突', lab: 'Ciliary processes',
+    def: 'pars plicata 的放射狀皺褶，覆蓋雙層上皮：non-pigmented epithelium（NPE）分泌 aqueous，其 tight junctions 構成 blood–aqueous barrier。',
+    n: [['數目', '約 70–80 個', 'BCSC 2'], ['Aqueous 生成', '約 2–3 μL/min（白天；夜間約 1 μL/min）', 'BCSC 10']],
+    dx: ['Uveitis 時 blood–aqueous barrier 破壞 → flare', '降眼壓藥中 beta-blocker、CAI、alpha-2 agonist 減少 aqueous 生成'],
+    op: ['Cyclophotocoagulation（transscleral、endoscopic ECP）'],
+    rel: ['ciliary_muscle', 'zonules', 'pc', 'sulcus'] },
+  mac: { en: 'Major arterial circle of iris', zh: '虹膜大動脈環', lab: 'Major art. circle',
+    def: '由 LPCA 與 anterior ciliary arteries 吻合形成，位置在 ciliary body 前部，不在 iris 內。',
+    dx: ['鈍傷撕裂 ciliary body face → hyphema 的來源', '多條 rectus 手術切斷 anterior ciliary arteries → anterior segment ischemia'],
+    rel: ['lpca', 'ciliary_body', 'iris'] },
+  sulcus: { en: 'Ciliary sulcus', zh: '睫狀溝',
+    def: 'iris 根部後面與 ciliary body 前面之間的凹槽，是 posterior chamber 最周邊。',
+    dx: ['Sulcus 放 one-piece acrylic IOL → iris chafing → UGH syndrome（uveitis–glaucoma–hyphema）、pigment dispersion'],
+    op: ['Posterior capsule rupture 時改放三片式 IOL 於 sulcus，可 optic capture 進 CCC', 'Sulcus IOL power 依 in-the-bag power 調降：< 18 D 減約 0.5 D、18–25 D 減約 1 D、> 25 D 減 1.5–2 D；若 optic capture 進 CCC，沿用 in-the-bag power'],
+    rel: ['pc', 'iris', 'ciliary_processes', 'capsule'] },
+  sphincter: { en: 'Iris sphincter', zh: '瞳孔括約肌',
+    def: 'pupil margin 附近的環狀平滑肌，parasympathetic（CN III → ciliary ganglion → short ciliary nerves）支配，縮瞳。',
+    dx: ['Adie tonic pupil：ciliary ganglion 損傷，對 0.1% pilocarpine 超敏感', 'CN III palsy 合併瞳孔散大 → 先排除 PComm aneurysm', 'Traumatic mydriasis：sphincter tears'],
+    op: ['術中小瞳孔可用 iris hooks 或 pupil expansion ring（如 Malyugin ring）；IFIS 時 sphincterotomy、pupil stretch 無效且可能惡化'],
+    rel: ['dilator', 'iris', 'ciliary_muscle'] },
+  dilator: { en: 'Iris dilator', zh: '瞳孔擴大肌',
+    def: '由 anterior pigment epithelium 特化的 myoepithelium，呈放射狀；sympathetic（α1）支配，散瞳。',
+    dx: ['Horner syndrome：miosis、1–2 mm ptosis、anhidrosis；apraclonidine 試驗可見瞳孔大小反轉', 'IFIS：tamsulosin 阻斷 dilator 的 α1A receptor，長期使用致 dilator 失用性萎縮、張力喪失，停藥後仍可能發生；三徵為 iris billowing、往切口脫出、進行性縮瞳'],
+    rel: ['sphincter', 'ipe', 'lpca', 'muller'] },
+  ipe: { en: 'Iris pigment epithelium', zh: '虹膜色素上皮', lab: 'IPE',
+    def: 'iris 後面的雙層色素上皮，源自 optic cup 的兩層 neuroectoderm：前層（含 dilator）往後接 pigmented ciliary epithelium → RPE；後層接 non-pigmented ciliary epithelium → neurosensory retina。',
+    dx: ['Transillumination defects：PDS（mid-peripheral 輪輻狀）、PXF（pupillary margin）、albinism', 'Krukenberg spindle：PDS 色素沉積在 endothelium', 'Iris pigment epithelial cyst'],
+    rel: ['dilator', 'iris', 'rpe'] },
+  lens_epi: { en: 'Lens epithelium', zh: '晶體上皮',
+    def: '只在 anterior capsule 下方到 equator 的單層細胞；equator 前方 germinative zone 的細胞分裂，移到 equator（bow region）後拉長分化成新的 lens fibers。',
+    dx: ['PCO：殘留 LEC 遷移到 posterior capsule（Elschnig pearls、fibrosis）', 'Anterior subcapsular cataract'],
+    op: ['徹底清除 cortex、使用 square-edge IOL 可降低 PCO'],
+    rel: ['capsule', 'lens'] },
+  berger: { en: 'Berger space', zh: '貝格氏間隙',
+    def: 'Wieger ligament 環內，posterior capsule 與 anterior hyaloid face 之間的潛在空間；Cloquet canal 前端開口於此。',
+    dx: ['平時為潛在空間；intraoperative OCT 可直接顯示，PCR、OVD、血液或 lens fragment 進入時臨床上較明顯'],
+    rel: ['wieger', 'ant_hyaloid', 'cloquet', 'capsule'] },
+  ant_hyaloid: { en: 'Anterior hyaloid face', zh: '前玻璃體膜', lab: 'Ant. hyaloid',
+    def: 'vitreous 的前界，貼在 lens 後方與 ciliary body 周邊。',
+    dx: ['Aqueous misdirection：aqueous 被導向 hyaloid 後方，lens-iris diaphragm 前移、前房變淺', 'PCR 時若 anterior hyaloid 仍完整，可能避免 vitreous prolapse'],
+    op: ['Aqueous misdirection 的處理之一：Nd:YAG hyaloidotomy 或 vitrectomy 打通 hyaloid'],
+    rel: ['wieger', 'berger', 'vitreous'] },
+  wieger: { en: 'Wieger ligament', zh: 'Wieger 韌帶',
+    def: 'anterior hyaloid face 與 posterior capsule 之間的環狀附著（hyaloideocapsular ligament）；年輕人附著緊、隨年齡變鬆。',
+    n: [['環直徑', '約 8–9 mm', 'BCSC 12']],
+    dx: ['年輕人做 ICCE 時容易一起帶出 vitreous（現代 phaco 少見）'],
+    rel: ['berger', 'ant_hyaloid', 'capsule'] },
+
+  tear_lipid: { en: 'Tear film: lipid layer', zh: '淚膜脂質層', lab: 'Lipid layer',
+    def: '淚膜最外層，由 meibomian glands 分泌，延緩 aqueous 蒸發、穩定淚膜。',
+    dx: ['MGD → evaporative dry eye（最常見的乾眼型態）', 'Blepharitis、ocular rosacea'],
+    ex: ['TBUT（傳統以 < 10 秒為異常；Asia Dry Eye Society 診斷標準採 ≤ 5 秒）', 'Meibography、lipid layer interferometry'],
+    op: ['熱敷、eyelid hygiene、IPL、thermal pulsation'],
+    rel: ['meibomian', 'tear_aqueous'] },
+  tear_aqueous: { en: 'Tear film: aqueous layer', zh: '淚膜水液層', lab: 'Aqueous layer',
+    def: '由 main lacrimal gland 與 accessory glands（Krause、Wolfring）分泌，含 lysozyme、lactoferrin、IgA 等。',
+    dx: ['Aqueous-deficient dry eye：Sjögren syndrome、lacrimal gland 浸潤或手術'],
+    ex: ['Schirmer test（無麻醉 5 分鐘 ≤ 5 mm 為明顯不足）', 'Tear meniscus height'],
+    op: ['Artificial tears、cyclosporine、punctal plugs'],
+    rel: ['lacrimal_gland', 'acc_lac', 'tear_lipid', 'tear_mucin'] },
+  tear_mucin: { en: 'Tear film: mucin layer', zh: '淚膜黏液層', lab: 'Mucin layer',
+    def: 'conjunctival goblet cells 分泌的 gel mucin 加上 corneal epithelium 的 membrane-bound mucins（glycocalyx），讓淚液能附著在疏水的上皮表面。現行觀念多把淚膜視為 lipid layer 加 muco-aqueous gel，mucin 與 aqueous 並非截然分層。',
+    dx: ['Goblet cells 減少：SJS、OCP（mucous membrane pemphigoid）、化學傷、vitamin A 缺乏'],
+    ex: ['Rose bengal／lissamine green 染色：顯示 mucin 保護不足的上皮'],
+    rel: ['conj', 'epithelium', 'tear_aqueous'] },
+  epithelium: { en: 'Corneal epithelium', zh: '角膜上皮', lab: 'Epithelium', thk: '≈ 50 μm',
+    def: '非角化複層鱗狀上皮，約 5–7 層：表層 squamous、wing、basal cells；由 limbal stem cells 補充，約 7–10 天更新。',
+    n: [['厚度', '約 50 μm', 'BCSC 8'], ['細胞層數', '約 5–7 層', 'BCSC 8']],
+    dx: ['Corneal abrasion（fluorescein 染色）', 'RCES：與 EBMD、過去外傷有關，常在晨起睜眼時痛', 'HSV dendrite（terminal bulbs）、epithelial ingrowth（LASIK 後）'],
+    ex: ['Fluorescein 染色', 'Epithelial thickness mapping（早期 keratoconus 篩檢）'],
+    op: ['PRK 先去除 epithelium；術後 dry eye 或藥物毒性會延遲上皮癒合'],
+    rel: ['bm', 'bowman', 'limbus', 'tear_mucin'] },
+  bm: { en: 'Epithelial basement membrane', zh: '上皮基底膜', lab: 'Basement membrane',
+    def: 'basal cells 分泌，以 hemidesmosomes 與 anchoring fibrils 錨定在 Bowman layer 上。',
+    dx: ['EBMD（map–dot–fingerprint dystrophy）', 'RCES：上皮黏附不良，好發於糖尿病、外傷後'],
+    op: ['PTK、anterior stromal puncture、debridement 治療 RCES'],
+    rel: ['epithelium', 'bowman'] },
+  bowman: { en: 'Bowman layer', zh: '鮑曼層', thk: '8–14 μm',
+    def: '無細胞的 collagen 層（stroma 前緣的特化），受傷後不會再生，只會留下 scar。',
+    n: [['厚度', '約 8–14 μm', 'BCSC 8']],
+    dx: ['Keratoconus：Bowman 斷裂', 'Band keratopathy：calcium 沉積在 Bowman 層級（EDTA chelation）'],
+    op: ['PRK／PTK 會去除 Bowman layer；LASIK flap 位於 stroma 前段'],
+    rel: ['epithelium', 'stroma', 'bm'] },
+  stroma: { en: 'Corneal stroma', zh: '角膜基質', lab: 'Stroma', thk: '≈ 90%',
+    def: '佔角膜厚度約 90%，由 200–250 層平行排列的 collagen lamellae、keratocytes 與 proteoglycans 構成；規則排列加上 endothelium pump 維持透明。',
+    n: [['佔角膜厚度', '約 90%', 'BCSC 8'], ['Lamellae', '約 200–250 層', 'BCSC 8']],
+    dx: ['Stromal edema、scar', 'Stromal dystrophies：granular、lattice、macular', 'Infectious keratitis 浸潤、keratoconus 變薄'],
+    op: ['CXL（Dresden protocol 要求去上皮後 stroma ≥ 400 μm）', 'LASIK flap、SMILE lenticule 都在 stroma', 'DALK 保留 Descemet 與 endothelium'],
+    rel: ['bowman', 'dua', 'descemet', 'endothelium'] },
+  dua: { en: 'Pre-Descemet (Dua) layer', zh: '前德士密層', lab: 'Pre-Descemet (Dua) layer', thk: '≈ 10 μm',
+    def: 'Dua 等人於 2013 年提出：stroma 最後方、沒有 keratocytes 的膠原層（平均約 10 μm），是 type 1 big bubble 的分離面；它是否為獨立的解剖層仍有爭議。',
+    n: [['厚度', '約 10 μm（10.15 ± 3.6 μm）', 'Dua 2013']],
+    op: ['DALK big-bubble：type 1 bubble 在 Dua layer 前方（與 stroma 之間），type 2 bubble 在 Dua layer 與 Descemet 之間'],
+    rel: ['stroma', 'descemet'] },
+  endothelium: { en: 'Corneal endothelium', zh: '角膜內皮', lab: 'Endothelium', thk: '單層 ≈ 5 μm',
+    def: '單層六角形細胞，靠 Na⁺/K⁺-ATPase pump 把水打出 stroma；成人幾乎不分裂，細胞流失靠鄰近細胞擴大、移行補位。',
+    n: [['年輕成人 ECD', '約 3000 cells/mm²', 'BCSC 8'], ['隨年齡流失', '每年約 0.5–0.6%', 'BCSC 8'], ['失代償', '約 400–700 cells/mm² 以下', 'BCSC 8']],
+    dx: ['Fuchs endothelial dystrophy（guttae，晨起視力較差）', 'PBK：phaco 後 endothelium 失代償', 'ICE syndrome（hammered-silver）、PPMD'],
+    ex: ['Specular microscopy：ECD、CV（polymegathism）、hexagonality（pleomorphism）', 'Pachymetry 上升提示 endothelium 功能下降'],
+    op: ['術前 ECD 偏低（例如 < 1000 cells/mm²）屬高風險：dispersive OVD（soft-shell）、降低 phaco 能量、遠離 endothelium 操作', 'DSAEK／DMEK'],
+    rel: ['descemet', 'ac', 'stroma'] },
+
+  ilm: { en: 'Internal limiting membrane', zh: '內界膜', lab: 'ILM',
+    def: 'Müller cells 的 basement membrane，是 retina 與 vitreous 的界面。',
+    dx: ['ERM 在 ILM 表面增生', 'VMT、macular hole'],
+    ex: ['OCT 最內層的高反射線'],
+    op: ['ILM peeling（ICG 或 brilliant blue 染色）'],
+    rel: ['hyaloid', 'nfl', 'fovea'] },
+  nfl: { en: 'Retinal nerve fiber layer', zh: '神經纖維層', lab: 'NFL',
+    def: 'RGC axons 走向 disc，正常沒有 myelin；越靠近 disc 越厚，peripapillary 以 I、S 象限最厚，N、T 較薄。',
+    n: [['Peripapillary RNFL', 'I、S 最厚（double-hump），N 與 T 先後因人而異；ISNT 原指 neuroretinal rim', 'BCSC 10']],
+    dx: ['Flame-shaped hemorrhage：沿 axon 排列（HTN、CRVO、disc hemorrhage）', 'Cotton-wool spot：NFL 微梗塞、axoplasmic stasis', 'Glaucoma 的 arcuate RNFL defect', 'Myelinated nerve fibers'],
+    ex: ['OCT：高反射', 'OCT RNFL 是 glaucoma 追蹤的核心'],
+    rel: ['gcl', 'disc', 'ilm'] },
+  gcl: { en: 'Ganglion cell layer', zh: '神經節細胞層', lab: 'GCL',
+    def: 'RGC 細胞體；黃斑區最厚（多層），foveola 處消失。',
+    dx: ['Glaucoma 早期 macular GCIPL 變薄', 'Cherry-red spot：CRAO 時周圍 inner retina 缺血水腫變白；Tay–Sachs 時 GCL 堆積 ganglioside 變白；foveola 沒有 inner retina，因而透出 choroid 與 RPE 的紅色'],
+    ex: ['OCT 以 GCIPL（GCL＋IPL）或 GCC（RNFL＋GCL＋IPL）分析，依機型而異'],
+    rel: ['nfl', 'ipl', 'fovea'] },
+  ipl: { en: 'Inner plexiform layer', zh: '內叢狀層', lab: 'IPL',
+    def: 'bipolar、amacrine cells 與 RGC 的突觸層。',
+    ex: ['OCT：中高反射；與 GCL 合併為 GCIPL'],
+    rel: ['gcl', 'inl'] },
+  inl: { en: 'Inner nuclear layer', zh: '內核層', lab: 'INL',
+    def: 'bipolar、horizontal、amacrine 與 Müller cells 的細胞體；內側邊界（IPL/INL）為 intermediate capillary plexus（ICP），外側邊界（INL/OPL）為 deep capillary plexus（DCP）。',
+    dx: ['CME：囊腔常在 INL 與 OPL／Henle', 'PAMM：INL 帶狀高反射（ICP／DCP 缺血）', 'Microaneurysm、dot-blot hemorrhage 位在較深層（INL／OPL）'],
+    ex: ['OCT：低反射'],
+    rel: ['opl', 'ipl', 'henle'] },
+  opl: { en: 'Outer plexiform layer', zh: '外叢狀層', lab: 'OPL',
+    def: 'photoreceptors 與 bipolar／horizontal cells 的突觸層；大約是 inner（CRA）與 outer（choroid）循環的分水嶺。',
+    dx: ['Hard exudates：lipoprotein 沉積在 OPL', 'CRAO 時 OPL 以內缺血、以外保留'],
+    ex: ['OCT：中高反射'],
+    rel: ['henle', 'inl', 'onl'] },
+  henle: { en: 'Henle fiber layer', zh: '亨利纖維層',
+    def: 'fovea 周圍 photoreceptor axons（夾雜 Müller cell 突起）斜向放射走出的部分；組織學上屬 OPL 外側部分，但一般 OCT 上與 ONL 無法區分，IN•OCT 合稱 HFL+ONL（低反射）。',
+    dx: ['Macular star：hard exudates 沿 Henle 放射排列（neuroretinitis、malignant HTN）', 'Petaloid CME：FA 呈花瓣狀滲漏'],
+    ex: ['OCT 反射率隨入射角改變，directional OCT 可與 ONL 分開'],
+    rel: ['opl', 'onl', 'fovea'] },
+  onl: { en: 'Outer nuclear layer', zh: '外核層', lab: 'ONL',
+    def: 'rods 與 cones 的細胞體；foveola 處最厚（只剩 cones）。',
+    dx: ['RP、晚期 AMD 等 outer retinal 萎縮 → ONL 變薄', 'Outer retinal tubulation'],
+    ex: ['OCT：低反射'],
+    rel: ['elm', 'henle', 'ez'] },
+  elm: { en: 'External limiting membrane', zh: '外界膜', lab: 'ELM',
+    def: '不是真正的膜：Müller cells 與 photoreceptor inner segments 之間的 adherens junctions 形成的線。',
+    ex: ['OCT 細高反射線；ELM 與 EZ 的完整度和 macular hole、DME 治療後視力預後相關'],
+    rel: ['onl', 'ez'] },
+  myoid: { en: 'Myoid zone', zh: '肌樣帶',
+    def: 'photoreceptor inner segment 靠近 ELM 的 myoid 部分；OCT 上為 ELM 與 EZ 之間的低反射帶（IN•OCT 命名）。',
+    ex: ['OCT：ELM（細高反射）→ myoid zone（低反射）→ EZ（高反射），三者分得開才能判讀外層各帶'],
+    rel: ['elm', 'ez', 'onl'] },
+  ez: { en: 'Ellipsoid zone (IS)', zh: '橢圓體帶',
+    def: 'OCT 外層第二條高反射帶（舊稱 IS/OS junction）；IN•OCT 認為主要對應 photoreceptor inner segment 富含 mitochondria 的 ellipsoid，但確切來源仍有爭議。',
+    dx: ['EZ disruption：MEWDS、AZOOR、solar maculopathy', 'Hydroxychloroquine toxicity：parafoveal EZ 缺損（flying saucer sign），亞洲人常在更周邊（pericentral）', 'Macular hole 術後 EZ 恢復程度與視力相關'],
+    rel: ['os', 'elm', 'iz'] },
+  os: { en: 'Photoreceptor outer segments', zh: '感光細胞外節', lab: 'Outer segments',
+    def: '堆疊的膜盤含 visual pigments（rhodopsin、cone opsins）；末端每天脫落，由 RPE phagocytosis 清除。',
+    dx: ['RP：rods 先受損 → night blindness、周邊視野縮小', 'Cone／cone-rod dystrophy'],
+    ex: ['ERG'],
+    rel: ['ez', 'iz', 'rpe'] },
+  iz: { en: 'Interdigitation zone', zh: '交錯帶',
+    def: '一般認為對應 cone outer segment 末端被 RPE apical processes 包覆之處；OCT 外層第三條高反射帶。',
+    dx: ['Outer retina 受損時 IZ 通常最先消失（→ EZ → ELM），也最晚恢復；例如 AZOOR；CSC 的 SRF 吸收後，IZ 恢復常晚於 EZ'],
+    rel: ['os', 'rpe', 'srs'] },
+  srs: { en: 'Subretinal space', zh: '視網膜下腔',
+    def: 'neurosensory retina（photoreceptors）與 RPE 之間的潛在空間，是胚胎 optic vesicle 腔的殘餘。',
+    dx: ['SRF：RRD、CSC、nAMD', 'Submacular hemorrhage：需盡快處理', 'Type 2 CNV（subretinal）', 'Subretinal drusenoid deposits（reticular pseudodrusen）位於 RPE 上方'],
+    ex: ['OCT：photoreceptors 與 RPE 之間的低反射空間'],
+    rel: ['rpe', 'os', 'iz'] },
+  rpe: { en: 'Retinal pigment epithelium', zh: '視網膜色素上皮', lab: 'RPE',
+    def: '單層含 melanin 的六角細胞，tight junctions 構成 outer blood–retina barrier；吞噬 outer segments、參與 visual cycle、把水分往 choroid 側打。',
+    dx: ['Drusen（RPE 下方）、geographic atrophy', 'PED（serous、drusenoid、fibrovascular）', 'CHRPE', 'RPE tear（大型 PED 打 anti-VEGF 後）'],
+    ex: ['OCT：RPE–Bruch complex 高反射帶', 'FAF：lipofuscin 增加呈 hyperautofluorescence，萎縮呈 hypo'],
+    rel: ['bruch', 'srs', 'iz', 'choriocapillaris'] },
+  bruch: { en: "Bruch's membrane", zh: '布魯赫膜',
+    def: '五層：RPE basement membrane、inner collagenous、elastic、outer collagenous、choriocapillaris basement membrane。',
+    dx: ['Drusen：位於 RPE basement membrane 與 inner collagenous layer 之間', 'Angioid streaks：elastic layer 鈣化斷裂（PXE、Paget、sickle cell）', 'Lacquer cracks（high myopia）', 'CNV 穿過 Bruch 長入'],
+    rel: ['rpe', 'choriocapillaris'] },
+  choriocapillaris: { en: 'Choriocapillaris', zh: '脈絡膜微血管層',
+    def: '有窗孔（fenestrated）的大口徑微血管，供應 outer retina 與 RPE。',
+    dx: ['APMPPE 等 placoid disease：choriocapillaris 灌流不足', 'OCTA flow voids 隨年齡與 AMD 增加'],
+    ex: ['FA 早期 choroidal flush；OCTA choriocapillaris slab'],
+    rel: ['bruch', 'sattler', 'rpe'] },
+  sattler: { en: "Sattler's layer", zh: '中血管層',
+    def: 'choroid 的中型血管層，介於 choriocapillaris 與 Haller layer 之間。',
+    dx: ['Pachychoroid 時 Sattler layer 與 choriocapillaris 被擴張的大血管擠壓變薄'],
+    rel: ['choriocapillaris', 'haller'] },
+  haller: { en: "Haller's layer", zh: '大血管層',
+    def: 'choroid 外側的大血管層，經 vortex veins 回流。',
+    dx: ['Pachyvessels：Haller 層血管擴張，見於 CSC、pachychoroid neovasculopathy、PCV'],
+    ex: ['EDI／SS-OCT、ICGA'],
+    rel: ['sattler', 'suprachoroid', 'choroid'] },
+  suprachoroid: { en: 'Suprachoroidal space', zh: '脈絡膜上腔', lab: 'Suprachoroid',
+    def: 'choroid 與 sclera 之間的潛在空間，LPCA 與 long ciliary nerves 從中通過。',
+    dx: ['Choroidal effusion／detachment（低眼壓、術後、uveal effusion）', 'Suprachoroidal hemorrhage'],
+    op: ['Suprachoroidal injection（triamcinolone）', 'Choroidal detachment 引流'],
+    rel: ['choroid', 'sclera', 'lpca', 'haller'] },
+  hyaloid: { en: 'Posterior hyaloid', zh: '後玻璃體膜',
+    def: 'vitreous 的後表面，與 ILM 相貼；隨年齡液化後分離即為 PVD。',
+    dx: ['Partial PVD 牽拉 fovea → VMT、macular hole', 'Anomalous PVD → ERM、vitreoschisis'],
+    ex: ['OCT 看 hyaloid 附著範圍（VMA vs VMT）'],
+    op: ['PPV 時要製造 PVD（triamcinolone 輔助顯影）'],
+    rel: ['ilm', 'vitreous', 'fovea'] },
+
+  globe: { en: 'Globe', zh: '眼球',
+    def: '眼球整體位置與大小；從上方看，visual axis 與 medial wall 大致平行。',
+    n: [['Axial length', '約 23.5 mm（多數 22–25 mm）', 'BCSC 3'], ['Hertel 兩眼差', '> 2 mm 有意義', 'BCSC 7']],
+    dx: ['Proptosis：TED（成人單側或雙側最常見原因）、orbital tumor、cellulitis', 'Enophthalmos：blowout fracture、silent sinus syndrome、轉移性 scirrhous breast cancer'],
+    ex: ['Hertel exophthalmometry、CT／MRI orbit'],
+    op: ['Axial length 決定 IOL 公式選擇（短眼、長眼誤差較大）；長眼 RD 風險較高'],
+    rel: ['sclera', 'cornea', 'optic_nerve', 'lateral_wall'] },
+  lateral_wall: { en: 'Lateral orbital wall', zh: '眶外壁', lab: 'Lateral wall',
+    def: '由 zygomatic bone 與 sphenoid greater wing 構成，四壁中最厚；與 medial wall 約夾 45°。lateral rim 位置較後縮，提供較寬的 temporal 視野與手術入路。',
+    n: [['Orbit 容積', '約 30 mL', 'BCSC 7'], ['Orbit 深度', '約 40–45 mm', 'BCSC 7']],
+    dx: ['Retrobulbar hemorrhage（orbital compartment syndrome）→ 緊急 lateral canthotomy／cantholysis', 'Zygomaticomaxillary complex fracture'],
+    op: ['Lateral orbitotomy 入路', 'Retrobulbar／peribulbar block 多由 inferotemporal 進針'],
+    rel: ['globe', 'lr', 'medial_wall'] },
+  medial_wall: { en: 'Medial orbital wall', zh: '眶內壁', lab: 'Medial wall',
+    def: '以 ethmoid 的 lamina papyracea 為主，薄如紙，緊鄰 ethmoid sinus；與 sagittal plane 大致平行。',
+    dx: ['Orbital cellulitis 最常由 ethmoid sinusitis 經此擴散', 'Medial wall fracture（可夾住 MR）'],
+    op: ['Anterior／posterior ethmoidal foramina 位於 frontoethmoidal suture，大約是 cribriform plate 的高度，是內側手術的上界地標', 'Endoscopic orbital decompression（TED）由此進入'],
+    rel: ['mr', 'so', 'trochlea', 'globe'] },
+  ir: { en: 'Inferior rectus', zh: '下直肌',
+    def: '起於 annulus of Zinn，止於 limbus 後約 6.5 mm；CN III inferior division 支配。主要作用 depression，另有 extorsion、adduction（沿 23° 的 orbital axis 牽拉）。',
+    n: [['Insertion 距 limbus（Spiral of Tillaux）', '約 6.5 mm', 'BCSC 6']],
+    dx: ['TED 最常侵犯 → restrictive hypotropia，forced duction 陽性', 'Orbital floor fracture：IR 或周圍組織卡住 → 垂直複視；兒童 white-eyed blowout 可伴 oculocardiac reflex，需緊急處理'],
+    op: ['IR recession 經 capsulopalpebral fascia 拉動下眼瞼 → lower lid retraction'],
+    rel: ['sr', 'io', 'cn3i', 'annulus'] },
+  sr: { en: 'Superior rectus', zh: '上直肌',
+    def: '起於 annulus of Zinn，止於 limbus 後約 7.7 mm；CN III superior division 支配。主要作用 elevation，另有 intorsion、adduction；眼球外展 23° 時幾乎是純 elevator。',
+    n: [['Insertion 距 limbus（Spiral of Tillaux）', '約 7.7 mm', 'BCSC 6'], ['與 visual axis 夾角', '約 23°', 'BCSC 6']],
+    dx: ['與 levator 同屬 CN III superior division、胚胎同源：先天 ptosis 可合併 SR 無力；monocular elevation deficiency（病因可為 SR 無力、IR restriction 或 supranuclear）常合併 true ptosis 或 pseudoptosis', '測 SR 功能：眼球外展時往上看'],
+    op: ['SR 手術會影響上眼瞼位置（與 levator 筋膜相連）'],
+    rel: ['levator', 'ir', 'cn3s', 'so'] },
+  so: { en: 'Superior oblique', zh: '上斜肌',
+    def: '起於 sphenoid body（optic canal 上內側），沿 superomedial 壁往前穿過 trochlea 後反折，從 SR 下方止於眼球 posterior superotemporal 象限；CN IV 支配。主要作用 intorsion，另有 depression、abduction。',
+    n: [['Reflected tendon 與 visual axis 夾角', '約 51°', 'BCSC 6']],
+    dx: ['CN IV palsy：患側 hypertropia，往對側看與頭往患側傾時加重（Parks–Bielschowsky 3-step），病人頭常傾向健側', 'Brown syndrome：SO tendon／trochlea 受限 → adduction 時無法上視', 'Retrobulbar block 後 SO 常仍能動（CN IV 在 annulus 外）'],
+    op: ['SO tuck、Harada–Ito（改善 extorsion）'],
+    rel: ['trochlea', 'cn4', 'sr', 'io'] },
+  io: { en: 'Inferior oblique', zh: '下斜肌',
+    def: '唯一不起於眶尖的 EOM：起於前內側 orbital floor（maxilla，nasolacrimal canal 外側），往後外走，止於 macula 附近的 inferotemporal 後方；CN III inferior division 支配。主要作用 extorsion，另有 elevation、abduction。',
+    dx: ['IO overaction → V-pattern、adduction 時上飄', 'CN III inferior division 往 IO 的分支帶 parasympathetic fibers 到 ciliary ganglion'],
+    op: ['IO 手術鄰近 macula 與 inferotemporal vortex vein，需小心'],
+    rel: ['ir', 'so', 'cn3i'] },
+  trochlea: { en: 'Trochlea', zh: '滑車',
+    def: '位於 frontal bone superomedial orbital rim 內側 trochlear fossa 的軟骨滑車，SO tendon 在此反折。',
+    dx: ['Trochleitis：superomedial 壓痛、往上內看時疼痛', 'Brown syndrome', '額竇或內側眶手術可能傷及 trochlea，出現後天 Brown 樣表現'],
+    rel: ['so', 'medial_wall'] },
+  annulus: { en: 'Annulus of Zinn', zh: '總腱環',
+    def: '眶尖的環狀肌腱，四條 rectus 的共同起點；環內包住 optic canal 與 SOF 內側部（oculomotor foramen）。',
+    n: [['環內通過', 'CN II、ophthalmic a.、CN III 上下支、nasociliary n.、CN VI', 'BCSC 7'], ['環外（SOF）', 'lacrimal n.、frontal n.、CN IV、superior ophthalmic v.', 'BCSC 7']],
+    dx: ['Optic neuritis 眼動痛：SR、MR 起點與 optic nerve sheath 相連', '眶尖病灶同時影響多條神經 → orbital apex syndrome'],
+    ex: ['記法 "Live Frankly To See Absolutely No Insult"：環外 LFT（Lacrimal、Frontal、Trochlear）、環內 SANI（Superior division CN III、Abducens、Nasociliary、Inferior division CN III）；SOV 不在口訣內，走環外'],
+    rel: ['sof', 'optic_canal', 'sr', 'lr', 'mr', 'ir'] },
+  levator: { en: 'Levator palpebrae superioris', zh: '提上眼瞼肌', lab: 'Levator (LPS)',
+    def: '起於 sphenoid lesser wing（annulus 上方），向前在 Whitnall ligament 附近轉為 aponeurosis；CN III superior division 支配。',
+    n: [['Levator function 分級', 'good ≥ 8／fair 5–7／poor ≤ 4 mm', 'BCSC 7'], ['MRD1 正常', '約 4–5 mm（部分來源列 3–4 mm）', 'BCSC 7']],
+    dx: ['Complete CN III palsy → 完全 ptosis（partial palsy 可只有部分 ptosis）', 'Congenital ptosis：levator 發育不良（肌肉被纖維脂肪取代），LF 差、往下看時 lid lag'],
+    op: ['LF 決定術式：poor → frontalis sling；fair–good → levator advancement／resection'],
+    rel: ['levator_apo', 'whitnall', 'muller', 'sr'] },
+
+  sof: { en: 'Superior orbital fissure', zh: '眶上裂', lab: 'SOF',
+    def: 'sphenoid greater wing 與 lesser wing 之間的裂隙。外側（annulus 外）：lacrimal、frontal n.、CN IV、superior ophthalmic v.；內側（annulus 內）：CN III 上下支、nasociliary n.、CN VI。',
+    dx: ['SOF syndrome：CN III、IV、VI 與 V1 受影響 → ophthalmoplegia、ptosis、前額麻木，視力不受影響', 'Carotid-cavernous fistula 經 SOV 逆流 → 眼瞼腫、結膜螺旋狀血管、proptosis'],
+    rel: ['annulus', 'syn_sof', 'sov', 'cn3s', 'cn4', 'cn6'] },
+  iof: { en: 'Inferior orbital fissure', zh: '眶下裂', lab: 'IOF',
+    def: 'greater wing 與 maxilla／palatine 之間，連通 pterygopalatine 與 infratemporal fossa；V2（infraorbital n.）、zygomatic n.、inferior ophthalmic vein 分支經過。',
+    dx: ['Orbital floor fracture 傷到 infraorbital n.：同側臉頰、上唇、上排牙齒麻木', '感染或腫瘤可經 IOF 在眼眶與 pterygopalatine fossa 之間擴散'],
+    rel: ['sof', 'ir'] },
+  optic_canal: { en: 'Optic canal', zh: '視神經管',
+    def: '位於 sphenoid lesser wing，內有 optic nerve 與 ophthalmic artery（動脈位於神經下方，多偏 inferolateral，出 canal 後位於神經外側）。',
+    n: [['長度', '約 8–10 mm', 'BCSC 5']],
+    dx: ['Traumatic optic neuropathy：canal 段神經被 dura 固定在骨壁上，減速傷時最易受損', 'Canal 緊鄰 sphenoid／posterior ethmoid sinus，鼻竇手術可能傷及'],
+    ex: ['CT 薄切看 canal fracture'],
+    rel: ['optic_nerve', 'ophth_a', 'annulus'] },
+  ophth_a: { en: 'Ophthalmic artery', zh: '眼動脈', lab: 'Ophthalmic a.',
+    def: 'ICA 出 cavernous sinus 後的第一個主要分支（多為 intradural 起源），經 optic canal 進入眼眶；分出 CRA、posterior ciliary arteries（供應 choroid 與 ONH）、lacrimal、muscular 等分支。',
+    dx: ['GCA：posterior ciliary a. 阻塞 → AAION，或 CRAO', 'Ophthalmic artery occlusion：choroid 與 retina 同時缺血，cherry-red spot 常不明顯'],
+    rel: ['cra', 'optic_canal', 'optic_nerve', 'lpca'] },
+  cn3s: { en: 'CN III superior division', zh: '動眼神經上支', lab: 'CN III sup. div.',
+    def: '經 SOF、annulus 內進入眼眶，支配 SR 與 levator。',
+    dx: ['Superior division palsy：ptosis 加上視受限；病灶多在 cavernous sinus 前段或眶內，但較近端（如 fascicle）病灶也可能造成 divisional palsy'],
+    rel: ['sr', 'levator', 'cn3i', 'sof'] },
+  cn3i: { en: 'CN III inferior division', zh: '動眼神經下支', lab: 'CN III inf. div.',
+    def: '經 SOF、annulus 內進入眼眶，支配 MR、IR、IO；往 IO 的分支帶 parasympathetic 纖維到 ciliary ganglion（再到 sphincter 與 ciliary muscle）。',
+    dx: ['CN III palsy 瞳孔受累：pupillary fibers 位於神經表層，compressive lesion（PComm aneurysm）易波及；microvascular（DM、HTN）常 pupil-sparing'],
+    rel: ['mr', 'ir', 'io', 'sphincter', 'ciliary_muscle'] },
+  cn4: { en: 'CN IV (trochlear)', zh: '滑車神經', lab: 'CN IV',
+    def: '唯一從 brainstem 背側出、且在中腦交叉的腦神經，顱內路徑最長；經 SOF 但在 annulus 外，支配 SO。',
+    dx: ['後天常見原因為頭部外傷（雙側病例尤其常見）與 microvascular（HTN、DM），population-based 研究兩者比例相近；先天性 CN IV palsy 常有很大的 vertical fusional amplitude，舊照片可見頭傾', 'Retrobulbar block 後 SO 常保留功能（神經在肌錐外）'],
+    rel: ['so', 'sof', 'frontal_n'] },
+  cn6: { en: 'CN VI (abducens)', zh: '外展神經', lab: 'CN VI',
+    def: '經 SOF、annulus 內進入眼眶，支配 LR；顱內經 Dorello canal、petrous apex，在 cavernous sinus 內緊鄰 ICA。',
+    dx: ['ICP 上升時的 false localizing sign', 'Gradenigo syndrome（petrous apicitis：CN VI palsy、耳漏、臉部疼痛）', 'Cavernous sinus 病灶時 CN VI 最常受影響（游離於 sinus 內、緊鄰 ICA）'],
+    rel: ['lr', 'sof', 'annulus'] },
+  nasociliary: { en: 'Nasociliary nerve (V1)', zh: '鼻睫神經', lab: 'Nasociliary n.',
+    def: 'V1 分支，經 annulus 內進入眼眶；分出 long ciliary nerves（角膜感覺）、通過 ciliary ganglion 的 sensory root、infratrochlear 與 anterior ethmoidal n.（到鼻尖）。',
+    dx: ['Hutchinson sign：HZO 鼻尖出現水泡 → 眼部侵犯風險高', '角膜知覺下降 → neurotrophic keratopathy（HSV、HZO、糖尿病、CN V 手術後）'],
+    rel: ['lpca', 'frontal_n', 'lacrimal_n', 'sof'] },
+  frontal_n: { en: 'Frontal nerve (V1)', zh: '額神經', lab: 'Frontal n.',
+    def: 'V1 最大分支，經 SOF（annulus 外）在 levator 上方往前，分為 supraorbital 與 supratrochlear n.，負責前額與上眼瞼感覺。',
+    dx: ['HZO 皮疹分布在前額、上眼瞼', '眉弓手術或外傷造成前額麻木'],
+    rel: ['lacrimal_n', 'nasociliary', 'cn4', 'sof'] },
+  lacrimal_n: { en: 'Lacrimal nerve (V1)', zh: '淚腺神經', lab: 'Lacrimal n.',
+    def: 'V1 最小分支，經 SOF（annulus 外）沿 lateral 壁到淚腺與上眼瞼外側；淚腺的 parasympathetic 分泌纖維由 zygomatic n.（V2）經交通支加入。',
+    dx: ['Lacrimal gland 惡性腫瘤沿神經侵犯 → 疼痛、麻木（adenoid cystic carcinoma 常有 perineural invasion）'],
+    rel: ['lacrimal_gland', 'frontal_n', 'sof'] },
+  sov: { en: 'Superior ophthalmic vein', zh: '上眼靜脈', lab: 'Sup. ophthalmic v.',
+    def: '眼眶主要回流靜脈，經 SOF（annulus 外）流入 cavernous sinus；傳統說法為「無瓣膜」，但解剖研究發現 SOV 及其主要分支具有瓣膜；病理狀況（如 CCF）時可逆流。',
+    dx: ['Carotid-cavernous fistula：影像見 SOV 擴張、corkscrew 結膜血管、EVP 上升 → IOP 升高', 'Cavernous sinus thrombosis：臉部中央感染可經此逆行擴散'],
+    rel: ['sof', 'cra', 'episclera'] },
+
+  skin: { en: 'Eyelid skin', zh: '眼瞼皮膚', lab: 'Skin',
+    def: '全身最薄的皮膚（< 1 mm），下方幾乎沒有皮下脂肪，水腫與瘀青容易擴散。',
+    dx: ['Dermatochalasis', 'BCC 是最常見的眼瞼惡性腫瘤（好發下眼瞼、內眥），其次為 SCC 與 sebaceous carcinoma（台灣醫院系列中 sebaceous carcinoma 比例常高於 SCC）', 'Contact dermatitis（點眼藥常見）'],
+    rel: ['orbicularis', 'crease'] },
+  orbicularis: { en: 'Orbicularis oculi', zh: '眼輪匝肌',
+    def: 'CN VII 支配；分 pretarsal（眨眼、淚液 pump）、preseptal、orbital（用力閉眼）三部分；lid margin 的 Riolan muscle 形成 gray line。',
+    dx: ['Facial nerve palsy → lagophthalmos、exposure keratopathy、paralytic ectropion、溢淚（pump 失效）', 'Benign essential blepharospasm → botulinum toxin'],
+    op: ['Blepharoplasty 時保留 pretarsal orbicularis，維持閉眼與 pump 功能'],
+    rel: ['skin', 'septum', 'gray_line'] },
+  septum: { en: 'Orbital septum', zh: '眶隔',
+    def: '從 orbital rim 的 arcus marginalis 往下延伸，在上眼瞼與 levator aponeurosis 融合，是 preseptal 與 orbital 腔室的屏障。單眼皮或低摺痕者（東亞人較常見）融合點較低，preaponeurotic fat 可下垂到 tarsus 前方。',
+    dx: ['Preseptal cellulitis（septum 前）vs orbital cellulitis（septum 後：proptosis、眼動痛、眼球運動受限、視力下降或 RAPD）', '單眼皮、上眼瞼較飽滿與 septum 低位融合有關（東亞人較常見，但並非全部）'],
+    op: ['Ptosis 或 blepharoplasty 手術打開 septum 後先看到 preaponeurotic fat，fat 後方就是 aponeurosis'],
+    rel: ['fat', 'levator_apo', 'orbicularis'] },
+  fat: { en: 'Preaponeurotic fat', zh: '腱膜前脂肪',
+    def: '位於 septum 後方、levator aponeurosis 前方的脂肪墊；上眼瞼分 central 與 medial（nasal）兩團，外側是 lacrimal gland（不是脂肪）。',
+    dx: ['老化 septum 鬆弛 → fat 前突', '外側上眼瞼腫塊要想到 lacrimal gland prolapse，不要當脂肪切除'],
+    op: ['手術中的重要地標：找到 fat，就找到它後方的 aponeurosis'],
+    rel: ['septum', 'levator_apo', 'lacrimal_gland'] },
+  levator_apo: { en: 'Levator aponeurosis', zh: '提肌腱膜',
+    def: 'levator 在 Whitnall ligament 附近轉成腱膜，止於 tarsus 前表面下 1/3，並有纖維穿過 orbicularis 附著到皮膚、形成眼瞼摺痕。',
+    dx: ['Aponeurotic（involutional）ptosis：腱膜鬆脫，LF 好、crease 變高或不清楚；常見於老化、長期 contact lens、眼內手術後'],
+    op: ['Levator advancement（external approach）', '術中調整高度與 contour，注意 lagophthalmos'],
+    rel: ['levator', 'muller', 'tarsus', 'crease', 'septum'] },
+  whitnall: { en: "Whitnall's ligament", zh: 'Whitnall 韌帶',
+    def: '上方橫向韌帶（superior transverse ligament），位於 levator 由肌肉轉為腱膜處，作為支點，把前後方向的拉力轉為向上提瞼。',
+    op: ['Whitnall sling：LF 不佳的 ptosis 選項之一', '手術時避免破壞，以免影響上眼瞼輪廓'],
+    rel: ['levator', 'levator_apo'] },
+  muller: { en: "Müller's muscle", zh: '穆勒氏肌',
+    def: 'levator 下方的平滑肌（superior tarsal muscle），sympathetic 支配，止於 tarsus 上緣，約提供 2 mm 的眼瞼高度。',
+    dx: ['Horner syndrome：1–2 mm ptosis，下眼瞼也輕微上升（reverse ptosis）', 'TED lid retraction：Müller 過度作用加上 levator 纖維化'],
+    ex: ['Phenylephrine test：點後眼瞼上升良好 → 適合 MMCR'],
+    op: ['Müller muscle–conjunctival resection（MMCR，posterior approach）'],
+    rel: ['levator', 'levator_apo', 'tarsus', 'dilator'] },
+  tarsus: { en: 'Tarsal plate', zh: '瞼板', lab: 'Tarsus',
+    def: '緻密結締組織板，提供眼瞼結構支撐，內含 meibomian glands。',
+    n: [['高度', '上眼瞼約 10–12 mm、下眼瞼約 4 mm', 'BCSC 7']],
+    dx: ['Entropion／ectropion：tarsus 變形或支撐失效', 'Floppy eyelid syndrome（與 OSA 相關）：tarsus 鬆軟易外翻'],
+    op: ['Lateral tarsal strip', 'Lid reconstruction 需替代 posterior lamella（tarsoconjunctival graft、Hughes flap）'],
+    rel: ['meibomian', 'levator_apo', 'muller', 'palp_conj', 'gray_line'] },
+  meibomian: { en: 'Meibomian glands', zh: '瞼板腺',
+    def: '埋在 tarsus 內的 sebaceous glands，開口於 gray line 後方，分泌淚膜的 lipid layer。',
+    n: [['數目', '上眼瞼約 25–40 條、下眼瞼約 20–30 條（個體差異大）', 'BCSC 7']],
+    dx: ['MGD → evaporative dry eye', 'Chalazion（lipogranuloma）、internal hordeolum', 'Sebaceous gland carcinoma：老年人同處反覆 chalazion、單側頑固性 blepharoconjunctivitis → 要切片', 'Distichiasis：多一排睫毛從 meibomian 開口長出'],
+    ex: ['Meibography、壓擠看分泌物品質'],
+    rel: ['tear_lipid', 'tarsus', 'gray_line'] },
+  gray_line: { en: 'Gray line', zh: '灰線',
+    def: 'lid margin 上的灰色線，對應 orbicularis 的 Riolan muscle；把眼瞼分成 anterior lamella（skin、orbicularis）與 posterior lamella（tarsus、conjunctiva）。',
+    dx: ['Lid margin laceration：縫合時先對齊 gray line、lash line、meibomian orifices，避免 notch'],
+    op: ['Lid splitting（例如 trichiasis 手術）沿 gray line 進行'],
+    rel: ['orbicularis', 'meibomian', 'lashes', 'tarsus'] },
+  lashes: { en: 'Cilia & glands of Zeis / Moll', zh: '睫毛與 Zeis／Moll 腺', lab: 'Lashes / Zeis & Moll',
+    def: '睫毛位於 anterior lamella；毛囊旁有 Zeis（sebaceous）與 Moll（apocrine sweat）腺。',
+    n: [['睫毛數', '上約 100–150 根、下約 50–75 根', 'BCSC 7']],
+    dx: ['External hordeolum（stye）：Zeis／Moll 感染', 'Trichiasis（睫毛倒向角膜）、distichiasis', 'Madarosis：睫毛局部脫落要想到惡性腫瘤（BCC、sebaceous carcinoma）'],
+    op: ['Epilation、electrolysis、cryotherapy、lid splitting'],
+    rel: ['gray_line', 'orbicularis', 'skin'] },
+  palp_conj: { en: 'Palpebral conjunctiva & fornix', zh: '瞼結膜與穹窿', lab: 'Palpebral conj. / fornix',
+    def: '襯在眼瞼後面、與 tarsus 緊密相連，在 superior fornix 反折成 bulbar conjunctiva。',
+    dx: ['Papillae：GPC（contact lens）、VKC cobblestone', 'Follicles：viral、chlamydia（trachoma：Arlt line、Herbert pits）', '異物常藏在上眼瞼 tarsal conjunctiva', 'Symblepharon、fornix 變淺：SJS、OCP、化學傷'],
+    ex: ['翻開上眼瞼（單翻，必要時雙翻看 fornix）'],
+    rel: ['conj', 'tarsus', 'acc_lac', 'muller'] },
+  acc_lac: { en: 'Accessory lacrimal glands', zh: '副淚腺', lab: 'Krause / Wolfring glands',
+    def: 'Krause（位於 fornix）與 Wolfring（位於 tarsus 遠離瞼緣的邊緣）腺；傳統認為負責基礎淚液分泌，但 basal／reflex 二分法有爭議，主淚腺也參與基礎分泌。',
+    dx: ['Fornix 瘢痕化疾病（SJS、OCP）破壞副淚腺 → 嚴重乾眼'],
+    rel: ['tear_aqueous', 'palp_conj', 'lacrimal_gland'] },
+  crease: { en: 'Upper eyelid crease', zh: '上眼瞼摺痕', lab: 'Lid crease',
+    def: 'levator aponeurosis 纖維穿過 orbicularis 附著到皮膚形成；單眼皮或低摺痕者（東亞人較常見）septum 在 tarsus 上緣以下才與 aponeurosis 融合、脂肪下垂，crease 較低或沒有。',
+    dx: ['Aponeurotic ptosis：crease 變高或不明顯', '雙側 crease 明顯不對稱可能提示一側腱膜問題'],
+    op: ['Ptosis 或 blepharoplasty 的切口通常沿 crease 設計'],
+    rel: ['levator_apo', 'skin', 'septum'] },
+
+  lacrimal_gland: { en: 'Lacrimal gland', zh: '淚腺',
+    def: '位於 superotemporal 的 lacrimal fossa，被 levator aponeurosis 的 lateral horn 分成 orbital lobe 與 palpebral lobe；所有導管都經過 palpebral lobe，開口於 superotemporal fornix。',
+    dx: ['Dacryoadenitis：上眼瞼外側腫痛、S 形眼瞼', '淚腺腫瘤：pleomorphic adenoma（臨床影像典型時直接完整 en bloc 切除，不先做 incisional biopsy；不完整切除會復發、惡性轉化）、adenoid cystic carcinoma（疼痛、perineural invasion）、lymphoma', 'Sarcoidosis、IgG4-related disease、Sjögren', '分泌神經路徑：CN VII（greater petrosal n.）→ pterygopalatine ganglion → zygomatic n. → lacrimal n.'],
+    op: ['切除 palpebral lobe 等於切斷整個淚腺的引流 → 嚴重乾眼'],
+    rel: ['acc_lac', 'tear_aqueous', 'lacrimal_n', 'fat'] },
+  puncta: { en: 'Puncta', zh: '淚點',
+    def: '上、下眼瞼內側 lid margin 上的小孔，正常略朝後，貼著 tear lake。',
+    n: [['直徑', '約 0.2–0.3 mm', 'BCSC 7']],
+    dx: ['Punctal stenosis、punctal eversion（medial ectropion）→ 溢淚', 'Pouting punctum：canaliculitis（Actinomyces）'],
+    op: ['Punctal plugs 治療乾眼', 'Punctoplasty（snip procedure）'],
+    rel: ['canaliculi', 'common_can'] },
+  canaliculi: { en: 'Canaliculi', zh: '淚小管',
+    def: '從 punctum 先垂直約 2 mm，再水平約 8 mm 往內走到 common canaliculus（或直接進淚囊）。',
+    n: [['垂直段／水平段', '約 2 mm／約 8 mm', 'BCSC 7']],
+    dx: ['Canaliculitis：Actinomyces，壓擠出 sulfur granules', 'Canalicular laceration：內眥外傷、狗咬傷，需 silicone stent 修補'],
+    ex: ['Probing、irrigation：水從另一個淚點逆流出來 → 阻塞在 common canaliculus 或更遠端'],
+    rel: ['puncta', 'common_can', 'sac'] },
+  common_can: { en: 'Common canaliculus', zh: '總淚小管',
+    def: '多數人上下 canaliculi 先匯合成 common canaliculus 再進淚囊；入口處的 valve of Rosenmüller 防止淚囊內容物逆流。',
+    n: [['有 common canaliculus 的比例', '> 90%（DCG 研究約 94%）', 'BCSC 7']],
+    dx: ['Rosenmüller valve 有效加上遠端 NLD 阻塞 → 淚囊脹大成 mucocele；新生兒為 dacryocystocele'],
+    rel: ['canaliculi', 'sac'] },
+  sac: { en: 'Lacrimal sac', zh: '淚囊',
+    def: '位於 lacrimal fossa（anterior 與 posterior lacrimal crest 之間），上端 fundus 高於 medial canthal tendon。',
+    n: [['長度', '約 12–15 mm', 'BCSC 7']],
+    dx: ['Acute dacryocystitis：MCT 下方紅腫', '腫塊位於 MCT 上方 → 要懷疑腫瘤，不是單純 dacryocystitis', 'Chronic dacryocystitis：壓迫淚囊有膿逆流'],
+    op: ['DCR：在淚囊與 middle meatus 之間造口（external 或 endoscopic）'],
+    rel: ['common_can', 'nld', 'mct'] },
+  nld: { en: 'Nasolacrimal duct', zh: '鼻淚管',
+    def: '從淚囊下端往下、稍向後外走，經骨管後開口於 inferior meatus（inferior turbinate 下方）。',
+    n: [['長度', '約 12–18 mm', 'BCSC 7']],
+    dx: ['PANDO（primary acquired NLD obstruction）：中老年女性多', 'CNLDO：Hasner valve 未打通'],
+    ex: ['Dye disappearance test、irrigation、DCG／CT'],
+    op: ['DCR 繞過 NLD 阻塞（造口在 middle meatus，不是 NLD 開口的 inferior meatus）'],
+    rel: ['sac', 'hasner'] },
+  hasner: { en: 'Valve of Hasner', zh: 'Hasner 瓣',
+    def: 'NLD 遠端開口於 inferior meatus 處的黏膜瓣。',
+    dx: ['CNLDO：新生兒常見，大多數在一歲內自行打通', 'Dacryocystocele：新生兒內眥下方藍色腫塊，可合併鼻內囊腫造成呼吸問題'],
+    op: ['Crigler massage', '約一歲仍未改善 → 先做 probing；失敗再考慮 balloon dacryoplasty 或 silicone intubation'],
+    rel: ['nld', 'sac'] },
+  mct: { en: 'Medial canthal tendon', zh: '內眥韌帶',
+    def: '固定內眥的韌帶，前肢附著於 anterior lacrimal crest、後肢附著於 posterior lacrimal crest，包住淚囊上部。',
+    dx: ['淚囊腫塊相對 MCT 的位置可區分 dacryocystitis（下方）與腫瘤（上方）', 'NOE（naso-orbito-ethmoid）骨折 → telecanthus'],
+    rel: ['sac', 'orbicularis'] },
+
+  syn_sof: { en: 'Superior orbital fissure syndrome', zh: '眶上裂症候群', pseudo: true, view: 'apex',
+    hl: ['cn3s', 'cn3i', 'cn4', 'cn6', 'frontal_n', 'lacrimal_n', 'nasociliary', 'sov', 'sof'],
+    def: 'SOF 病灶影響 CN III、IV、VI 與 V1：完全 ophthalmoplegia、ptosis、瞳孔散大固定、前額與角膜知覺下降；視力（CN II）不受影響。',
+    dx: ['原因：外傷骨折、腫瘤、發炎（Tolosa–Hunt）、感染'],
+    rel: ['sof', 'cn3s', 'cn4', 'cn6', 'nasociliary'] },
+  syn_apex: { en: 'Orbital apex syndrome', zh: '眶尖症候群', pseudo: true, view: 'apex',
+    hl: ['cn3s', 'cn3i', 'cn4', 'cn6', 'frontal_n', 'lacrimal_n', 'nasociliary', 'sov', 'sof', 'optic_nerve', 'optic_canal', 'ophth_a'],
+    def: 'SOF syndrome 再加上 CN II：視力下降、RAPD。',
+    dx: ['原因：invasive fungal sinusitis（糖尿病或免疫低下，mucormycosis 為急症）、腫瘤、IgG4-related disease、外傷'],
+    rel: ['optic_canal', 'sof', 'annulus'] },
+  syn_cs: { en: 'Cavernous sinus syndrome', zh: '海綿竇症候群', pseudo: true, view: 'apex',
+    hl: ['cn3s', 'cn3i', 'cn4', 'cn6', 'frontal_n', 'lacrimal_n', 'nasociliary', 'sov'],
+    def: 'cavernous sinus 內有 CN III、IV、V1、V2、VI 與沿 ICA 的交感纖維：除 SOF 的表現外，可合併 V2 感覺異常與 Horner，也可能雙側；CN II 不在 sinus 內。',
+    dx: ['原因：carotid-cavernous fistula、腫瘤（meningioma、pituitary）、cavernous sinus thrombosis、Tolosa–Hunt'],
+    rel: ['cn6', 'sov', 'sof'] }
+};
+
+/* ---------- clinical pathways ---------- */
+const PATHS = {
+  phaco: { name: 'Phaco 步驟', steps: [
+    { t: '主切口與 side port', ov: 1, hl: ['cornea', 'limbus'], pts: ['Temporal clear corneal incision 常見 2.2–2.8 mm，side port 約 1 mm', '隧道太短或太後（靠近 iris root）→ wound leak、iris prolapse', '切口越靠中央術後散光越大；刀口角度不對或器械鈍 → Descemet detachment'] },
+    { t: 'OVD 填充前房', ov: 0, hl: ['ac', 'cornea'], pts: ['Dispersive OVD 貼覆 endothelium（soft-shell），cohesive OVD 撐開空間', 'ECD 偏低、brunescent nucleus、淺前房時更要做好 endothelium 保護'] },
+    { t: 'CCC 撕囊', ov: 2, hl: ['capsule'], pts: ['在 anterior capsule 做連續環形撕囊，約 5–5.5 mm，360° 覆蓋 IOL optic 邊緣', '撕囊往外跑（run-out）可延伸到 equator 甚至 posterior capsule；後方壓力高、前房淺時更容易', '白色成熟白內障用 trypan blue 染色；PXF、外傷要注意 zonule'] },
+    { t: 'Hydrodissection', ov: 3, hl: ['capsule', 'lens'], pts: ['BSS 注入 capsule 與 cortex 之間，fluid wave 越過 posterior capsule 後輕壓，讓 nucleus 可轉動', 'Posterior polar cataract：一般不做 hydrodissection，改做 hydrodelineation，並盡量不轉核（後囊可能已變薄或有缺損）', '注水過多困在囊袋內 → capsular block、後囊破裂'] },
+    { t: 'Nucleus 乳化', ov: 0, hl: ['nucleus', 'iris', 'zonules'], pts: ['在囊袋內或 iris plane 操作，器械保持在 pupil 中央的安全區', 'IFIS（α1 blocker 如 tamsulosin）：iris billowing、脫出、進行性縮瞳 → 術前問藥史；intracameral phenylephrine／epinephrine、Healon5 類 OVD、降低 flow／vacuum 與瓶高，必要時 iris hooks／Malyugin ring', 'Zonule 弱（PXF、外傷）→ CTR、減少轉核施力'] },
+    { t: 'I/A 清除 cortex', ov: 0, hl: ['lens', 'capsule', 'zonules'], pts: ['Subincisional cortex 最難，必要時改 bimanual I/A', '避免吸住 posterior capsule；zonular dialysis 處沿切線方向剝 cortex', 'Cortex 殘留 → 術後發炎、PCO'] },
+    { t: 'IOL 放入囊袋', ov: 5, hl: ['capsule', 'sulcus'], pts: ['Haptics 放在 capsular bag 的 equator', 'PCR 時改三片式 IOL 放 ciliary sulcus：haptics 與 optic 都在 sulcus 時，依原度數減約 0.5–2 D（度數越高減越多）；若 optic capture 進 CCC，維持 in-the-bag power', 'One-piece acrylic IOL 不要放 sulcus（UGH syndrome 風險）'] }
+  ] },
+  ivi: { name: 'IVI 注射', steps: [
+    { t: '定位', ov: 0, hl: ['limbus', 'conj'], pts: ['成人用 caliper 從 limbus 量：phakic 約 3.5–4.0 mm、pseudophakic／aphakic 約 3.0–3.5 mm（嬰幼兒、ROP 距離短很多，不適用）', '臨床多選 inferotemporal 或 superotemporal 象限；本圖是水平切面，只示意深度與層次', 'Povidone-iodine 消毒結膜囊，開瞼器避免睫毛污染'] },
+    { t: '穿刺層次', ov: 1, hl: ['conj', 'sclera', 'pars_plana'], pts: ['針依序穿過 conjunctiva → Tenon → sclera → pars plana', '太前：碰到 lens 或 ciliary processes 出血；太後：越過 ora serrata 傷到 retina', '可先錯開結膜再進針，減少藥物逆流'] },
+    { t: '針尖方向', ov: 2, hl: ['vitreous', 'lens'], pts: ['針尖朝向眼球中心（mid-vitreous），phakic 眼避免朝前方 lens 方向', '緩慢推藥，拔針時以棉棒輕壓'] },
+    { t: '注射後確認', ov: 2, hl: ['cra', 'disc', 'retina'], pts: ['確認視神經灌流：視力回到 HM／CF（依術前視力），或以 indirect ophthalmoscopy 看到 disc／CRA 灌流', 'IOP 暫時升高常見；持續偏高需處理', '衛教 endophthalmitis 警訊：疼痛、視力下降、紅眼加重、hypopyon'] }
+  ] }
+};
+"use strict";
+/* ---------- geometry helpers ---------- */
+const DEG = Math.PI / 180;
+const fx = n => Math.round(n * 10) / 10;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+function arc(r, a0, a1, cx = 0, cy = 0, step = 1.2) {
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) / step)), o = [];
+  for (let i = 0; i <= n; i++) { const a = (a0 + (a1 - a0) * i / n) * DEG; o.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
+  return o;
+}
+function arcF(rf, a0, a1, step = 0.8) {
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) / step)), o = [];
+  for (let i = 0; i <= n; i++) { const ad = a0 + (a1 - a0) * i / n, a = ad * DEG, r = rf(ad); o.push([r * Math.cos(a), r * Math.sin(a)]); }
+  return o;
+}
+const pt = (r, a) => [r * Math.cos(a * DEG), r * Math.sin(a * DEG)];
+function bez(p0, p1, p2, p3, n = 20) {
+  const o = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, u = 1 - t;
+    o.push([u*u*u*p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t*t*t*p3[0], u*u*u*p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t*t*t*p3[1]]);
+  }
+  return o;
+}
+function cr(pts, seg = 8) {
+  const o = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || pts[i + 1];
+    for (let j = 0; j < seg; j++) {
+      const t = j / seg, t2 = t * t, t3 = t2 * t;
+      const f = k => 0.5 * ((2 * p1[k]) + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t3);
+      o.push([f(0), f(1)]);
+    }
+  }
+  o.push(pts[pts.length - 1]);
+  return o;
+}
+const mir = pts => pts.map(p => [p[0], -p[1]]);
+const rev = pts => pts.slice().reverse();
+const add = (a, b, k = 1) => [a[0] + b[0] * k, a[1] + b[1] * k];
+function mkT(s, x0, y0) { return p => [(p[0] - x0) * s, (y0 - p[1]) * s]; }
+const ID = p => p;
+function dp(pts, T = ID, close = true) {
+  return 'M' + pts.map(p => { const q = T(p); return fx(q[0]) + ' ' + fx(q[1]); }).join('L') + (close ? 'Z' : '');
+}
+/* tube polygon around a centerline (px); w = half width function of t in [0,1] */
+function tube(c, w) {
+  const L = [], R = [], n = c.length;
+  for (let i = 0; i < n; i++) {
+    const a = c[Math.max(0, i - 1)], b = c[Math.min(n - 1, i + 1)];
+    let dx = b[0] - a[0], dy = b[1] - a[1]; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
+    const ww = typeof w === 'function' ? w(i / (n - 1)) : w;
+    L.push([c[i][0] - dy * ww, c[i][1] + dx * ww]); R.push([c[i][0] + dy * ww, c[i][1] - dx * ww]);
+  }
+  return [...L, ...rev(R)];
+}
+/* SVG element builders */
+const S = (id, d, cls, extra = '') => `<path data-s="${id}" class="shape ${cls}" d="${d}" ${extra}/>`;
+const H = (id, d, w = 12) => `<path data-s="${id}" class="hit" d="${d}" stroke-width="${w}"/>`;
+const HF = (id, d) => `<path data-s="${id}" class="hit hitf" d="${d}"/>`;
+const HD = (id, x, y, r = 11) => `<circle data-s="${id}" class="hit dot" cx="${fx(x)}" cy="${fx(y)}" r="${r}"/>`;
+const DECO = (d, cls, extra = '') => `<path class="deco ${cls}" d="${d}" ${extra}/>`;
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+/* ---------- label layout ---------- */
+function tw(t) { return t.length * 7.3 + 6; }
+function spread(items, lo, hi, gap) {
+  // items: {p (desired center), s (size)} sorted by p; returns positions
+  const n = items.length; if (!n) return [];
+  const pos = items.map(i => i.p);
+  for (let i = 0; i < n; i++) {
+    const min = i ? pos[i - 1] + (items[i - 1].s + items[i].s) / 2 + gap : lo + items[i].s / 2;
+    pos[i] = Math.max(pos[i], min);
+  }
+  for (let i = n - 1; i >= 0; i--) {
+    const max = i < n - 1 ? pos[i + 1] - (items[i + 1].s + items[i].s) / 2 - gap : hi - items[i].s / 2;
+    pos[i] = Math.min(pos[i], max);
+  }
+  return pos;
+}
+/* list: [id, [ax,ay](px), side, text?]; cfg: {L:{x,lo,hi}, R:{x,lo,hi}, T:{y,lo,hi,rows}, B:{...}} */
+function labels(list, cfg) {
+  const out = [];
+  const bySide = { L: [], R: [], T: [], B: [] };
+  list.forEach(it => { const [id, a, side, text] = it; const t = text || (DATA[id] && (DATA[id].lab || DATA[id].en)) || id; bySide[side].push({ id, a, t }); });
+  ['L', 'R'].forEach(sd => {
+    const c = cfg[sd], arr = bySide[sd]; if (!arr.length) return;
+    arr.sort((u, v) => u.a[1] - v.a[1]);
+    const pos = spread(arr.map(i => ({ p: i.a[1], s: 16 })), c.lo, c.hi, c.gap ?? 3);
+    arr.forEach((i, k) => {
+      const y = pos[k], x = c.x, anc = sd === 'L' ? 'end' : 'start', tx = sd === 'L' ? x - 5 : x + 5;
+      const vv = c.val && DATA[i.id] && DATA[i.id].thk ? `<text class="val" x="${c.val}" y="${fx(y + 5)}" text-anchor="end">${esc(DATA[i.id].thk)}</text>` : '';
+      out.push(`<g class="lab" data-s="${i.id}"><line x1="${fx(i.a[0])}" y1="${fx(i.a[1])}" x2="${fx(x)}" y2="${fx(y)}"/><circle cx="${fx(i.a[0])}" cy="${fx(i.a[1])}" r="2.3"/><text x="${fx(tx)}" y="${fx(y + 5)}" text-anchor="${anc}">${esc(i.t)}</text>${vv}</g>`);
+    });
+  });
+  ['T', 'B'].forEach(sd => {
+    const c = cfg[sd], arr = bySide[sd]; if (!arr.length) return;
+    const rows = c.rows || 1;
+    arr.sort((u, v) => u.a[0] - v.a[0]);
+    const rowArr = Array.from({ length: rows }, () => []);
+    arr.forEach((i, k) => rowArr[k % rows].push(i));
+    rowArr.forEach((ra, r) => {
+      const pos = spread(ra.map(i => ({ p: i.a[0], s: tw(i.t) })), c.lo, c.hi, 10);
+      const y = sd === 'T' ? c.y + r * 20 : c.y - r * 20;
+      ra.forEach((i, k) => {
+        const x = pos[k], ly = sd === 'T' ? y + 5 : y - 13;
+        out.push(`<g class="lab" data-s="${i.id}"><line x1="${fx(i.a[0])}" y1="${fx(i.a[1])}" x2="${fx(x)}" y2="${fx(ly)}"/><circle cx="${fx(i.a[0])}" cy="${fx(i.a[1])}" r="2.3"/><text x="${fx(x)}" y="${fx(y)}" text-anchor="middle">${esc(i.t)}</text></g>`);
+      });
+    });
+  });
+  return out.join('');
+}
+
+/* ---------- shared patterns ---------- */
+const DEFS = `<defs>
+<pattern id="p-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="7" class="pat-stroke" stroke-width="1"/></pattern>
+<pattern id="p-cross" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V6M0 0H6" class="pat-stroke" stroke-width=".9"/></pattern>
+<pattern id="p-dots" width="9" height="7" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2" r="1.6" class="pat-fill" opacity=".55"/><circle cx="7" cy="5.5" r="1.6" class="pat-fill" opacity=".55"/></pattern>
+<pattern id="p-fib" width="10" height="4" patternUnits="userSpaceOnUse"><path d="M0 2H10" class="pat-stroke" stroke-width=".6" opacity=".6"/></pattern>
+<pattern id="p-vert" width="4" height="10" patternUnits="userSpaceOnUse"><path d="M2 0V10" class="pat-stroke" stroke-width=".7" opacity=".55"/></pattern>
+<pattern id="p-obl" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><path d="M0 4H8" class="pat-stroke" stroke-width=".8" opacity=".6"/></pattern>
+<pattern id="p-bone" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="3" cy="4" r="1.2" class="pat-fill" opacity=".35"/><circle cx="10" cy="10" r="1.6" class="pat-fill" opacity=".3"/><circle cx="11" cy="3" r=".9" class="pat-fill" opacity=".35"/></pattern>
+</defs>`;
+
+/* ---------- eye model (mm, origin = globe center, +x posterior, +y temporal; right eye horizontal section seen from above) ---------- */
+const EYE = (() => {
+  const Ro = 11.3, Rsi = 10.5, Rci = 10.15, Rri = 9.8;
+  const thLo = 148.83, thJ = 149.94, spurA = 146.53, cbEnd = 133.62, oraT = 113.34, oraN = -118.41, cbEndN = -133.62;
+  const thF = 6.6, thD = -15.2, cT = -10.3, cB = -20.1;
+  const J = [-9.09, 5.26], SPUR = [-8.76, 5.79], LO = [-9.67, 5.85];
+  const rIn = a => Rri + 0.24 * Math.exp(-(((a - thF) / 2.8) ** 2));
+  const cup = a => Rri + 0.42 * Math.exp(-(((a - thD) / 2.4) ** 2));
+  const LA = bez([-8.76, 0], [-8.76, 2.7], [-8.0, 4.6], [-7.25, 4.75], 28);
+  const LP = bez([-7.25, 4.75], [-6.45, 4.9], [-4.76, 3.0], [-4.76, 0], 28);
+  const lens = [...LA, ...LP.slice(1), ...rev(mir(LP)).slice(1), ...rev(mir(LA)).slice(1, -1)];
+  const lc = [-6.76, 0];
+  const scaleAbout = (pts, c, sx, sy) => pts.map(p => [c[0] + (p[0] - c[0]) * sx, c[1] + (p[1] - c[1]) * sy]);
+  const nucleus = scaleAbout(lens, [-6.9, 0], 0.6, 0.6);
+  const A = cr([[-8.62, 5.45], [-8.80, 4.9], [-8.95, 4.2], [-9.05, 3.4], [-8.98, 2.6], [-8.90, 2.0]], 6);
+  const B = cr([[-8.30, 5.40], [-8.42, 4.8], [-8.52, 4.1], [-8.58, 3.3], [-8.60, 2.6], [-8.62, 2.0]], 6);
+  const iris = [...A, [-8.77, 1.94], ...rev(B)];
+  const CBF = [[-8.62, 5.45], [-8.70, 5.62], SPUR];
+  const PROC = cr([[-7.00, 7.35], [-7.25, 6.75], [-7.55, 6.15], [-7.80, 5.55], [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]], 6);
+  const procTipIdx = PROC.findIndex(p => p[1] < 5.3);
+  const cb = [SPUR, ...arc(Rsi, spurA, cbEnd), ...PROC, [-8.62, 5.45], [-8.70, 5.62]];
+  const lensFront2 = LA.filter(p => p[1] <= 2.0);
+  const ac = [J, ...arc(Rsi, thJ, spurA), [-8.70, 5.62], [-8.62, 5.45], ...A, ...rev(lensFront2), ...mir(lensFront2).slice(1),
+    ...rev(mir(A)), [-8.62, -5.45], [-8.70, -5.62], ...arc(Rsi, -spurA, -thJ), ...arc(6.5, 233.94, 126.06, -5.26, 0)];
+  const pc = [...B, ...LA.filter(p => p[1] >= 2.0 && p[1] <= 4.5), [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]];
+  // dilated pupil (≈ 7.4 mm) used for the phaco pathway
+  const A2 = cr([[-8.62, 5.45], [-8.86, 5.08], [-8.93, 4.55], [-8.70, 3.98], [-8.26, 3.68]], 6);
+  const B2 = cr([[-8.30, 5.40], [-8.40, 4.95], [-8.36, 4.40], [-8.12, 3.83]], 6);
+  const lfD = LA.filter(p => p[1] <= 3.67);
+  const dil = {
+    iris: [...A2, [-8.15, 3.73], ...rev(B2)],
+    ac: [J, ...arc(Rsi, thJ, spurA), [-8.70, 5.62], [-8.62, 5.45], ...A2, ...rev(lfD), ...mir(lfD).slice(1),
+      ...rev(mir(A2)), [-8.62, -5.45], [-8.70, -5.62], ...arc(Rsi, -spurA, -thJ), ...arc(6.5, 233.94, 126.06, -5.26, 0)],
+    pc: [...B2, ...LA.filter(p => p[1] >= 3.8 && p[1] <= 4.5), [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]]
+  };
+  const cornea = [...arc(7.8, 131.4, 228.6, -4.51, 0), ...arc(6.5, 233.94, 126.06, -5.26, 0)];
+  const scleraT = [...arc(Ro, thLo, cT), ...arc(Rsi, cT, thJ)];
+  const scleraN = [...arc(Ro, -thLo, cB), ...arc(Rsi, cB, -thJ)];
+  const choroidT = [...arc(Rsi, oraT, cT), ...arc(Rci, cT, oraT)];
+  const choroidN = [...arc(Rsi, cB, oraN), ...arc(Rci, oraN, cB)];
+  const ppT = [...arc(Rsi, cbEnd, oraT), ...arc(Rci, oraT, cbEnd)];
+  const ppN = [...arc(Rsi, cbEndN, oraN), ...arc(Rci, oraN, cbEndN)];
+  const retT = [...arc(Rci, oraT, cT), ...arcF(rIn, cT, oraT)];
+  const retN = [...arc(Rci, cB, oraN), ...arcF(rIn, oraN, cB)];
+  const disc = [...arcF(cup, cT, cB, 0.4), ...arc(10.55, cB, cT)];
+  const lamina = [...arc(10.55, cT, cB), ...arc(10.95, cB, cT)];
+  const procHalf = PROC.slice(0, procTipIdx + 1);
+  const vit = [...arcF(rIn, oraT, cT), ...arcF(cup, cT, cB, 0.4), ...arcF(rIn, cB, oraN), ...arc(Rci, oraN, cbEndN),
+    ...mir(procHalf), ...mir(LP).slice(0), ...rev(LP).slice(1), ...rev(procHalf), ...arc(Rci, cbEnd, oraT)];
+  const vbT = [...arc(10.12, 124.6, 96.4), ...arc(9.15, 96.4, 124.6)];
+  const vbN = [...arc(10.12, -129.4, -101.5), ...arc(9.15, -101.5, -129.4)];
+  // optic nerve
+  const c0 = pt(10.95, thD), u = [Math.cos(-17 * DEG), Math.sin(-17 * DEG)], n = [-u[1], u[0]];
+  const at = (t, w) => [c0[0] + u[0] * t + n[0] * w, c0[1] + u[1] * t + n[1] * w];
+  const wN = t => 0.85 + 0.65 * clamp(t / 1.2);
+  const tt = Array.from({ length: 31 }, (_, i) => i * 0.25);
+  const nerve = [...tt.map(t => at(t, wN(t))), ...rev(tt.map(t => at(t, -wN(t))))];
+  const sub = [at(0.5, 1.85), at(7.5, 1.85), at(7.5, -1.85), at(0.5, -1.85)];
+  const sheath = [pt(Ro, -4.7), at(1.6, 2.25), at(7.5, 2.25), at(7.5, -2.25), at(1.6, -2.25), pt(Ro, -25.7), ...arc(Ro, -25.7, -4.7)];
+  const discC = pt(cup(thD), thD);
+  const cra = [discC, at(0, 0.18), at(7.5, 0.18)], crv = [discC, at(0, -0.18), at(7.5, -0.18)];
+  const cloquet = bez([-4.76, 0], [0, 0.35], [5.0, -1.2], [discC[0] - 0.1, discC[1] + 0.05], 30);
+  // rectus muscles
+  function rectus(insA, tanA, len) {
+    const cw = insA > tanA; const tr = tanA * DEG;
+    const dir = cw ? [Math.sin(tr), -Math.cos(tr)] : [-Math.sin(tr), Math.cos(tr)];
+    const nout = [Math.cos(tr), Math.sin(tr)];
+    const angs = arc(1, insA, tanA, 0, 0, 2).map(p => Math.atan2(p[1], p[0]) / DEG);
+    const k = angs.length - 1;
+    const th = i => 0.45 + 1.75 * (1 - Math.cos(Math.PI * i / k)) / 2;
+    const inner = angs.map(a => pt(Ro + 0.03, a));
+    const outer = angs.map((a, i) => pt(Ro + th(i), a));
+    const p0 = pt(Ro + 0.03, tanA), pe = add(p0, dir, len);
+    return [...inner, pe, add(pe, nout, 2.6), ...rev(outer)];
+  }
+  const lr = rectus(113.84, 72, 14), mr = rectus(-120.94, -78, 14);
+  const zon = [[[-7.80, 5.45], [-7.62, 4.62]], [[-7.82, 5.27], [-7.35, 4.76]], [[-7.62, 6.0], [-7.05, 4.80]], [[-7.38, 6.5], [-6.75, 4.72]], [[-7.12, 7.05], [-6.45, 4.58]]];
+  const zonHit = [[-7.80, 5.45], [-7.12, 7.05], [-6.45, 4.58], [-7.62, 4.62]];
+  return { Ro, Rsi, Rci, Rri, thLo, thJ, spurA, cbEnd, oraT, oraN, cbEndN, thF, thD, cT, cB, J, SPUR, LO, rIn, cup, LA, LP, lens, nucleus, A, B, iris, CBF, PROC, cb, ac, pc,
+    cornea, scleraT, scleraN, choroidT, choroidN, ppT, ppN, retT, retN, disc, lamina, vit, vbT, vbN, nerve, sub, sheath, cra, crv, cloquet, lr, mr, zon, zonHit, at, discC, lc, dil };
+})();
+
+/* draw the shared eye section with transform T; mode 'globe' | 'angle' */
+function eyeBody(T, mode, st) {
+  const E = EYE, o = [];
+  const D = (pts, c = true) => dp(pts, T, c);
+  const both = (pts, f) => { o.push(f(pts)); o.push(f(mir(pts))); };
+  const isA = mode === 'angle';
+  const phaco = !isA && st && st.path === 'phaco';
+  const AN = phaco ? E.dil : E;
+  const iolStep = phaco && PATHS.phaco.steps[st.step] && PATHS.phaco.steps[st.step].ov === 5;
+  // nerve sheath
+  if (!isA) {
+    o.push(S('onsheath', D(E.sheath), 'c-sheath'));
+    o.push(S('onsheath', D(E.sub), 'c-fluid', 'style="stroke:var(--t-stroke-2);stroke-width:.6"'));
+  }
+  o.push(S('vitreous', D(E.vit), 'c-vit'));
+  [E.vbT, E.vbN].forEach(p => o.push(S('vitreous_base', D(p), 'c-vit', 'style="fill:url(#p-hatch);stroke:none"')));
+  if (!isA) { o.push(S('cloquet', D(E.cloquet, false), 'c-dash')); o.push(H('cloquet', D(E.cloquet, false), 12)); }
+  o.push(S('choroid', D(E.choroidT), 'c-uvea'), S('choroid', D(E.choroidN), 'c-uvea'));
+  const lp1 = arc(10.4, -7, 139), lp2 = arc(10.4, -23, -139);
+  [lp1, lp2].forEach(p => { o.push(S('lpca', D(p, false), 'c-art', 'style="stroke-width:1.6"')); o.push(H('lpca', D(p, false), 9)); });
+  o.push(S('retina', D(E.retT), 'c-ret'), S('retina', D(E.retN), 'c-ret'));
+  if (!isA) {
+    o.push(S('disc', D(E.disc), 'c-nerve'));
+    o.push(S('lamina', D(E.lamina), 'c-sclera', 'style="fill:url(#p-cross)"'));
+  }
+  o.push(S('sclera', D(E.scleraT), 'c-sclera'), S('sclera', D(E.scleraN), 'c-sclera'));
+  o.push(S('pars_plana', D(E.ppT), 'c-cb'), S('pars_plana', D(E.ppN), 'c-cb'));
+  if (!isA) {
+    o.push(S('optic_nerve', D(E.nerve), 'c-nerve'));
+    o.push(S('cra', D(E.cra, false), 'c-art', 'style="stroke-width:1.8"'), S('cra', D(E.crv, false), 'c-vein', 'style="stroke-width:1.8"'));
+    o.push(H('cra', D(E.cra, false), 10));
+  }
+  // anterior segment
+  o.push(S('ac', D(AN.ac), 'c-fluid'));
+  o.push(S('pc', D(AN.pc), 'c-fluid', 'style="stroke:var(--t-stroke-2);stroke-width:.5"'), S('pc', D(mir(AN.pc)), 'c-fluid', 'style="stroke:var(--t-stroke-2);stroke-width:.5"'));
+  o.push(S(isA ? 'ciliary_processes' : 'ciliary_body', D(E.cb), 'c-cb'), S(isA ? 'ciliary_processes' : 'ciliary_body', D(mir(E.cb)), 'c-cb'));
+  if (iolStep) {
+    // emptied, collapsed capsular bag with a 5.2 mm capsulorhexis
+    o.push(`<path class="deco" d="${D(E.lens)}" style="fill:var(--t-fluid);stroke:none"/>`);
+    const rim = bez([-7.30, 2.6], [-7.36, 3.3], [-7.32, 4.2], [-7.15, 4.55], 10);
+    const post = bez([-7.15, 4.55], [-6.70, 4.45], [-6.22, 2.4], [-6.22, 0], 16);
+    // vitreous moves forward behind the collapsed posterior capsule
+    o.push(`<path class="deco" d="${D([...post, ...rev(mir(post)).slice(1), ...mir(E.LP), ...rev(E.LP).slice(1)])}" style="fill:var(--t-vit);stroke:none"/>`);
+    const bag = [...rim, ...post.slice(1), ...rev(mir(post)).slice(1), ...rev(mir(rim)).slice(1)];
+    o.push(S('capsule', D(bag, false), 'c-cap'), H('capsule', D(bag, false), 8));
+  } else {
+    o.push(S('lens', D(E.lens), 'c-lens'));
+    o.push(S('nucleus', D(E.nucleus), 'c-nuc'));
+    o.push(S('capsule', D(E.lens), 'c-cap'), H('capsule', D(E.lens), isA ? 14 : 8));
+  }
+  // zonules
+  [E.zon, E.zon.map(z => mir(z))].forEach(set => set.forEach(z => o.push(DECO(D(z, false), 'c-zon'))));
+  o.push(S('zonules', D(E.zonHit), 'c-zon', 'style="fill:transparent;stroke:none"'), S('zonules', D(mir(E.zonHit)), 'c-zon', 'style="fill:transparent;stroke:none"'));
+  o.push(S('iris', D(AN.iris), 'c-iris'), S('iris', D(mir(AN.iris)), 'c-iris'));
+  o.push(S('cornea', D(E.cornea), 'c-cornea'));
+  // conjunctiva / Tenon
+  const cEnd = isA ? 124 : 127;
+  const conjT = isA
+    ? [...arcF(a => E.Ro + 0.19 * clamp((E.thLo - a) / 1.6), E.thLo, cEnd, 0.4), ...arcF(a => E.Ro + 0.12 * clamp((E.thLo - a) / 1.6), cEnd, E.thLo, 0.4)]
+    : [...arcF(a => E.Ro + 0.17 * clamp((E.thLo - a) / 1.6), E.thLo, cEnd, 0.4), ...arc(E.Ro, cEnd, E.thLo)];
+  o.push(S('conj', D(conjT), 'c-conj'), S('conj', D(mir(conjT)), 'c-conj'));
+  if (!isA) {
+    const tT = arc(11.62, 146, -4.7), tN = arc(11.62, -146, -25.7);
+    [tT, tN].forEach(p => { o.push(S('tenon', D(p, false), 'c-dash', 'style="stroke-width:1"')); o.push(H('tenon', D(p, false), 9)); });
+  }
+  // muscles
+  o.push(S('lr', D(E.lr), 'c-mus'), S('mr', D(E.mr), 'c-mus'));
+  return o.join('');
+}
+
+/* ---------- view: globe ---------- */
+function renderGlobe(st) {
+  const E = EYE, T = mkT(17, -470 / 17, 330 / 17), P = p => T(p);
+  const D = (pts, c = true) => dp(pts, T, c);
+  let s = `<svg viewBox="0 0 940 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="右眼水平切面">${DEFS}<rect class="fig-bgrect" width="940" height="660" fill="var(--fig-bg)"/>`;
+  s += eyeBody(T, 'globe', st);
+  // fovea / macula / limbus / ora hit targets
+  const fv = P(pt(E.rIn(E.thF), E.thF));
+  const mac = arc(9.45, E.thF - 15, E.thF + 15);
+  s += S('macula', D(mac, false), 'c-thin', 'style="stroke-width:1.2;stroke-dasharray:1 3"') + H('macula', D(mac, false), 10);
+  s += HD('fovea', fv[0], fv[1], 9);
+  const lo = P(E.LO); s += HD('limbus', lo[0], lo[1], 10); const loN = P(mir([E.LO])[0]); s += HD('limbus', loN[0], loN[1], 10);
+  const orT = P(pt(10.0, E.oraT)), orN = P(pt(10.0, E.oraN));
+  s += `<path class="deco c-line" d="${dp([pt(9.75, E.oraT), pt(10.2, E.oraT)], T, false)}"/><path class="deco c-line" d="${dp([pt(9.75, E.oraN), pt(10.2, E.oraN)], T, false)}"/>`;
+  s += HD('ora', orT[0], orT[1], 9) + HD('ora', orN[0], orN[1], 9);
+  // zoom boxes (hidden while a clinical pathway is overlaid)
+  if (!st.path) {
+    const za = P([-10.3, 7.4]), zb = P([-6.6, 4.2]);
+    s += `<g class="zoom" data-go="angle"><rect x="${fx(za[0])}" y="${fx(za[1])}" width="${fx(zb[0] - za[0])}" height="${fx(zb[1] - za[1])}" rx="4"/><text x="${fx(za[0] - 4)}" y="${fx(za[1] - 6)}" text-anchor="end">放大 angle →</text></g>`;
+    const zr = P([8.7, 3.0]), zr2 = P([10.6, -0.6]);
+    s += `<g class="zoom" data-go="retina"><rect x="${fx(zr[0])}" y="${fx(zr[1])}" width="${fx(zr2[0] - zr[0])}" height="${fx(zr2[1] - zr[1])}" rx="4"/></g>`;
+  }
+  // dimensions
+  if (st.dims) s += globeDims(T);
+  if (st.path) s += pathOverlay(T, st);
+  const iolStep = st.path === 'phaco' && PATHS.phaco.steps[st.step] && PATHS.phaco.steps[st.step].ov === 5;
+  const L = [
+    ['cornea', P([-12.1, 2.4]), 'L'], ['ac', P([-10.4, 0.9]), 'L'], ['iris', P([-8.95, -3.6]), 'L'], ['pc', P([-8.25, -4.6]), 'L'],
+    ['capsule', iolStep ? P([-6.22, -1.0]) : P([-4.85, -1.3]), 'B'], ['zonules', P([-7.25, -5.7]), 'B'],
+    ['ciliary_body', P([-7.9, 6.4]), 'T'], ['pars_plana', P(pt(10.33, 124)), 'T'], ['ora', orT, 'T'], ['limbus', lo, 'T'], ['conj', P(pt(11.42, 137)), 'T'],
+    ['lr', P(pt(12.3, 82)), 'T'], ['sclera', P(pt(10.9, 58)), 'T'], ['vitreous_base', P(pt(9.6, -110)), 'B'], ['tenon', P(pt(11.62, -58)), 'B'],
+    ['mr', P(pt(12.4, -97)), 'B'], ['lpca', P(pt(10.4, -40)), 'B'], ['choroid', P(pt(10.33, 34)), 'R'], ['retina', P(pt(9.97, 22)), 'R'],
+    ['macula', P(pt(9.45, 14)), 'R'], ['fovea', fv, 'R'], ['vitreous', P([4.5, 4.2]), 'R'], ['disc', P(pt(10.25, E.thD)), 'R'],
+    ['lamina', P(pt(10.75, E.thD + 3)), 'R'], ['cra', P(E.at(3.6, 0.18)), 'R'], ['optic_nerve', P(E.at(5.6, -0.6)), 'R'], ['onsheath', P(E.at(6.6, 2.05)), 'R'],
+    ['cloquet', P([2.6, -0.55]), 'B']
+  ];
+  if (!iolStep) L.push(['lens', P([-7.9, 1.4]), 'L'], ['nucleus', P([-6.6, st.dims ? -1.9 : -0.8]), 'L']);
+  s += labels(L, { L: { x: 215, lo: 150, hi: 560 }, R: { x: 800, lo: 150, hi: 520 }, T: { y: 26, lo: 20, hi: 920, rows: 2 }, B: { y: 648, lo: 20, hi: 920, rows: 2 } });
+  s += `</svg>`;
+  return { svg: s, cap: ['右眼 OD 水平切面，由上往下看：上＝temporal、下＝nasal，左＝anterior。', `比例 ≈ 17 px/mm · 本圖 axial length（角膜至 foveal RPE）≈ ${AXL.toFixed(1)} mm`] };
+}
+const AXL = (() => { const f = pt(EYE.Rci, EYE.thF); return Math.hypot(f[0] + 12.31, f[1]); })();
+function globeDims(T) {
+  const E = EYE, P = p => T(p); let s = '<g class="dim">';
+  const tick = (a, r0, r1) => `<line x1="${fx(P(pt(r0, a))[0])}" y1="${fx(P(pt(r0, a))[1])}" x2="${fx(P(pt(r1, a))[0])}" y2="${fx(P(pt(r1, a))[1])}"/>`;
+  // Tillaux
+  const tl = arc(14.4, E.thLo, 113.84); s += `<path d="${dp(tl, T, false)}"/>` + tick(E.thLo, 13.9, 14.9) + tick(113.84, 13.9, 14.9);
+  let p = P(pt(15.2, 131)); s += `<text x="${fx(p[0])}" y="${fx(p[1])}" text-anchor="middle">LR 6.9 mm</text>`;
+  const ml = arc(14.6, -E.thLo, -120.94); s += `<path d="${dp(ml, T, false)}"/>` + tick(-E.thLo, 14.1, 15.1) + tick(-120.94, 14.1, 15.1);
+  p = P(pt(15.6, -134)); s += `<text x="${fx(p[0])}" y="${fx(p[1])}" text-anchor="middle">MR 5.5 mm</text>`;
+  // axial length: anterior corneal apex → foveal RPE, along the visual axis
+  const a = P([-12.31, 0]), fr = pt(E.Rci, E.thF), b = P(fr);
+  s += `<path d="M${fx(a[0])} ${fx(a[1])}L${fx(b[0])} ${fx(b[1])}" style="stroke-dasharray:6 3"/><circle cx="${fx(b[0])}" cy="${fx(b[1])}" r="3" style="fill:var(--accent);stroke:none"/>`;
+  const am = P([1.6, 0.8]);
+  s += `<text x="${fx(am[0])}" y="${fx(am[1])}" text-anchor="middle">axial length ≈ ${AXL.toFixed(1)} mm</text>`;
+  // ACD & lens thickness on axis
+  const c1 = P([-11.76, 0]), c2 = P([-8.76, 0]), c3 = P([-4.76, 0]);
+  s += `<line x1="${fx(c1[0])}" y1="${fx(c1[1])}" x2="${fx(c2[0])}" y2="${fx(c2[1])}" style="stroke-width:2"/><line x1="${fx(c2[0])}" y1="${fx(c2[1])}" x2="${fx(c3[0])}" y2="${fx(c3[1])}" style="stroke-width:2"/>`;
+  s += `<text x="${fx((c1[0] + c2[0]) / 2)}" y="${fx(c1[1] + 16)}" text-anchor="middle">ACD 3.0</text><text x="${fx((c2[0] + c3[0]) / 2 + 6)}" y="${fx(c2[1] + 16)}" text-anchor="middle">lens 4.0</text>`;
+  // corneal diameter
+  const d1 = P([-13.3, 5.85]), d2 = P([-13.3, -5.85]);
+  s += `<line x1="${fx(d1[0])}" y1="${fx(d1[1])}" x2="${fx(d2[0])}" y2="${fx(d2[1])}"/><line x1="${fx(d1[0] - 5)}" y1="${fx(d1[1])}" x2="${fx(d1[0] + 5)}" y2="${fx(d1[1])}"/><line x1="${fx(d2[0] - 5)}" y1="${fx(d2[1])}" x2="${fx(d2[0] + 5)}" y2="${fx(d2[1])}"/>`;
+  s += `<text x="${fx(d2[0])}" y="${fx(d2[1] + 18)}" text-anchor="middle">HVID 11.7</text>`;
+  // fovea-disc
+  return s + '</g>';
+}
+/* clinical pathway overlays on the globe */
+function pathOverlay(T, st) {
+  const E = EYE, P = p => T(p); let s = '<g class="ovl">';
+  const pth = PATHS[st.path]; const step = pth.steps[st.step] || {}; const k = step.ov;
+  if (st.path === 'ivi') {
+    const a = 128.55, out = P(pt(16.2, a)), tip = P(pt(5.6, a)), hub = P(pt(18.6, a));
+    const br = arc(12.7, E.thLo, a);
+    s += `<path class="tool" d="${dp(br, T, false)}" style="stroke-width:1.2"/>`;
+    const t1 = P(pt(12.2, a)), t2 = P(pt(13.2, a)), t0a = P(pt(12.2, E.thLo)), t0b = P(pt(13.2, E.thLo)), t35a = P(pt(12.4, 131.08)), t35b = P(pt(13.0, 131.08));
+    s += `<line class="tool" x1="${fx(t1[0])}" y1="${fx(t1[1])}" x2="${fx(t2[0])}" y2="${fx(t2[1])}" style="stroke-width:1.2"/><line class="tool" x1="${fx(t0a[0])}" y1="${fx(t0a[1])}" x2="${fx(t0b[0])}" y2="${fx(t0b[1])}" style="stroke-width:1.2"/><line class="tool" x1="${fx(t35a[0])}" y1="${fx(t35a[1])}" x2="${fx(t35b[0])}" y2="${fx(t35b[1])}" style="stroke-width:1.2"/>`;
+    const tl = P(pt(14.2, 141)); s += `<text x="${fx(tl[0])}" y="${fx(tl[1])}" text-anchor="end">limbus 後 3.5–4.0 mm</text>`;
+    if (k >= 1) s += `<line class="tool" x1="${fx(out[0])}" y1="${fx(out[1])}" x2="${fx(k >= 2 ? tip[0] : P(pt(10.0, a))[0])}" y2="${fx(k >= 2 ? tip[1] : P(pt(10.0, a))[1])}" style="stroke-width:2.4"/><line class="tool" x1="${fx(out[0])}" y1="${fx(out[1])}" x2="${fx(hub[0])}" y2="${fx(hub[1])}" style="stroke-width:9;stroke-linecap:round;opacity:.55"/>`;
+    if (k >= 2) s += `<circle class="toolfill" cx="${fx(tip[0])}" cy="${fx(tip[1])}" r="4"/>`;
+  } else {
+    if (k === 1) { // incision
+      const a = P([-10.12, 5.42]), b = P([-10.38, 4.00]);
+      s += `<line class="tool" x1="${fx(a[0])}" y1="${fx(a[1])}" x2="${fx(b[0])}" y2="${fx(b[1])}" style="stroke-width:3"/>`;
+      const c = P([-11.3, 7.0]); s += `<line class="tool" x1="${fx(c[0])}" y1="${fx(c[1])}" x2="${fx(a[0])}" y2="${fx(a[1])}" style="stroke-width:1;stroke-dasharray:3 3"/><text x="${fx(c[0] - 4)}" y="${fx(c[1] - 4)}" text-anchor="end">temporal clear corneal incision</text>`;
+    }
+    if (k === 2) {
+      const cap = E.LA.filter(p => p[1] <= 2.62), edge = cap[cap.length - 1];
+      const ccc = [...rev(cap), ...mir(cap).slice(1)];
+      s += `<path class="tool" d="${dp(ccc, T, false)}" style="stroke-width:3.4;stroke-dasharray:6 3"/>`;
+      const q = P(edge), q2 = P([edge[0], -edge[1]]);
+      s += `<circle class="toolfill" cx="${fx(q[0])}" cy="${fx(q[1])}" r="3.5"/><circle class="toolfill" cx="${fx(q2[0])}" cy="${fx(q2[1])}" r="3.5"/>`;
+      const t = P([-11.3, 7.0]); s += `<line class="tool" x1="${fx(t[0])}" y1="${fx(t[1])}" x2="${fx(q[0])}" y2="${fx(q[1])}" style="stroke-width:1;stroke-dasharray:3 3"/><text x="${fx(t[0] - 4)}" y="${fx(t[1] - 4)}" text-anchor="end">CCC 5–5.5 mm（散瞳下）</text>`;
+    }
+    if (k === 3) {
+      const wave = E.lens.filter(p => p[0] > -6.6).map(p => [-6.76 + (p[0] + 6.76) * 0.93, p[1] * 0.93]);
+      s += `<path class="tool" d="${dp(wave, T, false)}" style="stroke-width:2.2;stroke-dasharray:2 4"/>`;
+      const wp = P(wave[Math.floor(wave.length * 0.3)]), t = P([-2.6, 4.4]);
+      s += `<line class="tool" x1="${fx(t[0])}" y1="${fx(t[1] + 3)}" x2="${fx(wp[0])}" y2="${fx(wp[1])}" style="stroke-width:1;stroke-dasharray:3 3"/><text x="${fx(t[0] + 4)}" y="${fx(t[1])}">fluid wave</text>`;
+    }
+    if (k === 5) {
+      const optic = Array.from({ length: 49 }, (_, i) => { const a = i / 48 * 2 * Math.PI; return [-6.85 + 0.42 * Math.cos(a), 3.0 * Math.sin(a)]; });
+      s += `<path class="toolfill" d="${dp(optic, T)}" style="opacity:.55"/>`;
+      const h1 = bez([-6.85, 2.95], [-6.95, 3.6], [-7.05, 4.2], [-7.1, 4.45], 12), h2 = mir(h1);
+      s += `<path class="tool" d="${dp(h1, T, false)}"/><path class="tool" d="${dp(h2, T, false)}"/>`;
+      const o1 = P([-6.6, -1.6]), t1 = P([-2.6, -2.2]), o2 = P(h2[8]), t2 = P([-2.6, -3.6]);
+      s += `<line class="tool" x1="${fx(t1[0])}" y1="${fx(t1[1] - 4)}" x2="${fx(o1[0])}" y2="${fx(o1[1])}" style="stroke-width:1;stroke-dasharray:3 3"/><text x="${fx(t1[0] + 4)}" y="${fx(t1[1])}">IOL optic（6 mm）</text>`;
+      s += `<line class="tool" x1="${fx(t2[0])}" y1="${fx(t2[1] - 4)}" x2="${fx(o2[0])}" y2="${fx(o2[1])}" style="stroke-width:1;stroke-dasharray:3 3"/><text x="${fx(t2[0] + 4)}" y="${fx(t2[1])}">haptic（in the bag）</text>`;
+    }
+  }
+  return s + '</g>';
+}
+
+/* ---------- view: angle (same model, zoomed ×100 px/mm) ---------- */
+function renderAngle(st) {
+  const E = EYE, T = mkT(100, -12.4, 9.0), P = p => T(p), D = (pts, c = true) => dp(pts, T, c);
+  let s = `<svg viewBox="0 0 900 730" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="前房角放大">${DEFS}<rect class="fig-bgrect" width="900" height="730" fill="var(--fig-bg)"/>`;
+  s += eyeBody(T, 'angle', st);
+  // episclera (on sclera) and Tenon (between episclera and conjunctiva)
+  const epi = [...arc(E.Ro + 0.055, 147.6, 124), ...arc(E.Ro, 124, 147.6)];
+  s += S('episclera', D(epi), 'c-white', 'style="fill:var(--t-plex);opacity:.85"');
+  [146.2, 143.5, 141, 137.5, 134, 130.5, 127].forEach(a => { const q = P(pt(E.Ro + 0.028, a)); s += `<ellipse data-s="episclera" class="shape c-artf" cx="${fx(q[0])}" cy="${fx(q[1])}" rx="6" ry="2.3" transform="rotate(${fx(-(a - 90))} ${fx(q[0])} ${fx(q[1])})"/>`; });
+  const ten = [...arc(E.Ro + 0.12, 145.4, 124), ...arc(E.Ro + 0.058, 124, 145.4)];
+  s += S('tenon', D(ten), 'c-white', 'style="fill:var(--t-sheath);opacity:.8"');
+  // Descemet / endothelium line on posterior cornea
+  const desc = arc(6.49, 160, 126.06, -5.26, 0, 0.6);
+  s += S('descemet', D(desc, false), 'c-line', 'style="stroke-width:2.4;stroke:var(--t-nuclear)"') + H('descemet', D(desc, false), 12);
+  // TM: anterior (non-pigmented) and posterior (pigmented) halves
+  const tmA = [...arc(E.Rsi, E.thJ, 148.1), ...arc(10.41, 148.1, E.thJ)], tmP = [...arc(E.Rsi, 148.1, E.spurA + 0.4), ...arc(10.41, E.spurA + 0.4, 148.1)];
+  s += S('tm', D(tmA), 'c-coll', 'style="fill:var(--t-cb)"') + S('tm', D(tmP), 'c-coll', 'style="fill:var(--t-uvea)"');
+  // Schlemm canal (outer wall of TM)
+  const sc = P(pt(10.575, 147.8));
+  s += `<ellipse data-s="schlemm" class="shape c-white" cx="${fx(sc[0])}" cy="${fx(sc[1])}" rx="21" ry="6.5" transform="rotate(-58 ${fx(sc[0])} ${fx(sc[1])})" style="fill:var(--t-fluid);stroke-width:1.2"/>`;
+  // collector channel
+  const col = cr([pt(10.635, 147.8), pt(10.85, 147.25), pt(11.08, 147.85), pt(E.Ro + 0.02, 147.35)], 6);
+  s += S('collector', D(col, false), 'c-vein', 'style="stroke-width:3"') + H('collector', D(col, false), 12);
+  // Schwalbe line knob
+  const sw = P(pt(10.44, E.thJ + 0.15));
+  s += `<circle data-s="schwalbe" class="shape c-white" cx="${fx(sw[0])}" cy="${fx(sw[1])}" r="5" style="fill:var(--fig-bg);stroke-width:1.4"/>` + HD('schwalbe', sw[0], sw[1], 12);
+  // ciliary muscle
+  const cm = [[-8.72, 5.77], ...arc(10.45, 146.3, 136.3), [-7.62, 6.6], [-7.95, 6.05], [-8.3, 5.72], [-8.55, 5.62]];
+  s += S('ciliary_muscle', D(cr(cm, 4)), 'c-mus', 'style="fill-opacity:.85"');
+  // scleral spur drawn over the muscle so the longitudinal fibres insert on its posterior face
+  const sp = [pt(E.Rsi + 0.02, 147.15), pt(10.28, 146.55), pt(E.Rsi + 0.02, 145.75)];
+  s += S('spur', D(sp), 'c-sclera', 'style="stroke-width:1.2"');
+  // ciliary body band (anterior face of CB in the angle)
+  const cbf = [[-8.62, 5.45], [-8.70, 5.62], [-8.74, 5.74]];
+  s += S('cbb', D(cbf, false), 'c-line', 'style="stroke:var(--t-pig);stroke-width:3.2"') + H('cbb', D(cbf, false), 14);
+  // major arterial circle
+  const mc = P([-8.38, 5.62]);
+  s += `<circle data-s="mac" class="shape c-artf" cx="${fx(mc[0])}" cy="${fx(mc[1])}" r="6"/>`;
+  // ciliary processes epithelium edge
+  s += DECO(D(E.PROC.slice(0, -2), false), 'c-line', 'style="stroke:var(--t-pig);stroke-width:2.6"');
+  // sulcus
+  const sul = cr([[-8.30, 5.40], [-8.37, 5.05], [-8.12, 5.06], [-7.95, 5.22]], 4);
+  s += S('sulcus', D([...sul, [-8.1, 5.28]]), 'c-fluid', 'style="fill:var(--hl-soft);stroke:var(--t-stroke-2);stroke-dasharray:3 2"');
+  // iris layers: IPE, dilator, sphincter
+  const ipeO = E.B.map(p => [p[0] - 0.055, p[1]]);
+  s += S('ipe', D([...E.B, ...rev(ipeO)]), 'c-pig');
+  const dil = E.B.filter(p => p[1] > 2.95 && p[1] < 5.3).map(p => [p[0] - 0.08, p[1]]);
+  s += S('dilator', D(dil, false), 'c-line', 'style="stroke:var(--t-muscle);stroke-width:2.2"') + H('dilator', D(dil, false), 10);
+  const sph = cr([[-8.66, 2.08], [-8.80, 2.12], [-8.83, 2.5], [-8.80, 2.88], [-8.67, 2.86]], 4);
+  s += S('sphincter', D(sph), 'c-mus');
+  // lens epithelium under anterior capsule
+  const le = E.LA.filter(p => p[1] > 1.6).map(p => [-6.76 + (p[0] + 6.76) * 0.985, p[1] * 0.985]);
+  s += S('lens_epi', D(le, false), 'c-line', 'style="stroke:var(--t-nuclear);stroke-width:2.4;stroke-dasharray:3 2"') + H('lens_epi', D(le, false), 10);
+  // anterior hyaloid / Berger / Wieger
+  const lpS = E.LP.filter(p => p[1] <= 4.3 && p[1] >= 1.4);
+  const off = lpS.map(p => [p[0] + 0.14, p[1]]);
+  s += S('berger', D([...lpS, ...rev(off)]), 'c-fluid', 'style="stroke:none;fill:var(--hl-soft)"');
+  const w = lpS[0];
+  const hy = cr([[-5.6, 8.6], [-5.85, 7.2], [-6.1, 5.5], w], 6);
+  s += S('ant_hyaloid', D([...hy, ...off], false), 'c-dash', 'style="stroke-width:1.4"') + H('ant_hyaloid', D(hy, false), 12);
+  const wp = P(w); s += `<circle data-s="wieger" class="shape c-white" cx="${fx(wp[0])}" cy="${fx(wp[1])}" r="5" style="fill:var(--t-stroke)"/>` + HD('wieger', wp[0], wp[1], 12);
+  // limbus target
+  const lo = P(E.LO);
+  s += HD('limbus', lo[0], lo[1], 12);
+  // angle recess region hit (between iris root and TM)
+  const ar = P([-8.64, 5.47]);
+  s += HD('angle_recess', ar[0], ar[1], 11);
+  const L = [
+    ['schwalbe', sw, 'L'], ['tm', P(pt(10.45, 148.1)), 'L'], ['spur', P(pt(10.33, 146.55)), 'L'], ['cbb', P([-8.70, 5.62]), 'L'],
+    ['angle_recess', ar, 'L'], ['descemet', P([-5.26 - Math.sqrt(6.49 ** 2 - 16), 4.0]), 'L'], ['cornea', P([-10.6, 4.3]), 'L'], ['ac', P([-9.6, 3.0]), 'L'],
+    ['iris', P([-8.84, 3.9]), 'L'], ['sphincter', P([-8.76, 2.4]), 'L'], ['ipe', P([-8.6, 3.0]), 'L'], ['dilator', P([-8.6, 4.4]), 'L'],
+    ['conj', P(pt(E.Ro + 0.155, 139)), 'T'], ['tenon', P(pt(E.Ro + 0.09, 132)), 'T'], ['episclera', P(pt(E.Ro + 0.028, 135.75)), 'T'], ['limbus', lo, 'T'],
+    ['schlemm', sc, 'T'], ['collector', P(pt(11.08, 147.85)), 'T'], ['sclera', P(pt(10.9, 141)), 'T'],
+    ['pars_plana', P(pt(10.33, 128)), 'R'], ['ciliary_muscle', P([-7.85, 6.5]), 'R'], ['ciliary_processes', P([-7.55, 6.3]), 'R'],
+    ['mac', mc, 'R'], ['sulcus', P([-8.17, 5.16]), 'R'], ['pc', P([-8.2, 4.4]), 'R'], ['zonules', P([-7.2, 5.6]), 'R'],
+    ['lens_epi', P(le[Math.floor(le.length * 0.45)]), 'R'], ['capsule', P(E.LP[10]), 'R'], ['lens', P([-6.5, 3.2]), 'R'], ['nucleus', P([-6.3, 2.1]), 'R'],
+    ['wieger', wp, 'R'], ['berger', P([lpS[Math.floor(lpS.length / 2)][0] + 0.07, lpS[Math.floor(lpS.length / 2)][1]]), 'R'],
+    ['ant_hyaloid', P(hy[Math.floor(hy.length * 0.3)]), 'R'], ['vitreous', P([-5.0, 5.4]), 'R'], ['vitreous_base', P([-5.5, 8.7]), 'R']
+  ];
+  s += labels(L, { L: { x: 172, lo: 300, hi: 725 }, R: { x: 752, lo: 20, hi: 725 }, T: { y: 24, lo: 10, hi: 560, rows: 2 } });
+  s += `</svg>`;
+  return { svg: s, cap: ['temporal angle 放大（同一模型，約 100 px/mm）：上＝周邊 temporal、左＝anterior。', 'TM 長約 0.6 mm；Schlemm canal 位於 TM 外側'] };
+}
+/* ---------- view: cornea layers ---------- */
+function renderCornea(st) {
+  const x0 = 30, x1 = 600, W = 900, Ht = 570;
+  const Lyr = [ // id, y0, y1, fillClass/style
+    ['tear_lipid', 24, 32, 'style="fill:var(--t-fat)"'],
+    ['tear_aqueous', 32, 58, 'style="fill:var(--t-fluid)"'],
+    ['tear_mucin', 58, 66, 'style="fill:var(--t-retina);opacity:.8"'],
+    ['epithelium', 66, 184, 'style="fill:var(--t-plex)"'],
+    ['bm', 184, 188, 'style="fill:var(--t-nuclear)"'],
+    ['bowman', 188, 210, 'style="fill:var(--t-collagen);fill-opacity:.6"'],
+    ['stroma', 210, 440, 'style="fill:var(--t-collagen)"'],
+    ['dua', 440, 454, 'style="fill:var(--t-sheath)"'],
+    ['descemet', 454, 476, 'style="fill:var(--t-cornea)"'],
+    ['endothelium', 476, 496, 'style="fill:var(--t-plex)"'],
+    ['ac', 496, 552, 'style="fill:var(--t-fluid)"']
+  ];
+  let s = `<svg viewBox="0 0 ${W} ${Ht}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="角膜分層">${DEFS}<rect class="fig-bgrect" width="${W}" height="${Ht}" fill="var(--fig-bg)"/>`;
+  Lyr.forEach(([id, a, b, sty]) => { s += `<rect data-s="${id}" class="shape c-thin" x="${x0}" y="${a}" width="${x1 - x0}" height="${b - a}" ${sty}/>`; });
+  // decorations
+  let dco = '';
+  // microvilli + glycocalyx
+  for (let x = x0 + 3; x < x1; x += 7) dco += `M${x} 66v-4`;
+  // superficial squamous cells
+  const rows = [[66, 78, 64, 0], [78, 90, 64, 32]];
+  let nuc = '';
+  rows.forEach(([a, b, w, off]) => { dco += `M${x0} ${b}H${x1}`; for (let x = x0 + off; x < x1; x += w) { if (x > x0) dco += `M${x} ${a}V${b}`; nuc += `<ellipse cx="${x + w / 2}" cy="${(a + b) / 2}" rx="9" ry="2.2"/>`; } });
+  // wing cells
+  [[90, 120, 0], [120, 150, 19]].forEach(([a, b, off]) => {
+    dco += `M${x0} ${b}H${x1}`;
+    for (let x = x0 + off; x < x1; x += 38) { if (x > x0) dco += `M${x} ${a}L${x + 5} ${(a + b) / 2}L${x} ${b}`; nuc += `<circle cx="${x + 19}" cy="${(a + b) / 2}" r="4.6"/>`; }
+  });
+  // basal columnar cells
+  for (let x = x0; x < x1; x += 20) { if (x > x0) dco += `M${x} 150V184`; nuc += `<ellipse cx="${x + 10}" cy="171" rx="4" ry="8"/>`; }
+  // stroma lamellae + keratocytes
+  let k = 0;
+  for (let y = 218; y < 436; y += 11) {
+    let p = `M${x0} ${y}`; for (let x = x0; x <= x1; x += 15) p += `L${x} ${fx(y + Math.sin((x + y * 3) / 37) * 1.6)}`; dco += p;
+    if ((y / 11) % 2 < 1) for (let x = x0 + 25 + (k++ % 3) * 40; x < x1 - 30; x += 130) nuc += `<ellipse cx="${x}" cy="${y + 5.5}" rx="17" ry="1.9"/>`;
+  }
+  // Descemet banding
+  for (let y = 458; y < 474; y += 4) dco += `M${x0} ${y}H${x1}`;
+  // endothelium cells
+  for (let x = x0; x < x1; x += 44) { if (x > x0) dco += `M${x} 476V496`; nuc += `<ellipse cx="${x + 22}" cy="487" rx="9" ry="3"/>`; }
+  s += `<path class="deco" d="${dco}" style="stroke:var(--t-stroke);stroke-width:.7;fill:none;opacity:.8"/>`;
+  s += `<g class="deco" style="fill:var(--t-nuclear)">${nuc}</g>`;
+  // hit strokes for thin layers
+  s += H('tear_lipid', `M${x0} 28H${x1}`, 9) + H('tear_mucin', `M${x0} 62H${x1}`, 9) + H('bm', `M${x0} 186H${x1}`, 9) + H('dua', `M${x0} 447H${x1}`, 12);
+  s += `<text x="${x0}" y="15" class="deco" style="font-family:var(--f-body);font-size:12px;fill:var(--muted)">air · 前表面</text><text x="${x0}" y="566" class="deco" style="font-family:var(--f-body);font-size:12px;fill:var(--muted)">anterior chamber · 後表面</text>`;
+  const anc = (id, y) => [id, [x1 - 8, y], 'R'];
+  const L = Lyr.map(([id, a, b]) => anc(id, (a + b) / 2));
+  s += labels(L, { R: { x: 630, lo: 18, hi: 560, gap: 3, val: 890 } });
+  s += `</svg>`;
+  return { svg: s, cap: ['角膜橫切面（示意放大）：上＝前表面（tear film），下＝anterior chamber。', '右欄為成人中央角膜真實厚度近似值'] };
+}
+
+/* ---------- view: retina / macula OCT-style section ---------- */
+function renderRetina(st) {
+  const W = 720, xc = 330, oct = !!st.oct, VW = 960, VH = 620;
+  const xs = []; for (let x = 0; x <= W; x += 4) xs.push(x);
+  const sig = (d, c, w) => 1 / (1 + Math.exp(-(d - c) / w)), g = (d, s) => Math.exp(-((d / s) ** 2));
+  const hump = d => Math.exp(-(((d - 170) / 90) ** 2));
+  const stack = [
+    ['suprachoroid', () => 8], ['haller', () => 64], ['sattler', () => 36], ['choriocapillaris', () => 10], ['bruch', () => 3],
+    ['rpe', () => 13], ['iz', () => 4], ['os', (x, d) => 16 + 9 * g(d, 70)], ['ez', (x, d) => 8 + 3 * g(d, 80)], ['myoid', (x, d) => 8 + 3 * g(d, 80)], ['elm', () => 2.5],
+    ['onl', (x, d) => 50 + 52 * g(d, 85)], ['henle', (x, d) => 30 * Math.exp(-(((d - 105) / 75) ** 2))],
+    ['opl', (x, d) => 16 * (0.28 + 0.72 * sig(d, 55, 16))], ['inl', (x, d) => 34 * sig(d, 78, 18) * (1 + 0.18 * hump(d))],
+    ['ipl', (x, d) => 30 * sig(d, 90, 18) * (1 + 0.15 * hump(d))], ['gcl', (x, d) => 46 * sig(d, 98, 18) * (1 + 0.35 * hump(d)) * (1 - 0.22 * clamp((d - 250) / 180))],
+    ['nfl', (x, d) => (x > xc ? 6 + 0.055 * (x - xc) : 6 + 0.012 * (xc - x)) * sig(d, 105, 22)], ['ilm', () => 2.5]
+  ];
+  const base = 545; let bot = xs.map(() => base); const B = {};
+  stack.forEach(([id, f]) => { const top = xs.map((x, i) => bot[i] - f(x, Math.abs(x - xc))); B[id] = { top, bot }; bot = top; });
+  const surf = bot;
+  const OCT = { vitreous: '#060608', ilm: '#f4f4f4', nfl: '#d8d8d8', gcl: '#727272', ipl: '#a9a9a9', inl: '#3b3b3b', opl: '#b9b9b9', henle: '#2c2c2c', onl: '#272727', myoid: '#3a3a3a',
+    elm: '#c2c2c2', ez: '#f0f0f0', os: '#5a5a5a', iz: '#d2d2d2', rpe: '#ffffff', bruch: '#e6e6e6', choriocapillaris: '#909090', sattler: '#7a7a7a', haller: '#666', suprachoroid: '#222', sclera: '#a0a0a0' };
+  const HIS = { myoid: 'fill:var(--t-conj);fill-opacity:.55', ilm: 'fill:var(--t-nuclear)', nfl: 'fill:var(--t-plex)', gcl: 'fill:var(--t-nuclear)', ipl: 'fill:var(--t-plex)', inl: 'fill:var(--t-nuclear)', opl: 'fill:var(--t-plex)',
+    henle: 'fill:var(--t-plex)', onl: 'fill:var(--t-nuclear)', elm: 'fill:var(--t-stroke)', ez: 'fill:var(--t-muscle-2)', os: 'fill:var(--t-conj)', iz: 'fill:var(--t-cb)', rpe: 'fill:var(--t-pig)',
+    bruch: 'fill:var(--t-stroke)', choriocapillaris: 'fill:var(--t-cb)', sattler: 'fill:var(--t-uvea)', haller: 'fill:var(--t-uvea)', suprachoroid: 'fill:var(--t-iris)', sclera: 'fill:var(--t-sclera)', vitreous: 'fill:var(--t-vit)' };
+  const PAT = { nfl: 'p-fib', gcl: 'p-dots', ipl: 'p-fib', inl: 'p-dots', opl: 'p-fib', henle: 'p-obl', onl: 'p-dots', ez: 'p-vert', os: 'p-vert', sclera: 'p-fib' };
+  const sty = id => `style="${oct ? 'fill:' + OCT[id] : HIS[id]};stroke:none"`;
+  const poly = (top, botA) => 'M' + xs.map((x, i) => `${x} ${fx(top[i])}`).join('L') + 'L' + xs.map((x, i) => [x, botA[i]]).reverse().map(p => `${p[0]} ${fx(p[1])}`).join('L') + 'Z';
+  let s = `<svg viewBox="0 0 ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="黃斑區視網膜切面"${oct ? ' class="octsvg"' : ''}>${DEFS}<rect class="fig-bgrect" width="${VW}" height="${VH}" fill="${oct ? '#060608' : 'var(--fig-bg)'}"/>`;
+  // vitreous and sclera
+  s += `<path data-s="vitreous" class="shape" ${sty('vitreous')} d="${poly(xs.map(() => 0), surf)}"/>`;
+  s += `<path data-s="sclera" class="shape" ${sty('sclera')} d="M0 ${base}H${W}V${VH}H0Z"/>`;
+  if (!oct) s += `<path class="deco" d="M0 ${base}H${W}V${VH}H0Z" style="fill:url(#p-fib)"/>`;
+  stack.forEach(([id]) => {
+    const d = poly(B[id].top, B[id].bot);
+    s += `<path data-s="${id}" class="shape" ${sty(id)} d="${d}"/>`;
+    if (!oct && PAT[id]) s += `<path class="deco" d="${d}" style="fill:url(#${PAT[id]})"/>`;
+  });
+  // choroidal vessels (decorative)
+  const mid = (id, i) => (B[id].top[i] + B[id].bot[i]) / 2;
+  let v = '';
+  const vf = oct ? 'fill:#151515' : 'fill:var(--t-art);opacity:.85';
+  for (let i = 0; i < 9; i++) { const x = 30 + i * 84 + (i % 2 ? 16 : -4); const ix = Math.round(clamp(x, 0, W) / 4); v += `<ellipse cx="${x}" cy="${fx(mid('haller', ix))}" rx="31" ry="19"/>`; }
+  for (let i = 0; i < 17; i++) { const x = 14 + i * 44 + (i % 3) * 5; const ix = Math.round(clamp(x, 0, W) / 4); v += `<ellipse cx="${x}" cy="${fx(mid('sattler', ix))}" rx="13" ry="8"/>`; }
+  for (let x = 6; x < W; x += 15) { const ix = Math.round(x / 4); v += `<ellipse cx="${x}" cy="${fx(mid('choriocapillaris', ix))}" rx="5" ry="3"/>`; }
+  s += `<clipPath id="rclip"><rect width="${W}" height="${VH}"/></clipPath><g class="deco" clip-path="url(#rclip)" style="${vf}">${v}</g>`;
+  // hit strokes for thin layers
+  const midline = id => 'M' + xs.map((x, i) => `${x} ${fx((B[id].top[i] + B[id].bot[i]) / 2)}`).join('L');
+  ['ilm', 'elm', 'iz', 'bruch'].forEach(id => s += H(id, midline(id), 9));
+  // subretinal space: potential space between IZ and RPE
+  const srs = 'M' + xs.map((x, i) => `${x} ${fx(B.rpe.top[i])}`).join('L');
+  s += S('srs', srs, 'c-dash', `style="stroke:${oct ? '#bbb' : 'var(--hl)'};stroke-width:1.2;stroke-dasharray:6 5"`) + H('srs', srs, 8);
+  // posterior hyaloid bridging the pit
+  // posterior hyaloid still attached (VMA): follows the ILM, firmest at the fovea
+  const sm = surf.map(v => v - 4);
+  const hy = 'M' + xs.map((x, i) => `${x} ${fx(sm[i])}`).join('L');
+  s += S('hyaloid', hy, 'c-thin', `style="stroke:${oct ? '#8a8a8a' : 'var(--t-stroke)'};stroke-width:1.3"`) + H('hyaloid', hy, 9);
+  // fovea bracket
+  const fy = 74;
+  s += `<g><path data-s="fovea" class="shape c-line" d="M${xc - 112} ${fy + 7}V${fy}H${xc + 112}V${fy + 7}" style="${oct ? 'stroke:#ddd' : ''}"/><path data-s="fovea" class="shape c-line" d="M${xc - 26} ${fy + 26}V${fy + 20}H${xc + 26}V${fy + 26}" style="${oct ? 'stroke:#ddd' : ''}"/>`;
+  s += `<text class="deco" x="${xc}" y="${fy + 42}" text-anchor="middle" style="font-family:var(--f-mono);font-size:11px;${oct ? 'fill:#ccc' : 'fill:var(--muted)'}">foveola 0.35</text></g>`;
+  s += H('fovea', `M${xc - 112} ${fy}H${xc + 112}`, 14);
+  // scale bar
+  s += `<g class="deco" style="${oct ? 'stroke:#ddd;fill:#ddd' : 'stroke:var(--ink-2);fill:var(--ink-2)'}"><path d="M18 604H93" stroke-width="2"/><text x="18" y="596" style="font-family:var(--f-mono);font-size:11px;stroke:none">0.5 mm（水平）</text></g>`;
+  s += `<text class="deco" x="12" y="24" style="font-family:var(--f-body);font-size:12px;fill:${oct ? '#bbb' : 'var(--muted)'}">temporal</text><text class="deco" x="${W - 8}" y="24" text-anchor="end" style="font-family:var(--f-body);font-size:12px;fill:${oct ? '#bbb' : 'var(--muted)'}">nasal → disc</text>`;
+  const ax = 712, ix = Math.round(ax / 4);
+  const L = stack.map(([id]) => [id, [ax, (B[id].top[ix] + B[id].bot[ix]) / 2], 'R']);
+  const hx = Math.round((xc + 110) / 4); L.find(l => l[0] === 'henle')[1] = [xc + 110, (B.henle.top[hx] + B.henle.bot[hx]) / 2];
+  L.push(['srs', [ax - 14, B.rpe.top[ix - 3]], 'R'], ['sclera', [ax, 580], 'R']);
+  L.push(['fovea', [xc + 60, fy], 'T'], ['hyaloid', [150, sm[38]], 'T'], ['vitreous', [520, 60], 'T']);
+  s += labels(L, { R: { x: 738, lo: 40, hi: 612, gap: 2 }, T: { y: 30, lo: 120, hi: 700, rows: 1 } });
+  s += `</svg>`;
+  return { svg: s, cap: ['黃斑區水平切面（OCT 方向，右眼：左＝temporal，右＝nasal 往 disc）。', '垂直方向放大顯示；色帶可切換組織學／OCT 反射率'] };
+}
+/* ---------- px-space helpers ---------- */
+function offs(c, w) {
+  const n = c.length;
+  return c.map((p, i) => {
+    const a = c[Math.max(0, i - 1)], b = c[Math.min(n - 1, i + 1)];
+    let dx = b[0] - a[0], dy = b[1] - a[1]; const l = Math.hypot(dx, dy) || 1; dx /= l; dy /= l;
+    const ww = typeof w === 'function' ? w(i / (n - 1)) : w;
+    return [p[0] + dy * ww, p[1] - dx * ww];
+  });
+}
+const band = (c, w0, w1) => [...offs(c, w0), ...rev(offs(c, w1))];
+function ell(cx, cy, rx, ry, rot = 0, a0 = 0, a1 = 360, n = 72) {
+  const o = [], r = rot * DEG;
+  for (let i = 0; i <= n; i++) { const t = (a0 + (a1 - a0) * i / n) * DEG, x = rx * Math.cos(t), y = ry * Math.sin(t); o.push([cx + x * Math.cos(r) - y * Math.sin(r), cy + x * Math.sin(r) + y * Math.cos(r)]); }
+  return o;
+}
+const P0 = pts => dp(pts, ID);
+const P0o = pts => dp(pts, ID, false);
+const note = (x, y, t, anc = 'start') => `<text class="deco" x="${x}" y="${y}" text-anchor="${anc}" style="font-family:var(--f-body);font-size:12px;fill:var(--muted)">${t}</text>`;
+
+/* ---------- view: orbit, superior view of the right orbit ---------- */
+function renderOrbit(st) {
+  const lay = st.layer ?? 1; // 0 all, 1 levator removed, 2 levator + SR removed
+  const MX = 900; // drawn in a lateral-left frame, then mirrored so lateral sits on the right (correct for a RIGHT orbit seen from above)
+  let s = `<svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="右眼眶上視圖">${DEFS}<rect class="fig-bgrect" width="900" height="640" fill="var(--fig-bg)"/>`;
+  let g = '';
+  // ethmoid air cells
+  let eth = '';
+  for (let y = 150; y < 490; y += 34) for (let x = 616; x < 720; x += 36) { const j = ((x + y) % 3) * 4; eth += `<rect x="${x + j / 2}" y="${y}" width="${30 - j}" height="${28}" rx="7"/>`; }
+  g += `<g class="deco" style="fill:var(--surface-2);stroke:var(--t-bone-2);stroke-width:1.4">${eth}</g>`;
+  // apex bone
+  g += `<path class="deco c-bone" d="M520 640L540 566Q600 532 660 556L720 600L760 640Z"/><path class="deco" d="M520 640L540 566Q600 532 660 556L720 600L760 640Z" style="fill:url(#p-bone)"/>`;
+  // walls
+  const lat = [[266, 212], [300, 210], [306, 232], [570, 546], [556, 566], [546, 572], [272, 246], [260, 228]];
+  g += S('lateral_wall', P0(lat), 'c-bone') + DECO(P0(lat), '', 'style="fill:url(#p-bone)"');
+  const med = [...cr([[598, 108], [596, 300], [590, 470], [578, 550]], 6), ...cr([[588, 552], [600, 470], [606, 300], [608, 108]], 6)];
+  g += S('medial_wall', P0(med), 'c-bone');
+  g += `<path class="deco c-bone" d="M592 96Q620 88 640 100L634 118Q616 110 600 116Z"/>`;
+  g += `<ellipse class="deco" cx="592" cy="558" rx="15" ry="10" style="fill:var(--surface-2);stroke:var(--t-stroke)"/>`;
+  // optic nerve + sheath
+  const on = cr([[446, 290], [462, 340], [500, 400], [540, 452], [572, 505], [590, 552]], 8);
+  g += S('onsheath', P0(tube(on, 17)), 'c-sheath') + S('optic_nerve', P0(tube(on, 11.5)), 'c-nerve');
+  const irL = cr([[370, 158], [406, 240], [468, 360], [530, 470], [552, 532]], 6), irR = cr([[472, 140], [520, 232], [562, 342], [580, 452], [578, 525]], 6);
+  // LR, MR
+  const wM = t => 3 + 8 * clamp(t / 0.25) - 3 * clamp((t - 0.7) / 0.3);
+  const lrC = cr([[328, 142], [318, 170], [317, 200], [338, 262], [420, 372], [500, 470], [552, 530]], 8);
+  const mrC = cr([[526, 130], [539, 161], [543, 190], [556, 280], [572, 400], [582, 500], [584, 528]], 8);
+  g += S('lr', P0(tube(lrC, wM)), 'c-mus') + S('mr', P0(tube(mrC, wM)), 'c-mus');
+  // globe + cornea
+  g += `<circle data-s="globe" class="shape c-sclera" cx="430" cy="190" r="104"/>`;
+  g += S('cornea', 'M377.1 100.4A70 70 0 0 1 482.9 100.4A104 104 0 0 0 377.1 100.4Z', 'c-cornea');
+  // IR + IO as hidden lines under the globe
+  g += S('ir', P0([...irL, ...rev(irR)]), 'c-dash', 'style="fill:var(--t-muscle);fill-opacity:.12"');
+  const ioC = cr([[562, 172], [516, 204], [452, 248], [380, 290]], 8);
+  g += S('io', P0(tube(ioC, t => 7 + 3 * Math.sin(Math.PI * t))), 'c-dash', 'style="fill:var(--t-muscle);fill-opacity:.1;stroke-dasharray:3 3"');
+  // SO belly + trochlea + reflected tendon (passes under SR, inserts posterior superotemporal)
+  const soC = cr([[584, 508], [587, 420], [589, 320], [590, 220], [590, 150], [589, 130]], 8);
+  g += S('so', P0(tube(soC, t => 7 - 4.6 * clamp((t - 0.55) / 0.3))), 'c-mus');
+  const stC = cr([[585, 124], [540, 160], [480, 208], [420, 258], [397, 277]], 8);
+  g += S('so', P0(tube(stC, t => 2.6 + 7 * clamp((t - 0.72) / 0.28) ** 1.5)), 'c-coll');
+  g += `<circle data-s="trochlea" class="shape c-white" cx="589" cy="122" r="9" style="fill:var(--t-cornea);stroke-width:2"/>`;
+  g += `<path data-s="annulus" class="shape c-sclera" fill-rule="evenodd" d="${P0(ell(566, 536, 30, 18, -40))}${P0(ell(566, 536, 21, 10, -40))}" style="stroke-width:1.2"/>`;
+  if (lay < 2) {
+    const srL = cr([[382, 163], [420, 240], [480, 360], [540, 470], [560, 520]], 6), srR = cr([[478, 146], [520, 230], [560, 340], [578, 450], [578, 515]], 6);
+    g += S('sr', P0([...srL, ...rev(srR)]), 'c-mus', 'style="fill-opacity:.8"');
+  }
+  if (lay < 1) {
+    // levator: narrow over SR posteriorly, fanning anteriorly into the aponeurosis
+    const lvL = cr([[556, 500], [512, 400], [452, 280], [392, 150], [340, 40]], 6), lvR = cr([[578, 498], [566, 400], [540, 280], [512, 150], [540, 40]], 6);
+    g += S('levator', P0([...lvL, ...rev(lvR)]), 'c-mus2', 'style="fill-opacity:.88"');
+    g += DECO(P0([[362, 86], [528, 86], [540, 40], [340, 40]]), '', 'style="fill:var(--t-collagen);opacity:.8"');
+  }
+  g += `<g class="deco"><path class="c-axis" d="M430 46V612"/><path class="c-axis" d="M430 190L602 598"/><path class="c-axis" d="M397 277L372 297"/></g>`;
+  g += `<g class="dim deco"><path d="M430 274A84 84 0 0 0 462.7 267.4"/><path d="M430 300A50 50 0 0 1 391.2 281.5"/></g>`;
+  s += `<g transform="translate(${MX} 0) scale(-1 1)">${g}</g>`;
+  // text placed after mirroring so it reads normally
+  s += note(MX - 668, 140, 'ethmoid sinus', 'middle') + note(MX - 150, 430, 'temporal fossa', 'middle');
+  s += `<g class="dim deco"><text x="${MX - 452}" y="292" text-anchor="end">23°</text><text x="${MX - 396}" y="318" text-anchor="end">51°</text>`;
+  s += `<text x="${MX - 436}" y="624" text-anchor="end" style="font-family:var(--f-body);fill:var(--muted)">visual axis</text><text x="${MX - 606}" y="616" text-anchor="end" style="font-family:var(--f-body);fill:var(--muted)">orbital axis</text></g>`;
+  const L0 = [
+    ['globe', [360, 215], 'L'], ['lr', [334, 262], 'L'], ['lateral_wall', [428, 405], 'L'], ['ir', [377, 172], 'L'],
+    ['trochlea', [589, 122], 'R'], ['io', [552, 180], 'R'], ['medial_wall', [601, 240], 'R'], ['mr', [551, 250], 'R'],
+    ['so', [588, 380], 'R'], ['optic_nerve', [519, 424], 'R'], ['annulus', [580, 528], 'R'], ['cornea', [430, 82], 'T']
+  ];
+  if (lay < 2) L0.push(['sr', [500, 300], 'R']);
+  if (lay < 1) L0.push(['levator', [470, 60], 'T']);
+  const flip = { L: 'R', R: 'L', T: 'T', B: 'B' };
+  const L = L0.map(([id, a, side]) => [id, [MX - a[0], a[1]], flip[side]]);
+  s += labels(L, { L: { x: MX - 738, lo: 60, hi: 620 }, R: { x: MX - 240, lo: 70, hi: 620 }, T: { y: 22, lo: 40, hi: 860 } });
+  s += `</svg>`;
+  return { svg: s, cap: ['右眼眶上視圖（移除眶頂，由上往下看）：上＝anterior，左＝medial，右＝lateral。', 'orbital axis 與 visual axis 約 23°；SO tendon 約 51°'] };
+}
+
+/* ---------- view: orbital apex, frontal ---------- */
+function renderApex(st) {
+  let s = `<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="右眼眶尖正視圖">${DEFS}<rect class="fig-bgrect" width="900" height="620" fill="var(--fig-bg)"/>`;
+  const bone = 'M60 60Q450 10 840 70Q880 320 820 560Q450 610 80 560Q30 320 60 60Z';
+  s += `<path class="deco c-bone" d="${bone}"/><path class="deco" d="${bone}" style="fill:url(#p-bone)"/>`;
+  s += note(450, 48, 'lesser wing of sphenoid', 'middle') + note(110, 360, 'greater wing') + note(690, 572, 'body of sphenoid', 'middle') + note(150, 590, 'maxilla / palatine');
+  // openings
+  const sofU = [[492, 266], [450, 250], [400, 228], [330, 198], [255, 165], [196, 140], [176, 141]];
+  const sofL = [[184, 157], [250, 192], [320, 232], [370, 272], [395, 318], [420, 356], [460, 368], [495, 345], [505, 300]];
+  s += S('sof', P0([...cr(sofU, 6), ...cr(sofL, 6)]), 'c-white', 'style="fill:var(--surface-2);stroke-width:1.4"');
+  const iofU = cr([[452, 412], [330, 440], [200, 478], [146, 500]], 6), iofL = cr([[150, 514], [212, 500], [340, 464], [458, 428]], 6);
+  s += S('iof', P0([...iofU, ...iofL]), 'c-white', 'style="fill:var(--surface-2);stroke-width:1.4"');
+  // annulus ring with muscle origins
+  const ring = P0(ell(500, 300, 142, 122, -18)) + P0(ell(500, 300, 126, 106, -18));
+  s += `<path data-s="annulus" class="shape c-sclera" fill-rule="evenodd" d="${ring}" style="stroke-width:1.2"/>`;
+  const seg = (a0, a1) => [...ell(500, 300, 150, 130, -18, a0, a1, 24), ...rev(ell(500, 300, 120, 100, -18, a0, a1, 24))];
+  s += S('sr', P0(seg(256, 310)), 'c-mus') + S('mr', P0(seg(338, 386)), 'c-mus') + S('ir', P0(seg(62, 118)), 'c-mus');
+  s += S('lr', P0(seg(234, 250)), 'c-mus') + S('lr', P0(seg(186, 212)), 'c-mus');
+  // levator and SO origins
+  s += S('levator', P0(ell(530, 132, 46, 17, -6)), 'c-mus2') + S('so', P0(ell(660, 168, 22, 30, 20)), 'c-mus');
+  // optic canal (entirely inside the annulus) and its contents
+  s += `<circle data-s="optic_canal" class="shape c-white" cx="550" cy="253" r="42" style="fill:var(--surface-2);stroke-width:1.4"/>`;
+  s += `<circle data-s="optic_nerve" class="shape c-nerve" cx="553" cy="247" r="30"/><circle data-s="ophth_a" class="shape c-artf" cx="528" cy="277" r="8"/>`;
+  // SOF contents inside annulus
+  s += `<circle data-s="cn3s" class="shape c-nerve" cx="462" cy="272" r="13"/><circle data-s="nasociliary" class="shape c-nerve" cx="432" cy="292" r="8"/>`;
+  s += `<circle data-s="cn6" class="shape c-nerve" cx="410" cy="322" r="10"/><circle data-s="cn3i" class="shape c-nerve" cx="458" cy="336" r="15"/>`;
+  // SOF contents outside annulus
+  s += `<ellipse data-s="sov" class="shape c-veinf" cx="214" cy="158" rx="9" ry="6" transform="rotate(25 214 158)"/><circle data-s="lacrimal_n" class="shape c-nerve" cx="252" cy="177" r="7"/>`;
+  s += `<circle data-s="frontal_n" class="shape c-nerve" cx="298" cy="195" r="9"/><circle data-s="cn4" class="shape c-nerve" cx="346" cy="222" r="7"/>`;
+  const L = [
+    ['sov', [214, 158], 'L'], ['lacrimal_n', [252, 177], 'L'], ['frontal_n', [298, 195], 'L'], ['cn4', [346, 222], 'L'], ['lr', ell(500, 300, 135, 115, -18, 199, 199, 1)[0], 'L'],
+    ['cn6', [410, 322], 'L'], ['nasociliary', [432, 292], 'L'], ['iof', [300, 455], 'L'], ['sof', [478, 355], 'B'],
+    ['optic_canal', [537, 217], 'T'], ['optic_nerve', [566, 250], 'R'], ['ophth_a', [528, 277], 'R'], ['so', [660, 168], 'R'], ['mr', ell(500, 300, 135, 115, -18, 2, 2, 1)[0], 'R'],
+    ['annulus', ell(500, 300, 134, 114, -18, 44, 44, 1)[0], 'R'], ['ir', [500, 420], 'R'], ['cn3s', [462, 272], 'R'], ['cn3i', [458, 336], 'R'],
+    ['levator', [530, 120], 'T'], ['sr', [470, 176], 'T']
+  ];
+  s += labels(L, { L: { x: 166, lo: 90, hi: 560 }, R: { x: 728, lo: 90, hi: 600 }, T: { y: 26, lo: 300, hi: 760 }, B: { y: 606, lo: 300, hi: 700 } });
+  s += `</svg>`;
+  return { svg: s, cap: ['右眼眶尖正視圖（由前往後看）：左＝lateral，右＝medial。', 'annulus of Zinn 包住 optic canal 與 SOF 內側部'] };
+}
+
+/* ---------- view: upper eyelid sagittal ---------- */
+function renderLid(st) {
+  let s = `<svg viewBox="0 0 900 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="上眼瞼矢狀切面">${DEFS}<rect class="fig-bgrect" width="900" height="680" fill="var(--fig-bg)"/>`;
+  const xg = y => 1100 - Math.sqrt(640 * 640 - (650 - y) ** 2);
+  // globe (sclera band) and cornea
+  const sclO = [], sclI = []; for (let y = 236; y <= 560; y += 6) { sclO.push([xg(y), y]); }
+  for (let y = 560; y >= 236; y -= 6) sclI.push([xg(y) + 26, y]);
+  s += `<path class="deco c-vit" d="M${fx(xg(236))} 236L900 236V680H452Z"/>`;
+  s += S('sclera', P0([...sclO, ...sclI]), 'c-sclera');
+  const corO = cr([[xg(560), 560], [458, 600], [452, 640], [450, 680]], 6);
+  s += S('cornea', P0([...corO, [470, 680], ...rev(offs(corO, 20)).slice(1)]), 'c-cornea');
+  // bone: orbital rim + roof
+  const rim = 'M0 0H338Q352 40 354 92Q350 132 326 152Q296 150 250 118Q140 112 0 124Z';
+  s += `<path class="deco c-bone" d="${rim}"/><path class="deco" d="${rim}" style="fill:url(#p-bone)"/><path class="deco c-bone" d="M338 0H900V30Q640 48 352 84Z"/>`;
+  // lid base tissue
+  const SK = cr([[150, 0], [196, 96], [254, 170], [330, 252], [378, 330], [394, 395], [391, 470], [396, 560], [407, 628]], 10);
+  const CP = cr([[574, 268], [556, 300], [541, 330], [515, 380], [491, 440], [474, 500], [462, 560], [452, 628]], 10);
+  s += `<path class="deco" d="${P0([...SK.filter(p => p[1] > 120), [452, 630], ...rev(CP), [600, 214], [646, 176], [560, 168], [430, 150], [352, 100], [330, 150]])}" style="fill:var(--t-collagen);opacity:.28"/>`;
+  // skin, orbicularis
+  s += S('skin', P0(band(SK.filter(p => p[1] > 108), 0, 7)), 'c-skin');
+  const orbC = SK.filter(p => p[1] > 120 && p[1] < 626);
+  s += S('orbicularis', P0(band(orbC, 8, 32)), 'c-mus');
+  const orbA = offs(orbC, 20)[orbC.findIndex(p => p[1] >= 360)];
+  // tarsus, Müller, aponeurosis (offsets from posterior surface; negative = anterior)
+  const cpT = CP.filter(p => p[1] >= 378), cpA = CP.filter(p => p[1] >= 288 && p[1] <= 560);
+  s += S('tarsus', P0(band(cpT, -38, -6)), 'c-coll', 'style="fill:var(--t-sheath)"');
+  // Müller muscle: from the undersurface of the levator near its muscle–aponeurosis junction down to the upper tarsal border
+  const mLow = offs(CP, -20).filter((p, i) => CP[i][1] >= 292 && CP[i][1] <= 382);
+  const mC = [...cr([[626, 194], [598, 220], [572, 252], mLow[0]], 6), ...mLow.slice(1)];
+  s += S('muller', P0(tube(mC, t => 5 + 9 * clamp(t / 0.3))), 'c-mus2');
+  const mAnc = mLow[Math.floor(mLow.length * 0.5)];
+  // levator aponeurosis: from Whitnall's ligament region down to the anterior tarsus
+  const aLow = offs(cpA, -42);
+  const aC = [...cr([[642, 178], [604, 198], [566, 232], aLow[0]], 6), ...aLow.slice(1)];
+  s += S('levator_apo', P0(tube(aC, 4)), 'c-coll');
+  const aAnc = aLow[aLow.findIndex(p => p[1] >= 400)];
+  s += S('palp_conj', P0(band(CP, -6, 0)), 'c-conj');
+  // bulbar conjunctiva on globe from fornix to limbus
+  const bul = []; for (let y = 262; y <= 560; y += 6) bul.push([xg(y) - 1, y]);
+  s += S('palp_conj', P0([...bul, ...rev(bul.map(p => [p[0] - 5, p[1]]))]), 'c-conj');
+  s += S('palp_conj', P0o(cr([[574, 268], [578, 258], [590, 258], [xg(262) - 3, 264]], 4)), 'c-line', 'style="stroke:var(--t-conj);stroke-width:5"');
+  // levator muscle, SR
+  const lvC = cr([[642, 176], [700, 154], [780, 136], [900, 120]], 8);
+  s += S('levator', P0(tube(lvC, t => 6 + 10 * clamp(t / 0.35))), 'c-mus');
+  const srC = cr([[xg(226) + 6, 226], [680, 202], [780, 182], [900, 166]], 8);
+  s += S('sr', P0(tube(srC, t => 5 + 8 * clamp(t / 0.3))), 'c-mus');
+  s += `<ellipse data-s="whitnall" class="shape c-white" cx="640" cy="170" rx="18" ry="7" transform="rotate(-22 640 170)" style="fill:var(--t-sclera);stroke-width:1.2"/>`;
+  // septum + preaponeurotic fat
+  const sep = cr([[330, 152], [372, 222], [418, 300], [450, 360], [462, 404]], 8);
+  const apoAnt = offs(cpA, -46).filter(p => p[1] <= 404).sort((a, b) => b[1] - a[1]);
+  const fat = [...sep, ...apoAnt, [530, 252], [548, 222], [530, 200], [470, 178], [380, 160]];
+  s += S('fat', P0(fat), 'c-fat');
+  let lob = ''; [[392, 214], [420, 250], [446, 290], [470, 252], [440, 214], [478, 300], [490, 350], [456, 330]].forEach(([x, y]) => lob += `<circle cx="${x}" cy="${y}" r="15"/>`);
+  s += `<g class="deco" style="fill:none;stroke:var(--t-stroke-2)">${lob}</g>`;
+  s += S('septum', P0o(sep), 'c-line', 'style="stroke-width:2.2"') + H('septum', P0o(sep), 12);
+  // crease fibres
+  s += `<path class="deco" d="M462 404L405 397M458 418L404 409" style="stroke:var(--t-stroke);stroke-width:.9;fill:none"/>`;
+  s += HD('crease', 395, 396, 11);
+  // meibomian gland
+  const mg = cr([[441, 624], [446, 560], [458, 480], [474, 420], [488, 392]], 8);
+  let ac = ''; mg.forEach((p, i) => { if (i > 3 && i % 3 === 0) { ac += `<circle cx="${fx(p[0] - 7)}" cy="${fx(p[1])}" r="5"/><circle cx="${fx(p[0] + 6)}" cy="${fx(p[1] - 3)}" r="5"/>`; } });
+  s += `<g data-s="meibomian" class="shape c-gland" style="stroke-width:.6">${ac}</g>`;
+  s += S('meibomian', P0o(mg), 'c-line', 'style="stroke:var(--t-gland);stroke-width:3"') + H('meibomian', P0o(mg), 14);
+  // accessory lacrimal glands (Krause in fornix, Wolfring at upper tarsal border)
+  s += `<g data-s="acc_lac" class="shape c-gland" style="stroke-width:.6"><circle cx="562" cy="262" r="6"/><circle cx="552" cy="272" r="5"/><circle cx="508" cy="376" r="5.5"/></g>`;
+  // margin: lashes, gray line
+  s += `<g data-s="lashes" class="shape c-line" style="stroke-width:2.2;fill:none"><path d="M412 600Q414 640 384 662"/><path d="M420 602Q424 642 398 668"/><path d="M428 604Q434 640 414 668"/></g>`;
+  s += `<circle data-s="lashes" class="shape c-gland" cx="420" cy="586" r="6"/>`;
+  s += `<path class="deco" d="M432 620V632" style="stroke:var(--t-pig);stroke-width:3"/>` + HD('gray_line', 432, 628, 9);
+  const L = [
+    ['skin', [262, 182], 'L'], ['orbicularis', orbA, 'L'], ['septum', [418, 300], 'L'], ['fat', [440, 236], 'T'], ['crease', [395, 396], 'L'],
+    ['lashes', [404, 652], 'L'], ['gray_line', [432, 628], 'L'],
+    ['tarsus', [470, 520], 'R'], ['meibomian', [458, 480], 'R'], ['muller', mAnc, 'R'], ['palp_conj', [xg(430) - 2, 430], 'R'], ['acc_lac', [508, 376], 'R'],
+    ['levator_apo', aAnc, 'R'], ['cornea', [462, 640], 'R'], ['sclera', [xg(470) + 12, 470], 'R'],
+    ['levator', [730, 144], 'T'], ['whitnall', [640, 170], 'T'], ['sr', [760, 186], 'R']
+  ];
+  s += labels(L, { L: { x: 236, lo: 140, hi: 670 }, R: { x: 700, lo: 200, hi: 670 }, T: { y: 26, lo: 380, hi: 880 } });
+  s += note(70, 160, 'frontal bone / orbital rim');
+  s += `</svg>`;
+  return { svg: s, cap: ['上眼瞼矢狀切面（示意）：左＝anterior（皮膚側），右＝posterior（眼球）。', '依單眼皮／低摺痕型態繪製：septum 在 tarsus 上緣以下才與 aponeurosis 融合'] };
+}
+
+/* ---------- view: lacrimal drainage, frontal right eye ---------- */
+function renderLacrimal(st) {
+  let s = `<svg viewBox="0 0 980 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="右眼淚道正視圖">${DEFS}<rect class="fig-bgrect" width="980" height="640" fill="var(--fig-bg)"/>`;
+  // bone & nasal cavity
+  s += `<path class="deco c-bone" d="M626 120H760V640H612L622 540Q618 420 620 330Z"/><path class="deco" d="M626 120H760V640H612L622 540Q618 420 620 330Z" style="fill:url(#p-bone)"/>`;
+  s += `<path class="deco" d="M680 300H800V640H680Z" style="fill:var(--surface-2);stroke:var(--t-stroke-2)"/>`;
+  s += `<path class="deco c-conj" d="M680 360Q760 350 790 380Q796 410 760 418Q720 424 680 412Z"/><path class="deco c-conj" d="M680 462Q770 452 796 490Q800 530 760 540Q716 548 680 532Z"/>`;
+  s += note(740, 330, 'nasal cavity', 'middle') + note(740, 440, 'middle meatus', 'middle') + note(740, 584, 'inferior meatus', 'middle') + note(735, 506, 'inf. turbinate', 'middle') + note(735, 393, 'mid. turbinate', 'middle');
+  // eyelids & eye
+  const up = cr([[110, 266], [190, 214], [300, 196], [410, 216], [490, 260]], 8), lo = cr([[490, 260], [400, 300], [300, 316], [200, 304], [110, 266]], 8);
+  s += `<path class="deco" d="M60 100Q300 60 560 150V420Q300 470 60 420Z" style="fill:var(--t-skin);opacity:.45"/>`;
+  s += `<path class="deco c-sclera" d="${P0([...up, ...lo])}"/>`;
+  s += `<circle class="deco c-iris" cx="300" cy="256" r="60"/><circle class="deco" cx="300" cy="256" r="21" style="fill:var(--t-pig)"/>`;
+  s += `<path class="deco c-line" d="${P0o(up)}" style="stroke-width:2"/><path class="deco c-line" d="${P0o(lo)}" style="stroke-width:2"/>`;
+  s += `<ellipse class="deco c-gland" cx="478" cy="261" rx="10" ry="7" style="opacity:.8"/>`;
+  // lacrimal gland lobes + lateral horn of levator aponeurosis
+  s += S('lacrimal_gland', P0(ell(168, 118, 72, 38, -18)), 'c-gland') + S('lacrimal_gland', P0(ell(186, 176, 42, 18, -12)), 'c-gland');
+  s += `<path class="deco" d="M92 172Q180 140 268 138" style="stroke:var(--t-sheath);stroke-width:6;fill:none"/>`;
+  s += `<path class="deco" d="M182 192L196 214M200 192L214 212M218 190L230 210" style="stroke:var(--t-gland);stroke-width:1.6;stroke-dasharray:3 3;fill:none"/>`;
+  // canaliculi
+  const cu = cr([[448, 236], [448, 214], [480, 212], [520, 226], [552, 246]], 8), cl = cr([[440, 288], [440, 308], [480, 306], [520, 288], [552, 256]], 8);
+  s += S('canaliculi', P0(tube(cu, 3.6)), 'c-conj', 'style="stroke-width:1"') + H('canaliculi', P0o(cu), 14);
+  s += S('canaliculi', P0(tube(cl, 3.6)), 'c-conj', 'style="stroke-width:1"') + H('canaliculi', P0o(cl), 14);
+  // lacrimal sac + NLD
+  const sac = 'M572 214Q572 192 596 192Q620 192 620 214V318Q620 336 606 340H586Q572 336 572 318Z';
+  s += S('sac', sac, 'c-conj', 'style="stroke-width:1.2"');
+  const nld = cr([[596, 334], [598, 400], [604, 470], [612, 530], [628, 548]], 8);
+  s += S('nld', P0(tube(nld, t => 11 - 3 * t)), 'c-conj', 'style="stroke-width:1.2"');
+  s += S('common_can', 'M550 251H574', 'c-line', 'style="stroke:var(--t-conj);stroke-width:8"') + H('common_can', 'M550 251H574', 16);
+  s += `<path class="deco" d="M572 244V258" style="stroke:var(--t-stroke);stroke-width:1.6"/>`;
+  s += S('hasner', 'M624 540Q640 552 652 552', 'c-line', 'style="stroke:var(--t-stroke);stroke-width:3"') + H('hasner', 'M624 540Q640 552 652 552', 14);
+  // medial canthal tendon crossing in front of the sac
+  s += S('mct', 'M486 262Q560 246 650 236L652 252Q560 262 488 270Z', 'c-coll', 'style="fill-opacity:.55"');
+  // puncta
+  s += `<circle data-s="puncta" class="shape c-white" cx="448" cy="236" r="4.5" style="fill:var(--t-pig)"/><circle data-s="puncta" class="shape c-white" cx="440" cy="288" r="4.5" style="fill:var(--t-pig)"/>`;
+  s += HD('puncta', 448, 236, 10) + HD('puncta', 440, 288, 10);
+  const L = [
+    ['lacrimal_gland', [168, 118], 'T'], ['puncta', [448, 236], 'T'], ['canaliculi', [500, 218], 'T'], ['common_can', [560, 251], 'R'],
+    ['sac', [596, 300], 'R'], ['mct', [620, 248], 'R'], ['nld', [600, 430], 'R'], ['hasner', [640, 551], 'R']
+  ];
+  s += labels(L, { R: { x: 818, lo: 150, hi: 620 }, T: { y: 28, lo: 40, hi: 620 }, B: { y: 620, lo: 100, hi: 560 } });
+  s += `</svg>`;
+  return { svg: s, cap: ['右眼淚液排出系統正視圖：左＝lateral，右＝medial（鼻側）。', '水平 canaliculus 約 8–10 mm；NLD 開口於 inferior meatus'] };
+}
+/* ---------- app ---------- */
+const VIEWS = [
+  { id: 'globe', name: '眼球總覽', en: 'Globe', subs: [['globe', '水平切面']] },
+  { id: 'ant', name: '前段', en: 'Anterior segment', subs: [['angle', 'Angle 放大'], ['cornea', '角膜分層']] },
+  { id: 'post', name: '視網膜', en: 'Retina', subs: [['retina', '黃斑切面']] },
+  { id: 'orbit', name: '眼眶', en: 'Orbit', subs: [['orbit', 'EOM 上視圖'], ['apex', '眶尖正視圖']] },
+  { id: 'adnexa', name: '眼瞼與淚道', en: 'Adnexa', subs: [['lid', '上眼瞼切面'], ['lacrimal', '淚道']] }
+];
+const RENDER = { globe: renderGlobe, angle: renderAngle, cornea: renderCornea, retina: renderRetina, orbit: renderOrbit, apex: renderApex, lid: renderLid, lacrimal: renderLacrimal };
+const SUB_ORDER = ['globe', 'angle', 'cornea', 'retina', 'orbit', 'apex', 'lid', 'lacrimal'];
+const SUB_NAME = {}; const SUB_GROUP = {};
+VIEWS.forEach(v => v.subs.forEach(([id, nm]) => { SUB_NAME[id] = v.subs.length > 1 ? `${v.name}・${nm}` : v.name; SUB_GROUP[id] = v.id; }));
+
+const $ = s => document.querySelector(s);
+const st = { sub: 'globe', sel: 'cornea', multi: null, multiSrc: null, labels: true, dims: false, oct: false, layer: 1, path: null, step: 0, mode: 'learn', quiz: null };
+const store = (() => {
+  const K = 'eyeAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K, JSON.stringify(mem)); } catch (e) { } } };
+})();
+
+/* which ids appear in which sub-view */
+const ID_VIEWS = {};
+const idsIn = svg => { const set = new Set(); svg.replace(/data-s="([^"]+)"/g, (_, id) => set.add(id)); return set; };
+SUB_ORDER.forEach(sub => {
+  const tmp = Object.assign({}, st, { layer: 0, path: null, dims: false, oct: false });
+  const ids = idsIn(RENDER[sub](tmp).svg);
+  ids.forEach(id => { (ID_VIEWS[id] = ID_VIEWS[id] || []).push(sub); });
+});
+const PRIMARY = id => (DATA[id] && DATA[id].view) || (ID_VIEWS[id] ? (id === 'levator' ? 'lid' : ID_VIEWS[id][0]) : null);
+let CURRENT_IDS = new Set();
+
+/* ---------- rendering ---------- */
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${SUB_GROUP[st.sub] === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  const g = VIEWS.find(v => v.id === SUB_GROUP[st.sub]);
+  $('#subs').innerHTML = g.subs.length > 1 ? `<div class="seg" role="group" aria-label="切面">${g.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${st.sub === id}">${nm}</button>`).join('')}</div>` : `<span style="font-size:13px;color:var(--muted)">${g.subs[0][1]}</span>`;
+}
+function renderTools() {
+  const q = st.mode === 'quiz';
+  let h = '';
+  if (!q) h += `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
+  if (st.sub === 'globe' && !q) {
+    h += `<label class="tog"><input type="checkbox" id="t-dim" ${st.dims ? 'checked' : ''}>尺寸標註</label>`;
+    h += `<label class="tog">臨床路徑 <select id="t-path"><option value="">無</option><option value="phaco" ${st.path === 'phaco' ? 'selected' : ''}>Phaco</option><option value="ivi" ${st.path === 'ivi' ? 'selected' : ''}>IVI</option></select></label>`;
+  }
+  if (st.sub === 'retina') h += `<label class="tog"><input type="checkbox" id="t-oct" ${st.oct ? 'checked' : ''}>OCT 反射率配色</label>`;
+  if (st.sub === 'orbit') h += `<label class="tog">上層結構 <select id="t-layer"><option value="0" ${st.layer === 0 ? 'selected' : ''}>全部顯示</option><option value="1" ${st.layer === 1 ? 'selected' : ''}>移除 levator</option><option value="2" ${st.layer === 2 ? 'selected' : ''}>移除 levator 與 SR</option></select></label>`;
+  $('#tools').innerHTML = h;
+}
+function renderExtra() {
+  if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  let h = '';
+  if (st.sub === 'angle') {
+    const b = [['schwalbe', 'Schwalbe line', 10, 'var(--fig-bg)'], ['tm', 'TM（non-pigmented）', 22, 'var(--t-cb)'], ['tm', 'TM（pigmented）', 22, 'var(--t-uvea)'], ['spur', 'Scleral spur', 12, 'var(--t-sclera)'], ['cbb', 'Ciliary body band', 22, 'var(--t-pig)'], ['iris', 'Iris root', 26, 'var(--t-iris)']];
+    h = `<div class="xh">Gonioscopy 所見（由上到下＝由前到後）</div><div class="gonio"><div class="gstack">${b.map(([id, t, hh, c]) => `<button type="button" data-s="${id}" style="height:${hh + 12}px;background:${c};color:${['var(--t-uvea)', 'var(--t-pig)', 'var(--t-iris)'].includes(c) ? '#F3EEE8' : 'var(--ink)'}"><span>${t}</span><span>${DATA[id].zh}</span></button>`).join('')}</div>
+      <div class="gnote"><span><b>看得到哪一層，就代表 angle 開到哪裡。</b>只見 Schwalbe line ≈ Shaffer 1；見到 TM ≈ 2；見到 scleral spur ≈ 3；見到 CBB ≈ 4。</span><span>先用 corneal wedge 找 Schwalbe line，再往後找 spur。Pigmented TM 才是有濾過功能的部分。</span><span>Indentation 後打開 → appositional closure；打不開 → PAS（synechial）。</span></div></div>`;
+  } else if (st.sub === 'cornea') {
+    let hex = ''; const r = 9, w = r * Math.sqrt(3);
+    for (let row = 0; row < 8; row++) for (let col = 0; col < 9; col++) {
+      const cx = col * w + (row % 2 ? w / 2 : 0) + 6, cy = row * r * 1.5 + 8; const rr = (row === 3 && col === 4) ? r * 1.25 : r;
+      const p = Array.from({ length: 6 }, (_, k) => { const a = (60 * k + 30) * DEG; return `${fx(cx + rr * Math.cos(a))},${fx(cy + rr * Math.sin(a))}`; }).join(' ');
+      hex += `<polygon points="${p}"/>`;
+    }
+    h = `<div class="xh">Specular microscopy</div><div class="spec"><svg viewBox="0 0 150 112" data-s="endothelium" role="img" aria-label="角膜內皮鏡面顯微"><rect width="150" height="112" fill="#1c1a22"/><g fill="#8d8a96" stroke="#2a2830" stroke-width="1.6">${hex}</g></svg><p>內皮的正常樣貌是大小一致的六角形鑲嵌。報告三個數字：<b>ECD</b>（cells/mm²）、<b>CV</b>（大小變異，polymegathism）、<b>hexagonality</b>（六角形比例，pleomorphism）。中間那顆放大的細胞示意 polymegathism。點圖可看 endothelium 卡片。</p></div>`;
+  } else if (st.sub === 'orbit') {
+    const g = [['sr', '往右上', 'OS IO'], [null, '往上', ''], ['io', '往左上', 'OS SR'], ['lr', '往右', 'OS MR'], [null, '正前方', ''], ['mr', '往左', 'OS LR'], ['ir', '往右下', 'OS SO'], [null, '往下', ''], ['so', '往左下', 'OS IR']];
+    h = `<div class="xrow"><div><div class="xh">右眼 OD 六個診斷眼位</div><div class="gaze">${g.map(([id, t, y]) => id ? `<button type="button" data-s="${id}"><small>${t}</small><b>${id.toUpperCase()}</b><small>${y}</small></button>` : `<button type="button" class="ctr" tabindex="-1">${t}</button>`).join('')}</div></div>
+      <div class="gnote" style="max-width:46ch;padding-top:22px"><span>以檢查者面對病人的視角排列：左欄＝病人往自己的右邊看。灰字是對側 OS 的 yoke muscle。</span><span><b>垂直肌在哪個眼位作用最純：</b>rectus 在 abduction（與 orbital axis 對齊，23°），oblique 在 adduction（51°）。所以 SO 測往下內、IO 測往上內。</span></div></div>`;
+  } else if (st.sub === 'apex') {
+    h = `<div class="xh">點症候群看受影響的結構</div><div class="syn">${['syn_sof', 'syn_apex', 'syn_cs'].map(id => `<button type="button" class="chip ${st.sel === id ? 'on' : ''}" data-syn="${id}">${DATA[id].zh}<i> · ${DATA[id].en}</i></button>`).join('')}</div>`;
+  }
+  $('#extra').innerHTML = h;
+}
+function renderFig() {
+  const out = RENDER[st.sub](st);
+  const fig = $('#fig');
+  fig.innerHTML = out.svg;
+  fig.classList.toggle('nolab', !st.labels);
+  fig.classList.toggle('quiz-on', st.mode === 'quiz');
+  fig.classList.toggle('oct', st.sub === 'retina' && st.oct);
+  $('#cap').innerHTML = `<span>${out.cap[0]}</span><span class="ori">${out.cap[1]}</span>`;
+  CURRENT_IDS = idsIn(out.svg);
+  renderIndex();
+}
+function renderIndex() {
+  if (st.mode === 'quiz') { $('#index').innerHTML = ''; $('#index').hidden = true; return; }
+  $('#index').hidden = false;
+  const ids = Object.keys(DATA).filter(id => CURRENT_IDS.has(id));
+  $('#index').innerHTML = `<span class="lbl">本圖結構（${ids.length}）</span>` + ids.map(id => `<button type="button" class="chip" data-s="${id}">${DATA[id].zh} <i>${DATA[id].lab || DATA[id].en}</i></button>`).join('');
+}
+function applyHL() {
+  const fig = $('#fig'), svg = fig.querySelector('svg');
+  document.querySelectorAll('.on').forEach(e => { if (!e.closest('.seg')) e.classList.remove('on'); });
+  document.querySelectorAll('.q-ok,.q-bad').forEach(e => e.classList.remove('q-ok', 'q-bad'));
+  const set = new Set([...(st.multi || []), st.sel].filter(Boolean));
+  const q = st.quiz;
+  if (st.mode === 'quiz' && q && q.phase === 'q') {
+    set.clear();
+    const it = q.items[q.i];
+    if (it.type === 'name') set.add(it.id);
+    if (q.ans) {
+      fig.querySelectorAll(`[data-s="${it.id}"]`).forEach(e => e.classList.add('q-ok'));
+      if (q.ans.pick && q.ans.pick !== it.id) fig.querySelectorAll(`[data-s="${q.ans.pick}"]`).forEach(e => e.classList.add('q-bad'));
+    }
+  }
+  set.forEach(id => document.querySelectorAll(`[data-s="${id}"]`).forEach(e => { if (!e.closest('.panel')) e.classList.add('on'); }));
+  if (svg) svg.classList.toggle('has-sel', set.size > 0 && !(st.mode === 'quiz'));
+  document.querySelectorAll('[data-syn]').forEach(b => b.classList.toggle('on', b.dataset.syn === st.sel));
+}
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+function cardHTML(id) {
+  const d = DATA[id]; if (!d) return '';
+  const where = (ID_VIEWS[id] || []).filter(v => v !== st.sub);
+  let h = `<div class="card"><div class="eyebrow">${SUB_NAME[d.view || PRIMARY(id)] || ''}${d.pseudo ? ' · 臨床症候群' : ''}</div><div><h2>${d.en}</h2></div><p class="zh">${d.zh}</p><p class="def">${d.def}</p>`;
+  if (d.n && d.n.length) h += `<div class="sec"><h3>重點數值</h3><table class="nums"><tbody>${d.n.map(([a, b, r]) => `<tr><td>${a}</td><td class="v">${b}</td><td class="r">${r}</td></tr>`).join('')}</tbody></table></div>`;
+  h += list('臨床疾病', d.dx) + list('檢查', d.ex) + list('手術與處置', d.op);
+  if (d.rel && d.rel.length) h += `<div class="sec"><h3>相關結構</h3><div class="rel">${d.rel.filter(r => DATA[r]).map(r => `<button type="button" class="chip" data-go-id="${r}">${DATA[r].zh} <i>${DATA[r].lab || DATA[r].en}</i></button>`).join('')}</div></div>`;
+  if (where.length) h += `<div class="sec"><h3>也出現在</h3><div class="rel">${where.map(v => `<button type="button" class="chip" data-go-sub="${v}" data-go-sel="${id}">${SUB_NAME[v]}</button>`).join('')}</div></div>`;
+  return h + `</div>`;
+}
+function renderPanel() {
+  const p = $('#panel');
+  if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
+  let h = '';
+  if (st.path && st.sub === 'globe') {
+    const P = PATHS[st.path], s = P.steps[st.step];
+    h += `<div class="steps"><div class="t">${P.name}</div>${P.steps.map((x, i) => `<button type="button" class="step" data-step="${i}" aria-current="${i === st.step}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span>${x.t}</span></button>`).join('')}</div>`;
+    h += `<div class="stepbox"><h3>${s.t}</h3><ul>${s.pts.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+  }
+  h += st.sel ? cardHTML(st.sel) : `<div class="empty-card">點圖上的結構或下方清單，查看說明、重點數值與臨床連結。</div>`;
+  p.innerHTML = h;
+}
+function renderSelbar() {
+  const b = $('#selbar'), d = st.mode === 'learn' && st.sel && DATA[st.sel];
+  if (!d) { b.hidden = true; return; }
+  b.hidden = false; b.innerHTML = `<span>已選：${d.zh} <i>${d.en}</i></span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderPanel(); applyHL(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).length;
+}
+
+/* ---------- navigation ---------- */
+function setSub(sub, keepSel) {
+  if (st.sub !== sub) { st.sub = sub; if (sub !== 'globe') { st.path = null; if (st.multiSrc === 'path') { st.multi = null; st.multiSrc = null; } } if (!keepSel) { st.multi = null; st.multiSrc = null; } }
+  try { const m = store.get(); m.sub = sub; store.save(); } catch (e) { }
+}
+function select(id) {
+  if (!DATA[id]) return;
+  const d = DATA[id];
+  if (d.pseudo) { setSub(d.view, true); st.sel = id; st.multi = d.hl; st.multiSrc = 'syn'; render(); return; }
+  if (st.multiSrc === 'syn') { st.multi = null; st.multiSrc = null; }
+  if (!CURRENT_IDS.has(id) && st.multiSrc !== 'path') st.multi = null;
+  const before = st.sub;
+  if (!CURRENT_IDS.has(id)) { const v = PRIMARY(id); if (v) setSub(v, true); }
+  st.sel = id;
+  if (before === st.sub) { renderPanel(); renderExtra(); applyHL(); renderSelbar(); } else render();
+}
+
+/* ---------- quiz ---------- */
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+function quizHTML() {
+  const q = st.quiz;
+  if (!q || q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).length;
+    const s = q || { scope: 'view', type: 'mix', total: 10 };
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(s[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗</div><h2>考考你認得多少</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'view', '目前這張圖')}${opt('scope', 'all', '全部 8 張圖')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${opt('type', 'find', '在圖上找')}${opt('type', 'name', '說出名稱')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 40, '40')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">測驗時標籤會隱藏。答錯的結構會自動記進錯題本；在「錯題」範圍答對一次會減一筆。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go-id="${x.id}"><span>${DATA[x.id].zh} · <i>${DATA[x.id].en}</i></span><span>${x.type === 'find' ? '找位置' : '認名稱'}</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i], d = DATA[it.id];
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  if (it.type === 'find') {
+    h += `<div class="prompt"><div class="k">在圖上點出</div><div class="q">${d.zh}　<i>${d.en}</i></div></div>`;
+  } else {
+    h += `<div class="prompt"><div class="k">圖上亮起的結構是？</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.id ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${DATA[o].zh}　<i>${DATA[o].en}</i></button>`).join('')}</div>`;
+  }
+  if (q.ans) {
+    const ok = q.ans.ok, pk = q.ans.pick && DATA[q.ans.pick];
+    h += `<div class="fb ${ok ? 'ok' : 'bad'}"><b>${ok ? '答對。' : '答錯。'}</b>${!ok && it.type === 'find' && pk ? ` 你點的是 ${pk.zh}（${pk.en}）；綠框才是 ${d.zh}。` : ''} ${d.def}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else if (it.type === 'find') h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const scope = cfg.scope, w = store.get().wrong;
+  let pool;
+  if (scope === 'view') pool = [...CURRENT_IDS].filter(id => DATA[id] && !DATA[id].pseudo);
+  else if (scope === 'wrong') pool = Object.keys(w).filter(id => DATA[id] && ID_VIEWS[id]);
+  else pool = Object.keys(DATA).filter(id => !DATA[id].pseudo && ID_VIEWS[id]);
+  if (!pool.length) { st.quiz = Object.assign({ phase: 'setup' }, cfg); renderPanel(); return; }
+  const n = Math.min(cfg.total, pool.length);
+  const items = shuffle(pool.slice()).slice(0, n).map(id => {
+    const type = cfg.type === 'mix' ? (Math.random() < 0.5 ? 'find' : 'name') : cfg.type;
+    const sub = scope === 'view' ? st.sub : (CURRENT_IDS.has(id) ? st.sub : PRIMARY(id));
+    return { id, type, sub };
+  });
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
+  st.sel = null; st.multi = null; st.path = null;
+  gotoQ();
+}
+function gotoQ() {
+  const q = st.quiz, it = q.items[q.i];
+  if (st.sub !== it.sub) st.sub = it.sub;
+  if (it.sub === 'orbit') st.layer = (it.id === 'levator') ? 0 : (it.id === 'ir' ? 2 : 1);
+  if (it.type === 'name' && !it.opts) {
+    const pool = [...idsIn(RENDER[it.sub](st).svg)].filter(x => x !== it.id && DATA[x] && !DATA[x].pseudo);
+    it.opts = shuffle([it.id, ...shuffle(pool).slice(0, 3)]);
+  }
+  render();
+}
+function answer(pick) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  const ok = pick === it.id;
+  q.ans = { ok, pick }; if (ok) q.score++;
+  q.log.push({ id: it.id, ok, type: it.type });
+  const m = store.get();
+  if (!ok) m.wrong[it.id] = (m.wrong[it.id] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.id]) { m.wrong[it.id]--; if (m.wrong[it.id] <= 0) delete m.wrong[it.id]; }
+  store.save();
+  renderPanel(); applyHL();
+  $('#wrong-ct').textContent = Object.keys(m.wrong).length;
+}
+function setMode(m) {
+  st.mode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  if (m === 'quiz') { st.quiz = { phase: 'setup', scope: 'view', type: 'mix', total: 10 }; st.multi = null; st.path = null; }
+  else { st.quiz = null; if (!st.sel) st.sel = [...CURRENT_IDS].find(id => DATA[id]) || 'cornea'; }
+  render();
+}
+
+/* ---------- sheets ---------- */
+function openSheet(id) { const s = $(id); s.hidden = false; const f = s.querySelector('input,button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(s => s.hidden = true); }
+function renderNums() {
+  const q = ($('#nums-q').value || '').trim().toLowerCase();
+  let h = '<table class="ntab"><thead><tr><th>結構</th><th>項目</th><th>數值</th><th>對照</th></tr></thead><tbody>';
+  SUB_ORDER.forEach(sub => {
+    const rows = [];
+    Object.keys(DATA).forEach(id => {
+      const d = DATA[id]; if (!d.n || PRIMARY(id) !== sub) return;
+      d.n.forEach(([a, b, r]) => { const txt = `${d.zh} ${d.en} ${a} ${b}`.toLowerCase(); if (!q || txt.includes(q)) rows.push(`<tr data-go="${id}"><td class="s">${d.zh}<i>${d.en}</i></td><td>${a}</td><td class="v">${b}</td><td class="r">${r}</td></tr>`); });
+    });
+    if (rows.length) h += `<tr class="grp"><td colspan="4">${SUB_NAME[sub]}</td></tr>` + rows.join('');
+  });
+  h += '</tbody></table>';
+  $('#nums-body').innerHTML = h;
+}
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(id => DATA[id]).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(id => `<button type="button" data-go="${id}"><span>${DATA[id].zh} · <i>${DATA[id].en}</i></span><span>× ${w[id]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的結構會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  $('#w-practice').disabled = !ids.length;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const tab = t.closest('[data-view]'); if (tab) { const v = VIEWS.find(x => x.id === tab.dataset.view); if (st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q') return; setSub(v.subs[0][0]); if (st.mode === 'learn') { st.sel = null; } render(); return; }
+  const sb = t.closest('[data-sub]'); if (sb) { if (st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q') return; setSub(sb.dataset.sub); if (st.mode === 'learn') st.sel = null; render(); return; }
+  const zm = t.closest('.zoom[data-go]'); if (zm && st.mode === 'learn') { setSub(zm.dataset.go); st.sel = null; render(); return; }
+  const syn = t.closest('[data-syn]'); if (syn) { select(syn.dataset.syn); return; }
+  const gi = t.closest('[data-go-id]'); if (gi) { if (st.mode === 'quiz') setMode('learn'); select(gi.dataset.goId); return; }
+  const gs = t.closest('[data-go-sub]'); if (gs) { setSub(gs.dataset.goSub, true); st.sel = gs.dataset.goSel; render(); return; }
+  const stp = t.closest('[data-step]'); if (stp) { st.step = +stp.dataset.step; const s = PATHS[st.path].steps[st.step]; st.multi = s.hl; st.multiSrc = 'path'; st.sel = null; render(); return; }
+  const go = t.closest('tr[data-go], .wl button[data-go]'); if (go) { closeSheets(); if (st.mode === 'quiz') setMode('learn'); select(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  // quiz controls
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start')) { startQuiz({ scope: st.quiz.scope, type: st.quiz.type, total: st.quiz.total }); return; }
+  if (t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) { q.phase = 'done'; render(); } else gotoQ(); return; }
+  if (t.closest('#q-skip')) { answer(null); return; }
+  const op = t.closest('[data-opt]'); if (op) { answer(op.dataset.opt); return; }
+  // structure click
+  const el = t.closest('[data-s]');
+  if (el && (el.closest('#fig') || el.closest('#extra') || el.closest('#index'))) {
+    const id = el.dataset.s;
+    if (st.mode === 'quiz') { const q = st.quiz; if (q && q.phase === 'q' && q.items[q.i].type === 'find' && el.closest('#fig')) answer(id); return; }
+    select(id); return;
+  }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 't-lab') { st.labels = t.checked; $('#fig').classList.toggle('nolab', !st.labels); }
+  if (t.id === 't-dim') { st.dims = t.checked; renderFig(); applyHL(); }
+  if (t.id === 't-oct') { st.oct = t.checked; renderFig(); applyHL(); }
+  if (t.id === 't-layer') { st.layer = +t.value; renderFig(); applyHL(); }
+  if (t.id === 't-path') { st.path = t.value || null; st.step = 0; if (st.path) { st.multi = PATHS[st.path].steps[0].hl; st.multiSrc = 'path'; st.sel = null; } else { st.multi = null; st.multiSrc = null; } render(); }
+});
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-nums').addEventListener('click', () => { renderNums(); openSheet('#sheet-nums'); });
+$('#nums-q').addEventListener('input', renderNums);
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 20 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+// tooltip
+const tip = $('#tip');
+$('#fig').addEventListener('mousemove', e => {
+  if (st.mode === 'quiz') { tip.hidden = true; return; }
+  const el = e.target.closest('[data-s]');
+  if (!el || !DATA[el.dataset.s]) { tip.hidden = true; return; }
+  const d = DATA[el.dataset.s];
+  tip.innerHTML = `${d.zh}　<i>${d.en}</i>`; tip.hidden = false;
+  const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8), y = e.clientY + 16;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+});
+$('#fig').addEventListener('mouseleave', () => tip.hidden = true);
+
+/* ---------- boot ---------- */
+(() => {
+  const h = (location.hash || '').replace('#', '');
+  const saved = store.get().sub;
+  if (RENDER[h]) { st.sub = h; st.sel = null; }
+  else if (saved && RENDER[saved]) { st.sub = saved; st.sel = saved === 'globe' ? 'cornea' : null; }
+  render();
+  if (!st.sel) { st.sel = Object.keys(DATA).find(id => CURRENT_IDS.has(id)); renderPanel(); applyHL(); }
+})();
+</script>
+
+</body>
+</html>
