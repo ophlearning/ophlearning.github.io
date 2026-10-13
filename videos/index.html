@@ -76,6 +76,8 @@ h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:34px;letter-spa
 .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
 .screen{border-radius:10px;overflow:hidden;background:var(--screen);border:1px solid var(--line)}
 .screen video,.screen iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:var(--screen)}
+.screen .yt{aspect-ratio:16/9}
+.screen .yt iframe{height:100%;aspect-ratio:auto}
 .sum{margin:0;color:var(--ink-2);max-width:68ch}
 .note{margin:0;font-size:13.5px;color:var(--ink-2);background:var(--accent-soft);border-radius:8px;padding:10px 14px}
 .sec-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 2px;display:flex;align-items:center;gap:10px}
@@ -151,13 +153,16 @@ const CATS = [
   {id:'exam',    zh:'檢查與診斷'},
 ];
 
-/* 影片清單：type 'mp4' 是影片檔（放在 media/），type 'anim' 是程式動畫（src 指向動畫頁面）
-   chapters 的時間以秒為單位；refs 的 doi 或 url 擇一 */
+/* 影片清單：每支影片的網址是 videos/#<id>
+   type 'youtube'：yt 填 YouTube 影片 ID（watch?v= 後面那串），沒給 poster 就用 YouTube 縮圖；影片一律用這種
+   type 'mp4'：影片檔放在 media/（目前沒有在用）
+   type 'anim'：程式動畫，src 指向動畫頁面
+   dur 是片長（秒）；chapters 的時間以秒為單位；refs 的 doi 或 url 擇一 */
 const VIDEOS = [
   {
-    id:'dmek', type:'mp4', cat:'surgery',
+    id:'dmek', type:'youtube', yt:'Fbd0qDjD_ZM', cat:'surgery',
     zh:'DMEK 手術教學', en:'Descemet membrane endothelial keratoplasty',
-    src:'media/dmek.mp4', poster:'media/dmek.jpg', dur:636,
+    poster:'media/dmek.jpg', dur:636,
     short:'從選病人、準備 graft、手術步驟到術後照顧，走一遍 DMEK。',
     sum:'用文獻的標準做法，帶你走一遍 DMEK：選病人、準備 graft、手術步驟，到術後照顧。手術步驟以 Chen 與 Terry 2019 年發表的 step-by-step 做法為主線。',
     note:'各院做法不同的地方，影片中標「因院而異」；跟刀時請對照你們科的實際做法。',
@@ -205,8 +210,26 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>'
 const fmt = t => Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0');
 const catName = id => (CATS.find(c => c.id === id) || {zh:''}).zh;
 const nChapters = v => v.chapters ? v.chapters.reduce((n, g) => n + g.items.length, 0) : 0;
+const posterOf = v => v.poster || (v.type === 'youtube' && v.yt ? `https://i.ytimg.com/vi/${encodeURIComponent(v.yt)}/hqdefault.jpg` : '');
 const PLAY = '<svg class="play" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="21" fill="var(--surface)" opacity=".92"/><path d="M18 14.5L30.5 22L18 29.5Z" fill="var(--accent)"/></svg>';
-let cat = 'all';
+const YT_HOST = 'https://www.youtube-nocookie.com';
+let cat = 'all', cleanup = null, renderToken = 0, ytApi = null;
+
+/* YouTube IFrame API：第一次打開 YouTube 影片時才載入；載入失敗就退回一般嵌入 */
+function loadYT(){
+  if (!ytApi) ytApi = new Promise((resolve, reject) => {
+    if (window.YT && window.YT.Player) return resolve(window.YT);
+    let done = false;
+    window.onYouTubeIframeAPIReady = () => { done = true; resolve(window.YT); };
+    const fail = () => { if (!done) { done = true; ytApi = null; reject(new Error('YouTube API unavailable')); } };
+    const s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    s.onerror = fail;
+    document.head.appendChild(s);
+    setTimeout(fail, 10000);
+  });
+  return ytApi;
+}
 
 function renderChips(){
   const all = [{id:'all', zh:'全部'}, ...CATS];
@@ -224,7 +247,7 @@ function renderList(){
     if (nChapters(v)) tags.push(nChapters(v) + ' 個章節');
     if (v.refs && v.refs.length) tags.push(v.refs.length + ' 篇文獻');
     return `<li><a class="vcard" href="#${encodeURIComponent(v.id)}">
-      <div class="poster">${v.poster ? `<img src="${esc(v.poster)}" alt="" loading="lazy">` : ''}${PLAY}${v.dur ? `<span class="dur">${fmt(v.dur)}</span>` : ''}</div>
+      <div class="poster">${posterOf(v) ? `<img src="${esc(posterOf(v))}" alt="" loading="lazy">` : ''}${PLAY}${v.dur ? `<span class="dur">${fmt(v.dur)}</span>` : ''}</div>
       <div>
         <div class="cat">${esc(catName(v.cat))}</div>
         <h2>${esc(v.zh)}<span class="en">${esc(v.en)}</span></h2>
@@ -244,22 +267,41 @@ function renderDetail(v){
   if (v.refs && v.refs.length) meta.push(v.refs.length + ' 篇參考文獻');
   $('#d-meta').innerHTML = meta.map(m => `<span>${esc(m)}</span>`).join('');
 
+  /* 播放器：seek(t) 跳到第 t 秒，now() 回傳目前秒數（取不到時回傳 null） */
   const screen = $('#d-screen');
-  if (v.type === 'anim') {
+  const token = ++renderToken;
+  let seek = null, now = () => null, player = null, plainYT = false, timer = null;
+  if (v.type === 'youtube') {
+    const embed = start => `${YT_HOST}/embed/${encodeURIComponent(v.yt)}?rel=0&playsinline=1${start != null ? `&start=${start}&autoplay=1` : ''}`;
+    const plain = start => {
+      plainYT = true;
+      screen.querySelector('.yt').innerHTML = `<iframe src="${esc(embed(start))}" title="${esc(v.zh)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+    };
+    screen.innerHTML = '<div class="yt"><div id="yt-player"></div></div>';
+    loadYT().then(YT => {
+      if (token !== renderToken) return;
+      player = new YT.Player('yt-player', {host: YT_HOST, videoId: v.yt, width: '100%', height: '100%', playerVars: {rel: 0, playsinline: 1}});
+    }).catch(() => { if (token === renderToken) plain(); });
+    const ready = () => !plainYT && player && typeof player.seekTo === 'function';
+    seek = t => { if (ready()) { player.seekTo(t, true); player.playVideo(); } else plain(t); };
+    now = () => ready() ? player.getCurrentTime() : null;
+  } else if (v.type === 'anim') {
     screen.innerHTML = `<iframe src="${esc(v.src)}" title="${esc(v.zh)}" loading="lazy"></iframe>`;
   } else {
     screen.innerHTML = `<video controls preload="metadata" playsinline ${v.poster ? `poster="${esc(v.poster)}"` : ''} src="${esc(v.src)}"></video>`;
+    const video = screen.querySelector('video');
+    seek = t => { video.currentTime = t; video.play().catch(() => {}); };
+    now = () => video.currentTime;
   }
   $('#d-sum').textContent = v.sum || v.short;
   $('#d-note').hidden = !v.note;
   $('#d-note').textContent = v.note || '';
 
-  const video = screen.querySelector('video');
   const hasCh = !!(v.chapters && v.chapters.length);
   $('#d-ch-h').hidden = $('#d-chapters').hidden = !hasCh;
   $('#d-chapters').innerHTML = hasCh ? v.chapters.map(g => `<li class="grp">
       ${g.g ? `<div class="grp-h">${esc(g.g)}</div>` : ''}
-      <ol>${g.items.map(([t, label]) => `<li><button type="button" class="ch" data-t="${t}" ${video ? '' : 'disabled'}><span class="ts">${fmt(t)}</span><span>${esc(label)}</span></button></li>`).join('')}</ol>
+      <ol>${g.items.map(([t, label]) => `<li><button type="button" class="ch" data-t="${t}" ${seek ? '' : 'disabled'}><span class="ts">${fmt(t)}</span><span>${esc(label)}</span></button></li>`).join('')}</ol>
     </li>`).join('') : '';
 
   const refs = v.refs || [];
@@ -271,33 +313,39 @@ function renderDetail(v){
     return `<li>${esc(r.c)} <a href="${esc(href)}" target="_blank" rel="noopener">${esc(label)}</a></li>`;
   }).join('');
 
-  if (video && hasCh) {
+  if (seek && hasCh) {
     const btns = [...document.querySelectorAll('#d-chapters .ch')];
     const times = btns.map(b => +b.dataset.t);
-    const mark = () => {
+    const mark = cur => {
+      if (cur == null) return;
       let i = -1;
-      times.forEach((t, k) => { if (video.currentTime + 0.3 >= t) i = k; });
+      times.forEach((t, k) => { if (cur + 0.3 >= t) i = k; });
       btns.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
     };
-    video.addEventListener('timeupdate', mark);
-    video.addEventListener('seeked', mark);
-    btns.forEach(b => b.addEventListener('click', () => {
-      video.currentTime = +b.dataset.t;
-      video.play().catch(() => {});
-    }));
+    btns.forEach(b => b.addEventListener('click', () => { seek(+b.dataset.t); mark(+b.dataset.t); }));
+    const video = screen.querySelector('video');
+    if (video) ['timeupdate', 'seeked'].forEach(e => video.addEventListener(e, () => mark(now())));
+    else timer = setInterval(() => mark(now()), 500);
   }
+  cleanup = () => {
+    clearInterval(timer);
+    const video = screen.querySelector('video');
+    if (video) video.pause();
+    if (player && typeof player.destroy === 'function') player.destroy();
+    screen.innerHTML = '';
+  };
   document.title = `${v.zh} · 教學影片 · ophlearning`;
 }
 
 function route(){
+  if (cleanup) { cleanup(); cleanup = null; }
+  renderToken++;
   const id = decodeURIComponent(location.hash.slice(1));
   const v = VIDEOS.find(x => x.id === id);
-  const prev = $('#d-screen video');
-  if (prev) prev.pause();
   $('#list-view').hidden = !!v;
   $('#detail-view').hidden = !v;
   if (v) renderDetail(v);
-  else { $('#d-screen').innerHTML = ''; document.title = '教學影片 · ophlearning'; renderList(); }
+  else { document.title = '教學影片 · ophlearning'; renderList(); }
   window.scrollTo(0, 0);
 }
 
