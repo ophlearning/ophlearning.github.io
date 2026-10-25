@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>光學與驗光互動圖譜</title>
-<meta name="description" content="互動式光學與驗光：用 reduced eye 光路圖看正視、近視、遠視與散光的焦點位置，加矯正鏡片、調節與看近，Sturm's conoid 與 circle of least confusion，附測驗與錯題本。">
+<meta name="description" content="互動式光學與驗光：用 reduced eye 光路圖看正視、近視、遠視與散光的焦點位置，加矯正鏡片、調節與看近，Sturm's conoid 與 circle of least confusion；檢影鏡驗光的 with／against／neutral 反光動畫、加減鏡片中和、工作距離換算與兩條子午線組處方，附測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -18,6 +18,7 @@
   --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
   --t-sclera:#F5F0EC; --t-vit:#EEF2F8; --t-cornea:#E2E0F1; --t-retina:#C55367; --t-lens:#DCE6F5;
   --ray:#C98A1B; --ray2:#1E8A86;
+  --t-skin:#EAC3AC; --t-white:#FFFFFF; --t-iris:#7C5342; --t-pupil:#15121F; --rfx:#FF9F1A; --stk:rgba(255,246,214,.88);
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -30,14 +31,16 @@
   --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-sclera:#3B3647; --t-vit:#24212F; --t-cornea:#302B44; --t-retina:#E07A8B; --t-lens:#3A4766;
-  --ray:#E2B14A; --ray2:#4FC7C2; color-scheme:dark }}
+  --ray:#E2B14A; --ray2:#4FC7C2;
+  --t-skin:#7A5848; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-pupil:#0B0A10; --rfx:#FFB347; --stk:rgba(255,240,200,.72); color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
   --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-sclera:#3B3647; --t-vit:#24212F; --t-cornea:#302B44; --t-retina:#E07A8B; --t-lens:#3A4766;
-  --ray:#E2B14A; --ray2:#4FC7C2; color-scheme:dark }
+  --ray:#E2B14A; --ray2:#4FC7C2;
+  --t-skin:#7A5848; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-pupil:#0B0A10; --rfx:#FFB347; --stk:rgba(255,240,200,.72); color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -124,6 +127,13 @@ a{color:var(--accent)}
 .ruler .cur{fill:var(--accent)}
 .ruler .obj{fill:var(--ray2)}
 .ruler .rng{stroke:var(--accent);stroke-width:5;stroke-linecap:round;opacity:.35}
+.r-face{fill:var(--t-skin)}
+.r-sclera{fill:var(--t-white);stroke:var(--t-stroke);stroke-width:1.2}
+.r-iris{fill:var(--t-iris)}
+.r-pupil{fill:var(--t-pupil)}
+.r-rim{fill:none;stroke:var(--t-stroke);stroke-width:1.2}
+.r-streak{fill:var(--stk)}
+.r-rfx{fill:var(--rfx)}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -246,7 +256,7 @@ input[type=range]{width:min(280px,100%);accent-color:var(--accent);margin:0}
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>光路圖是眼球側面，光從左邊進來（左＝anterior）。眼睛用 reduced eye（單一折射面）近似，橫向依比例、縱向放大；矯正鏡片當作貼在角膜上（不算 vertex distance）。光斑大小、調節量只是示意。</span>
+    <span><b>關於圖：</b>光路圖是眼球側面，光從左邊進來（左＝anterior）。眼睛用 reduced eye（單一折射面）近似，橫向依比例、縱向放大；矯正鏡片當作貼在角膜上（不算 vertex distance）。光斑大小、調節量只是示意。檢影鏡分頁畫的是檢查者看到的病人瞳孔（正面），反光的速度、寬度、亮度只是示意，主子午線只做 90° 與 180°。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -275,7 +285,9 @@ const SRC = {
   S3: { t: 'EyeWiki：Hyperopia', u: 'https://eyewiki.org/Hyperopia' },
   S4: { t: 'EyeWiki：Presbyopia', u: 'https://eyewiki.org/Presbyopia' },
   S5: { t: 'Iwata Y. Experimental investigation of focal position in regular astigmatic eyes with zero spherical equivalent. Sci Rep 2025;15:43355', u: 'https://doi.org/10.1038/s41598-025-27291-4' },
-  S6: { t: 'AAO：Basic Optics, Chapter 12 – Astigmatic Refractive Correction: Retinoscopy（教學投影片）', u: 'https://www.aao.org/Assets/cf750fad-9184-4fda-9760-dfd024f7b1af/637151349588330000/bo12-pdf?inline=1' }
+  S6: { t: 'AAO：Basic Optics, Chapter 12 – Astigmatic Refractive Correction: Retinoscopy（教學投影片）', u: 'https://www.aao.org/Assets/cf750fad-9184-4fda-9760-dfd024f7b1af/637151349588330000/bo12-pdf?inline=1' },
+  S7: { t: 'EyeWiki：Retinoscopy', u: 'https://eyewiki.org/Retinoscopy' },
+  S8: { t: 'Wilkinson ME. Plus Cylinder Retinoscopy Instructional Video. EyeRounds.org, University of Iowa, 2015', u: 'https://eyerounds.org/video/Refraction/retinoscopy/index.htm' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. <a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a></li>`).join('')}</ul></div>`; }
@@ -450,10 +462,165 @@ const CHIPS = {
 };
 const CHIP_ORDER = Object.keys(CHIPS);
 
+/* ---------- 分頁二：檢影鏡驗光（retinoscopy） ----------
+   兩條主子午線只做 90° 與 180°。e＝（眼睛該子午線的屈光度 − 試鏡片）＋ 1／工作距離：
+   e > 0 遠點在窺孔後 → with；e < 0 遠點在檢查者與病人之間 → against；|e| ≤ 0.25 D 當作中和 */
+const NEUT = 0.25;
+const RP = {
+  emm: { zh: '正視', Rv: 0, Rh: 0 }, myo1: { zh: '低度近視 −1.00', Rv: -1, Rh: -1 }, myo3: { zh: '近視 −3.00', Rv: -3, Rh: -3 }, hyp2: { zh: '遠視 +2.00', Rv: 2, Rh: 2 },
+  ast1: { zh: '散光 −1.00 −2.00 × 180', Rv: -3, Rh: -1 }, ast2: { zh: '散光 +1.00 −1.50 × 090', Rv: 1, Rh: -0.5 }, rand: { zh: '隨機病人（處方先藏起來）', Rv: 0, Rh: 0 }
+};
+const RP_ORDER = Object.keys(RP);
+const WDS = [[0.5, '50 cm'], [2 / 3, '67 cm'], [1, '1 m']];
+const wdLabel = w => (WDS.find(([x]) => Math.abs(x - w) < 1e-9) || [0, fmtCM(w)])[1];
+const MERZH = { v: '垂直子午線（90°）', h: '水平子午線（180°）' };
+// 負柱鏡試鏡片：axis 那條子午線＝S，另一條＝S＋C
+const lensMer = (S, C, ax) => ({ v: ax === 90 ? S : S + C, h: ax === 180 ? S : S + C });
+function retState(pt, S, C, ax, w) {
+  const L2 = lensMer(S, C, ax), e = { v: pt.Rv - L2.v + 1 / w, h: pt.Rh - L2.h + 1 / w };
+  return { L: L2, e, neut: { v: Math.abs(e.v) <= NEUT + 1e-9, h: Math.abs(e.h) <= NEUT + 1e-9 } };
+}
+const motionOf = e => Math.abs(e) <= NEUT + 1e-9 ? 'neutral' : e > 0 ? 'with' : 'against';
+const MOTZH = { with: 'With motion', against: 'Against motion', neutral: 'Neutral' };
+const MOTACT = { with: '加正鏡', against: '加負鏡', neutral: '已中和' };
+// 直立的光帶左右掃 → 測水平子午線；橫的光帶上下掃 → 測垂直子午線
+const merOf = ori => ori === 'v' ? 'h' : 'v';
+const retPatient = () => st.rpat === 'rand' ? st.rrand : RP[st.rpat];
+function randPatient() {
+  const q = v => Math.round(v * 4) / 4, a = q(-5 + Math.random() * 8), d = Math.random() < 0.4 ? 0 : q(0.5 + Math.random() * 2.5);
+  return Math.random() < 0.5 ? { Rv: a, Rh: q(a + d) } : { Rv: q(a + d), Rh: a };
+}
+function reflexLook(e) {
+  const a = Math.abs(e);
+  return { k: Math.max(0.35, Math.min(3.2, 0.9 / Math.max(a, 0.05))), w: 104 * (0.12 + 0.6 / (1 + 1.3 * a)), op: 0.28 + 0.62 / (1 + a) };
+}
+const RET = { e: 0, ori: 'v', raf: null, t0: 0 };
+function retSVG(pt, S, C, ax, w, ori, o) {
+  const rs = retState(pt, S, C, ax, w), m = merOf(ori), e = rs.e[m], lk = reflexLook(e), rot = ori === 'v' ? 0 : 90;
+  Object.assign(RET, { e, ori, lk, mot: motionOf(e) });
+  const PR = 52;
+  let h = `<svg viewBox="0 0 640 360" role="img" aria-label="檢影鏡下的瞳孔反光" id="rsvg">
+    <defs><clipPath id="rpc"><circle cx="0" cy="0" r="${PR}"/></clipPath><clipPath id="rfc"><rect x="20" y="20" width="600" height="320" rx="24"/></clipPath>
+      <mask id="rpm" maskUnits="userSpaceOnUse" x="-400" y="-400" width="800" height="800"><rect x="-400" y="-400" width="800" height="800" fill="#fff"/><circle cx="0" cy="0" r="${PR}" fill="#000"/></mask></defs>
+    <rect class="r-face" x="20" y="20" width="600" height="320" rx="24"/>
+    <path class="r-sclera" d="M130 180Q320 70 510 180Q320 290 130 180Z"/>
+    <circle class="r-iris" cx="320" cy="180" r="80"/><circle class="r-pupil" cx="320" cy="180" r="${PR}"/>
+    <g clip-path="url(#rfc)"><g transform="translate(320 180) rotate(${rot})" mask="url(#rpm)"><g id="rstk"><rect class="r-streak" x="-13" y="-220" width="26" height="440"/></g></g></g>
+    <g transform="translate(320 180) rotate(${rot})" clip-path="url(#rpc)"><g id="rfx"><rect class="r-rfx" x="${(-lk.w / 2).toFixed(1)}" y="-80" width="${lk.w.toFixed(1)}" height="160" style="opacity:${RET.mot === 'neutral' ? 0 : lk.op.toFixed(2)}"/></g><rect id="rfxN" class="r-rfx" x="-60" y="-60" width="120" height="120" style="opacity:0"/></g>
+    <circle class="r-rim" cx="320" cy="180" r="${PR}"/>`;
+  h += `<g class="deco lab"><text x="34" y="46">光帶${ori === 'v' ? '直立、左右掃' : '橫的、上下掃'} → 測${MERZH[m]}</text>
+    <text x="606" y="46" text-anchor="end">鏡片 ${fmtD(S)}${C ? ` ${fmtD(C)} × ${ax === 90 ? '090' : '180'}` : ' DS'}</text><text x="606" y="66" text-anchor="end">工作距離 ${wdLabel(w)}</text></g>`;
+  if (o.reduce) h += `<g class="deco"><text x="320" y="330" text-anchor="middle">（已關閉動畫）光帶往${ori === 'v' ? '右' : '下'}時，反光${RET.mot === 'with' ? `往${ori === 'v' ? '右' : '下'}（同向）` : RET.mot === 'against' ? `往${ori === 'v' ? '左' : '上'}（反向）` : '整個瞳孔一起亮'}</text></g>`;
+  return { svg: h + `</svg>`, rs };
+}
+// 動畫：只改光帶與反光的位移，不重畫整張圖
+function retTick(now) {
+  if (st.view !== 'ret' || !$('#rstk')) { RET.raf = null; return; }
+  const s = 110 * Math.sin(2 * Math.PI * ((now - RET.t0) / 1800));
+  $('#rstk').setAttribute('transform', `translate(${s.toFixed(1)} 0)`);
+  if (RET.mot === 'neutral') { const on = Math.abs(s) < 52 + 13; $('#rfxN').style.opacity = on ? (0.55 + 0.4 * (1 - Math.abs(s) / 65)).toFixed(2) : '0.05'; }
+  else { const sg = RET.mot === 'with' ? 1 : -1, x = Math.max(-80, Math.min(80, sg * RET.lk.k * s)); $('#rfx').setAttribute('transform', `translate(${x.toFixed(1)} 0)`); }
+  RET.raf = requestAnimationFrame(retTick);
+}
+function retStartAnim() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!RET.raf) { RET.t0 = performance.now(); RET.raf = requestAnimationFrame(retTick); }
+}
+const reduceMotion = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const lookZh = e => { const a = Math.abs(e); return a <= NEUT ? '整個瞳孔一起亮、看不出移動' : a < 1 ? '亮、快、寬' : a < 2.5 ? '中等' : '暗、慢、窄'; };
+// 淨處方：中和用的鏡片（毛處方）減掉工作距離
+const netOf = (L2, w) => ({ v: L2.v - 1 / w, h: L2.h - 1 / w });
+const rxOfMer = M => rxMinus(Math.round(M.v * 100) / 100, Math.round(M.h * 100) / 100);
+
+const RET_POINTS = {
+  how: [`檢影鏡的窺孔代表無限遠：病人的遠點剛好落在窺孔時，反光充滿整個瞳孔、看不出移動，就是 neutral${s('S7')}`,
+    `遠點在檢影鏡後方（或在視網膜後方）→ with motion；遠點在檢查者與病人之間 → against motion${s('S7')}`,
+    `口訣 SPAM：同向（same／with）加正（plus），反向（against）加負（minus）${s('S7')}`,
+    `越接近中和，反光越亮、移動越快、越寬${s('S7')}`,
+    `中和區大約 0.50 D；從 with 往 against 加鏡時，取最後一個中和的度數，避免 over-minus${s('S8')}`],
+  wd: [`工作距離要換算成屈光度再從結果扣掉：67 cm ≈ 1.50 D、50 cm ＝ 2.00 D${s('S7', 'S8')}`, `所以近視 −1.00 的人在 67 cm 看到的是 with motion：遠點在 1 m，比檢影鏡還遠`],
+  ast: [`光帶和要測的子午線互相垂直：直立的光帶左右掃，測的是水平子午線${s('S8')}`, `找軸：反光最窄、最亮、break 與 skew 消失時，光帶就對在主子午線上${s('S7')}`,
+    `先用球面鏡把一條子午線中和，再用柱鏡中和另一條${s('S6')}；用負柱鏡時，先用球面鏡中和較正（較遠視）的那條，另一條會剩 against，再加負柱鏡（軸放在第一條子午線）`]
+};
+function retCard() {
+  const pt = retPatient(), rs = retState(pt, st.rS, st.rC, st.rAx, st.rw), m = merOf(st.rori), e = rs.e[m], mo = motionOf(e);
+  const rows = ['h', 'v'].map(k => `<li>${MERZH[k]}：${MOTZH[motionOf(rs.e[k])]}${st.rnum ? `（e ＝ ${fmtD(rs.e[k])} D）` : ''}${k === m ? ' ← 正在掃' : ''}</li>`).join('');
+  let v = `正在掃${MERZH[m]}：<b>${MOTZH[mo]}</b>，${lookZh(e)} → ${MOTACT[mo]}`;
+  let done = '';
+  if (rs.neut.v && rs.neut.h) {
+    const net = netOf(rs.L, st.rw);
+    done = `<div class="verdict">兩條子午線都中和了。毛處方（中和用的鏡片）<b>${rxOfMer(rs.L)}</b> → 扣工作距離 ${fmtD(-1 / st.rw)} D → 淨處方 <b>${rxOfMer(net)}</b>${st.rpat === 'rand' || st.rnum ? `；這位病人的真實處方是 <b>${rxMinus(pt.Rv, pt.Rh)}</b>` : ''}</div>`;
+  }
+  return `<div class="card"><div class="eyebrow">檢影鏡驗光 · 對照 BCSC 3</div><div><h2>Retinoscopy</h2></div><p class="zh">${RP[st.rpat].zh}${st.rpat !== 'rand' ? `（${rxMinus(pt.Rv, pt.Rh)}）` : ''}</p>
+    <div class="verdict">${v}</div>${done}<div class="sec"><h3>兩條子午線</h3><ul>${rows}</ul></div>
+    ${list('原理', RET_POINTS.how)}${list('工作距離', RET_POINTS.wd)}${list('散光', RET_POINTS.ast)}${srcList(['S6', 'S7', 'S8'])}</div>`;
+}
+function retExtra(quiz) {
+  const D = v => `${fmtD(v)} D`;
+  return `<div class="xrow">${slider('r-S', '試鏡片球面 S', -10, 10, 0.25, st.rS, D)}${slider('r-C', '試鏡片負柱鏡 C', -6, 0, 0.25, st.rC, D)}
+    <div class="sl"><label>柱鏡軸</label><div class="seg" role="group" aria-label="柱鏡軸">${[[90, '090'], [180, '180']].map(([a, t]) => `<button type="button" data-rax="${a}" aria-pressed="${st.rAx === a}">${t}</button>`).join('')}</div></div>
+    <div class="sl"><label>光帶方向</label><div class="seg" role="group" aria-label="光帶方向">${[['v', '直立（測 180°）'], ['h', '橫的（測 90°）']].map(([k, t]) => `<button type="button" data-rori="${k}" aria-pressed="${st.rori === k}">${t}</button>`).join('')}</div></div>
+    ${quiz ? '' : `<div class="sl"><label>工作距離</label><div class="seg" role="group" aria-label="工作距離">${WDS.map(([w, t]) => `<button type="button" data-rw="${w}" aria-pressed="${Math.abs(st.rw - w) < 1e-9}">${t}</button>`).join('')}</div></div>`}</div>
+    <p class="rstat" id="rrstat" style="margin-top:12px">${retStatus()}</p>
+    ${quiz ? '' : `<div class="formula"><span><code>淨處方 ＝ 中和用的鏡片 − 1 ／ 工作距離（m）</code></span><span>67 cm 扣 1.50 D、50 cm 扣 2.00 D、1 m 扣 1.00 D</span></div>`}`;
+}
+function retStatus() {
+  const it = quizItem(), pt = it ? it.pt : retPatient(), w = it ? it.w : st.rw, rs = retState(pt, st.rS, st.rC, st.rAx, w), m = merOf(st.rori), mo = motionOf(rs.e[m]);
+  return `正在掃${MERZH[m]}：反光${mo === 'neutral' ? '整個瞳孔一起亮' : mo === 'with' ? '和光帶同向移動' : '和光帶反向移動'}${it ? '' : `（${MOTZH[mo]} → ${MOTACT[mo]}）`}`;
+}
+
+/* 測驗：motion 看反光選下一步、wd 算淨處方、neut 用拖拉條把病人中和 */
+const MQ = { m1: 2, m2: 0.75, m3: -1.5, m4: -0.5, m5: 0, m6: 3 };                // e（D）
+const WQ = { w1: [3, 3, 2 / 3], w2: [1, 1, 0.5], w3: [0, 0, 2 / 3], w4: [2, 0.5, 0.5], w5: [0.5, 2.5, 2 / 3], w6: [-1, 1, 2 / 3] };   // [90° 中和鏡片, 180° 中和鏡片, 工作距離 m]
+const ZQ = ['myo3', 'myo1', 'hyp2', 'ast1', 'ast2'];
+const RKEYS = [...Object.keys(MQ).map(k => 'ret:m:' + k), ...Object.keys(WQ).map(k => 'ret:w:' + k), ...ZQ.map(k => 'ret:z:' + k)];
+const wdAns = ([gv, gh, w]) => rxOfMer({ v: gv - 1 / w, h: gh - 1 / w });
+const MOT_OPTS = ['with', 'against', 'neutral'].map(k => `${MOTZH[k]}：${MOTACT[k]}`);
+function retItem(key) {
+  const t = { m: 'motion', w: 'wd', z: 'neut' }[key[4]], id = key.slice(6), w = 2 / 3;
+  if (t === 'motion') { const e = MQ[id], R = e - 1 / w, mo = motionOf(e); return { key, type: t, pt: { Rv: R, Rh: R }, w, ori: Math.random() < 0.5 ? 'v' : 'h', ans: `${MOTZH[mo]}：${MOTACT[mo]}`, opts: MOT_OPTS.slice(), lab: x => x }; }
+  if (t === 'wd') {
+    const [gv, gh, ww] = WQ[id], ans = wdAns(WQ[id]);
+    const cands = [ans, rxOfMer({ v: gv, h: gh }), rxOfMer({ v: gv + 1 / ww, h: gh + 1 / ww }), rxOfMer({ v: gh - 1 / ww, h: gv - 1 / ww }), rxOfMer({ v: gv - 1 / ww + 0.5, h: gh - 1 / ww + 0.5 })];
+    return { key, type: t, g: [gv, gh, ww], ans, opts: shuffle([...new Set(cands)].slice(0, 4)), lab: x => x, pt: { Rv: gv - 1 / ww, Rh: gh - 1 / ww }, w: ww };
+  }
+  return { key, type: t, pt: RP[id], w, id };
+}
+const retKeyLabel = k => { const t = k[4], id = k.slice(6); return t === 'm' ? `反光 e ${fmtD(MQ[id])} D（看動向）` : t === 'w' ? `${WQ[id][0] === WQ[id][1] ? `兩條都用 ${fmtD(WQ[id][0])}` : `90° 用 ${fmtD(WQ[id][0])}、180° 用 ${fmtD(WQ[id][1])}`}，${wdLabel(WQ[id][2])}（算淨處方）` : `${RP[id].zh}（中和）`; };
+function retQuizBody(it, q) {
+  const optBtn = o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${o}</button>`;
+  let h;
+  if (it.type === 'motion') h = `<div class="prompt"><div class="k">上方是工作距離 67 cm、還沒加鏡片時看到的反光</div><div class="q">這是什麼反光？下一步？</div></div><div class="opts">${it.opts.map(optBtn).join('')}</div>`;
+  else if (it.type === 'wd') { const [gv, gh, w] = it.g; h = `<div class="prompt"><div class="k">工作距離 ${wdLabel(w)}；${gv === gh ? `兩條子午線都用 ${fmtD(gv)} D 中和` : `90° 子午線用 ${fmtD(gv)} D、180° 子午線用 ${fmtD(gh)} D 中和`}</div><div class="q">淨處方（負柱鏡寫法）是？</div></div><div class="opts">${it.opts.map(optBtn).join('')}</div>`; }
+  else h = `<div class="prompt"><div class="k">工作距離 67 cm；病人處方藏起來了</div><div class="q">用下方的鏡片與光帶方向，把兩條子午線都中和，再按「交出」</div></div>${q.ans ? '' : `<div class="row"><button type="button" class="btn primary" id="r-submit">交出：已中和</button></div>`}`;
+  if (q.ans) {
+    let more;
+    if (it.type === 'motion') more = RET_POINTS.how[1];
+    else if (it.type === 'wd') more = `淨處方 ＝ 中和用的鏡片 − 1 ／ 工作距離：每條子午線各扣 ${(1 / it.g[2]).toFixed(2)} D，再寫成負柱鏡。`;
+    else { const net = netOf(lensMer(st.rS, st.rC, st.rAx), it.w); more = `你的毛處方 ${rxOfMer(lensMer(st.rS, st.rC, st.rAx))}，淨處方 ${rxOfMer(net)}；病人的真實處方是 ${rxMinus(it.pt.Rv, it.pt.Rh)}（中和用的鏡片要是 ${rxMinus(it.pt.Rv + 1.5, it.pt.Rh + 1.5)}）。`; }
+    const ans = it.type === 'neut' ? (q.ans.ok ? '兩條子午線都中和了（±0.25 D 內）。' : '還沒有兩條子午線都中和（要在 ±0.25 D 內）。') : `答案是 ${it.ans}。`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${q.ans.pick}；` : ' '}${ans}<br>${more}</div>`;
+  }
+  return h;
+}
+function retFig() {
+  const it = quizItem(), fig = $('#fig');
+  const pt = it ? it.pt : retPatient(), w = it ? it.w : st.rw;
+  let lens = { S: st.rS, C: st.rC, ax: st.rAx };
+  if (it && it.type === 'motion') lens = { S: 0, C: 0, ax: 90 };
+  if (it && it.type === 'wd') { const [gv, gh] = it.g, S = Math.max(gv, gh); lens = { S, C: Math.min(gv, gh) - S, ax: gv >= gh ? 90 : 180 }; }
+  const ori = it && it.type === 'motion' ? it.ori : st.rori;
+  fig.innerHTML = retSVG(pt, lens.S, lens.C, lens.ax, w, ori, { reduce: reduceMotion() }).svg;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+  $('#cap').innerHTML = `<span>檢查者看到的病人瞳孔（正面）。光帶在臉上來回掃，瞳孔裡的橘色是反光；反光的方向、速度、寬度與亮度只是示意。</span><span class="ori">只做 90° 與 180° 兩條主子午線</span>`;
+  retStartAnim();
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'ref', name: '屈光與矯正', en: 'Refractive errors' }];
+const VIEWS = [{ id: 'ref', name: '屈光與矯正', en: 'Refractive errors' }, { id: 'ret', name: '檢影鏡驗光', en: 'Retinoscopy' }];
 const $ = q => document.querySelector(q);
-const st = { view: 'ref', chip: 'myo', mode: 'sph', R: -3, typ: 'axial', Rv: -3, Rh: -1, Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40, labels: true, learnMode: 'learn', quiz: null };
+const st = { view: 'ref', chip: 'myo', mode: 'sph', R: -3, typ: 'axial', Rv: -3, Rh: -1, Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40, labels: true, learnMode: 'learn', quiz: null,
+  rpat: 'myo3', rrand: null, rori: 'v', rS: 0, rC: 0, rAx: 90, rw: 2 / 3, rnum: false };
 const params = () => ({ mode: st.mode, R: st.R, typ: st.typ, Rv: st.Rv, Rh: st.Rh, Ls: st.Ls, S: st.S, C: st.C, A: st.A, obj: st.obj, dcm: st.dcm });
 const store = (() => {
   const K2 = 'opticsAtlas.v1';
@@ -469,10 +636,14 @@ function curName(p) { const t = stateOf(p); return AST_ZH[t] ? { en: AST_ZH[t], 
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選屈光狀態，拖拉條調度數、鏡片與調節'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'ret' ? '下方選病人，轉光帶方向、加減鏡片直到中和' : '下方選屈光狀態，拖拉條調度數、鏡片與調節'}</span>`;
 }
 function renderTools() {
   let h = '';
+  if (st.view === 'ret') {
+    if (st.learnMode !== 'quiz') h = `<label class="tog"><input type="checkbox" id="t-num" ${st.rnum ? 'checked' : ''}>顯示剩下的度數</label><label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
+    $('#tools').innerHTML = h; return;
+  }
   if (st.learnMode !== 'quiz') {
     if (st.mode === 'sph') h += `<div class="seg" role="group" aria-label="成因">${[['axial', '軸性'], ['refr', '屈光性']].map(([k, t]) => `<button type="button" data-typ="${k}" aria-pressed="${st.typ === k}">${t}</button>`).join('')}</div>`;
     h += `<div class="seg" role="group" aria-label="看遠看近">${[['far', '看遠'], ['near', '看近']].map(([k, t]) => `<button type="button" data-obj="${k}" aria-pressed="${st.obj === k}">${t}</button>`).join('')}</div>`;
@@ -482,6 +653,7 @@ function renderTools() {
 }
 function figParams() { const it = quizItem(); return it ? Object.assign({ Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40, typ: 'axial' }, it.p) : params(); }
 function renderFig() {
+  if (st.view === 'ret') { retFig(); return; }
   const r = renderEye(figParams(), {});
   const fig = $('#fig'); fig.innerHTML = r.svg;
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
@@ -494,6 +666,7 @@ function statusText(p) {
 }
 const slider = (id, label, min, max, step, val, fmt) => `<div class="sl"><label for="${id}">${label}<b id="${id}-v">${fmt(val)}</b></label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
 function renderExtra() {
+  if (st.view === 'ret') { const it = quizItem(); $('#extra').innerHTML = st.learnMode === 'quiz' ? (it && it.type === 'neut' ? retExtra(true) : '') : retExtra(false); return; }
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
   const D = v => `${fmtD(v)} D`;
   let h = `<div class="xrow">`;
@@ -509,6 +682,7 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'ret') { ix.innerHTML = `<span class="lbl">病人（${RP_ORDER.length}）</span>` + RP_ORDER.map(k => `<button type="button" class="chip ${k === st.rpat ? 'on' : ''}" data-rp="${k}">${RP[k].zh}</button>`).join(''); return; }
   ix.innerHTML = `<span class="lbl">屈光狀態（${CHIP_ORDER.length}）</span>` + CHIP_ORDER.map(k => `<button type="button" class="chip ${k === st.chip ? 'on' : ''}" data-chip="${k}">${CHIPS[k].zh} <i>${CHIPS[k].en}</i></button>`).join('');
 }
 function cardHTML() {
@@ -523,10 +697,10 @@ function cardHTML() {
 }
 function renderPanel() {
   const p = $('#panel');
-  p.innerHTML = st.learnMode === 'quiz' ? quizHTML() : cardHTML();
+  p.innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'ret' ? retCard() : cardHTML();
 }
 function renderSelbar() {
-  const b = $('#selbar'), t = st.learnMode === 'learn' ? `目前：${curName(params()).zh}` : '';
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'ret' ? `病人：${RP[st.rpat].zh}` : `目前：${curName(params()).zh}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -549,11 +723,13 @@ const NQ = { n1: [-2, 4], n2: [2, 4], n3: [0, 2.5], n4: [-1, 1], n5: [0, 10], n6
 const nearAns = ([R, A]) => 100 / (A - R);  // cm
 const SQ = ['emm', 'myo', 'hyp', 'cm', 'sm', 'mx', 'sh', 'ch'];
 const QKEYS = [...SQ.map(k => 'opt:s:' + k), ...Object.keys(FQ).map(k => 'opt:f:' + k), ...Object.keys(NQ).map(k => 'opt:n:' + k)];
-const keyValid = k => QKEYS.includes(k);
-const QT = [['state', '看光路圖選狀態'], ['far', '遠點換算度數'], ['near', '算近點']];
-const QTZ = { s: 'state', f: 'far', n: 'near' };
+// 錯題的 key：分頁一 opt:s／f／n:…；分頁二 ret:m:…（看反光）、ret:w:…（算淨處方）、ret:z:…（中和病人）
+const keyValid = k => QKEYS.includes(k) || RKEYS.includes(k);
+const keyView = k => k.startsWith('ret:') ? 'ret' : 'ref';
+const QTV = { ref: [['state', '看光路圖選狀態'], ['far', '遠點換算度數'], ['near', '算近點']], ret: [['motion', '看反光'], ['wd', '算淨處方'], ['neut', '中和病人']] };
+const QTZ = { s: 'state', f: 'far', n: 'near', m: 'motion', w: 'wd', z: 'neut' };
 const stZh = k => AST_ZH2[k] || OP[k].zh;
-const keyLabel = k => { const t = k[4], id = k.slice(6); return t === 's' ? `${stZh(id)}（看光路圖）` : t === 'f' ? `遠點${FQ[id] < 0 ? '在眼前' : '在眼後'} ${farDist(FQ[id])}（換算度數）` : `R ${fmtD(NQ[id][0])}、調節 ${NQ[id][1]} D（算近點）`; };
+const keyLabel = k => { if (k.startsWith('ret:')) return retKeyLabel(k); const t = k[4], id = k.slice(6); return t === 's' ? `${stZh(id)}（看光路圖）` : t === 'f' ? `遠點${FQ[id] < 0 ? '在眼前' : '在眼後'} ${farDist(FQ[id])}（換算度數）` : `R ${fmtD(NQ[id][0])}、調節 ${NQ[id][1]} D（算近點）`; };
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 function stateParams(k) {
@@ -566,6 +742,7 @@ function stateParams(k) {
   return { mode: 'ast', Rv: sw ? pr[1] : pr[0], Rh: sw ? pr[0] : pr[1] };
 }
 function itemOf(key) {
+  if (key.startsWith('ret:')) return retItem(key);
   const t = QTZ[key[4]], id = key.slice(6);
   if (t === 'state') {
     const p = stateParams(id), pool = AST_ZH[id] ? ['cm', 'sm', 'mx', 'sh', 'ch'] : ['emm', 'myo', 'hyp'];
@@ -586,14 +763,14 @@ const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 
 function quizHTML() {
   const q = st.quiz;
   if (q.phase === 'setup') {
-    const w = Object.keys(store.get().wrong).filter(keyValid).length;
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length, ret = st.view === 'ret';
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · 屈光與矯正</div><h2>焦點在哪？要配幾度？</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${ret ? '反光怎麼動？處方是多少？' : '焦點在哪？要配幾度？'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
-      <div class="row"><span class="lbl">題型</span><div class="seg">${QT.map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">三種題型：看光路圖判斷屈光狀態（含五型散光）；給遠點距離選矯正度數；給屈光度與調節幅度算近點。鏡片都當作貼在角膜上。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${ret ? '三種題型：看反光動向選下一步；給中和用的鏡片與工作距離算淨處方；自己用試鏡片把病人兩條子午線都中和（誤差 ±0.25 D 內算對）。' : '三種題型：看光路圖判斷屈光狀態（含五型散光）；給遠點距離選矯正度數；給屈光度與調節幅度算近點。鏡片都當作貼在角膜上。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -603,6 +780,11 @@ function quizHTML() {
   }
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  if (it.key.startsWith('ret:')) {
+    h += retQuizBody(it, q);
+    h += q.ans ? `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>` : `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+    return h + `</div>`;
+  }
   const prompt = it.type === 'state' ? ['上方是這隻眼睛不戴鏡、不調節、看遠時的光路', '這是什麼屈光狀態？']
     : it.type === 'far' ? [`這隻眼睛不調節時，遠點${it.D < 0 ? `在眼前 ${farDist(it.D)}` : `在眼後 ${farDist(it.D)}（虛的）`}`, '矯正鏡片要幾度？（貼在角膜上）']
     : [`屈光度 R ${fmtD(it.R)} D，調節幅度 ${it.A} D，不戴鏡`, '近點在眼前多遠？'];
@@ -617,16 +799,18 @@ function quizHTML() {
   return h + `</div>`;
 }
 function startQuiz(cfg) {
-  const w = store.get().wrong, types = cfg.type === 'mix' ? QT.map(x => x[0]) : [cfg.type];
-  let pool = QKEYS.filter(k => types.includes(QTZ[k[4]]));
+  const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
+  let pool = (st.view === 'ret' ? RKEYS : QKEYS).filter(k => types.includes(QTZ[k[4]]));
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
   while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
   keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
   st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
-  render();
+  resetTrial(); render();
 }
+// 中和題每題都從空的試鏡片開始
+function resetTrial() { Object.assign(st, { rS: 0, rC: 0, rAx: 90, rori: 'v' }); }
 function answer(a) {
   const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
   q.ans = a; if (a.ok) q.score++;
@@ -636,7 +820,12 @@ function answer(a) {
   else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
   store.save(); render();
 }
-function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; resetTrial(); render(); }
+function setView(v) {
+  st.view = v;
+  try { history.replaceState(null, '', v === 'ref' ? location.pathname : '#' + v); } catch (e) { }
+  if (st.learnMode === 'quiz') st.quiz = quizDefaults();
+}
 function setMode(m) {
   st.learnMode = m;
   $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
@@ -646,6 +835,13 @@ function setMode(m) {
 function setChip(k) { st.chip = k; Object.assign(st, CHIPS[k].p, { Ls: 0, S: 0, C: 0, A: 0 }); }
 function goKey(k) {
   const t = k[4], id = k.slice(6);
+  if (k.startsWith('ret:')) {
+    setView('ret'); resetTrial();
+    if (t === 'z') st.rpat = id;
+    else if (t === 'm') { st.rpat = MQ[id] - 1.5 < -0.01 ? 'myo3' : 'emm'; }
+    render(); return;
+  }
+  setView('ref');
   if (t === 's') setChip(id);
   else if (t === 'f') { setChip(FQ[id] < 0 ? 'myo' : 'hyp'); st.R = FQ[id]; }
   else { setChip(NQ[id][0] < 0 ? 'myo' : NQ[id][0] > 0 ? 'hyp' : 'emm'); st.R = NQ[id][0]; st.A = 0; }
@@ -658,8 +854,9 @@ function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidd
 function renderWrong() {
   const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
   $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
-  $('#w-practice').disabled = !ids.length;
-  $('#w-practice').textContent = `練習這個分頁的錯題（${ids.length}）`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
 }
 
 /* ---------- events ---------- */
@@ -669,6 +866,12 @@ document.addEventListener('click', e => {
   if (t.closest('[data-close]')) { closeSheets(); return; }
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const rp = t.closest('[data-rp]'); if (rp) { st.rpat = rp.dataset.rp; if (st.rpat === 'rand') st.rrand = randPatient(); resetTrial(); render(); return; }
+  const rax = t.closest('[data-rax]'); if (rax) { st.rAx = +rax.dataset.rax; render(); return; }
+  const ror = t.closest('[data-rori]'); if (ror) { st.rori = ror.dataset.rori; render(); return; }
+  const rw = t.closest('[data-rw]'); if (rw) { st.rw = +rw.dataset.rw; render(); return; }
+  if (t.closest('#r-submit')) { const it = quizItem(); if (it && !st.quiz.ans) { const rs = retState(it.pt, st.rS, st.rC, st.rAx, it.w); answer({ ok: rs.neut.v && rs.neut.h }); } return; }
   const ch = t.closest('[data-chip]'); if (ch) { setChip(ch.dataset.chip); render(); return; }
   const ty = t.closest('[data-typ]'); if (ty) { st.typ = ty.dataset.typ; render(); return; }
   const ob = t.closest('[data-obj]'); if (ob) { st.obj = ob.dataset.obj; render(); return; }
@@ -682,13 +885,23 @@ document.addEventListener('click', e => {
 });
 const SL = { 's-R': 'R', 's-L': 'Ls', 's-Rv': 'Rv', 's-Rh': 'Rh', 's-S': 'S', 's-C': 'C', 's-A': 'A', 's-d': 'dcm' };
 document.addEventListener('input', e => {
+  if (e.target.id === 'r-S' || e.target.id === 'r-C') {
+    const k2 = e.target.id === 'r-S' ? 'rS' : 'rC'; st[k2] = +e.target.value;
+    $('#' + e.target.id + '-v').textContent = `${fmtD(st[k2])} D`;
+    renderFig(); if (st.learnMode !== 'quiz') renderPanel(); renderSelbar();
+    const rs = $('#rrstat'); if (rs) rs.textContent = retStatus();
+    return;
+  }
   const k = SL[e.target.id]; if (!k) return;
   st[k] = +e.target.value;
   const v = $('#' + e.target.id + '-v'); if (v) v.textContent = k === 'dcm' ? `${st[k]} cm` : k === 'A' ? `${st[k].toFixed(2)} D` : `${fmtD(st[k])} D`;
   if (k === 'R' || k === 'Rv' || k === 'Rh') { const t2 = stateOf(params()); st.chip = CHIPS[t2] ? t2 : st.chip; const ix = document.querySelectorAll('[data-chip]'); ix.forEach(b => b.classList.toggle('on', b.dataset.chip === st.chip)); }
   renderLive();
 });
-document.addEventListener('change', e => { if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); } });
+document.addEventListener('change', e => {
+  if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
+  if (e.target.id === 't-num') { st.rnum = e.target.checked; renderPanel(); }
+});
 $('#m-learn').addEventListener('click', () => setMode('learn'));
 $('#m-quiz').addEventListener('click', () => setMode('quiz'));
 $('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
@@ -729,8 +942,22 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   a(near(nearAns([-2, 4]), 100 / 6) && near(nearAns([2, 4]), 50) && near(nearAns([0, 2.5]), 40), '近點：1／(A − R)');
   a(QKEYS.every(k => { const it = itemOf(k); return it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length; }), '每題的選項都含答案且不重複');
   SQ.forEach(k => { for (let i = 0; i < 20; i++) a(stateOf(stateParams(k)) === k, `隨機出題 ${k} 的參數要符合該型`); });
+  // 分頁二：檢影鏡
+  const W67 = 2 / 3, mo = (pt, S, C, ax, w, m) => motionOf(retState(pt, S, C, ax, w).e[m]);
+  a(mo(RP.emm, 0, 0, 90, W67, 'h') === 'with' && mo(RP.myo3, 0, 0, 90, W67, 'h') === 'against' && mo(RP.hyp2, 0, 0, 90, W67, 'v') === 'with', '67 cm：正視與遠視 with、近視 −3 against');
+  a(mo(RP.myo1, 0, 0, 90, W67, 'h') === 'with' && mo(RP.myo1, 0, 0, 90, 1, 'h') === 'neutral' && mo(RP.myo1, 0, 0, 90, 0.5, 'h') === 'with' && mo(RP.myo3, -1.5, 0, 90, W67, 'v') === 'neutral', '近視 −1：遠點 1 m，在 1 m 剛好中和、67 與 50 cm 是 with；−3 加 −1.50 中和');
+  a(merOf('v') === 'h' && merOf('h') === 'v', '直立光帶測水平子午線');
+  ['emm', 'myo1', 'myo3', 'hyp2', 'ast1', 'ast2'].forEach(id => {
+    const pt = RP[id], gv = pt.Rv + 1.5, gh = pt.Rh + 1.5, S = Math.max(gv, gh), C = Math.min(gv, gh) - S, ax = gv >= gh ? 90 : 180, rs = retState(pt, S, C, ax, W67);
+    a(rs.neut.v && rs.neut.h && rxOfMer(netOf(rs.L, W67)) === rxMinus(pt.Rv, pt.Rh), `${id}：中和後扣工作距離要等於真實處方`);
+  });
+  a(wdAns(WQ.w1) === '+1.50 DS' && wdAns(WQ.w4) === '0.00 −1.50 × 090' && wdAns(WQ.w5) === '+1.00 −2.00 × 180', '淨處方換算');
+  a(RKEYS.filter(k => k[4] !== 'z').every(k => { const it = retItem(k); return it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length >= 3; }), '檢影題目的選項含答案且不重複');
+  a(Object.values(MQ).every(e => motionOf(e) === (Math.abs(e) <= NEUT ? 'neutral' : e > 0 ? 'with' : 'against')), '反光題的動向');
 })();
 
+st.rrand = randPatient();
+if (location.hash === '#ret') st.view = 'ret';
 render();
 </script>
 
