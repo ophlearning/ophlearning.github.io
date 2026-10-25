@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>青光眼互動圖譜</title>
-<meta name="description" content="互動式青光眼圖譜：在前房角剖面上看房水從 ciliary processes 製造、經 trabecular meshwork 與 uveoscleral 兩條路流出；切換 prostaglandin analogs、beta-blocker、alpha-2 agonist、CAI、pilocarpine、netarsudil、latanoprostene bunod，看各類藥作用在哪個構造、TM 與 ciliary muscle 怎麼變、episcleral venous pressure 怎麼變，附 Goldmann 方程式、說明卡、測驗與錯題本。">
+<meta name="description" content="互動式青光眼圖譜：在前房角剖面上看房水從 ciliary processes 製造、經 trabecular meshwork 與 uveoscleral 兩條路流出；切換 prostaglandin analogs、beta-blocker、alpha-2 agonist、CAI、pilocarpine、netarsudil、latanoprostene bunod，看各類藥作用在哪個構造、TM 與 ciliary muscle 怎麼變、episcleral venous pressure 怎麼變，附 Goldmann 方程式；gonioscopy 前房角分級：拖拉角度看剖面與鏡下所見同步變化，換算 Shaffer 與 Spaeth（插入點、角度、iris 形狀、色素），分辨 appositional 與 PAS；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -19,7 +19,7 @@
   --t-cornea:#E2E0F1; --t-sclera:#F5F0EC; --t-collagen:#EFC6D3; --t-conj:#F1CFD9; --t-uvea:#8E604B; --t-iris:#7C5342;
   --t-pig:#4A3028; --t-cb:#B98673; --t-muscle:#C55367; --t-lens:#E6ECF7; --t-nuc:#D3D9EA; --t-fluid:#E8F0F8; --t-vit:#EEF3F6;
   --t-sheath:#E2C29E; --t-vein:#4C62AF; --t-nuclear:#7B67C1; --t-plex:#EDC1D2;
-  --aq:#1C6FC0; --aq-band:rgba(28,111,192,.15); --uv:#1D8A6E; --uv-band:rgba(29,138,110,.17); --up:#1D6FB8; --dn:#B5472E;
+  --aq:#1C6FC0; --aq-band:rgba(28,111,192,.15); --uv:#1D8A6E; --uv-band:rgba(29,138,110,.17); --up:#1D6FB8; --dn:#B5472E; --beam:#FFFFFF;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -34,7 +34,7 @@
   --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
   --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
   --t-sheath:#6D5541; --t-vein:#7286D8; --t-nuclear:#6552B5; --t-plex:#6E4560;
-  --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; color-scheme:dark }}
+  --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; --beam:#EDE6CF; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
@@ -43,7 +43,7 @@
   --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
   --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
   --t-sheath:#6D5541; --t-vein:#7286D8; --t-nuclear:#6552B5; --t-plex:#6E4560;
-  --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; color-scheme:dark }
+  --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; --beam:#EDE6CF; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -150,6 +150,18 @@ a{color:var(--accent)}
 .bdg .ar{font-family:var(--f-mono)!important;font-weight:500;fill:var(--muted)}
 .bdg .ar.up{fill:var(--up)}
 .bdg .ar.dn{fill:var(--dn)}
+.duo{display:grid;grid-template-columns:1.47fr 1fr}
+.duo.one{grid-template-columns:minmax(0,480px);justify-content:center}
+.fig .duo svg{min-width:0;width:100%}
+.gtan{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:6 4}
+.garc{fill:none;stroke:var(--accent);stroke-width:2}
+.gdeg{font-family:var(--f-mono)!important;font-size:17px;fill:var(--accent)!important;paint-order:stroke;stroke:var(--fig-bg);stroke-width:4px}
+.gmk{fill:var(--hl);stroke:var(--fig-bg);stroke-width:2}
+.tbl{overflow-x:auto;max-width:100%}
+.tbl table{border-collapse:collapse;font-size:13px;width:100%}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+.tbl th{font-weight:500;color:var(--muted);font-size:12px}
+.tbl tr.on td{background:var(--accent-soft)}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -223,6 +235,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
 .foot a{color:var(--ink-2)}
 
 @media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
+@media (max-width: 700px){ .duo{grid-template-columns:1fr} }
 @media (max-width: 560px){
   .wrap{padding-inline:16px}
   .brand h1{font-size:23px}
@@ -234,6 +247,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .lab.note text{font-size:19px}
   .seg button{padding:5px 10px}
   .gold{font-size:17px}
+  .gdeg{font-size:26px}
 }
 </style>
 </head>
@@ -275,7 +289,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>前房角剖面沿用眼解剖圖譜的眼球模型（右眼 OD temporal angle 放大，約 100 px/mm）：上＝周邊 temporal、左＝anterior。房水粒子的多寡與管道粗細只表示藥物作用的方向，不是實際流量；穩定狀態下房水製造量等於流出量。TM、Schlemm canal、ciliary muscle 的變化是示意，放大圖也不是實際比例。</span>
+    <span><b>關於圖：</b>前房角剖面沿用眼解剖圖譜的眼球模型（右眼 OD temporal angle 放大，約 100 px/mm）：上＝周邊 temporal、左＝anterior。房水粒子的多寡與管道粗細只表示藥物作用的方向，不是實際流量；穩定狀態下房水製造量等於流出量。TM、Schlemm canal、ciliary muscle 的變化是示意，放大圖也不是實際比例。前房角分級分頁的剖面同一個模型再放大（約 190 px/mm），鏡下示意由上到下＝由前（角膜側）到後（iris 側）；看得到哪些結構依 Kanski 的 Shaffer 對照，不是光學計算。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。藥物機轉以 AAO PPP 與 DailyMed 仿單為主，仿單和 PPP 寫法不同時都列出來。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -321,7 +335,12 @@ const SRC = {
   S19: { t: 'Inoue T, Tanihara H. Rho-associated kinase inhibitors: a novel glaucoma therapy. Prog Retin Eye Res 2013;37:1–12（摘要）', u: 'https://doi.org/10.1016/j.preteyeres.2013.05.002' },
   S20: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：p.346 Aqueous production、Aqueous outflow（anatomy、physiology）、p.347 Fig 11.3', u: null },
   S21: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：pp.408–411 Medical treatment of glaucoma（prostaglandin derivatives、beta-blockers、CAI、alpha-2 agonists、miotics、new topical medications）', u: null },
-  S22: { t: 'Mehran NA, Sinha S, Razeghinejad R. New glaucoma medications: latanoprostene bunod, netarsudil, and fixed combination netarsudil-latanoprost. Eye 2020;34(1):72–88（摘要）', u: 'https://doi.org/10.1038/s41433-019-0671-0' }
+  S22: { t: 'Mehran NA, Sinha S, Razeghinejad R. New glaucoma medications: latanoprostene bunod, netarsudil, and fixed combination netarsudil-latanoprost. Eye 2020;34(1):72–88（摘要）', u: 'https://doi.org/10.1038/s41433-019-0671-0' },
+  S23: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：pp.374–375 Grading of angle width（Shaffer、Spaeth、Scheie、van Herick）', u: null },
+  S24: { t: 'EyeWiki：Gonioscopy（Shaffer 與 Spaeth grading）', u: 'https://eyewiki.org/Gonioscopy' },
+  S25: { t: 'Nolan W, Onakoya A. Gonioscopy skills and techniques. Community Eye Health 2022;34(112):40–42', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8862628/' },
+  S26: { t: 'Gedde SJ, et al. Primary Angle-Closure Disease Preferred Practice Pattern®. Ophthalmology 2026;133(4):P153–P201', u: 'https://doi.org/10.1016/j.ophtha.2025.12.030' },
+  S27: { t: 'Spaeth GL, Aruajo S, Azuara A. Comparison of the configuration of the human anterior chamber angle, as determined by the Spaeth gonioscopic grading system and ultrasound biomicroscopy. Trans Am Ophthalmol Soc 1995;93:337–351（摘要）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1312064/' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
@@ -800,11 +819,267 @@ function goldHTML(id) {
     <li>F 變少或 U 變多 → 括號變小；C 變大 → 除得更多；Pv 變小 → 加得更少。四種都讓 IOP 下降。</li></ul>`;
 }
 
+/* ---------- 分頁二：gonioscopy 前房角分級 ----------
+   剖面：同分頁一的眼球模型，放大到約 190 px/mm；iris 依角度與形狀畫（角度量法照 Kanski：TM 內表面的切線與周邊約 1/3 處 iris 前表面切線的夾角）
+   鏡下示意：前（角膜側）在上、後（iris 側）在下；看得到哪些結構依 Kanski 的 Shaffer 對照；Spaeth 的字母依 EyeWiki */
+const TG = mkT(190, -10.25, 6.4), PG = p => TG(p), DG = (pts, c = true) => dp(pts, TG, c);
+const GU = (() => { const a = [EYE.J[0] - EYE.SPUR[0], EYE.J[1] - EYE.SPUR[1]], l = Math.hypot(a[0], a[1]); return [a[0] / l, a[1] / l]; })();   // 沿 TM 往前（往 Schwalbe line）
+const GN = [-GU[1], GU[0]];   // 垂直 TM、指向 anterior chamber
+const gdir = a => [Math.cos(a * DEG) * GU[0] + Math.sin(a * DEG) * GN[0], Math.cos(a * DEG) * GU[1] + Math.sin(a * DEG) * GN[1]];
+// 前房角的壁（由前往後）：角膜內表面 → Schwalbe line → TM（前半 non-pigmented、後半 pigmented）→ scleral spur → ciliary body band → 更後面的 ciliary body
+const GW = (() => {
+  const E = EYE, pts = [], at = {}, push = (a, k) => { a.forEach(p => pts.push(p)); if (k) at[k] = pts.length - 1; };
+  push(arc(6.5, 128, 126.06, -5.26, 0, 0.5)); at.A = 0; at.SL = pts.length - 1;
+  push(arc(E.Rsi, E.thJ, 149.3, 0, 0, 0.2).slice(1), 'B1');
+  push(arc(E.Rsi, 149.3, 148.1, 0, 0, 0.2).slice(1), 'PIG');
+  push(arc(E.Rsi, 148.1, 147.5, 0, 0, 0.2).slice(1), 'B2');
+  push(arc(E.Rsi, 147.5, 146.93, 0, 0, 0.2).slice(1), 'TME');
+  push([[-8.74, 5.74]], 'C');
+  push([[-8.70, 5.62], [-8.62, 5.45]], 'D');
+  push([[-8.51, 5.43], [-8.40, 5.41]], 'E');
+  return { pts, at };
+})();
+const wallSeg = (k1, k2) => { const i = GW.at[k1], j = GW.at[k2]; return GW.pts.slice(Math.min(i, j), Math.max(i, j) + 1); };
+const GORDER = ['A', 'B1', 'B2', 'C', 'D', 'E'];   // 由前往後
+const ant = (k1, k2) => GORDER.indexOf(k1) < GORDER.indexOf(k2);
+
+const GSH = {   // Shaffer（Kanski 的角度與看得到的結構；關閉的可能性依 EyeWiki）
+  '4': { deg: '35–45°', see: '最寬，不必傾斜鏡子就看得到 ciliary body；常見於 myopia 與 pseudophakia', risk: '不會關閉' },
+  '3': { deg: '25–35°', see: 'Open angle，看得到 scleral spur', risk: '不會關閉' },
+  '2': { deg: '20°', see: '看得到 TM，看不到 scleral spur', risk: '可能關閉' },
+  '1': { deg: '10°', see: '很窄，只看得到 Schwalbe line，或再加上 TM 的最上緣', risk: '終究很可能關閉' },
+  slit: { deg: '—', see: '沒有明顯的 iridocorneal contact，但看不到任何前房角結構', risk: '—' },
+  '0': { deg: '0°', see: '因 iridocorneal contact 而關閉', risk: '部分或全部關閉' }
+};
+const GSH_ORDER = ['4', '3', '2', '1', 'slit', '0'];
+const gLab = g => g === 'slit' ? 'Slit' : `Grade ${g}`;
+// 角度 → Shaffer：Kanski 寫 grade 4 35–45°、3 25–35°、2 20°、1 10°；介於中間的本頁取最接近的一級，5° 以下且沒有接觸算 slit
+const shafferOf = th => th >= 35 ? '4' : th >= 25 ? '3' : th >= 15 ? '2' : th >= 5 ? '1' : th > 0 ? 'slit' : '0';
+const AUTO_APP = { '4': 'D', '3': 'C', '2': 'B2', '1': 'B1', slit: 'slit', '0': 'A' };   // 不壓迫時看起來的插入點（看得到的最深結構）
+const STRUCT_G = { E: '4', D: '4', C: '3', B2: '2', B1: '1', slit: 'slit', A: '0' };
+const SP_INS = {   // Spaeth 的插入點（EyeWiki）
+  A: 'Anterior to Schwalbe line：iris 看起來接在 Schwalbe line 前方',
+  B: 'Behind Schwalbe line：接在 Schwalbe line 與 scleral spur 之間（TM 上）',
+  C: 'Scleral spur：接在 scleral spur',
+  D: 'Deep：比 scleral spur 更深',
+  E: 'Extremely deep：非常深'
+};
+const SP_CFG = { F: ['Flat（regular）', '平'], B: ['Bowing anteriorly', '往前凸'], P: ['Plateau', '周邊陡升、中間平'], C: ['Concave', '往後凹'] };
+const BANDS = [['sl', 'Schwalbe line'], ['nptm', 'TM（non-pigmented）'], ['ptm', 'TM（pigmented）'], ['spur', 'Scleral spur'], ['cbb', 'Ciliary body band']];
+const VIS_OF = { A: 0, slit: 0, B1: 2, B2: 3, C: 4, D: 5, E: 5 };   // 由前往後看得到幾條帶
+const GPRE = {
+  wide: { zh: '寬角', th: 40, cfg: 'F', pig: 1 },
+  deep: { zh: '很深的插入點', th: 42, cfg: 'F', pig: 1, app: 'E', root: 'E' },
+  open: { zh: '中等', th: 30, cfg: 'F', pig: 1 },
+  narrow: { zh: '窄角', th: 20, cfg: 'B', pig: 2 },
+  vnarrow: { zh: '很窄', th: 10, cfg: 'B', pig: 2 },
+  slit: { zh: 'Slit', th: 3, cfg: 'B', pig: 2 },
+  plateau: { zh: 'Plateau（EyeWiki 的例子）', th: 30, cfg: 'P', pig: 1, app: 'B2', tru: 'D' },
+  appos: { zh: '貼合性關閉（appositional）', th: 10, cfg: 'B', pig: 2, app: 'A', tru: 'D' },
+  pas: { zh: '沾黏性關閉（PAS）', th: 10, cfg: 'F', pig: 2, app: 'A', tru: 'A', pas: true }
+};
+const GPRE_ORDER = Object.keys(GPRE);
+const LET = k => k === 'slit' ? null : k[0];
+/* s：{ th, cfg, pig, app, tru, pas, root, ind }；app 沒指定時依角度自動 */
+function gEval(s) {
+  const th = s.th, root = s.root || 'D', app = s.app || AUTO_APP[shafferOf(th)];
+  const contact = app !== 'slit' && ant(app, root) && (!!s.app || app === 'A');
+  const opened = s.ind && s.tru && !s.pas && s.tru !== app;
+  const vis = opened ? s.tru : app;
+  const shaffer = app === 'A' ? '0' : shafferOf(th);
+  const L1 = LET(app), L2 = s.tru ? LET(s.tru) : null;
+  const spaeth = L1 ? `${L2 && L2 !== L1 ? `(${L1})${L2}` : L1}${th}${s.cfg}${s.pig}` : null;
+  return { th, cfg: s.cfg, pig: s.pig, app, tru: s.tru || null, pas: !!s.pas, root, ind: !!s.ind, contact: contact && !opened, opened, vis,
+    thDraw: opened ? Math.max(th, 38) : contact ? Math.max(th, 10) : th, cfgDraw: opened ? 'F' : s.cfg,
+    shaffer, structG: STRUCT_G[app], spaeth, itc: ['A', 'slit', 'B1'].includes(app) };
+}
+// iris 前表面：沿弧長每 0.05 mm 一點；周邊 1.2 mm 處（約 1/3）的切線和 TM 的夾角＝th
+function irisCurve(P0, th, cfg, roll) {
+  const pts = [P0.slice()], al = [];
+  let p = P0.slice();
+  for (let l = 0; l < 2.9; l += 0.05) {
+    let a = cfg === 'B' ? Math.max(th * 0.5, th + 10 * (l - 1.2) / 1.2) : cfg === 'C' ? th - 12 * (l - 1.2) / 1.2 : th;
+    if (cfg === 'P' && roll) a = l < 0.28 ? Math.max(3, th - 25) : l < 0.45 ? Math.max(3, th - 25) + (th - Math.max(3, th - 25)) * (l - 0.28) / 0.17 : th;
+    if (l > 1.6) a = a + (Math.max(a, 30) - a) * Math.min(1, (l - 1.6) / 0.8);
+    a = Math.max(0.5, Math.min(80, a)); al.push(a);
+    const d = gdir(a); p = [p[0] + d[0] * 0.05, p[1] + d[1] * 0.05]; pts.push(p);
+  }
+  al.push(al[al.length - 1]);
+  return { pts, al };
+}
+function gCross(G, o) {
+  const E = EYE, root = GW.pts[GW.at[G.root]];
+  let h = `<svg viewBox="0 0 560 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="前房角剖面"><rect width="560" height="450" fill="var(--fig-bg)"/>`;
+  h += S(DG([...arc(E.Ro, 100, E.thLo), ...arc(7.8, 131.4, 200, -4.51, 0), [-3, 0]]), 'c-fluid');
+  h += S(DG(E.scleraT), 'c-sclera');
+  const conj = [...arcF(a => E.Ro + 0.19 * clamp((E.thLo - a) / 1.6), E.thLo, 124, 0.4), ...arcF(a => E.Ro + 0.12 * clamp((E.thLo - a) / 1.6), 124, E.thLo, 0.4)];
+  h += S(DG(conj), 'c-conj') + S(DG(E.cornea), 'c-cornea');
+  h += S(DG(arc(6.49, 160, 126.06, -5.26, 0, 0.6), false), 'c-line', 'style="stroke-width:2.4;stroke:var(--t-nuclear)"');
+  const tmA = [...arc(E.Rsi, E.thJ, 148.1), ...arc(10.41, 148.1, E.thJ)], tmP = [...arc(E.Rsi, 148.1, E.spurA + 0.4), ...arc(10.41, E.spurA + 0.4, 148.1)];
+  h += S(DG(tmA), 'c-coll', 'style="fill:var(--t-cb)"') + S(DG(tmP), 'c-coll', 'style="fill:var(--t-uvea)"');
+  const sc = PG(pt(10.575, 147.8));
+  h += `<ellipse class="c-white" cx="${fx(sc[0])}" cy="${fx(sc[1])}" rx="40" ry="12.4" transform="rotate(-58 ${fx(sc[0])} ${fx(sc[1])})" style="fill:var(--t-fluid);stroke-width:1.2"/>`;
+  const sw = PG(pt(10.44, E.thJ + 0.15));
+  h += `<circle class="c-white" cx="${fx(sw[0])}" cy="${fx(sw[1])}" r="7" style="stroke-width:1.4"/>`;
+  h += S(DG(E.cb), 'c-cb') + S(DG(cmShape(0)), 'c-mus', 'style="fill-opacity:.85"');
+  h += S(DG([pt(E.Rsi + 0.02, 147.15), pt(10.28, 146.55), pt(E.Rsi + 0.02, 145.75)]), 'c-sclera', 'style="stroke-width:1.2"');
+  h += S(DG([[-8.62, 5.45], [-8.70, 5.62], [-8.74, 5.74]], false), 'c-line', 'style="stroke:var(--t-pig);stroke-width:5"');
+  // iris：從根部沿著壁到看起來的插入點（貼住＝接觸；留一道細縫＝沒接觸、只是擋住視線），再依角度與形狀離開
+  const dk = G.opened ? G.root : G.vis === 'slit' ? 'SL' : G.vis, gap = G.contact ? 0 : 0.035, wT = 0.22;
+  const nrm = (arr, i) => { const a = arr[Math.max(0, i - 1)], b = arr[Math.min(arr.length - 1, i + 1)], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; let n = [-(b[1] - a[1]) / l, (b[0] - a[0]) / l]; if (n[0] * GN[0] + n[1] * GN[1] < 0) n = [-n[0], -n[1]]; return n; };
+  const sw2 = dk === G.root ? [] : rev(wallSeg(dk, G.root));
+  const off = (k0, i) => { const n = nrm(sw2, i), k = k0 * Math.min(1, i / 3); return [sw2[i][0] + k * n[0], sw2[i][1] + k * n[1]]; };
+  const sA = sw2.map((p, i) => off(gap, i)), sP = sw2.map((p, i) => off(gap + wT, i));
+  const P0 = sA.length ? sA[sA.length - 1] : root;
+  const cv = irisCurve(P0, G.thDraw, G.cfgDraw, !sA.length);
+  const thick = l => sA.length ? wT + (0.42 - wT) * Math.min(1, l / 0.9) : 0.16 + 0.26 * Math.min(1, l / 0.9);
+  const post = cv.pts.map((p, i) => { const a = cv.al[i] * DEG, t = thick(i * 0.05); return [p[0] + t * (-Math.sin(a) * GU[0] + Math.cos(a) * GN[0]), p[1] + t * (-Math.sin(a) * GU[1] + Math.cos(a) * GN[1])]; });
+  h += S(DG(sA.length ? [...sA, ...cv.pts.slice(1), ...rev(post), ...rev(sP)] : [root, ...cv.pts, ...rev(post), [root[0] + 0.3, root[1] - 0.03]]), 'c-iris');
+  if (sA.length) {
+    const m = PG(sA[Math.floor(sA.length / 2)]), q = PG([-9.62, 4.3]);
+    const txt = G.contact ? (G.pas ? 'PAS（壓迫推不開）' : `周邊 iris 貼到壁上${G.itc ? '（ITC）' : ''}`) : '被 iris 擋住（沒接觸）';
+    h += `<g class="lab note"><line x1="${fx(m[0])}" y1="${fx(m[1])}" x2="${fx(q[0] + 40)}" y2="${fx(q[1] - 14)}"/><text x="${fx(q[0])}" y="${fx(q[1])}">${txt}</text></g>`;
+  }
+  if (G.vis !== 'slit' && G.vis !== 'A') {
+    const q = PG(GW.pts[GW.at[G.vis]]);
+    h += `<circle class="gmk" cx="${fx(q[0])}" cy="${fx(q[1])}" r="6"/>`;
+  }
+  // Shaffer 的量法：TM 切線與周邊 1/3 處 iris 切線
+  if (!o.hideAngle && G.thDraw >= 1 && !G.contact) {
+    const i13 = Math.round(1.2 / 0.05), Q = cv.pts[i13], tau = gdir(cv.al[i13]);
+    // 兩條線的交點 V：J + s·GU ＝ Q − r·tau
+    const J = EYE.J, det = GU[0] * (-tau[1]) - GU[1] * (-tau[0]);
+    let sV = ((Q[0] - J[0]) * (-tau[1]) - (Q[1] - J[1]) * (-tau[0])) / det, V = [J[0] + sV * GU[0], J[1] + sV * GU[1]];
+    const Vs = PG(V), far = Vs[0] < 10 || Vs[0] > 550 || Vs[1] < 10 || Vs[1] > 440;
+    const ln = (p1, p2) => `<path class="gtan" d="${DG([p1, p2], false)}"/>`, mv = (p0, d, k) => [p0[0] + d[0] * k, p0[1] + d[1] * k];
+    if (far) {
+      // 角度很小時兩條切線的交點跑出圖外：沿壁畫 TM 切線，再在 iris 的量測點畫一條和它平行的線來標角度
+      h += ln(EYE.SPUR, mv(EYE.J, GU, 0.6)) + ln(Q, mv(Q, GU, 0.6)) + ln(mv(Q, tau, -0.35), mv(Q, tau, 0.3));
+      V = Q;
+    } else h += ln(V, mv(V, GU, Math.max(0.6, -sV + 0.5))) + ln(V, mv(Q, tau, 0.25));
+    const Vp = PG(V), r = 62, ang = k => { const d = k ? tau : GU, q = PG([V[0] + d[0], V[1] + d[1]]); return Math.atan2(q[1] - Vp[1], q[0] - Vp[0]); };
+    const b0 = ang(0), b1 = ang(1), p0 = [Vp[0] + r * Math.cos(b0), Vp[1] + r * Math.sin(b0)], p1 = [Vp[0] + r * Math.cos(b1), Vp[1] + r * Math.sin(b1)];
+    const dl = ((b1 - b0 + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;   // 走短的那一邊
+    h += `<path class="garc" d="M${fx(p0[0])} ${fx(p0[1])}A${r} ${r} 0 0 ${dl > 0 ? 1 : 0} ${fx(p1[0])} ${fx(p1[1])}"/>`;
+    const bm = b0 + dl / 2, tx = [Vp[0] + (r + 22) * Math.cos(bm), Vp[1] + (r + 22) * Math.sin(bm)];
+    h += `<text class="gdeg" x="${fx(tx[0])}" y="${fx(tx[1] + 6)}" text-anchor="middle">${G.opened ? '壓迫後' : `${G.th}°`}</text>`;
+  }
+  const m = isMob();
+  const L = [['Cornea', PG([-10.0, 4.7]), 'L'], ['Schwalbe line', sw, 'L'], ['TM', PG(pt(10.46, 148.6)), 'L'], ['Scleral spur', PG(pt(10.33, 146.55)), 'L'],
+    ['Sclera', PG(pt(10.9, 144)), 'T'], ['Schlemm canal', sc, 'T'], ['Conjunctiva', PG(pt(E.Ro + 0.15, 146.5)), 'T'],
+    ['Ciliary muscle', PG([-8.15, 6.12]), 'R'], ['Ciliary body band', PG([-8.70, 5.60]), 'R'], ['Ciliary body', PG([-8.05, 5.5]), 'R'], ['Iris', PG(cv.pts[34]), 'R']];
+  h += labels(L, { L: { x: m ? 138 : 118, lo: 170, hi: 440 }, R: { x: m ? 400 : 430, lo: 40, hi: 440 }, T: { y: m ? 26 : 22, lo: 8, hi: 552, rows: 1 } }, m ? 23 : 16);
+  h += `<g class="lab note"><text x="${fx(PG([-9.55, 4.75])[0])}" y="${fx(PG([-9.55, 4.75])[1])}">Anterior chamber</text></g>`;
+  return h + `</svg>`;
+}
+// 鏡下示意（由上到下＝由前到後）
+const GBY = { sl: [150, 158], nptm: [158, 200], ptm: [200, 245], spur: [245, 262], cbb: [262, 300] };
+const GEDGE = { A: 128, slit: 150, B1: 184, B2: 226, C: 259, D: 298, E: 334 };
+function gView(G, o) {
+  const k = G.vis, edge = GEDGE[k], cbbEnd = k === 'E' ? 336 : 300, m = isMob();
+  let h = `<svg viewBox="0 0 380 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="gonioscopy 鏡下示意"><rect width="380" height="450" fill="var(--fig-bg)"/>`;
+  h += `<rect x="0" y="0" width="380" height="150" style="fill:var(--t-cornea)"/>`;
+  h += `<path d="M120 0L150 150M178 0L150 150" style="fill:none;stroke:var(--beam);stroke-width:3;stroke-linecap:round;opacity:.9"/>`;
+  h += `<rect x="0" y="${GBY.sl[0]}" width="380" height="8" style="fill:var(--beam);stroke:var(--t-stroke);stroke-width:.6"/>`;
+  h += `<rect x="0" y="${GBY.nptm[0]}" width="380" height="42" style="fill:var(--t-collagen);opacity:.75"/>`;
+  h += `<rect x="0" y="${GBY.ptm[0]}" width="380" height="45" style="fill:var(--t-collagen)"/><rect x="0" y="${GBY.ptm[0]}" width="380" height="45" style="fill:var(--t-pig);opacity:${fx(0.12 + 0.17 * G.pig)}"/>`;
+  h += `<rect x="0" y="${GBY.spur[0]}" width="380" height="17" style="fill:var(--t-sclera);stroke:var(--t-stroke-2);stroke-width:.6"/>`;
+  h += `<rect x="0" y="${GBY.cbb[0]}" width="380" height="${cbbEnd - GBY.cbb[0]}" style="fill:var(--t-cb)"/>`;
+  // iris：上緣是看起來的插入點；slit 時上方留一道暗縫（沒有接觸）
+  if (k === 'slit') h += `<rect x="0" y="${edge - 9}" width="380" height="9" style="fill:var(--t-pig)"/>`;
+  let wave = `M0 ${edge}`; for (let x = 0; x <= 380; x += 20) wave += `Q${x + 10} ${edge + (x / 20 % 2 ? 5 : -3)} ${x + 20} ${edge}`;
+  h += `<path d="${wave}V450H0Z" class="c-iris"/>`;
+  for (let x = 14; x < 380; x += 26) h += `<path d="M${x} ${edge + 14}q6 ${fx((450 - edge) * 0.45)} -2 ${fx(450 - edge - 20)}" style="fill:none;stroke:var(--t-pig);stroke-width:1.2;opacity:.45"/>`;
+  if (G.pas && G.contact) h += `<path d="M60 ${edge}l18 -46l18 46M230 ${edge}l14 -38l14 38" class="c-iris" style="stroke:none"/>`;
+  // 結構名稱（看不到的標「被擋住」）
+  if (!o.quiz) {
+    const n = VIS_OF[k], f = m ? 15.5 : 12.5;
+    BANDS.forEach(([b, t], i) => { const y = (GBY[b][0] + GBY[b][1]) / 2 + f * 0.35, seen = i < n; h += `<g class="lab"><text x="372" y="${fx(b === 'cbb' && k === 'E' ? 318 : y)}" text-anchor="end" style="font-size:${f}px;${seen ? '' : 'fill:var(--muted)'}">${t}${seen ? '' : '（被擋住）'}</text></g>`; });
+    h += `<g class="lab"><text x="12" y="${fx(Math.max(edge + 34, 330))}" style="font-size:${f}px">Iris${G.contact ? (G.pas ? '（PAS）' : '（周邊貼到壁上）') : ''}</text></g><g class="lab"><text x="12" y="40" style="font-size:${f}px">Cornea</text></g><g class="lab"><text x="186" y="118" style="font-size:${f * 0.92}px">corneal wedge</text></g>`;
+  }
+  return h + `</svg>`;
+}
+function gFigHTML(G, o) {
+  return `<div class="duo${o.viewOnly ? ' one' : ''}">${o.viewOnly ? '' : gCross(G, o)}${gView(G, o)}</div>`;
+}
+function gonState() { return { th: st.gTh, cfg: st.gCfg, pig: st.gPig, app: st.gApp, tru: st.gTru, pas: st.gPas, root: st.gRoot, ind: st.gInd }; }
+function gonFig() {
+  const it = quizItem(), G = gEval(it ? it.gs : gonState()), quiz = st.learnMode === 'quiz';
+  const fig = $('#fig');
+  fig.innerHTML = gFigHTML(G, { quiz, viewOnly: !!(it && it.type === 'look'), hideAngle: false });
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', quiz);
+  $('#cap').innerHTML = `<span>${it && it.type === 'look' ? '鏡下示意' : '左：前房角剖面（同分頁一的眼球模型放大，上＝周邊、左＝anterior），虛線夾角＝Shaffer 的量法。右：鏡下示意'}，由上到下＝由前（角膜側）到後（iris 側）；iris 的上緣就是看起來的插入點。</span><span class="ori">示意，不是實際比例</span>`;
+}
+function gonExtra() {
+  const G = gEval(gonState()), sl = (id, label, min, max, step, val, fmt) => `<div class="sl"><label for="${id}">${label}<b id="${id}-v">${fmt(val)}</b></label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
+  const row = g => `<tr class="${g === G.shaffer ? 'on' : ''}"><td>${gLab(g)}</td><td>${GSH[g].deg}</td><td>${GSH[g].see}</td><td>${GSH[g].risk}</td></tr>`;
+  return `<div class="xrow">${sl('g-th', 'TM 與周邊 1/3 iris 的夾角', 0, 45, 1, st.gTh, v => `${v}°`)}
+    <div class="sl"><span class="xh" style="margin:0">Iris 形狀（Spaeth）</span><div class="seg">${Object.keys(SP_CFG).map(c => `<button type="button" data-gcfg="${c}" aria-pressed="${st.gCfg === c}">${c} ${SP_CFG[c][1]}</button>`).join('')}</div></div>
+    <div class="sl"><span class="xh" style="margin:0">後段 TM 色素（0–4）</span><div class="seg">${[0, 1, 2, 3, 4].map(p => `<button type="button" data-gpig="${p}" aria-pressed="${st.gPig === p}">${p}</button>`).join('')}</div></div></div>
+    <p class="rstat" style="margin-top:12px">拖拉角度時，插入點回到「依角度」的典型對應；下方的例子另外指定插入點與壓迫後的樣子。</p>
+    <div class="xh" style="margin-top:14px">Shaffer 分級${s('S23', 'S24')}</div>
+    <div class="tbl"><table><thead><tr><th>Grade</th><th>角度</th><th>看得到的結構</th><th>關閉的可能</th></tr></thead><tbody>${GSH_ORDER.map(row).join('')}</tbody></table></div>
+    <p class="rstat" style="font-size:13px;color:var(--muted)">Grade 3 的下限 Kanski 寫 25°、EyeWiki 寫 20°，文獻不一；grade 2、1 文獻只給 20°、10°，中間的角度本頁取最接近的一級。</p>`;
+}
+function gonCard() {
+  const G = gEval(gonState()), n = VIS_OF[G.vis];
+  const seen = BANDS.filter((b, i) => i < n).map(b => b[1]), hid = BANDS.filter((b, i) => i >= n).map(b => b[1]);
+  const sp = G.spaeth ? `<b style="font-family:var(--f-mono);font-size:18px">${G.spaeth}</b>` : '插入點看不到，無法記';
+  const parts = [];
+  if (G.spaeth) {
+    const L1 = LET(G.app), L2 = G.tru ? LET(G.tru) : null;
+    if (L2 && L2 !== L1) parts.push(`(${L1})：壓迫前看到的插入點——${SP_INS[L1]}${s('S24')}`, `${L2}：壓迫後的插入點——${SP_INS[L2]}${s('S24')}`);
+    else parts.push(`${L1}：插入點——${SP_INS[L1]}${s('S24')}`);
+    parts.push(`${G.th}：iris 角度（度）${s('S24')}`, `${G.cfg}：iris 形狀——${SP_CFG[G.cfg][0]}（${SP_CFG[G.cfg][1]}）${s('S24')}`, `${G.pig}：後段 TM 的色素，0–4 級${s('S24')}`);
+  }
+  const clin = [];
+  clin.push(G.itc ? `看不到 pigmented TM（不壓迫）＝這一區有 iridotrabecular contact（ITC）${s('S25', 'S26')}` : `看得到 pigmented TM：這一區沒有 ITC${s('S25', 'S26')}`);
+  if (G.tru && G.ind) clin.push(G.pas ? `壓迫也推不開：PAS（沾黏性關閉）${s('S23', 'S26')}` : `壓迫後打開、看到更深的結構：貼合性（appositional）關閉，不是 PAS${s('S23', 'S26')}`);
+  else if (G.tru) clin.push(`上方工具列打開「壓迫」，看壓迫後的樣子；壓迫（indentation）用來分辨貼合性與沾黏性（PAS）關閉${s('S23', 'S26')}`);
+  if (G.cfg === 'P') clin.push(`Plateau iris configuration：周邊 iris 被前移的 ciliary body 頂起，iris 平面相對平、中央前房較深；壓迫時有「double hump sign」${s('S26')}`);
+  if (G.shaffer !== G.structG) clin.push(`依角度是 ${gLab(G.shaffer)}，依看得到的結構是 ${gLab(G.structG)}：Shaffer 只記角度，Spaeth 把插入點、角度、iris 形狀分開記，才看得出這種差別${s('S23', 'S27')}`);
+  return `<div class="card"><div class="eyebrow">前房角分級 · 對照 BCSC 10</div><div><h2>Shaffer ${gLab(G.shaffer)}</h2></div><p class="zh">${GSH[G.shaffer].see}</p>
+    <div class="verdict"><span>Spaeth ${sp}</span><span>依看得到的結構：${gLab(G.structG)}</span></div>
+    ${list('鏡下看得到', seen.length ? [seen.join('、') + (G.vis === 'B1' ? '（TM 只看到最上緣）' : G.vis === 'B2' ? '（pigmented TM 只看到一部分）' : '')] : ['看不到任何前房角結構'])}${hid.length ? list('被 iris 擋住', [hid.join('、')]) : ''}
+    ${parts.length ? list('Spaeth 記法拆解', parts) : ''}${list('臨床意義', clin)}
+    ${list('Shaffer', [`記的是 TM 內表面的切線與周邊約 1/3 處 iris 前表面切線的夾角，每個象限給一個數字；實務上很多人直接依看得到幾種結構分級，再註明 iris 的角度${s('S23')}`, `前房角通常上方最窄${s('S23')}`])}
+    ${list('Spaeth', [`記三件事：iris 插入點、角度、周邊 iris 的弧度${s('S23', 'S27')}；另外記後段 TM 的色素 0–4 級，括號內是壓迫前看到的插入點，例如 (B)D30P1${s('S24')}`, `Iris 形狀的字母各版本不同：EyeWiki 列 S（steep）、B（bowing anteriorly）、P（plateau）、R 或 F（regular／flat）、C（concave）${s('S24')}；本頁用 F、B、P、C`, `和 UBM 比較，Spaeth 記的角度平均少估約 5°${s('S27')}`])}
+    ${list('診斷門檻', [`不壓迫時看起來 iris 碰到 pigmented TM 或更前面＝ITC；ITC 達 180 度以上：沒有 PAS、眼壓正常、沒有視神經病變＝PACS；加上 PAS 或眼壓高＝PAC；再加上青光眼視神經病變＝PACG${s('S26')}`, `實務上：角度大於 25° 且一圈都看得到 scleral spur，關閉風險低；超過兩個象限看不到 pigmented TM，風險高${s('S25')}`])}
+    ${list('檢查技巧', [`暗室、約 1 mm 的短光帶且不要照進瞳孔，以免瞳孔縮小把前房角撐開${s('S25', 'S26')}`, `分級在眼睛正視、不壓迫時做；先用 corneal wedge 找 Schwalbe line，再往後找 TM${s('S25', 'S24')}`, `從上方的鏡子看下方的前房角，轉鏡子看其他象限${s('S25')}`])}
+    ${list('原始文獻', ['Shaffer RN. Primary glaucomas. Gonioscopy, ophthalmoscopy and perimetry. Trans Am Acad Ophthalmol Otolaryngol 1960;64:112–127；Spaeth GL. The normal development of the human anterior chamber angle: a new system of descriptive grading. Trans Ophthalmol Soc U K 1971;91:709–739。兩篇線上都找不到全文，本頁的分級依上面列的轉述'])}
+    ${srcList(['S23', 'S24', 'S25', 'S26', 'S27'])}</div>`;
+}
+/* 測驗：look 看鏡下判斷 Shaffer；deg 角度換 Shaffer；spa 讀 Spaeth 記法 */
+const GL_Q = { '4': { th: 40, cfg: 'F' }, '3': { th: 30, cfg: 'F' }, '2': { th: 20, cfg: 'B' }, '1': { th: 10, cfg: 'B' }, slit: { th: 3, cfg: 'B' }, '0': { th: 10, cfg: 'B', app: 'A' } };
+const GD_Q = { d40: 40, d30: 30, d20: 20, d10: 10 };
+const GP_Q = {
+  p1: { q: '(B)D30P1：括號裡的 B 是什麼？', ans: '壓迫前看到的插入點，在 Schwalbe line 與 scleral spur 之間', opts: ['壓迫後的插入點，在 Schwalbe line 與 scleral spur 之間', 'Iris 形狀是 bowing anteriorly', '後段 TM 色素是 B 級'] },
+  p2: { q: '(B)D30P1：壓迫後真正的插入點是哪裡？', ans: 'D：比 scleral spur 更深', opts: ['B：Schwalbe line 與 scleral spur 之間', 'C：在 scleral spur', 'A：Schwalbe line 前方'] },
+  p3: { q: '(B)D30P1 裡的 P 代表什麼？', ans: 'Plateau：周邊陡升、中間平', opts: ['Bowing anteriorly：往前凸', 'Flat：平', 'Concave：往後凹'] },
+  p4: { q: '(B)D30P1 最後的 1 代表什麼？', ans: '後段 TM 的色素，0–4 級的第 1 級', opts: ['看得到 1 種結構', 'Shaffer grade 1', '一個象限關閉'] },
+  p5: { q: 'Spaeth 插入點寫 A 代表什麼？', ans: 'Iris 看起來接在 Schwalbe line 前方', opts: ['Iris 接在 scleral spur', 'Iris 接得非常深', 'Iris 形狀是 concave'] },
+  p6: { q: '(B)D30P1 依角度換算 Shaffer 是幾級？', ans: 'Grade 3', opts: ['Grade 4', 'Grade 2', 'Grade 1'] },
+  p7: { q: 'Iris 形狀寫 B 代表什麼？', ans: 'Bowing anteriorly：往前凸', opts: ['Plateau：周邊陡升、中間平', 'Behind Schwalbe line：接在 TM 上', 'Concave：往後凹'] }
+};
+const GKEYS = [...GSH_ORDER.map(g => 'gon:l:' + g), ...Object.keys(GD_Q).map(k => 'gon:d:' + k), ...Object.keys(GP_Q).map(k => 'gon:p:' + k)];
+const gonKeyLabel = k => { const t = k.split(':')[1], id = k.split(':')[2]; return t === 'l' ? `看鏡下判斷：${gLab(id)}` : t === 'd' ? `${GD_Q[id]}° 換 Shaffer` : GP_Q[id].q; };
+function gonItem(key) {
+  const t = key.split(':')[1], id = key.split(':')[2], pig = 1 + Math.floor(Math.random() * 3);
+  if (t === 'l') return { key, type: 'look', gs: Object.assign({ pig }, GL_Q[id]), ans: id, opts: GSH_ORDER.slice(), lab: gLab,
+    prompt: ['上方是不壓迫、眼睛正視時的鏡下所見（示意）', '這一區的 Shaffer 分級（依看得到的結構）？'], more: `${gLab(id)}：${GSH[id].see}${s('S23')}` };
+  if (t === 'd') { const th = GD_Q[id], g = shafferOf(th); return { key, type: 'deg', gs: { th, cfg: 'F', pig }, ans: g, opts: GSH_ORDER.slice(), lab: gLab,
+    prompt: [`TM 與周邊 1/3 iris 的夾角約 ${th}°，沒有接觸`, 'Shaffer 是幾級？'], more: `Kanski：${gLab(g)}＝${GSH[g].deg}，${GSH[g].see}${s('S23')}` }; }
+  const q = GP_Q[id];
+  return { key, type: 'spa', gs: Object.assign({ pig: 1 }, GPRE.plateau), ans: q.ans, opts: shuffle([q.ans, ...q.opts]), lab: x => x,
+    prompt: ['Spaeth 記法', q.q], more: `EyeWiki 的例子 (B)D30P1：壓迫前看到 B、壓迫後是 D，iris 角度 30°、plateau、後段 TM 色素 1 級${s('S24')}` };
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'aq', name: '房水與藥物', en: 'Aqueous & drugs' }];
+const VIEWS = [{ id: 'aq', name: '房水與藥物', en: 'Aqueous & drugs' }, { id: 'gon', name: '前房角分級', en: 'Gonioscopy' }];
 const $ = q => document.querySelector(q);
 let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
-const st = { view: 'aq', drug: 'none', site: null, labels: true, anim: !reduce, learnMode: 'learn', quiz: null };
+const st = { view: 'aq', drug: 'none', site: null, labels: true, anim: !reduce, learnMode: 'learn', quiz: null,
+  gTh: 40, gCfg: 'F', gPig: 1, gPre: 'wide', gApp: null, gTru: null, gPas: false, gRoot: null, gInd: false };
 const store = (() => {
   const K2 = 'glaucomaAtlas.v1';
   let mem = { wrong: {} };
@@ -817,12 +1092,14 @@ const figDrug = () => { const it = quizItem(); return it ? (it.type === 'anim' ?
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選藥物，看它作用在哪裡；點圖上的構造或標示，看哪些藥作用在那裡'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'gon' ? '拖拉條調角度，或下方選例子；左邊剖面、右邊鏡下所見一起變' : '下方選藥物，看它作用在哪裡；點圖上的構造或標示，看哪些藥作用在那裡'}</span>`;
 }
 function renderTools() {
+  if (st.view === 'gon') { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : (st.gTru ? `<label class="tog"><input type="checkbox" id="t-ind" ${st.gInd ? 'checked' : ''}>壓迫（indentation）</label>` : '') + `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-anim" ${st.anim ? 'checked' : ''}>動畫</label>` + (st.learnMode !== 'quiz' ? `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>` : '');
 }
 function renderFig() {
+  if (st.view === 'gon') { if (AQ.raf) cancelAnimationFrame(AQ.raf); AQ.raf = null; gonFig(); return; }
   const fig = $('#fig');
   fig.innerHTML = aqSVG(figDrug(), { quiz: st.learnMode === 'quiz', site: st.learnMode === 'quiz' ? null : st.site });
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
@@ -831,6 +1108,7 @@ function renderFig() {
 }
 function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  if (st.view === 'gon') { $('#extra').innerHTML = gonExtra(); return; }
   const an = anatOf(st.drug);
   $('#extra').innerHTML = `<div class="xrow"><div class="ins"><div class="xh">TM 與 Schlemm canal 放大（示意）</div>${tmInset(an)}<p>由 AC 往外：uveal、corneoscleral、juxtacanalicular（JCT）三層，再到 Schlemm canal 內壁的 giant vacuoles；正常阻力主要在 JCT${s('S16', 'S20')}。${st.drug === 'pilo' ? 'Pilocarpine：網眼整體被撐開、Schlemm canal 擴張。' : st.drug === 'rock' ? 'Netarsudil：JCT 空隙變寬、giant vacuoles 變多（摘除眼灌流的觀察）。' : st.drug === 'lbn' ? 'Latanoprostene bunod：NO 讓 TM 細胞放鬆。' : ''}</p></div>
     <div class="ins"><div class="xh">Ciliary muscle 肌束放大（示意）</div>${cmInset(an)}<p>綠色虛線＝肌束之間的空隙，也就是 uveoscleral 路徑${s('S16')}。${an.cmGap > 0 ? '這類藥讓空隙變寬（細胞外基質重塑）。' : an.cmGap < 0 ? 'Pilocarpine：肌肉收縮、空隙變窄。' : ''}</p></div></div>
@@ -840,13 +1118,15 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'gon') { ix.innerHTML = `<span class="lbl">例子（${GPRE_ORDER.length}）</span>` + GPRE_ORDER.map(k => `<button type="button" class="chip ${k === st.gPre ? 'on' : ''}" data-gpre="${k}">${GPRE[k].zh}</button>`).join(''); return; }
   ix.innerHTML = `<span class="lbl">藥物（${DRUG_ORDER.length - 1} 類）</span>` + DRUG_ORDER.map(k => `<button type="button" class="chip ${k === st.drug && !st.site ? 'on' : ''}" data-drug="${k}">${k === 'none' ? '未用藥' : DRUGS[k].zh} ${k === 'none' ? '' : `<i>${DRUGS[k].en}</i>`}</button>`).join('');
 }
 function renderPanel() {
-  $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.site ? siteCard(st.site) : drugCard(st.drug);
+  $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'gon' ? gonCard() : st.site ? siteCard(st.site) : drugCard(st.drug);
 }
 function renderSelbar() {
-  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.site ? `部位：${SITES[st.site].en}` : `目前：${st.drug === 'none' ? '未用藥' : DRUGS[st.drug].zh}`;
+  const G = st.view === 'gon' ? gEval(gonState()) : null;
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : G ? `Shaffer ${gLab(G.shaffer)}${G.spaeth ? ` · Spaeth ${G.spaeth}` : ''}` : st.site ? `部位：${SITES[st.site].en}` : `目前：${st.drug === 'none' ? '未用藥' : DRUGS[st.drug].zh}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -884,14 +1164,17 @@ const AQ_S = {
   s9: { q: '哪一類藥只減少房水製造，非選擇性的會引起 bronchospasm 與 bradycardia？', ok: ['beta'] }
 };
 const QKEYS = [...AQ_A.map(k => 'aq:a:' + k), ...Object.keys(AQ_S).map(k => 'aq:s:' + k)];
-const keyValid = k => QKEYS.includes(k);
-const keyView = () => 'aq';
-const QTV = { aq: [['anim', '看圖猜藥'], ['site', '給部位或機轉選藥']] };
-const QTZ = { a: 'anim', s: 'site' };
+// 錯題的 key：分頁一 aq:a:…（看圖猜藥）、aq:s:…（給部位選藥）；分頁二 gon:l:…（看鏡下）、gon:d:…（角度換算）、gon:p:…（Spaeth 記法）；冒號後那個字母決定題型
+const keyValid = k => QKEYS.includes(k) || GKEYS.includes(k);
+const keyView = k => k.startsWith('gon:') ? 'gon' : 'aq';
+const QTV = { aq: [['anim', '看圖猜藥'], ['site', '給部位或機轉選藥']], gon: [['look', '看鏡下判斷'], ['deg', '角度換 Shaffer'], ['spa', 'Spaeth 記法']] };
+const QTZ = { a: 'anim', s: 'site', l: 'look', d: 'deg', p: 'spa' };
+const kType = k => QTZ[k.split(':')[1]];
 const dLab = id => `${DRUGS[id].zh}（${DRUGS[id].en}）`;
-const keyLabel = k => k[3] === 'a' ? `看圖猜藥：${DRUGS[k.slice(5)].zh}` : AQ_S[k.slice(5)].q;
+const keyLabel = k => k.startsWith('gon:') ? gonKeyLabel(k) : k[3] === 'a' ? `看圖猜藥：${DRUGS[k.slice(5)].zh}` : AQ_S[k.slice(5)].q;
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 function itemOf(key) {
+  if (key.startsWith('gon:')) return gonItem(key);
   const t = QTZ[key[3]], id = key.slice(5);
   if (t === 'anim') {
     const pool = AQ_A.filter(x => x !== id && !(LOOK[id] || []).includes(x));
@@ -906,12 +1189,13 @@ function quizHTML() {
   if (q.phase === 'setup') {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>這類藥作用在哪裡？</h2>
+    const gv = st.view === 'gon';
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${gv ? '前房角幾級？怎麼記？' : '這類藥作用在哪裡？'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">兩種題型：看圖上哪些部位在變、往哪個方向（標籤會隱藏），猜是哪一類藥；給作用部位、機轉或特徵副作用選藥。圖上看起來一樣的兩類（beta-blocker 與 CAI、prostaglandin 與 latanoprostene bunod）不會同時出現在選項裡。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${gv ? '三種題型：看鏡下示意（不壓迫、正視）判斷 Shaffer 分級；給角度換算 Shaffer；讀 Spaeth 記法 (B)D30P1 的每一部分。' : '兩種題型：看圖上哪些部位在變、往哪個方向（標籤會隱藏），猜是哪一類藥；給作用部位、機轉或特徵副作用選藥。圖上看起來一樣的兩類（beta-blocker 與 CAI、prostaglandin 與 latanoprostene bunod）不會同時出現在選項裡。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -921,18 +1205,18 @@ function quizHTML() {
   }
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
-  const prompt = it.type === 'anim' ? ['上方是點了某一類藥之後的房水路徑：看標示的箭頭與構造變化', '這是哪一類藥？'] : ['作用部位與機轉', it.q];
-  h += `<div class="prompt"><div class="k">${prompt[0]}</div><div class="q">${prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${dLab(o)}</button>`).join('')}</div>`;
+  const lab = it.lab || dLab, prompt = it.prompt || (it.type === 'anim' ? ['上方是點了某一類藥之後的房水路徑：看標示的箭頭與構造變化', '這是哪一類藥？'] : ['作用部位與機轉', it.q]);
+  h += `<div class="prompt"><div class="k">${prompt[0]}</div><div class="q">${prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${lab(o)}</button>`).join('')}</div>`;
   if (q.ans) {
-    const d = DRUGS[it.ans], more = `${d.def}<br><span style="display:inline-flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px">${effLine(it.ans)}</span>`;
-    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${DRUGS[q.ans.pick].zh}；` : ' '}答案是 ${dLab(it.ans)}。<br>${more}</div>`;
+    const more = it.more || `${DRUGS[it.ans].def}<br><span style="display:inline-flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px">${effLine(it.ans)}</span>`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${it.lab ? lab(q.ans.pick) : DRUGS[q.ans.pick].zh}；` : ' '}答案是 ${lab(it.ans)}。<br>${more}</div>`;
     h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
   } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
   return h + `</div>`;
 }
 function startQuiz(cfg) {
   const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
-  let pool = QKEYS.filter(k => keyView(k) === st.view && types.includes(QTZ[k[3]]));
+  let pool = [...QKEYS, ...GKEYS].filter(k => keyView(k) === st.view && types.includes(kType(k)));
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
@@ -954,6 +1238,7 @@ function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.le
 function setView(v) {
   st.view = v;
   try { history.replaceState(null, '', v === 'aq' ? location.pathname : '#' + v); } catch (e) { }
+  if (AQ.raf) { cancelAnimationFrame(AQ.raf); AQ.raf = null; }
   if (st.learnMode === 'quiz') st.quiz = quizDefaults();
 }
 function setMode(m) {
@@ -962,7 +1247,14 @@ function setMode(m) {
   st.quiz = m === 'quiz' ? quizDefaults() : null;
   render();
 }
+function setGPre(k) { const p = GPRE[k]; Object.assign(st, { gPre: k, gTh: p.th, gCfg: p.cfg, gPig: p.pig, gApp: p.app || null, gTru: p.tru || null, gPas: !!p.pas, gRoot: p.root || null, gInd: false }); }
 function goKey(k) {
+  if (k.startsWith('gon:')) {
+    setView('gon'); const t = k.split(':')[1], id = k.split(':')[2];
+    if (t === 'p') setGPre('plateau');
+    else { const s0 = t === 'l' ? GL_Q[id] : { th: GD_Q[id], cfg: 'F' }; Object.assign(st, { gPre: null, gTh: s0.th, gCfg: s0.cfg, gApp: s0.app || null, gTru: null, gPas: false, gRoot: null, gInd: false }); }
+    render(); return;
+  }
   setView('aq'); st.site = null;
   st.drug = k[3] === 'a' ? k.slice(5) : AQ_S[k.slice(5)].ok[0];
   render();
@@ -987,6 +1279,9 @@ document.addEventListener('click', e => {
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
   const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const gp = t.closest('[data-gpre]'); if (gp) { setGPre(gp.dataset.gpre); render(); return; }
+  const gc = t.closest('[data-gcfg]'); if (gc) { st.gCfg = gc.dataset.gcfg; render(); return; }
+  const gg = t.closest('[data-gpig]'); if (gg) { st.gPig = +gg.dataset.gpig; render(); return; }
   const dr = t.closest('[data-drug]'); if (dr) { st.drug = dr.dataset.drug; st.site = null; render(); return; }
   const si = t.closest('[data-site]'); if (si) { if (st.learnMode === 'quiz') return; st.site = st.site === si.dataset.site ? null : si.dataset.site; render(); return; }
   const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
@@ -1000,6 +1295,17 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
   if (e.target.id === 't-anim') { st.anim = e.target.checked; aqStart(); }
+  if (e.target.id === 't-ind') { st.gInd = e.target.checked; renderFig(); renderPanel(); }
+});
+// 拖拉角度：插入點回到依角度的典型對應，只重畫圖、說明卡與表格
+document.addEventListener('input', e => {
+  if (e.target.id !== 'g-th') return;
+  Object.assign(st, { gTh: +e.target.value, gPre: null, gApp: null, gTru: null, gPas: false, gRoot: null, gInd: false });
+  $('#g-th-v').textContent = `${st.gTh}°`;
+  document.querySelectorAll('[data-gpre]').forEach(b => b.classList.remove('on'));
+  const G = gEval(gonState());
+  document.querySelectorAll('.tbl tbody tr').forEach((tr, i) => tr.classList.toggle('on', GSH_ORDER[i] === G.shaffer));
+  renderTools(); gonFig(); renderPanel(); renderSelbar();
 });
 let lastMob = isMob();
 window.addEventListener('resize', () => { const m = isMob(); if (m !== lastMob) { lastMob = m; renderFig(); } });
@@ -1040,6 +1346,24 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   SITE_ORDER.forEach(k => { const x = SITES[k], used = refs([x.def, ...x.pts].join(' ')); a(used.every(r => x.src.includes(r) && SRC[r]), `${k} 部位的引用都在來源清單`); });
   // 測驗
   Object.entries(AQ_S).forEach(([k, q]) => { if (q.test) a(AQ_A.filter(q.test).join() === q.ok.join(), `題目 ${k} 只有一個正確的藥`); });
+  // 分頁二：前房角分級
+  a(GORDER.every((k, i) => i === 0 || GW.at[GORDER[i - 1]] < GW.at[k]) && GW.at.SL > GW.at.A && GW.at.B1 > GW.at.SL && GW.at.PIG > GW.at.B1 && GW.at.B2 > GW.at.PIG, '壁上的位置由前往後：A、Schwalbe line、TM 前半、pigmented TM、spur、ciliary body');
+  a([[45, '4'], [40, '4'], [35, '4'], [34, '3'], [30, '3'], [25, '3'], [20, '2'], [10, '1'], [3, 'slit'], [0, '0']].every(([d, g]) => shafferOf(d) === g), 'Shaffer：Kanski 的 35–45、25–35、20、10、0');
+  for (let d = 0; d <= 45; d++) { const G = gEval({ th: d, cfg: 'F', pig: 1 }); a(G.shaffer === G.structG, `${d}°：依角度與依看得到的結構，在典型對應下要一致`); }
+  a(gEval(Object.assign({}, GPRE.plateau)).spaeth === '(B)D30P1', 'Plateau 例子的記法同 EyeWiki：(B)D30P1');
+  a(gEval(Object.assign({}, GPRE.wide)).spaeth === 'D40F1' && gEval(Object.assign({}, GPRE.slit)).spaeth === null, '寬角 D40F1；slit 記不了插入點');
+  a(['A', 'slit', 'B1'].every(k => VIS_OF[k] < 3) && ['B2', 'C', 'D', 'E'].every(k => VIS_OF[k] >= 3), '看不到 pigmented TM（ITC）的插入點：A、slit、B1');
+  a(gEval(Object.assign({ ind: true }, GPRE.appos)).vis === 'D' && gEval(Object.assign({ ind: true }, GPRE.pas)).vis === 'A', '壓迫：appositional 打開到 D、PAS 不變');
+  a(GSH_ORDER.every(g => { const G = gEval(Object.assign({ pig: 1 }, GL_Q[g])); return G.structG === g && G.shaffer === g; }), '看鏡下題：每一級的畫面要對上答案');
+  ['F', 'B', 'P', 'C'].forEach(cfg => [0, 5, 10, 20, 30, 40, 45].forEach(d => {
+    const G = gEval({ th: d, cfg, pig: 1 }), P0 = G.contact ? GW.pts[GW.at[G.app]] : GW.pts[GW.at[G.root]], cv = irisCurve(P0, G.thDraw, G.cfgDraw, !G.contact);
+    a(cv.pts.slice(1, 30).every(p => (p[0] - P0[0]) * GN[0] + (p[1] - P0[1]) * GN[1] > -0.01 && Math.hypot(p[0] + 5.26, p[1]) < 6.5), `${cfg} ${d}°：iris 周邊不穿進壁或角膜`);
+    const i13 = 24; a(Math.abs(cv.al[i13] - G.thDraw) < 0.5 || G.thDraw < 1, `${cfg} ${d}°：周邊 1/3 的切線角＝設定的角度`);
+  }));
+  for (let n = 0; n < 10; n++) GKEYS.forEach(k => { const it = gonItem(k); a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length, `${k} 的選項含答案、不重複`); });
+  a(GKEYS.every(k => GKEYS.filter(x => x === k).length === 1) && Object.keys(QTZ).length === new Set(Object.keys(QTZ)).size, '題型字母不重複');
+  const gUsed = refs(gonCard() + gonExtra());
+  a(gUsed.every(k => ['S23', 'S24', 'S25', 'S26', 'S27'].includes(k)), '分頁二的引用都在它的來源清單');
   for (let n = 0; n < 30; n++) QKEYS.forEach(k => {
     const it = itemOf(k);
     a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === 4, `${k} 的選項含答案、不重複、四個`);
@@ -1047,7 +1371,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   });
 })();
 
-if (location.hash === '#aq') st.view = 'aq';
+if (location.hash === '#gon') st.view = 'gon';
 render();
 </script>
 
