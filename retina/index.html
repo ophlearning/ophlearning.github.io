@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>視網膜互動圖譜</title>
-<meta name="description" content="互動式視網膜：看視網膜剝離的形狀，用 Lincoff rules 找 primary break；在眼底圖放裂孔，看視網膜下液怎麼依重力擴散；切換黃斑 OCT 病變（IRF、SRF、PED、ERM、VMA／VMT、macular hole），用 IVTS 分級，附測驗與錯題本。">
+<meta name="description" content="互動式視網膜：看視網膜剝離的形狀，用 Lincoff rules 找 primary break；在眼底圖放裂孔，看視網膜下液怎麼依重力擴散；切換黃斑 OCT 病變（IRF、SRF、PED、ERM、VMA／VMT、macular hole），用 IVTS 分級；在眼底上設定 ROP 病灶，依 ICROP3 判讀 zone、stage、plus，依 ETROP 判斷 Type 1／Type 2；附測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -18,6 +18,7 @@
   --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
   --t-fundus:#EDB18C; --t-fundus-2:#DD9772; --t-disc:#F8E3B8; --t-vessel:#B04530; --t-break:#9E1424;
   --rd:#F1F4FA; --rd-edge:rgba(52,60,92,.6);
+  --rop-avas:#F6DCCB; --rop-line:#FFFFFF; --rop-ridge:#FBE7E3; --rop-nv:#A3263A; --rop-rlf:#ECEBF1;
   --oct-bg:#06060A; --oct-hi:#F2F2F2; --oct-mh:#BDBDBD; --oct-m:#7C7C7C; --oct-lo:#2C2C2C; --oct-ch:#6A6A6A; --oct-chv:#262626; --oct-mark:#FF9F1A;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
@@ -31,14 +32,16 @@
   --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78;
-  --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7); color-scheme:dark }}
+  --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7);
+  --rop-avas:#86655A; --rop-line:#F3EEE9; --rop-ridge:#E7BDB6; --rop-nv:#F06A78; --rop-rlf:#CFCBD8; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
   --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78;
-  --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7); color-scheme:dark }
+  --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7);
+  --rop-avas:#86655A; --rop-line:#F3EEE9; --rop-ridge:#E7BDB6; --rop-nv:#F06A78; --rop-rlf:#CFCBD8; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -135,6 +138,44 @@ a{color:var(--accent)}
 .ocal.sm{font-size:12px;fill:var(--oct-hi)!important}
 .o-lead{fill:none;stroke:var(--t-stroke-2);stroke-width:1}
 .olab{font-family:var(--f-body)!important;font-size:13px;fill:var(--ink-2)!important}
+/* ROP：無血管區較淡；交界處的 demarcation line、ridge、新生血管；分區線 */
+.r-avas{fill:var(--rop-avas)}
+.r-ves{fill:none;stroke:var(--t-vessel);stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.r-ves.a{opacity:.72}
+.r-sh{fill:none;stroke:var(--t-stroke);stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
+.r-sh.wide{stroke-width:10.5}
+.r-dl{fill:none;stroke:var(--rop-line);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.r-ridge{fill:none;stroke:var(--rop-ridge);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.r-ridge-in{fill:none;stroke:var(--rop-line);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.r-nv{fill:none;stroke:var(--rop-nv);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.r-nv.thin{stroke-width:1.5}
+.r-rdf{fill:var(--rd);stroke:var(--rd-edge);stroke-width:1.6;stroke-linejoin:round}
+.r-rlf{fill:var(--rop-rlf);stroke:var(--t-stroke);stroke-width:1.2}
+.r-rlf-l{fill:none;stroke:var(--t-stroke-2);stroke-width:1.4}
+.r-zl{fill:none;stroke:var(--hl);stroke-width:1.8}
+.r-zl.dot{stroke-dasharray:2 5;stroke-width:2.2;stroke-linecap:round}
+.r-sec{stroke:var(--t-stroke-2);stroke-width:1;stroke-dasharray:3 5}
+.r-sel{fill:var(--hl-soft);opacity:.4}
+.r-rim{fill:var(--hl);opacity:.6}
+.r-ztag{font-family:var(--f-mono)!important;font-size:13px!important;fill:var(--hl)!important}
+.rgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-width:640px}
+.rgrid.p3{grid-template-columns:repeat(3,minmax(0,1fr));max-width:400px}
+.rmini{border:1px solid var(--line-2);background:var(--surface-2);border-radius:8px;padding:4px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;line-height:1.3;color:var(--ink-2);min-width:0;text-align:center}
+.rmini svg{display:block;width:100%;height:auto}
+.rmini:hover{border-color:var(--accent)}
+.rmini[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.m-ch{fill:var(--t-fundus-2)}
+.m-scl{stroke:var(--t-stroke);stroke-width:1.2}
+.m-ret{fill:var(--t-fundus);stroke:var(--t-stroke-2);stroke-width:1}
+.m-ves{fill:var(--t-vessel)}
+.m-dl{fill:var(--rop-line);stroke:var(--t-stroke);stroke-width:.8}
+.m-ridge{fill:var(--rop-ridge);stroke:var(--t-stroke);stroke-width:1}
+.m-nv{fill:none;stroke:var(--rop-nv);stroke-width:2.2;stroke-linecap:round}
+.verdict.t1{background:var(--bad-soft)}
+.verdict.t2{background:var(--accent-soft)}
+.verdict.t0{background:var(--surface-2);border:1px solid var(--line)}
+.ck{display:inline-block;width:1.5em;font-family:var(--f-mono);color:var(--muted)}
+.ck.on{color:var(--ok);font-weight:600}
 input[type=range]{width:min(320px,100%);accent-color:var(--accent);margin:0}
 .opts{display:flex;flex-direction:column;gap:8px}
 .opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
@@ -215,6 +256,8 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .eyetag{font-size:24px}
   .ocal{font-size:24px}
   .ocal.sm{font-size:20px}
+  .r-ztag{font-size:19px!important}
+  .rgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .seg button{padding:5px 10px}
 }
 </style>
@@ -257,7 +300,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>眼底示意圖畫成正像，同眼底照片：上＝superior，OD 的視盤在右、OS 的視盤在左；鐘點依檢查者看出去的方向標示。為了看清周邊，視盤放在圖的正中央，從後極到 ora serrata 的距離不按比例。剝離範圍、隆起高度與液體擴散的速度只是示意。OCT 是水平切過 fovea 的示意 B-scan：橫向 6 mm、縱向放大約 4 倍，病變的形狀與大小只是示意，不是真實影像。</span>
+    <span><b>關於圖：</b>眼底示意圖畫成正像，同眼底照片：上＝superior，OD 的視盤在右、OS 的視盤在左；鐘點依檢查者看出去的方向標示。為了看清周邊，視盤放在圖的正中央，從後極到 ora serrata 的距離不按比例。剝離範圍、隆起高度與液體擴散的速度只是示意。ROP 分區圖同樣把視盤放在中央，zone 以視盤為圓心；zone 之間的比例、病灶與血管的樣子只是示意。OCT 是水平切過 fovea 的示意 B-scan：橫向 6 mm、縱向放大約 4 倍，病變的形狀與大小只是示意，不是真實影像。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -289,7 +332,13 @@ const SRC = {
   S6: { t: 'Staurenghi G, Sadda S, Chakravarthy U, Spaide RF; IN•OCT Panel. Proposed lexicon for anatomic landmarks in normal posterior segment SD-OCT: the IN•OCT consensus. Ophthalmology 2014;121:1572–1578（全文付費，本頁依摘要）', u: 'https://doi.org/10.1016/j.ophtha.2014.02.023' },
   S7: { t: 'Duker JS, Kaiser PK, Binder S, et al. The International Vitreomacular Traction Study Group classification of vitreomacular adhesion, traction, and macular hole. Ophthalmology 2013;120:2611–2619（全文付費，本頁依摘要）', u: 'https://doi.org/10.1016/j.ophtha.2013.07.042' },
   S8: { t: 'Bikbova G, Oshitari T, Baba T, Yamamoto S, Mori K. Pathogenesis and management of macular hole: review of current advances. J Ophthalmol 2019:3467381（轉述 IVTS 的大小切點）', u: 'https://doi.org/10.1155/2019/3467381' },
-  S9: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：p.580 正常 OCT 圖說、p.589 serous PED、p.595 MNV 的 OCT、p.605 CSC、p.609 CMO、pp.611–612 FTMH 與 ERM、p.615 VMA／VMT', u: null }
+  S9: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：p.580 正常 OCT 圖說、p.589 serous PED、p.595 MNV 的 OCT、p.605 CSC、p.609 CMO、pp.611–612 FTMH 與 ERM、p.615 VMA／VMT', u: null },
+  S10: { t: 'Chiang MF, Quinn GE, Fielder AR, et al. International Classification of Retinopathy of Prematurity, Third Edition. Ophthalmology 2021;128:e51–e68（PMC 開放全文）', u: 'https://doi.org/10.1016/j.ophtha.2021.05.031' },
+  S11: { t: 'Early Treatment for Retinopathy of Prematurity Cooperative Group. Revised indications for the treatment of retinopathy of prematurity: results of the early treatment for retinopathy of prematurity randomized trial. Arch Ophthalmol 2003;121:1684–1694（本頁依摘要）', u: 'https://doi.org/10.1001/archopht.121.12.1684' },
+  S12: { t: 'Cryotherapy for Retinopathy of Prematurity Cooperative Group. Multicenter trial of cryotherapy for retinopathy of prematurity: preliminary results. Arch Ophthalmol 1988;106:471–479（本頁依摘要）', u: 'https://doi.org/10.1001/archopht.1988.01060130517027' },
+  S13: { t: 'Mintz-Hittner HA, Kennedy KA, Chuang AZ, et al. Efficacy of intravitreal bevacizumab for stage 3+ retinopathy of prematurity. N Engl J Med 2011;364:603–615（BEAT-ROP；PMC 開放全文）', u: 'https://doi.org/10.1056/NEJMoa1007374' },
+  S14: { t: 'Stahl A, Lepore D, Fielder A, et al. Ranibizumab versus laser therapy for the treatment of very low birthweight infants with retinopathy of prematurity (RAINBOW): an open-label randomised controlled trial. Lancet 2019;394:1551–1559（PMC 開放全文）', u: 'https://doi.org/10.1016/S0140-6736(19)31344-3' },
+  S15: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.548–549 Retinopathy of prematurity', u: null }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
@@ -657,14 +706,289 @@ function octSVG(c, p, o) {
   return { svg: h + `</svg>`, G2 };
 }
 
+/* ---------- ROP 分頁：ICROP3 的 zone、stage、plus 與 ETROP 分型 ----------
+   視盤放圖中央（同 RD 分頁），zone 是以視盤為圓心的同心圓；ora serrata 的圓心往 temporal 偏，
+   所以 zone II 外圈只在 nasal 側碰到 ora，temporal 側剩下的新月形就是 zone III（S10）。
+   鐘點扇形 k＝從 k 點到 k+1 點（0＝12 點到 1 點）；例子與題目以 OD 定義，OS 用 mirrorSec 鏡射。比例是示意 */
+const RG = { df: 52, dd: 24, ora: 270, off: 40 };      // 視盤到 fovea、視盤直徑、ora 半徑、ora 圓心往 temporal 偏多少
+RG.z1 = 2 * RG.df; RG.p2 = RG.z1 + 2 * RG.dd; RG.z2 = RG.ora - RG.off;
+const tsign = eye => eye === 'R' ? -1 : 1;             // temporal 在圖上的 x 方向
+// 從視盤沿 h 點鐘方向走到 ora 的距離
+const oraDist = (h, eye) => { const sn = Math.sin(h * RAD), o = RG.off; return tsign(eye) * o * sn + Math.sqrt(RG.ora * RG.ora - o * o + o * o * sn * sn); };
+const zoneAt = r => r <= RG.z1 ? 'I' : r <= RG.p2 ? 'pII' : r <= RG.z2 ? 'II' : 'III';
+const zMain = z => z === 'pII' ? 'II' : z;             // posterior zone II 屬於 zone II
+const ZONE_ZH = { I: 'Zone I', pII: 'Posterior zone II', II: 'Zone II', III: 'Zone III' };
+const ZONE_EN = { I: 'zone I', pII: 'posterior zone II', II: 'zone II', III: 'zone III' };
+const PLUS_ZH = ['沒有 plus', 'Pre-plus', 'Plus'];
+const STAGES = ['0', '1', '2', '3', '4A', '4B', '5A', '5B', '5C'];
+const STAGE_ZH = { 1: 'demarcation line', 2: 'ridge', 3: 'extraretinal neovascular proliferation', '4A': 'partial RD，fovea 沒有剝離', '4B': 'partial RD，fovea 剝離', '5A': 'total RD，看得到視盤（open funnel）', '5B': 'total RD，看不到視盤', '5C': 'total RD，合併前段變化' };
+const mirrorSec = k => 11 - k;
+const NOTCH = { R: [8, 9], L: [2, 3] };                // notch 畫在 temporal 水平經線上的 2 個鐘點
+const ALL12 = [...Array(12).keys()];
+const hName = x => (x % 12) || 12;
+// 選到的鐘點分成幾段連續的範圍（跨過 12 點也算連續）：[[起點, 長度], ...]
+function runs(hs) {
+  if (hs.length >= 12) return [[0, 12]];
+  const on = new Set(hs), out = [];
+  hs.forEach(k => { if (!on.has((k + 11) % 12)) { let n = 0; while (on.has((k + n) % 12)) n++; out.push([k, n]); } });
+  return out;
+}
+const runName = ([k, n]) => n >= 12 ? '全部 12 個鐘點' : `${hName(k)}–${hName(k + n)} 點`;
+const maxRun = hs => runs(hs).reduce((m, r) => Math.max(m, r[1]), 0);
+// ETROP（S11）：1＝Type 1、2＝Type 2、0＝兩型都不是；p 是 plus 的程度（0 沒有、1 pre-plus、2 plus），只有 2 算 plus
+function etrop(z, sn, p) {
+  const plus = p === 2;
+  if (z === 'I') return plus || sn === 3 ? 1 : 2;
+  if (z === 'II') return plus && sn >= 2 ? 1 : sn === 3 ? 2 : 0;
+  return 0;
+}
+// CRYO-ROP 的 threshold（S12）：zone I 或 II 的 stage 3、連續 5 個或累計 8 個鐘點、合併 plus
+const threshold = (z, sn, p, hs) => sn === 3 && z !== 'III' && p === 2 && (maxRun(hs) >= 5 || hs.length >= 8);
+// 從設定算出：記錄的 zone（有 notch 時取最後方的）、有效的鐘點（超過 ora 的不算）、ETROP 分型與 threshold
+function ropEval(o, eye) {
+  const sn = o.stage === '0' ? 0 : +o.stage[0], z0 = zoneAt(o.r);
+  const canNotch = sn >= 1 && sn <= 3 && z0 !== 'I', notch = !!o.notch && canNotch;
+  const nh = NOTCH[eye], rN = notch ? (z0 === 'III' ? RG.z2 : RG.z1) - 14 : o.r;
+  const fit = o.hrs.filter(k => oraDist(k + 0.5, eye) > o.r + 4);
+  const hrs = sn === 0 ? [] : sn === 5 ? ALL12.slice() : [...new Set(fit.concat(notch ? nh : []))].sort((a, b) => a - b);
+  const drop = sn === 0 || sn === 5 ? 0 : o.hrs.filter(k => !fit.includes(k) && !(notch && nh.includes(k))).length;
+  const a = nh[0], b = nh[1] + 1, w = 0.15;
+  const rad = h => { if (!notch) return o.r; h = norm(h); const d = Math.min(h - a, b - h), t = d >= w ? 1 : d <= -w ? 0 : (d + w) / (2 * w); return o.r + (rN - o.r) * t; };
+  const z = notch ? zoneAt(rN) : z0, zm = zMain(z), n = hrs.length;
+  const type = sn === 0 || !n ? null : sn >= 4 ? 'rd' : etrop(zm, sn, o.plus);
+  return { sn, z0, z, zm, notch, canNotch, hrs, drop, rad, type, thr: sn >= 1 && sn <= 3 && n > 0 && threshold(zm, sn, o.plus, hrs), maxRun: maxRun(hrs), runs: runs(hrs) };
+}
+const ropShort = e => e.type === 1 ? 'Type 1' : e.type === 2 ? 'Type 2' : e.type === 0 ? '非 Type 1／2' : e.type === 'rd' ? '已有 RD' : e.sn === 0 ? '沒有病灶' : '先選鐘點';
+
+/* 例子（OD 定義）：r＝病灶離視盤多遠（px），hrs＝鐘點扇形 */
+const RPRE = {
+  inc: { zh: '尚未有病灶', o: { r: 196, hrs: [], stage: '0', plus: 0 } },
+  z2s1: { zh: 'Zone II · stage 1', o: { r: 200, hrs: [8, 9, 10], stage: '1', plus: 0 } },
+  z2s2: { zh: 'Zone II · stage 2', o: { r: 196, hrs: [7, 8, 9, 10], stage: '2', plus: 0 } },
+  z2s3: { zh: 'Zone II · stage 3 · pre-plus', o: { r: 190, hrs: [7, 8, 9, 10], stage: '3', plus: 1 } },
+  z2s2p: { zh: 'Zone II · stage 2 · plus', o: { r: 190, hrs: [7, 8, 9, 10, 11], stage: '2', plus: 2 } },
+  thr: { zh: 'Threshold', o: { r: 186, hrs: [6, 7, 8, 9, 10, 11], stage: '3', plus: 2 } },
+  z1s1: { zh: 'Zone I · stage 1 · pre-plus', o: { r: 86, hrs: [7, 8, 9, 10], stage: '1', plus: 1 } },
+  z1s3: { zh: 'Zone I · stage 3（2 個鐘點）', o: { r: 88, hrs: [8, 9], stage: '3', plus: 0 } },
+  notch: { zh: 'Notch', o: { r: 140, hrs: [6, 7, 10, 11], stage: '2', plus: 0, notch: true } },
+  arop: { zh: 'A-ROP', o: { r: 84, hrs: ALL12, stage: '3', plus: 2, arop: true } },
+  z3s2: { zh: 'Zone III · stage 2', o: { r: 272, hrs: [8, 9], stage: '2', plus: 0 } },
+  s4a: { zh: 'Stage 4A', o: { r: 190, hrs: [7, 8, 9, 10], stage: '4A', plus: 2 } },
+  s5a: { zh: 'Stage 5A', o: { r: 190, hrs: ALL12, stage: '5A', plus: 2 } }
+};
+const RPRE_ORDER = Object.keys(RPRE);
+const ropCopy = (o, eye) => ({ r: o.r, hrs: (eye === 'R' ? o.hrs : o.hrs.map(mirrorSec)).slice().sort((a, b) => a - b), stage: o.stage, plus: o.plus, notch: !!o.notch, arop: !!o.arop });
+const presetRop = (id, eye) => ropCopy(RPRE[id].o, eye);
+
+/* 測驗題（OD 定義，出題時隨機換成 OS）：z＝zone、st＝stage、p＝plus 程度、h＝鐘點 */
+const RCASE = {
+  c1: { z: 'I', st: '1', p: 0, h: [8, 9, 10] }, c2: { z: 'I', st: '2', p: 0, h: [7, 8, 9] },
+  c3: { z: 'I', st: '1', p: 2, h: [8, 9, 10, 11] }, c4: { z: 'I', st: '3', p: 0, h: [8, 9] },
+  c5: { z: 'I', st: '2', p: 1, h: [8, 9, 10] }, c6: { z: 'pII', st: '3', p: 0, h: [7, 8, 9, 10] },
+  c7: { z: 'II', st: '3', p: 2, h: [7, 8, 9, 10] }, c8: { z: 'II', st: '2', p: 2, h: [8, 9, 10] },
+  c9: { z: 'II', st: '2', p: 0, h: [7, 8, 9, 10, 11] }, c10: { z: 'II', st: '1', p: 2, h: [8, 9, 10] },
+  c11: { z: 'II', st: '3', p: 1, h: [0, 1, 10, 11] }, c12: { z: 'III', st: '2', p: 0, h: [8, 9] },
+  c13: { z: 'III', st: '3', p: 0, h: [7, 8, 9, 10] }, c14: { z: 'II', st: '2', p: 1, h: [4, 5, 6] },
+  c15: { z: 'pII', st: '2', p: 2, h: [8, 9, 10] }, c16: { z: 'I', st: '3', p: 2, h: ALL12 }
+};
+const R_AT = { I: 82, pII: 128, II: 196, III: 274 };
+const caseRop = (c, eye) => { const C = RCASE[c]; return ropCopy({ r: R_AT[C.z], hrs: C.h, stage: C.st, plus: C.p }, eye); };
+const ROP_KEYS = ['z', 't'].flatMap(t => Object.keys(RCASE).map(c => `rop:${t}:${c}`));
+const TYPE_OPT = { t1: 'Type 1（治療）', t2: 'Type 2（觀察）', t0: '兩型都不是' };
+const TYPE_LONG = { 1: 'Type 1 ROP → 治療', 2: 'Type 2 ROP → 觀察', 0: '不屬於 Type 1 或 Type 2' };
+const zsLab = (z, sn) => `Zone ${z} · stage ${sn}`;
+const caseName = c => { const C = RCASE[c]; return `${ZONE_ZH[C.z]} · stage ${C.st} · ${PLUS_ZH[C.p]}`; };
+// 為什麼是這一型（依 ETROP 的定義推）
+function typeWhy(z, sn, p) {
+  const pp = p === 1 ? '；pre-plus 不算 plus' : '', t = etrop(z, sn, p);
+  if (t === 1) return (z === 'I' ? (p === 2 ? 'Zone I、任何 stage、合併 plus' : 'Zone I、stage 3、沒有 plus') : 'Zone II、stage 2 或 3、合併 plus') + ' → Type 1' + pp;
+  if (t === 2) return (z === 'I' ? 'Zone I、stage 1 或 2、沒有 plus' : 'Zone II、stage 3、沒有 plus') + ' → Type 2' + pp;
+  return (z === 'III' ? 'Zone III 不在 Type 1／Type 2 的定義裡' : sn === 1 ? 'Zone II 的 stage 1 不論有沒有 plus，都不在兩型裡' : 'Zone II 的 stage 2 沒有 plus，不在兩型裡') + pp;
+}
+// 還差什麼才會變成 Type 1（依定義推）
+function ropHint(z, sn, p) {
+  const t = etrop(z, sn, p);
+  if (t === 2) return z === 'I' ? '再出現 plus，或進展到 stage 3，就變成 Type 1' : '再出現 plus 就變成 Type 1';
+  if (t === 0 && z === 'II') return sn === 1 ? '進展到 stage 2 以上並合併 plus 才是 Type 1；進展到 stage 3 是 Type 2' : '合併 plus 就是 Type 1；進展到 stage 3 是 Type 2';
+  return '';
+}
+
+/* 說明卡 */
+const ROPC = {
+  zone: { en: 'Zone', zh: '分區：病灶在哪裡', def: `三個以視盤為圓心的同心圓分區；整眼的 zone 由最後方的血管化或 ROP 病灶決定${s('S10')}。`,
+    secs: [['Zone I', [`圓心在視盤中心，半徑是視盤中心到 fovea 中心距離的兩倍${s('S10')}`, `用 28 D 鏡：把視盤 nasal 緣放在視野的一邊，zone I 的界線大約在另一邊${s('S10')}；Kanski 的說法是看得到視盤時，視野內就是 zone I${s('S15')}`, `照相時，39 週 PMA（postmenstrual age）以前不一定看得清楚 fovea，可以用黃斑中心估計${s('S10')}`]],
+      ['Posterior zone II', [`從 zone I 邊界往外 2 個視盤直徑的環，表示比周邊的 zone II 更值得擔心${s('S10')}`, `BEAT-ROP 收的就是 zone I 或 posterior zone II 的 stage 3 合併 plus${s('S13')}`]],
+      ['Zone II', [`從 zone I 外緣到 nasal ora serrata 的環；temporal、上方、下方取同樣的距離${s('S10')}`]],
+      ['Zone III', [`Zone II 以外剩下的 temporal 新月形${s('S10')}`, `判定 zone III 要確認 nasal 的血管已經長到 ora，而且最 nasal 的兩個鐘點沒有 ROP${s('S10')}`]],
+      ['Notch', [`ROP 病灶沿水平經線往較後方的 zone 侵入 1–2 個鐘點${s('S10')}`, `記錄成最後方的 zone 加上「secondary to notch」：大部分在 zone II、temporal notch 進到 zone I，就寫「zone I secondary to notch」${s('S10')}`, '本頁分型時用記錄的 zone（ICROP3 沒有另外寫 notch 怎麼影響治療）']],
+      ['圖上', ['實線＝zone I 與 zone II 的外界，點線＝posterior zone II 的外界（同 ICROP3 示意圖的畫法）；比例是示意', 'Ora 的圓心偏 temporal，所以 zone II 外圈只在 nasal 側碰到 ora']]],
+    src: ['S10', 'S13', 'S15'] },
+  stage: { en: 'Stage', zh: '分期：交界處長什麼樣子', def: `Stage 描述血管區與無血管區交界處的變化；同一眼有不只一種 stage 時，以最嚴重的分類${s('S10')}。`,
+    secs: [['Stage 1 · Demarcation line', [`交界處一條細的結構，相對平、白色、在視網膜平面內；後方血管可能有異常分支${s('S10')}`, `只有交界處周邊血管擴張彎曲，還不夠診斷 stage 1${s('S10')}`, `Kanski：大致和 ora 平行，temporal 周邊比較明顯${s('S15')}`]],
+      ['Stage 2 · Ridge', [`從 demarcation line 長出、有寬度和高度的 ridge，顏色從白到粉紅${s('S10')}`, `Ridge 後方視網膜表面零星的新生血管小簇（popcorn）不算 stage 3${s('S10')}`]],
+      ['Stage 3 · Extraretinal neovascular proliferation', [`新生血管從 ridge 長進玻璃體，和 ridge 後緣相連，越多看起來越參差${s('S10')}`, `Zone I 或 posterior zone II 可以出現沒有明顯 ridge 的 flat neovascularization，也算 stage 3${s('S10')}`, `Kanski：發生率高峰約在 post-conceptual age 35 週${s('S15')}`]],
+      ['Stage 4 · Partial RD', [`4A：fovea 沒有剝離；4B：fovea 剝離${s('S10')}`, `可能是 exudative 或 tractional；exudative 多在雷射後幾天內出現，通常凸起、有時局部、會自己消退${s('S10')}`, `A-ROP 可以出現火山形的後極 tractional detachment；周邊仍貼著，所以算 4B 不算 5${s('S10')}`]],
+      ['Stage 5 · Total RD', [`5A：看得到視盤（open funnel）；5B：因 retrolental fibrovascular tissue 或 closed funnel 看不到視盤；5C：5B 再合併前段變化，例如前房明顯變淺、虹膜與水晶體囊沾黏、角膜中央混濁${s('S10')}`, `看不到後極時，用 B-scan 超音波看剝離範圍${s('S10')}`]],
+      ['沒有病灶時', [`ICROP3 建議寫「incomplete vascularization into zone II」這種寫法，不寫「no ROP」或「immature retina」${s('S10')}`]]],
+    src: ['S10', 'S15'] },
+  plus: { en: 'Plus disease', zh: '後極血管擴張與彎曲', def: `Plus：視網膜血管擴張與彎曲；pre-plus：血管擴張和／或彎曲異常，但還不到 plus${s('S10')}。`,
+    secs: [['ICROP3 怎麼看', [`從 normal、pre-plus 到 plus 是連續的光譜；專家之間判斷會不同，正常與嚴重兩端的一致性較好${s('S10')}`, `看 zone I 範圍內的血管，不只看窄角照片的範圍，也不數有幾個象限異常${s('S10')}`, `1984 年的描述還包括虹膜血管充血、瞳孔散不開、周邊血管充血合併玻璃體混濁；現在認為這些是嚴重病變的徵象，不是診斷 plus 的必要條件${s('S10')}`]],
+      ['書和指引寫法不同', [`Kanski 寫 plus 是後極至少兩個象限的血管擴張與彎曲${s('S15')}`, `RAINBOW 判斷 active ROP 時也用「至少兩個象限」${s('S14')}`, '本頁依 ICROP3：不數象限']],
+      ['分型時', [`ETROP 的 plus：後極血管擴張彎曲達到或超過一張標準照片${s('S11')}`, `Pre-plus 是「還不到 plus」，所以分型時不算 plus${s('S10')}`]],
+      ['圖上', ['Plus 的程度改變 zone I 內血管的粗細與彎曲；三段只是示意，不是標準照片']]],
+    src: ['S10', 'S11', 'S14', 'S15'] },
+  arop: { en: 'Aggressive ROP', zh: 'A-ROP：進展快的嚴重型', def: `ICROP3 用 A-ROP 取代舊的 aggressive-posterior ROP（AP-ROP）：關鍵是進展速度和血管異常的樣子，不是位置${s('S10')}。`,
+    secs: [['特徵', [`快速出現病理性新生血管和嚴重 plus，沒有依序經過典型的 stage${s('S10')}`, `常見 flat neovascularization，用 28 D 鏡不容易看到，用放大倍率較高的 20 D 鏡或螢光血管攝影可能有幫助${s('S10')}`, `也會出現在較大的早產兒、後極以外，資源有限的地區特別常見${s('S10')}`]],
+      ['為什麼重要', [`Kanski：未治療通常會進展到 stage 5，有時幾天內${s('S15')}`, `ETROP 的 Type 1／Type 2 只用 zone、stage、plus 定義${s('S11')}；RAINBOW 把 AP-ROP 列為收案的治療條件之一${s('S14')}`]],
+      ['圖上', ['勾選 A-ROP 且 stage 3 時，交界處改畫成沒有 ridge 的 flat neovascularization（示意）']]],
+    src: ['S10', 'S11', 'S14', 'S15'] },
+  type: { en: 'ETROP Type 1 / Type 2', zh: '要不要治療', def: `ETROP 把 high-risk prethreshold 的眼睛隨機分成提早治療或傳統處理，再依結果訂出 Type 1（治療）與 Type 2（觀察）${s('S11')}。`,
+    secs: [['Type 1：治療', [`Zone I、任何 stage、合併 plus${s('S11')}`, `Zone I、stage 3、沒有 plus${s('S11')}`, `Zone II、stage 2 或 3、合併 plus${s('S11')}`, `Kanski：建議在 72 小時內治療${s('S15')}`]],
+      ['Type 2：觀察', [`Zone I、stage 1 或 2、沒有 plus${s('S11')}`, `Zone II、stage 3、沒有 plus${s('S11')}`, `進展到 Type 1 或 threshold 才考慮治療${s('S11')}`]],
+      ['ETROP 的結果', [`提早治療讓 9 個月大時不良的 grating acuity 從 19.5% 降到 14.5%（P = .01），不良的結構結果從 15.6% 降到 9.1%（P < .001）${s('S11')}`]],
+      ['要注意', [`分型裡沒有鐘點數：zone I 的 stage 3 不論範圍多大都算${s('S11', 'S15')}`, `Pre-plus 不算 plus${s('S10')}`, '其他組合（例如 zone II stage 1–2 沒有 plus、zone III）不屬於這兩型']]],
+    src: ['S10', 'S11', 'S15'] },
+  thr: { en: 'Threshold ROP', zh: '舊的治療門檻（CRYO-ROP）', def: `CRYO-ROP 的 threshold：zone I 或 II 的 stage 3，範圍達連續 5 個或累計 8 個 30° 扇形（clock hours），而且合併 plus${s('S12')}。`,
+    secs: [['當年的結果', [`Threshold 時一眼做 cryotherapy：3 個月時不良結果 21.8%，未治療的眼 43%${s('S12')}`]],
+      ['現在', [`ETROP 之後改成 Type 1 就提早治療，threshold 當治療門檻的觀念已被取代${s('S15')}`, `Type 2 進展到 Type 1 或 threshold 時才考慮治療${s('S11')}`]],
+      ['鐘點的角色', [`ICROP3 用 12 個鐘點扇形記錄範圍（extent）${s('S10')}`, `只有 threshold 的定義用鐘點數決定要不要治療；Type 1／Type 2 的定義不看鐘點數${s('S11', 'S12')}`, '判讀卡會同時算出最長連續與累計的鐘點數']]],
+    src: ['S10', 'S11', 'S12', 'S15'] },
+  tx: { en: 'Laser or anti-VEGF', zh: '治療方式與治療後', def: 'Type 1 的治療主要是周邊無血管區的雷射，或玻璃體內注射 anti-VEGF。下面的劑量是試驗用法，不是本頁的建議。',
+    secs: [['雷射', [`燒掉周邊無血管的視網膜；視力與解剖結果比 cryotherapy 好，已大致取代 cryotherapy${s('S15')}`, `雷射會永久破壞周邊視網膜${s('S13')}`]],
+      ['BEAT-ROP（bevacizumab）', [`收案：zone I 或 posterior zone II 的 stage 3 合併 plus；bevacizumab 0.625 mg（0.025 ml）對雷射${s('S13')}`, `54 週 PMA 前需要再治療的復發：zone I 6% 對 42%（P = 0.003）；posterior zone II 5% 對 12%（P = 0.27，沒有顯著差異）${s('S13')}`, `注射後周邊血管會繼續長；復發也比較晚：平均 16.0 週，雷射 6.2 週${s('S13')}`, `試驗太小，無法評估安全性${s('S13')}`]],
+      ['RAINBOW（ranibizumab）', [`收案：出生體重 < 1500 g、兩眼都達治療條件；ranibizumab 0.2 mg、0.1 mg 對雷射${s('S14')}`, `24 週時治療成功 80%、75%、66%；0.2 mg 對雷射 OR 2.19（95% CI 0.99–4.82，p = 0.051）${s('S14')}`, `不良結構結果：0.2 mg 1 人、0.1 mg 5 人、雷射 7 人${s('S14')}`, `沒有收 zone II stage 2 合併 plus，因為部分國家對要不要治療有爭議${s('S14')}`]],
+      ['Kanski 的原則', [`Anti-VEGF 當 zone I 的第一線，zone II 用雷射${s('S15')}`, `Anti-VEGF 治療的眼日後高度近視的機會較低，但停藥後可能復發${s('S15')}`]],
+      ['治療後', [`Regression：anti-VEGF 之後最早 1–3 天就看到血管變化，雷射約 7–14 天${s('S10')}`, `Reactivation：anti-VEGF 之後比自然消退後常見，完整雷射之後很少；anti-VEGF 之後最常在 37–60 週 PMA；記錄成「reactivated stage 2」這種寫法${s('S10')}`, `RAINBOW 需要再治療的復發中位時間 8 週，更晚也可能發生，所以要定期追蹤${s('S14')}`, `PAR（persistent avascular retina，一直沒長血管的區域）在 anti-VEGF 之後比自然消退後更常見、範圍更大${s('S10')}`]]],
+    src: ['S10', 'S13', 'S14', 'S15'] }
+};
+const ROPC_ORDER = Object.keys(ROPC);
+
+/* 畫圖 */
+// 血管方向（OD 的鐘點）與種類：a＝artery、v＝vein；OS 鏡射
+const RVES = [[0.5, 'v'], [1.4, 'a'], [2.3, 'v'], [3.1, 'a'], [3.9, 'v'], [4.8, 'a'], [5.6, 'v'], [6.5, 'a'], [7.3, 'v'], [8.1, 'a'], [8.9, 'v'], [9.7, 'a'], [10.5, 'v'], [11.3, 'a']];
+const PLUS_LOOK = [{ a: 1.5, v: 2.3, amp: 1.2 }, { a: 1.9, v: 3.3, amp: 3.8 }, { a: 2.3, v: 4.5, amp: 6.8 }];
+// 一條從視盤往周邊的血管：plus 越重，zone I 內越粗、越彎（S10：plus 看 zone I 內的血管）
+function ropVessel(h0, kind, rEnd, lv) {
+  if (rEnd < 22) return '';
+  const L = PLUS_LOOK[lv], n = Math.ceil((rEnd - 14) / 5), ps = [];
+  for (let i = 0; i <= n; i++) {
+    const r = 14 + (rEnd - 14) * i / n, post = r <= RG.z1 ? 1 : Math.max(0.25, 1 - (r - RG.z1) / 110);
+    const amp = (kind === 'a' ? 1.25 : 0.8) * L.amp * post * Math.min(1, (r - 14) / 18);
+    ps.push(pt(h0 + amp * Math.sin(r / 8.5 + h0 * 2.7) / r / RAD, r));
+  }
+  return `<path class="r-ves ${kind}" stroke-width="${kind === 'a' ? L.a : L.v}" d="M${ps.map(P).join('L')}"/>`;
+}
+function ropArc(a, b, f) {
+  const n = Math.max(6, Math.ceil((b - a) * 24)), ps = [];
+  for (let i = 0; i <= n; i++) { const h = a + (b - a) * i / n; ps.push(pt(h, f(h, i))); }
+  return 'M' + ps.map(P).join('L');
+}
+// 環狀帶：從 a 順時針到 b，內緣 fin(h)、外緣 fout(h)；整圈時要配 fill-rule evenodd 挖空內圈
+function ropBand(a, b, fin, fout) {
+  const n = Math.max(6, Math.ceil((b - a) * 24)), o = [], q = [];
+  for (let i = 0; i <= n; i++) { const h = a + (b - a) * i / n; o.push(pt(h, fout(h))); q.push(pt(h, fin(h))); }
+  return 'M' + o.map(P).join('L') + (b - a >= 12 ? 'ZM' : 'L') + q.reverse().map(P).join('L') + 'Z';
+}
+function ropSVG(o) {
+  const { eye, rop: R, e } = o, ts = tsign(eye), { cx, cy } = G, oc = cx + ts * RG.off, M = h => eye === 'R' ? h : 12 - h;
+  const od = h => oraDist(h, eye), rad = e.rad, fx = cx + ts * RG.df;
+  let h = `<svg viewBox="-34 0 768 716" role="img" aria-label="ROP 分區示意圖" id="fsvg" class="${o.hit ? 'hitfig' : ''}">
+    <defs><clipPath id="rclip"><circle cx="${oc}" cy="${cy}" r="${RG.ora}"/></clipPath></defs>
+    <circle class="r-avas" cx="${oc}" cy="${cy}" r="${RG.ora}"/>
+    <g clip-path="url(#rclip)"><path class="c-fundus" d="${ropArc(0, 12, rad)}Z"/>`;
+  // 選到的鐘點：淡色扇形，加上 ora 邊緣一圈色條
+  if (o.sel && e.sn >= 1 && e.sn <= 4) h += e.hrs.map(k => `<path class="r-sel" d="${ropBand(k, k + 1, () => 16, od)}"/><path class="r-rim" d="${ropBand(k + 0.04, k + 0.96, x => od(x) - 10, od)}"/>`).join('');
+  // 剝離畫在血管下面（同 RD 分頁）；4B 再把 temporal 水平經線一帶連到 fovea
+  if (e.sn === 4) {
+    h += `<g opacity=".72"><path class="r-rdf" fill-rule="evenodd" d="${e.runs.map(([k, n]) => ropBand(k, k + n, x => rad(x) - 55, x => Math.max(od(x), rad(x) - 40))).join('')}"/>`;
+    if (R.stage === '4B') h += `<path class="r-rdf" d="${ropBand(NOTCH[eye][0], NOTCH[eye][1] + 1, () => 18, x => rad(x) - 40)}"/>`;
+    h += `</g>`;
+  }
+  if (e.sn === 5) h += `<g opacity=".72"><circle class="r-rdf" cx="${oc}" cy="${cy}" r="${RG.ora - 1}"/></g>`;
+  h += `</g><g class="deco" clip-path="url(#rclip)">${RVES.map(([h0, k]) => { const q0 = M(h0); return ropVessel(q0, k, Math.min(rad(q0), od(q0)) - 3, R.plus); }).join('')}`;
+  if (e.sn >= 1 && e.sn <= 4) e.runs.forEach(([k, n]) => {
+    const a = k, b = k + n, line = ropArc(a, b, rad), flat = R.arop && e.sn === 3;
+    if (e.sn === 1) h += `<path class="r-sh" d="${line}"/><path class="r-dl" d="${line}"/>`;
+    else if (!flat) h += `<path class="r-sh wide" d="${line}"/><path class="r-ridge" d="${line}"/><path class="r-ridge-in" d="${line}"/>`;
+    if (flat) h += `<path class="r-nv thin" d="${ropArc(a, b, (x, i) => rad(x) - 6 - (i % 2) * 16)}"/><path class="r-nv thin" d="${ropArc(a, b, (x, i) => rad(x) - 20 - (i % 2) * 14)}"/>`;
+    else if (e.sn >= 3) h += `<path class="r-nv" d="${ropArc(a, b, (x, i) => rad(x) - 10 + 3.5 * Math.sin(i * 1.9))}"/>`;
+  });
+  h += `</g><g class="deco"><circle class="c-mac" cx="${fx}" cy="${cy}" r="18" opacity=".55"/><circle class="c-mac" cx="${fx}" cy="${cy}" r="4.5"/><circle class="c-disc" cx="${cx}" cy="${cy}" r="${RG.dd / 2}"/>`;
+  if (e.sn === 5 && R.stage !== '5A') h += `<circle class="r-rlf" cx="${cx}" cy="${cy}" r="96"/><path class="r-rlf-l" d="M${cx - 60} ${cy - 30}q40 -20 90 10M${cx - 70} ${cy + 20}q50 10 110 -20M${cx - 40} ${cy + 55}q40 -15 80 0"/>`;
+  if (o.zones) h += `<circle class="r-zl" cx="${cx}" cy="${cy}" r="${RG.z1}"/><circle class="r-zl dot" cx="${cx}" cy="${cy}" r="${RG.p2}"/><circle class="r-zl" cx="${cx}" cy="${cy}" r="${RG.z2}"/>`;
+  h += `<circle class="c-ora" cx="${oc}" cy="${cy}" r="${RG.ora}"/>`;
+  for (let k = 0; k < 12; k++) {
+    const [x1, y1] = pt(k, 16), [x2, y2] = pt(k, od(k)), [lx, ly] = pt(k, od(k) + 22);
+    h += `<line class="r-sec" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/><text class="clk" x="${lx.toFixed(1)}" y="${(ly + 5).toFixed(1)}" text-anchor="middle">${hName(k)}</text>`;
+  }
+  const xL = cx - od(9) - 48, xR = cx + od(3) + 48;
+  h += `<text class="eyetag" x="-18" y="34">${eye === 'R' ? 'OD' : 'OS'}</text>
+    <text class="dir" x="${cx}" y="30" text-anchor="middle">SUPERIOR</text><text class="dir" x="${cx}" y="700" text-anchor="middle">INFERIOR</text>
+    <text class="dir" x="${xL.toFixed(1)}" y="${cy + 5}" text-anchor="middle" transform="rotate(-90 ${xL.toFixed(1)} ${cy})">${eye === 'R' ? 'TEMPORAL' : 'NASAL'}</text>
+    <text class="dir" x="${xR.toFixed(1)}" y="${cy + 5}" text-anchor="middle" transform="rotate(90 ${xR.toFixed(1)} ${cy})">${eye === 'R' ? 'NASAL' : 'TEMPORAL'}</text></g>`;
+  const tag = (t, hr, r) => { const [x, y] = pt(M(hr), r); return `<text class="in r-ztag" x="${x.toFixed(1)}" y="${(y + 5).toFixed(1)}" text-anchor="middle">${t}</text>`; };
+  const [ox, oy] = pt(M(6.6), od(M(6.6)) - 16);
+  h += `<g class="deco lab"><text x="${cx - ts * 20}" y="${cy + 34}" text-anchor="middle" class="in">Disc</text><text x="${fx}" y="${cy - 24}" text-anchor="middle" class="in">Fovea</text>
+    <text x="${ox.toFixed(1)}" y="${oy.toFixed(1)}" text-anchor="middle" class="in">Ora serrata</text>`;
+  if (o.zones) h += tag('Zone I', 1.5, RG.z1 - 18) + tag('Posterior II', 1.5, (RG.z1 + RG.p2) / 2) + tag('Zone II', 1.5, (RG.p2 + RG.z2) / 2) + tag('Zone III', 9, (RG.z2 + od(M(9))) / 2);
+  return h + `</g></svg>`;
+}
+// 各 stage 的側面小圖：上＝玻璃體、下＝脈絡膜；左半有血管（紅點）、右半沒有，交界在中間
+function miniStage(n) {
+  const base = `<rect class="m-ch" x="0" y="70" width="114" height="10"/><line class="m-scl" x1="0" y1="86" x2="114" y2="86"/>`;
+  const flat = `<rect class="m-ret" x="0" y="58" width="114" height="12"/>` + [12, 24, 36, 48].map(x => `<circle class="m-ves" cx="${x}" cy="64" r="2.2"/>`).join('');
+  const ridge = `<path class="m-ridge" d="M44 59Q57 40 70 59Z"/>`;
+  if (n === 1) return base + flat + `<rect class="m-dl" x="56" y="58" width="3" height="12"/>`;
+  if (n === 2) return base + flat + ridge;
+  if (n === 3) return base + flat + ridge + `<path class="m-nv" d="M52 48q-7 -12 -3 -26M57 45q2 -14 9 -25M63 48q8 -9 13 -20"/>`;
+  if (n === 4) return base + `<path class="m-ret" d="M0 58H28C42 58 48 32 66 32C84 32 94 48 114 50V62C94 60 84 44 66 44C48 44 42 70 28 70H0Z"/><circle class="m-ves" cx="8" cy="64" r="2.2"/><circle class="m-ves" cx="18" cy="64" r="2.2"/><path class="m-nv" d="M66 32q-5 -12 5 -22"/>`;
+  return base + `<path class="m-ret" d="M0 58C18 40 40 20 62 16C84 20 100 30 114 36V48C100 42 84 30 62 28C42 32 20 52 0 70Z"/><path class="m-nv" d="M60 16q-2 -8 4 -12"/>`;
+}
+
+/* 判讀卡：目前設定的 ICROP3 記法、ETROP 分型、threshold 與下一步 */
+function ropCardHTML(o, eye) {
+  const e = ropEval(o, eye), n = e.hrs.length, zl = e.notch ? `${ZONE_ZH[e.z]} secondary to notch` : ZONE_ZH[e.z];
+  const eb = `<div class="eyebrow">ROP 判讀 · ${EYEZH[eye]} · 對照 BCSC 6、12</div>`;
+  if (e.sn === 0) return `<div class="card">${eb}<div><h2>Incomplete vascularization</h2></div><p class="zh">into ${ZONE_EN[e.z0]}</p>
+    <p class="def">血管只長到 ${ZONE_ZH[e.z0]}，交界處還沒有 ROP 病灶，不做 ETROP 分型。</p>
+    ${list('下一步', [`ICROP3 建議寫「incomplete vascularization into ${ZONE_EN[e.z0]}」，不寫「no ROP」或「immature retina」${s('S10')}`, `Kanski：依嚴重度每 1–3 週追蹤一次，直到血管長到 zone III${s('S15')}`, '在眼底上點扇形選鐘點，或在下方選 stage，就會加上病灶'])}${srcList(['S10', 'S15'])}</div>`;
+  const ext = e.sn === 5 ? '全視網膜剝離' : n ? `${e.runs.map(runName).join('、')}，共 ${n} 個鐘點${e.runs.length > 1 ? `（最長連續 ${e.maxRun} 個）` : ''}` : '還沒選鐘點';
+  let h = `<div class="card">${eb}<div><h2>${zl} · Stage ${o.stage}</h2></div><p class="zh">${PLUS_ZH[o.plus]} · ${ext}${o.arop ? ' · A-ROP' : ''}</p>`;
+  const why = [`最後方的病灶在 ${ZONE_ZH[e.z0]}${e.notch ? `；temporal notch 往後進到 ${ZONE_ZH[e.z]}，所以記錄成 ${zl}` : ''}${s('S10')}`,
+    `Stage ${o.stage}：${STAGE_ZH[o.stage]}${s('S10')}`,
+    `${PLUS_ZH[o.plus]}${o.plus === 1 ? '：血管異常但還不到 plus，分型時不算 plus' : ''}${s('S10')}`];
+  if (e.drop) why.push(`有 ${e.drop} 個選取的鐘點在這個位置已超過 ora（nasal 側），不算進範圍`);
+  if (!n) return h + `<div class="verdict t0">先在眼底上點扇形，選病灶所在的鐘點</div>${list('判讀', why)}${srcList(['S10'])}</div>`;
+  if (e.type === 'rd') return h + `<div class="verdict t1">已有視網膜剝離（stage ${o.stage}）</div>${list('判讀', why)}
+    ${list('下一步', [`ETROP 的 Type 1／Type 2 只用到 stage 1–3 的組合${s('S11')}`, `Kanski：沒有侵犯黃斑的 tractional RD（4A）做 PPV，解剖成功率約 90%；4B 與 5 即使解剖復位，視力結果通常不好${s('S15')}`])}${srcList(['S10', 'S11', 'S15'])}</div>`;
+  const z = e.zm, sn = e.sn, pl = o.plus === 2, ck = (on, t) => `<span class="ck ${on ? 'on' : ''}">${on ? '✓' : '—'}</span>${t}`;
+  h += `<div class="verdict t${e.type}">ETROP：${TYPE_LONG[e.type]}</div><div class="verdict t0">CRYO-ROP threshold：${e.thr ? '達到' : '未達'}（最長連續 ${e.maxRun}、累計 ${n} 個鐘點）</div>`;
+  h += list('判讀', why);
+  h += list('Type 1 的條件', [ck(z === 'I' && pl, `Zone I、任何 stage、合併 plus${s('S11')}`), ck(z === 'I' && sn === 3 && !pl, 'Zone I、stage 3、沒有 plus'), ck(z === 'II' && pl && sn >= 2, 'Zone II、stage 2 或 3、合併 plus')]);
+  h += list('Type 2 的條件', [ck(z === 'I' && sn <= 2 && !pl, `Zone I、stage 1 或 2、沒有 plus${s('S11')}`), ck(z === 'II' && sn === 3 && !pl, 'Zone II、stage 3、沒有 plus')]);
+  h += list('舊的 threshold', [ck(sn === 3 && z !== 'III', `Zone I 或 II 的 stage 3${s('S12')}`), ck(e.maxRun >= 5 || n >= 8, `連續 ≥ 5 或累計 ≥ 8 個鐘點（現在最長連續 ${e.maxRun}、累計 ${n}）`), ck(pl, '合併 plus')]);
+  const hint = ropHint(z, sn, o.plus), next = e.type === 1 ? [`Kanski：Type 1 建議在 72 小時內治療${s('S15')}`, '雷射與 anti-VEGF 的比較，見「治療方式與治療後」說明卡']
+    : e.type === 2 ? [`ETROP：Type 2 先觀察，進展到 Type 1 或 threshold 才考慮治療${s('S11')}`] : [`不屬於 ETROP 的兩型；Kanski：依嚴重度每 1–3 週追蹤一次，直到血管長到 zone III${s('S15')}`];
+  if (hint) next.push(hint);
+  if (o.arop) next.push(`A-ROP：Kanski 指出未治療通常會進展到 stage 5，有時幾天內${s('S15')}`);
+  return h + list('下一步', next) + srcList(['S10', 'S11', 'S12', 'S15']) + `</div>`;
+}
+function ropConceptCard(id) {
+  const d = ROPC[id];
+  return `<div class="card"><div class="eyebrow">ROP · 說明卡 · 對照 BCSC 6、12</div><div><h2>${d.en}</h2></div><p class="zh">${d.zh}</p><p class="def">${d.def}</p>
+    ${d.secs.map(([t, arr]) => list(t, arr)).join('')}${srcList(d.src)}<div><button type="button" class="btn" data-rcard="">← 回到判讀</button></div></div>`;
+}
+
 /* ---------- app ---------- */
 const VIEWS = [
   { id: 'rd', name: '視網膜剝離', en: 'Lincoff rules', subs: [['shape', '看形狀找裂孔'], ['spread', '放裂孔看液體']] },
-  { id: 'oct', name: 'OCT 黃斑病變', en: 'Macular OCT' }
+  { id: 'oct', name: 'OCT 黃斑病變', en: 'Macular OCT' },
+  { id: 'rop', name: 'ROP 分區與分期', en: 'ROP' }
 ];
 const $ = q => document.querySelector(q);
 const st = { view: 'rd', sub: 'shape', eye: 'R', pre: null, v: 't', zone: true, labels: true, mode: 'learn', quiz: null, brk: null, t: 1,
-  ocond: 'normal', aw: 1000, hw: 300, hv: true, omark: true, ohit: null };
+  ocond: 'normal', aw: 1000, hw: 300, hv: true, omark: true, ohit: null,
+  rop: presetRop('z2s3', 'R'), rpre: 'z2s3', rcard: null, rzone: true };
 const store = (() => {
   const K = 'retinaAtlas.v1';
   let mem = { wrong: {} };
@@ -674,24 +998,26 @@ const store = (() => {
 const inQ = () => st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q';
 const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
 // 錯題的 key：分頁一是 rd:形狀_t或n_眼（例如 rd:st_n_L＝OS 的 superonasal RD）；
-// 分頁二是 oct:d:病變（選診斷）、oct:i:i3（IVTS 分級）、oct:f:srf（點液體）
+// 分頁二是 oct:d:病變（選診斷）、oct:i:i3（IVTS 分級）、oct:f:srf（點液體）；
+// 分頁三是 rop:z:c4（看圖判 zone／stage）、rop:t:c7（ETROP 分型），c 後面是 RCASE 的題號
 const RD_KEYS = PRE_ORDER.flatMap(id => (PRE[id].asym ? ['t', 'n'] : ['t']).flatMap(v => ['R', 'L'].map(e => `rd:${id}_${v}_${e}`)));
 const parseKey = k => { const [id, v, eye] = k.slice(3).split('_'); return { id, v, eye }; };
 const keyLabel = k => {
   if (k.startsWith('oct:d:')) return `${OC[k.slice(6)].zh}（選診斷）`;
   if (k.startsWith('oct:i:')) return `${ivLabel(IVC[k.slice(6)])}（IVTS 分級）`;
   if (k.startsWith('oct:f:')) return `${OC[k.slice(6)].zh}（點液體）`;
+  if (k.startsWith('rop:')) return `${caseName(k.slice(6))}（${k[4] === 'z' ? '判 zone／stage' : 'ETROP 分型'}）`;
   const { id, v, eye } = parseKey(k); return `${PRE[id].en(v)}（${eye === 'R' ? 'OD' : 'OS'}）`;
 };
-const keyValid = k => RD_KEYS.includes(k) || OCT_KEYS.includes(k);
-const keyView = k => k.startsWith('oct:') ? 'oct' : 'rd';
+const keyValid = k => RD_KEYS.includes(k) || OCT_KEYS.includes(k) || ROP_KEYS.includes(k);
+const keyView = k => k.startsWith('oct:') ? 'oct' : k.startsWith('rop:') ? 'rop' : 'rd';
 const narrowFig = () => !!(window.matchMedia && window.matchMedia('(max-width: 560px)').matches);
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
   const V = VIEWS.find(v => v.id === st.view);
   $('#hintbar').innerHTML = st.mode === 'quiz' ? `<span class="hint">測驗中：標籤已隱藏${st.view === 'rd' ? '，在眼底圖上點出裂孔' : ''}</span>`
-    : !V.subs ? `<span class="hint">點 B-scan 上任一層看名稱；下方選病變</span>`
+    : !V.subs ? `<span class="hint">${st.view === 'rop' ? '點眼底上的扇形選病灶的鐘點；下方調位置、stage 與 plus' : '點 B-scan 上任一層看名稱；下方選病變'}</span>`
     : `<div class="seg" role="group" aria-label="圖">${V.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${st.sub === id}">${nm}</button>`).join('')}</div>`;
 }
 function renderTools() {
@@ -702,6 +1028,7 @@ function renderTools() {
   }
   if (st.mode !== 'quiz') {
     h = `<div class="seg" role="group" aria-label="眼別">${['R', 'L'].map(e => `<button type="button" data-eye="${e}" aria-pressed="${st.eye === e}">${e === 'R' ? 'OD' : 'OS'}</button>`).join('')}</div>`;
+    if (st.view === 'rop') { $('#tools').innerHTML = h + `<label class="tog"><input type="checkbox" id="t-rzone" ${st.rzone ? 'checked' : ''}>分區線</label><label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
     if (st.sub === 'shape' && st.pre && PRE[st.pre].asym) h += `<div class="seg" role="group" aria-label="側別">${[['t', 'Temporal'], ['n', 'Nasal']].map(([v, t]) => `<button type="button" data-v="${v}" aria-pressed="${st.v === v}">${t}</button>`).join('')}</div>`;
     if (st.sub === 'shape') h += `<label class="tog"><input type="checkbox" id="t-zone" ${st.zone ? 'checked' : ''}>預測範圍</label>`;
     h += `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
@@ -731,8 +1058,18 @@ function octFig() {
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.mode === 'quiz');
   $('#cap').innerHTML = `<span>示意 B-scan，水平切過 fovea：上＝vitreous、下＝choroid；右側 NFL 較厚，朝向視盤（以 OD 為例）。${mark ? '橘色＝病變。' : ''}</span><span class="ori">${narrowFig() ? '手機版只顯示中央 3.75 mm' : '橫向 6 mm'}；縱向放大約 4 倍</span>`;
 }
+function ropFig() {
+  const it = quizItem(), q = st.quiz;
+  const o = it ? { eye: it.eye, rop: it.o, e: ropEval(it.o, it.eye), zones: it.type === 'type' || !!q.ans }
+    : { eye: st.eye, rop: st.rop, e: ropEval(st.rop, st.eye), zones: st.rzone, sel: true, hit: true };
+  const fig = $('#fig'); fig.innerHTML = ropSVG(o);
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.mode === 'quiz');
+  const c5 = o.e.sn === 5 && o.rop.stage !== '5A' ? ' 5B／5C：retrolental 組織擋住視盤；5C 的前段變化在眼底圖上看不到。' : '';
+  $('#cap').innerHTML = `<span>${it ? '正像眼底：上＝superior；視盤放中央，鐘點依檢查者看出去的方向。' : '正像眼底，視盤放中央：實線＝zone I、zone II 的外界，點線＝posterior zone II 的外界；點扇形選鐘點。'}${c5}</span><span class="ori">zone 的比例、病灶與血管為示意</span>`;
+}
 function renderFig() {
   if (st.view === 'oct') { octFig(); return; }
+  if (st.view === 'rop') { ropFig(); return; }
   const fig = $('#fig');
   fig.innerHTML = renderFundus(figOpts());
   fig.classList.toggle('nolab', !st.labels);
@@ -750,8 +1087,24 @@ function octExtra() {
   h += `<div><div class="xh">點到的位置</div><p class="rstat" id="ostat">${st.ohit ? `${LNAME[st.ohit][0]}　${LNAME[st.ohit][1]}` : '點 B-scan 上任一層，這裡會顯示名稱。'}</p></div>`;
   return `<div class="xrow">${h}</div>`;
 }
+const ropPosText = (o, e) => `${ZONE_ZH[e.z0]}${e.notch ? `；notch 進到 ${ZONE_ZH[e.z]}` : ''}${e.drop ? `（${e.drop} 個選取的鐘點在這裡已超過 ora，不算）` : ''}`;
+function ropExtra() {
+  if (st.mode === 'quiz') return '';
+  const o = st.rop, e = ropEval(o, st.eye);
+  const P5 = [['1', 'Demarcation line'], ['2', 'Ridge'], ['3', 'Extraretinal NV'], ['4A', 'Partial RD'], ['5A', 'Total RD']];
+  return `<div class="xrow">
+      <div style="flex:1 1 240px;max-width:340px"><div class="xh">病灶最後方的位置${s('S10')}</div><input type="range" id="r-pos" min="40" max="300" step="2" value="${o.r}" aria-label="病灶離視盤多遠"><p class="rstat" id="r-posv">${ropPosText(o, e)}</p></div>
+      <div><div class="xh">其他</div><div style="display:flex;flex-wrap:wrap;gap:8px">
+        <label class="tog"><input type="checkbox" id="r-notch" ${e.notch ? 'checked' : ''} ${e.canNotch ? '' : 'disabled'}>Temporal notch</label>
+        <label class="tog"><input type="checkbox" id="r-arop" ${o.arop ? 'checked' : ''}>A-ROP</label>
+        <button type="button" class="btn" id="r-clear" ${o.hrs.length ? '' : 'disabled'}>清除鐘點</button></div></div></div>
+    <div style="margin-top:14px"><div class="xh">Stage${s('S10')}</div><div class="seg" role="group" aria-label="Stage">${STAGES.map(v => `<button type="button" data-rstage="${v}" aria-pressed="${o.stage === v}">${v === '0' ? '無病灶' : v}</button>`).join('')}</div>
+      <div class="rgrid" style="margin-top:10px">${P5.map(([v, nm]) => `<button type="button" class="rmini" data-rstage="${v}" aria-pressed="${o.stage !== '0' && o.stage[0] === v[0]}"><svg viewBox="0 0 114 92" aria-hidden="true">${miniStage(+v[0])}</svg><span>${v[0]} · ${nm}</span></button>`).join('')}</div></div>
+    <div style="margin-top:14px"><div class="xh">Plus${s('S10')}</div><div class="rgrid p3">${['Normal', 'Pre-plus', 'Plus'].map((nm, lv) => `<button type="button" class="rmini" data-rplus="${lv}" aria-pressed="${o.plus === lv}"><svg viewBox="${G.cx - 112} ${G.cy - 112} 224 224" aria-hidden="true"><circle class="c-fundus" cx="${G.cx}" cy="${G.cy}" r="110"/>${RVES.map(([h0, k]) => ropVessel(h0, k, 106, lv)).join('')}<circle class="c-disc" cx="${G.cx}" cy="${G.cy}" r="12"/></svg><span>${nm}</span></button>`).join('')}</div></div>`;
+}
 function renderExtra() {
   if (st.view === 'oct') { $('#extra').innerHTML = octExtra(); return; }
+  if (st.view === 'rop') { $('#extra').innerHTML = ropExtra(); return; }
   if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
   const legend = `<div><div class="xh">圖例</div><div class="legend">
       <span><i class="sw" style="background:var(--rd)"></i>剝離的視網膜（皺摺線＝bullous）</span>
@@ -773,6 +1126,13 @@ function renderIndex() {
     if (st.mode === 'quiz') { ix.hidden = true; return; }
     ix.hidden = false;
     ix.innerHTML = `<span class="lbl">病變（${OC_ORDER.length}）</span>` + OC_ORDER.map(c => `<button type="button" class="chip ${c === st.ocond ? 'on' : ''}" data-oc="${c}">${OC[c].zh} <i>${OC[c].en}</i></button>`).join('');
+    return;
+  }
+  if (st.view === 'rop') {
+    if (st.mode === 'quiz') { ix.hidden = true; return; }
+    ix.hidden = false;
+    ix.innerHTML = `<span class="lbl">例子（${RPRE_ORDER.length}）</span>` + RPRE_ORDER.map(id => `<button type="button" class="chip ${id === st.rpre ? 'on' : ''}" data-rpre="${id}">${RPRE[id].zh} <i>${ropShort(ropEval(presetRop(id, st.eye), st.eye))}</i></button>`).join('')
+      + `<span class="lbl" style="margin-top:6px">說明卡（${ROPC_ORDER.length}）</span>` + ROPC_ORDER.map(id => `<button type="button" class="chip ${id === st.rcard ? 'on' : ''}" data-rcard="${id}">${ROPC[id].zh} <i>${ROPC[id].en}</i></button>`).join('');
     return;
   }
   if (st.mode === 'quiz' || st.sub !== 'shape') { ix.hidden = true; return; }
@@ -816,6 +1176,7 @@ function renderPanel() {
   const p = $('#panel');
   if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
   if (st.view === 'oct') { p.innerHTML = octCard(); return; }
+  if (st.view === 'rop') { p.innerHTML = st.rcard ? ropConceptCard(st.rcard) : ropCardHTML(st.rop, st.eye); return; }
   if (st.sub === 'spread') { p.innerHTML = spreadCard(); return; }
   p.innerHTML = st.pre ? preCard() : `<div class="empty-card"><div class="eyebrow">視網膜剝離 · Lincoff rules</div>
     <p>Lincoff 與 Gieser 在 1971 年分析 1,000 例 rhegmatogenous RD，發現剝離依重力擴散，可以從剝離的形狀回推 primary break 的位置${s('S1', 'S4')}。</p>
@@ -829,6 +1190,7 @@ function renderSelbar() {
   let t = '';
   if (st.mode === 'learn') {
     if (st.view === 'oct') { if (st.ocond !== 'normal') t = `病變：${OC[st.ocond].zh}`; }
+    else if (st.view === 'rop') t = st.rcard ? `說明卡：${ROPC[st.rcard].zh}` : `判讀：${ropShort(ropEval(st.rop, st.eye))}`;
     else if (st.sub === 'shape' && st.pre) t = `形狀：${PRE[st.pre].zh(st.v)}`;
     else if (st.sub === 'spread' && st.brk != null) t = `裂孔：${hh(st.brk)} 點`;
   }
@@ -865,10 +1227,35 @@ function playSpread() {
    分頁一：看剝離範圍，在眼底圖上點裂孔（break）
    分頁二：dx 看 B-scan 選診斷、ivts 依量好的數字分級、fluid 在圖上點液體 */
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
-const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: st.view === 'oct' ? 'mix' : 'break', total: 10 });
-const QT = { rd: [['break', '點出裂孔']], oct: [['dx', '看 B-scan 選診斷'], ['ivts', 'IVTS 分級'], ['fluid', '點出液體']] };
-const QH = { rd: '裂孔在哪裡？', oct: '這是什麼病變？' };
-const QTYPE_ZH = { break: '找裂孔', dx: '選診斷', ivts: 'IVTS 分級', fluid: '點液體' };
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: st.view === 'rd' ? 'break' : 'mix', total: 10 });
+const QT = { rd: [['break', '點出裂孔']], oct: [['dx', '看 B-scan 選診斷'], ['ivts', 'IVTS 分級'], ['fluid', '點出液體']], rop: [['zs', '看圖判 zone 與 stage'], ['type', '判斷要不要治療']] };
+const QH = { rd: '裂孔在哪裡？', oct: '這是什麼病變？', rop: 'ROP 怎麼分、要不要治療？' };
+const QTYPE_ZH = { break: '找裂孔', dx: '選診斷', ivts: 'IVTS 分級', fluid: '點液體', zs: '判 zone／stage', type: 'ETROP 分型' };
+const ropType = k => k[4] === 'z' ? 'zs' : 'type';
+function ropItem(key) {
+  const type = ropType(key), c = key.slice(6), C = RCASE[c], zm = zMain(C.z), eye = Math.random() < 0.5 ? 'R' : 'L', o = caseRop(c, eye);
+  if (type === 'zs') {
+    const ans = zsLab(zm, C.st), near = [...['1', '2', '3'].filter(x => x !== C.st).map(x => zsLab(zm, x)), ...['I', 'II', 'III'].filter(x => x !== zm).map(x => zsLab(x, C.st))];
+    return { key, type, c, eye, o, ans, opts: shuffle([ans, ...shuffle(near).slice(0, 3)]) };
+  }
+  return { key, type, c, eye, o, ans: 't' + etrop(zm, +C.st, C.p), opts: ['t1', 't2', 't0'] };
+}
+function ropQuizBody(it, q) {
+  const C = RCASE[it.c], zm = zMain(C.z), lab = x => it.type === 'zs' ? x : TYPE_OPT[x];
+  const optBtn = x => `<button type="button" class="opt ${q.ans ? (x === it.ans ? 'ok' : (q.ans.pick === x ? 'bad' : '')) : ''}" data-opt="${x}" ${q.ans ? 'disabled' : ''}>${lab(x)}</button>`;
+  let h = it.type === 'zs'
+    ? `<div class="prompt"><div class="k">${EYEZH[it.eye]}：上方的眼底示意圖先隱藏分區線（看得到視盤與 fovea）</div><div class="q">病灶在哪個 zone、是哪個 stage？</div></div>`
+    : `<div class="prompt"><div class="k">${EYEZH[it.eye]}：${ZONE_ZH[C.z]}、stage ${C.st}、${C.h.length} 個鐘點、${PLUS_ZH[C.p]}</div><div class="q">依 ETROP，這是哪一型？</div></div>`;
+  h += `<div class="opts">${it.opts.map(optBtn).join('')}</div>`;
+  if (q.ans) {
+    const pk = q.ans.pick ? lab(q.ans.pick) : '';
+    const more = it.type === 'zs'
+      ? `${C.z === 'pII' ? '病灶在 posterior zone II，仍屬於 zone II。' : ''}Zone I 的半徑是視盤到 fovea 距離的兩倍；stage ${C.st} 是 ${STAGE_ZH[C.st]}${s('S10')}。`
+      : `${typeWhy(zm, +C.st, C.p)}${s('S11')}`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && pk ? ` 你選的是 ${pk}；` : ' '}答案是 ${lab(it.ans)}。<br>${more}</div>`;
+  }
+  return h;
+}
 const rnd = (a, b, step) => a + step * Math.floor(Math.random() * ((b - a) / step + 1));
 function octItem(key) {
   const t = { d: 'dx', i: 'ivts', f: 'fluid' }[key[4]], id = key.slice(6);
@@ -907,6 +1294,7 @@ function quizHTML() {
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
       <p style="margin:0;font-size:13px;color:var(--muted)">${st.view === 'rd' ? '每題給一個剝離範圍（OD 或 OS），在眼底圖上點出最可能的 primary break；點在 Lincoff rules 的預測範圍內就算對。'
+        : st.view === 'rop' ? '兩種題型：看眼底示意圖判斷 zone 與 stage（分區線先隱藏，作答後顯示；posterior zone II 算 zone II）；給 zone、stage、範圍與 plus，依 ETROP 判斷 Type 1、Type 2 或兩型都不是。每題隨機用 OD 或 OS。'
         : '三種題型：看 B-scan 選診斷；依 IVTS 分出 macular hole 的大小與有沒有 VMT、VMA／VMT 是 focal 還是 broad（圖上會給量好的數字）；在圖上點出液體。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
@@ -918,7 +1306,7 @@ function quizHTML() {
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
   if (it.type !== 'break') {
-    h += octQuizBody(it, q);
+    h += it.type === 'zs' || it.type === 'type' ? ropQuizBody(it, q) : octQuizBody(it, q);
     h += q.ans ? `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>` : `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
     return h + `</div>`;
   }
@@ -931,15 +1319,15 @@ function quizHTML() {
   return h + `</div>`;
 }
 function startQuiz(cfg) {
-  const w = store.get().wrong, oct = st.view === 'oct';
-  const types = oct ? (cfg.type === 'mix' ? QT.oct.map(x => x[0]) : [cfg.type]) : ['break'];
-  let pool = oct ? OCT_KEYS.filter(k => types.includes({ d: 'dx', i: 'ivts', f: 'fluid' }[k[4]])) : RD_KEYS.slice();
+  const w = store.get().wrong, oct = st.view === 'oct', rop = st.view === 'rop';
+  const types = oct || rop ? (cfg.type === 'mix' ? QT[st.view].map(x => x[0]) : [cfg.type]) : ['break'];
+  let pool = oct ? OCT_KEYS.filter(k => types.includes({ d: 'dx', i: 'ivts', f: 'fluid' }[k[4]])) : rop ? ROP_KEYS.filter(k => types.includes(ropType(k))) : RD_KEYS.slice();
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
   while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
   keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
-  const items = keys.map(key => oct ? octItem(key) : Object.assign({ key, type: 'break' }, parseKey(key)));
+  const items = keys.map(key => oct ? octItem(key) : rop ? ropItem(key) : Object.assign({ key, type: 'break' }, parseKey(key)));
   st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
   stopAnim(); render();
 }
@@ -971,6 +1359,7 @@ function goKey(k) {
     if (t === 'i') { const q2 = IVC[id]; st.ocond = q2.c; if (q2.aw) st.aw = q2.aw; if (q2.hw) { st.hw = q2.hw; st.hv = q2.hv; } } else st.ocond = id;
     render(); return;
   }
+  if (k.startsWith('rop:')) { setView('rop'); st.eye = 'R'; st.rop = caseRop(k.slice(6), 'R'); st.rpre = null; st.rcard = null; render(); return; }
   setView('rd'); const { id, v, eye } = parseKey(k); st.sub = 'shape'; st.pre = id; st.v = v; st.eye = eye; render();
 }
 
@@ -1005,8 +1394,18 @@ function octClick(e) {
   st.ohit = octHit(octGeo(st.ocond, octParams()), q2.x, q2.y);
   const el = $('#ostat'); if (el) el.textContent = st.ohit ? `${LNAME[st.ohit][0]}　${LNAME[st.ohit][1]}` : '圖外';
 }
+// ROP：點扇形加入或移除一個鐘點；還沒有病灶時順手設成 stage 1
+function ropClick(ev) {
+  if (st.mode === 'quiz') return;
+  const p = figPoint(ev); if (!p || p.r < 14 || p.r > oraDist(p.h, st.eye) + 6) return;
+  const k = Math.floor(p.h + 1e-9) % 12, o = st.rop;
+  o.hrs = o.hrs.includes(k) ? o.hrs.filter(x => x !== k) : o.hrs.concat(k).sort((a, b) => a - b);
+  if (o.stage === '0' && o.hrs.length) o.stage = '1';
+  st.rpre = null; st.rcard = null; render();
+}
 $('#fig').addEventListener('click', e => {
   if (st.view === 'oct') { octClick(e); return; }
+  if (st.view === 'rop') { ropClick(e); return; }
   const p = figPoint(e); if (!p || p.r > G.ora + 20) return;
   if (st.mode === 'quiz') {
     const it = quizItem(); if (!it || st.quiz.ans) return;
@@ -1027,9 +1426,14 @@ document.addEventListener('click', e => {
   const oc = t.closest('[data-oc]'); if (oc) { st.ocond = oc.dataset.oc; st.ohit = null; render(); return; }
   const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
   const sb = t.closest('[data-sub]'); if (sb) { if (inQ()) return; stopAnim(); st.sub = sb.dataset.sub; st.t = 1; render(); return; }
-  const ey = t.closest('[data-eye]'); if (ey) { st.eye = ey.dataset.eye; if (RAF) { const tt = st.t; render(); st.t = tt; } else render(); return; }
+  const ey = t.closest('[data-eye]'); if (ey) { if (st.view === 'rop' && ey.dataset.eye !== st.eye) st.rop.hrs = st.rop.hrs.map(mirrorSec).sort((a, b) => a - b); st.eye = ey.dataset.eye; if (RAF) { const tt = st.t; render(); st.t = tt; } else render(); return; }
   const vv = t.closest('[data-v]'); if (vv) { st.v = vv.dataset.v; render(); return; }
   const pr = t.closest('[data-pre]'); if (pr) { st.pre = st.pre === pr.dataset.pre ? null : pr.dataset.pre; render(); return; }
+  const rp = t.closest('[data-rpre]'); if (rp) { st.rpre = rp.dataset.rpre; st.rop = presetRop(st.rpre, st.eye); st.rcard = null; render(); return; }
+  const rc = t.closest('[data-rcard]'); if (rc) { st.rcard = rc.dataset.rcard || null; render(); if (narrowFig() && st.rcard) try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const rsg = t.closest('[data-rstage]'); if (rsg) { st.rop.stage = rsg.dataset.rstage; st.rpre = null; st.rcard = null; render(); return; }
+  const rpl = t.closest('[data-rplus]'); if (rpl) { st.rop.plus = +rpl.dataset.rplus; st.rpre = null; st.rcard = null; render(); return; }
+  if (t.closest('#r-clear')) { st.rop.hrs = []; st.rpre = null; st.rcard = null; render(); return; }
   if (t.closest('#sp-play')) { if (st.brk != null) playSpread(); return; }
   if (t.closest('#sp-end')) { stopAnim(); st.t = 1; render(); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
@@ -1044,11 +1448,20 @@ document.addEventListener('change', e => {
   if (e.target.id === 't-zone') { st.zone = e.target.checked; renderFig(); }
   if (e.target.id === 't-mark') { st.omark = e.target.checked; renderFig(); }
   if (e.target.id === 'o-hv') { st.hv = e.target.checked; renderFig(); renderPanel(); }
+  if (e.target.id === 't-rzone') { st.rzone = e.target.checked; renderFig(); }
+  if (e.target.id === 'r-notch' || e.target.id === 'r-arop') { st.rop[e.target.id === 'r-notch' ? 'notch' : 'arop'] = e.target.checked; st.rpre = null; st.rcard = null; render(); }
 });
 // 拖拉條：只重畫圖與說明卡，不重畫拖拉條本身（才不會中斷拖拉）
 document.addEventListener('input', e => {
   if (e.target.id === 'o-aw') { st.aw = +e.target.value; $('#o-awv').textContent = `${st.aw} μm → ${attSize(st.aw)}`; }
   else if (e.target.id === 'o-hw') { st.hw = +e.target.value; $('#o-hwv').textContent = `${st.hw} μm → ${holeSize(st.hw)}`; }
+  else if (e.target.id === 'r-pos') {
+    st.rop.r = +e.target.value; st.rpre = null; st.rcard = null;
+    const ev = ropEval(st.rop, st.eye), nb = $('#r-notch');
+    $('#r-posv').textContent = ropPosText(st.rop, ev);
+    if (nb) { nb.disabled = !ev.canNotch; nb.checked = ev.notch; }
+    renderIndex();
+  }
   else return;
   renderFig(); renderPanel(); renderSelbar();
 });
@@ -1101,9 +1514,38 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   [180, 400, 720].forEach(w => { const gH = octGeo('ftmh', { aw: 1000, hw: w, hv: true }); a(Math.abs(gH.hole.w * O.um - w) < 1e-6 && octHit(gH, O.xc, gH.hole.yN) === 'hole', `${w} μm 的孔最窄處寬度要對`); });
   a(Object.values(OC).every(d => d.src.every(k => SRC[k])) && OCT_KEYS.every(keyValid), 'OCT 說明卡的出處與題目 key 都存在');
   a(Object.values(IVC).every(q2 => /^(Small|Medium|Large) FTMH (with|without) VMT$|^(Focal|Broad) VM[AT]$/.test(ivLabel(q2))), 'IVTS 分級題的答案格式');
+  // 分頁三：ROP 的分區（ICROP3）、ETROP 分型、CRYO-ROP threshold
+  a(Math.abs(oraDist(3, 'R') - RG.z2) < 1e-9 && Math.abs(oraDist(9, 'L') - RG.z2) < 1e-9 && Math.abs(oraDist(9, 'R') - (RG.ora + RG.off)) < 1e-9, 'zone II 外圈只在 nasal 側碰到 ora');
+  a([...Array(120).keys()].every(i => oraDist(i / 10, 'R') >= RG.z2 - 1e-9 && oraDist(i / 10, 'L') >= RG.z2 - 1e-9), 'ora 都在 zone II 外圈以外（zone III 只剩 temporal 新月形）');
+  a(RG.z1 === 2 * RG.df && RG.p2 - RG.z1 === 2 * RG.dd && zoneAt(RG.z1) === 'I' && zoneAt(RG.z1 + 1) === 'pII' && zoneAt(RG.p2 + 1) === 'II' && zoneAt(RG.z2 + 1) === 'III', 'zone I 半徑＝視盤到 fovea 的兩倍、posterior zone II＝再往外 2 個視盤直徑');
+  [240, 262, 290].forEach(r => ['R', 'L'].forEach(eye => { const e = ropEval({ r, hrs: ALL12, stage: '2', plus: 0 }, eye), nas = eye === 'R' ? [2, 3] : [8, 9]; a(e.z === 'III' && nas.every(k => !e.hrs.includes(k)), `zone III（${r}，${eye}）：最 nasal 的兩個鐘點不能有 ROP`); }));
+  a(mirrorSec(8) === 3 && [0, 5, 11].every(k => mirrorSec(mirrorSec(k)) === k) && NOTCH.L.every(k => NOTCH.R.includes(mirrorSec(k))), '鐘點鏡射：OD 的 8–9 點＝OS 的 3–4 點');
+  a([0.5, 3.5, 8.5, 11.5].every(x => Math.floor(clockOf(...pt(x, 150))) === Math.floor(x)), '點到的扇形要對');
+  // ETROP：照摘要原文另外列一次，逐一比對所有 zone × stage × plus
+  const T1 = ['I1+', 'I2+', 'I3+', 'I3', 'II2+', 'II3+'], T2 = ['I1', 'I2', 'II3'];
+  ['I', 'II', 'III'].forEach(z => [1, 2, 3].forEach(sn => [0, 1, 2].forEach(p => {
+    const id = z + sn + (p === 2 ? '+' : ''), want = T1.includes(id) ? 1 : T2.includes(id) ? 2 : 0;
+    a(etrop(z, sn, p) === want, `ETROP：zone ${z}、stage ${sn}、plus ${p} 應是 ${want}`);
+  })));
+  a(threshold('II', 3, 2, [10, 11, 0, 1, 2]) && threshold('I', 3, 2, [0, 2, 4, 6, 8, 10, 1, 3]) && !threshold('II', 3, 2, [0, 1, 2, 3]) && !threshold('II', 3, 1, ALL12) && !threshold('II', 2, 2, ALL12) && !threshold('III', 3, 2, ALL12), 'threshold：stage 3、zone I／II、連續 5 或累計 8 個鐘點、plus');
+  a(maxRun([11, 0, 1]) === 3 && runName(runs([10, 11, 0])[0]) === '10–1 點' && runs(ALL12)[0][1] === 12, '跨過 12 點的連續鐘點');
+  const PW = { inc: null, z2s1: 0, z2s2: 0, z2s3: 2, z2s2p: 1, thr: 1, z1s1: 2, z1s3: 1, notch: 2, arop: 1, z3s2: 0, s4a: 'rd', s5a: 'rd' };
+  RPRE_ORDER.forEach(id => ['R', 'L'].forEach(eye => { const e = ropEval(presetRop(id, eye), eye); a(e.type === PW[id] && !e.drop, `例子 ${id}（${eye}）應是 ${PW[id]}，鐘點都在 ora 以內`); }));
+  a(ropEval(presetRop('thr', 'R'), 'R').thr && !ropEval(presetRop('z2s2p', 'R'), 'R').thr, '例子：threshold 達到、zone II stage 2＋plus 沒達到');
+  const en = ropEval(presetRop('notch', 'L'), 'L');
+  a(en.notch && en.z0 === 'pII' && en.z === 'I' && en.hrs.length === 6, 'notch：記錄成 zone I secondary to notch');
+  a(!ropEval(Object.assign(presetRop('z1s3', 'R'), { notch: true }), 'R').notch, 'zone I 沒有更後方的 zone，不能有 notch');
+  // 題目：畫出來的 zone、stage、鐘點數要和題目寫的一樣；答案只有一個、在選項裡
+  Object.keys(RCASE).forEach(c => ['R', 'L'].forEach(eye => { const e = ropEval(caseRop(c, eye), eye), C = RCASE[c]; a(e.z === C.z && e.sn === +C.st && e.hrs.length === C.h.length, `題目 ${c}（${eye}）的圖要和題目一致`); }));
+  ROP_KEYS.forEach(k => { const it = ropItem(k); a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && keyValid(k) && keyView(k) === 'rop', `${k} 的選項`); });
+  // 說明卡與判讀卡：用到的上標來源都列在那張卡的來源清單
+  const supOK = html => { const used = [...html.matchAll(/<sup class="s">(\d+)<\/sup>/g)].map(m => m[1]), listed = [...html.matchAll(/<li>(\d+)\. /g)].map(m => m[1]); return used.every(x => listed.includes(x)); };
+  a(ROPC_ORDER.every(id => supOK(ropConceptCard(id))) && RPRE_ORDER.every(id => ['R', 'L'].every(eye => supOK(ropCardHTML(presetRop(id, eye), eye)))), 'ROP 卡片的上標都列在來源清單');
+  a(Object.keys(RCASE).every(c => [0, 1, 2].every(p => supOK(ropCardHTML(Object.assign(caseRop(c, 'R'), { plus: p }), 'R')))), 'ROP 判讀卡（各題目設定）的上標都列在來源清單');
 })();
 
 if (location.hash === '#oct') st.view = 'oct';
+else if (location.hash === '#rop') st.view = 'rop';
 render();
 </script>
 
