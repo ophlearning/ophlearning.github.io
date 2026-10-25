@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>青光眼互動圖譜</title>
+<meta name="description" content="互動式青光眼圖譜：在前房角剖面上看房水從 ciliary processes 製造、經 trabecular meshwork 與 uveoscleral 兩條路流出；切換 prostaglandin analogs、beta-blocker、alpha-2 agonist、CAI、pilocarpine、netarsudil、latanoprostene bunod，看各類藥作用在哪個構造、TM 與 ciliary muscle 怎麼變、episcleral venous pressure 怎麼變，附 Goldmann 方程式、說明卡、測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as optics — figure stage on the left, card on the right; the angle section reuses the eye-atlas model (top = peripheral temporal, left = anterior) */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --hl:#0A6FD8; --hl-soft:rgba(10,111,216,.16); --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-cornea:#E2E0F1; --t-sclera:#F5F0EC; --t-collagen:#EFC6D3; --t-conj:#F1CFD9; --t-uvea:#8E604B; --t-iris:#7C5342;
+  --t-pig:#4A3028; --t-cb:#B98673; --t-muscle:#C55367; --t-lens:#E6ECF7; --t-nuc:#D3D9EA; --t-fluid:#E8F0F8; --t-vit:#EEF3F6;
+  --t-sheath:#E2C29E; --t-vein:#4C62AF; --t-nuclear:#7B67C1; --t-plex:#EDC1D2;
+  --aq:#1C6FC0; --aq-band:rgba(28,111,192,.15); --uv:#1D8A6E; --uv-band:rgba(29,138,110,.17); --up:#1D6FB8; --dn:#B5472E;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
+  --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
+  --t-sheath:#6D5541; --t-vein:#7286D8; --t-nuclear:#6552B5; --t-plex:#6E4560;
+  --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
+  --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
+  --t-sheath:#6D5541; --t-vein:#7286D8; --t-nuclear:#6552B5; --t-plex:#6E4560;
+  --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:560px;max-height:calc(100vh - 150px)}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip i{font-family:var(--f-display);font-size:12.5px}
+
+/* figure: anatomy classes from the eye atlas */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+.deco{pointer-events:none}
+.lab text{font-size:14px;paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.lab line{stroke:var(--t-stroke);stroke-width:.8}
+.lab circle{fill:var(--t-stroke)}
+.lab.note text{font-family:var(--f-body);font-size:13px;fill:var(--ink-2)}
+.nolab .lab,.quiz-on .lab{display:none}
+.c-cornea{fill:var(--t-cornea);stroke:var(--t-stroke);stroke-width:1}
+.c-sclera{fill:var(--t-sclera);stroke:var(--t-stroke);stroke-width:1}
+.c-coll{fill:var(--t-collagen);stroke:var(--t-stroke);stroke-width:.8}
+.c-conj{fill:var(--t-conj);stroke:var(--t-stroke);stroke-width:.6}
+.c-iris{fill:var(--t-iris);stroke:var(--t-stroke);stroke-width:.8}
+.c-pig{fill:var(--t-pig);stroke:none}
+.c-cb{fill:var(--t-cb);stroke:var(--t-stroke);stroke-width:.8}
+.c-mus{fill:var(--t-muscle);stroke:var(--t-stroke);stroke-width:.8}
+.c-lens{fill:var(--t-lens);stroke:none}
+.c-nuc{fill:var(--t-nuc);stroke:var(--t-stroke-2);stroke-width:.8}
+.c-cap{fill:none;stroke:var(--t-stroke);stroke-width:1.6}
+.c-fluid{fill:var(--t-fluid);stroke:none}
+.c-vit{fill:var(--t-vit);stroke:none}
+.c-vein{fill:none;stroke:var(--t-vein);stroke-width:2}
+.c-line{fill:none;stroke:var(--t-stroke);stroke-width:1.4}
+.c-white{fill:var(--fig-bg);stroke:var(--t-stroke);stroke-width:.8}
+.c-zon{fill:none;stroke:var(--t-stroke);stroke-width:.7}
+.gap{fill:none;stroke:var(--t-fluid);stroke-linecap:round}
+.pore{fill:var(--t-fluid);stroke:none}
+.band{fill:none;stroke:var(--aq-band);stroke-linecap:round;stroke-linejoin:round}
+.band.u{stroke:var(--uv-band)}
+.aqp{fill:var(--aq)}
+.aqp.u{fill:var(--uv)}
+.aqp.v{fill:var(--t-vein)}
+.act{stroke:var(--hl)!important;stroke-width:2.6px!important;stroke-opacity:1!important}
+.npe.act{stroke-width:4.5px!important}
+@media (prefers-reduced-motion:no-preference){ .act{animation:pulse 1.6s ease-in-out infinite} }
+@keyframes pulse{50%{stroke-opacity:.35}}
+.site{fill:transparent;stroke:transparent;cursor:pointer}
+.site.ln{fill:none}
+.site.sel{fill:var(--hl-soft)}
+.site.ln.sel{fill:none;stroke:var(--hl-soft)}
+.arw{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round}
+.arwh{fill:var(--accent)}
+.bdg{cursor:pointer}
+.bdg rect{fill:var(--surface);stroke:var(--line-2);stroke-width:1}
+.bdg.on rect{stroke:var(--accent);stroke-width:1.6;fill:var(--accent-soft)}
+.bdg line{stroke:var(--line-2);stroke-width:1;stroke-dasharray:3 3}
+.bdg text{font-family:var(--f-body)!important;fill:var(--ink)}
+.bdg .ar{font-family:var(--f-mono)!important;font-weight:500;fill:var(--muted)}
+.bdg .ar.up{fill:var(--up)}
+.bdg .ar.dn{fill:var(--dn)}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--accent-soft);display:flex;flex-wrap:wrap;gap:4px 14px}
+.ar{font-family:var(--f-mono);font-weight:500;color:var(--muted)}
+.ar.up{color:var(--up)}
+.ar.dn{color:var(--dn)}
+.dl{display:flex;flex-direction:column;gap:6px}
+.dl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.dl button:hover{border-color:var(--accent)}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt i{font-family:var(--f-display);color:var(--muted)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras: insets + Goldmann */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.xrow{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-start}
+.ins{flex:1 1 300px;min-width:min(300px,100%)}
+.ins svg{display:block;width:100%;max-width:460px;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--fig-bg)}
+.ins text{font-family:var(--f-body);font-size:11px;fill:var(--ink-2)}
+.ins p{margin:6px 0 0;font-size:13px;color:var(--ink-2);max-width:460px}
+.gold{font-family:var(--f-mono);font-size:19px;color:var(--ink);display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;margin:4px 0 8px}
+.gold .tm{display:inline-flex;align-items:baseline;gap:3px}
+.gold .ar{font-size:15px}
+.gl{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:13.5px;color:var(--ink-2)}
+.gl b{font-family:var(--f-mono);font-weight:500;color:var(--ink)}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .fig svg{min-width:0}
+  .lab text{font-size:19px;stroke-width:4.5px}
+  .lab.note text{font-size:19px}
+  .seg button{padding:5px 10px}
+  .gold{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>青光眼互動圖譜</h1>
+      <span class="sub">Glaucoma · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>前房角剖面沿用眼解剖圖譜的眼球模型（右眼 OD temporal angle 放大，約 100 px/mm）：上＝周邊 temporal、左＝anterior。房水粒子的多寡與管道粗細只表示藥物作用的方向，不是實際流量；穩定狀態下房水製造量等於流出量。TM、Schlemm canal、ciliary muscle 的變化是示意，放大圖也不是實際比例。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。藥物機轉以 AAO PPP 與 DailyMed 仿單為主，仿單和 PPP 寫法不同時都列出來。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- sources ---------- */
+const DM = id => `https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=${id}`;
+const SRC = {
+  S1: { t: 'Gedde SJ, et al. Primary Open-Angle Glaucoma Preferred Practice Pattern®. Ophthalmology 2026;133(4):P1–P103（Table 4 Glaucoma Medications：機轉、IOP 降幅、副作用、禁忌）', u: 'https://doi.org/10.1016/j.ophtha.2025.12.029' },
+  S2: { t: 'DailyMed：XALATAN（latanoprost）仿單 12.1 Mechanism of Action、5 Warnings and Precautions', u: DM('a98595b3-9f47-48e0-b18d-550a2095f264') },
+  S3: { t: 'DailyMed：LUMIGAN（bimatoprost）仿單 12.1 Mechanism of Action', u: DM('a5e67c75-db88-4372-bb07-c8dd15c97631') },
+  S4: { t: 'DailyMed：TRAVATAN Z（travoprost）仿單 12.1 Mechanism of Action', u: DM('028455e0-ae77-4213-8819-3b58ef7d6a14') },
+  S5: { t: 'DailyMed：TIMOPTIC（timolol maleate）仿單 Clinical Pharmacology', u: DM('45ac65b3-19f7-4f33-aebf-cadd3daa4bf1') },
+  S6: { t: 'DailyMed：BETOPTIC S（betaxolol）仿單 12.1 Mechanism of Action', u: DM('905ba189-456c-4aa4-8231-39a971374ad8') },
+  S7: { t: 'DailyMed：ALPHAGAN P（brimonidine tartrate）仿單 12.1 Mechanism of Action、6 Adverse Reactions', u: DM('264c4494-c225-486f-888a-caaf36be46b3') },
+  S8: { t: 'DailyMed：IOPIDINE（apraclonidine）仿單 Clinical Pharmacology', u: DM('2a6c44a6-e415-467f-bf3b-3e7f2c7dc714') },
+  S9: { t: 'DailyMed：dorzolamide hydrochloride ophthalmic solution 仿單 12.1 Mechanism of Action', u: DM('29157995-fa61-4425-86a5-5bd0e4718cd8') },
+  S10: { t: 'DailyMed：AZOPT（brinzolamide）仿單 12.1 Mechanism of Action', u: DM('0afb6589-51ba-432c-aed1-20a12d5d3455') },
+  S11: { t: 'DailyMed：pilocarpine hydrochloride ophthalmic solution 仿單 12.1 Mechanism of Action', u: DM('84428e9a-f486-44d9-ad93-4ea9069a6787') },
+  S12: { t: 'DailyMed：RHOPRESSA（netarsudil）仿單 12.1 Mechanism of Action、6 Adverse Reactions', u: DM('7d4f0e3a-5b86-4c43-982a-813b22ae7e22') },
+  S13: { t: 'DailyMed：VYZULTA（latanoprostene bunod）仿單 12.1 Mechanism of Action', u: DM('60ce7900-a677-4fc2-88d0-1603baa9dbd4') },
+  S14: { t: 'Kazemi A, McLaren JW, Kopczynski CC, et al. The effects of netarsudil ophthalmic solution on aqueous humor dynamics in a randomized study in humans. J Ocul Pharmacol Ther 2018;34(5):380–386', u: 'https://doi.org/10.1089/jop.2017.0138' },
+  S15: { t: 'Sit AJ, Gupta D, Kazemi A, et al. Netarsudil improves trabecular outflow facility in patients with primary open angle glaucoma or ocular hypertension: a phase 2 study. Am J Ophthalmol 2021;226:262–269（摘要）', u: 'https://doi.org/10.1016/j.ajo.2021.01.019' },
+  S16: { t: 'Goel M, Picciani RG, Lee RK, Bhattacharya SK. Aqueous humor dynamics: a review. Open Ophthalmol J 2010;4:52–59', u: 'https://doi.org/10.2174/1874364101004010052' },
+  S17: { t: 'Cavet ME, DeCory HH. The role of nitric oxide in the intraocular pressure lowering efficacy of latanoprostene bunod: review of nonclinical studies. J Ocul Pharmacol Ther 2018;34(1–2):52–60', u: 'https://doi.org/10.1089/jop.2016.0188' },
+  S18: { t: 'Wang SK, Chang RT. An emerging treatment option for glaucoma: Rho kinase inhibitors. Clin Ophthalmol 2014;8:883–890', u: 'https://doi.org/10.2147/OPTH.S41000' },
+  S19: { t: 'Inoue T, Tanihara H. Rho-associated kinase inhibitors: a novel glaucoma therapy. Prog Retin Eye Res 2013;37:1–12（摘要）', u: 'https://doi.org/10.1016/j.preteyeres.2013.05.002' },
+  S20: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：p.346 Aqueous production、Aqueous outflow（anatomy、physiology）、p.347 Fig 11.3', u: null },
+  S21: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：pp.408–411 Medical treatment of glaucoma（prostaglandin derivatives、beta-blockers、CAI、alpha-2 agonists、miotics、new topical medications）', u: null },
+  S22: { t: 'Mehran NA, Sinha S, Razeghinejad R. New glaucoma medications: latanoprostene bunod, netarsudil, and fixed combination netarsudil-latanoprost. Eye 2020;34(1):72–88（摘要）', u: 'https://doi.org/10.1038/s41433-019-0671-0' }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+
+/* ---------- geometry helpers（同眼解剖圖譜） ---------- */
+const DEG = Math.PI / 180;
+const fx = n => Math.round(n * 10) / 10;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+function arc(r, a0, a1, cx = 0, cy = 0, step = 1.2) {
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) / step)), o = [];
+  for (let i = 0; i <= n; i++) { const a = (a0 + (a1 - a0) * i / n) * DEG; o.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
+  return o;
+}
+function arcF(rf, a0, a1, step = 0.8) {
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) / step)), o = [];
+  for (let i = 0; i <= n; i++) { const ad = a0 + (a1 - a0) * i / n, a = ad * DEG, r = rf(ad); o.push([r * Math.cos(a), r * Math.sin(a)]); }
+  return o;
+}
+const pt = (r, a) => [r * Math.cos(a * DEG), r * Math.sin(a * DEG)];
+function bez(p0, p1, p2, p3, n = 20) {
+  const o = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, u = 1 - t;
+    o.push([u*u*u*p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t*t*t*p3[0], u*u*u*p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t*t*t*p3[1]]);
+  }
+  return o;
+}
+function cr(pts, seg = 8) {
+  const o = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || pts[i + 1];
+    for (let j = 0; j < seg; j++) {
+      const t = j / seg, t2 = t * t, t3 = t2 * t;
+      const f = k => 0.5 * ((2 * p1[k]) + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t3);
+      o.push([f(0), f(1)]);
+    }
+  }
+  o.push(pts[pts.length - 1]);
+  return o;
+}
+const mir = pts => pts.map(p => [p[0], -p[1]]);
+const rev = pts => pts.slice().reverse();
+function mkT(sc, x0, y0) { return p => [(p[0] - x0) * sc, (y0 - p[1]) * sc]; }
+function dp(pts, T, close = true) {
+  return 'M' + pts.map(p => { const q = T(p); return fx(q[0]) + ' ' + fx(q[1]); }).join('L') + (close ? 'Z' : '');
+}
+function inPoly(p, poly) {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const a = poly[i], b = poly[j];
+    if ((a[1] > p[1]) !== (b[1] > p[1]) && p[0] < (b[0] - a[0]) * (p[1] - a[1]) / (b[1] - a[1]) + a[0]) c = !c;
+  }
+  return c;
+}
+const esc = x => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+/* ---------- label layout（同眼解剖圖譜） ---------- */
+function tw(t) { return t.length * 7.3 + 6; }
+function spread(items, lo, hi, gap) {
+  const n = items.length; if (!n) return [];
+  const pos = items.map(i => i.p);
+  for (let i = 0; i < n; i++) {
+    const min = i ? pos[i - 1] + (items[i - 1].s + items[i].s) / 2 + gap : lo + items[i].s / 2;
+    pos[i] = Math.max(pos[i], min);
+  }
+  for (let i = n - 1; i >= 0; i--) {
+    const max = i < n - 1 ? pos[i + 1] - (items[i + 1].s + items[i].s) / 2 - gap : hi - items[i].s / 2;
+    pos[i] = Math.min(pos[i], max);
+  }
+  return pos;
+}
+/* list: [text, [ax,ay](px), side]; cfg: {L:{x,lo,hi}, R:{x,lo,hi}, T:{y,lo,hi,rows}} */
+function labels(list, cfg, rowH = 16) {
+  const out = [], bySide = { L: [], R: [], T: [] };
+  list.forEach(([t, a, side]) => bySide[side].push({ a, t }));
+  ['L', 'R'].forEach(sd => {
+    const c = cfg[sd], arr = bySide[sd]; if (!arr.length) return;
+    arr.sort((u, v) => u.a[1] - v.a[1]);
+    const pos = spread(arr.map(i => ({ p: i.a[1], s: rowH })), c.lo, c.hi, 3);
+    arr.forEach((i, k) => {
+      const y = pos[k], x = c.x, anc = sd === 'L' ? 'end' : 'start', tx = sd === 'L' ? x - 5 : x + 5;
+      out.push(`<g class="lab"><line x1="${fx(i.a[0])}" y1="${fx(i.a[1])}" x2="${fx(x)}" y2="${fx(y)}"/><circle cx="${fx(i.a[0])}" cy="${fx(i.a[1])}" r="2.3"/><text x="${fx(tx)}" y="${fx(y + 5)}" text-anchor="${anc}">${esc(i.t)}</text></g>`);
+    });
+  });
+  const c = cfg.T, arr = bySide.T;
+  if (arr.length) {
+    const rows = c.rows || 1, rowArr = Array.from({ length: rows }, () => []);
+    arr.sort((u, v) => u.a[0] - v.a[0]).forEach((i, k) => rowArr[k % rows].push(i));
+    rowArr.forEach((ra, r) => {
+      const pos = spread(ra.map(i => ({ p: i.a[0], s: tw(i.t) * rowH / 16 })), c.lo, c.hi, 10), y = c.y + r * (rowH + 4);
+      ra.forEach((i, k) => out.push(`<g class="lab"><line x1="${fx(i.a[0])}" y1="${fx(i.a[1])}" x2="${fx(pos[k])}" y2="${fx(y + 5)}"/><circle cx="${fx(i.a[0])}" cy="${fx(i.a[1])}" r="2.3"/><text x="${fx(pos[k])}" y="${fx(y)}" text-anchor="middle">${esc(i.t)}</text></g>`));
+    });
+  }
+  return out.join('');
+}
+
+/* ---------- eye model：眼解剖圖譜 EYE 的前段（mm，原點＝眼球中心，+x posterior、+y temporal；右眼水平切面由上往下看）；只留前房角放大圖看得到的部分 ---------- */
+const EYE = (() => {
+  const Ro = 11.3, Rsi = 10.5, Rci = 10.15;
+  const thLo = 148.83, thJ = 149.94, spurA = 146.53, cbEnd = 133.62, oraT = 113.34, cT = -10.3;
+  const J = [-9.09, 5.26], SPUR = [-8.76, 5.79];
+  const LA = bez([-8.76, 0], [-8.76, 2.7], [-8.0, 4.6], [-7.25, 4.75], 28);
+  const LP = bez([-7.25, 4.75], [-6.45, 4.9], [-4.76, 3.0], [-4.76, 0], 28);
+  const lens = [...LA, ...LP.slice(1), ...rev(mir(LP)).slice(1), ...rev(mir(LA)).slice(1, -1)];
+  const scaleAbout = (pts, c, sx, sy) => pts.map(p => [c[0] + (p[0] - c[0]) * sx, c[1] + (p[1] - c[1]) * sy]);
+  const nucleus = scaleAbout(lens, [-6.9, 0], 0.6, 0.6);
+  const A = cr([[-8.62, 5.45], [-8.80, 4.9], [-8.95, 4.2], [-9.05, 3.4], [-8.98, 2.6], [-8.90, 2.0]], 6);
+  const B = cr([[-8.30, 5.40], [-8.42, 4.8], [-8.52, 4.1], [-8.58, 3.3], [-8.60, 2.6], [-8.62, 2.0]], 6);
+  const iris = [...A, [-8.77, 1.94], ...rev(B)];
+  const PROC = cr([[-7.00, 7.35], [-7.25, 6.75], [-7.55, 6.15], [-7.80, 5.55], [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]], 6);
+  const cb = [SPUR, ...arc(Rsi, spurA, cbEnd), ...PROC, [-8.62, 5.45], [-8.70, 5.62]];
+  const lensFront2 = LA.filter(p => p[1] <= 2.0);
+  const ac = [J, ...arc(Rsi, thJ, spurA), [-8.70, 5.62], [-8.62, 5.45], ...A, ...rev(lensFront2), ...mir(lensFront2).slice(1),
+    ...rev(mir(A)), [-8.62, -5.45], [-8.70, -5.62], ...arc(Rsi, -spurA, -thJ), ...arc(6.5, 233.94, 126.06, -5.26, 0)];
+  const pc = [...B, ...LA.filter(p => p[1] >= 2.0 && p[1] <= 4.5), [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]];
+  const cornea = [...arc(7.8, 131.4, 228.6, -4.51, 0), ...arc(6.5, 233.94, 126.06, -5.26, 0)];
+  const scleraT = [...arc(Ro, thLo, cT), ...arc(Rsi, cT, thJ)];
+  const ppT = [...arc(Rsi, cbEnd, oraT), ...arc(Rci, oraT, cbEnd)];
+  const zon = [[[-7.80, 5.45], [-7.62, 4.62]], [[-7.82, 5.27], [-7.35, 4.76]], [[-7.62, 6.0], [-7.05, 4.80]], [[-7.38, 6.5], [-6.75, 4.72]], [[-7.12, 7.05], [-6.45, 4.58]]];
+  // ciliary muscle（同眼解剖圖譜前房角圖）
+  const cm = [[-8.72, 5.77], ...arc(10.45, 146.3, 136.3), [-7.62, 6.6], [-7.95, 6.05], [-8.3, 5.72], [-8.55, 5.62]];
+  return { Ro, Rsi, Rci, thLo, thJ, spurA, cbEnd, J, SPUR, LA, LP, lens, nucleus, A, B, iris, PROC, cb, ac, pc, cornea, scleraT, ppT, zon, cm };
+})();
+
+/* ---------- 前房角圖：同眼解剖圖譜 renderAngle 的放大倍率與方位（約 100 px/mm；上＝周邊 temporal、左＝anterior） ---------- */
+const TA = mkT(100, -12.4, 9.0), PA = p => TA(p), DA = (pts, c = true) => dp(pts, TA, c);
+/* 房水的三段路（mm）：製造 → posterior chamber → 瞳孔 → anterior chamber 到前房角（Q）；從 Q 分成 trabecular 與 uveoscleral 兩條 */
+const QA = [-8.86, 5.36];
+const ROUTE = {
+  prod: [[-7.66, 5.85], [-7.92, 5.13], [-8.18, 4.6], [-8.34, 3.8], [-8.5, 3.0], [-8.58, 2.3], [-8.7, 1.82], [-8.95, 1.8], [-9.22, 2.2], [-9.55, 3.0], [-9.7, 3.9], [-9.45, 4.75], QA],
+  trab: [QA, pt(10.46, 148.3), pt(10.575, 147.8), pt(10.635, 147.8), pt(10.85, 147.25), pt(11.08, 147.85), pt(11.32, 147.35), ...arc(11.33, 147.0, 126.5, 0, 0, 1.5)],
+  uveo: [QA, [-8.66, 5.52], pt(10.26, 145.8), pt(10.26, 142.5), pt(10.28, 140.0), pt(10.4, 137.5), pt(10.48, 134.5), ...arc(10.48, 133, 120.5, 0, 0, 1.5)]
+};
+const VEIN_I = 6;   // trab 第 6 點起進入 episcleral vein（房水和血液混合）
+function pxPath(mm) {
+  const pts = mm.map(PA), cum = [0];
+  for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  return { pts, cum, L: cum[cum.length - 1] };
+}
+const PX = { prod: pxPath(ROUTE.prod), trab: pxPath(ROUTE.trab), uveo: pxPath(ROUTE.uveo) };
+PX.trab.v = PX.trab.cum[VEIN_I];
+function along(p, d) {
+  let i = 1; while (i < p.cum.length - 1 && p.cum[i] < d) i++;
+  const t = (d - p.cum[i - 1]) / ((p.cum[i] - p.cum[i - 1]) || 1), a = p.pts[i - 1], b = p.pts[i];
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+
+/* ---------- 藥物 ----------
+   eff：F 房水製造、C trabecular outflow（facility）、U uveoscleral outflow、P episcleral venous pressure
+   值：2 主要增加、1 增加、0.5 次要增加、0 不變、−1 減少、−0.5 可能減少（文獻不一）
+   anat：圖上構造的示意變化（0–1）：cmGap ciliary muscle 肌束空隙（負＝變窄）、cmPull 肌肉收縮往前內移、tmIn TM 網眼、tmJct JCT 空隙與 giant vacuoles、scDil Schlemm canal 擴張、miosis 縮瞳 */
+const NOANAT = { cmGap: 0, cmPull: 0, tmIn: 0, tmJct: 0, scDil: 0, miosis: false };
+const DRUGS = {
+  none: { en: 'Aqueous humor dynamics', zh: '房水的製造與流出（未用藥）', eff: {}, anat: {},
+    def: 'Ciliary processes 製造房水，經 posterior chamber、瞳孔進入 anterior chamber，再從前房角的兩條路離開。',
+    mech: [`製造：pars plicata 的 ciliary epithelium，先由微血管 ultrafiltration 到 stroma，再經雙層上皮主動運輸${s('S20')}；主動分泌約佔 80–90%${s('S16')}`,
+      `房水流速白天平均約 2.4 μL/min；早上約 3.0、下午約 2.4、夜間降到約 1.5 μL/min${s('S16')}`,
+      `Trabecular（傳統）路徑：TM → Schlemm canal → collector channels → aqueous veins → episcleral veins；流量隨眼壓增加（pressure-sensitive）${s('S20', 'S16')}`,
+      `Uveoscleral（非傳統）路徑：穿過 ciliary body 前表面、走 ciliary muscle 肌束之間進 suprachoroidal space，再由 ciliary body、choroid、sclera 的靜脈循環帶走；相對不受眼壓影響${s('S20', 'S16')}`,
+      `兩條路的比例文獻不一：Kanski 寫 trabecular 90%、uveoscleral 10%${s('S20')}；Goel 2010 引用的研究在猴子有 40–50% 走 uveoscleral，年輕人推算相近，且隨年齡下降${s('S16')}`,
+      `阻力約 75% 在 TM、25% 在 Schlemm canal 之後；TM 裡主要在 juxtacanalicular 那層${s('S16', 'S20')}`,
+      `Episcleral venous pressure 約 8–10 mmHg；一般人平均眼壓 15.5 ± 2.6 mmHg${s('S16')}`],
+    src: ['S16', 'S20'] },
+  pga: { en: 'Prostaglandin analogs', zh: '前列腺素類似物', ag: 'Latanoprost、travoprost、bimatoprost、tafluprost',
+    eff: { U: 2, C: 0.5 }, anat: { cmGap: 1 }, bn: { uveo: '肌束空隙變寬' },
+    def: 'FP 受體 agonist，主要增加 uveoscleral outflow；最常用的第一線降眼壓藥，一天點一次。',
+    mech: [`PPP 表列機轉：increase uveoscleral outflow${s('S1')}`,
+      `Latanoprost 仿單：主要機轉是增加 uveoscleral outflow${s('S2')}；travoprost 是 selective FP prostanoid receptor agonist，增加 uveoscleral outflow${s('S4')}`,
+      `Bimatoprost 仿單：TM 與 uveoscleral 兩條路都增加${s('S3')}`,
+      `Kanski：主要是增加 uveoscleral outflow，也找到增加 trabecular outflow facility 等其他機轉${s('S21')}`],
+    chg: [`PGF2α 降低 ciliary muscle 肌束之間空隙的阻力，可能經由活化 matrix metalloproteinases${s('S16')}：圖上肌束之間的空隙變寬`,
+      `TM 的作用是次要的，圖上只畫小幅增加${s('S3', 'S21')}`],
+    iop: `25%–33%${s('S1')}；Kanski 寫 27–35%${s('S21')}`,
+    se: [`虹膜、眼瞼周圍皮膚與睫毛的色素增加，虹膜變色多半是永久的；睫毛變長、變粗、變多，通常可逆${s('S2')}`,
+      `Conjunctival injection、periorbitopathy、uveitis、cystoid macular edema；活動性 uveitis 與 herpetic keratitis 病史要小心${s('S1')}`],
+    src: ['S1', 'S2', 'S3', 'S4', 'S16', 'S21'] },
+  lbn: { en: 'Latanoprostene bunod', zh: '會放出 NO 的前列腺素', ag: 'Latanoprostene bunod 0.024%',
+    eff: { U: 2, C: 1 }, anat: { cmGap: 1, tmJct: 0.7, tmIn: 0.4 }, bn: { uveo: '肌束空隙變寬', tm: 'NO 讓 TM 細胞放鬆' },
+    def: '在眼內分解成 latanoprost acid 與 butanediol mononitrate；後者再放出 nitric oxide（NO），作用在 TM。',
+    mech: [`仿單：TM 與 uveoscleral 兩條路的 outflow 都增加${s('S13')}`,
+      `PPP：分解成 latanoprost（prostaglandin analog）與 butanediol mononitrate（NO 供應者），兩條路都增加${s('S1')}`,
+      `Kanski：latanoprost 走 uveoscleral，NO 作用在 TM、增加 outflow；比 latanoprost 單用降得多${s('S21')}`],
+    chg: [`NO 讓 TM 細胞放鬆：myosin light chain 磷酸化下降、細胞骨架重排（非臨床研究）${s('S17')}：圖上 TM 的網眼變大`,
+      `Latanoprost 的部分同 prostaglandin analogs：ciliary muscle 肌束空隙變寬${s('S16')}`],
+    iop: `PPP 把它列在 prostaglandin analogs 一列（25%–33%）${s('S1')}`,
+    se: [`副作用和其他 prostaglandin 類似${s('S21')}`],
+    src: ['S1', 'S13', 'S16', 'S17', 'S21'] },
+  beta: { en: 'Beta-adrenergic antagonists', zh: 'β 阻斷劑', ag: 'Timolol、levobunolol、carteolol（非選擇性）；betaxolol（β1 選擇性）',
+    eff: { F: -1 }, anat: {}, bn: { cpe: 'ciliary epithelium' },
+    def: '作用在 ciliary epithelium，減少房水製造。',
+    mech: [`PPP：decrease aqueous production${s('S1')}`,
+      `Kanski：減少製造，經由 ciliary epithelium${s('S21')}`,
+      `Timolol 仿單：tonography 與 fluorophotometry 研究顯示主要是減少房水生成；有些研究也看到 outflow facility 稍微增加${s('S5')}`,
+      `Betaxolol 仿單：機轉是減少房水製造${s('S6')}`],
+    chg: ['圖上：ciliary processes 上皮製造的房水變少；兩條 outflow 路徑不變',
+      `Timolol 在清醒時降低房水流速，睡眠時不會（房水製造本來就是夜間較低）${s('S16')}`],
+    iop: `20%–25%${s('S1')}；Kanski 寫 21–27%，約 10% 會隨時間變差（tachyphylaxis）${s('S21')}`,
+    se: [`Bronchospasm、bradycardia、hypotension、CHF、運動耐受度下降、憂鬱${s('S1')}`,
+      `禁忌：asthma、COPD、bradycardia、一度以上 heart block、CHF${s('S1')}`],
+    src: ['S1', 'S5', 'S6', 'S16', 'S21'] },
+  a2: { en: 'Alpha-2 adrenergic agonists', zh: 'α2 作用劑', ag: 'Brimonidine、apraclonidine',
+    eff: { F: -1, U: 1 }, anat: {}, bn: { cpe: 'ciliary epithelium' },
+    def: '減少房水製造；brimonidine 另外增加 uveoscleral outflow。',
+    mech: [`Brimonidine 仿單：fluorophotometry 研究顯示雙重機轉，減少房水製造、增加 uveoscleral outflow${s('S7')}`,
+      `Apraclonidine 仿單：主要作用可能是減少房水生成${s('S8')}`,
+      `PPP：decrease aqueous production；decrease episcleral venous pressure or increase uveoscleral outflow${s('S1')}`,
+      `Kanski：經由 ciliary epithelium 減少生成，並增加 uveoscleral outflow${s('S21')}`],
+    chg: ['圖上：製造變少、uveoscleral 路徑變寬',
+      `PPP 提到的 EVP 下降，brimonidine 仿單沒有寫，圖上不畫${s('S1', 'S7')}`],
+    iop: `20%–25%${s('S1')}`,
+    se: [`Allergic／follicular conjunctivitis、口鼻乾、hypotension、頭痛、嗜睡${s('S1', 'S7')}`,
+      `會通過 blood–brain barrier，幼兒可能嚴重 CNS depression；PPP 列嬰幼兒與 MAOI 治療中為禁忌${s('S1', 'S21')}`],
+    src: ['S1', 'S7', 'S8', 'S21'] },
+  cai: { en: 'Carbonic anhydrase inhibitors', zh: '碳酸酐酶抑制劑', ag: 'Dorzolamide、brinzolamide（點眼）；acetazolamide、methazolamide（口服）',
+    eff: { F: -1 }, anat: {}, bn: { cpe: 'carbonic anhydrase II' },
+    def: '抑制 ciliary processes 的 carbonic anhydrase II，減少房水分泌。',
+    mech: [`仿單：抑制 ciliary processes 的 carbonic anhydrase，減慢 bicarbonate 生成，連帶減少 sodium 與水分的運送，房水分泌下降${s('S9', 'S10')}`,
+      `PPP：點眼與口服都是 decrease aqueous production${s('S1')}`,
+      `Carbonic anhydrase 在 non-pigmented 與 pigmented ciliary epithelium 都有，參與 bicarbonate 運送${s('S16')}`],
+    chg: ['圖上：ciliary processes 上皮製造的房水變少；兩條 outflow 路徑不變'],
+    iop: `點眼 15%–20%、口服 20%–30%${s('S1')}；Kanski：點眼一般比 beta-blocker 稍弱${s('S21')}`,
+    se: [`點眼：allergic conjunctivitis、corneal edema、metallic taste；sulfonamide allergy 禁用${s('S1')}`,
+      `口服：電解質失衡、腎結石、血液惡病質（aplastic anemia、thrombocytopenia）、Stevens–Johnson syndrome${s('S1')}`],
+    src: ['S1', 'S9', 'S10', 'S16', 'S21'] },
+  pilo: { en: 'Parasympathomimetics（miotics）', zh: '擬副交感神經藥（縮瞳劑）', ag: 'Pilocarpine（cholinergic agonist）；echothiophate（anticholinesterase）',
+    eff: { C: 1, U: -1 }, anat: { cmPull: 1, tmIn: 1, tmJct: 0.5, scDil: 1, cmGap: -0.6, miosis: true }, bn: { tm: '肌肉收縮拉緊 scleral spur', uveo: '肌肉收縮、空隙變窄' },
+    def: 'Ciliary muscle 收縮拉緊 scleral spur，TM 網眼被撐開；同時 sphincter 收縮造成縮瞳。',
+    mech: [`仿單：ciliary muscle 收縮，增加 scleral spur 的張力、打開 TM 的網眼，outflow resistance 下降；miosis 可解除 appositional angle closure${s('S11')}`,
+      `PPP：increase trabecular outflow${s('S1')}`,
+      `Kanski：現在主要用在 angle closure，縮瞳把周邊 iris 拉離 TM；ciliary muscle 收縮增加 TM outflow facility${s('S21')}`],
+    chg: [`Ciliary muscle 往前、往內移動，TM 被撐開、Schlemm canal 擴張${s('S16')}：圖上肌肉內緣往前內移、TM 網眼變大、Schlemm canal 變寬`,
+      `Uveoscleral outflow 變少：用 pilocarpine 時只佔 0–3%，用 atropine 時 4–27%${s('S16')}：圖上肌束空隙變窄、uveoscleral 路徑變細`],
+    iop: `20%–25%${s('S1')}`,
+    se: [`近視度數增加、視力下降、眉弓痛、cataract、paradoxical angle closure、retinal tear／detachment；周邊視網膜有易裂區時要先檢查眼底${s('S1')}`,
+      `視野缺損看起來更深、更大${s('S21')}`],
+    src: ['S1', 'S11', 'S16', 'S21'] },
+  rock: { en: 'Rho kinase inhibitors', zh: 'ROCK 抑制劑', ag: 'Netarsudil 0.02%',
+    eff: { C: 1, P: -1, F: -0.5 }, anat: { tmJct: 1, tmIn: 0.3 }, bn: { tm: 'TM 放鬆、JCT 空隙變寬', evp: '遠端路徑的壓力下降', cpe: '人體研究只是趨勢' },
+    def: '直接作用在傳統路徑：增加 TM outflow，並降低 episcleral venous pressure。',
+    mech: [`仿單：增加經由 TM 的 outflow，確切機轉不明${s('S12')}`,
+      `PPP：increase trabecular outflow；decrease episcleral venous pressure；decrease aqueous production${s('S1')}`,
+      `健康受試者點 7 天：outflow facility 增加 22%（0.27 → 0.33 μL/min/mmHg），EVP 下降 10%（7.9 → 7.2 mmHg）；房水流速有下降趨勢（−15%，P = 0.08），uveoscleral 不變${s('S14')}`,
+      `POAG／OHT 病人點 7 天：EVP 平均下降 0.79 mmHg（vehicle ＋0.10），outflow facility 也增加${s('S15')}`,
+      `Netarsudil 同時抑制 norepinephrine transporter${s('S22')}`],
+    chg: [`抑制 actin 細胞骨架的收縮張力，讓 TM 放鬆${s('S18')}`,
+      `摘除的眼球灌流 ROCK 抑制劑後，juxtacanalicular 區的空隙變寬、Schlemm canal 內皮的 giant vacuoles 變多${s('S19')}：圖上 TM 靠 Schlemm canal 那層的網眼變大`,
+      `EVP 下降是遠端（distal）路徑的作用${s('S14', 'S15')}：圖上 episcleral vein 標示往下`,
+      `減少製造：PPP 有列，但人體研究只是趨勢，圖上標「可能」${s('S1', 'S14')}`],
+    iop: `10%–20%${s('S1')}`,
+    se: [`Conjunctival hyperemia 最常見（53%），6% 因此停藥；corneal verticillata、點藥處疼痛、conjunctival hemorrhage 各約 20%${s('S12')}`],
+    src: ['S1', 'S12', 'S14', 'S15', 'S18', 'S19', 'S22'] }
+};
+const DRUG_ORDER = ['none', 'pga', 'lbn', 'beta', 'a2', 'cai', 'pilo', 'rock'];
+const effOf = id => Object.assign({ F: 0, C: 0, U: 0, P: 0 }, DRUGS[id].eff);
+const anatOf = id => Object.assign({}, NOANAT, DRUGS[id].anat);
+function arrowTxt(v) { return v >= 2 ? '↑↑' : v === 1 ? '↑' : v > 0 ? '↑ 次要' : v === -1 ? '↓' : v < 0 ? '↓ 可能' : '—'; }
+const arrowCls = v => v > 0 ? 'up' : v < 0 ? 'dn' : '';
+
+/* ---------- 作用部位 ---------- */
+const SITE_K = { cpe: 'F', tm: 'C', uveo: 'U', evp: 'P' };
+const SITE_ORDER = ['cpe', 'tm', 'uveo', 'evp'];
+const SITES = {
+  cpe: { short: '房水製造', en: 'Ciliary epithelium', zh: '房水製造處：ciliary processes 的雙層上皮',
+    def: 'Pars plicata 的 ciliary processes 表面有兩層上皮：內層 non-pigmented（面向 posterior chamber）、外層 pigmented。',
+    pts: [`血漿先經 ultrafiltration 進到 ciliary process 的 stroma，再由雙層上皮主動運輸，形成滲透壓梯度把水帶過去${s('S20')}`,
+      `主要的主動運輸在 non-pigmented epithelium；Na-K-ATPase 與 carbonic anhydrase 在兩層上皮都有${s('S16')}`],
+    src: ['S16', 'S20'] },
+  tm: { short: 'TM outflow', en: 'Trabecular meshwork → Schlemm canal', zh: '傳統路徑（conventional outflow）',
+    def: 'TM 由內到外分三層：uveal meshwork、corneoscleral meshwork、juxtacanalicular（JCT）meshwork；JCT 外側的內皮就是 Schlemm canal 的內壁。',
+    pts: [`Uveal meshwork 的開口約 25–75 μm${s('S16')}`,
+      `JCT 的細胞埋在緻密的細胞外基質裡，提供正常 outflow 阻力的主要部分${s('S20')}`,
+      `Schlemm canal 內壁內皮有 giant vacuoles，被認為以跨細胞孔道運送房水；外壁有 collector channels 的開口${s('S20')}`,
+      `Ciliary muscle 前端的肌腱插入 corneoscleral 與 JCT meshwork；肌肉收縮時 TM 被撐開、Schlemm canal 擴張${s('S16')}`],
+    src: ['S16', 'S20'] },
+  uveo: { short: 'Uveoscleral', en: 'Ciliary muscle → suprachoroidal space', zh: '非傳統路徑（uveoscleral outflow）',
+    def: '房水從前房角穿過 ciliary body 前表面，走 ciliary muscle 肌束之間的空隙進入 suprachoroidal space，再由 ciliary body、choroid、sclera 的循環帶走或穿出 sclera。',
+    pts: [`這條路的速率限制在穿過 ciliary muscle 的那一段${s('S16')}`,
+      `相對不受眼壓影響；隨年齡減少${s('S16')}`,
+      `Ciliary muscle 收縮會大幅減少這條路；PGF2α 降低肌束間空隙的阻力${s('S16')}`],
+    src: ['S16', 'S20'] },
+  evp: { short: 'EVP', en: 'Episcleral veins', zh: 'Episcleral venous pressure（EVP）',
+    def: 'Schlemm canal 的房水經 collector channels、aqueous veins 匯入 episcleral veins；這裡的壓力是傳統路徑的下游壓力，也就是 Goldmann 方程式裡的 Pv。',
+    pts: [`EVP 約 8–10 mmHg${s('S16')}；健康受試者量到平均 7.9 mmHg${s('S14')}`,
+      `傳統路徑的流量＝（IOP − EVP）× C：EVP 越高，同樣的流量需要越高的眼壓${s('S16')}`,
+      `Trabecular MIGS 的降壓效果受遠端路徑阻力與 EVP 限制${s('S1')}`,
+      `PPP 把 alpha-2 agonist 的機轉寫成「decrease EVP or increase uveoscleral outflow」；brimonidine 仿單只寫 uveoscleral，本圖不畫${s('S1', 'S7')}`],
+    src: ['S1', 'S7', 'S14', 'S16'] }
+};
+
+/* ---------- drawing ---------- */
+const isMob = () => { try { return matchMedia('(max-width:560px)').matches; } catch (e) { return false; } };
+const S = (d, cls, extra = '') => `<path class="${cls}" d="${d}" ${extra}/>`;
+function cmShape(pull) {
+  // pilocarpine：肌肉內緣往前（−x）、往內（−y）移；外側貼 sclera 的弧不動
+  const m = EYE.cm.map(p => p.slice()), sh = [[-0.22, -0.14], [-0.14, -0.10], [-0.06, -0.05]];
+  const n = m.length;
+  [n - 4, n - 3, n - 2].forEach((i, k) => { m[i][0] += sh[k][0] * pull; m[i][1] += sh[k][1] * pull; });
+  return cr(m, 4);
+}
+function textW(t, f) { let w = 0; for (const ch of t) w += ch.charCodeAt(0) > 255 ? f : ch === ' ' ? f * 0.3 : f * 0.58; return w; }
+// 四個作用部位的標示：位置（px）、引線指向的構造
+const BADGE = { evp: [40, 128, PA(pt(11.33, 141))], tm: [40, 236, PA(pt(10.47, 148.3))], uveo: [600, 166, PA(pt(10.48, 131))], cpe: [600, 495, PA([-7.80, 5.55])] };
+function badges(ef, sel, bn) {
+  // 手機上字放大，不放第二行的說明
+  const m = isMob(), f = m ? 25 : 14.5, pad = f * 0.6, fn = f * 0.84;
+  return SITE_ORDER.map(k => {
+    const [x, y, a] = BADGE[k], v = ef[SITE_K[k]], t1 = SITES[k].short, t2 = arrowTxt(v), note = !m && v && bn[k];
+    const hgt = f * 2 + (note ? fn * 1.4 : 0), mid = y + f;
+    const w = Math.max(textW(t1, f) + textW(t2, f) + pad * 3, note ? textW(note, fn) + pad * 2 : 0);
+    const ax = a[0] < x ? x : a[0] > x + w ? x + w : x + w / 2, ay = a[1] < y ? y : a[1] > y + hgt ? y + hgt : mid;
+    return `<g class="bdg ${sel === k ? 'on' : ''}" data-site="${k}"><line x1="${fx(ax)}" y1="${fx(ay)}" x2="${fx(a[0])}" y2="${fx(a[1])}"/><rect x="${x}" y="${y}" width="${fx(w)}" height="${fx(hgt)}" rx="${fx(f * 0.5)}"/>
+      <text x="${fx(x + pad)}" y="${fx(mid + f * 0.36)}" style="font-size:${f}px">${t1}</text><text class="ar ${arrowCls(v)}" x="${fx(x + pad * 2 + textW(t1, f))}" y="${fx(mid + f * 0.36)}" style="font-size:${f}px">${t2}</text>${note ? `<g class="lab note"><text x="${fx(x + pad)}" y="${fx(mid + f * 0.36 + fn * 1.35)}" style="font-size:${fx(fn)}px;stroke-width:0">${note}</text></g>` : ''}</g>`;
+  }).join('');
+}
+function aqParticles(id, tms) {
+  const ef = effOf(id), pd = 1 + 0.4 * ef.F;
+  const dens = { prod: pd, trab: pd * (1 + 0.3 * ef.C), uveo: pd * 0.55 * (1 + 0.45 * ef.U) }, spd = { prod: 42, trab: 42, uveo: 24 };
+  const r = isMob() ? 5.6 : 3.6;
+  let h = '';
+  for (const k of ['prod', 'trab', 'uveo']) {
+    const p = PX[k], gap = 30 / dens[k], off = (tms * spd[k] / 1000) % gap;
+    for (let x = off; x < p.L; x += gap) {
+      const q = along(p, x), op = Math.min(1, x / 18, (p.L - x) / 40);
+      const cls = k === 'uveo' ? 'u' : k === 'trab' && x > p.v ? 'v' : '';
+      h += `<circle class="aqp ${cls}" cx="${fx(q[0])}" cy="${fx(q[1])}" r="${r}" opacity="${fx(op)}"/>`;
+    }
+  }
+  return h;
+}
+function aqSVG(id, o) {
+  const E = EYE, ef = effOf(id), an = anatOf(id), act = k => ef[SITE_K[k]] !== 0 ? ' act' : '', sel = k => o.site === k ? ' sel' : '';
+  let h = `<svg viewBox="0 0 900 730" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="前房角放大：房水的製造與流出"><rect width="900" height="730" fill="var(--fig-bg)"/>`;
+  // 眼球的底（同眼解剖圖譜的上色與疊放順序）
+  h += S(DA([...arc(E.Rci, 95, 178), [-4, 0.4]]), 'c-vit');
+  h += S(DA(E.scleraT), 'c-sclera') + S(DA(E.ppT), 'c-cb');
+  h += S(DA(E.ac), 'c-fluid') + S(DA(E.pc), 'c-fluid', 'style="stroke:var(--t-stroke-2);stroke-width:.5"');
+  h += S(DA(E.cb), 'c-cb');
+  h += S(DA(E.lens), 'c-lens') + S(DA(E.nucleus), 'c-nuc') + S(DA(E.lens), 'c-cap');
+  E.zon.forEach(z => { h += `<path class="deco c-zon" d="${DA(z, false)}"/>`; });
+  h += S(DA(E.iris), 'c-iris') + S(DA(E.cornea), 'c-cornea');
+  const cEnd = 124;
+  const conj = [...arcF(a => E.Ro + 0.19 * clamp((E.thLo - a) / 1.6), E.thLo, cEnd, 0.4), ...arcF(a => E.Ro + 0.12 * clamp((E.thLo - a) / 1.6), cEnd, E.thLo, 0.4)];
+  h += S(DA(conj), 'c-conj');
+  // episclera 與 episcleral vein
+  const epi = [...arc(E.Ro + 0.055, 147.6, 124), ...arc(E.Ro, 124, 147.6)];
+  h += S(DA(epi), 'c-white', 'style="fill:var(--t-plex);opacity:.85"');
+  const vein = arc(E.Ro + 0.03, 147.35, 124, 0, 0, 1);
+  h += S(DA(vein, false), 'c-vein' + act('evp'), 'style="stroke-width:5;stroke-linecap:round;stroke-opacity:.7"');
+  h += S(DA([...arc(E.Ro + 0.12, 145.4, 124), ...arc(E.Ro + 0.058, 124, 145.4)]), 'c-white', 'style="fill:var(--t-sheath);opacity:.8"');
+  h += S(DA(arc(6.49, 160, 126.06, -5.26, 0, 0.6), false), 'c-line', 'style="stroke-width:2.4;stroke:var(--t-nuclear)"');
+  // TM（前半 non-pigmented、後半 pigmented）＋網眼
+  const tmA = [...arc(E.Rsi, E.thJ, 148.1), ...arc(10.41, 148.1, E.thJ)], tmP = [...arc(E.Rsi, 148.1, E.spurA + 0.4), ...arc(10.41, E.spurA + 0.4, 148.1)];
+  h += S(DA(tmA), 'c-coll' + act('tm'), 'style="fill:var(--t-cb)"') + S(DA(tmP), 'c-coll' + act('tm'), 'style="fill:var(--t-uvea)"');
+  const op = Math.max(an.tmIn, an.tmJct);
+  [149.45, 148.9, 148.35, 147.8, 147.25].forEach(a => {
+    const q = PA(pt(10.455, a)), rot = Math.atan2(-Math.cos(a * DEG), -Math.sin(a * DEG)) / DEG;
+    h += `<ellipse class="pore" cx="${fx(q[0])}" cy="${fx(q[1])}" rx="${fx(1.8 + 1.8 * op)}" ry="${fx(1.1 + 1.3 * op)}" transform="rotate(${fx(rot)} ${fx(q[0])} ${fx(q[1])})"/>`;
+  });
+  // Schlemm canal、collector channel、Schwalbe line
+  const sc = PA(pt(10.575, 147.8));
+  h += `<ellipse class="c-white${act('tm')}" cx="${fx(sc[0])}" cy="${fx(sc[1])}" rx="${fx(21 + 3 * an.scDil)}" ry="${fx(6.5 + 3.5 * an.scDil)}" transform="rotate(-58 ${fx(sc[0])} ${fx(sc[1])})" style="fill:var(--t-fluid);stroke-width:1.2"/>`;
+  h += S(DA(cr([pt(10.635, 147.8), pt(10.85, 147.25), pt(11.08, 147.85), pt(E.Ro + 0.02, 147.35)], 6), false), 'c-vein', 'style="stroke-width:3"');
+  const sw = PA(pt(10.44, E.thJ + 0.15));
+  h += `<circle class="c-white" cx="${fx(sw[0])}" cy="${fx(sw[1])}" r="5" style="stroke-width:1.4"/>`;
+  // ciliary muscle（收縮時內緣往前內移）＋肌束之間的空隙
+  const cmP = cmShape(an.cmPull);
+  h += S(DA(cmP), 'c-mus' + act('uveo'), 'style="fill-opacity:.85"');
+  const gw = 1.7 * (1 + an.cmGap);
+  [[10.36, 146.0, 139.8], [10.24, 145.2, 139.6]].forEach(([r, a0, a1]) => { h += `<path class="gap" d="${DA(arc(r, a0, a1, 0, 0, 0.6), false)}" style="stroke-width:${fx(gw)}"/>`; });
+  h += S(DA([pt(E.Rsi + 0.02, 147.15), pt(10.28, 146.55), pt(E.Rsi + 0.02, 145.75)]), 'c-sclera', 'style="stroke-width:1.2"');
+  h += S(DA([[-8.62, 5.45], [-8.70, 5.62], [-8.74, 5.74]], false), 'c-line', 'style="stroke:var(--t-pig);stroke-width:3.2"');
+  // ciliary processes 的上皮（房水製造處）
+  h += S(DA(E.PROC.slice(0, -2), false), 'c-line npe' + act('cpe'), 'style="stroke:var(--t-pig);stroke-width:2.6"');
+  // iris sphincter
+  h += S(DA(cr([[-8.66, 2.08], [-8.80, 2.12], [-8.83, 2.5], [-8.80, 2.88], [-8.67, 2.86]], 4)), 'c-mus');
+  // 房水的管道（粗細＝這條路的通暢度，示意）
+  const bw = isMob() ? 1.5 : 1;
+  h += S(DA(ROUTE.prod, false), 'band deco', `style="stroke-width:${fx(13 * bw * (1 + 0.3 * ef.F))}"`);
+  h += S(DA(ROUTE.trab, false), 'band deco', `style="stroke-width:${fx(10 * bw * (1 + 0.35 * ef.C))}"`);
+  h += S(DA(ROUTE.uveo, false), 'band u deco', `style="stroke-width:${fx(8 * bw * (1 + 0.45 * ef.U))}"`);
+  h += `<g id="aqp" class="deco">${aqParticles(id, 0)}</g>`;
+  // pilocarpine：拉緊 scleral spur、縮瞳
+  if (an.cmPull) {
+    const a1 = PA(pt(10.22, 146.7)), a2 = PA(pt(10.02, 143.6));
+    h += `<path class="arw deco" d="M${fx(a1[0])} ${fx(a1[1])}L${fx(a2[0])} ${fx(a2[1])}"/>` + head(a1, a2);
+  }
+  if (an.miosis) {
+    const b1 = PA([-8.5, 2.75]), b2 = PA([-8.5, 2.05]);
+    h += `<path class="arw deco" d="M${fx(b1[0])} ${fx(b1[1])}L${fx(b2[0])} ${fx(b2[1])}"/>` + head(b1, b2);
+    h += `<g class="lab note"><text x="${fx(b1[0] + 12)}" y="${fx(b1[1] + 30)}">縮瞳（miosis）</text></g>`;
+  }
+  // 點選作用部位（學習模式）
+  if (!o.quiz) {
+    h += S(DA(E.cb), 'site' + sel('cpe'), 'data-site="cpe"');
+    h += S(DA(cmP), 'site' + sel('uveo'), 'data-site="uveo"') + S(DA(ROUTE.uveo.slice(6), false), 'site ln' + sel('uveo'), 'data-site="uveo" style="stroke-width:24"');
+    h += S(DA([...tmA, ...tmP]), 'site' + sel('tm'), 'data-site="tm"') + `<circle class="site${sel('tm')}" data-site="tm" cx="${fx(sc[0])}" cy="${fx(sc[1])}" r="18"/>`;
+    h += S(DA(vein, false), 'site ln' + sel('evp'), 'data-site="evp" style="stroke-width:24"');
+  }
+  // 標籤
+  const P = PA, L = [
+    ['Cornea', P([-10.6, 4.3]), 'L'], ['Anterior chamber', P([-9.6, 3.0]), 'L'], ['Iris', P([-8.84, 3.9]), 'L'], ['TM', P(pt(10.45, 148.1)), 'L'], ['Scleral spur', P(pt(10.33, 146.55)), 'L'],
+    ['Conjunctiva', P(pt(E.Ro + 0.155, 139)), 'T'], ['Episcleral vein', P(pt(E.Ro + 0.03, 134)), 'T'], ['Schlemm canal', sc, 'T'], ['Collector channel', P(pt(11.08, 147.85)), 'T'], ['Sclera', P(pt(10.9, 141)), 'T'],
+    ['Suprachoroidal space', P(pt(10.48, 126.5)), 'R'], ['Pars plana', P(pt(10.3, 129.5)), 'R'], ['Ciliary muscle', P([-7.85, 6.5]), 'R'], ['Ciliary processes', P([-7.55, 6.15]), 'R'],
+    ['Posterior chamber', P([-8.2, 4.4]), 'R'], ['Lens', P([-6.5, 3.2]), 'R'], ['Vitreous', P([-5.0, 5.4]), 'R']
+  ];
+  const m = isMob();
+  // 手機字較大：右側標籤欄往左移，留出字的寬度
+  h += labels(L, { L: { x: 172, lo: 300, hi: 725 }, R: { x: m ? 690 : 752, lo: 20, hi: 725 }, T: { y: m ? 26 : 24, lo: 10, hi: 590, rows: 2 } }, m ? 23 : 16);
+  h += badges(ef, o.site, DRUGS[id].bn || {});
+  return h + `</svg>`;
+}
+function head(a, b) {
+  const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), L = 10, w = 5.5;
+  const p1 = [b[0] - L * Math.cos(ang) + w * Math.sin(ang), b[1] - L * Math.sin(ang) - w * Math.cos(ang)], p2 = [b[0] - L * Math.cos(ang) - w * Math.sin(ang), b[1] - L * Math.sin(ang) + w * Math.cos(ang)];
+  return `<path class="arwh deco" d="M${fx(b[0])} ${fx(b[1])}L${fx(p1[0])} ${fx(p1[1])}L${fx(p2[0])} ${fx(p2[1])}Z"/>`;
+}
+
+/* ---------- 放大示意：TM 三層與 Schlemm canal、ciliary muscle 肌束 ---------- */
+function tmInset(an) {
+  const o = an.tmIn, j = Math.max(an.tmJct, an.tmIn * 0.5), scw = 30 + 22 * an.scDil;
+  const x0 = 34, x1 = 96, x2 = 168, x3 = 200, sc0 = 205, sc1 = sc0 + scw, top = 24, bot = 136;
+  let h = `<svg viewBox="0 0 330 172" role="img" aria-label="TM 與 Schlemm canal 放大示意">`;
+  h += `<rect x="0" y="${top}" width="${x0}" height="${bot - top}" class="c-fluid"/>`;
+  h += `<rect x="${x0}" y="${top}" width="${x1 - x0}" height="${bot - top}" style="fill:var(--t-cb)"/><rect x="${x1}" y="${top}" width="${x2 - x1}" height="${bot - top}" style="fill:var(--t-collagen)"/><rect x="${x2}" y="${top}" width="${x3 - x2}" height="${bot - top}" style="fill:var(--t-sheath)"/>`;
+  // uveal：大開口；corneoscleral：一層層的縫；JCT：細小空隙（阻力所在）
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 2; c++) h += `<ellipse class="pore" cx="${x0 + 16 + c * 30}" cy="${top + 14 + r * 26 + (c ? 12 : 0)}" rx="${fx(8 + 4 * o)}" ry="${fx(5.5 + 3 * o)}"/>`;
+  for (let r = 0; r < 6; r++) h += `<rect class="pore" x="${x1 + 8}" y="${fx(top + 8 + r * 18.5 - (1.4 + 2.2 * o))}" width="${x2 - x1 - 16}" height="${fx(2.8 + 4.4 * o)}" rx="2"/>`;
+  for (let r = 0; r < 9; r++) for (let c = 0; c < 2; c++) h += `<circle class="pore" cx="${x2 + 9 + c * 12}" cy="${top + 8 + r * 12.5 + (c ? 6 : 0)}" r="${fx(1.3 + 2.0 * j)}"/>`;
+  // Schlemm canal 內壁（含 giant vacuoles）、管腔、外壁、collector channel
+  h += `<rect x="${x3}" y="${top}" width="${sc0 - x3}" height="${bot - top}" style="fill:var(--t-stroke-2)"/>`;
+  h += `<rect x="${sc0}" y="${top + 6}" width="${fx(scw)}" height="${bot - top - 12}" rx="8" class="c-fluid" style="stroke:var(--t-stroke);stroke-width:1"/>`;
+  const nv = 2 + Math.round(3 * an.tmJct);
+  for (let k = 0; k < nv; k++) { const cy = top + 18 + k * (bot - top - 36) / Math.max(1, nv - 1); h += `<ellipse cx="${sc0 + 3}" cy="${fx(cy)}" rx="5" ry="7" style="fill:var(--t-fluid);stroke:var(--t-stroke);stroke-width:.8"/>`; }
+  h += `<rect x="${fx(sc1)}" y="${top}" width="${fx(330 - sc1)}" height="${bot - top}" style="fill:var(--t-sclera);stroke:var(--t-stroke);stroke-width:.6"/>`;
+  h += `<path d="M${fx(sc1 - 2)} 80Q${fx(sc1 + 30)} 74 ${fx(sc1 + 46)} 46T330 30" style="fill:none;stroke:var(--t-vein);stroke-width:5;stroke-linecap:round"/>`;
+  // 房水方向
+  h += `<path class="arw" d="M6 80H28"/>` + head([6, 80], [28, 80]);
+  h += `<text x="17" y="${top - 8}" text-anchor="middle">AC</text><text x="${(x0 + x1) / 2}" y="${top - 8}" text-anchor="middle">Uveal</text><text x="${(x1 + x2) / 2}" y="${top - 8}" text-anchor="middle">Corneoscleral</text><text x="${(x2 + x3) / 2 + 2}" y="${top - 8}" text-anchor="middle">JCT</text>`;
+  h += `<text x="${fx((sc0 + sc1) / 2)}" y="${bot + 16}" text-anchor="middle">Schlemm canal</text><text x="326" y="${top - 8}" text-anchor="end">→ episcleral vein</text>`;
+  return h + `</svg>`;
+}
+function cmInset(an) {
+  const g = 7 * (1 + an.cmGap), len = 214 - 34 * an.cmPull, x0 = 40 - 10 * an.cmPull, top = 22, H = 108;
+  const bh = (H - 2 * g) / 3;
+  let h = `<svg viewBox="0 0 330 160" role="img" aria-label="ciliary muscle 肌束放大示意">`;
+  h += `<rect x="0" y="${top}" width="34" height="${H}" class="c-fluid"/><rect x="262" y="${top}" width="68" height="${H}" class="c-fluid"/>`;
+  h += `<rect x="34" y="${top}" width="228" height="${H}" style="fill:var(--t-fluid);opacity:.6"/>`;
+  for (let k = 0; k < 3; k++) h += `<rect x="${fx(x0)}" y="${fx(top + k * (bh + g))}" width="${fx(len)}" height="${fx(bh)}" rx="${fx(Math.min(10, bh / 2))}" class="c-mus" style="fill-opacity:.9"/>`;
+  // 肌束之間的房水（uveoscleral 路徑）
+  for (let k = 0; k < 2; k++) { const y = top + bh * (k + 1) + g * k + g / 2; h += `<path d="M14 ${fx(y)}H300" style="fill:none;stroke:var(--uv);stroke-width:${fx(Math.max(0.8, g * 0.55))};stroke-dasharray:6 5;stroke-linecap:round"/>`; }
+  h += `<text x="4" y="${top - 7}">前房角</text><text x="${fx(x0 + len / 2)}" y="${top - 7}" text-anchor="middle">ciliary muscle 肌束</text><text x="326" y="${top + H + 16}" text-anchor="end">→ suprachoroidal space</text>`;
+  return h + `</svg>`;
+}
+
+/* ---------- 說明卡 ---------- */
+function effLine(id) {
+  const ef = effOf(id);
+  return SITE_ORDER.map(k => `<span>${SITES[k].short} <b class="ar ${arrowCls(ef[SITE_K[k]])}">${arrowTxt(ef[SITE_K[k]])}</b></span>`).join('');
+}
+function drugCard(id) {
+  const d = DRUGS[id], head2 = `<div class="eyebrow">房水與藥物 · 對照 BCSC 10</div><div><h2>${d.en}</h2></div><p class="zh">${d.zh}</p><p class="def">${d.def}</p>`;
+  if (id === 'none') return `<div class="card">${head2}${list('重點', d.mech)}${list('看圖', ['藍點＝房水；綠點＝走 uveoscleral；紫點＝進入 episcleral vein 和血液混合', '管道越粗＝這條路越通暢（示意）；點圖上的構造或標示，看哪些藥作用在那裡', '下方選一類藥，看它作用在哪個構造、各段怎麼變'])}${srcList(d.src)}</div>`;
+  return `<div class="card">${head2}<div class="verdict">${effLine(id)}</div>${list('藥物', [d.ag])}${list('作用部位與機轉', d.mech)}${list('構造上的變化', d.chg)}${list('降眼壓幅度（從基準值）', [d.iop])}${list('副作用與禁忌', d.se)}${srcList(d.src)}</div>`;
+}
+function siteCard(k) {
+  const x = SITES[k], key = SITE_K[k], acting = DRUG_ORDER.filter(id => effOf(id)[key] !== 0);
+  return `<div class="card"><div class="eyebrow">作用部位 · 對照 BCSC 10</div><div><h2>${x.en}</h2></div><p class="zh">${x.zh}</p><p class="def">${x.def}</p>
+    ${list('重點', x.pts)}<div class="sec"><h3>作用在這裡的藥</h3><div class="dl">${acting.map(id => { const v = effOf(id)[key]; return `<button type="button" data-drug="${id}"><span>${DRUGS[id].zh}（${DRUGS[id].en}）</span><b class="ar ${arrowCls(v)}">${arrowTxt(v)}</b></button>`; }).join('')}</div></div>
+    <button type="button" class="btn" data-site="${k}" style="align-self:flex-start">回到藥物說明</button>${srcList(x.src)}</div>`;
+}
+function goldHTML(id) {
+  const ef = effOf(id), tm = (t, k) => `<span class="tm">${t}${ef[k] ? `<b class="ar ${arrowCls(ef[k])}">${arrowTxt(ef[k]).split(' ')[0]}</b>` : ''}</span>`;
+  return `<div class="xh">Goldmann 方程式${s('S16')}</div><div class="gold"><span>IOP ＝ (</span>${tm('F', 'F')}<span>−</span>${tm('U', 'U')}<span>) ／</span>${tm('C', 'C')}<span>＋</span>${tm('Pv', 'P')}</div>
+    <ul class="gl"><li><b>F</b> 房水製造速率（ciliary epithelium）；白天約 2.4 μL/min${s('S16')}</li><li><b>U</b> uveoscleral outflow，方程式裡當成和眼壓無關的固定量（是簡化）${s('S16')}</li><li><b>C</b> trabecular outflow facility（TM、Schlemm canal 的通暢度）</li><li><b>Pv</b> episcleral venous pressure，約 8–10 mmHg${s('S16')}</li>
+    <li>F 變少或 U 變多 → 括號變小；C 變大 → 除得更多；Pv 變小 → 加得更少。四種都讓 IOP 下降。</li></ul>`;
+}
+
+/* ---------- app ---------- */
+const VIEWS = [{ id: 'aq', name: '房水與藥物', en: 'Aqueous & drugs' }];
+const $ = q => document.querySelector(q);
+let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
+const st = { view: 'aq', drug: 'none', site: null, labels: true, anim: !reduce, learnMode: 'learn', quiz: null };
+const store = (() => {
+  const K2 = 'glaucomaAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K2); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K2, JSON.stringify(mem)); } catch (e) { } } };
+})();
+const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
+const figDrug = () => { const it = quizItem(); return it ? (it.type === 'anim' ? it.drug : 'none') : st.drug; };
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選藥物，看它作用在哪裡；點圖上的構造或標示，看哪些藥作用在那裡'}</span>`;
+}
+function renderTools() {
+  $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-anim" ${st.anim ? 'checked' : ''}>動畫</label>` + (st.learnMode !== 'quiz' ? `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>` : '');
+}
+function renderFig() {
+  const fig = $('#fig');
+  fig.innerHTML = aqSVG(figDrug(), { quiz: st.learnMode === 'quiz', site: st.learnMode === 'quiz' ? null : st.site });
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+  $('#cap').innerHTML = `<span>右眼 temporal angle 放大（同眼解剖圖譜，約 100 px/mm）：上＝周邊 temporal、左＝anterior。藍點＝房水、綠點＝uveoscleral、紫點＝進入 episcleral vein；標示裡的箭頭＝這類藥讓該處增加或減少。</span><span class="ori">粒子多寡與管道粗細為示意</span>`;
+  aqStart();
+}
+function renderExtra() {
+  if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  const an = anatOf(st.drug);
+  $('#extra').innerHTML = `<div class="xrow"><div class="ins"><div class="xh">TM 與 Schlemm canal 放大（示意）</div>${tmInset(an)}<p>由 AC 往外：uveal、corneoscleral、juxtacanalicular（JCT）三層，再到 Schlemm canal 內壁的 giant vacuoles；正常阻力主要在 JCT${s('S16', 'S20')}。${st.drug === 'pilo' ? 'Pilocarpine：網眼整體被撐開、Schlemm canal 擴張。' : st.drug === 'rock' ? 'Netarsudil：JCT 空隙變寬、giant vacuoles 變多（摘除眼灌流的觀察）。' : st.drug === 'lbn' ? 'Latanoprostene bunod：NO 讓 TM 細胞放鬆。' : ''}</p></div>
+    <div class="ins"><div class="xh">Ciliary muscle 肌束放大（示意）</div>${cmInset(an)}<p>綠色虛線＝肌束之間的空隙，也就是 uveoscleral 路徑${s('S16')}。${an.cmGap > 0 ? '這類藥讓空隙變寬（細胞外基質重塑）。' : an.cmGap < 0 ? 'Pilocarpine：肌肉收縮、空隙變窄。' : ''}</p></div></div>
+    <div style="margin-top:14px">${goldHTML(st.drug)}</div>`;
+}
+function renderIndex() {
+  const ix = $('#index');
+  if (st.learnMode === 'quiz') { ix.hidden = true; return; }
+  ix.hidden = false;
+  ix.innerHTML = `<span class="lbl">藥物（${DRUG_ORDER.length - 1} 類）</span>` + DRUG_ORDER.map(k => `<button type="button" class="chip ${k === st.drug && !st.site ? 'on' : ''}" data-drug="${k}">${k === 'none' ? '未用藥' : DRUGS[k].zh} ${k === 'none' ? '' : `<i>${DRUGS[k].en}</i>`}</button>`).join('');
+}
+function renderPanel() {
+  $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.site ? siteCard(st.site) : drugCard(st.drug);
+}
+function renderSelbar() {
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.site ? `部位：${SITES[st.site].en}` : `目前：${st.drug === 'none' ? '未用藥' : DRUGS[st.drug].zh}`;
+  b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
+}
+
+/* ---------- 房水動畫：只改 #aqp 裡的粒子 ---------- */
+const AQ = { raf: null };
+function aqTick(now) {
+  AQ.raf = null;
+  const g = document.getElementById('aqp');
+  if (!g || !st.anim) return;
+  g.innerHTML = aqParticles(figDrug(), now);
+  AQ.raf = requestAnimationFrame(aqTick);
+}
+function aqStart() {
+  if (AQ.raf) cancelAnimationFrame(AQ.raf);
+  AQ.raf = st.anim ? requestAnimationFrame(aqTick) : null;
+}
+
+/* ---------- quiz ----------
+   anim：看圖上的作用部位與箭頭猜是哪類藥；site：給作用部位或機轉選藥 */
+const AQ_A = ['pga', 'lbn', 'beta', 'a2', 'cai', 'pilo', 'rock'];
+const LOOK = { beta: ['cai'], cai: ['beta'], pga: ['lbn'], lbn: ['pga'] };   // 圖上看起來一樣的，不放在同一題的選項裡
+const AQ_S = {
+  s1: { q: '哪一類藥會降低 episcleral venous pressure？', ok: ['rock'], test: d => effOf(d).P < 0 },
+  s2: { q: '哪一類藥靠 ciliary muscle 收縮拉緊 scleral spur，把 TM 網眼撐開？', ok: ['pilo'], test: d => anatOf(d).cmPull > 0 },
+  s3: { q: '哪一類藥會減少 uveoscleral outflow？', ok: ['pilo'], test: d => effOf(d).U < 0 },
+  s4: { q: '哪一類藥抑制 ciliary processes 的 carbonic anhydrase II，減少房水分泌？', ok: ['cai'] },
+  s5: { q: '哪一類藥會放出 nitric oxide，讓 TM 細胞放鬆？', ok: ['lbn'] },
+  s6: { q: '哪一類藥同時減少房水製造、又增加 uveoscleral outflow？', ok: ['a2'], test: d => effOf(d).F < 0 && effOf(d).U > 0 },
+  s7: { q: '哪一類藥主要增加 uveoscleral outflow、不影響房水製造，是最常用的第一線藥？', ok: ['pga'], excl: ['lbn'] },
+  s8: { q: '哪一類藥最常見的副作用是 conjunctival hyperemia（約一半的人），也常出現 corneal verticillata？', ok: ['rock'] },
+  s9: { q: '哪一類藥只減少房水製造，非選擇性的會引起 bronchospasm 與 bradycardia？', ok: ['beta'] }
+};
+const QKEYS = [...AQ_A.map(k => 'aq:a:' + k), ...Object.keys(AQ_S).map(k => 'aq:s:' + k)];
+const keyValid = k => QKEYS.includes(k);
+const keyView = () => 'aq';
+const QTV = { aq: [['anim', '看圖猜藥'], ['site', '給部位或機轉選藥']] };
+const QTZ = { a: 'anim', s: 'site' };
+const dLab = id => `${DRUGS[id].zh}（${DRUGS[id].en}）`;
+const keyLabel = k => k[3] === 'a' ? `看圖猜藥：${DRUGS[k.slice(5)].zh}` : AQ_S[k.slice(5)].q;
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+function itemOf(key) {
+  const t = QTZ[key[3]], id = key.slice(5);
+  if (t === 'anim') {
+    const pool = AQ_A.filter(x => x !== id && !(LOOK[id] || []).includes(x));
+    return { key, type: t, drug: id, ans: id, opts: shuffle([id, ...shuffle(pool).slice(0, 3)]) };
+  }
+  const q = AQ_S[id], pool = AQ_A.filter(x => !q.ok.includes(x) && !(q.excl || []).includes(x));
+  return { key, type: t, ans: q.ok[0], q: q.q, opts: shuffle([q.ok[0], ...shuffle(pool).slice(0, 3)]) };
+}
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
+function quizHTML() {
+  const q = st.quiz;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>這類藥作用在哪裡？</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">兩種題型：看圖上哪些部位在變、往哪個方向（標籤會隱藏），猜是哪一類藥；給作用部位、機轉或特徵副作用選藥。圖上看起來一樣的兩類（beta-blocker 與 CAI、prostaglandin 與 latanoprostene bunod）不會同時出現在選項裡。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>再看一次</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i];
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  const prompt = it.type === 'anim' ? ['上方是點了某一類藥之後的房水路徑：看標示的箭頭與構造變化', '這是哪一類藥？'] : ['作用部位與機轉', it.q];
+  h += `<div class="prompt"><div class="k">${prompt[0]}</div><div class="q">${prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${dLab(o)}</button>`).join('')}</div>`;
+  if (q.ans) {
+    const d = DRUGS[it.ans], more = `${d.def}<br><span style="display:inline-flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px">${effLine(it.ans)}</span>`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${DRUGS[q.ans.pick].zh}；` : ' '}答案是 ${dLab(it.ans)}。<br>${more}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
+  let pool = QKEYS.filter(k => keyView(k) === st.view && types.includes(QTZ[k[3]]));
+  if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
+  render();
+}
+function answer(a) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  q.ans = a; if (a.ok) q.score++;
+  q.log.push({ key: it.key, ok: a.ok, type: it.type });
+  const m = store.get();
+  if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
+  store.save(); render();
+}
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function setView(v) {
+  st.view = v;
+  try { history.replaceState(null, '', v === 'aq' ? location.pathname : '#' + v); } catch (e) { }
+  if (st.learnMode === 'quiz') st.quiz = quizDefaults();
+}
+function setMode(m) {
+  st.learnMode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
+  render();
+}
+function goKey(k) {
+  setView('aq'); st.site = null;
+  st.drug = k[3] === 'a' ? k.slice(5) : AQ_S[k.slice(5)].ok[0];
+  render();
+}
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.learnMode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const dr = t.closest('[data-drug]'); if (dr) { st.drug = dr.dataset.drug; st.site = null; render(); return; }
+  const si = t.closest('[data-site]'); if (si) { if (st.learnMode === 'quiz') return; st.site = st.site === si.dataset.site ? null : si.dataset.site; render(); return; }
+  const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
+  if (t.closest('#q-skip')) { answer({ ok: false }); return; }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
+  if (e.target.id === 't-anim') { st.anim = e.target.checked; aqStart(); }
+});
+let lastMob = isMob();
+window.addEventListener('resize', () => { const m = isMob(); if (m !== lastMob) { lastMob = m; renderFig(); } });
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+
+/* ---------- self-check ---------- */
+(() => {
+  const a = (c, m) => console.assert(c, 'glaucoma self-check: ' + m);
+  const E = EYE, R = ROUTE;
+  // 房水路徑要走在對的腔室與構造裡
+  a(R.prod.slice(1, 6).every(p => inPoly(p, E.pc)), '製造後的房水先在 posterior chamber');
+  a(R.prod.slice(6, 12).every(p => inPoly(p, E.ac)), '過瞳孔後在 anterior chamber');
+  a(inPoly(QA, E.ac), '分岔點在前房角的 anterior chamber 裡');
+  const rT = Math.hypot(...R.trab[1]), aT = Math.atan2(R.trab[1][1], R.trab[1][0]) / DEG;
+  a(rT > 10.41 && rT < E.Rsi && aT > E.spurA && aT < E.thJ, 'trabecular 路徑穿過 TM');
+  a(Math.hypot(...R.trab[2]) > E.Rsi && Math.hypot(...R.trab[VEIN_I]) >= E.Ro, 'Schlemm canal 在 TM 外側；第 6 點到 episclera');
+  a(R.uveo.slice(2, 5).every(p => inPoly(p, E.cm)), 'uveoscleral 路徑穿過 ciliary muscle 肌束之間');
+  a(R.uveo.slice(2, 5).every(p => inPoly(p, cmShape(1))), 'pilocarpine 收縮後路徑仍在肌肉裡');
+  a(R.trab[R.trab.length - 1][1] > 9 && R.uveo[R.uveo.length - 1][1] > 9, '兩條 outflow 路徑都流出圖的上緣');
+  // 藥物資料
+  const OKV = [2, 1, 0.5, 0, -0.5, -1];
+  DRUG_ORDER.forEach(id => { const ef = effOf(id); a(Object.values(ef).every(v => OKV.includes(v)) && Object.keys(ef).every(k => 'FCUP'.includes(k)), `${id} 的 eff 值`); });
+  a(DRUG_ORDER.every(id => id === 'none' || SITE_ORDER.some(k => effOf(id)[SITE_K[k]] !== 0)), '每類藥至少作用在一處');
+  a(arrowTxt(-0.5) === '↓ 可能' && arrowTxt(0.5) === '↑ 次要' && arrowTxt(2) === '↑↑' && arrowTxt(0) === '—', '箭頭文字');
+  // 說明卡裡用到的上標來源，都要列在該卡的來源清單
+  const refs = x => [...String(x).matchAll(/<sup class="s">(\d+)<\/sup>/g)].map(m => 'S' + m[1]);
+  DRUG_ORDER.forEach(id => { const d = DRUGS[id], used = refs([d.def, ...(d.mech || []), ...(d.chg || []), d.iop, ...(d.se || [])].join(' ')); a(used.every(k => d.src.includes(k) && SRC[k]), `${id} 的引用都在來源清單`); a(d.src.every(k => SRC[k]), `${id} 的來源存在`); });
+  SITE_ORDER.forEach(k => { const x = SITES[k], used = refs([x.def, ...x.pts].join(' ')); a(used.every(r => x.src.includes(r) && SRC[r]), `${k} 部位的引用都在來源清單`); });
+  // 測驗
+  Object.entries(AQ_S).forEach(([k, q]) => { if (q.test) a(AQ_A.filter(q.test).join() === q.ok.join(), `題目 ${k} 只有一個正確的藥`); });
+  for (let n = 0; n < 30; n++) QKEYS.forEach(k => {
+    const it = itemOf(k);
+    a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === 4, `${k} 的選項含答案、不重複、四個`);
+    if (it.type === 'anim') a(!it.opts.some(o => o !== it.ans && JSON.stringify(effOf(o)) === JSON.stringify(effOf(it.ans))), `${k}：選項裡沒有圖上看起來一樣的藥`);
+  });
+})();
+
+if (location.hash === '#aq') st.view = 'aq';
+render();
+</script>
+
+</body>
+</html>
