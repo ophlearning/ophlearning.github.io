@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>青光眼互動圖譜</title>
-<meta name="description" content="互動式青光眼圖譜：在前房角剖面上看房水從 ciliary processes 製造、經 trabecular meshwork 與 uveoscleral 兩條路流出；切換 prostaglandin analogs、beta-blocker、alpha-2 agonist、CAI、pilocarpine、netarsudil、latanoprostene bunod，看各類藥作用在哪個構造、TM 與 ciliary muscle 怎麼變、episcleral venous pressure 怎麼變，附 Goldmann 方程式；gonioscopy 前房角分級：拖拉角度看剖面與鏡下所見同步變化，換算 Shaffer 與 Spaeth（插入點、角度、iris 形狀、色素），分辨 appositional 與 PAS；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式青光眼圖譜：在前房角剖面上看房水從 ciliary processes 製造、經 trabecular meshwork 與 uveoscleral 兩條路流出；切換 prostaglandin analogs、beta-blocker、alpha-2 agonist、CAI、pilocarpine、netarsudil、latanoprostene bunod，看各類藥作用在哪個構造、TM 與 ciliary muscle 怎麼變、episcleral venous pressure 怎麼變，附 Goldmann 方程式；gonioscopy 前房角分級：拖拉角度看剖面與鏡下所見同步變化，換算 Shaffer 與 Spaeth（插入點、角度、iris 形狀、色素），分辨 appositional 與 PAS；視野與 RNFL：24-2 缺損型態（paracentral、nasal step、arcuate、temporal wedge）對到眼底的 RNFL 走向與視盤鐘點；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -152,6 +152,30 @@ a{color:var(--accent)}
 .bdg .ar.dn{fill:var(--dn)}
 .duo{display:grid;grid-template-columns:1.47fr 1fr}
 .duo.one{grid-template-columns:minmax(0,480px);justify-content:center}
+.duo.eq{grid-template-columns:1fr 1fr}
+.vax{stroke:var(--line-2);stroke-width:1}
+.vbs{fill:var(--line-2);opacity:.7}
+.vdot{fill:var(--muted)}
+.vdot.on{fill:var(--hl)}
+.vsym{fill:var(--ink)}
+.vsym.d1{opacity:.32}.vsym.d2{opacity:.62}.vsym.d3{opacity:1}
+.vsym.on{stroke:var(--hl);stroke-width:3}
+.vhit{fill:transparent;cursor:pointer}
+.vtitle{font-family:var(--f-body)!important;font-size:13px;fill:var(--muted)!important}
+.vfun{fill:var(--surface-2);stroke:var(--line)}
+.vnf{fill:none;stroke:var(--t-stroke-2);stroke-width:.9}
+.vraphe{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5 4}
+.vfov{fill:var(--t-pig);opacity:.7}
+.vtrk{fill:none;stroke:var(--hl);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.vdisc{fill:var(--t-sheath);stroke:var(--t-stroke);stroke-width:1}
+.vseg{fill:var(--surface);stroke:var(--line-2);stroke-width:1}
+.vseg[data-vclk]{cursor:pointer}
+.vseg[data-vclk]:hover{stroke:var(--accent);stroke-width:2}
+.vseg.bad{fill:var(--bad);fill-opacity:.8}
+.vseg.good{fill:var(--ok)}
+.vseg.pick{stroke:var(--bad);stroke-width:3}
+.vseg.on{stroke:var(--hl);stroke-width:3}
+.vclk{font-family:var(--f-mono)!important;font-size:12px;fill:var(--ink-2)!important}
 .fig .duo svg{min-width:0;width:100%}
 .gtan{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:6 4}
 .garc{fill:none;stroke:var(--accent);stroke-width:2}
@@ -235,7 +259,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
 .foot a{color:var(--ink-2)}
 
 @media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
-@media (max-width: 700px){ .duo{grid-template-columns:1fr} }
+@media (max-width: 700px){ .duo,.duo.eq{grid-template-columns:1fr} }
 @media (max-width: 560px){
   .wrap{padding-inline:16px}
   .brand h1{font-size:23px}
@@ -248,6 +272,8 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .seg button{padding:5px 10px}
   .gold{font-size:17px}
   .gdeg{font-size:26px}
+  .vtitle{font-size:17px}
+  .vclk{font-size:16px}
 }
 </style>
 </head>
@@ -289,7 +315,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>前房角剖面沿用眼解剖圖譜的眼球模型（右眼 OD temporal angle 放大，約 100 px/mm）：上＝周邊 temporal、左＝anterior。房水粒子的多寡與管道粗細只表示藥物作用的方向，不是實際流量；穩定狀態下房水製造量等於流出量。TM、Schlemm canal、ciliary muscle 的變化是示意，放大圖也不是實際比例。前房角分級分頁的剖面同一個模型再放大（約 190 px/mm），鏡下示意由上到下＝由前（角膜側）到後（iris 側）；看得到哪些結構依 Kanski 的 Shaffer 對照，不是光學計算。</span>
+    <span><b>關於圖：</b>前房角剖面沿用眼解剖圖譜的眼球模型（右眼 OD temporal angle 放大，約 100 px/mm）：上＝周邊 temporal、左＝anterior。房水粒子的多寡與管道粗細只表示藥物作用的方向，不是實際流量；穩定狀態下房水製造量等於流出量。TM、Schlemm canal、ciliary muscle 的變化是示意，放大圖也不是實際比例。前房角分級分頁的剖面同一個模型再放大（約 190 px/mm），鏡下示意由上到下＝由前（角膜側）到後（iris 側）；看得到哪些結構依 Kanski 的 Shaffer 對照，不是光學計算。視野與 RNFL 分頁：視野依病人自己看出去的樣子畫（右眼，左＝nasal），眼底是正像（OD 視盤在右）；RNFL 走向用 Jansonius 2009 的平均模型，缺損點的位置與深淺是示意。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。藥物機轉以 AAO PPP 與 DailyMed 仿單為主，仿單和 PPP 寫法不同時都列出來。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -340,6 +366,11 @@ const SRC = {
   S24: { t: 'EyeWiki：Gonioscopy（Shaffer 與 Spaeth grading）', u: 'https://eyewiki.org/Gonioscopy' },
   S25: { t: 'Nolan W, Onakoya A. Gonioscopy skills and techniques. Community Eye Health 2022;34(112):40–42', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8862628/' },
   S26: { t: 'Gedde SJ, et al. Primary Angle-Closure Disease Preferred Practice Pattern®. Ophthalmology 2026;133(4):P153–P201', u: 'https://doi.org/10.1016/j.ophtha.2025.12.030' },
+  S28: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：p.9 盲點位置、p.11 Testing patterns（24-2）、p.14 grey scale、pattern deviation 與機率圖、p.17 GHT', u: null },
+  S29: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：p.356 RNFL 的走向、pp.366–367 青光眼的視野缺損與最低診斷標準', u: null },
+  S30: { t: 'Garway-Heath DF, Poinoosawmy D, Fitzke FW, Hitchings RA. Mapping the visual field to the optic disc in normal tension glaucoma eyes. Ophthalmology 2000;107(10):1809–1815（摘要）', u: 'https://doi.org/10.1016/s0161-6420(00)00284-0' },
+  S31: { t: 'Jansonius NM, Nevalainen J, Selig B, et al. A mathematical description of nerve fiber bundle trajectories and their variability in the human retina. Vision Res 2009;49(17):2157–2163', u: 'https://doi.org/10.1016/j.visres.2009.04.029' },
+  S32: { t: 'Hood DC, Raza AS, de Moraes CGV, Liebmann JM, Ritch R. Glaucomatous damage of the macula. Prog Retin Eye Res 2013;32:1–21', u: 'https://doi.org/10.1016/j.preteyeres.2012.08.003' },
   S27: { t: 'Spaeth GL, Aruajo S, Azuara A. Comparison of the configuration of the human anterior chamber angle, as determined by the Spaeth gonioscopic grading system and ultrasound biomicroscopy. Trans Am Ophthalmol Soc 1995;93:337–351（摘要）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1312064/' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
@@ -1074,12 +1105,199 @@ function gonItem(key) {
     prompt: ['Spaeth 記法', q.q], more: `EyeWiki 的例子 (B)D30P1：壓迫前看到 B、壓迫後是 D，iris 角度 30°、plateau、後段 TM 色素 1 級${s('S24')}` };
 }
 
+/* ---------- 分頁三：視野與 RNFL 對應 ----------
+   視野：24-2（6° 間隔、54 點，右眼），病人自己看出去的樣子：左＝nasal、右＝temporal
+   眼底：正像，同眼底照片，OD 視盤在右；視野 (x, y) 對到視網膜 (x, −y)：上下顛倒、左右同側（盲點和視盤都在右邊）
+   RNFL 走向：Jansonius 2009 的數學模型（視盤中心在 fovea 鼻側 15°、上方 2°）；鼻側（|φ| < 60°）模型不涵蓋，依 Kanski 當成直線進視盤 */
+const V242 = (() => { const o = []; [[21, [-9, -3, 3, 9]], [15, [-15, -9, -3, 3, 9, 15]], [9, [-21, -15, -9, -3, 3, 9, 15, 21]], [3, [-27, -21, -15, -9, -3, 3, 9, 15, 21]]].forEach(([y, xs]) => xs.forEach(x => { o.push([x, y]); o.push([x, -y]); })); return o; })();
+const isBS = p => p[0] === 15 && Math.abs(p[1]) === 3;   // 盲點附近的兩個測試點（分析時不算）
+const vk = p => `${p[0]},${p[1]}`;
+const JR0 = 4;
+function jPhi(p0, r) {
+  // PMC 版 c 的式子正負號和內文描述（c 由視盤鼻側約 0.5 增加到顳側約 3）相反；本頁依內文
+  let c, b;
+  if (p0 >= 0) { c = 1.9 + 1.4 * Math.tanh((p0 - 121) / 14); b = Math.exp(-1.9 + 3.9 * Math.tanh(-(p0 - 121) / 14)); }
+  else { c = 1.0 + 0.5 * Math.tanh((-p0 - 90) / 25); b = -Math.exp(0.7 + 1.5 * Math.tanh(-(-p0 - 90) / 25)); }
+  return p0 + b * Math.pow(Math.max(0, r - JR0), c);
+}
+const jC = p0 => p0 >= 0 ? 1.9 + 1.4 * Math.tanh((p0 - 121) / 14) : 1.0 + 0.5 * Math.tanh((-p0 - 90) / 25);
+function jPolar(x, y) { const xp = x - 15, yp = x > 0 ? y - 2 * (x / 15) ** 2 : y; return [Math.hypot(xp, yp), Math.atan2(yp, xp) / DEG]; }
+function jXY(ph, r) { const xp = r * Math.cos(ph * DEG), yp = r * Math.sin(ph * DEG), x = xp + 15; return [x, x > 0 ? yp + 2 * (x / 15) ** 2 : yp]; }
+// 視網膜上一點 → [進視盤的角度 φ0（0°＝3 點鐘、逆時針為正）, 是否當直線]；在視盤裡回傳 null
+function jPhi0(x, y) {
+  const [r, ph] = jPolar(x, y);
+  if (r <= JR0) return null;
+  if (Math.abs(ph) < 60) return [ph, true];
+  let best = null;
+  for (let i = 600; i <= 1800; i++) { const p0 = (ph > 0 ? 1 : -1) * i / 10, d = Math.abs(jPhi(p0, r) - ph); if (!best || d < best[0]) best = [d, p0]; }
+  return best[0] < 3 ? [best[1], false] : [ph, true];   // 模型對不上的點（靠鼻側）也當直線
+}
+const vClock = p0 => { const h = ((3 - p0 / 30) % 12 + 12) % 12; return h < 0.5 ? h + 12 : h; };   // 0.5–12.5
+const vHour = p0 => { const h = Math.round(vClock(p0)) % 12; return h === 0 ? 12 : h; };
+const VMAP = {};   // 每個 24-2 點：視網膜位置、φ0、鐘點
+V242.forEach(p => { if (isBS(p)) return; const rp = [p[0], -p[1]], [p0, str] = jPhi0(rp[0], rp[1]); VMAP[vk(p)] = { p, rp, p0, str, h: vHour(p0) }; });
+// 缺損型態（上方視野；下方是上下鏡射）；第三個數字＝深度 1–3（示意）
+const VPAT0 = {
+  para: { zh: 'Paracentral scotoma', zh2: '中心旁暗點', pts: [[-3, 3, 3], [-9, 3, 2], [-3, 9, 2], [-9, 9, 1]] },
+  step: { zh: 'Nasal step', zh2: '鼻側階梯', pts: [[-27, 3, 3], [-21, 3, 3], [-21, 9, 2], [-15, 3, 1]] },
+  arc: { zh: 'Arcuate defect', zh2: '弧形暗點', pts: [[15, 9, 2], [9, 15, 3], [3, 15, 3], [-3, 15, 3], [-9, 15, 3], [-15, 9, 2], [-9, 9, 1], [3, 9, 1]] },
+  tw: { zh: 'Temporal wedge', zh2: '顳側楔形缺損', pts: [[21, 3, 3], [21, 9, 2]] }
+};
+const VPAT = {};
+Object.entries(VPAT0).forEach(([k, d]) => {
+  VPAT[k + '_s'] = { type: k, side: 's', en: d.zh, zh: `上方 ${d.zh2}`, pts: d.pts };
+  VPAT[k + '_i'] = { type: k, side: 'i', en: d.zh, zh: `下方 ${d.zh2}`, pts: d.pts.map(([x, y, z]) => [x, -y, z]) };
+});
+const VPAT_ORDER = ['para_s', 'para_i', 'step_s', 'step_i', 'arc_s', 'arc_i', 'tw_s', 'tw_i'];
+const vHours = k => [...new Set(VPAT[k].pts.map(p => VMAP[vk(p)].h))].sort((a, b) => a - b);
+const HOUR_ZH = h => ({ 12: 'superior', 3: 'nasal', 6: 'inferior', 9: 'temporal' })[h] || '';
+const VINFO = {
+  para: { def: `早期就可能出現的小範圍中心旁凹陷，常在上方鼻側，NTG 較常見${s('S29')}`,
+    more: [`24-2 的點間隔 6°，中央 10° 內只有少數點，黃斑的早期損傷可能被漏掉或低估${s('S32')}`,
+      `上方視野中央的缺損對應下方黃斑；下方黃斑的神經纖維大多進入視盤的 macular vulnerability zone（temporal quadrant 下半到 inferior quadrant 的 temporal 側），這一區特別容易受損${s('S32')}`,
+      `下方視野中央對應上方黃斑，神經纖維進 temporal quadrant、接近 9 點鐘，比較不容易受損${s('S32')}`] },
+  step: { def: `鼻側視野水平中線上下的敏感度不一樣；缺損以水平中線為界，對應 RNFL 的 horizontal raphe${s('S29')}`,
+    more: [`Kanski 的圖例：下方視盤與 OCT 的變化，對應上方 nasal step${s('S29')}`, `Fovea 顳側的神經纖維繞過 papillomacular bundle、不越過 horizontal raphe，所以缺損停在水平線${s('S29')}`] },
+  arc: { def: `由 paracentral 暗點合併而成，通常在離固視點 10°–20° 之間，從盲點往上或往下繞過固視點；之後沿 arcuate 神經纖維的分布往兩側延長${s('S29')}`,
+    more: [`上下兩個 arcuate 相連就成 ring scotoma，通常是晚期${s('S29')}`, `進入視盤 superotemporal 與 inferotemporal 的 arcuate 纖維最容易受青光眼損傷；papillomacular bundle 最耐${s('S29')}`] },
+  tw: { def: `比 nasal step 少見，意義相似${s('S29')}`,
+    more: [`顳側視野對應鼻側視網膜；鼻側的神經纖維走比較直的路線進視盤${s('S29')}`] }
+};
+// ---- 繪圖 ----
+const TVF = p => [(p[0] + 31) * 7, (26 - p[1]) * 7], TFU = p => [(p[0] + 30) * 7, (26 - p[1]) * 7];
+function vfPanel(defect, o) {
+  let h = `<svg viewBox="0 0 434 364" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="24-2 視野（右眼，病人看出去）"><rect width="434" height="364" fill="var(--fig-bg)"/>`;
+  const c = TVF([0, 0]);
+  h += `<line class="vax" x1="${fx(TVF([-30, 0])[0])}" y1="${fx(c[1])}" x2="${fx(TVF([30, 0])[0])}" y2="${fx(c[1])}"/><line class="vax" x1="${fx(c[0])}" y1="${fx(TVF([0, 25])[1])}" x2="${fx(c[0])}" y2="${fx(TVF([0, -25])[1])}"/>`;
+  const bs = TVF([15, -2]);
+  h += `<ellipse class="vbs" cx="${fx(bs[0])}" cy="${fx(bs[1])}" rx="17" ry="22"/>`;
+  V242.forEach(p => {
+    if (isBS(p)) return;
+    const q = TVF(p), d = defect[vk(p)] || 0, on = o.sel === vk(p) || (o.clk && VMAP[vk(p)].h === o.clk);
+    h += d ? `<rect class="vsym d${d}${on ? ' on' : ''}" x="${fx(q[0] - 7)}" y="${fx(q[1] - 7)}" width="14" height="14" rx="1.5"/>` : `<circle class="vdot${on ? ' on' : ''}" cx="${fx(q[0])}" cy="${fx(q[1])}" r="${on ? 5 : 2.6}"/>`;
+    if (!o.quiz) h += `<circle class="vhit" data-vp="${vk(p)}" cx="${fx(q[0])}" cy="${fx(q[1])}" r="18"/>`;
+  });
+  h += `<g class="lab note"><text x="8" y="44">← Nasal</text><text x="426" y="44" text-anchor="end">Temporal →</text><text x="${fx(c[0] + 8)}" y="18">Superior</text><text x="${fx(c[0] + 8)}" y="356">Inferior</text><text x="${fx(bs[0])}" y="${fx(bs[1] + 38)}" text-anchor="middle">盲點</text></g>`;
+  h += `<text class="vtitle" x="8" y="18">24-2 · 右眼</text>`;
+  return h + `</svg>`;
+}
+function jTrack(p0, rEnd, str) {
+  const o = [];
+  for (let r = JR0; r <= rEnd + 1e-9; r += 0.4) {
+    const ph = str ? p0 : jPhi(p0, r);
+    if (Math.abs(ph) > 180) break;
+    o.push(jXY(ph, r));
+  }
+  return o;
+}
+function fundusPanel(defect, o) {
+  const disc = [15, 2];
+  let h = `<svg viewBox="0 0 434 364" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="右眼眼底（正像）的 RNFL 走向與視盤鐘點"><rect width="434" height="364" fill="var(--fig-bg)"/>`;
+  h += `<rect x="6" y="6" width="422" height="352" rx="14" class="vfun"/>`;
+  // 背景的 RNFL 走向
+  const bg = [];
+  for (let a = 64; a <= 176; a += 8) bg.push(a, -a);
+  for (let a = -45; a <= 45; a += 15) bg.push(a);
+  bg.forEach(p0 => { const tr = jTrack(p0, Math.abs(p0) < 60 ? 17 : 34, Math.abs(p0) < 60).filter(q => q[0] > -30 && q[0] < 31 && Math.abs(q[1]) < 25); if (tr.length > 1) h += `<path class="vnf" d="${dp(tr, TFU, false)}"/>`; });
+  const fv = TFU([0, 0]);
+  h += `<path class="vraphe" d="M${fx(fv[0])} ${fx(fv[1])}H${fx(TFU([-30, 0])[0])}"/>`;
+  h += `<circle class="vfov" cx="${fx(fv[0])}" cy="${fx(fv[1])}" r="6"/>`;
+  // 24-2 點投到視網膜上（上下顛倒）
+  V242.forEach(p => { if (isBS(p)) return; const q = TFU([p[0], -p[1]]), d = defect[vk(p)] || 0; h += d ? `<rect class="vsym d${d} sm" x="${fx(q[0] - 4)}" y="${fx(q[1] - 4)}" width="8" height="8" rx="1"/>` : `<circle class="vdot sm" cx="${fx(q[0])}" cy="${fx(q[1])}" r="1.6"/>`; });
+  // 受影響的神經纖維（從缺損點走回視盤）
+  const hi = Object.keys(o.track || {});
+  hi.forEach(k => { const m = VMAP[k], [r] = jPolar(m.rp[0], m.rp[1]), tr = jTrack(m.p0, r, m.str); tr.push(m.rp); h += `<path class="vtrk" d="${dp(tr, TFU, false)}"/>`; });
+  // 視盤與鐘點環
+  const dc = TFU(disc);
+  h += `<ellipse class="vdisc" cx="${fx(dc[0])}" cy="${fx(dc[1])}" rx="${2.6 * 7}" ry="${3.0 * 7}"/>`;
+  for (let hr = 1; hr <= 12; hr++) {
+    const ac = (3 - hr) * 30, seg = [...arc(5.6, ac - 15, ac + 15, disc[0], disc[1], 3), ...arc(3.7, ac + 15, ac - 15, disc[0], disc[1], 3)];
+    const cls = (o.hours || []).includes(hr) ? ' bad' : '', okc = o.good && o.good.includes(hr) ? ' good' : '', pk = o.pick === hr ? ' pick' : '', cl = o.clk === hr ? ' on' : '';
+    h += `<path class="vseg${cls}${okc}${pk}${cl}" ${o.ringClick ? `data-vclk="${hr}"` : ''} d="${dp(seg, TFU)}"/>`;
+  }
+  [[12, 'S'], [3, 'N'], [6, 'I'], [9, 'T']].forEach(([hr, t]) => { const q = TFU([disc[0] + 7.1 * Math.cos((3 - hr) * 30 * DEG), disc[1] + 7.1 * Math.sin((3 - hr) * 30 * DEG)]); h += `<text class="vclk" x="${fx(q[0])}" y="${fx(q[1] + 5)}" text-anchor="middle">${t}</text>`; });
+  if (!o.quiz) h += `<g class="lab note"><text x="${fx(fv[0] + 8)}" y="${fx(fv[1] - 10)}">Fovea</text><text x="${fx(TFU([-29, 0])[0])}" y="${fx(fv[1] - 8)}">Horizontal raphe</text><text x="426" y="${fx(TFU([0, 7.4])[1])}" text-anchor="end">Optic disc</text><text x="420" y="24" text-anchor="end">Superior</text><text x="420" y="350" text-anchor="end">Inferior</text></g>`;
+  h += `<text class="vtitle" x="16" y="26">右眼眼底（正像）</text>`;
+  return h + `</svg>`;
+}
+function vDefect(k) { const d = {}; if (k && VPAT[k]) VPAT[k].pts.forEach(p => { d[vk(p)] = p[2]; }); return d; }
+function vfFig() {
+  const it = quizItem(), quiz = st.learnMode === 'quiz', fig = $('#fig');
+  let left, right;
+  if (it && it.type === 'clk') {
+    const d = vDefect(it.pat), rev = !!st.quiz.ans;
+    left = vfPanel(d, { quiz: true });
+    right = fundusPanel({}, { quiz: true, ringClick: !rev, good: rev ? it.hours : null, pick: rev && st.quiz.ans.pick ? +st.quiz.ans.pick : null, track: rev ? d : null });
+  } else if (it && it.type === 'mat') {
+    left = vfPanel({}, { quiz: true });
+    right = fundusPanel({}, { quiz: true, hours: it.hours });
+  } else {
+    const d = vDefect(st.vPat), tr = st.vSel ? { [st.vSel]: 1 } : st.vClk ? Object.fromEntries(Object.keys(VMAP).filter(k => VMAP[k].h === st.vClk).map(k => [k, 1])) : d;
+    const hours = st.vSel ? [VMAP[st.vSel].h] : st.vPat ? vHours(st.vPat) : [];
+    left = vfPanel(d, { sel: st.vSel, clk: st.vClk });
+    right = fundusPanel(d, { track: tr, hours, ringClick: true, clk: st.vClk });
+  }
+  fig.innerHTML = `<div class="duo eq">${left}${right}</div>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', quiz);
+  $('#cap').innerHTML = `<span>24-2 視野（病人自己看出去，左＝nasal）與右眼眼底正像（OD 視盤在右）：兩張圖上下顛倒、左右同側：盲點和視盤都在右邊。深色方塊＝缺損（越深越不像正常），紅色鐘點＝對應受損的視盤區段。</span><span class="ori">RNFL 走向：Jansonius 2009 的平均模型</span>`;
+}
+function vfExtra() {
+  return `<div class="xrow"><div class="ins" style="flex:1 1 100%"><div class="xh">怎麼對應</div><ul class="gl">
+    <li>視野上一點 → 上下顛倒到視網膜（視野的上方＝下方視網膜，視野的顳側＝鼻側視網膜）→ 沿 RNFL 走回視盤，落在某個鐘點${s('S29', 'S31')}</li>
+    <li>右眼眼底：9 點鐘＝temporal（朝 fovea）、3 點鐘＝nasal、12 點鐘＝superior、6 點鐘＝inferior；視盤中心約在 fovea 鼻側 15.5°、上方 1.9°${s('S30')}</li>
+    <li>同一個視野點對到視盤的位置因人而異：Garway-Heath 估計的標準差 7.2°；Jansonius 的模型依位置從不到 1° 到 18°，平均 8.8°${s('S30', 'S31')}</li>
+    <li>點視野上任一點，右邊畫出它的神經纖維與對到的鐘點；點視盤旁的鐘點，左邊亮起對到那個鐘點的視野點</li></ul></div></div>`;
+}
+function vfCard() {
+  const head = (e, t, z) => `<div class="eyebrow">${e} · 對照 BCSC 10</div><div><h2>${t}</h2></div>${z ? `<p class="zh">${z}</p>` : ''}`;
+  if (st.vSel) {
+    const m = VMAP[st.vSel], [x, y] = m.p;
+    return `<div class="card">${head('視野上的一點', `(${x > 0 ? '+' : ''}${x}°, ${y > 0 ? '+' : ''}${y}°)`, `${y > 0 ? '上方' : '下方'}${x > 0 ? '顳側' : '鼻側'}視野`)}
+      <div class="verdict"><span>對到視盤 <b class="ar">${m.h} 點鐘</b>${HOUR_ZH(m.h) ? `（${HOUR_ZH(m.h)}）` : ''}</span></div>
+      ${list('對應', [`視網膜位置：${y > 0 ? '下方' : '上方'}${x > 0 ? '鼻側' : '顳側'}（上下顛倒，左右同側）${s('S29')}`, `沿 RNFL 走回視盤：${m.h} 點鐘${m.str ? '（鼻側，模型不涵蓋，當成直線）' : '（Jansonius 2009 平均模型）'}${s('S31', 'S29')}`, `個人差異：同一點對到視盤的位置標準差從不到 1° 到 18°${s('S31')}`])}
+      <button type="button" class="btn" data-vp="${st.vSel}" style="align-self:flex-start">取消選取</button>${srcList(['S29', 'S31'])}</div>`;
+  }
+  if (st.vClk) {
+    const pts = Object.values(VMAP).filter(m => m.h === st.vClk);
+    return `<div class="card">${head('視盤鐘點', `${st.vClk} 點鐘`, HOUR_ZH(st.vClk) ? `右眼 ${HOUR_ZH(st.vClk)}` : '')}
+      <div class="verdict"><span>對到這裡的 24-2 點：<b class="ar">${pts.length} 個</b></span></div>
+      ${list('這些點在', pts.length ? [`${[...new Set(pts.map(m => m.p[1] > 0 ? '上方' : '下方'))].join('、')}視野；左邊亮起的點`] : ['24-2 沒有點對到這個鐘點（多半是鼻側或 papillomacular 區）'])}
+      ${list('重點', [`進入視盤 superotemporal 與 inferotemporal 的 arcuate 纖維最容易受青光眼損傷；papillomacular bundle 最耐${s('S29')}`, `上方黃斑的纖維進 temporal quadrant（接近 9 點鐘），比較不容易受損${s('S32')}`])}
+      <button type="button" class="btn" data-vclk="${st.vClk}" style="align-self:flex-start">取消選取</button>${srcList(['S29', 'S31', 'S32'])}</div>`;
+  }
+  if (!st.vPat) return `<div class="card">${head('視野與 RNFL', '24-2 visual field', '24-2 視野與 RNFL 的對應')}
+    ${list('24-2', [`青光眼最重要的缺損多在中央 30° 內；24-2 是常用的青光眼程式，顳側測到 24°、鼻側到 30°，點與點間隔 6°${s('S28', 'S31')}`, `盲點在顳側 10°–20°、略低於水平線${s('S28')}`, `機率圖：每一點的缺損在正常人中出現的比例（<5% 到 <0.5%），符號越深越可能是真的缺損${s('S28')}`, `Pattern deviation 扣掉整體下降（例如白內障），用來看局部缺損${s('S28')}`])}
+    ${list('判讀（Hodapp、Parrish、Anderson 的最低標準，三項之一）', [`Glaucoma hemifield test 連兩次 outside normal limits${s('S29')}`, `典型位置有 3 個以上非邊緣點 P <5%、其中一點 P <1%，連兩次${s('S29')}`, `Corrected PSD 在正常人中出現不到 5%，連兩次${s('S29')}`])}
+    ${list('RNFL 的走向', [`黃斑的纖維直走進視盤（papillomacular bundle）；鼻側的纖維也走得比較直；fovea 顳側的纖維繞過 papillomacular bundle，不越過 horizontal raphe${s('S29')}`])}
+    ${srcList(['S28', 'S29', 'S31'])}</div>`;
+  const P = VPAT[st.vPat], I = VINFO[P.type], hrs = vHours(st.vPat);
+  return `<div class="card">${head('視野缺損型態', P.en, P.zh)}<p class="def">${I.def}</p>
+    <div class="verdict"><span>${P.side === 's' ? '上方視野 → 下方視網膜' : '下方視野 → 上方視網膜'}</span><span>對到視盤 <b class="ar">${hrs.join('、')} 點鐘</b></span></div>
+    ${list('重點', I.more)}
+    ${list('對應的算法', [`每個缺損點上下顛倒到視網膜，再用 Jansonius 2009 的平均 RNFL 模型走回視盤，四捨五入到最近的鐘點${s('S31')}`, `點的位置與深淺是示意的典型形狀，不是真實病人${s('S29')}`])}
+    ${srcList(P.type === 'para' ? ['S29', 'S31', 'S32'] : ['S29', 'S31'])}</div>`;
+}
+/* 測驗：clk 看視野點出受損的視盤鐘點；mat 看受損鐘點選視野型態 */
+const VKEYS = [...VPAT_ORDER.map(k => 'vf:k:' + k), ...VPAT_ORDER.map(k => 'vf:m:' + k)];
+const vfKeyLabel = k => { const t = k.split(':')[1], id = k.split(':')[2]; return t === 'k' ? `點鐘點：${VPAT[id].zh}` : `看鐘點選型態：${VPAT[id].zh}`; };
+const vDisjoint = (a, b) => !vHours(a).some(h => vHours(b).includes(h));
+function vfItem(key) {
+  const t = key.split(':')[1], id = key.split(':')[2], hours = vHours(id);
+  if (t === 'k') return { key, type: 'clk', pat: id, hours, ans: hours.join('、'), opts: [], lab: x => `${x} 點鐘`,
+    prompt: ['左邊是一隻右眼的 24-2 視野缺損（示意）', '在右邊視盤旁的鐘點環上，點一個受損的鐘點'],
+    more: `${VPAT[id].zh}：對到 ${hours.join('、')} 點鐘（綠色）。${VPAT[id].side === 's' ? '上方視野對下方視盤' : '下方視野對上方視盤'}${s('S29', 'S31')}` };
+  const pool = VPAT_ORDER.filter(k => k !== id && vDisjoint(k, id));
+  return { key, type: 'mat', pat: id, hours, ans: id, opts: shuffle([id, ...shuffle(pool).slice(0, 3)]), lab: k => VPAT[k].zh,
+    prompt: ['右邊紅色的是 OCT 上變薄的視盤鐘點（右眼，示意）', '最可能對應哪一種視野缺損？'], more: `${VPAT[id].zh}${s('S29', 'S31')}` };
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'aq', name: '房水與藥物', en: 'Aqueous & drugs' }, { id: 'gon', name: '前房角分級', en: 'Gonioscopy' }];
+const VIEWS = [{ id: 'aq', name: '房水與藥物', en: 'Aqueous & drugs' }, { id: 'gon', name: '前房角分級', en: 'Gonioscopy' }, { id: 'vf', name: '視野與 RNFL', en: 'Visual field & RNFL' }];
 const $ = q => document.querySelector(q);
 let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
 const st = { view: 'aq', drug: 'none', site: null, labels: true, anim: !reduce, learnMode: 'learn', quiz: null,
-  gTh: 40, gCfg: 'F', gPig: 1, gPre: 'wide', gApp: null, gTru: null, gPas: false, gRoot: null, gInd: false };
+  gTh: 40, gCfg: 'F', gPig: 1, gPre: 'wide', gApp: null, gTru: null, gPas: false, gRoot: null, gInd: false,
+  vPat: 'arc_s', vSel: null, vClk: null };
 const store = (() => {
   const K2 = 'glaucomaAtlas.v1';
   let mem = { wrong: {} };
@@ -1092,14 +1310,15 @@ const figDrug = () => { const it = quizItem(); return it ? (it.type === 'anim' ?
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'gon' ? '拖拉條調角度，或下方選例子；左邊剖面、右邊鏡下所見一起變' : '下方選藥物，看它作用在哪裡；點圖上的構造或標示，看哪些藥作用在那裡'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'gon' ? '拖拉條調角度，或下方選例子；左邊剖面、右邊鏡下所見一起變' : st.view === 'vf' ? '下方選缺損型態；點視野上的點或視盤旁的鐘點，看兩邊怎麼對應' : '下方選藥物，看它作用在哪裡；點圖上的構造或標示，看哪些藥作用在那裡'}</span>`;
 }
 function renderTools() {
+  if (st.view === 'vf') { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   if (st.view === 'gon') { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : (st.gTru ? `<label class="tog"><input type="checkbox" id="t-ind" ${st.gInd ? 'checked' : ''}>壓迫（indentation）</label>` : '') + `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-anim" ${st.anim ? 'checked' : ''}>動畫</label>` + (st.learnMode !== 'quiz' ? `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>` : '');
 }
 function renderFig() {
-  if (st.view === 'gon') { if (AQ.raf) cancelAnimationFrame(AQ.raf); AQ.raf = null; gonFig(); return; }
+  if (st.view === 'gon' || st.view === 'vf') { if (AQ.raf) cancelAnimationFrame(AQ.raf); AQ.raf = null; if (st.view === 'gon') gonFig(); else vfFig(); return; }
   const fig = $('#fig');
   fig.innerHTML = aqSVG(figDrug(), { quiz: st.learnMode === 'quiz', site: st.learnMode === 'quiz' ? null : st.site });
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
@@ -1109,6 +1328,7 @@ function renderFig() {
 function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
   if (st.view === 'gon') { $('#extra').innerHTML = gonExtra(); return; }
+  if (st.view === 'vf') { $('#extra').innerHTML = vfExtra(); return; }
   const an = anatOf(st.drug);
   $('#extra').innerHTML = `<div class="xrow"><div class="ins"><div class="xh">TM 與 Schlemm canal 放大（示意）</div>${tmInset(an)}<p>由 AC 往外：uveal、corneoscleral、juxtacanalicular（JCT）三層，再到 Schlemm canal 內壁的 giant vacuoles；正常阻力主要在 JCT${s('S16', 'S20')}。${st.drug === 'pilo' ? 'Pilocarpine：網眼整體被撐開、Schlemm canal 擴張。' : st.drug === 'rock' ? 'Netarsudil：JCT 空隙變寬、giant vacuoles 變多（摘除眼灌流的觀察）。' : st.drug === 'lbn' ? 'Latanoprostene bunod：NO 讓 TM 細胞放鬆。' : ''}</p></div>
     <div class="ins"><div class="xh">Ciliary muscle 肌束放大（示意）</div>${cmInset(an)}<p>綠色虛線＝肌束之間的空隙，也就是 uveoscleral 路徑${s('S16')}。${an.cmGap > 0 ? '這類藥讓空隙變寬（細胞外基質重塑）。' : an.cmGap < 0 ? 'Pilocarpine：肌肉收縮、空隙變窄。' : ''}</p></div></div>
@@ -1118,15 +1338,16 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'vf') { ix.innerHTML = `<span class="lbl">缺損型態（${VPAT_ORDER.length}）</span><button type="button" class="chip ${!st.vPat && !st.vSel && !st.vClk ? 'on' : ''}" data-vpat="">未選（看說明）</button>` + VPAT_ORDER.map(k => `<button type="button" class="chip ${k === st.vPat && !st.vSel && !st.vClk ? 'on' : ''}" data-vpat="${k}">${VPAT[k].zh} <i>${VPAT[k].en}</i></button>`).join(''); return; }
   if (st.view === 'gon') { ix.innerHTML = `<span class="lbl">例子（${GPRE_ORDER.length}）</span>` + GPRE_ORDER.map(k => `<button type="button" class="chip ${k === st.gPre ? 'on' : ''}" data-gpre="${k}">${GPRE[k].zh}</button>`).join(''); return; }
   ix.innerHTML = `<span class="lbl">藥物（${DRUG_ORDER.length - 1} 類）</span>` + DRUG_ORDER.map(k => `<button type="button" class="chip ${k === st.drug && !st.site ? 'on' : ''}" data-drug="${k}">${k === 'none' ? '未用藥' : DRUGS[k].zh} ${k === 'none' ? '' : `<i>${DRUGS[k].en}</i>`}</button>`).join('');
 }
 function renderPanel() {
-  $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'gon' ? gonCard() : st.site ? siteCard(st.site) : drugCard(st.drug);
+  $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'gon' ? gonCard() : st.view === 'vf' ? vfCard() : st.site ? siteCard(st.site) : drugCard(st.drug);
 }
 function renderSelbar() {
   const G = st.view === 'gon' ? gEval(gonState()) : null;
-  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : G ? `Shaffer ${gLab(G.shaffer)}${G.spaeth ? ` · Spaeth ${G.spaeth}` : ''}` : st.site ? `部位：${SITES[st.site].en}` : `目前：${st.drug === 'none' ? '未用藥' : DRUGS[st.drug].zh}`;
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'vf' ? `目前：${st.vSel ? '視野上的一點' : st.vClk ? `視盤 ${st.vClk} 點鐘` : st.vPat ? VPAT[st.vPat].zh : '未選'}` : G ? `Shaffer ${gLab(G.shaffer)}${G.spaeth ? ` · Spaeth ${G.spaeth}` : ''}` : st.site ? `部位：${SITES[st.site].en}` : `目前：${st.drug === 'none' ? '未用藥' : DRUGS[st.drug].zh}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -1165,16 +1386,17 @@ const AQ_S = {
 };
 const QKEYS = [...AQ_A.map(k => 'aq:a:' + k), ...Object.keys(AQ_S).map(k => 'aq:s:' + k)];
 // 錯題的 key：分頁一 aq:a:…（看圖猜藥）、aq:s:…（給部位選藥）；分頁二 gon:l:…（看鏡下）、gon:d:…（角度換算）、gon:p:…（Spaeth 記法）；冒號後那個字母決定題型
-const keyValid = k => QKEYS.includes(k) || GKEYS.includes(k);
-const keyView = k => k.startsWith('gon:') ? 'gon' : 'aq';
-const QTV = { aq: [['anim', '看圖猜藥'], ['site', '給部位或機轉選藥']], gon: [['look', '看鏡下判斷'], ['deg', '角度換 Shaffer'], ['spa', 'Spaeth 記法']] };
-const QTZ = { a: 'anim', s: 'site', l: 'look', d: 'deg', p: 'spa' };
+const keyValid = k => QKEYS.includes(k) || GKEYS.includes(k) || VKEYS.includes(k);
+const keyView = k => k.startsWith('gon:') ? 'gon' : k.startsWith('vf:') ? 'vf' : 'aq';
+const QTV = { aq: [['anim', '看圖猜藥'], ['site', '給部位或機轉選藥']], gon: [['look', '看鏡下判斷'], ['deg', '角度換 Shaffer'], ['spa', 'Spaeth 記法']], vf: [['clk', '看視野點鐘點'], ['mat', '看鐘點選型態']] };
+const QTZ = { a: 'anim', s: 'site', l: 'look', d: 'deg', p: 'spa', k: 'clk', m: 'mat' };
 const kType = k => QTZ[k.split(':')[1]];
 const dLab = id => `${DRUGS[id].zh}（${DRUGS[id].en}）`;
-const keyLabel = k => k.startsWith('gon:') ? gonKeyLabel(k) : k[3] === 'a' ? `看圖猜藥：${DRUGS[k.slice(5)].zh}` : AQ_S[k.slice(5)].q;
+const keyLabel = k => k.startsWith('vf:') ? vfKeyLabel(k) : k.startsWith('gon:') ? gonKeyLabel(k) : k[3] === 'a' ? `看圖猜藥：${DRUGS[k.slice(5)].zh}` : AQ_S[k.slice(5)].q;
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 function itemOf(key) {
   if (key.startsWith('gon:')) return gonItem(key);
+  if (key.startsWith('vf:')) return vfItem(key);
   const t = QTZ[key[3]], id = key.slice(5);
   if (t === 'anim') {
     const pool = AQ_A.filter(x => x !== id && !(LOOK[id] || []).includes(x));
@@ -1190,12 +1412,12 @@ function quizHTML() {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
     const gv = st.view === 'gon';
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${gv ? '前房角幾級？怎麼記？' : '這類藥作用在哪裡？'}</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${gv ? '前房角幾級？怎麼記？' : st.view === 'vf' ? '視野缺損對到視盤哪裡？' : '這類藥作用在哪裡？'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">${gv ? '三種題型：看鏡下示意（不壓迫、正視）判斷 Shaffer 分級；給角度換算 Shaffer；讀 Spaeth 記法 (B)D30P1 的每一部分。' : '兩種題型：看圖上哪些部位在變、往哪個方向（標籤會隱藏），猜是哪一類藥；給作用部位、機轉或特徵副作用選藥。圖上看起來一樣的兩類（beta-blocker 與 CAI、prostaglandin 與 latanoprostene bunod）不會同時出現在選項裡。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${gv ? '三種題型：看鏡下示意（不壓迫、正視）判斷 Shaffer 分級；給角度換算 Shaffer；讀 Spaeth 記法 (B)D30P1 的每一部分。' : st.view === 'vf' ? '兩種題型：看 24-2 視野缺損，在視盤旁的鐘點環點出受損的鐘點（點到任何一個對應的鐘點都算對）；看 OCT 上變薄的鐘點，選最可能的視野缺損型態（選項裡不會有對到相同鐘點的型態）。' : '兩種題型：看圖上哪些部位在變、往哪個方向（標籤會隱藏），猜是哪一類藥；給作用部位、機轉或特徵副作用選藥。圖上看起來一樣的兩類（beta-blocker 與 CAI、prostaglandin 與 latanoprostene bunod）不會同時出現在選項裡。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -1206,7 +1428,7 @@ function quizHTML() {
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
   const lab = it.lab || dLab, prompt = it.prompt || (it.type === 'anim' ? ['上方是點了某一類藥之後的房水路徑：看標示的箭頭與構造變化', '這是哪一類藥？'] : ['作用部位與機轉', it.q]);
-  h += `<div class="prompt"><div class="k">${prompt[0]}</div><div class="q">${prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${lab(o)}</button>`).join('')}</div>`;
+  h += `<div class="prompt"><div class="k">${prompt[0]}</div><div class="q">${prompt[1]}</div></div><div class="opts">${(it.opts || []).map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${lab(o)}</button>`).join('')}</div>`;
   if (q.ans) {
     const more = it.more || `${DRUGS[it.ans].def}<br><span style="display:inline-flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px">${effLine(it.ans)}</span>`;
     h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${it.lab ? lab(q.ans.pick) : DRUGS[q.ans.pick].zh}；` : ' '}答案是 ${lab(it.ans)}。<br>${more}</div>`;
@@ -1216,7 +1438,7 @@ function quizHTML() {
 }
 function startQuiz(cfg) {
   const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
-  let pool = [...QKEYS, ...GKEYS].filter(k => keyView(k) === st.view && types.includes(kType(k)));
+  let pool = [...QKEYS, ...GKEYS, ...VKEYS].filter(k => keyView(k) === st.view && types.includes(kType(k)));
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
@@ -1249,6 +1471,7 @@ function setMode(m) {
 }
 function setGPre(k) { const p = GPRE[k]; Object.assign(st, { gPre: k, gTh: p.th, gCfg: p.cfg, gPig: p.pig, gApp: p.app || null, gTru: p.tru || null, gPas: !!p.pas, gRoot: p.root || null, gInd: false }); }
 function goKey(k) {
+  if (k.startsWith('vf:')) { setView('vf'); Object.assign(st, { vPat: k.split(':')[2], vSel: null, vClk: null }); render(); return; }
   if (k.startsWith('gon:')) {
     setView('gon'); const t = k.split(':')[1], id = k.split(':')[2];
     if (t === 'p') setGPre('plateau');
@@ -1279,6 +1502,9 @@ document.addEventListener('click', e => {
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
   const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const vc = t.closest('[data-vclk]'); if (vc) { const hr = +vc.dataset.vclk, it = quizItem(); if (it && it.type === 'clk') { if (!st.quiz.ans) answer({ ok: it.hours.includes(hr), pick: String(hr) }); return; } if (st.learnMode === 'quiz') return; st.vClk = st.vClk === hr ? null : hr; st.vSel = null; render(); return; }
+  const vpt = t.closest('[data-vp]'); if (vpt) { if (st.learnMode === 'quiz') return; st.vSel = st.vSel === vpt.dataset.vp ? null : vpt.dataset.vp; st.vClk = null; render(); return; }
+  const vpa = t.closest('[data-vpat]'); if (vpa) { Object.assign(st, { vPat: vpa.dataset.vpat || null, vSel: null, vClk: null }); render(); return; }
   const gp = t.closest('[data-gpre]'); if (gp) { setGPre(gp.dataset.gpre); render(); return; }
   const gc = t.closest('[data-gcfg]'); if (gc) { st.gCfg = gc.dataset.gcfg; render(); return; }
   const gg = t.closest('[data-gpig]'); if (gg) { st.gPig = +gg.dataset.gpig; render(); return; }
@@ -1364,6 +1590,18 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   a(GKEYS.every(k => GKEYS.filter(x => x === k).length === 1) && Object.keys(QTZ).length === new Set(Object.keys(QTZ)).size, '題型字母不重複');
   const gUsed = refs(gonCard() + gonExtra());
   a(gUsed.every(k => ['S23', 'S24', 'S25', 'S26', 'S27'].includes(k)), '分頁二的引用都在它的來源清單');
+  // 分頁三：視野與 RNFL
+  a(V242.length === 54 && new Set(V242.map(vk)).size === 54, '24-2 有 54 點');
+  a(Math.max(...V242.map(p => p[0])) === 21 && Math.min(...V242.map(p => p[0])) === -27 && V242.every(p => Math.abs(p[0]) % 6 === 3 && Math.abs(p[1]) % 6 === 3), '24-2：右眼顳側到 21°、鼻側到 27°，6° 間隔、跨在水平與垂直線兩邊');
+  a(Object.keys(VMAP).length === 52, '扣掉盲點旁兩點剩 52 點（同 Garway-Heath）');
+  a(jC(60) < 1 && jC(180) > 3, 'Jansonius：c 由視盤鼻側約 0.5 增加到顳側約 3（依內文）');
+  a(Object.values(VMAP).filter(m => m.p[0] < 15).every(m => m.p[1] > 0 ? m.p0 < 0 : m.p0 > 0), '盲點鼻側的視野：上方對下方視盤、下方對上方視盤（horizontal raphe）');
+  a([[-3, 3], [3, 3]].every(p => [7, 8].includes(VMAP[vk(p)].h)), '上方中央視野 → MVZ（7–8 點鐘）');
+  a([[-3, -3], [3, -3]].every(p => [9, 10].includes(VMAP[vk(p)].h)), '下方中央視野 → temporal quadrant（9–10 點鐘）');
+  a(['tw_s', 'tw_i'].every(k => vHours(k).every(h => h >= 1 && h <= 5)), 'Temporal wedge → 鼻側視盤');
+  a(Object.values(VMAP).every(m => { if (m.str) return true; const [r] = jPolar(m.rp[0], m.rp[1]), q = jXY(jPhi(m.p0, r), r); return Math.hypot(q[0] - m.rp[0], q[1] - m.rp[1]) < 1; }), '沿模型走回視盤的路線，終點對得到原來的點');
+  a(VPAT_ORDER.every(k => VPAT[k].pts.every(p => VMAP[vk(p)])), '缺損型態的點都在 24-2 上、不在盲點');
+  for (let n = 0; n < 10; n++) VKEYS.forEach(k => { const it = vfItem(k); a(it.type === 'clk' ? it.hours.length > 0 : it.opts.includes(it.ans) && it.opts.length >= 2 && new Set(it.opts).size === it.opts.length && it.opts.every(o => o === it.ans || vDisjoint(o, it.ans)), `${k} 的題目`); });
   for (let n = 0; n < 30; n++) QKEYS.forEach(k => {
     const it = itemOf(k);
     a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === 4, `${k} 的選項含答案、不重複、四個`);
@@ -1371,7 +1609,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   });
 })();
 
-if (location.hash === '#gon') st.view = 'gon';
+if (location.hash === '#gon' || location.hash === '#vf') st.view = location.hash.slice(1);
 render();
 </script>
 
