@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>光學與驗光互動圖譜</title>
+<meta name="description" content="互動式光學與驗光：用 reduced eye 光路圖看正視、近視、遠視與散光的焦點位置，加矯正鏡片、調節與看近，Sturm's conoid 與 circle of least confusion，附測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as retina — figure stage on the left, card on the right; ray diagrams have light entering from the left (left = anterior) */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --hl:#0A6FD8; --hl-soft:rgba(10,111,216,.2); --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-sclera:#F5F0EC; --t-vit:#EEF2F8; --t-cornea:#E2E0F1; --t-retina:#C55367; --t-lens:#DCE6F5;
+  --ray:#C98A1B; --ray2:#1E8A86;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-sclera:#3B3647; --t-vit:#24212F; --t-cornea:#302B44; --t-retina:#E07A8B; --t-lens:#3A4766;
+  --ray:#E2B14A; --ray2:#4FC7C2; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-sclera:#3B3647; --t-vit:#24212F; --t-cornea:#302B44; --t-retina:#E07A8B; --t-lens:#3A4766;
+  --ray:#E2B14A; --ray2:#4FC7C2; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:560px;max-height:calc(100vh - 150px)}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip i{font-family:var(--f-display);font-size:12.5px}
+
+/* figure */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+.deco{pointer-events:none}
+.deco text{font-family:var(--f-body);font-size:13px;fill:var(--muted)}
+.lab text{font-size:14px;paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.nolab .lab,.quiz-on .lab{display:none}
+.c-globe{fill:var(--t-vit);stroke:var(--t-stroke);stroke-width:1.3}
+.c-cornea{fill:var(--t-cornea);stroke:var(--t-stroke);stroke-width:1.3}
+.c-retina{fill:none;stroke:var(--t-retina);stroke-width:4;stroke-linecap:round}
+.c-axis{stroke:var(--t-stroke-2);stroke-width:1;stroke-dasharray:4 5}
+.c-lens{fill:var(--t-lens);stroke:var(--t-stroke);stroke-width:1.2}
+.ray{fill:none;stroke:var(--ray);stroke-width:1.6}
+.ray2{fill:none;stroke:var(--ray2);stroke-width:1.6;stroke-dasharray:6 4}
+.ray.ext,.ray2.ext{stroke-dasharray:3 4;opacity:.75}
+.fpt{fill:var(--ray);stroke:var(--surface);stroke-width:1.2}
+.fpt2{fill:var(--ray2);stroke:var(--surface);stroke-width:1.2}
+.clc{fill:none;stroke:var(--ink-2);stroke-width:1.6}
+.ftxt.halo{paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.ftxt{font-family:var(--f-mono)!important;font-size:13px;fill:var(--ink-2)!important}
+.ltxt{font-family:var(--f-mono)!important;font-size:14px;fill:var(--accent)!important}
+.inset{fill:var(--surface);stroke:var(--line-2);stroke-width:1}
+.spot{fill:var(--ray);fill-opacity:.55;stroke:var(--ray);stroke-width:1.2}
+.ruler line{stroke:var(--t-stroke-2);stroke-width:1}
+.ruler .base{stroke:var(--t-stroke);stroke-width:1.4}
+.ruler text{font-family:var(--f-mono);font-size:11.5px;fill:var(--muted)}
+.ruler .mk{font-family:var(--f-body);font-size:12px;fill:var(--ink)}
+.ruler .fp{fill:var(--ray)}
+.ruler .cur{fill:var(--accent)}
+.ruler .obj{fill:var(--ray2)}
+.ruler .rng{stroke:var(--accent);stroke-width:5;stroke-linecap:round;opacity:.35}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--ok-soft)}
+.verdict b{font-family:var(--f-mono);font-weight:500}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt i{font-family:var(--f-display);color:var(--muted)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.xrow{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-start}
+.sl{display:flex;flex-direction:column;gap:4px;min-width:min(240px,100%)}
+.sl label{font-size:13px;color:var(--ink-2);display:flex;justify-content:space-between;gap:10px}
+.sl label b{font-family:var(--f-mono);font-weight:500;color:var(--ink)}
+input[type=range]{width:min(280px,100%);accent-color:var(--accent);margin:0}
+.rstat{margin:0;font-size:14px;color:var(--ink);min-height:1.5em}
+.rbox{width:100%}
+.rbox svg{display:block;width:100%;max-width:640px;height:auto}
+.formula{font-size:13px;color:var(--ink-2);display:flex;flex-direction:column;gap:3px}
+.formula code{font-family:var(--f-mono);font-size:12.5px;color:var(--ink)}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .fig svg{min-width:0}
+  .lab text{font-size:22px;stroke-width:4.5px}
+  .deco text{font-size:20px}
+  .ftxt{font-size:20px}
+  .ltxt{font-size:21px}
+  .ruler text,.ruler .mk{font-size:19px}
+  .seg button{padding:5px 10px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>光學與驗光互動圖譜</h1>
+      <span class="sub">Optics &amp; refraction · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>光路圖是眼球側面，光從左邊進來（左＝anterior）。眼睛用 reduced eye（單一折射面）近似，橫向依比例、縱向放大；矯正鏡片當作貼在角膜上（不算 vertex distance）。光斑大小、調節量只是示意。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- sources ---------- */
+const SRC = {
+  S1: { t: 'Storani de Almeida M, Carvalho LA. Different schematic eyes and their accuracy to the in vivo eye: a quantitative comparison study. Braz J Phys 2007;37(2A):378–387（Emsley reduced eye 的參數）', u: 'https://www.redalyc.org/articulo.oa?id=46437308' },
+  S2: { t: 'EyeWiki：Myopia', u: 'https://eyewiki.org/Myopia' },
+  S3: { t: 'EyeWiki：Hyperopia', u: 'https://eyewiki.org/Hyperopia' },
+  S4: { t: 'EyeWiki：Presbyopia', u: 'https://eyewiki.org/Presbyopia' },
+  S5: { t: 'Iwata Y. Experimental investigation of focal position in regular astigmatic eyes with zero spherical equivalent. Sci Rep 2025;15:43355', u: 'https://doi.org/10.1038/s41598-025-27291-4' },
+  S6: { t: 'AAO：Basic Optics, Chapter 12 – Astigmatic Refractive Correction: Retinoscopy（教學投影片）', u: 'https://www.aao.org/Assets/cf750fad-9184-4fda-9760-dfd024f7b1af/637151349588330000/bo12-pdf?inline=1' }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. <a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a></li>`).join('')}</ul></div>`; }
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+
+/* ---------- reduced eye（Emsley）：單一折射面，n′＝4/3，曲率半徑 5.55 mm，正視眼長 22.22 mm ----------
+   聚散度（D）＝1／距離（m）。進眼後的聚散度 V′＝物體 U＋鏡片＋眼睛屈光力 P＋調節 A；焦點在 n′／V′。
+   屈光度 R 定義為 far point 的聚散度＝n′／L − P（近視為負）：矯正鏡片（貼在角膜上）＝R */
+const NP = 4 / 3, R0 = 5.55, L0 = 22.22;
+// 屈光力以正視眼長 22.22 mm 定（≈ 60.01 D）；用 r＝5.55 mm 算是 60.06 D，差別來自原文數字的四捨五入
+const P0 = NP * 1000 / L0;
+const focusMM = V => 1000 * NP / V;
+const fmtD = d => (d > 0 ? '+' : d < 0 ? '−' : '') + Math.abs(d).toFixed(2);
+const fmtCM = m => m >= 1 ? `${(+m.toFixed(2))} m` : `${(+(m * 100).toFixed(1))} cm`;
+// 眼睛：sph 模式用 R 與軸性／屈光性；ast 模式兩條主子午線各有屈光度（散光當作屈光性）
+function eyeOf(p) {
+  if (p.mode === 'ast') return { L: L0, Pv: NP * 1000 / L0 - p.Rv, Ph: NP * 1000 / L0 - p.Rh };
+  if (p.typ === 'axial') { const L = 1000 * NP / (P0 + p.R); return { L, Pv: P0, Ph: P0 }; }
+  return { L: L0, Pv: NP * 1000 / L0 - p.R, Ph: NP * 1000 / L0 - p.R };
+}
+const Rof = (E, m) => NP * 1000 / E.L - E[m];          // 該子午線的屈光度（far point 聚散度）
+// 鏡片：sph 是單一球面；ast 的負柱鏡自動對齊在較近視（較負）的那條子午線
+function lensOf(p) {
+  if (p.mode !== 'ast') return { v: p.Ls, h: p.Ls };
+  const strongV = p.Rv <= p.Rh;
+  return { v: p.S + (strongV ? p.C : 0), h: p.S + (strongV ? 0 : p.C) };
+}
+function optics(p) {
+  const E = eyeOf(p), Ln = lensOf(p), U = p.obj === 'near' ? -100 / p.dcm : 0;
+  const V = { v: U + Ln.v + E.Pv + p.A, h: U + Ln.h + E.Ph + p.A };
+  const f = { v: focusMM(V.v), h: focusMM(V.h) };
+  const need = NP * 1000 / E.L;                         // 要剛好落在視網膜上的聚散度
+  const res = { v: V.v - need, h: V.h - need };          // 正＝焦點在視網膜前（多出來的屈光力）
+  const mid = focusMM((V.v + V.h) / 2);
+  return { E, Ln, U, V, f, res, mid, L: E.L };
+}
+// 散光分類：依兩條焦線相對視網膜的位置（AAO Basic Optics 的五型）
+const TOL = 0.125;
+function astType(Rv, Rh) {
+  const sg = r => r < -TOL ? -1 : r > TOL ? 1 : 0, a = sg(Rv), b = sg(Rh);
+  if (Math.abs(Rv - Rh) <= TOL) return a < 0 ? 'myo' : a > 0 ? 'hyp' : 'emm';
+  if (a < 0 && b < 0) return 'cm';
+  if (a > 0 && b > 0) return 'ch';
+  if (a * b < 0) return 'mx';
+  return (a + b) < 0 ? 'sm' : 'sh';
+}
+const sphState = R => Math.abs(R) <= TOL ? 'emm' : R < 0 ? 'myo' : 'hyp';
+// 處方（負柱鏡）：sphere＝較正的那條子午線，cyl＝兩者差，axis＝sphere 那條子午線（垂直＝090、水平＝180）
+function rxMinus(Rv, Rh) {
+  if (Math.abs(Rv - Rh) < 1e-9) return `${fmtD(Rv)} DS`;
+  const S = Math.max(Rv, Rh), C = Math.min(Rv, Rh) - S, ax = Rv >= Rh ? '090' : '180';
+  return `${fmtD(S)} ${fmtD(C)} × ${ax}`;
+}
+
+/* ---------- drawing ---------- */
+const K = 13, X0 = 300, Y0 = 210, HS = [-3, -1.5, 0, 1.5, 3];
+const fx = v => v.toFixed(1);
+function lensSVG(pw, label) {
+  if (Math.abs(pw.v) < 1e-9 && Math.abs(pw.h) < 1e-9) return '';
+  const x = 280, plus = (pw.v + pw.h) / 2 > 0;
+  const d = plus ? `M${x} 150Q${x + 11} 210 ${x} 270Q${x - 11} 210 ${x} 150Z` : `M${x - 7} 150L${x + 7} 150Q${x + 1} 210 ${x + 7} 270L${x - 7} 270Q${x - 1} 210 ${x - 7} 150Z`;
+  return `<path class="c-lens" d="${d}"/><text class="ltxt" x="${x}" y="138" text-anchor="middle">${label}</text>`;
+}
+function raysSVG(O2, m, cls, hs) {
+  const f = O2.f[m], L = O2.L, xr = X0 + L * K;
+  let h = '';
+  hs.forEach(hm => {
+    const y0 = Y0 - hm * K;
+    const yIn = O2.U ? Y0 - hm * K * (1 - (X0 - 150) / (-1000 / O2.U * K)) : y0;
+    const yr = Y0 - hm * K * (1 - L / f);
+    h += `<path class="${cls}" d="M150 ${fx(yIn)}L${X0} ${fx(y0)}L${fx(xr)} ${fx(yr)}"/>`;
+    if (f > L) { const xf = Math.min(X0 + f * K, 880); const yf = Y0 - hm * K * (1 - (xf - X0) / (f * K)); h += `<path class="${cls} ext" d="M${fx(xr)} ${fx(yr)}L${fx(xf)} ${fx(yf)}"/>`; }
+  });
+  return h;
+}
+// 焦點附近放大：視網膜在小窗中央，前後各 2.5 mm；軸向每 mm 46 px、縱向每 mm 150 px
+function zoomSVG(O2, ast) {
+  const L = O2.L, cx = 765, cy = 330, Z = z => cx + (z - L) * 46, Yv = y => cy - y * 150, z1 = L - 2.5, z2 = L + 2.5;
+  let h = `<g class="deco"><clipPath id="zc"><rect x="650" y="268" width="230" height="124"/></clipPath><rect class="inset" x="650" y="268" width="230" height="124" rx="6"/>
+    <g clip-path="url(#zc)"><line class="c-axis" x1="650" y1="${cy}" x2="880" y2="${cy}"/><line class="c-retina" x1="${cx}" y1="272" x2="${cx}" y2="388" style="stroke-width:3"/>`;
+  const seg = (f, hm, cls) => `<path class="${cls}" d="M${fx(Z(z1))} ${fx(Yv(hm * (1 - z1 / f)))}L${fx(Z(z2))} ${fx(Yv(hm * (1 - z2 / f)))}"/>`;
+  [-3, -1.5, 1.5, 3].forEach(hm => { h += seg(O2.f.v, hm, 'ray'); });
+  if (ast) [-3, 3].forEach(hm => { h += seg(O2.f.h, hm, 'ray2'); });
+  const marks = [];
+  if (!ast) marks.push([O2.f.v, 'F′', 'fpt']);
+  else { const a = O2.f.v <= O2.f.h ? ['v', 'h'] : ['h', 'v']; marks.push([O2.f[a[0]], '焦線 1', a[0] === 'v' ? 'fpt' : 'fpt2'], [O2.f[a[1]], '焦線 2', a[1] === 'v' ? 'fpt' : 'fpt2'], [O2.mid, 'CLC', 'clc']); }
+  let lab = '';
+  marks.forEach(([f, txt, cls], k) => {
+    const x = Z(f), up = k % 2 === 0, ty = up ? 284 : 386;
+    if (x < 652 || x > 878) { lab += `<text class="ftxt" x="${x < 652 ? 656 : 874}" y="${up ? 286 : 384}" text-anchor="${x < 652 ? 'start' : 'end'}">${x < 652 ? '← ' : ''}${txt}${x > 878 ? ' →' : ''}</text>`; return; }
+    if (cls === 'clc') { h += `<circle class="clc" cx="${fx(x)}" cy="${cy}" r="6"/>`; lab += `<text class="ftxt halo" x="${fx(x)}" y="${cy + 28}" text-anchor="middle">CLC</text>`; return; }
+    h += `<circle class="${cls}" cx="${fx(x)}" cy="${cy}" r="4"/>`;
+    lab += `<line class="c-axis" x1="${fx(x)}" y1="${cy + (up ? -6 : 6)}" x2="${fx(x)}" y2="${up ? 290 : 372}" style="stroke-dasharray:none"/><text class="ftxt" x="${fx(x)}" y="${ty}" text-anchor="middle">${txt}</text>`;
+  });
+  return h + `</g>${lab}<text x="765" y="410" text-anchor="middle">焦點附近放大</text></g>`;
+}
+function renderEye(p, o) {
+  const O2 = optics(p), L = O2.L, xr = X0 + L * K, ast = p.mode === 'ast';
+  const cx = X0 + 10 + (L * K - 10) / 2, rx = (L * K - 10) / 2, ry = 150;
+  const ret = []; for (let t = -0.85; t <= 0.851; t += 0.05) ret.push(`${fx(cx + rx * Math.cos(t))} ${fx(Y0 + ry * Math.sin(t))}`);
+  const N = X0 + R0 * K, cr = R0 * K, a1 = 125 * Math.PI / 180;
+  let h = `<svg viewBox="140 24 750 396" role="img" aria-label="眼球側面光路圖" id="esvg">
+    <line class="c-axis" x1="140" y1="${Y0}" x2="890" y2="${Y0}"/>
+    <ellipse class="c-globe" cx="${fx(cx)}" cy="${Y0}" rx="${fx(rx)}" ry="${ry}"/>
+    <path class="c-cornea" d="M${fx(N + cr * Math.cos(a1))} ${fx(Y0 - cr * Math.sin(a1))}A${cr} ${cr} 0 0 0 ${fx(N + cr * Math.cos(a1))} ${fx(Y0 + cr * Math.sin(a1))}Z"/>
+    <path class="c-retina" d="M${ret.join('L')}"/>`;
+  const lab = ast ? `S ${fmtD(p.S)} C ${fmtD(p.C)}` : `${fmtD(p.Ls)} D`;
+  h += lensSVG(O2.Ln, lab);
+  h += raysSVG(O2, 'v', 'ray', HS);
+  if (ast) h += raysSVG(O2, 'h', 'ray2', [-3, 3]);
+  // 主圖只畫焦點的點；名稱標在右下的放大小窗
+  const dot = (f, cls) => { const x = X0 + f * K; return x < 885 ? `<circle class="${cls}" cx="${fx(x)}" cy="${Y0}" r="4"/>` : ''; };
+  h += dot(O2.f.v, 'fpt') + (ast ? dot(O2.f.h, 'fpt2') : '');
+  h += zoomSVG(O2, ast);
+  h += `<g class="deco lab"><text x="${X0 - 4}" y="${Y0 - 92}" text-anchor="end">Cornea</text><text x="${fx(xr + 8)}" y="${Y0 - 112}">Retina</text>
+    <circle cx="${fx(N)}" cy="${Y0}" r="2.5" style="fill:var(--ink-2)"/><text x="${fx(N)}" y="${Y0 + 22}" text-anchor="middle">N</text>
+    <text x="${fx(cx)}" y="${Y0 + 142}" text-anchor="middle">眼長 ${L.toFixed(2)} mm</text>
+    <text x="152" y="${Y0 - 52}">${p.obj === 'near' ? `物體在 ${p.dcm} cm（圖外）` : '遠處平行光'}</text></g>`;
+  // 視網膜上的光斑（正面看）：半徑＝瞳孔半徑 × |1 − L／f|
+  // 光斑放大畫（每 mm 120 px），−1 D 左右就看得出來；太大時截在小圖邊緣
+  const bl = m => Math.min(0.48, 3 * Math.abs(1 - L / O2.f[m])), SC = 120;
+  const ix = 800, iy = 92, bv = bl('v') * SC, bh = bl('h') * SC;
+  h += `<g class="deco"><circle class="inset" cx="${ix}" cy="${iy}" r="62"/>${Math.max(bv, bh) < 2 ? `<circle class="spot" cx="${ix}" cy="${iy}" r="2.5"/>` : `<ellipse class="spot" cx="${ix}" cy="${iy}" rx="${fx(Math.max(1, ast ? bh : bv))}" ry="${fx(Math.max(1, bv))}"/>`}
+    <text x="${ix}" y="${iy + 80}" text-anchor="middle">視網膜上的光斑</text></g>`;
+  return { svg: h + `</svg>`, O2 };
+}
+// 屈光度尺：0 D（∞）在左、10 D（10 cm）靠近眼睛
+function rulerSVG(p) {
+  const O2 = optics(p), X = D => 30 + Math.max(0, Math.min(10, D)) * 54;
+  let h = `<svg viewBox="0 0 600 78" class="ruler" role="img" aria-label="遠點與對焦距離"><line class="base" x1="30" y1="40" x2="570" y2="40"/>`;
+  [[0, '∞'], [1, '1 m'], [2, '50'], [3, '33'], [4, '25'], [5, '20'], [10, '10 cm']].forEach(([D, t]) => { h += `<line x1="${X(D)}" y1="34" x2="${X(D)}" y2="46"/><text x="${X(D)}" y="62" text-anchor="middle">${t}</text>`; });
+  if (p.mode === 'ast') return h + `<text class="mk" x="300" y="22" text-anchor="middle">散光：兩條子午線的遠點不同（看右邊說明卡的處方）</text></svg>`;
+  const Rr = Rof(O2.E, 'Pv') - O2.Ln.v;              // 戴鏡後、不調節時剩下的屈光度
+  const Dfp = -Rr, Dcur = p.A - Rr;
+  if (Dcur > Dfp + 0.01) h += `<line class="rng" x1="${X(Dfp)}" y1="40" x2="${X(Dcur)}" y2="40"/>`;
+  h += Dfp >= -0.01 ? `<circle class="fp" cx="${X(Dfp)}" cy="40" r="6"/><text class="mk" x="${X(Dfp)}" y="22" text-anchor="${Dfp > 8 ? 'end' : 'middle'}">遠點 ${Dfp < 0.01 ? '∞' : fmtCM(1 / Dfp)}</text>`
+    : `<text class="mk" x="30" y="22">遠點在眼睛後方 ${fmtCM(-1 / Dfp)}（虛的，要調節才看得清遠處）</text>`;
+  if (p.A > 0 && Dcur > 0) h += `<circle class="cur" cx="${X(Dcur)}" cy="40" r="5"/><text class="mk" x="${X(Dcur)}" y="76" text-anchor="middle">用 ${p.A.toFixed(2)} D 調節時對焦在 ${fmtCM(1 / Dcur)}</text>`;
+  if (p.obj === 'near') h += `<path class="obj" d="M${X(100 / p.dcm)} 46l-5 9h10z"/>`;
+  return h + `</svg>`;
+}
+
+/* ---------- 說明卡 ---------- */
+const OP = {
+  emm: { en: 'Emmetropia', zh: '正視',
+    def: '不調節時，遠處來的平行光剛好聚焦在視網膜上；far point 在無限遠。',
+    look: [`Emsley reduced eye：單一折射面、曲率半徑 5.55 mm、n′＝1.3333，正視眼長 22.22 mm${s('S1')}；依 (n′ − 1)／r 算出約 60 D`, `Cornea 約占眼睛總屈光力的 2/3${s('S1')}`],
+    src: ['S1'] },
+  myo: { en: 'Myopia', zh: '近視',
+    def: '屈光力相對眼長太強：遠處的光聚焦在視網膜前，到視網膜時已經散開。',
+    look: [`不調節時，遠處的光收斂太強、聚焦在視網膜前${s('S2')}`, `Far point 在眼睛前方、cornea 與無限遠之間${s('S2')}；矯正鏡片的度數＝−1／far point 距離（m）`, `用凹透鏡（concave、minus lens）把光發散一點，讓焦點回到視網膜${s('S2')}`],
+    more: [`Pathologic myopia 的定義之一：spherical equivalent 超過 6.00 D，或眼軸長超過 26.5 mm${s('S2')}`, '上方可以切換軸性（眼長變長）或屈光性（屈光力變強），兩者焦點都在視網膜前'],
+    src: ['S1', 'S2'] },
+  hyp: { en: 'Hyperopia', zh: '遠視',
+    def: '屈光力相對眼長太弱：遠處的光到視網膜時還沒聚焦，焦點在視網膜後。',
+    look: [`焦點在視網膜後${s('S3')}；最常見的原因是眼軸較短${s('S3')}`, `用凸透鏡（convex、plus lens）矯正${s('S3')}`, '不調節時 far point 在眼睛後方（虛的），所以看遠也要用調節'],
+    more: [`年輕人可以靠調節克服 facultative 與 latent hyperopia${s('S3')}`, `Manifest hyperopia 用不散瞳驗光測得，latent hyperopia 要用 cycloplegic refraction 才測得到${s('S3')}`, `Facultative：調節可以克服；absolute：調節克服不了${s('S3')}`],
+    src: ['S1', 'S3'] },
+  ast: { en: 'Astigmatism', zh: '散光',
+    def: '兩條互相垂直的主子午線屈光力不同，光不會聚成一點，而是形成兩條焦線（Sturm’s conoid）。',
+    look: [`兩條主子午線屈光力不同 → 第一、第二焦線；兩者中點是 circle of least confusion（CLC）${s('S5')}`, `球面鏡片會把整個 conoid 一起前後移動；柱鏡只移動其中一條焦線${s('S6')}`,
+      `依兩條焦線相對視網膜的位置分五型：compound myopic（都在前）、simple myopic（一條在前、一條在網膜上）、mixed（一前一後）、simple hyperopic（一條在網膜上、一條在後）、compound hyperopic（都在後）${s('S6')}`],
+    more: [`一般認為 spherical equivalent 為 0 時 CLC 落在視網膜上；但年輕人的研究顯示，調節會讓成像偏向第二條焦線、CLC 跑到視網膜前${s('S5')}`, `Mixed astigmatism 不代表 CLC 一定剛好在視網膜上${s('S6')}`, '圖上實線（琥珀色）＝垂直子午線的光，虛線（藍綠色）＝水平子午線的光；矯正用的負柱鏡會自動對齊較近視的那條子午線'],
+    src: ['S5', 'S6'] }
+};
+const AST_ZH = { cm: 'Compound myopic astigmatism', sm: 'Simple myopic astigmatism', mx: 'Mixed astigmatism', sh: 'Simple hyperopic astigmatism', ch: 'Compound hyperopic astigmatism' };
+const AST_ZH2 = { cm: '複性近視散光', sm: '單純近視散光', mx: '混合散光', sh: '單純遠視散光', ch: '複性遠視散光' };
+const CHIPS = {
+  emm: { zh: '正視', en: 'Emmetropia', p: { mode: 'sph', R: 0 } }, myo: { zh: '近視', en: 'Myopia', p: { mode: 'sph', R: -3 } }, hyp: { zh: '遠視', en: 'Hyperopia', p: { mode: 'sph', R: 2 } },
+  cm: { zh: AST_ZH2.cm, en: 'Compound myopic', p: { mode: 'ast', Rv: -3, Rh: -1 } }, sm: { zh: AST_ZH2.sm, en: 'Simple myopic', p: { mode: 'ast', Rv: -2, Rh: 0 } },
+  mx: { zh: AST_ZH2.mx, en: 'Mixed', p: { mode: 'ast', Rv: -1.5, Rh: 1.5 } }, sh: { zh: AST_ZH2.sh, en: 'Simple hyperopic', p: { mode: 'ast', Rv: 0, Rh: 2 } }, ch: { zh: AST_ZH2.ch, en: 'Compound hyperopic', p: { mode: 'ast', Rv: 1, Rh: 3 } }
+};
+const CHIP_ORDER = Object.keys(CHIPS);
+
+/* ---------- app ---------- */
+const VIEWS = [{ id: 'ref', name: '屈光與矯正', en: 'Refractive errors' }];
+const $ = q => document.querySelector(q);
+const st = { view: 'ref', chip: 'myo', mode: 'sph', R: -3, typ: 'axial', Rv: -3, Rh: -1, Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40, labels: true, learnMode: 'learn', quiz: null };
+const params = () => ({ mode: st.mode, R: st.R, typ: st.typ, Rv: st.Rv, Rh: st.Rh, Ls: st.Ls, S: st.S, C: st.C, A: st.A, obj: st.obj, dcm: st.dcm });
+const store = (() => {
+  const K2 = 'opticsAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K2); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K2, JSON.stringify(mem)); } catch (e) { } } };
+})();
+const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
+
+function stateOf(p) { return p.mode === 'ast' ? astType(p.Rv, p.Rh) : sphState(p.R); }
+function curName(p) { const t = stateOf(p); return AST_ZH[t] ? { en: AST_ZH[t], zh: AST_ZH2[t] } : { en: OP[t].en, zh: OP[t].zh }; }
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選屈光狀態，拖拉條調度數、鏡片與調節'}</span>`;
+}
+function renderTools() {
+  let h = '';
+  if (st.learnMode !== 'quiz') {
+    if (st.mode === 'sph') h += `<div class="seg" role="group" aria-label="成因">${[['axial', '軸性'], ['refr', '屈光性']].map(([k, t]) => `<button type="button" data-typ="${k}" aria-pressed="${st.typ === k}">${t}</button>`).join('')}</div>`;
+    h += `<div class="seg" role="group" aria-label="看遠看近">${[['far', '看遠'], ['near', '看近']].map(([k, t]) => `<button type="button" data-obj="${k}" aria-pressed="${st.obj === k}">${t}</button>`).join('')}</div>`;
+    h += `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
+  }
+  $('#tools').innerHTML = h;
+}
+function figParams() { const it = quizItem(); return it ? Object.assign({ Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40, typ: 'axial' }, it.p) : params(); }
+function renderFig() {
+  const r = renderEye(figParams(), {});
+  const fig = $('#fig'); fig.innerHTML = r.svg;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+  $('#cap').innerHTML = `<span>眼球側面，光從左邊進來（左＝anterior）。琥珀色＝光線${figParams().mode === 'ast' ? '（實線＝垂直子午線、虛線＝水平子午線）' : ''}；右上小圖是光到視網膜時的光斑，從正面看。</span><span class="ori">reduced eye；縱向放大</span>`;
+}
+function statusText(p) {
+  const O2 = optics(p), d = r => Math.abs(r) <= 0.13 ? '剛好在視網膜上' : r > 0 ? `在視網膜前（多 ${r.toFixed(2)} D）` : `在視網膜後（少 ${(-r).toFixed(2)} D）`;
+  if (p.mode === 'ast') return `第一條焦線${d(Math.max(O2.res.v, O2.res.h))}；第二條焦線${d(Math.min(O2.res.v, O2.res.h))}。`;
+  const r = O2.res.v; return `焦點${d(r)}${Math.abs(r) <= 0.13 ? '：看得清楚。' : '：模糊。'}`;
+}
+const slider = (id, label, min, max, step, val, fmt) => `<div class="sl"><label for="${id}">${label}<b id="${id}-v">${fmt(val)}</b></label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
+function renderExtra() {
+  if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  const D = v => `${fmtD(v)} D`;
+  let h = `<div class="xrow">`;
+  if (st.mode === 'sph') h += slider('s-R', '眼睛的屈光度 R', -8, 6, 0.25, st.R, D) + slider('s-L', '矯正鏡片', -10, 8, 0.25, st.Ls, D);
+  else h += slider('s-Rv', '垂直子午線的屈光度', -6, 4, 0.25, st.Rv, D) + slider('s-Rh', '水平子午線的屈光度', -6, 4, 0.25, st.Rh, D) + slider('s-S', '鏡片球面 S', -8, 6, 0.25, st.S, D) + slider('s-C', '鏡片負柱鏡 C', -6, 0, 0.25, st.C, D);
+  h += slider('s-A', '使用的調節 A', 0, 10, 0.25, st.A, v => `${(+v).toFixed(2)} D`);
+  if (st.obj === 'near') h += slider('s-d', '物體距離', 10, 200, 5, st.dcm, v => `${v} cm`);
+  h += `</div><p class="rstat" id="rstat" style="margin-top:12px">${statusText(params())}</p><div class="rbox" id="rbox">${rulerSVG(params())}</div>
+    <div class="formula" style="margin-top:8px"><div class="xh" style="margin:6px 0 2px">公式</div><span><code>聚散度（D）＝ 1 ／ 距離（m）</code></span><span><code>矯正鏡片 ＝ R</code>；近視：<code>R ＝ −1 ／ 遠點距離（m）</code></span><span><code>近點距離 ＝ 1 ／（調節幅度 − R）</code></span><span>本頁鏡片當作貼在角膜上（不算 vertex distance，分頁三再談）</span></div>`;
+  $('#extra').innerHTML = h;
+}
+function renderIndex() {
+  const ix = $('#index');
+  if (st.learnMode === 'quiz') { ix.hidden = true; return; }
+  ix.hidden = false;
+  ix.innerHTML = `<span class="lbl">屈光狀態（${CHIP_ORDER.length}）</span>` + CHIP_ORDER.map(k => `<button type="button" class="chip ${k === st.chip ? 'on' : ''}" data-chip="${k}">${CHIPS[k].zh} <i>${CHIPS[k].en}</i></button>`).join('');
+}
+function cardHTML() {
+  const p = params(), O2 = optics(p), t = stateOf(p), nm = curName(p), base = p.mode === 'ast' ? OP.ast : OP[t];
+  let v;
+  if (p.mode === 'ast') v = `兩條子午線：垂直 ${fmtD(p.Rv)}、水平 ${fmtD(p.Rh)} D → 處方 <b>${rxMinus(p.Rv, p.Rh)}</b>（負柱鏡寫法）；SE ${fmtD((p.Rv + p.Rh) / 2)} D`;
+  else v = `屈光度 <b>${fmtD(p.R)} D</b>${p.R < -0.01 ? ` → 遠點在眼前 ${fmtCM(-1 / p.R)}` : p.R > 0.01 ? ' → 遠點在眼後（虛的）' : ' → 遠點在無限遠'}；${p.typ === 'axial' ? '軸性' : '屈光性'}：眼長 ${O2.L.toFixed(2)} mm、屈光力 ${O2.E.Pv.toFixed(2)} D`;
+  return `<div class="card"><div class="eyebrow">屈光與矯正 · 對照 BCSC 3</div><div><h2>${nm.en}</h2></div><p class="zh">${nm.zh}</p><p class="def">${base.def}</p>
+    <div class="verdict">${v}</div>${list('重點', base.look)}${list('延伸', base.more)}
+    ${list('調節', [`年輕時調節幅度約 7–10 D，20 到 50 歲之間下降最多，50 歲左右約剩 0.50 D${s('S4')}`, `第一次出現 presbyopia 症狀的平均年齡在 42–44 歲${s('S4')}`, '下方拖拉條可以加調節，看焦點往前移、對焦點往眼前靠近'])}
+    ${srcList([...new Set([...base.src, 'S4'])])}</div>`;
+}
+function renderPanel() {
+  const p = $('#panel');
+  p.innerHTML = st.learnMode === 'quiz' ? quizHTML() : cardHTML();
+}
+function renderSelbar() {
+  const b = $('#selbar'), t = st.learnMode === 'learn' ? `目前：${curName(params()).zh}` : '';
+  b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
+}
+// 拖拉時只更新圖、說明卡、狀態列與屈光度尺，不重畫拖拉條
+function renderLive() {
+  renderFig(); renderPanel(); renderSelbar();
+  const rs = $('#rstat'); if (rs) rs.textContent = statusText(params());
+  const rb = $('#rbox'); if (rb) rb.innerHTML = rulerSVG(params());
+}
+
+/* ---------- quiz ----------
+   state：看光路圖選屈光狀態；far：給遠點選矯正度數；near：給屈光度與調節幅度算近點 */
+const FQ = { f1: -4, f2: -3, f3: -2, f4: -1, f5: -5, f6: 2, f7: 1, f8: 4 };   // 遠點的聚散度（D）：負＝遠點在眼前（近視），正＝在眼後（遠視、虛的）
+const farAns = D => D;                      // 矯正鏡片（貼在角膜上）＝遠點聚散度
+const farDist = D => fmtCM(1 / Math.abs(D));
+const NQ = { n1: [-2, 4], n2: [2, 4], n3: [0, 2.5], n4: [-1, 1], n5: [0, 10], n6: [-3, 1] };   // [R, 調節幅度]
+const nearAns = ([R, A]) => 100 / (A - R);  // cm
+const SQ = ['emm', 'myo', 'hyp', 'cm', 'sm', 'mx', 'sh', 'ch'];
+const QKEYS = [...SQ.map(k => 'opt:s:' + k), ...Object.keys(FQ).map(k => 'opt:f:' + k), ...Object.keys(NQ).map(k => 'opt:n:' + k)];
+const keyValid = k => QKEYS.includes(k);
+const QT = [['state', '看光路圖選狀態'], ['far', '遠點換算度數'], ['near', '算近點']];
+const QTZ = { s: 'state', f: 'far', n: 'near' };
+const stZh = k => AST_ZH2[k] || OP[k].zh;
+const keyLabel = k => { const t = k[4], id = k.slice(6); return t === 's' ? `${stZh(id)}（看光路圖）` : t === 'f' ? `遠點${FQ[id] < 0 ? '在眼前' : '在眼後'} ${farDist(FQ[id])}（換算度數）` : `R ${fmtD(NQ[id][0])}、調節 ${NQ[id][1]} D（算近點）`; };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+function stateParams(k) {
+  const q = v => Math.round(v * 4) / 4;
+  if (k === 'emm') return { mode: 'sph', R: 0, typ: 'axial' };
+  if (k === 'myo') return { mode: 'sph', R: -q(1.5 + Math.random() * 3.5), typ: pick(['axial', 'refr']) };
+  if (k === 'hyp') return { mode: 'sph', R: q(1.5 + Math.random() * 2.5), typ: pick(['axial', 'refr']) };
+  const a = q(1 + Math.random() * 1.5), b = q(1 + Math.random() * 1.5), sw = Math.random() < 0.5;
+  const pr = { cm: [-a - b, -a], sm: [-a - 0.5, 0], mx: [-a, b], sh: [0, a + 0.5], ch: [a, a + b] }[k];
+  return { mode: 'ast', Rv: sw ? pr[1] : pr[0], Rh: sw ? pr[0] : pr[1] };
+}
+function itemOf(key) {
+  const t = QTZ[key[4]], id = key.slice(6);
+  if (t === 'state') {
+    const p = stateParams(id), pool = AST_ZH[id] ? ['cm', 'sm', 'mx', 'sh', 'ch'] : ['emm', 'myo', 'hyp'];
+    return { key, type: t, p, ans: id, opts: shuffle(pool.slice()), lab: stZh };
+  }
+  if (t === 'far') {
+    const D = FQ[id], a = farAns(D), f = x => `${fmtD(x)} D`;
+    const opts = [...new Set([a, -a, a / 2, a * 2].map(x => Math.round(x * 4) / 4))].map(f);
+    return { key, type: t, p: { mode: 'sph', R: a, typ: 'axial' }, ans: f(a), opts: shuffle(opts), lab: x => x, D };
+  }
+  const [R, A] = NQ[id], a = nearAns([R, A]), f = x => fmtCM(x / 100);
+  // 干擾選項：忘了減 R、把 R 加反、算錯一點
+  const cands = [a, 100 / A, 100 / (A + R), a * 2, a / 2, 100 / (A - R + 2)].filter(x => x > 0 && isFinite(x));
+  const opts = [...new Set(cands.map(f))].slice(0, 4);
+  return { key, type: t, p: { mode: 'sph', R, typ: 'axial' }, ans: f(a), opts: shuffle(opts), lab: x => x, R, A };
+}
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
+function quizHTML() {
+  const q = st.quiz;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).filter(keyValid).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗 · 屈光與矯正</div><h2>焦點在哪？要配幾度？</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QT.map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">三種題型：看光路圖判斷屈光狀態（含五型散光）；給遠點距離選矯正度數；給屈光度與調節幅度算近點。鏡片都當作貼在角膜上。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>再看一次</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i];
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  const prompt = it.type === 'state' ? ['上方是這隻眼睛不戴鏡、不調節、看遠時的光路', '這是什麼屈光狀態？']
+    : it.type === 'far' ? [`這隻眼睛不調節時，遠點${it.D < 0 ? `在眼前 ${farDist(it.D)}` : `在眼後 ${farDist(it.D)}（虛的）`}`, '矯正鏡片要幾度？（貼在角膜上）']
+    : [`屈光度 R ${fmtD(it.R)} D，調節幅度 ${it.A} D，不戴鏡`, '近點在眼前多遠？'];
+  h += `<div class="prompt"><div class="k">${prompt[0]}</div><div class="q">${prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${it.lab(o)}</button>`).join('')}</div>`;
+  if (q.ans) {
+    const more = it.type === 'state' ? (AST_ZH[it.ans] ? `兩條子午線：垂直 ${fmtD(it.p.Rv)}、水平 ${fmtD(it.p.Rh)} D，處方 ${rxMinus(it.p.Rv, it.p.Rh)}。${OP.ast.look[2]}` : `${OP[it.ans].look[0]}`)
+      : it.type === 'far' ? `矯正鏡片 ＝ 1 ／ 遠點距離（m）：${it.D < 0 ? `遠點在眼前 → −1 ／ ${+(1 / -it.D).toFixed(3)} m` : `遠點在眼後 → +1 ／ ${+(1 / it.D).toFixed(3)} m`} ＝ ${it.ans}。`
+      : `近點 ＝ 1 ／（調節幅度 − R）＝ 1 ／（${it.A} − (${fmtD(it.R)})）＝ 1 ／ ${(it.A - it.R).toFixed(2)} D ＝ ${it.ans}。`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${it.lab(q.ans.pick)}；` : ' '}答案是 ${it.lab(it.ans)}。<br>${more}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong, types = cfg.type === 'mix' ? QT.map(x => x[0]) : [cfg.type];
+  let pool = QKEYS.filter(k => types.includes(QTZ[k[4]]));
+  if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
+  render();
+}
+function answer(a) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  q.ans = a; if (a.ok) q.score++;
+  q.log.push({ key: it.key, ok: a.ok, type: it.type });
+  const m = store.get();
+  if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
+  store.save(); render();
+}
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function setMode(m) {
+  st.learnMode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
+  render();
+}
+function setChip(k) { st.chip = k; Object.assign(st, CHIPS[k].p, { Ls: 0, S: 0, C: 0, A: 0 }); }
+function goKey(k) {
+  const t = k[4], id = k.slice(6);
+  if (t === 's') setChip(id);
+  else if (t === 'f') { setChip(FQ[id] < 0 ? 'myo' : 'hyp'); st.R = FQ[id]; }
+  else { setChip(NQ[id][0] < 0 ? 'myo' : NQ[id][0] > 0 ? 'hyp' : 'emm'); st.R = NQ[id][0]; st.A = 0; }
+  render();
+}
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  $('#w-practice').disabled = !ids.length;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${ids.length}）`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.learnMode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const ch = t.closest('[data-chip]'); if (ch) { setChip(ch.dataset.chip); render(); return; }
+  const ty = t.closest('[data-typ]'); if (ty) { st.typ = ty.dataset.typ; render(); return; }
+  const ob = t.closest('[data-obj]'); if (ob) { st.obj = ob.dataset.obj; render(); return; }
+  const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
+  if (t.closest('#q-skip')) { answer({ ok: false }); return; }
+});
+const SL = { 's-R': 'R', 's-L': 'Ls', 's-Rv': 'Rv', 's-Rh': 'Rh', 's-S': 'S', 's-C': 'C', 's-A': 'A', 's-d': 'dcm' };
+document.addEventListener('input', e => {
+  const k = SL[e.target.id]; if (!k) return;
+  st[k] = +e.target.value;
+  const v = $('#' + e.target.id + '-v'); if (v) v.textContent = k === 'dcm' ? `${st[k]} cm` : k === 'A' ? `${st[k].toFixed(2)} D` : `${fmtD(st[k])} D`;
+  if (k === 'R' || k === 'Rv' || k === 'Rh') { const t2 = stateOf(params()); st.chip = CHIPS[t2] ? t2 : st.chip; const ix = document.querySelectorAll('[data-chip]'); ix.forEach(b => b.classList.toggle('on', b.dataset.chip === st.chip)); }
+  renderLive();
+});
+document.addEventListener('change', e => { if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); } });
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+
+/* ---------- self-check ---------- */
+(() => {
+  const a = (c, m) => console.assert(c, 'optics self-check: ' + m);
+  const near = (x, y, e = 1e-6) => Math.abs(x - y) < e;
+  const P = o => Object.assign({ mode: 'sph', R: 0, typ: 'axial', Rv: 0, Rh: 0, Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40 }, o);
+  a(near(P0, 60, 0.1) && near((NP - 1) / (R0 / 1000), 60, 0.1) && near(focusMM(P0), L0, 1e-9), 'Emsley：約 60 D、正視焦點在 22.22 mm');
+  a(near(optics(P({})).res.v, 0, 0.01), '正視看遠：焦點在視網膜上');
+  ['axial', 'refr'].forEach(typ => {
+    a(optics(P({ R: -3, typ })).res.v > 2.9, `${typ} 近視：焦點在視網膜前`);
+    a(optics(P({ R: 2, typ })).res.v < -1.9, `${typ} 遠視：焦點在視網膜後`);
+    a(near(optics(P({ R: -3, typ, Ls: -3 })).res.v, 0, 1e-6) && near(optics(P({ R: 2, typ, Ls: 2 })).res.v, 0, 1e-6), `${typ}：鏡片＝R 時剛好矯正`);
+  });
+  a(eyeOf(P({ R: -3, typ: 'axial' })).L > L0 && eyeOf(P({ R: 2, typ: 'axial' })).L < L0, '軸性近視眼較長、軸性遠視眼較短');
+  a(near(optics(P({ R: 2, A: 2 })).res.v, 0, 1e-6), '遠視 +2 用 2 D 調節可以看清遠處');
+  a(near(optics(P({ R: -2, A: 4, obj: 'near', dcm: 100 / 6 })).res.v, 0, 1e-6), '近視 −2、調節 4 D：近點 16.7 cm 剛好對焦');
+  // 散光：分類、處方、矯正
+  Object.keys(AST_ZH).forEach(k => a(astType(CHIPS[k].p.Rv, CHIPS[k].p.Rh) === k, `散光預設 ${k} 的分類`));
+  a(rxMinus(-1, -3) === '−1.00 −2.00 × 090' && rxMinus(-3, -1) === '−1.00 −2.00 × 180', '負柱鏡寫法：sphere＝較正的子午線，axis 在那條子午線');
+  const ca = optics(P({ mode: 'ast', Rv: -3, Rh: -1, S: -1, C: -2 }));
+  a(near(ca.res.v, 0, 1e-6) && near(ca.res.h, 0, 1e-6), '散光：S＝較正子午線、C＝差值時兩條焦線都回到視網膜');
+  const cs = optics(P({ mode: 'ast', Rv: -3, Rh: -1, S: -1 }));
+  a(near(cs.res.h, 0, 1e-6) && cs.res.v > 1.9, '只加球面：整個 conoid 移動，一條焦線上網膜、另一條還在前');
+  // 測驗答案
+  a(farDist(-4) === '25 cm' && farAns(-4) === -4 && farDist(2) === '50 cm', '遠點換算：眼前 25 cm → −4 D、眼後 50 cm → +2 D');
+  a(QKEYS.filter(k => k[4] === 'n').every(k => itemOf(k).opts.length >= 3), '算近點的題目至少 3 個選項');
+  a(near(nearAns([-2, 4]), 100 / 6) && near(nearAns([2, 4]), 50) && near(nearAns([0, 2.5]), 40), '近點：1／(A − R)');
+  a(QKEYS.every(k => { const it = itemOf(k); return it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length; }), '每題的選項都含答案且不重複');
+  SQ.forEach(k => { for (let i = 0; i < 20; i++) a(stateOf(stateParams(k)) === k, `隨機出題 ${k} 的參數要符合該型`); });
+})();
+
+render();
+</script>
+
+</body>
+</html>
