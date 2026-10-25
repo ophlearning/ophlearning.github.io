@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>神經眼科互動圖譜</title>
-<meta name="description" content="互動式神經眼科：視路病灶與兩眼視野缺損、九方向眼位與 CN III／IV／VI palsy、INO、Parks three-step test，附測驗與錯題本。">
+<meta name="description" content="互動式神經眼科：視路病灶與兩眼視野缺損、九方向眼位與 CN III／IV／VI palsy、INO、Parks three-step test、swinging flashlight 與 anisocoria 判斷，附測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -234,6 +234,22 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
 .stp .n{font-family:var(--f-mono);font-size:12px;color:var(--accent)}
 @media (max-width: 760px){ .stps{grid-template-columns:minmax(0,1fr)} }
 
+/* pupil */
+.c-thin{fill:none;stroke:var(--t-stroke);stroke-width:1.2}
+.pup{transform-box:fill-box;transform-origin:center;transform:scale(var(--k));transition:transform var(--dur) ease}
+.beam polygon{fill:var(--vf-l);opacity:.22}
+.beam rect{fill:var(--ink-2)}
+.near rect{fill:var(--accent)}
+.part{cursor:pointer}
+.part .hitp{fill:none;stroke:transparent;stroke-width:18}
+.part.on .fib{stroke-width:6}
+.part.on .pn,.part:hover .pn{stroke:var(--hl);stroke-width:2.4}
+.part:hover .fib{stroke-width:5}
+.fstat{margin:10px 0 0;font-size:14px;color:var(--ink);min-height:1.5em}
+.trail{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:13px;color:var(--muted);margin-bottom:8px}
+.fq{margin:0 0 8px;font-size:15px;font-weight:500}
+.fend{margin:0;font-size:15px;font-weight:500;color:var(--accent)}
+
 @media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
 @media (max-width: 560px){
   .wrap{padding-inline:16px}
@@ -291,7 +307,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>視路是由頭頂往下看的示意圖，不按比例；視野圖依病人自己看出去的樣子畫，缺損的形狀與大小只是示意。九方向眼位以檢查者面對病人的視角畫（同臨床照片），偏斜程度只是示意，不代表度數。</span>
+    <span><b>關於圖：</b>視路是由頭頂往下看的示意圖，不按比例；視野圖依病人自己看出去的樣子畫，缺損的形狀與大小只是示意。九方向眼位與瞳孔圖以檢查者面對病人的視角畫（同臨床照片），偏斜程度與瞳孔大小只是示意，不代表度數或毫米。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -711,13 +727,258 @@ function muscCard() {
   return h + srcList([MSRC[k], 'S8']) + `</div>`;
 }
 
+/* ---------- pupil（分頁三） ----------
+   Swinging flashlight 與 anisocoria 例子都用檢查者面對病人的視角：圖左＝病人右眼 OD。
+   反射路徑圖是由頭頂往下看：圖左＝病人左側（同分頁一）。瞳孔大小只是示意比例，不代表毫米。 */
+Object.assign(SRC, {
+  S9: { t: 'Penney DC, et al. Abnormal pupils at the bedside. Int J Emerg Med 2026（PMC13015004）', u: 'https://doi.org/10.1186/s12245-026-01195-0' },
+  S10: { t: 'Kanagalingam S, Miller NR. Horner syndrome: clinical perspectives. Eye Brain 2015;7:35–46', u: 'https://doi.org/10.2147/EB.S63633' },
+  S11: { t: "Xu SY, et al. Adie's pupil: a diagnostic challenge for the physician. Med Sci Monit 2022;28:e934657", u: 'https://doi.org/10.12659/MSM.934657' },
+  S12: { t: 'Li L, et al. Transdermal and powdered scopolamine-induced anisocoria. Case Rep Ophthalmol 2025;16:341–345', u: 'https://doi.org/10.1159/000545362' }
+});
+const PCONDS = {
+  normal: { short: '正常', en: 'Normal pupils', zh: '正常瞳孔', side: false },
+  rapd: {
+    short: 'RAPD', en: 'Relative afferent pupillary defect', zh: '相對性傳入瞳孔缺陷（Marcus Gunn pupil）', side: true,
+    info: side => ({
+      def: `${EYE[side]}的 afferent 訊號（retina 或 optic nerve）比較弱${s('S9')}`,
+      look: [`燈照${EYE[opp(side)]}（正常眼）時兩眼都縮小；把燈移到${EYE[side]}時，兩眼反而一起放大${s('S9')}`, `靜止時兩眼一樣大：RAPD 本身不造成 anisocoria，要動態測試才看得出來${s('S9')}`, `檢查：暗室、請病人看遠處避免看近縮瞳，每一眼照幾秒再快速換到另一眼${s('S9')}`],
+      key: [`每一眼的訊號都傳到兩側中腦，所以照任何一眼，正常時兩眼縮得一樣多${s('S9')}`, `Optic tract 或 pretectal 區病灶造成 afferent 不對稱時，也可能有 RAPD（見「視路與視野」的 optic tract）${s('S9', 'S1')}`],
+      cause: [`最常見是視神經病變；嚴重的視網膜病變也會${s('S9')}`, `Optic neuritis、ischemic optic neuropathy、retinal detachment、CRAO 或 CRVO、optic nerve tumor、advanced glaucoma${s('S9')}`],
+      src: ['S9', 'S1']
+    })
+  },
+  cn3: {
+    short: 'CN III', en: 'Oculomotor nerve palsy（pupil-involving）', zh: '動眼神經麻痺（瞳孔受影響）', side: true,
+    info: side => ({
+      def: `CN III 帶有讓瞳孔收縮的副交感纖維，這些纖維走在神經表層，容易被外部壓迫${s('S9')}`,
+      look: [`${EYE[side]}瞳孔放大、對光反應差；合併明顯 ptosis 與 down and out 的眼位${s('S9')}`, `照哪一眼，${EYE[opp(side)]}都正常縮小（afferent 正常），只有${EYE[side]}縮不了`],
+      key: [`瞳孔受影響要想到壓迫，特別是 PCOM aneurysm，需緊急做 CTA 或 MRA${s('S9')}`, `Microvascular ischemia 多傷到中央的運動纖維、保留表層的瞳孔纖維，所以常是 pupil-sparing${s('S9')}`, `「Rule of the pupil」是傳統說法；現在多數臨床醫師仍會做血管影像排除 aneurysm${s('S9')}`, `部分 CN III palsy 的瞳孔對 dilute pilocarpine 也會縮，不能只靠這個測試排除${s('S9')}`],
+      cause: [`壓迫：PCOM aneurysm、顱內腫瘤、cavernous sinus 病變${s('S9')}`, `Microvascular：DM、HTN、atherosclerosis${s('S9')}`],
+      src: ['S9']
+    })
+  },
+  horner: {
+    short: 'Horner', en: 'Horner syndrome', zh: 'Horner 症候群', side: true,
+    info: side => ({
+      def: `支配眼睛的交感神經（oculosympathetic）路徑中斷，iris dilator 無力${s('S9', 'S10')}`,
+      look: [`${EYE[side]}瞳孔較小、對光反應正常；暗處 anisocoria 比亮處明顯${s('S9', 'S10')}`, `輕微 ptosis（Müller muscle 負責約 2 mm 的上眼瞼抬高），下眼瞼稍微抬高（upside-down ptosis）；約 12% 沒有 ptosis${s('S10')}`, `Dilation lag：突然關燈後，Horner 瞳孔晚幾秒才放大，約 4–5 秒時兩眼差最多${s('S10')}`, `依位置可合併同側臉部 anhidrosis${s('S9', 'S10')}`],
+      key: [`確認：apraclonidine 或 cocaine；分位置：hydroxyamphetamine（見「Anisocoria 判斷」）${s('S10')}`, `急性頸痛合併 Horner：先當 carotid artery dissection，做頸部 CTA${s('S9')}`, `Horner 合併同側 CN VI palsy：強烈指向後方 cavernous sinus${s('S10')}`],
+      cause: [`Carotid artery dissection、Pancoast tumor、brainstem stroke（Wallenberg）、cavernous sinus 病變${s('S9')}`, `一個 450 人的系列中，能找到原因的病人裡 central 13%、preganglionic 44%、postganglionic 43%${s('S10')}`],
+      src: ['S9', 'S10']
+    })
+  },
+  adie: {
+    short: 'Adie', en: 'Adie tonic pupil', zh: 'Adie 強直性瞳孔', side: true,
+    info: side => ({
+      def: `Ciliary ganglion 或 short ciliary nerves 受損，屬於 postganglionic 副交感神經損傷${s('S9', 'S11')}`,
+      look: [`${EYE[side]}瞳孔放大，對光反應很弱或沒有；看近時慢慢縮小，之後再慢慢放大（light-near dissociation）${s('S9')}`, `約 80% 單側；多見於 20–40 歲女性${s('S9', 'S11')}`],
+      key: [`Dilute pilocarpine（0.1–0.125%）：患側縮得比健側多，因為 cholinergic denervation supersensitivity${s('S9')}`, `機轉：支配 ciliary body 的纖維遠多於 sphincter，再生時有些錯接到 sphincter，所以看近會縮、照光不太縮${s('S9', 'S11')}`, `單側瞳孔放大、看近會縮、其他神經學檢查正常，強烈指向 Adie 而不是壓迫性病灶${s('S9')}`, `合併深部肌腱反射減弱＝Holmes-Adie syndrome${s('S9', 'S11')}`],
+      cause: [`多為 idiopathic，也可在病毒感染、發炎、外傷後出現${s('S9')}`, `一篇個案文獻回顧中，相關疾病以感染（梅毒最常見）為主，其次是免疫疾病與 paraneoplastic syndrome${s('S11')}`],
+      src: ['S9', 'S11']
+    })
+  },
+  ar: {
+    short: 'Argyll Robertson', en: 'Argyll Robertson pupil', zh: 'Argyll Robertson 瞳孔', side: false,
+    info: () => ({
+      def: `背側中腦（pretectal 區、posterior commissure）病灶切斷光反射路徑，但近反射走較腹側的路徑到 EW nucleus，所以得以保留${s('S9')}`,
+      look: [`兩眼瞳孔都小、形狀不規則；對光幾乎不縮，看近時正常縮小（light-near dissociation）${s('S9')}`, `通常雙側、對稱，視力正常${s('S9')}`],
+      key: [`兩眼都小、看近會縮 → 想到 neurosyphilis 或背側中腦病灶${s('S9')}`, `點 atropine 會散大${s('S11')}`],
+      cause: [`Neurosyphilis（tabes dorsalis、general paresis）；其他背側中腦病灶也會出現類似表現${s('S9')}`],
+      src: ['S9', 'S11']
+    })
+  }
+};
+const PCOND_ORDER = ['normal', 'rapd', 'cn3', 'horner', 'adie', 'ar'];
+const PUP_IDS = ['rapd_R', 'rapd_L', 'cn3_R', 'cn3_L', 'horner_R', 'horner_L', 'adie_R', 'adie_L', 'ar'];
+const pcondZh = id => { const [c, side] = id.split('_'); return side ? `${ZH[side]}側 ${PCONDS[c].short}` : PCONDS[c].short; };
+const LIGHTS = { dim: '暗室（看遠）', R: '照右眼', L: '照左眼', bright: '亮室', near: '看近' };
+
+/* 示意瞳孔大小：d 是相對直徑（最大 7.4）。照光時兩眼的縮瞳程度一樣（consensual），由被照那一眼的 afferent 強弱決定 */
+function pupilOf(cond, side, eye, light) {
+  const gain = e => cond === 'rapd' && e === side ? .3 : 1;
+  const drive = light === 'R' || light === 'L' ? gain(light) : light === 'bright' ? 1 : 0, near = light === 'near' ? 1 : 0;
+  const aff = cond !== 'normal' && cond !== 'ar' && eye === side;
+  let d = 6.2 - 3.2 * Math.max(drive, near * .9), pt = 'none', dur = .45, irr = false, off = [0, 0];
+  if (cond === 'ar') { d = 2.6 - .8 * near; irr = true; }
+  else if (aff && cond === 'cn3') { d = 7.4; pt = 'marked'; off = [eye === 'R' ? -22 : 22, 12]; }
+  else if (aff && cond === 'horner') { d = 4.6 - 1.6 * Math.max(drive, near * .9); pt = 'mild'; }
+  else if (aff && cond === 'adie') { d = 7 - .25 * drive - 3.4 * near; dur = near || st.light === 'near' ? 2.8 : .6; }
+  return { d, pt, dur, irr, off };
+}
+function bigEye(cx, cy, p, eye) {
+  const id = `be${EYE_UID++}`, shape = `M${cx - 95},${cy}Q${cx},${cy - 120} ${cx + 95},${cy}Q${cx},${cy + 120} ${cx - 95},${cy}Z`;
+  const ix = cx + p.off[0], iy = cy + p.off[1], k = p.d / 7.4;
+  const lid = p.pt === 'none' ? '' : `<path class="c-lid" d="M${cx - 100},${cy - 70}H${cx + 100}V${p.pt === 'mild' ? cy - 40 : cy - 2}Q${cx},${p.pt === 'mild' ? cy - 50 : cy - 14} ${cx - 100},${p.pt === 'mild' ? cy - 40 : cy - 2}Z"/>`;
+  const pupil = p.irr ? `<ellipse class="c-pupil pup" data-eye="${eye}" cx="${ix}" cy="${iy}" rx="32.6" ry="26" transform="rotate(24 ${ix} ${iy})" style="--k:${k};--dur:${p.dur}s"/>`
+    : `<circle class="c-pupil pup" data-eye="${eye}" cx="${ix}" cy="${iy}" r="32.6" style="--k:${k};--dur:${p.dur}s"/>`;
+  return `<g class="deco"><clipPath id="${id}"><path d="${shape}"/></clipPath><path class="c-eyew" d="${shape}"/>
+    <g clip-path="url(#${id})"><circle class="c-iris" cx="${ix}" cy="${iy}" r="48"/>${pupil}${lid}</g><path class="c-eyeo" d="${shape}"/></g>`;
+}
+function flashCond() { const it = quizItem(); if (it && it.type === 'flash') { const [c, side] = it.id.split('_'); return [c, side || 'R']; } return [st.pcond, st.pside]; }
+function renderFlash() {
+  const [c, side] = flashCond(), P = e => pupilOf(c, side, e, st.light);
+  st.pd = { R: P('R').d, L: P('L').d };
+  const beam = (cx, e) => `<g class="beam" data-b="${e}" ${st.light === e ? '' : 'hidden'}><polygon points="${cx - 12},300 ${cx + 12},300 ${cx + 44},${170 + 20} ${cx - 44},${170 + 20}"/><rect x="${cx - 16}" y="298" width="32" height="26" rx="5"/></g>`;
+  return `<svg viewBox="0 0 660 330" role="img" aria-label="Swinging flashlight，檢查者面對病人">
+    <text class="gzt" x="200" y="34" text-anchor="middle">病人右眼 OD</text><text class="gzt" x="460" y="34" text-anchor="middle">病人左眼 OS</text>
+    <g class="near" ${st.light === 'near' ? '' : 'hidden'}><rect x="322" y="52" width="16" height="70" rx="3"/><text class="gzt" x="330" y="142" text-anchor="middle">看近</text></g>
+    ${beam(200, 'R')}${beam(460, 'L')}${bigEye(200, 170, P('R'), 'R')}${bigEye(460, 170, P('L'), 'L')}
+    <text class="gzt" id="room" x="330" y="318" text-anchor="middle">${st.light === 'bright' ? '亮室' : st.light === 'dim' ? '暗室：請病人看遠處' : ''}</text></svg>`;
+}
+// 只更新瞳孔與燈，讓 CSS transition 演出縮放；回傳兩眼的變化描述
+function applyLight() {
+  const [c, side] = flashCond(), old = st.pd || { R: 6.2, L: 6.2 }, now = {};
+  ['R', 'L'].forEach(e => {
+    const p = pupilOf(c, side, e, st.light), el = document.querySelector(`#fig .pup[data-eye="${e}"]`);
+    now[e] = p.d;
+    if (el) { el.style.setProperty('--dur', p.dur + 's'); el.style.setProperty('--k', p.d / 7.4); }
+  });
+  document.querySelectorAll('#fig .beam').forEach(b => b.hidden = b.dataset.b !== st.light);
+  const nr = document.querySelector('#fig .near'); if (nr) nr.hidden = st.light !== 'near';
+  const rm = document.querySelector('#room'); if (rm) rm.textContent = st.light === 'bright' ? '亮室' : st.light === 'dim' ? '暗室：請病人看遠處' : '';
+  const word = dlt => dlt < -.3 ? '縮小' : dlt > .3 ? '放大' : '幾乎不變';
+  const w = { R: word(now.R - old.R), L: word(now.L - old.L) };
+  st.pd = now;
+  const t = `${LIGHTS[st.light]}：${w.R === w.L ? `兩眼都${w.R}` : `右眼${w.R}、左眼${w.L}`}`;
+  const fs = $('#fstat'); if (fs) fs.textContent = t;
+  return t;
+}
+let SWING = null;
+function syncLight() { document.querySelectorAll('[data-light]').forEach(b => b.setAttribute('aria-pressed', b.dataset.light === st.light)); }
+function stopSwing() { if (SWING) { clearInterval(SWING); SWING = null; } const b = $('#swing'); if (b) b.setAttribute('aria-pressed', 'false'); }
+function flashControls() {
+  return `<div class="xh">照光與看近</div><div class="row" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+    <div class="seg" role="group" aria-label="光線">${Object.entries(LIGHTS).map(([k, t]) => `<button type="button" data-light="${k}" aria-pressed="${st.light === k}">${t}</button>`).join('')}</div>
+    <button type="button" class="btn" id="swing" aria-pressed="${!!SWING}">自動來回照</button></div>
+    <p class="fstat" id="fstat">先在暗室看兩眼大小，再按「照右眼」「照左眼」來回比較，最後按「看近」。</p>`;
+}
+
+/* 反射路徑圖：由頭頂往下看（上半）＋交感三段神經示意（下半） */
+const PARTS = {
+  aff: { en: 'Afferent limb', zh: '傳入路徑', pts: [`Retina → optic nerve → chiasm → optic tract → 中腦 pretectal nuclei${s('S9')}`, `一眼的這一段比較弱 → 照那一眼時兩眼縮得較少，就是 RAPD${s('S9')}`], src: ['S9'] },
+  pretectal: { en: 'Pretectal nuclei', zh: 'Pretectal 核', pts: [`兩側 pretectal nuclei 都投射到兩側 EW nucleus，所以照任何一眼，兩眼都會縮${s('S9')}`, `Pretectal 區、posterior commissure、背側中腦病灶：光反射壞、近反射保留（light-near dissociation，例如 Argyll Robertson）${s('S9')}`], src: ['S9'] },
+  ew: { en: 'Edinger-Westphal nucleus', zh: 'EW 核', pts: [`EW nucleus 發出副交感纖維，隨 CN III 走${s('S9')}`, `近反射的訊號從較腹側的路徑到 EW，不經過 pretectal 區${s('S9')}`], src: ['S9'] },
+  cn3p: { en: 'Oculomotor nerve（pupil fibers）', zh: 'CN III 裡的瞳孔纖維', pts: [`瞳孔的副交感纖維走在 CN III 表層，容易被外部壓迫（PCOM aneurysm、uncal herniation）${s('S9')}`, `Microvascular ischemia 多傷中央的運動纖維，所以常是 pupil-sparing${s('S9')}`], src: ['S9'] },
+  cg: { en: 'Ciliary ganglion', zh: '睫狀神經節', pts: [`Preganglionic 纖維隨 CN III 到 ciliary ganglion 交換，postganglionic 經 short ciliary nerves 到 iris sphincter 與 ciliary body${s('S9')}`, `支配 ciliary body 的纖維比 sphincter 多；這裡受損再生時錯接，就是 Adie tonic pupil${s('S9', 'S11')}`], src: ['S9', 'S11'] },
+  n1: { en: 'First-order neuron', zh: '交感第一段（central）', pts: [`Posterolateral hypothalamus → lateral brainstem → spinal cord 的 ciliospinal center of Budge（C8–T1；另一篇寫 C8–T2，文獻不一）${s('S10', 'S9')}`, `Central Horner 幾乎都單側，常合併全身半側 hypohidrosis${s('S10')}`, `Lateral medullary infarction（Wallenberg）：33 位連續病人中 91% 有 Horner${s('S10')}`], src: ['S10', 'S9'] },
+  n2: { en: 'Second-order neuron', zh: '交感第二段（preganglionic）', pts: [`離開 ciliospinal center、越過 pulmonary apex，經 stellate ganglion 沿 carotid sheath 上行到 superior cervical ganglion${s('S10')}`, `Pancoast syndrome：肺尖腫瘤合併同側肩痛、手部無力與 preganglionic Horner${s('S10')}`, `外傷與醫源性傷害（胸腔、頸部手術、導管等）也常見${s('S10')}`], src: ['S10'] },
+  n3: { en: 'Third-order neuron', zh: '交感第三段（postganglionic）', pts: [`Superior cervical ganglion → internal carotid artery 管壁 → cavernous sinus（短暫與 CN VI 同行）→ V1 nasociliary → long ciliary nerves → iris dilator${s('S10')}`, `ICA 病灶常是 incomplete Horner（沒有 anhidrosis），因為臉部汗腺的纖維走 external carotid${s('S10')}`, `Painful Horner 最常見是 carotid artery dissection${s('S10')}`], src: ['S10'] }
+};
+const PART_ORDER = ['aff', 'pretectal', 'ew', 'cn3p', 'cg', 'n1', 'n2', 'n3'];
+function renderRoute() {
+  const on = id => st.mode === 'learn' && st.ppart === id ? ' on' : '';
+  const seg = (id, d, cls) => `<g class="part${on(id)}" data-pp="${id}"><path class="hitp" d="${d}"/><path class="fib ${cls}" d="${d}"/></g>`;
+  return `<svg viewBox="0 0 660 720" role="img" aria-label="瞳孔反射路徑示意">
+    <text class="gzt" x="16" y="24">副交感：光反射（由頭頂往下看，圖左＝病人左側）</text>
+    <g class="deco"><circle class="c-eye" cx="200" cy="92" r="32"/><circle class="c-eye" cx="460" cy="92" r="32"/>
+      <text x="200" y="97" text-anchor="middle" style="font-family:var(--f-mono);font-size:13px;fill:var(--ink-2)">OS</text><text x="460" y="97" text-anchor="middle" style="font-family:var(--f-mono);font-size:13px;fill:var(--ink-2)">OD</text>
+      <path class="c-thin" d="M285,262 L310,312 M285,262 L350,312 M375,262 L310,312 M375,262 L350,312"/></g>
+    ${seg('aff', 'M200,124 L330,192 L285,256 M460,124 L330,192 L375,256', 'r')}
+    ${seg('cn3p', 'M310,320 C230,330 150,270 150,158 M350,320 C430,330 510,270 510,158', 'l')}
+    ${seg('cg', 'M150,143 L178,114 M510,143 L482,114', 'l')}
+    <g class="part${on('pretectal')}" data-pp="pretectal"><ellipse class="c-nuc pn" cx="285" cy="262" rx="17" ry="9"/><ellipse class="c-nuc pn" cx="375" cy="262" rx="17" ry="9"/></g>
+    <g class="part${on('ew')}" data-pp="ew"><ellipse class="c-nuc pn" cx="310" cy="314" rx="13" ry="8"/><ellipse class="c-nuc pn" cx="350" cy="314" rx="13" ry="8"/></g>
+    <g class="part${on('cg')}" data-pp="cg"><circle class="c-nuc pn" cx="150" cy="150" r="8"/><circle class="c-nuc pn" cx="510" cy="150" r="8"/></g>
+    <g class="lab deco"><text x="346" y="186">Chiasm</text><text x="398" y="160">Afferent</text><text x="264" y="266" text-anchor="end">Pretectal</text>
+      <text x="368" y="340">EW nucleus</text><text x="196" y="300" text-anchor="end">CN III</text><text x="138" y="182" text-anchor="end">Ciliary ganglion</text></g>
+    <text class="gzt" x="16" y="404">交感：三段神經（示意，不按解剖位置）</text>
+    <g class="deco"><rect class="cell" x="22" y="424" width="136" height="34" rx="8"/><text class="gzt" x="90" y="446" text-anchor="middle">Hypothalamus</text>
+      <rect class="cell" x="96" y="636" width="196" height="34" rx="8"/><text class="gzt" x="194" y="658" text-anchor="middle">Ciliospinal center</text>
+      <rect class="cell" x="330" y="596" width="150" height="34" rx="8"/><text class="gzt" x="405" y="618" text-anchor="middle">Superior cervical g.</text>
+      <rect class="cell" x="510" y="424" width="136" height="34" rx="8"/><text class="gzt" x="578" y="446" text-anchor="middle">Dilator · Müller</text></g>
+    ${seg('n1', 'M90,458 C90,560 120,630 150,636', 'r')}${seg('n2', 'M240,670 C280,712 380,700 400,630', 'l')}${seg('n3', 'M425,596 C460,520 520,480 570,458', 'r')}
+    <g class="lab deco"><text x="100" y="560">1st order</text><text x="262" y="712">2nd order · 越過 lung apex</text><text x="476" y="540">3rd order · 沿 ICA</text></g></svg>`;
+}
+
+/* Anisocoria 判斷流程：每個節點是問題（o）或結論（end） */
+const FLOW = {
+  start: {
+    t: '先比較亮處與暗處', q: '兩眼大小的差距，在哪裡比較大？', o: [['phys', '差不多（差距穩定）'], ['small', '暗處差比較多'], ['large', '亮處差比較多']],
+    pts: [`瞳孔大小由副交感（縮）與交感（放大）的平衡決定${s('S9')}`, `亮處差較多 → 大的那顆縮不了，是副交感問題；暗處差較多 → 小的那顆放不大，是交感問題${s('S9')}`, `會痛的 anisocoria 要先當 PCOM aneurysm，直到排除${s('S9')}`], src: ['S9']
+  },
+  phys: { t: 'Physiologic anisocoria', end: true, ex: 'phys', pts: [`差距穩定、通常小於 1 mm，對光反應正常${s('S9')}`, `約 20% 的人有${s('S9', 'S10')}`, `可合併 levator 問題造成的 ptosis，看起來像 Horner；要看瞳孔反應與暗處差距${s('S10')}`], src: ['S9', 'S10'] },
+  small: {
+    t: '小的那顆異常：交感（Horner 方向）', q: '點 apraclonidine 後？', o: [['hornerY', 'Anisocoria 反轉（小的變大）'], ['hornerN', '沒有反轉']], ex: 'horner',
+    pts: [`Horner 的小瞳孔對光反應正常，暗處差較多；可有 dilation lag${s('S10')}`, `Apraclonidine：iris dilator 的 α1 受體 denervation supersensitivity → Horner 瞳孔放大、anisocoria 反轉；正常瞳孔幾乎不變或稍縮${s('S10')}`, `Cocaine（2–10%）：正常瞳孔散大、Horner 不散大；45 分鐘後 anisocoria 至少 0.8 mm 支持 Horner${s('S10')}`, `嬰兒點 apraclonidine 有嗜睡、叫不醒的報告，嬰幼兒建議改用 cocaine${s('S10')}`], src: ['S10']
+  },
+  hornerN: { t: 'Apraclonidine 沒有反轉', end: true, ex: 'horner', pts: [`急性 Horner 可能還沒產生 supersensitivity 而偽陰性；但也有發病 3 小時、36 小時就陽性的報告${s('S10')}`, `陰性時，依臨床決定是否改做 cocaine 或其他評估${s('S10')}`], src: ['S10'] },
+  hornerY: {
+    t: '確認是 Horner：接著分位置', q: '點 hydroxyamphetamine（0.5%）後，患側瞳孔？', o: [['hPre', '散大'], ['hPost', '不散大']], ex: 'horner',
+    pts: [`Hydroxyamphetamine 讓 postganglionic 神經末梢釋放儲存的 norepinephrine${s('S10')}`, `Central 或 preganglionic 病灶：末梢完好 → 會散大，甚至比健側大；postganglionic 病灶：末梢沒了 → 不散大${s('S10')}`], src: ['S10']
+  },
+  hPre: { t: 'Central 或 preganglionic Horner', end: true, ex: 'horner', pts: [`第一段（central）：腦幹梗塞（Wallenberg）、脊髓病灶，常合併其他神經學症狀${s('S10')}`, `第二段（preganglionic）：肺尖腫瘤（Pancoast）、外傷、醫源性${s('S10')}`, `影像：腦部 MRI（含 contrast）、胸部 CT 找肺尖病灶${s('S9', 'S10')}`], src: ['S9', 'S10'] },
+  hPost: { t: 'Postganglionic（third-order）Horner', end: true, ex: 'horner', pts: [`受傷一週內可能偽陰性：神經末梢的 norepinephrine 還沒耗盡${s('S10')}`, `ICA 病灶最常見，painful Horner 多為 carotid dissection；用 CT 或 MR angiography 評估頸部血管${s('S10')}`, `合併 CN VI palsy → 想到後方 cavernous sinus${s('S10')}`], src: ['S10'] },
+  large: {
+    t: '大的那顆異常：副交感', q: '有沒有 ptosis 或眼球運動受限？', o: [['cn3', '有'], ['large2', '沒有']], ex: 'large',
+    pts: [`放大且縮不好的瞳孔：CN III palsy、Adie tonic pupil、藥物性散瞳、外傷傷到 ciliary ganglion${s('S9')}`, `先看眼瞼與眼球運動，排除 CN III palsy${s('S9')}`], src: ['S9']
+  },
+  cn3: { t: 'CN III palsy（瞳孔受影響）', end: true, ex: 'cn3', pts: [`合併 ptosis、眼球運動受限的放大瞳孔，要想到壓迫性病灶，特別是 PCOM aneurysm${s('S9')}`, `需緊急做 CTA 或 MRA${s('S9')}`, `合併臉部感覺異常 → 病灶可能在 cavernous sinus${s('S9')}`], src: ['S9'] },
+  large2: {
+    t: '眼瞼、眼球運動正常', q: '看近時會慢慢縮小嗎？或點 dilute pilocarpine（0.1–0.125%）後？', o: [['adie', '看近慢慢縮／dilute pilocarpine 明顯縮'], ['pharm', '都不縮']], ex: 'large',
+    pts: [`Adie：對光不太縮、看近慢慢縮（light-near dissociation）；dilute pilocarpine 讓患側縮得比健側多${s('S9')}`, `部分 CN III palsy 的瞳孔對 dilute pilocarpine 也會縮，要搭配整體檢查判讀${s('S9')}`], src: ['S9']
+  },
+  adie: { t: 'Adie tonic pupil', end: true, ex: 'adie', pts: [`單側放大、看近會縮、其他神經學檢查正常，強烈指向 Adie 而不是壓迫性病灶${s('S9')}`, `合併深部肌腱反射減弱＝Holmes-Adie syndrome${s('S9', 'S11')}`, `文獻回顧中相關疾病以感染（梅毒最常見）為主，建議篩檢${s('S11')}`], src: ['S9', 'S11'] },
+  pharm: { t: '想到藥物性散瞳', end: true, ex: 'large', pts: [`問接觸史：atropine、scopolamine、吸入型 ipratropium 等 anticholinergic；sympathomimetic 藥物也會散瞳${s('S9')}`, `Anticholinergic 造成的散瞳一般對 pilocarpine 沒反應，但有個案報告反應不一致${s('S12')}`, `先天性 mydriasis 也對 pilocarpine 沒反應，要看病史與舊照片${s('S11')}`], src: ['S9', 'S11', 'S12'] }
+};
+const flowNode = () => st.flow.length ? FLOW[st.flow[st.flow.length - 1]] : FLOW.start;
+// 例子：病人右眼是患側；[亮處右, 亮處左, 暗處右, 暗處左, 右眼 ptosis]
+const EXAMPLES = { none: [3, 3, 6.2, 6.2, 'none'], phys: [3.4, 3, 6.6, 6.2, 'none'], horner: [2.9, 3.1, 4.6, 6.2, 'mild'], large: [7, 3, 7.2, 6.2, 'none'], cn3: [7.2, 3, 7.4, 6.2, 'marked'], adie: [6.8, 3, 7, 6.2, 'none'] };
+function renderAniso() {
+  const n = flowNode(), ex = EXAMPLES[n.ex || 'none'];
+  const eye = (cx, cy, d, pt) => `<g transform="translate(${cx} ${cy}) scale(.62) translate(${-cx} ${-cy})">${bigEye(cx, cy, { d, pt, dur: 0, irr: false, off: [0, 0] }, '')}</g>`;
+  return `<svg viewBox="0 0 660 344" role="img" aria-label="Anisocoria 例子：亮處與暗處">
+    <text class="gzt" x="16" y="24">${n.ex ? '例子：病人右眼是患側（瞳孔大小為示意）' : '選一個答案，這裡會出現對應的例子'}</text>
+    <text class="gzt" x="40" y="122">亮處</text><text class="gzt" x="40" y="270">暗處</text>
+    <text class="gzt" x="250" y="62" text-anchor="middle">右眼 OD</text><text class="gzt" x="470" y="62" text-anchor="middle">左眼 OS</text>
+    ${eye(250, 118, ex[0], ex[4])}${eye(470, 118, ex[1], 'none')}${eye(250, 266, ex[2], ex[4])}${eye(470, 266, ex[3], 'none')}</svg>`;
+}
+function flowControls() {
+  const n = flowNode();
+  const trail = ['start', ...st.flow].map(k => FLOW[k].t);
+  return `<div class="xh">一步一步判斷${s('S9')}</div><div class="trail">${trail.map((t, i) => `<span>${i ? '→ ' : ''}${t}</span>`).join('')}</div>
+    ${n.end ? `<p class="fend">結論：${n.t}（說明見說明卡）</p>` : `<p class="fq">${n.q}</p><div class="row" style="display:flex;flex-wrap:wrap;gap:8px">${n.o.map(([k, t]) => `<button type="button" class="btn" data-fl="${k}">${t}</button>`).join('')}</div>`}
+    ${st.flow.length ? `<div class="row" style="margin-top:10px;display:flex;gap:8px"><button type="button" class="btn" id="fl-back">上一步</button><button type="button" class="btn" id="fl-reset">重來</button></div>` : ''}`;
+}
+function pupCard() {
+  if (st.psub === 'route') {
+    if (!st.ppart) return `<div class="empty-card"><div class="eyebrow">瞳孔反射路徑</div><p>上半是光反射（副交感）：藍綠色是傳入，琥珀色是 CN III 帶出去的副交感。下半是支配 dilator 與 Müller muscle 的交感三段神經。</p><p>點任何一段，看這裡壞掉會出現什麼瞳孔表現。要看瞳孔怎麼動，切到「Swinging flashlight」。</p></div>`;
+    const P = PARTS[st.ppart];
+    return `<div class="card"><div class="eyebrow">瞳孔路徑 · 對照 BCSC 5</div><div><h2>${P.en}</h2></div><p class="zh">${P.zh}</p>${list('重點', P.pts)}${srcList(P.src)}</div>`;
+  }
+  if (st.psub === 'flash') {
+    if (st.pcond === 'normal') return `<div class="empty-card"><div class="eyebrow">Swinging flashlight</div><p>正常時，照任何一眼兩眼都縮得一樣多（direct 與 consensual），因為每一眼的訊號都傳到兩側中腦${s('S9')}。</p><p>從圖上方選一種狀況和側別，再用圖下方的按鈕照光、切換亮室與暗室、看近，觀察兩眼瞳孔怎麼變。</p>${srcList(['S9'])}</div>`;
+    const C = PCONDS[st.pcond], d = C.info(st.pside);
+    return `<div class="card"><div class="eyebrow">瞳孔 · 對照 BCSC 5</div><div><h2>${C.en}</h2></div><p class="zh">${C.side ? `${ZH[st.pside]}側 · ` : ''}${C.zh}</p><p class="def">${d.def}</p>${list('表現', d.look)}${list('判讀與處置重點', d.key)}${list('常見病因', d.cause)}${srcList(d.src)}</div>`;
+  }
+  const n = flowNode();
+  return `<div class="card"><div class="eyebrow">Anisocoria 判斷 · 對照 BCSC 5</div><div><h2>${n.t}</h2></div>${n.end ? '' : `<p class="def">${n.q}</p>`}${list(n.end ? '重點' : '為什麼這樣問', n.pts)}${srcList(n.src)}</div>`;
+}
+/* 測驗：flash＝看 swinging flashlight 選診斷；case＝病例描述選診斷 */
+const PCASES = {
+  c1: ['右眼較小，暗處差距比亮處大；點 apraclonidine 後右眼變大、anisocoria 反轉', '右側 Horner syndrome', 'S10'],
+  c2: ['右眼較小；點 cocaine 45 分鐘後右眼幾乎沒有散大，anisocoria 達 1 mm', '右側 Horner syndrome', 'S10'],
+  c3: ['已確認右側 Horner；點 hydroxyamphetamine 後右眼沒有散大', '右側 postganglionic Horner', 'S10'],
+  c4: ['已確認右側 Horner；點 hydroxyamphetamine 後右眼散大，甚至比左眼大', '右側 central 或 preganglionic Horner', 'S10'],
+  c5: ['右眼較大、亮處差距較大；右眼 ptosis 明顯，adduction 與上下轉都受限', '右側 CN III palsy（要緊急 CTA／MRA）', 'S9'],
+  c6: ['右眼較大、亮處差距較大，眼球運動正常；看近時右眼慢慢縮小，點 0.125% pilocarpine 後右眼縮得比左眼多', '右側 Adie tonic pupil', 'S9'],
+  c7: ['右眼較大、對光不縮、眼球運動正常；看近不縮、dilute pilocarpine 也不縮；前一天貼過 scopolamine 貼片', '右眼藥物性散瞳', 'S9'],
+  c8: ['兩眼都小且形狀不規則；對光幾乎不縮，看近時正常縮小', 'Argyll Robertson pupil', 'S9'],
+  c9: ['兩眼一樣大；燈從右眼移到左眼時，兩眼都放大；移回右眼時兩眼都縮小', '左眼 RAPD', 'S9'],
+  c10: ['兩眼差約 0.5 mm，亮處與暗處差距一樣，對光反應正常', 'Physiologic anisocoria', 'S9']
+};
+const PCASE_IDS = Object.keys(PCASES);
+
 /* ---------- app ---------- */
 const VIEWS = [
   { id: 'path', name: '視路與視野', en: 'Visual pathway' },
-  { id: 'eom', name: '眼外肌與複視', en: 'Ocular motility', subs: [['gaze', '九方向眼位'], ['step', 'Three-step test']] }
+  { id: 'eom', name: '眼外肌與複視', en: 'Ocular motility', subs: [['gaze', '九方向眼位'], ['step', 'Three-step test']] },
+  { id: 'pup', name: '瞳孔', en: 'Pupil', subs: [['route', '反射路徑'], ['flash', 'Swinging flashlight'], ['aniso', 'Anisocoria 判斷']] }
 ];
 const $ = q => document.querySelector(q);
-const st = { view: 'path', sub: 'gaze', sel: null, labels: true, tint: true, mode: 'learn', quiz: null, cond: 'none', side: 'R', pupil: true, musc: null, steps: [] };
+const st = { view: 'path', sub: 'gaze', sel: null, labels: true, tint: true, mode: 'learn', quiz: null, cond: 'none', side: 'R', pupil: true, musc: null, steps: [],
+  psub: 'route', pcond: 'normal', pside: 'R', light: 'dim', pd: null, ppart: null, flow: [] };
+const curSub = () => st.view === 'pup' ? st.psub : st.sub;
 const store = (() => {
   const K = 'neuroOphth.v1';
   let mem = { wrong: {} };
@@ -725,27 +986,33 @@ const store = (() => {
   return { get: () => mem, save() { try { localStorage.setItem(K, JSON.stringify(mem)); } catch (e) { } } };
 })();
 const inQ = () => st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q';
-// 錯題的 key：分頁一是病灶 id（例如 ot_L）；分頁二是 eom:g:cn3_R（看眼位）或 eom:s:RSO（三步驟）
-const keyLabel = k => k.startsWith('eom:g:') ? condZh(k.slice(6)) : k.startsWith('eom:s:') ? `${mZh(k.slice(6))}（三步驟）` : siteZh(k);
-const keyValid = k => k.startsWith('eom:g:') ? COND_IDS.includes(k.slice(6)) : k.startsWith('eom:s:') ? VERT.includes(k.slice(6)) : SITES.includes(k);
-const keyView = k => k.startsWith('eom:') ? 'eom' : 'path';
+// 錯題的 key：分頁一是病灶 id（例如 ot_L）；分頁二是 eom:g:cn3_R（看眼位）或 eom:s:RSO（三步驟）；
+// 分頁三是 pup:f:horner_R（swinging flashlight）或 pup:c:c3（病例）
+const keyLabel = k => k.startsWith('eom:g:') ? condZh(k.slice(6)) : k.startsWith('eom:s:') ? `${mZh(k.slice(6))}（三步驟）`
+  : k.startsWith('pup:f:') ? `${pcondZh(k.slice(6))}（手電筒）` : k.startsWith('pup:c:') ? `${PCASES[k.slice(6)][1]}（病例）` : siteZh(k);
+const keyValid = k => k.startsWith('eom:g:') ? COND_IDS.includes(k.slice(6)) : k.startsWith('eom:s:') ? VERT.includes(k.slice(6))
+  : k.startsWith('pup:f:') ? PUP_IDS.includes(k.slice(6)) : k.startsWith('pup:c:') ? !!PCASES[k.slice(6)] : SITES.includes(k);
+const keyView = k => k.startsWith('eom:') ? 'eom' : k.startsWith('pup:') ? 'pup' : 'path';
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
   const V = VIEWS.find(v => v.id === st.view);
-  $('#hintbar').innerHTML = V.subs ? `<div class="seg" role="group" aria-label="圖">${V.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${st.sub === id}">${nm}</button>`).join('')}</div>`
+  $('#hintbar').innerHTML = V.subs ? `<div class="seg" role="group" aria-label="圖">${V.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${curSub() === id}">${nm}</button>`).join('')}</div>`
     : `<span class="hint">${st.mode === 'quiz' ? '測驗中：標籤已隱藏' : '點視路上的圓點，看兩眼視野怎麼缺'}</span>`;
 }
 function renderTools() {
   let h = '';
   if (st.mode !== 'quiz') {
     if (st.view === 'path') h = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label><label class="tog"><input type="checkbox" id="t-tint" ${st.tint ? 'checked' : ''}>左右視野配色</label>`;
-    else if (st.sub === 'gaze') {
+    else if (st.view === 'eom' && st.sub === 'gaze') {
       h = `<div class="seg" role="group" aria-label="狀況">${[['none', '正常'], ...COND_ORDER.map(c => [c, CONDS[c].short.replace(' palsy', '')])].map(([c, t]) => `<button type="button" data-cond="${c}" aria-pressed="${st.cond === c}">${t}</button>`).join('')}</div>`;
       if (st.cond !== 'none') h += `<div class="seg" role="group" aria-label="側別">${['R', 'L'].map(x => `<button type="button" data-side="${x}" aria-pressed="${st.side === x}">${ZH[x]}側</button>`).join('')}</div>`;
       if (st.cond === 'cn3') h += `<label class="tog"><input type="checkbox" id="t-pupil" ${st.pupil ? 'checked' : ''}>瞳孔受影響</label>`;
       h += `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>肌肉標籤</label>`;
-    }
+    } else if (st.view === 'pup' && st.psub === 'flash') {
+      h = `<div class="seg" role="group" aria-label="狀況">${PCOND_ORDER.map(c => `<button type="button" data-pc="${c}" aria-pressed="${st.pcond === c}">${PCONDS[c].short}</button>`).join('')}</div>`;
+      if (PCONDS[st.pcond].side) h += `<div class="seg" role="group" aria-label="側別">${['R', 'L'].map(x => `<button type="button" data-ps="${x}" aria-pressed="${st.pside === x}">${ZH[x]}側</button>`).join('')}</div>`;
+    } else if (st.view === 'pup' && st.psub === 'route') h = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
   }
   $('#tools').innerHTML = h;
 }
@@ -755,6 +1022,10 @@ function renderFig() {
   if (st.view === 'path') {
     fig.innerHTML = renderPathway();
     cap = ['由頭頂往下看：上＝anterior，圖左＝病人左側。視野依病人看出去的樣子畫，T＝temporal、N＝nasal；黑色＝缺損，小黑點＝生理盲點。', '視野圓＝中央 30°（示意）'];
+  } else if (st.view === 'pup') {
+    if (st.psub === 'route') { fig.innerHTML = renderRoute(); cap = ['上半由頭頂往下看（圖左＝病人左側）：藍綠色＝傳入，琥珀色＝CN III 的副交感。下半是交感三段神經的示意，不按解剖位置。', '近反射走較腹側的路徑到 EW']; }
+    else if (st.psub === 'flash') { fig.innerHTML = renderFlash(); cap = ['檢查者面對病人：圖左＝病人右眼 OD。瞳孔大小與速度只是示意。', '照光時兩眼應縮得一樣多']; }
+    else { fig.innerHTML = renderAniso(); cap = ['檢查者面對病人：圖左＝病人右眼 OD。上排亮處、下排暗處。', '瞳孔大小為示意']; }
   } else if (st.sub === 'gaze') {
     fig.innerHTML = renderGaze();
     cap = ['檢查者面對病人（同臨床照片）：圖左＝病人右眼 OD；每格寫的是病人往哪邊看，下方是該方向主要作用的兩條肌肉。', '眼位偏斜為示意，不代表度數'];
@@ -767,7 +1038,9 @@ function renderFig() {
   $('#cap').innerHTML = `<span>${cap[0]}</span><span class="ori">${cap[1]}</span>`;
 }
 function renderExtra() {
+  if (st.view === 'pup' && st.psub === 'flash') { $('#extra').innerHTML = flashControls(); return; }
   if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  if (st.view === 'pup') { $('#extra').innerHTML = st.psub === 'aniso' ? flowControls() : ''; return; }
   if (st.view === 'eom') { $('#extra').innerHTML = st.sub === 'step' ? stepControls() : ''; return; }
   $('#extra').innerHTML = `<div class="xrow"><div><div class="xh">看到視野缺損時依序問${s('S1')}</div><ol>
       <li>檢查可信嗎？</li><li>正常還是異常？</li><li>單眼還是雙眼？單眼 → chiasm 之前</li>
@@ -780,9 +1053,10 @@ function renderExtra() {
 }
 function renderIndex() {
   const ix = $('#index');
-  if (st.mode === 'quiz' || (st.view === 'eom' && st.sub === 'step')) { ix.hidden = true; return; }
+  if (st.mode === 'quiz' || (st.view === 'eom' && st.sub === 'step') || (st.view === 'pup' && st.psub !== 'route')) { ix.hidden = true; return; }
   ix.hidden = false;
-  ix.innerHTML = st.view === 'path'
+  ix.innerHTML = st.view === 'pup' ? `<span class="lbl">路徑分段（${PART_ORDER.length}）</span>` + PART_ORDER.map(id => `<button type="button" class="chip ${id === st.ppart ? 'on' : ''}" data-pp="${id}">${PARTS[id].zh}</button>`).join('')
+    : st.view === 'path'
     ? `<span class="lbl">病灶位置（${SITES.length}）</span>` + SITES.map(id => `<button type="button" class="chip ${id === st.sel ? 'on' : ''}" data-s="${id}">${siteZh(id)}</button>`).join('')
     : `<span class="lbl">點肌肉，看它作用最純的方向（${MUSCLES.length}）</span>` + MUSCLES.map(m => `<button type="button" class="chip ${m === st.musc ? 'on' : ''}" data-m="${m}">${mZh(m)} <i>${MNAME[m.slice(1)]}</i></button>`).join('');
 }
@@ -797,6 +1071,7 @@ function cardHTML(id) {
 function renderPanel() {
   const p = $('#panel');
   if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
+  if (st.view === 'pup') { p.innerHTML = pupCard(); return; }
   if (st.view === 'eom') {
     if (st.sub === 'step') { p.innerHTML = stepCard(); return; }
     p.innerHTML = st.musc ? muscCard() : st.cond !== 'none' ? condCard() : `<div class="empty-card"><div class="eyebrow">眼外肌與複視</div>
@@ -816,23 +1091,29 @@ function renderSelbar() {
     else if (st.view === 'eom' && st.sub === 'gaze' && st.musc) t = `肌肉：${mZh(st.musc)}`;
     else if (st.view === 'eom' && st.sub === 'gaze' && st.cond !== 'none') t = `目前：${condZh(`${st.cond}_${st.side}`)}`;
     else if (st.view === 'eom' && st.sub === 'step' && st.steps.length === 3) t = `結果：${mZh(cands(st.steps)[0])}`;
+    else if (st.view === 'pup' && st.psub === 'route' && st.ppart) t = `路徑：${PARTS[st.ppart].zh}`;
+    else if (st.view === 'pup' && st.psub === 'flash' && st.pcond !== 'normal') t = `目前：${pcondZh(PCONDS[st.pcond].side ? `${st.pcond}_${st.pside}` : st.pcond)}`;
+    else if (st.view === 'pup' && st.psub === 'aniso' && flowNode().end) t = `結論：${flowNode().t}`;
   }
   b.hidden = !t;
   if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
+  if (!(st.view === 'pup' && st.psub === 'flash')) stopSwing();
   renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
   $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
 }
 function select(id) { if (!SITES.includes(id)) return; st.view = 'path'; st.sel = id; render(); }
 function setView(v) {
   st.view = v;
-  try { history.replaceState(null, '', v === 'eom' ? '#eom' : location.pathname); } catch (e) { }
+  try { history.replaceState(null, '', v === 'path' ? location.pathname : '#' + v); } catch (e) { }
   if (st.mode === 'quiz') st.quiz = quizDefaults();
 }
 function goKey(k) {
   if (k.startsWith('eom:g:')) { const [c, side] = k.slice(6).split('_'); setView('eom'); st.sub = 'gaze'; st.cond = c; st.side = side; st.musc = null; render(); }
   else if (k.startsWith('eom:s:')) { setView('eom'); st.sub = 'step'; st.steps = STEP_CASES[k.slice(6)].slice(); render(); }
+  else if (k.startsWith('pup:f:')) { const [c, side] = k.slice(6).split('_'); setView('pup'); st.psub = 'flash'; st.pcond = c; st.pside = side || 'R'; st.light = 'dim'; render(); }
+  else if (k.startsWith('pup:c:')) { setView('pup'); st.psub = 'aniso'; st.flow = []; render(); }
   else { setView('path'); select(k); }
 }
 
@@ -840,15 +1121,17 @@ function goKey(k) {
    分頁一：find 給名稱在圖上點、vf 給視野在圖上點病灶
    分頁二：gaze 看九方向眼位選診斷、step 給三步驟結果在圖上點肌肉 */
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
-const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: st.view === 'eom' ? 'gaze' : 'vf', total: 10 });
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: { eom: 'gaze', pup: 'flash' }[st.view] || 'vf', total: 10 });
+const QT = { path: [['vf', '看視野找病灶'], ['find', '在圖上找']], eom: [['gaze', '看眼位選診斷'], ['step', '三步驟病例']], pup: [['flash', '看手電筒選診斷'], ['case', '病例判斷']] };
+const QH = { path: '病灶在哪裡？', eom: '是哪一條神經、哪一條肌肉？', pup: '是哪一種瞳孔異常？' };
 function quizHTML() {
-  const q = st.quiz, eom = st.view === 'eom';
+  const q = st.quiz;
   if (q.phase === 'setup') {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${eom ? '是哪一條神經、哪一條肌肉？' : '病灶在哪裡？'}</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${QH[st.view]}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
-      <div class="row"><span class="lbl">題型</span><div class="seg">${eom ? opt('type', 'gaze', '看眼位選診斷') + opt('type', 'step', '三步驟病例') : opt('type', 'vf', '看視野找病灶') + opt('type', 'find', '在圖上找')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QT[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
       <p style="margin:0;font-size:13px;color:var(--muted)">測驗時標籤會隱藏。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
@@ -856,7 +1139,7 @@ function quizHTML() {
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
     return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
-      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>${{ vf: '看視野', find: '找位置', gaze: '看眼位', step: '三步驟' }[x.type]}</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>${{ vf: '看視野', find: '找位置', gaze: '看眼位', step: '三步驟', flash: '手電筒', case: '病例' }[x.type]}</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
       <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
   }
   const it = q.items[q.i];
@@ -864,24 +1147,29 @@ function quizHTML() {
   if (it.type === 'vf') h += `<div class="prompt"><div class="k">上方是這位病人的兩眼視野</div><div class="q">在圖上點出病灶位置</div></div>`;
   else if (it.type === 'find') h += `<div class="prompt"><div class="k">在圖上點出</div><div class="q">${siteZh(it.id)}</div></div>`;
   else if (it.type === 'gaze') h += `<div class="prompt"><div class="k">上方是這位病人的九方向眼位</div><div class="q">是哪一種、哪一側？</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.id ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${condZh(o)}</button>`).join('')}</div>`;
+  else if (it.type === 'flash') h += `<div class="prompt"><div class="k">用圖下方的按鈕照光、切換亮室暗室、看近</div><div class="q">這是哪一種、哪一側？</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.id ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${pcondZh(o)}</button>`).join('')}</div>`;
+  else if (it.type === 'case') h += `<div class="prompt"><div class="k">病例</div><div class="q" style="font-size:16px">${PCASES[it.id][0]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.id ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${PCASES[o][1]}</button>`).join('')}</div>`;
   else { const [hy, g, t] = STEP_CASES[it.id]; h += `<div class="prompt"><div class="k">三步驟結果</div><div class="q">${EYEZH[hy]} hypertropia；往${ZH[g]}看時較大；頭歪向${ZH[t]}肩時較大</div></div><p style="margin:0;font-size:14px">在圖上點出無力的肌肉。</p>`; }
   if (q.ans) {
     const ok = q.ans.ok;
     let ans, more;
     if (it.type === 'gaze') { ans = condZh(it.id); const [c, side] = it.id.split('_'); more = CONDS[c].info(side, true).look[c === 'cn3' ? 0 : 1]; }
     else if (it.type === 'step') { ans = `${mZh(it.id)}（${MNERVE[it.id.slice(1)]}）`; more = STEP_Q[2].ex; }
+    else if (it.type === 'flash') { ans = pcondZh(it.id); const [c, side] = it.id.split('_'); more = PCONDS[c].info(side || 'R').look[0]; }
+    else if (it.type === 'case') { ans = PCASES[it.id][1]; more = `出處${s(PCASES[it.id][2])}：${SRC[PCASES[it.id][2]].t}`; }
     else { ans = siteZh(it.id); more = infoFor(it.id).vf[0]; }
-    const pk = q.ans.pick ? (it.type === 'gaze' ? condZh(q.ans.pick) : it.type === 'step' ? mZh(q.ans.pick) : siteZh(q.ans.pick)) : '';
+    const pk = q.ans.pick ? ({ gaze: condZh, step: mZh, flash: pcondZh, case: x => PCASES[x][1] }[it.type] || siteZh)(q.ans.pick) : '';
     h += `<div class="fb ${ok ? 'ok' : 'bad'}"><b>${ok ? '答對。' : '答錯。'}</b>${!ok && pk ? ` 你選的是${pk}；` : ' '}答案是${ans}。<br>${more}</div>`;
     h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
   } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
   return h + `</div>`;
 }
 function startQuiz(cfg) {
-  const w = store.get().wrong, eom = st.view === 'eom';
-  const types = cfg.type === 'mix' ? (eom ? ['gaze', 'step'] : ['vf', 'find']) : [cfg.type];
+  const w = store.get().wrong, eom = st.view === 'eom', pup = st.view === 'pup';
+  const types = cfg.type === 'mix' ? QT[st.view].map(x => x[0]) : [cfg.type];
   // 每個 key 配一種題型；分頁一同一處病灶可用兩種題型出
   let pool = eom ? [...(types.includes('gaze') ? COND_IDS.map(x => ['eom:g:' + x, 'gaze']) : []), ...(types.includes('step') ? VERT.map(x => ['eom:s:' + x, 'step']) : [])]
+    : pup ? [...(types.includes('flash') ? PUP_IDS.map(x => ['pup:f:' + x, 'flash']) : []), ...(types.includes('case') ? PCASE_IDS.map(x => ['pup:c:' + x, 'case']) : [])]
     : SITES.map(x => [x, null]);
   if (cfg.scope === 'wrong') pool = pool.filter(([k]) => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
@@ -891,11 +1179,19 @@ function startQuiz(cfg) {
   const items = keys.map(([key, type]) => {
     if (type === 'gaze') { const id = key.slice(6); return { key, id, type, opts: shuffle([id, ...shuffle(COND_IDS.filter(x => x !== id)).slice(0, 3)]) }; }
     if (type === 'step') return { key, id: key.slice(6), type };
+    if (type === 'flash') { const id = key.slice(6); return { key, id, type, opts: shuffle([id, ...shuffle(PUP_IDS.filter(x => x !== id)).slice(0, 3)]) }; }
+    if (type === 'case') {
+      // 選項用答案文字去重：c1、c2 的答案相同，不能同時出現
+      const id = key.slice(6), seen = new Set([PCASES[id][1]]);
+      const others = shuffle(PCASE_IDS.slice()).filter(x => !seen.has(PCASES[x][1]) && seen.add(PCASES[x][1]));
+      return { key, id, type, opts: shuffle([id, ...others.slice(0, 3)]) };
+    }
     return { key, id: key, type: types[Math.floor(Math.random() * types.length)] };
   });
   st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
   st.sel = null; st.musc = null;
   if (eom) st.sub = items[0].type === 'step' ? 'step' : 'gaze';
+  if (pup) { st.psub = items[0].type === 'flash' ? 'flash' : 'aniso'; st.light = 'dim'; st.flow = []; }
   render();
 }
 function answer(pick) {
@@ -912,6 +1208,7 @@ function nextQ() {
   const q = st.quiz; q.i++; q.ans = null;
   if (q.i >= q.items.length) q.phase = 'done';
   else if (st.view === 'eom') st.sub = q.items[q.i].type === 'step' ? 'step' : 'gaze';
+  else if (st.view === 'pup') { st.psub = q.items[q.i].type === 'flash' ? 'flash' : 'aniso'; st.light = 'dim'; stopSwing(); }
   render();
 }
 function setMode(m) {
@@ -940,7 +1237,19 @@ document.addEventListener('click', e => {
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
   const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
-  const sb = t.closest('[data-sub]'); if (sb) { if (inQ()) return; st.sub = sb.dataset.sub; render(); return; }
+  const sb = t.closest('[data-sub]'); if (sb) { if (inQ()) return; if (st.view === 'pup') st.psub = sb.dataset.sub; else st.sub = sb.dataset.sub; render(); return; }
+  const pc = t.closest('[data-pc]'); if (pc) { st.pcond = pc.dataset.pc; st.light = 'dim'; render(); return; }
+  const ps = t.closest('[data-ps]'); if (ps) { st.pside = ps.dataset.ps; st.light = 'dim'; render(); return; }
+  const lt = t.closest('[data-light]'); if (lt) { stopSwing(); st.light = lt.dataset.light; applyLight(); syncLight(); return; }
+  if (t.closest('#swing')) {
+    if (SWING) { stopSwing(); return; }
+    const step = () => { st.light = st.light === 'R' ? 'L' : 'R'; applyLight(); syncLight(); };
+    step(); SWING = setInterval(step, 2000); $('#swing').setAttribute('aria-pressed', 'true'); return;
+  }
+  const pp = t.closest('[data-pp]'); if (pp) { if (st.mode === 'quiz') return; st.ppart = st.ppart === pp.dataset.pp ? null : pp.dataset.pp; render(); return; }
+  const fl = t.closest('[data-fl]'); if (fl) { st.flow = st.flow.concat(fl.dataset.fl); render(); return; }
+  if (t.closest('#fl-back')) { st.flow = st.flow.slice(0, -1); render(); return; }
+  if (t.closest('#fl-reset')) { st.flow = []; render(); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
   if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
   if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
@@ -1011,9 +1320,19 @@ $('#fig').addEventListener('mouseleave', () => tip.hidden = true);
   a(Object.keys(STEP_CASES).length === 8, '八種三步驟結果應對到八條不同肌肉');
   a(eyePos('cn6', 'R', false, 'R', 1, 0).x <= 0, '右 CN VI 往右看時右眼不能 abduct');
   a(eyePos('cn3', 'L', true, 'L', 0, 0).x < 0 && eyePos('cn3', 'L', true, 'L', 0, 0).y < 0, '左 CN III 主視位左眼 down and out');
+  // 分頁三：瞳孔示意模型與判斷流程
+  const pd = (c, side, e, l) => pupilOf(c, side, e, l).d;
+  a(pd('normal', 'R', 'R', 'R') === pd('normal', 'R', 'L', 'R') && pd('normal', 'R', 'L', 'R') < pd('normal', 'R', 'L', 'dim'), '正常照右眼：兩眼一樣縮');
+  a(pd('rapd', 'L', 'R', 'L') > pd('rapd', 'L', 'R', 'R') && pd('rapd', 'L', 'L', 'L') > pd('rapd', 'L', 'L', 'R'), '左眼 RAPD：燈移到左眼時兩眼都比照右眼時大');
+  a(pd('rapd', 'L', 'R', 'dim') === pd('rapd', 'L', 'L', 'dim'), 'RAPD 靜止時不造成 anisocoria');
+  a(pd('horner', 'R', 'L', 'dim') - pd('horner', 'R', 'R', 'dim') > pd('horner', 'R', 'L', 'bright') - pd('horner', 'R', 'R', 'bright'), 'Horner 暗處差較多');
+  a(pd('cn3', 'R', 'R', 'bright') - pd('cn3', 'R', 'L', 'bright') > pd('cn3', 'R', 'R', 'dim') - pd('cn3', 'R', 'L', 'dim'), 'CN III 亮處差較多');
+  a(pd('adie', 'R', 'R', 'near') < pd('adie', 'R', 'R', 'R') - 2, 'Adie 看近縮得比照光多（light-near dissociation）');
+  a(pd('ar', 'R', 'R', 'R') === pd('ar', 'R', 'R', 'dim') && pd('ar', 'R', 'R', 'near') < pd('ar', 'R', 'R', 'dim'), 'Argyll Robertson：對光不縮、看近縮');
+  a(Object.values(FLOW).every(n => n.end || n.o.every(([k]) => FLOW[k])), '判斷流程的每個選項都要接到存在的節點');
 })();
 
-if (location.hash === '#eom') st.view = 'eom';
+if (location.hash === '#eom' || location.hash === '#pup') st.view = location.hash.slice(1);
 render();
 </script>
 
