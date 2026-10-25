@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>神經眼科互動圖譜</title>
+<meta name="description" content="互動式神經眼科：點視路上的病灶位置，看兩眼視野缺損、RAPD 與定位重點，附測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as eye-atlas — figure stage on the left, card on the right; visual fields sit above the eyes, pathway runs down to the occipital lobe */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --hl:#0A6FD8; --hl-soft:rgba(10,111,216,.16); --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-sclera:#F5F0EC; --t-nuc:#D3D9EA; --t-brain:#F1EEF6; --t-cortex:#E4DDF1; --t-cortex-2:#CFC3E8;
+  --vf-bg:#FFFFFF; --vf-def:#2E2840; --vf-l:#C98A1B; --vf-r:#1E8A86;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-sclera:#3B3647; --t-nuc:#3A4261; --t-brain:#1D1A27; --t-cortex:#2C2640; --t-cortex-2:#3D3459;
+  --vf-bg:#A49EBB; --vf-def:#0B0A10; --vf-l:#E2B14A; --vf-r:#4FC7C2; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-sclera:#3B3647; --t-nuc:#3A4261; --t-brain:#1D1A27; --t-cortex:#2C2640; --t-cortex-2:#3D3459;
+  --vf-bg:#A49EBB; --vf-def:#0B0A10; --vf-l:#E2B14A; --vf-r:#4FC7C2; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:560px;max-height:calc(100vh - 150px)}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}
+.selbar i{font-family:var(--f-display)}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip i{font-family:var(--f-display);font-size:12.5px}
+
+/* figure */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+.c-brain{fill:var(--t-brain);stroke:var(--t-stroke-2);stroke-width:1.2}
+.c-cortex{fill:var(--t-cortex);stroke:var(--t-stroke-2);stroke-width:1}
+.c-tip{fill:var(--t-cortex-2);stroke:var(--t-stroke-2);stroke-width:1}
+.c-eye{fill:var(--t-sclera);stroke:var(--t-stroke);stroke-width:1.2}
+.c-nuc{fill:var(--t-nuc);stroke:var(--t-stroke);stroke-width:1}
+.c-mid{fill:none;stroke:var(--t-stroke-2);stroke-width:1;stroke-dasharray:3 6}
+.fib{fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.fib.l{stroke:var(--vf-l)}.fib.r{stroke:var(--vf-r)}
+.mono .fib{stroke:var(--t-stroke)}
+.deco{pointer-events:none}
+.deco text{font-family:var(--f-body);font-size:12.5px;fill:var(--muted)}
+.lab text{font-size:15px;paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.nolab .lab,.quiz-on .lab{display:none}
+.vft{font-family:var(--f-body)!important;font-size:14px;font-weight:600}
+.vfn{font-family:var(--f-mono)!important;font-size:12px;fill:var(--muted)!important}
+.vf-bg{fill:var(--vf-bg)}
+.vf-def{fill:var(--vf-def)}
+.vf-ring{fill:none;stroke:var(--t-stroke);stroke-width:1.2}
+.vf-mer{stroke:var(--t-stroke);stroke-width:.8;stroke-dasharray:3 4}
+.tint-l{fill:var(--vf-l);opacity:.22}.tint-r{fill:var(--vf-r);opacity:.22}
+.site{cursor:pointer}
+.site .hit{fill:transparent}
+.site .mk{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.site:hover .mk{fill:var(--accent-soft)}
+.site.on .mk{fill:var(--bad);stroke:var(--bad)}
+.site.on .ring{fill:none;stroke:var(--bad);stroke-width:2;opacity:.55}
+.site.q-ok .mk{fill:var(--ok);stroke:var(--ok)}
+.site.q-bad .mk{fill:var(--bad);stroke:var(--bad)}
+.site .ring{fill:none;stroke:none}
+@media (prefers-reduced-motion: no-preference){
+  .site.on .ring{animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.15}}
+}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.rel{display:flex;flex-wrap:wrap;gap:6px}
+.empty-card{padding:22px 22px 24px;color:var(--ink-2);font-size:14.5px;display:flex;flex-direction:column;gap:10px}
+.empty-card p{margin:0}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.prompt .q i{font-family:var(--f-display);font-weight:500}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.xrow{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-start}
+.xrow ol{margin:0;padding-left:20px;font-size:13.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:3px;max-width:52ch}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.legend span{display:flex;align-items:center;gap:8px}
+.sw{width:22px;height:4px;border-radius:2px;flex:none}
+.sw.box{height:14px;width:14px;border-radius:3px;border:1px solid var(--t-stroke)}
+.tip{position:fixed;z-index:30;pointer-events:none;background:var(--ink);color:var(--paper);font-size:13px;padding:5px 9px;border-radius:6px;max-width:260px;line-height:1.35}
+.tip i{font-family:var(--f-display);opacity:.85}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .fig svg{min-width:0}
+  .lab text{font-size:21px;stroke-width:4.5px}
+  .deco text{font-size:17px}
+  .vft{font-size:19px}
+  .vfn{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>神經眼科互動圖譜</h1>
+      <span class="sub">Neuro-ophthalmology · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>視路是由頭頂往下看的示意圖，不按比例；視野圖依病人自己看出去的樣子畫，缺損的形狀與大小只是示意，不代表實際度數。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<div class="tip" id="tip" hidden></div>
+<script>
+/* ---------- sources ---------- */
+const SRC = {
+  S1: { t: 'Biousse V, Newman NJ. Neuro-ophthalmology Illustrated, 2nd ed., ch. 3 Visual Fields（Stanford Neuro-Ophthalmology 整理頁）', u: 'https://neuro-ophthalmology.stanford.edu/2018/12/neuro-ophthalmology-illustrated-chapter-3-visual-fields/' },
+  S2: { t: 'EyeWiki：Compressive Visual Field Defects', u: 'https://eyewiki.org/Compressive_Visual_Field_Defects' },
+  S3: { t: 'EyeWiki：Relative Afferent Pupillary Defect', u: 'https://eyewiki.org/Relative_Afferent_Pupillary_Defect' }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+
+/* ---------- side helpers ----------
+   L / R = 病人的左／右。腦的一側病灶 → 對側視野；field side 'l' / 'r' = 病人左／右側視野 */
+const ZH = { L: '左', R: '右' };
+const EYE = { L: ' OS 左眼', R: ' OD 右眼' };   // 前面留空格，讓中英文之間有間隔
+const opp = x => x === 'L' ? 'R' : 'L';
+const fieldOf = side => side === 'L' ? 'r' : 'l';          // 對側視野
+const temporalOf = eye => eye === 'R' ? 'r' : 'l';         // 該眼的 temporal field 在病人的哪一側
+const FZH = { l: '左', r: '右' };
+
+/* ---------- lesion sites ----------
+   field(side) 回傳 { L: [...], R: [...] }：兩眼視野上要塗黑的區域
+   區域：hemi 半邊、quad 象限、cen 中央暗點、halfcen 中央半圓暗點、spare 保留的中央區、cut 保留的多邊形（單位座標，y 向下） */
+const TYPES = {
+  on: {
+    en: 'Optic nerve', zh: '視神經', pos: { L: [340, 303], R: [560, 303] },
+    field: side => ({ [side]: [{ k: 'cen', r: .24 }], [opp(side)]: [] }),
+    info: side => ({
+      def: `視網膜神經節細胞的軸突出眼球後、到 chiasm 之前的一段；這裡的病灶只影響${EYE[side]}。`,
+      vf: [`${EYE[side]}單眼缺損；依病因可能是 central、cecocentral、paracentral scotoma、arcuate 或 altitudinal defect（圖示 central scotoma）${s('S1')}`, `另一眼正常`],
+      loc: [`單眼缺損 → 病灶在 chiasm 之前${s('S1')}`, `黃斑病灶也會造成 central 或 paracentral 缺損，要和視神經病變分開${s('S1')}`],
+      sign: [`${EYE[side]} RAPD：任何視神經病變都可能造成 RAPD${s('S3')}`],
+      cause: [`Orbit 內壓迫性病灶：cavernous hemangioma、optic nerve sheath meningioma、schwannoma、neurofibroma 等${s('S2')}`, `壓迫造成的缺損可逐漸進展：central scotoma、blind spot 擴大、全面縮窄${s('S2')}`],
+      src: ['S1', 'S2', 'S3']
+    })
+  },
+  jx: {
+    en: 'Junction', zh: '視神經與 chiasm 交界', pos: { L: [412, 341], R: [488, 341] },
+    field: side => ({ [side]: [{ k: 'cen', r: .24 }], [opp(side)]: [{ k: 'quad', s: temporalOf(opp(side)), v: 'u' }] }),
+    info: side => ({
+      def: `${ZH[side]}側 optic nerve 最後端、接上 chiasm 的位置。`,
+      vf: [`Junctional scotoma：${EYE[side]} central scotoma ＋ ${EYE[opp(side)]} superotemporal defect${s('S1', 'S2')}`, `變型 junctional scotoma of Traquair：只有單眼的 hemianopic 缺損（通常在 temporal 側），來自交叉的 nasal fibers 受壓${s('S2')}`],
+      loc: [`病灶在 central scotoma 那一眼的 optic nerve 後端${s('S1')}`, `傳統用 Wilbrand's knee 解釋：交叉的 inferonasal fibers 先往前繞進對側 optic nerve 再往後走；這個解剖構造是否存在有爭議，但臨床上看得到 junctional scotoma${s('S1')}`, `所以看到單眼 central scotoma 時，另一眼的 superotemporal 視野也要看`],
+      sign: [],
+      cause: [`Intracranial optic nerve、junction 與 chiasm 的病灶，最常見是腫瘤${s('S2')}`],
+      src: ['S1', 'S2']
+    })
+  },
+  chiasm: {
+    en: 'Optic chiasm', zh: '視交叉', pos: { C: [450, 366] },
+    field: () => ({ L: [{ k: 'hemi', s: 'l' }], R: [{ k: 'hemi', s: 'r' }] }),
+    info: () => ({
+      def: '兩眼 nasal retina 的纖維在這裡交叉到對側 optic tract，temporal retina 的纖維不交叉。',
+      vf: [`Bitemporal hemianopia，常不對稱${s('S1', 'S2')}`, `Chiasm 後方的交叉黃斑纖維受壓 → paracentral bitemporal hemianopia${s('S2')}`],
+      loc: [`Nasal retina 負責 temporal field；交叉的 nasal fibers 被切斷 → 兩眼都掉 temporal 半邊${s('S1')}`, `缺損以垂直中線為界、兩眼都在 temporal 側 → 想到 chiasm${s('S1')}`],
+      sign: [],
+      cause: [`最常見：pituitary adenoma、craniopharyngioma、meningioma、optic glioma${s('S2')}`, `較少見：chordoma、germinoma、lymphoma、metastasis；非腫瘤：sphenoid mucocele、arachnoid cyst、Rathke's cleft cyst${s('S2')}`],
+      src: ['S1', 'S2']
+    })
+  },
+  ot: {
+    en: 'Optic tract', zh: '視徑', pos: { L: [384, 421], R: [516, 421] },
+    field: side => {
+      const f = fieldOf(side), x = f === 'l' ? -1 : 1;
+      return {
+        L: [{ k: 'hemi', s: f }, { k: 'cut', pts: [[x * .22, 1.05], [x * 1.05, 1.05], [x * 1.05, .3], [x * .6, .48]] }],
+        R: [{ k: 'hemi', s: f }, { k: 'cut', pts: [[x * .3, -1.05], [x * 1.05, -1.05], [x * 1.05, -.15], [x * .62, -.5]] }]
+      };
+    },
+    info: side => ({
+      def: `從 chiasm 到 LGN 的一段；${ZH[side]}側 optic tract 裡有${EYE[side]}的 temporal fibers 和${EYE[opp(side)]}交叉過來的 nasal fibers。`,
+      vf: [`${FZH[fieldOf(side)]}側 homonymous hemianopia（病灶對側）${s('S1')}`, `常是 incongruous：兩眼缺損形狀不同（圖示）${s('S2')}；也可能是 congruent${s('S1')}`],
+      loc: [`Congruity 法則（越 congruent、病灶越後面）不適用於 optic tract${s('S1')}`, `Homonymous hemianopia 合併 hemianopia 那一側的 RAPD 與兩眼視神經萎縮 → 想到 optic tract${s('S1')}`],
+      sign: [`${EYE[opp(side)]} RAPD（hemianopia 那一側、temporal field 缺損的眼）：optic tract 裡來自對側眼的交叉纖維較多（約 53% 對 47%）${s('S1', 'S3')}`, `慢性病灶：${EYE[opp(side)]} bowtie（band）atrophy，${EYE[side]}主要是 temporal pallor${s('S1')}`],
+      cause: [`Hemorrhage、primary tumor（glioma、meningioma）、metastasis、infection／abscess、sarcoidosis${s('S2')}`],
+      src: ['S1', 'S2', 'S3']
+    })
+  },
+  ml: {
+    en: "Meyer's loop", zh: 'Temporal lobe 的 optic radiation', pos: { L: [240, 580], R: [660, 580] },
+    field: side => { const f = fieldOf(side); return { L: [{ k: 'quad', s: f, v: 'u' }], R: [{ k: 'quad', s: f, v: 'u' }] }; },
+    info: side => ({
+      def: `LGN 出來的 optic radiation 分成兩股：下方纖維先往前繞進 temporal lobe（Meyer's loop），再往後到 occipital cortex。`,
+      vf: [`${FZH[fieldOf(side)]}側 superior homonymous quadrantanopia（"pie in the sky"）${s('S2')}`, `也可描述為上方較嚴重的 homonymous hemianopia${s('S1')}`],
+      loc: [`下方纖維帶的是上方視野，所以 temporal lobe 病灶掉上方${s('S1', 'S2')}`],
+      sign: [`OKN 正常且兩側對稱${s('S1')}`],
+      cause: [`Retrochiasmal 病灶：成人以血管性較多，兒童以腫瘤較多${s('S2')}`],
+      src: ['S1', 'S2']
+    })
+  },
+  pr: {
+    en: 'Parietal radiation', zh: 'Parietal lobe 的 optic radiation', pos: { L: [359, 586], R: [541, 586] },
+    field: side => { const f = fieldOf(side); return { L: [{ k: 'quad', s: f, v: 'd' }], R: [{ k: 'quad', s: f, v: 'd' }] }; },
+    info: side => ({
+      def: 'Optic radiation 的上方纖維經 parietal lobe 往後走到 occipital cortex。',
+      vf: [`${FZH[fieldOf(side)]}側 inferior homonymous quadrantanopia（"pie on the floor"）${s('S2')}`, `也可描述為下方較嚴重的 homonymous hemianopia${s('S1')}`],
+      loc: [`上方纖維帶的是下方視野，所以 parietal lobe 病灶掉下方${s('S1', 'S2')}`],
+      sign: [`深部 parietal 病灶常使 OKN 變差：條紋往病灶那一側移動時${s('S1')}`],
+      cause: [`Retrochiasmal 病灶：成人以血管性較多，兒童以腫瘤較多${s('S2')}`],
+      src: ['S1', 'S2']
+    })
+  },
+  oc: {
+    en: 'Occipital cortex', zh: '枕葉視覺皮質（PCA 區）', pos: { L: [404, 712], R: [496, 712] },
+    field: side => { const f = fieldOf(side); return { L: [{ k: 'hemi', s: f }, { k: 'spare', r: .18 }], R: [{ k: 'hemi', s: f }, { k: 'spare', r: .18 }] }; },
+    info: side => ({
+      def: 'Primary visual cortex（area 17），在 occipital lobe；optic radiation 的終點。',
+      vf: [`${FZH[fieldOf(side)]}側 homonymous hemianopia，大多 congruent（兩眼形狀一樣）${s('S1', 'S2')}`, `PCA 阻塞常保留中央視野：macular sparing（圖示）${s('S1')}`],
+      loc: [`Congruity 法則：homonymous hemianopia 越 congruent，病灶越後面${s('S1')}`, `Occipital tip（黃斑代表區）常由 PCA 與 MCA 末端雙重供血；PCA 阻塞而 MCA 通暢時，tip 可以倖免 → macular sparing${s('S1')}`, `只保留 anterior occipital cortex 時，hemianopia 那一側的 temporal crescent 也會保留${s('S1')}`],
+      sign: [`通常不造成 RAPD：RAPD 多來自視神經病變，而不是 optic tract 或視覺皮質病變${s('S3')}`],
+      cause: [`單獨的 congruent homonymous hemianopia，多數是 PCA 區域的 occipital infarction${s('S1')}`],
+      src: ['S1', 'S2', 'S3']
+    })
+  },
+  tip: {
+    en: 'Occipital tip', zh: '枕葉尖端（黃斑代表區）', pos: { L: [432, 749], R: [468, 749] },
+    field: side => { const f = fieldOf(side); return { L: [{ k: 'halfcen', s: f, r: .36 }], R: [{ k: 'halfcen', s: f, r: .36 }] }; },
+    info: side => ({
+      def: 'Occipital lobe 最後端，代表中央（黃斑）的 homonymous hemifield；常是 PCA 與 MCA 之間的 watershed 區。',
+      vf: [`${FZH[fieldOf(side)]}側小的、位於中央的 homonymous hemianopic scotoma${s('S1')}`],
+      loc: [`中央的 homonymous 缺損、周邊正常 → 想到 occipital tip${s('S1')}`],
+      sign: [`通常不造成 RAPD${s('S3')}`],
+      cause: [`遠端 MCA 或 PCA 分支的 embolic infarction，側枝循環不足時只傷到 tip${s('S1')}`],
+      src: ['S1', 'S3']
+    })
+  }
+};
+const TYPE_ORDER = ['on', 'jx', 'chiasm', 'ot', 'ml', 'pr', 'oc', 'tip'];
+const SITES = [];
+TYPE_ORDER.forEach(t => Object.keys(TYPES[t].pos).forEach(side => SITES.push(side === 'C' ? t : `${t}_${side}`)));
+const parse = id => { const [t, side] = id.split('_'); return { t, side: side || 'C', T: TYPES[t] }; };
+const siteZh = id => { const { side, T } = parse(id); return side === 'C' ? T.zh : `${ZH[side]}側 ${T.en}`; };
+const siteEn = id => { const { side, T } = parse(id); return side === 'C' ? T.en : `${side === 'L' ? 'Left' : 'Right'} ${T.en.startsWith('Meyer') ? T.en : T.en.charAt(0).toLowerCase() + T.en.slice(1)}`; };
+const fieldFor = id => { const { side, T } = parse(id); return T.field(side); };
+const infoFor = id => { const { side, T } = parse(id); return T.info(side); };
+
+/* ---------- visual field ---------- */
+const VF = { R: 74, L: [300, 108], Rr: [600, 108] };
+function vfSVG(eye, regs, tint) {
+  const [cx, cy] = eye === 'L' ? VF.L : VF.Rr, R = VF.R, id = `vfc-${eye}`;
+  const half = side => side === 'l' ? cx - R : cx;
+  let d = '', holes = '';   // 缺損畫在上層；spare／cut 用 mask 在缺損上挖洞，露出底下的正常視野
+  (regs || []).forEach(g => {
+    if (g.k === 'hemi') d += `<rect class="vf-def" x="${half(g.s)}" y="${cy - R}" width="${R}" height="${2 * R}"/>`;
+    else if (g.k === 'quad') d += `<rect class="vf-def" x="${half(g.s)}" y="${g.v === 'u' ? cy - R : cy}" width="${R}" height="${R}"/>`;
+    else if (g.k === 'cen') d += `<circle class="vf-def" cx="${cx}" cy="${cy}" r="${g.r * R}"/>`;
+    else if (g.k === 'halfcen') { const r = g.r * R; d += `<path class="vf-def" d="M${cx},${cy - r}A${r},${r} 0 0 ${g.s === 'l' ? 0 : 1} ${cx},${cy + r}Z"/>`; }
+    else if (g.k === 'spare') holes += `<circle fill="#000" cx="${cx}" cy="${cy}" r="${g.r * R}"/>`;
+    else if (g.k === 'cut') holes += `<polygon fill="#000" points="${g.pts.map(([x, y]) => `${cx + x * R},${cy + y * R}`).join(' ')}"/>`;
+  });
+  const bx = cx + (eye === 'R' ? 1 : -1) * R * .5;   // blind spot 約在 temporal 15°（視野圓＝中央 30°）
+  const tn = eye === 'L' ? ['T', 'N'] : ['N', 'T'];
+  return `<g><clipPath id="${id}"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath>
+    <mask id="${id}-m"><rect fill="#fff" x="${cx - R}" y="${cy - R}" width="${2 * R}" height="${2 * R}"/>${holes}</mask>
+    <g clip-path="url(#${id})"><rect class="vf-bg" x="${cx - R}" y="${cy - R}" width="${2 * R}" height="${2 * R}"/>
+    ${tint ? `<rect class="tint-l" x="${cx - R}" y="${cy - R}" width="${R}" height="${2 * R}"/><rect class="tint-r" x="${cx}" y="${cy - R}" width="${R}" height="${2 * R}"/>` : ''}
+    <g mask="url(#${id}-m)">${d}</g>
+    <ellipse class="vf-def" cx="${bx}" cy="${cy}" rx="${R * .07}" ry="${R * .095}"/>
+    <line class="vf-mer" x1="${cx}" y1="${cy - R}" x2="${cx}" y2="${cy + R}"/><line class="vf-mer" x1="${cx - R}" y1="${cy}" x2="${cx + R}" y2="${cy}"/></g>
+    <circle class="vf-ring" cx="${cx}" cy="${cy}" r="${R}"/>
+    <text class="vft" x="${cx}" y="${cy - R - 12}" text-anchor="middle">${eye === 'L' ? 'OS 左眼視野' : 'OD 右眼視野'}</text>
+    <text class="vfn" x="${cx - R - 12}" y="${cy + 4}" text-anchor="middle">${tn[0]}</text><text class="vfn" x="${cx + R + 12}" y="${cy + 4}" text-anchor="middle">${tn[1]}</text></g>`;
+}
+
+/* ---------- pathway figure ---------- */
+const FIB = {
+  r: ['M293,279 L420,350 L420,386 L335,462', 'M593,279 L470,346 L430,386 L335,462',
+    'M335,468 C255,455 215,520 238,585 C258,640 330,690 398,712', 'M335,468 C352,540 360,630 398,712'],
+  l: ['M607,279 L480,350 L480,386 L565,462', 'M307,279 L430,346 L470,386 L565,462',
+    'M565,468 C645,455 685,520 662,585 C642,640 570,690 502,712', 'M565,468 C548,540 540,630 502,712']
+};
+function renderPathway() {
+  const q = st.mode === 'quiz' ? st.quiz : null, it = q && q.phase === 'q' ? q.items[q.i] : null;
+  let fields = {};
+  if (it) { if (it.type === 'vf' || q.ans) fields = fieldFor(it.id); }
+  else if (st.sel) fields = fieldFor(st.sel);
+  let svg = `<svg viewBox="120 0 660 790" role="img" aria-label="視路由頭頂往下看的示意圖，上方是兩眼視野" class="${st.tint ? '' : 'mono'}">`;
+  svg += vfSVG('L', fields.L, st.tint) + vfSVG('R', fields.R, st.tint);
+  // brain, cortex
+  svg += `<g class="deco"><ellipse class="c-brain" cx="450" cy="540" rx="300" ry="238"/><line class="c-mid" x1="450" y1="400" x2="450" y2="776"/>
+    <ellipse class="c-cortex" cx="410" cy="722" rx="36" ry="30"/><ellipse class="c-cortex" cx="490" cy="722" rx="36" ry="30"/>
+    <ellipse class="c-tip" cx="432" cy="749" rx="13" ry="10"/><ellipse class="c-tip" cx="468" cy="749" rx="13" ry="10"/>
+    <text x="188" y="440">Temporal lobe</text><text x="712" y="440" text-anchor="end">Temporal lobe</text></g>`;
+  // eyes and fibers
+  svg += `<g class="deco"><circle class="c-eye" cx="300" cy="245" r="34"/><circle class="c-eye" cx="600" cy="245" r="34"/>
+    <text x="300" y="250" text-anchor="middle" style="font-family:var(--f-mono);font-size:13px;fill:var(--ink-2)">OS</text><text x="600" y="250" text-anchor="middle" style="font-family:var(--f-mono);font-size:13px;fill:var(--ink-2)">OD</text>
+    ${FIB.r.map(p => `<path class="fib r" d="${p}"/>`).join('')}${FIB.l.map(p => `<path class="fib l" d="${p}"/>`).join('')}
+    <ellipse class="c-nuc" cx="335" cy="468" rx="18" ry="11"/><ellipse class="c-nuc" cx="565" cy="468" rx="18" ry="11"/></g>`;
+  // labels
+  svg += `<g class="lab deco">
+    <text x="322" y="322" text-anchor="end">Optic nerve</text>
+    <text x="494" y="376">Junction</text>
+    <text x="450" y="322" text-anchor="middle">Chiasm</text>
+    <text x="368" y="414" text-anchor="end">Optic tract</text>
+    <text x="590" y="473">LGN</text>
+    <text x="226" y="612" text-anchor="end">Meyer's loop</text>
+    <text x="560" y="610">Parietal radiation</text>
+    <text x="534" y="726">Occipital cortex</text>
+    <text x="414" y="775" text-anchor="end">Occipital tip</text></g>`;
+  // sites
+  svg += SITES.map(id => {
+    const { side, T } = parse(id), [x, y] = T.pos[side];
+    let cls = 'site';
+    if (it) { if (q.ans) { if (id === it.id) cls += ' q-ok'; else if (id === q.ans.pick) cls += ' q-bad'; } }
+    else if (st.mode === 'learn' && id === st.sel) cls += ' on';
+    return `<g class="${cls}" data-s="${id}"><circle class="hit" cx="${x}" cy="${y}" r="15"/><circle class="ring" cx="${x}" cy="${y}" r="12"/><circle class="mk" cx="${x}" cy="${y}" r="6"/></g>`;
+  }).join('');
+  return svg + `</svg>`;
+}
+
+/* ---------- app ---------- */
+const VIEWS = [{ id: 'path', name: '視路與視野', en: 'Visual pathway' }];
+const $ = q => document.querySelector(q);
+const st = { view: 'path', sel: null, labels: true, tint: true, mode: 'learn', quiz: null };
+const store = (() => {
+  const K = 'neuroOphth.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K, JSON.stringify(mem)); } catch (e) { } } };
+})();
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  $('#hintbar').innerHTML = `<span class="hint">${st.mode === 'quiz' ? '測驗中：標籤已隱藏' : '點視路上的圓點，看兩眼視野怎麼缺'}</span>`;
+}
+function renderTools() {
+  $('#tools').innerHTML = st.mode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label><label class="tog"><input type="checkbox" id="t-tint" ${st.tint ? 'checked' : ''}>左右視野配色</label>`;
+}
+function renderFig() {
+  const fig = $('#fig');
+  fig.innerHTML = renderPathway();
+  fig.classList.toggle('nolab', !st.labels);
+  fig.classList.toggle('quiz-on', st.mode === 'quiz');
+  $('#cap').innerHTML = `<span>由頭頂往下看：上＝anterior，圖左＝病人左側。視野依病人看出去的樣子畫，T＝temporal、N＝nasal；黑色＝缺損，小黑點＝生理盲點。</span><span class="ori">視野圓＝中央 30°（示意）</span>`;
+}
+function renderExtra() {
+  if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  $('#extra').innerHTML = `<div class="xrow"><div><div class="xh">看到視野缺損時依序問${s('S1')}</div><ol>
+      <li>檢查可信嗎？</li><li>正常還是異常？</li><li>單眼還是雙眼？單眼 → chiasm 之前</li>
+      <li>雙眼的話，有沒有以垂直中線為界？</li><li>以中線為界：bitemporal（chiasm）還是 homonymous（chiasm 之後）？</li>
+      <li>Homonymous 的話，完整還是不完整？完整的無法再細分位置</li><li>不完整的話，congruent 嗎？越 congruent 越後面（optic tract 例外）</li></ol></div>
+    <div><div class="xh">配色</div><div class="legend">
+      <span><i class="sw" style="background:var(--vf-r)"></i>病人右側視野的纖維 → 走左腦</span>
+      <span><i class="sw" style="background:var(--vf-l)"></i>病人左側視野的纖維 → 走右腦</span>
+      <span><i class="sw box" style="background:var(--vf-def)"></i>視野缺損</span></div></div></div>`;
+}
+function renderIndex() {
+  if (st.mode === 'quiz') { $('#index').hidden = true; return; }
+  $('#index').hidden = false;
+  $('#index').innerHTML = `<span class="lbl">病灶位置（${SITES.length}）</span>` + SITES.map(id => `<button type="button" class="chip ${id === st.sel ? 'on' : ''}" data-s="${id}">${siteZh(id)}</button>`).join('');
+}
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+function cardHTML(id) {
+  const { side, T } = parse(id), d = infoFor(id);
+  let h = `<div class="card"><div class="eyebrow">視路病灶 · 對照 BCSC 5</div><div><h2>${siteEn(id)}</h2></div><p class="zh">${side === 'C' ? T.zh : `${ZH[side]}側 · ${T.zh}`}</p><p class="def">${d.def}</p>`;
+  h += list('視野缺損', d.vf) + list('定位重點', d.loc) + list('RAPD 與其他徵象', d.sign) + list('常見病因', d.cause);
+  if (side !== 'C') h += `<div class="sec"><h3>另一側</h3><div class="rel"><button type="button" class="chip" data-s="${parse(id).t}_${opp(side)}">${siteZh(`${parse(id).t}_${opp(side)}`)}</button></div></div>`;
+  h += `<div class="sec"><h3>來源</h3><ul class="src">${d.src.map(k => `<li>${k.replace('S', '')}. <a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a></li>`).join('')}</ul></div>`;
+  return h + `</div>`;
+}
+function renderPanel() {
+  const p = $('#panel');
+  if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
+  p.innerHTML = st.sel ? cardHTML(st.sel) : `<div class="empty-card"><div class="eyebrow">視路與視野</div>
+    <p>上方是兩眼的正常視野。點視路上任一個圓點，就會在該位置放一個病灶，視野立刻變成對應的缺損，右邊說明卡會寫出缺損名稱、定位重點、RAPD 與常見病因。</p>
+    <p>配色開著時，同一種顏色的纖維負責同一側視野：看顏色就知道 chiasm 之後的病灶為什麼掉對側。</p></div>`;
+}
+function renderSelbar() {
+  const b = $('#selbar');
+  if (st.mode !== 'learn' || !st.sel) { b.hidden = true; return; }
+  b.hidden = false; b.innerHTML = `<span>病灶：${siteZh(st.sel)}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).length;
+}
+function select(id) { if (!SITES.includes(id)) return; st.sel = id; render(); }
+
+/* ---------- quiz ----------
+   find：給名稱，在圖上點出位置；vf：給兩眼視野，在圖上點出病灶 */
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+function quizHTML() {
+  const q = st.quiz;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗</div><h2>病灶在哪裡？</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', `全部 ${SITES.length} 處`)}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${opt('type', 'vf', '看視野找病灶')}${opt('type', 'find', '在圖上找')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 15, '15')}${opt('total', 30, '30')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">測驗時標籤會隱藏。答錯的病灶會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於病灶數時，同一處會再出一次。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.id}"><span>${siteZh(x.id)}</span><span>${x.type === 'vf' ? '看視野' : '找位置'}</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i];
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  h += it.type === 'vf' ? `<div class="prompt"><div class="k">上方是這位病人的兩眼視野</div><div class="q">在圖上點出病灶位置</div></div>`
+    : `<div class="prompt"><div class="k">在圖上點出</div><div class="q">${siteZh(it.id)}</div></div>`;
+  if (q.ans) {
+    const ok = q.ans.ok, d = infoFor(it.id);
+    h += `<div class="fb ${ok ? 'ok' : 'bad'}"><b>${ok ? '答對。' : '答錯。'}</b>${!ok && q.ans.pick ? ` 你點的是${siteZh(q.ans.pick)}；綠點才是${siteZh(it.id)}。` : ` 答案是${siteZh(it.id)}。`}<br>${d.vf[0]}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong;
+  const pool = cfg.scope === 'wrong' ? Object.keys(w).filter(id => SITES.includes(id)) : SITES.slice();
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let ids = [];
+  while (ids.length < cfg.total) ids = ids.concat(shuffle(pool.slice()));
+  const items = ids.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total)
+    .map(id => ({ id, type: cfg.type === 'mix' ? (Math.random() < .5 ? 'vf' : 'find') : cfg.type }));
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
+  st.sel = null; render();
+}
+function answer(pick) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  const ok = pick === it.id;
+  q.ans = { ok, pick }; if (ok) q.score++;
+  q.log.push({ id: it.id, ok, type: it.type });
+  const m = store.get();
+  if (!ok) m.wrong[it.id] = (m.wrong[it.id] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.id]) { m.wrong[it.id]--; if (m.wrong[it.id] <= 0) delete m.wrong[it.id]; }
+  store.save(); render();
+}
+function setMode(m) {
+  st.mode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? { phase: 'setup', scope: 'all', type: 'vf', total: 10 } : null;
+  render();
+}
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(id => SITES.includes(id)).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(id => `<button type="button" data-go="${id}"><span>${siteZh(id)}</span><span>× ${w[id]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的病灶會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  $('#w-practice').disabled = !ids.length;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.mode === 'quiz') setMode('learn'); select(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); return; }
+  if (t.closest('#q-skip')) { answer(null); return; }
+  const el = t.closest('[data-s]');
+  if (el) {
+    if (st.mode === 'quiz') { const q = st.quiz; if (q.phase === 'q' && el.closest('#fig')) answer(el.dataset.s); return; }
+    select(el.dataset.s);
+  }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
+  if (e.target.id === 't-tint') { st.tint = e.target.checked; renderFig(); }
+});
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+const tip = $('#tip');
+$('#fig').addEventListener('mousemove', e => {
+  const el = e.target.closest('[data-s]');
+  if (st.mode === 'quiz' || !el) { tip.hidden = true; return; }
+  tip.innerHTML = `${siteZh(el.dataset.s)}　<i>${siteEn(el.dataset.s)}</i>`; tip.hidden = false;
+  tip.style.left = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8) + 'px'; tip.style.top = (e.clientY + 16) + 'px';
+});
+$('#fig').addEventListener('mouseleave', () => tip.hidden = true);
+
+/* ---------- self-check：病灶側別與視野側別的對應 ---------- */
+(() => {
+  const has = (regs, k, side) => (regs || []).some(g => g.k === k && g.s === side);
+  const a = (c, m) => console.assert(c, 'neuro-ophth self-check: ' + m);
+  a(SITES.length === 15, '應有 15 處病灶');
+  a(has(fieldFor('chiasm').L, 'hemi', 'l') && has(fieldFor('chiasm').R, 'hemi', 'r'), 'chiasm 應是兩眼 temporal');
+  ['ot', 'oc'].forEach(t => a(has(fieldFor(`${t}_L`).L, 'hemi', 'r') && has(fieldFor(`${t}_L`).R, 'hemi', 'r'), `左側 ${t} 應掉右側視野`));
+  a(fieldFor('ml_R').L.some(g => g.s === 'l' && g.v === 'u'), '右側 Meyer loop 應掉左上');
+  a(fieldFor('pr_L').R.some(g => g.s === 'r' && g.v === 'd'), '左側 parietal 應掉右下');
+  a(fieldFor('jx_L').R.some(g => g.k === 'quad' && g.s === 'r' && g.v === 'u'), '左側 junction 對側眼應掉 superotemporal');
+  a(fieldFor('on_R').L.length === 0, '右側視神經病灶左眼應正常');
+})();
+
+render();
+</script>
+
+</body>
+</html>
