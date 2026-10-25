@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>神經眼科互動圖譜</title>
-<meta name="description" content="互動式神經眼科：點視路上的病灶位置，看兩眼視野缺損、RAPD 與定位重點，附測驗與錯題本。">
+<meta name="description" content="互動式神經眼科：視路病灶與兩眼視野缺損、九方向眼位與 CN III／IV／VI palsy、INO、Parks three-step test，附測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -18,6 +18,7 @@
   --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
   --t-sclera:#F5F0EC; --t-nuc:#D3D9EA; --t-brain:#F1EEF6; --t-cortex:#E4DDF1; --t-cortex-2:#CFC3E8;
   --vf-bg:#FFFFFF; --vf-def:#2E2840; --vf-l:#C98A1B; --vf-r:#1E8A86;
+  --t-white:#FFFFFF; --t-iris:#7C5342; --t-pupil:#15121F; --t-skin:#EAC3AC; --t-head:#F6EEE8;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -30,14 +31,16 @@
   --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-sclera:#3B3647; --t-nuc:#3A4261; --t-brain:#1D1A27; --t-cortex:#2C2640; --t-cortex-2:#3D3459;
-  --vf-bg:#A49EBB; --vf-def:#0B0A10; --vf-l:#E2B14A; --vf-r:#4FC7C2; color-scheme:dark }}
+  --vf-bg:#A49EBB; --vf-def:#0B0A10; --vf-l:#E2B14A; --vf-r:#4FC7C2;
+  --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-pupil:#15121F; --t-skin:#7A5848; --t-head:#2A2535; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
   --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-sclera:#3B3647; --t-nuc:#3A4261; --t-brain:#1D1A27; --t-cortex:#2C2640; --t-cortex-2:#3D3459;
-  --vf-bg:#A49EBB; --vf-def:#0B0A10; --vf-l:#E2B14A; --vf-r:#4FC7C2; color-scheme:dark }
+  --vf-bg:#A49EBB; --vf-def:#0B0A10; --vf-l:#E2B14A; --vf-r:#4FC7C2;
+  --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-pupil:#15121F; --t-skin:#7A5848; --t-head:#2A2535; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -191,6 +194,46 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
 .foot b{color:var(--ink-2);font-weight:500}
 .foot a{color:var(--ink-2)}
 
+/* ocular motility */
+.c-eyew{fill:var(--t-white)}
+.c-eyeo{fill:none;stroke:var(--t-stroke);stroke-width:1.2}
+.c-iris{fill:var(--t-iris)}
+.c-pupil{fill:var(--t-pupil)}
+.c-lid{fill:var(--t-skin)}
+.c-head{fill:var(--t-head);stroke:var(--t-stroke-2);stroke-width:1}
+.cell{fill:var(--surface-2);stroke:var(--line);stroke-width:1}
+.cell.on{fill:var(--hl-soft);stroke:var(--hl);stroke-width:2}
+.gzt{font-family:var(--f-body)!important;font-size:13px;fill:var(--muted)!important}
+.mch{cursor:pointer}
+.mch rect{fill:transparent}
+.mch text{font-family:var(--f-mono)!important;font-size:13px;fill:var(--accent)!important}
+.mch.on text{fill:var(--hl)!important;font-weight:600}
+.nysm{fill:none;stroke:var(--bad);stroke-width:1.6}
+@media (prefers-reduced-motion: no-preference){
+  .nys{animation:nys .45s ease-in-out infinite}
+  @keyframes nys{50%{transform:translateX(-4px)}}
+}
+.pill{cursor:pointer}
+.pill rect{fill:var(--surface);stroke:var(--accent);stroke-width:1.5}
+.pill text.k{font-family:var(--f-mono)!important;font-size:18px;font-weight:500}
+.pill text.z{font-family:var(--f-body)!important;font-size:12px;fill:var(--muted)!important}
+.pill.out{opacity:.25}
+.pill.fin rect{fill:var(--hl-soft);stroke:var(--hl);stroke-width:2.6}
+.pill.q-ok rect{fill:var(--ok-soft);stroke:var(--ok);stroke-width:2.6}
+.pill.q-bad rect{fill:var(--bad-soft);stroke:var(--bad);stroke-width:2.6}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.stps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stp{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;background:var(--surface-2)}
+.stp.dis{opacity:.45}
+.stp .t{font-size:14px;font-weight:500}
+.stp .ex{font-size:13px;color:var(--ink-2)}
+.stp .n{font-family:var(--f-mono);font-size:12px;color:var(--accent)}
+@media (max-width: 760px){ .stps{grid-template-columns:minmax(0,1fr)} }
+
 @media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
 @media (max-width: 560px){
   .wrap{padding-inline:16px}
@@ -203,6 +246,10 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .deco text{font-size:17px}
   .vft{font-size:19px}
   .vfn{font-size:16px}
+  .gzt{font-size:19px}
+  .seg button{padding:5px 10px}
+  .pill text.k{font-size:24px}
+  .pill text.z{font-size:17px}
 }
 </style>
 </head>
@@ -244,7 +291,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>視路是由頭頂往下看的示意圖，不按比例；視野圖依病人自己看出去的樣子畫，缺損的形狀與大小只是示意，不代表實際度數。</span>
+    <span><b>關於圖：</b>視路是由頭頂往下看的示意圖，不按比例；視野圖依病人自己看出去的樣子畫，缺損的形狀與大小只是示意。九方向眼位以檢查者面對病人的視角畫（同臨床照片），偏斜程度只是示意，不代表度數。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -474,33 +521,254 @@ function renderPathway() {
   return svg + `</svg>`;
 }
 
+/* ---------- ocular motility（分頁二） ----------
+   方向一律用病人的：h ＝ +1 往病人自己的右邊看、v ＝ +1 往上。
+   畫圖時檢查者面對病人（同臨床照片），所以圖左＝病人右側、病人右眼 OD 畫在左邊。 */
+Object.assign(SRC, {
+  S4: { t: 'EyeWiki：Acquired Oculomotor Nerve Palsy', u: 'https://eyewiki.org/Acquired_Oculomotor_Nerve_Palsy' },
+  S5: { t: 'EyeWiki：Cranial Nerve 4 Palsy', u: 'https://eyewiki.org/Cranial_Nerve_4_Palsy' },
+  S6: { t: 'EyeWiki：Abducens Nerve Palsy', u: 'https://eyewiki.org/Abducens_Nerve_Palsy' },
+  S7: { t: 'EyeWiki：Internuclear Ophthalmoplegia', u: 'https://eyewiki.org/Internuclear_Ophthalmoplegia' },
+  S8: { t: 'EyeWiki：Three Step Test for Cyclovertical Muscle Palsy', u: 'https://eyewiki.org/Three_Step_Test_for_Cyclovertical_Muscle_Palsy' }
+});
+const EYEZH = { R: '右眼', L: '左眼' };
+const MNAME = { SR: 'Superior rectus', IR: 'Inferior rectus', MR: 'Medial rectus', LR: 'Lateral rectus', SO: 'Superior oblique', IO: 'Inferior oblique' };
+const MNERVE = { SR: 'CN III', IR: 'CN III', MR: 'CN III', IO: 'CN III', LR: 'CN VI', SO: 'CN IV' };
+const MSRC = { SR: 'S4', IR: 'S4', MR: 'S4', IO: 'S4', LR: 'S6', SO: 'S5' };
+const MUSCLES = ['R', 'L'].flatMap(e => ['SR', 'IR', 'MR', 'LR', 'SO', 'IO'].map(k => e + k));
+const VERT = MUSCLES.filter(m => !/MR|LR/.test(m));
+const mZh = m => `${EYEZH[m[0]]} ${m.slice(1)}`;
+// 肌肉作用最純的方向：rectus 在 abduction、oblique 在 adduction；該眼 abduct 的方向＝病人同側
+const fieldOfM = m => {
+  const e = m[0], k = m.slice(1), hs = ['SR', 'IR', 'LR'].includes(k) ? e : opp(e);
+  return { h: hs === 'R' ? 1 : -1, v: (k === 'SR' || k === 'IO') ? 1 : (k === 'IR' || k === 'SO') ? -1 : 0 };
+};
+const primeMovers = (h, v) => MUSCLES.filter(m => { const f = fieldOfM(m); return f.h === h && f.v === v; });
+const dirZh = (h, v) => (h === 0 && v === 0) ? '正前方' : '往' + (h > 0 ? '右' : h < 0 ? '左' : '') + (v > 0 ? '上' : v < 0 ? '下' : '');
+
+const CONDS = {
+  cn3: {
+    short: 'CN III palsy', en: 'Oculomotor nerve palsy', zh: '動眼神經麻痺',
+    info: (side, pupil) => ({
+      def: `CN III 支配 SR、levator（superior division），以及 MR、IR、IO、瞳孔括約肌與 ciliary body（inferior division）${s('S4')}`,
+      look: [`Complete palsy：complete ptosis、眼位 down and out、瞳孔放大且反應遲鈍${s('S4')}`, `Down and out 是因為${EYE[side]}無法 adduct、infraduct、supraduct${s('S4')}`,
+        pupil ? '目前顯示 pupil-involving：患眼瞳孔放大' : '目前顯示 pupil-sparing：患眼瞳孔大小正常',
+        `圖中把眼瞼畫成部分下垂，才看得到眼位；臨床上 partial palsy 比 complete 常見${s('S4')}`],
+      key: [`新發、急性、complete 且 pupil-involving 是急症，要緊急排除 intracranial aneurysm；門診看到應轉急診${s('S4')}`, `Pupil-sparing 多為 ischemic，但仍有高達 16% 是壓迫造成，所以不論哪一型都建議盡快做 neuroimaging${s('S4')}`, `CTA 或 MRA 通常足以找到病灶${s('S4')}`],
+      cause: [`Subarachnoid space 中最常見的已知病因：posterior communicating artery aneurysm${s('S4')}`, `Microvascular（DM、HTN、atherosclerosis），主要是 pupil-sparing${s('S4')}`, `其他：腫瘤壓迫、外傷、uncal herniation、cavernous sinus thrombosis、carotid-cavernous fistula、Tolosa-Hunt syndrome 等${s('S4')}`],
+      src: ['S4']
+    })
+  },
+  cn4: {
+    short: 'CN IV palsy', en: 'Trochlear nerve palsy', zh: '滑車神經麻痺',
+    info: side => ({
+      def: `CN IV 支配 SO；它在顱內走的路徑最長，輕微外傷就可能受傷${s('S5')}`,
+      look: [`${EYE[side]} hypertropia 與 excyclotorsion${s('S5')}`, `Hypertropia 往${ZH[opp(side)]}側（對側）看時變大${s('S5')}`, `頭歪向${ZH[side]}肩（同側）時變大：Bielschowsky head tilt test，見圖下方${s('S5')}`, `病人常把頭歪向${ZH[opp(side)]}側來減少複視${s('S5')}`],
+      key: [`用 Parks three-step test 確認是${ZH[side]}側 SO（切到「Three-step test」）${s('S8')}`, `第四步 upright-supine test：從坐到躺，垂直偏斜改變超過 50% 偏向 skew deviation；CN IV palsy 不會變${s('S5')}`, `雙側的線索：交替的 hypertropia、兩側 head tilt 都陽性、excyclotorsion 大於 10°、V-pattern esotropia 大於 25 PD${s('S5')}`],
+      cause: [`先天性：常見，primary position 的 hypertropia 常大於 10 PD${s('S5')}`, `外傷：雙側在外傷後相對較多${s('S5')}`, `Microvascular：常在 4–6 個月內自行恢復${s('S5')}`, `一項族群研究中只有 4% 是 idiopathic${s('S5')}`],
+      src: ['S5', 'S8']
+    })
+  },
+  cn6: {
+    short: 'CN VI palsy', en: 'Abducens nerve palsy', zh: '外展神經麻痺',
+    info: side => ({
+      def: `CN VI 支配 LR，負責 abduction${s('S6')}`,
+      look: [`${EYE[side]}無法 abduct${s('S6')}`, `Esotropia 是 incomitant：往${ZH[side]}側（患側）看、看遠時較大${s('S6')}`, `水平、uncrossed 的複視，看遠較嚴重${s('S6')}`, `病人可能把頭轉向${ZH[side]}側，避免患眼 abduct${s('S6')}`],
+      key: [`顱內壓升高可造成 nonlocalizing 的 sixth nerve palsy，常合併頭痛、噁心嘔吐、pulse-synchronous tinnitus${s('S6')}`, `建議 MRI（gadolinium、fat suppression）：50 歲以下、有癌症病史、沒有 microvascular 危險因子，或不是單獨的 palsy${s('S6')}`, `合併疼痛或神經學異常、雙側、optic nerve edema、3 個月沒有明顯改善，也要做 MRI${s('S6')}`],
+      cause: [`成人：microvascular ischemia、外傷、idiopathic；skull-base 腫瘤（clivus meningioma、chordoma、nasopharyngeal carcinoma、metastasis）${s('S6')}`, `兒童：先天性少見；後天以腫瘤（brainstem glioma）、外傷、感染、發炎為主，要立即仔細評估${s('S6')}`],
+      src: ['S6']
+    })
+  },
+  ino: {
+    short: 'INO', en: 'Internuclear ophthalmoplegia', zh: '核間性眼肌麻痺',
+    info: side => ({
+      def: `連接 CN VI 核與 CN III 核的 interneuron，也就是 medial longitudinal fasciculus（MLF）受損${s('S7')}`,
+      look: [`${ZH[side]}側 INO：往${ZH[opp(side)]}側看時，${EYE[side]} adduction 不足${s('S7')}`, `同時${EYE[opp(side)]} abduct 時出現 dissociated 的 abducting nystagmus（圖中紅色波浪線）${s('S7')}`, `Convergence 通常保留；病灶在 CN III 核那一層（anterior INO）時 convergence 也會受損${s('S7')}`],
+      key: [`看 adduction 不足的那一側命名，就是 MLF 病灶那一側${s('S7')}`, `兩側 MLF 靠近中線，雙側 INO 並不少見，MS 常是雙側${s('S7')}`],
+      cause: [`年輕人（約 45 歲以下）：multiple sclerosis${s('S7')}`, `年長者：最常見是 CVA，通常有高血壓、糖尿病、抽菸等血管危險因子${s('S7')}`],
+      src: ['S7']
+    })
+  }
+};
+const COND_ORDER = ['cn3', 'cn4', 'cn6', 'ino'];
+const COND_IDS = COND_ORDER.flatMap(c => ['R', 'L'].map(side => `${c}_${side}`));
+const condZh = id => { const [c, side] = id.split('_'); return `${ZH[side]}側 ${CONDS[c].short}`; };
+
+/* 示意眼位：回傳虹膜位置（病人座標）與外觀；數字只是畫圖用的比例，不代表度數 */
+function eyePos(cond, side, pupil, e, h, v) {
+  const a = e === 'R' ? h : -h;   // 這一眼 abduct 的量（＋＝abduct）
+  let ax = a, vy = v, big = false, ptosis = false, nys = false;
+  if (cond !== 'none' && e === side) {
+    if (cond === 'cn3') { ax = Math.min(1, Math.max(a, 0) + .45); vy = -.35; ptosis = true; big = pupil; }
+    else if (cond === 'cn6') ax = a > 0 ? -.3 : Math.min(a, -.3);
+    else if (cond === 'cn4') vy = v + .12 + .2 * Math.max(-a, 0);
+    else if (cond === 'ino') ax = a < 0 ? a * .15 : a;
+  }
+  if (cond === 'ino' && e !== side && a > 0) nys = true;
+  return { x: e === 'R' ? ax : -ax, y: vy, big, ptosis, nys };
+}
+let EYE_UID = 0;
+function eyeSVG(cx, cy, p) {
+  const id = `ey${EYE_UID++}`, ix = cx - p.x * 17, iy = cy - p.y * 8;
+  const shape = `M${cx - 34},${cy}Q${cx},${cy - 24} ${cx + 34},${cy}Q${cx},${cy + 24} ${cx - 34},${cy}Z`;
+  return `<g class="deco"><clipPath id="${id}"><path d="${shape}"/></clipPath><path class="c-eyew" d="${shape}"/>
+    <g clip-path="url(#${id})"><g class="${p.nys ? 'nys' : ''}"><circle class="c-iris" cx="${ix}" cy="${iy}" r="11.5"/><circle class="c-pupil" cx="${ix}" cy="${iy}" r="${p.big ? 7.5 : 4}"/></g>
+    ${p.ptosis ? `<path class="c-lid" d="M${cx - 36},${cy - 26}H${cx + 36}V${cy + 3}Q${cx},${cy - 3} ${cx - 36},${cy + 3}Z"/>` : ''}</g>
+    <path class="c-eyeo" d="${shape}"/>${p.nys ? `<path class="nysm" d="M${cx - 12},${cy - 26}l4,-4l4,4l4,-4l4,4l4,-4"/>` : ''}</g>`;
+}
+function quizItem() { const q = st.mode === 'quiz' ? st.quiz : null; return q && q.phase === 'q' ? q.items[q.i] : null; }
+function renderGaze() {
+  const it = quizItem();
+  let cond = st.cond, side = st.side, pupil = st.pupil;
+  if (it) { [cond, side] = it.id.split('_'); pupil = true; }
+  const hl = st.mode === 'learn' && st.musc ? fieldOfM(st.musc) : null;
+  const CW = 214, CH = 120, tilt = cond === 'cn4';
+  let svg = `<svg viewBox="0 0 660 ${tilt ? 574 : 392}" role="img" aria-label="九方向眼位，檢查者面對病人">`;
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
+    const h = 1 - c, v = 1 - r, x0 = 9 + c * CW, y0 = 8 + r * (CH + 6), mx = x0 + CW / 2;
+    const on = hl && hl.h === h && hl.v === v;
+    svg += `<rect class="cell ${on ? 'on' : ''}" x="${x0 + 3}" y="${y0}" width="${CW - 6}" height="${CH}" rx="8"/><text class="gzt" x="${x0 + 14}" y="${y0 + 19}">${dirZh(h, v)}</text>`;
+    svg += eyeSVG(mx - 46, y0 + 60, eyePos(cond, side, pupil, 'R', h, v)) + eyeSVG(mx + 46, y0 + 60, eyePos(cond, side, pupil, 'L', h, v));
+    if (h !== 0) svg += `<g class="lab">${primeMovers(h, v).map((m, i) => `<g class="mch ${st.musc === m ? 'on' : ''}" data-m="${m}"><rect x="${mx - 46 + i * 92 - 26}" y="${y0 + CH - 26}" width="52" height="22"/><text x="${mx - 46 + i * 92}" y="${y0 + CH - 10}" text-anchor="middle">${m}</text></g>`).join('')}</g>`;
+  }
+  if (tilt) {
+    const y0 = 8 + 3 * (CH + 6) + 14;
+    svg += `<text class="gzt" x="18" y="${y0}">Bielschowsky head tilt（看正前方）</text>`;
+    ['R', 'L'].forEach((t, i) => {
+      const mx = 168 + i * 324, cy = y0 + 104, hyp = t === side ? .5 : .04, ang = t === 'R' ? -14 : 14;
+      const pe = e => ({ x: 0, y: e === side ? hyp : 0, big: false, ptosis: false, nys: false });
+      svg += `<text class="gzt" x="${mx}" y="${y0 + 22}" text-anchor="middle">頭歪向${ZH[t]}肩</text><text class="gzt" x="${mx}" y="${y0 + 42}" text-anchor="middle">${t === side ? '同側：hypertropia 變大' : '對側：hypertropia 變小'}</text>
+        <g transform="rotate(${ang} ${mx} ${cy})"><ellipse class="c-head" cx="${mx}" cy="${cy}" rx="104" ry="46"/>${eyeSVG(mx - 46, cy, pe('R'))}${eyeSVG(mx + 46, cy, pe('L'))}</g>`;
+    });
+  }
+  return svg + `</svg>`;
+}
+/* Parks three-step：steps ＝ [較高的眼, 往哪邊看較大, 頭往哪邊歪較大]，每個值是 'R' 或 'L' */
+function cands(steps) {
+  const [hy, g, t] = steps;
+  let c = VERT.slice();
+  if (hy) c = c.filter(m => m[0] === hy ? ['IR', 'SO'].includes(m.slice(1)) : ['SR', 'IO'].includes(m.slice(1)));
+  if (g) c = c.filter(m => fieldOfM(m).h === (g === 'R' ? 1 : -1));
+  if (t) c = c.filter(m => m[0] === t ? ['SO', 'SR'].includes(m.slice(1)) : ['IO', 'IR'].includes(m.slice(1)));
+  return c;
+}
+const STEP_CASES = {};   // 肌肉 → 會指向它的三步驟結果
+['R', 'L'].forEach(hy => ['R', 'L'].forEach(g => ['R', 'L'].forEach(t => { STEP_CASES[cands([hy, g, t])[0]] = [hy, g, t]; })));
+function renderStepChart() {
+  const it = quizItem(), q = st.quiz;
+  const c = it ? VERT : cands(st.steps), done = !it && st.steps.length === 3;
+  let svg = `<svg viewBox="0 0 660 350" role="img" aria-label="八條垂直作用肌依作用方向排列，檢查者面對病人">
+    <text class="gzt" x="185" y="26" text-anchor="middle">往病人右邊看</text><text class="gzt" x="495" y="26" text-anchor="middle">往病人左邊看</text>
+    <text class="gzt" x="22" y="114" text-anchor="middle">上</text><text class="gzt" x="22" y="260" text-anchor="middle">下</text>`;
+  [1, -1].forEach((v, r) => [1, -1].forEach((h, col) => {
+    const x0 = 40 + col * 310, y0 = 40 + r * 150, mx = x0 + 145;
+    svg += `<rect class="cell" x="${x0}" y="${y0}" width="290" height="136" rx="10"/>`;
+    primeMovers(h, v).forEach((m, i) => {
+      const px = mx - 70 + i * 140, py = y0 + 68;
+      let cls = 'pill';
+      if (it) { if (q.ans) { if (m === it.id) cls += ' q-ok'; else if (m === q.ans.pick) cls += ' q-bad'; } }
+      else { if (!c.includes(m)) cls += ' out'; else if (done) cls += ' fin'; }
+      svg += `<g class="${cls}" data-m="${m}"><rect x="${px - 58}" y="${py - 32}" width="116" height="64" rx="12"/><text class="k" x="${px}" y="${py + 2}" text-anchor="middle">${m}</text><text class="z" x="${px}" y="${py + 21}" text-anchor="middle">${EYEZH[m[0]]} · ${MNERVE[m.slice(1)]}</text></g>`;
+    });
+  }));
+  return svg + `</svg>`;
+}
+const STEP_Q = [
+  { t: '主視位哪一眼較高？', o: { R: '右眼較高', L: '左眼較高' }, ex: '較高的眼：不是它的 depressor（IR、SO）無力，就是另一眼的 elevator（SR、IO）無力，剩 4 條' },
+  { t: '往哪邊看時偏斜較大？', o: { R: '往右看', L: '往左看' }, ex: '每個注視方向，兩眼各有一條主要作用的垂直肌；保留在偏斜較大那一邊作用的肌肉，剩 2 條' },
+  { t: '頭往哪邊歪時偏斜較大？', o: { R: '歪向右肩', L: '歪向左肩' }, ex: '頭歪向一側時，該側眼要 incyclotort（SO、SR），對側眼要 excyclotort（IO、IR）；例如 SO 無力時，SR 的上轉作用沒有被抵消，hypertropia 變大，剩 1 條' }
+];
+function stepControls() {
+  return `<div class="xh">一步一步選${s('S8')}</div><div class="stps">${STEP_Q.map((q, i) => {
+    const dis = i > st.steps.length, val = st.steps[i];
+    return `<div class="stp ${dis ? 'dis' : ''}"><span class="n">STEP ${i + 1}</span><span class="t">${q.t}</span>
+      <div class="seg">${['R', 'L'].map(k => `<button type="button" data-stp="${i}" data-val="${k}" aria-pressed="${val === k}" ${dis ? 'disabled' : ''}>${q.o[k]}</button>`).join('')}</div>
+      ${val ? `<span class="ex">${q.ex}：${cands(st.steps.slice(0, i + 1)).join('、')}</span>` : ''}</div>`;
+  }).join('')}</div>${st.steps.length ? `<div class="row" style="margin-top:10px"><button type="button" class="btn" id="stp-reset">重來</button></div>` : ''}`;
+}
+function stepCard() {
+  const done = st.steps.length === 3, m = done ? cands(st.steps)[0] : null;
+  let h = `<div class="card"><div class="eyebrow">Parks three-step test · 對照 BCSC 5、6</div><div><h2>${done ? `${m}` : '三步驟找出無力的垂直肌'}</h2></div>`;
+  h += done ? `<p class="zh">${mZh(m)}（${MNAME[m.slice(1)]}）· ${MNERVE[m.slice(1)]}</p><p class="def">三步驟結果：${EYEZH[st.steps[0]]} hypertropia、往${ZH[st.steps[1]]}看較大、頭歪向${ZH[st.steps[2]]}肩較大。${m.slice(1) === 'SO' ? `SO 由 CN IV 支配，這個結果對應${ZH[m[0]]}側 CN IV palsy。` : ''}</p>`
+    : `<p class="def">用來找出「單一條」無力的垂直作用肌。在圖下方依序回答三題，圖上不符合的肌肉會變淡，最後只剩一條。</p>`;
+  h += list('限制', [`只適用於單一條垂直肌無力；多條肌肉無力或 restrictive strabismus 時不可靠${s('S8')}`, `找不出單一條肌肉時，要懷疑 skew deviation${s('S8')}`, `結果陽性也不等於 palsy：DVD、skew deviation、myasthenia gravis 也可能出現同樣結果${s('S8')}`, `第四步 upright-supine test：從坐到躺垂直偏斜改變超過 50%，偏向 skew deviation${s('S5')}`]);
+  h += srcList(['S8', 'S5']);
+  return h + `</div>`;
+}
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. <a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a></li>`).join('')}</ul></div>`; }
+function condCard() {
+  const C = CONDS[st.cond], d = C.info(st.side, st.pupil);
+  let h = `<div class="card"><div class="eyebrow">眼球運動 · 對照 BCSC 5</div><div><h2>${C.en}</h2></div><p class="zh">${ZH[st.side]}側 · ${C.zh}（${C.short}）</p><p class="def">${d.def}</p>`;
+  h += list('眼位與症狀', d.look) + list('處置重點', d.key) + list('常見病因', d.cause);
+  h += `<div class="sec"><h3>另一側</h3><div class="rel"><button type="button" class="chip" data-side="${opp(st.side)}">${ZH[opp(st.side)]}側 ${C.short}</button></div></div>`;
+  return h + srcList(d.src) + `</div>`;
+}
+function muscCard() {
+  const m = st.musc, k = m.slice(1), f = fieldOfM(m);
+  let h = `<div class="card"><div class="eyebrow">眼外肌 · 對照 BCSC 6</div><div><h2>${MNAME[k]}</h2></div><p class="zh">${EYEZH[m[0]]} ${k} · ${MNERVE[k]}</p>`;
+  h += `<p class="def">由 ${MNERVE[k]} 支配${s(MSRC[k])}。作用最純的方向是病人${dirZh(f.h, f.v)}看（圖中亮起的那格）${s('S8')}。</p>`;
+  h += `<div class="sec"><h3>同一格的另一條</h3><div class="rel">${primeMovers(f.h, f.v).filter(x => x !== m).map(x => `<button type="button" class="chip" data-m="${x}">${mZh(x)}</button>`).join('')}</div></div>`;
+  return h + srcList([MSRC[k], 'S8']) + `</div>`;
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'path', name: '視路與視野', en: 'Visual pathway' }];
+const VIEWS = [
+  { id: 'path', name: '視路與視野', en: 'Visual pathway' },
+  { id: 'eom', name: '眼外肌與複視', en: 'Ocular motility', subs: [['gaze', '九方向眼位'], ['step', 'Three-step test']] }
+];
 const $ = q => document.querySelector(q);
-const st = { view: 'path', sel: null, labels: true, tint: true, mode: 'learn', quiz: null };
+const st = { view: 'path', sub: 'gaze', sel: null, labels: true, tint: true, mode: 'learn', quiz: null, cond: 'none', side: 'R', pupil: true, musc: null, steps: [] };
 const store = (() => {
   const K = 'neuroOphth.v1';
   let mem = { wrong: {} };
   try { const r = localStorage.getItem(K); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
   return { get: () => mem, save() { try { localStorage.setItem(K, JSON.stringify(mem)); } catch (e) { } } };
 })();
+const inQ = () => st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+// 錯題的 key：分頁一是病灶 id（例如 ot_L）；分頁二是 eom:g:cn3_R（看眼位）或 eom:s:RSO（三步驟）
+const keyLabel = k => k.startsWith('eom:g:') ? condZh(k.slice(6)) : k.startsWith('eom:s:') ? `${mZh(k.slice(6))}（三步驟）` : siteZh(k);
+const keyValid = k => k.startsWith('eom:g:') ? COND_IDS.includes(k.slice(6)) : k.startsWith('eom:s:') ? VERT.includes(k.slice(6)) : SITES.includes(k);
+const keyView = k => k.startsWith('eom:') ? 'eom' : 'path';
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.mode === 'quiz' ? '測驗中：標籤已隱藏' : '點視路上的圓點，看兩眼視野怎麼缺'}</span>`;
+  const V = VIEWS.find(v => v.id === st.view);
+  $('#hintbar').innerHTML = V.subs ? `<div class="seg" role="group" aria-label="圖">${V.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${st.sub === id}">${nm}</button>`).join('')}</div>`
+    : `<span class="hint">${st.mode === 'quiz' ? '測驗中：標籤已隱藏' : '點視路上的圓點，看兩眼視野怎麼缺'}</span>`;
 }
 function renderTools() {
-  $('#tools').innerHTML = st.mode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label><label class="tog"><input type="checkbox" id="t-tint" ${st.tint ? 'checked' : ''}>左右視野配色</label>`;
+  let h = '';
+  if (st.mode !== 'quiz') {
+    if (st.view === 'path') h = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label><label class="tog"><input type="checkbox" id="t-tint" ${st.tint ? 'checked' : ''}>左右視野配色</label>`;
+    else if (st.sub === 'gaze') {
+      h = `<div class="seg" role="group" aria-label="狀況">${[['none', '正常'], ...COND_ORDER.map(c => [c, CONDS[c].short.replace(' palsy', '')])].map(([c, t]) => `<button type="button" data-cond="${c}" aria-pressed="${st.cond === c}">${t}</button>`).join('')}</div>`;
+      if (st.cond !== 'none') h += `<div class="seg" role="group" aria-label="側別">${['R', 'L'].map(x => `<button type="button" data-side="${x}" aria-pressed="${st.side === x}">${ZH[x]}側</button>`).join('')}</div>`;
+      if (st.cond === 'cn3') h += `<label class="tog"><input type="checkbox" id="t-pupil" ${st.pupil ? 'checked' : ''}>瞳孔受影響</label>`;
+      h += `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>肌肉標籤</label>`;
+    }
+  }
+  $('#tools').innerHTML = h;
 }
 function renderFig() {
   const fig = $('#fig');
-  fig.innerHTML = renderPathway();
+  let cap;
+  if (st.view === 'path') {
+    fig.innerHTML = renderPathway();
+    cap = ['由頭頂往下看：上＝anterior，圖左＝病人左側。視野依病人看出去的樣子畫，T＝temporal、N＝nasal；黑色＝缺損，小黑點＝生理盲點。', '視野圓＝中央 30°（示意）'];
+  } else if (st.sub === 'gaze') {
+    fig.innerHTML = renderGaze();
+    cap = ['檢查者面對病人（同臨床照片）：圖左＝病人右眼 OD；每格寫的是病人往哪邊看，下方是該方向主要作用的兩條肌肉。', '眼位偏斜為示意，不代表度數'];
+  } else {
+    fig.innerHTML = renderStepChart();
+    cap = ['檢查者面對病人：左欄＝往病人右邊看。每格是該方向主要作用的兩條垂直肌，左＝OD、右＝OS。', '只看單一條垂直肌無力'];
+  }
   fig.classList.toggle('nolab', !st.labels);
   fig.classList.toggle('quiz-on', st.mode === 'quiz');
-  $('#cap').innerHTML = `<span>由頭頂往下看：上＝anterior，圖左＝病人左側。視野依病人看出去的樣子畫，T＝temporal、N＝nasal；黑色＝缺損，小黑點＝生理盲點。</span><span class="ori">視野圓＝中央 30°（示意）</span>`;
+  $('#cap').innerHTML = `<span>${cap[0]}</span><span class="ori">${cap[1]}</span>`;
 }
 function renderExtra() {
   if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  if (st.view === 'eom') { $('#extra').innerHTML = st.sub === 'step' ? stepControls() : ''; return; }
   $('#extra').innerHTML = `<div class="xrow"><div><div class="xh">看到視野缺損時依序問${s('S1')}</div><ol>
       <li>檢查可信嗎？</li><li>正常還是異常？</li><li>單眼還是雙眼？單眼 → chiasm 之前</li>
       <li>雙眼的話，有沒有以垂直中線為界？</li><li>以中線為界：bitemporal（chiasm）還是 homonymous（chiasm 之後）？</li>
@@ -511,9 +779,12 @@ function renderExtra() {
       <span><i class="sw box" style="background:var(--vf-def)"></i>視野缺損</span></div></div></div>`;
 }
 function renderIndex() {
-  if (st.mode === 'quiz') { $('#index').hidden = true; return; }
-  $('#index').hidden = false;
-  $('#index').innerHTML = `<span class="lbl">病灶位置（${SITES.length}）</span>` + SITES.map(id => `<button type="button" class="chip ${id === st.sel ? 'on' : ''}" data-s="${id}">${siteZh(id)}</button>`).join('');
+  const ix = $('#index');
+  if (st.mode === 'quiz' || (st.view === 'eom' && st.sub === 'step')) { ix.hidden = true; return; }
+  ix.hidden = false;
+  ix.innerHTML = st.view === 'path'
+    ? `<span class="lbl">病灶位置（${SITES.length}）</span>` + SITES.map(id => `<button type="button" class="chip ${id === st.sel ? 'on' : ''}" data-s="${id}">${siteZh(id)}</button>`).join('')
+    : `<span class="lbl">點肌肉，看它作用最純的方向（${MUSCLES.length}）</span>` + MUSCLES.map(m => `<button type="button" class="chip ${m === st.musc ? 'on' : ''}" data-m="${m}">${mZh(m)} <i>${MNAME[m.slice(1)]}</i></button>`).join('');
 }
 function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
 function cardHTML(id) {
@@ -521,84 +792,132 @@ function cardHTML(id) {
   let h = `<div class="card"><div class="eyebrow">視路病灶 · 對照 BCSC 5</div><div><h2>${siteEn(id)}</h2></div><p class="zh">${side === 'C' ? T.zh : `${ZH[side]}側 · ${T.zh}`}</p><p class="def">${d.def}</p>`;
   h += list('視野缺損', d.vf) + list('定位重點', d.loc) + list('RAPD 與其他徵象', d.sign) + list('常見病因', d.cause);
   if (side !== 'C') h += `<div class="sec"><h3>另一側</h3><div class="rel"><button type="button" class="chip" data-s="${parse(id).t}_${opp(side)}">${siteZh(`${parse(id).t}_${opp(side)}`)}</button></div></div>`;
-  h += `<div class="sec"><h3>來源</h3><ul class="src">${d.src.map(k => `<li>${k.replace('S', '')}. <a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a></li>`).join('')}</ul></div>`;
-  return h + `</div>`;
+  return h + srcList(d.src) + `</div>`;
 }
 function renderPanel() {
   const p = $('#panel');
   if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
+  if (st.view === 'eom') {
+    if (st.sub === 'step') { p.innerHTML = stepCard(); return; }
+    p.innerHTML = st.musc ? muscCard() : st.cond !== 'none' ? condCard() : `<div class="empty-card"><div class="eyebrow">眼外肌與複視</div>
+      <p>上方是正常的九方向眼位。從圖上方的按鈕選一種狀況（CN III、IV、VI palsy、INO）和側別，就能看到哪一眼、往哪個方向動不到，右邊說明卡會寫出眼位特徵、處置重點與常見病因。</p>
+      <p>點格子下方的肌肉名稱，會亮起它作用最純的方向。要練垂直斜視的定位，切到「Three-step test」。</p></div>`;
+    return;
+  }
   p.innerHTML = st.sel ? cardHTML(st.sel) : `<div class="empty-card"><div class="eyebrow">視路與視野</div>
     <p>上方是兩眼的正常視野。點視路上任一個圓點，就會在該位置放一個病灶，視野立刻變成對應的缺損，右邊說明卡會寫出缺損名稱、定位重點、RAPD 與常見病因。</p>
     <p>配色開著時，同一種顏色的纖維負責同一側視野：看顏色就知道 chiasm 之後的病灶為什麼掉對側。</p></div>`;
 }
 function renderSelbar() {
   const b = $('#selbar');
-  if (st.mode !== 'learn' || !st.sel) { b.hidden = true; return; }
-  b.hidden = false; b.innerHTML = `<span>病灶：${siteZh(st.sel)}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+  let t = '';
+  if (st.mode === 'learn') {
+    if (st.view === 'path' && st.sel) t = `病灶：${siteZh(st.sel)}`;
+    else if (st.view === 'eom' && st.sub === 'gaze' && st.musc) t = `肌肉：${mZh(st.musc)}`;
+    else if (st.view === 'eom' && st.sub === 'gaze' && st.cond !== 'none') t = `目前：${condZh(`${st.cond}_${st.side}`)}`;
+    else if (st.view === 'eom' && st.sub === 'step' && st.steps.length === 3) t = `結果：${mZh(cands(st.steps)[0])}`;
+  }
+  b.hidden = !t;
+  if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
   renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
-  $('#wrong-ct').textContent = Object.keys(store.get().wrong).length;
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
 }
-function select(id) { if (!SITES.includes(id)) return; st.sel = id; render(); }
+function select(id) { if (!SITES.includes(id)) return; st.view = 'path'; st.sel = id; render(); }
+function setView(v) {
+  st.view = v;
+  try { history.replaceState(null, '', v === 'eom' ? '#eom' : location.pathname); } catch (e) { }
+  if (st.mode === 'quiz') st.quiz = quizDefaults();
+}
+function goKey(k) {
+  if (k.startsWith('eom:g:')) { const [c, side] = k.slice(6).split('_'); setView('eom'); st.sub = 'gaze'; st.cond = c; st.side = side; st.musc = null; render(); }
+  else if (k.startsWith('eom:s:')) { setView('eom'); st.sub = 'step'; st.steps = STEP_CASES[k.slice(6)].slice(); render(); }
+  else { setView('path'); select(k); }
+}
 
 /* ---------- quiz ----------
-   find：給名稱，在圖上點出位置；vf：給兩眼視野，在圖上點出病灶 */
+   分頁一：find 給名稱在圖上點、vf 給視野在圖上點病灶
+   分頁二：gaze 看九方向眼位選診斷、step 給三步驟結果在圖上點肌肉 */
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: st.view === 'eom' ? 'gaze' : 'vf', total: 10 });
 function quizHTML() {
-  const q = st.quiz;
+  const q = st.quiz, eom = st.view === 'eom';
   if (q.phase === 'setup') {
-    const w = Object.keys(store.get().wrong).length;
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗</div><h2>病灶在哪裡？</h2>
-      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', `全部 ${SITES.length} 處`)}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
-      <div class="row"><span class="lbl">題型</span><div class="seg">${opt('type', 'vf', '看視野找病灶')}${opt('type', 'find', '在圖上找')}${opt('type', 'mix', '混合')}</div></div>
-      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 15, '15')}${opt('total', 30, '30')}</div></div>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${eom ? '是哪一條神經、哪一條肌肉？' : '病灶在哪裡？'}</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${eom ? opt('type', 'gaze', '看眼位選診斷') + opt('type', 'step', '三步驟病例') : opt('type', 'vf', '看視野找病灶') + opt('type', 'find', '在圖上找')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">測驗時標籤會隱藏。答錯的病灶會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於病灶數時，同一處會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">測驗時標籤會隱藏。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
     return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
-      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.id}"><span>${siteZh(x.id)}</span><span>${x.type === 'vf' ? '看視野' : '找位置'}</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>${{ vf: '看視野', find: '找位置', gaze: '看眼位', step: '三步驟' }[x.type]}</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
       <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
   }
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
-  h += it.type === 'vf' ? `<div class="prompt"><div class="k">上方是這位病人的兩眼視野</div><div class="q">在圖上點出病灶位置</div></div>`
-    : `<div class="prompt"><div class="k">在圖上點出</div><div class="q">${siteZh(it.id)}</div></div>`;
+  if (it.type === 'vf') h += `<div class="prompt"><div class="k">上方是這位病人的兩眼視野</div><div class="q">在圖上點出病灶位置</div></div>`;
+  else if (it.type === 'find') h += `<div class="prompt"><div class="k">在圖上點出</div><div class="q">${siteZh(it.id)}</div></div>`;
+  else if (it.type === 'gaze') h += `<div class="prompt"><div class="k">上方是這位病人的九方向眼位</div><div class="q">是哪一種、哪一側？</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.id ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${condZh(o)}</button>`).join('')}</div>`;
+  else { const [hy, g, t] = STEP_CASES[it.id]; h += `<div class="prompt"><div class="k">三步驟結果</div><div class="q">${EYEZH[hy]} hypertropia；往${ZH[g]}看時較大；頭歪向${ZH[t]}肩時較大</div></div><p style="margin:0;font-size:14px">在圖上點出無力的肌肉。</p>`; }
   if (q.ans) {
-    const ok = q.ans.ok, d = infoFor(it.id);
-    h += `<div class="fb ${ok ? 'ok' : 'bad'}"><b>${ok ? '答對。' : '答錯。'}</b>${!ok && q.ans.pick ? ` 你點的是${siteZh(q.ans.pick)}；綠點才是${siteZh(it.id)}。` : ` 答案是${siteZh(it.id)}。`}<br>${d.vf[0]}</div>`;
+    const ok = q.ans.ok;
+    let ans, more;
+    if (it.type === 'gaze') { ans = condZh(it.id); const [c, side] = it.id.split('_'); more = CONDS[c].info(side, true).look[c === 'cn3' ? 0 : 1]; }
+    else if (it.type === 'step') { ans = `${mZh(it.id)}（${MNERVE[it.id.slice(1)]}）`; more = STEP_Q[2].ex; }
+    else { ans = siteZh(it.id); more = infoFor(it.id).vf[0]; }
+    const pk = q.ans.pick ? (it.type === 'gaze' ? condZh(q.ans.pick) : it.type === 'step' ? mZh(q.ans.pick) : siteZh(q.ans.pick)) : '';
+    h += `<div class="fb ${ok ? 'ok' : 'bad'}"><b>${ok ? '答對。' : '答錯。'}</b>${!ok && pk ? ` 你選的是${pk}；` : ' '}答案是${ans}。<br>${more}</div>`;
     h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
   } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
   return h + `</div>`;
 }
 function startQuiz(cfg) {
-  const w = store.get().wrong;
-  const pool = cfg.scope === 'wrong' ? Object.keys(w).filter(id => SITES.includes(id)) : SITES.slice();
+  const w = store.get().wrong, eom = st.view === 'eom';
+  const types = cfg.type === 'mix' ? (eom ? ['gaze', 'step'] : ['vf', 'find']) : [cfg.type];
+  // 每個 key 配一種題型；分頁一同一處病灶可用兩種題型出
+  let pool = eom ? [...(types.includes('gaze') ? COND_IDS.map(x => ['eom:g:' + x, 'gaze']) : []), ...(types.includes('step') ? VERT.map(x => ['eom:s:' + x, 'step']) : [])]
+    : SITES.map(x => [x, null]);
+  if (cfg.scope === 'wrong') pool = pool.filter(([k]) => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
-  let ids = [];
-  while (ids.length < cfg.total) ids = ids.concat(shuffle(pool.slice()));
-  const items = ids.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total)
-    .map(id => ({ id, type: cfg.type === 'mix' ? (Math.random() < .5 ? 'vf' : 'find') : cfg.type }));
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  const items = keys.map(([key, type]) => {
+    if (type === 'gaze') { const id = key.slice(6); return { key, id, type, opts: shuffle([id, ...shuffle(COND_IDS.filter(x => x !== id)).slice(0, 3)]) }; }
+    if (type === 'step') return { key, id: key.slice(6), type };
+    return { key, id: key, type: types[Math.floor(Math.random() * types.length)] };
+  });
   st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
-  st.sel = null; render();
+  st.sel = null; st.musc = null;
+  if (eom) st.sub = items[0].type === 'step' ? 'step' : 'gaze';
+  render();
 }
 function answer(pick) {
   const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
   const ok = pick === it.id;
   q.ans = { ok, pick }; if (ok) q.score++;
-  q.log.push({ id: it.id, ok, type: it.type });
+  q.log.push({ key: it.key, ok, type: it.type });
   const m = store.get();
-  if (!ok) m.wrong[it.id] = (m.wrong[it.id] || 0) + 1;
-  else if (q.scope === 'wrong' && m.wrong[it.id]) { m.wrong[it.id]--; if (m.wrong[it.id] <= 0) delete m.wrong[it.id]; }
+  if (!ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
   store.save(); render();
+}
+function nextQ() {
+  const q = st.quiz; q.i++; q.ans = null;
+  if (q.i >= q.items.length) q.phase = 'done';
+  else if (st.view === 'eom') st.sub = q.items[q.i].type === 'step' ? 'step' : 'gaze';
+  render();
 }
 function setMode(m) {
   st.mode = m;
   $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
-  st.quiz = m === 'quiz' ? { phase: 'setup', scope: 'all', type: 'vf', total: 10 } : null;
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
   render();
 }
 
@@ -606,33 +925,49 @@ function setMode(m) {
 function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
 function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
 function renderWrong() {
-  const w = store.get().wrong, ids = Object.keys(w).filter(id => SITES.includes(id)).sort((a, b) => w[b] - w[a]);
-  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(id => `<button type="button" data-go="${id}"><span>${siteZh(id)}</span><span>× ${w[id]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的病灶會自動記在這裡（只存在這個瀏覽器）。</p>`;
-  $('#w-practice').disabled = !ids.length;
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
 }
 
 /* ---------- events ---------- */
 document.addEventListener('click', e => {
   const t = e.target;
-  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.mode === 'quiz') setMode('learn'); select(go.dataset.go); return; }
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.mode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
   if (t.closest('[data-close]')) { closeSheets(); return; }
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const sb = t.closest('[data-sub]'); if (sb) { if (inQ()) return; st.sub = sb.dataset.sub; render(); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
   if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
   if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
   if (t.closest('#q-learn')) { setMode('learn'); return; }
-  if (t.closest('#q-next')) { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
   if (t.closest('#q-skip')) { answer(null); return; }
+  const op = t.closest('[data-opt]'); if (op) { answer(op.dataset.opt); return; }
+  const cd = t.closest('[data-cond]'); if (cd) { st.cond = cd.dataset.cond; st.musc = null; render(); return; }
+  const sd = t.closest('[data-side]'); if (sd) { st.side = sd.dataset.side; st.musc = null; render(); return; }
+  const sp = t.closest('[data-stp]'); if (sp) { const i = +sp.dataset.stp; st.steps = st.steps.slice(0, i); st.steps[i] = sp.dataset.val; render(); return; }
+  if (t.closest('#stp-reset')) { st.steps = []; render(); return; }
+  const mu = t.closest('[data-m]');
+  if (mu) {
+    if (st.mode === 'quiz') { const it = quizItem(); if (it && it.type === 'step' && mu.closest('#fig')) answer(mu.dataset.m); return; }
+    if (st.view === 'eom' && st.sub === 'step') return;
+    st.musc = st.musc === mu.dataset.m ? null : mu.dataset.m; render(); return;
+  }
   const el = t.closest('[data-s]');
   if (el) {
-    if (st.mode === 'quiz') { const q = st.quiz; if (q.phase === 'q' && el.closest('#fig')) answer(el.dataset.s); return; }
+    if (st.mode === 'quiz') { if (inQ() && st.view === 'path' && el.closest('#fig')) answer(el.dataset.s); return; }
     select(el.dataset.s);
   }
 });
 document.addEventListener('change', e => {
   if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
   if (e.target.id === 't-tint') { st.tint = e.target.checked; renderFig(); }
+  if (e.target.id === 't-pupil') { st.pupil = e.target.checked; renderFig(); renderPanel(); }
 });
 $('#m-learn').addEventListener('click', () => setMode('learn'));
 $('#m-quiz').addEventListener('click', () => setMode('quiz'));
@@ -654,10 +989,11 @@ $('#fig').addEventListener('mousemove', e => {
 });
 $('#fig').addEventListener('mouseleave', () => tip.hidden = true);
 
-/* ---------- self-check：病灶側別與視野側別的對應 ---------- */
+/* ---------- self-check ---------- */
 (() => {
   const has = (regs, k, side) => (regs || []).some(g => g.k === k && g.s === side);
   const a = (c, m) => console.assert(c, 'neuro-ophth self-check: ' + m);
+  // 分頁一：病灶側別與視野側別的對應
   a(SITES.length === 15, '應有 15 處病灶');
   a(has(fieldFor('chiasm').L, 'hemi', 'l') && has(fieldFor('chiasm').R, 'hemi', 'r'), 'chiasm 應是兩眼 temporal');
   ['ot', 'oc'].forEach(t => a(has(fieldFor(`${t}_L`).L, 'hemi', 'r') && has(fieldFor(`${t}_L`).R, 'hemi', 'r'), `左側 ${t} 應掉右側視野`));
@@ -665,8 +1001,19 @@ $('#fig').addEventListener('mouseleave', () => tip.hidden = true);
   a(fieldFor('pr_L').R.some(g => g.s === 'r' && g.v === 'd'), '左側 parietal 應掉右下');
   a(fieldFor('jx_L').R.some(g => g.k === 'quad' && g.s === 'r' && g.v === 'u'), '左側 junction 對側眼應掉 superotemporal');
   a(fieldFor('on_R').L.length === 0, '右側視神經病灶左眼應正常');
+  // 分頁二：肌肉作用方向與三步驟
+  a(fieldOfM('RSO').h === -1 && fieldOfM('RSO').v === -1, 'RSO 應在往左下');
+  a(fieldOfM('LIO').h === 1 && fieldOfM('LIO').v === 1, 'LIO 應在往右上');
+  a(primeMovers(1, 0).join() === 'RLR,LMR', '往右看是 RLR 與 LMR');
+  a(cands(['R']).length === 4 && cands(['R', 'L']).length === 2, '三步驟應剩 4、2 條');
+  a(cands(['R', 'L', 'R']).join() === 'RSO', '右眼高、往左看大、右歪大 → RSO（EyeWiki 例子）');
+  a(cands(['R', 'L', 'L']).join() === 'LSR', '右眼高、往左看大、左歪大 → LSR');
+  a(Object.keys(STEP_CASES).length === 8, '八種三步驟結果應對到八條不同肌肉');
+  a(eyePos('cn6', 'R', false, 'R', 1, 0).x <= 0, '右 CN VI 往右看時右眼不能 abduct');
+  a(eyePos('cn3', 'L', true, 'L', 0, 0).x < 0 && eyePos('cn3', 'L', true, 'L', 0, 0).y < 0, '左 CN III 主視位左眼 down and out');
 })();
 
+if (location.hash === '#eom') st.view = 'eom';
 render();
 </script>
 
