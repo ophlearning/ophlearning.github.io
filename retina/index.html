@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>視網膜互動圖譜</title>
-<meta name="description" content="互動式視網膜：看視網膜剝離的形狀，用 Lincoff rules 找 primary break；在眼底圖放裂孔，看視網膜下液怎麼依重力擴散，附測驗與錯題本。">
+<meta name="description" content="互動式視網膜：看視網膜剝離的形狀，用 Lincoff rules 找 primary break；在眼底圖放裂孔，看視網膜下液怎麼依重力擴散；切換黃斑 OCT 病變（IRF、SRF、PED、ERM、VMA／VMT、macular hole），用 IVTS 分級，附測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -18,6 +18,7 @@
   --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
   --t-fundus:#EDB18C; --t-fundus-2:#DD9772; --t-disc:#F8E3B8; --t-vessel:#B04530; --t-break:#9E1424;
   --rd:#F1F4FA; --rd-edge:rgba(52,60,92,.6);
+  --oct-bg:#06060A; --oct-hi:#F2F2F2; --oct-mh:#BDBDBD; --oct-m:#7C7C7C; --oct-lo:#2C2C2C; --oct-ch:#6A6A6A; --oct-chv:#262626; --oct-mark:#FF9F1A;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -122,6 +123,25 @@ a{color:var(--accent)}
 .pick{fill:none;stroke-width:3}
 .pick.ok{stroke:var(--ok)}.pick.bad{stroke:var(--bad)}
 .hitfig{cursor:crosshair}
+/* OCT：灰階與病變標示在淺色、深色模式都一樣（OCT 影像本來就是黑底） */
+.o-bg{fill:var(--oct-bg)}.o-hi{fill:var(--oct-hi)}.o-mh{fill:var(--oct-mh)}.o-m{fill:var(--oct-m)}.o-lo{fill:var(--oct-lo)}.o-ch{fill:var(--oct-ch)}.o-chv{fill:var(--oct-chv)}
+.o-mem{fill:none;stroke:var(--oct-hi);stroke-width:2.6}
+.o-hya{fill:none;stroke:var(--oct-hi);stroke-width:1.8}
+.gapol{fill:none;stroke:none}
+.omark .les{stroke:var(--oct-mark);stroke-width:1.8}
+.omark .gapol{stroke-dasharray:5 3}
+.o-cal{fill:none;stroke:var(--oct-mark);stroke-width:1.6}
+.ocal{font-family:var(--f-mono)!important;font-size:14px;fill:var(--oct-mark)!important}
+.ocal.sm{font-size:12px;fill:var(--oct-hi)!important}
+.o-lead{fill:none;stroke:var(--t-stroke-2);stroke-width:1}
+.olab{font-family:var(--f-body)!important;font-size:13px;fill:var(--ink-2)!important}
+input[type=range]{width:min(320px,100%);accent-color:var(--accent);margin:0}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt i{font-family:var(--f-display);color:var(--muted)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -193,6 +213,8 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .clk{font-size:22px}
   .dir{font-size:18px}
   .eyetag{font-size:24px}
+  .ocal{font-size:24px}
+  .ocal.sm{font-size:20px}
   .seg button{padding:5px 10px}
 }
 </style>
@@ -235,7 +257,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>眼底示意圖畫成正像，同眼底照片：上＝superior，OD 的視盤在右、OS 的視盤在左；鐘點依檢查者看出去的方向標示。為了看清周邊，視盤放在圖的正中央，從後極到 ora serrata 的距離不按比例。剝離範圍、隆起高度與液體擴散的速度只是示意。</span>
+    <span><b>關於圖：</b>眼底示意圖畫成正像，同眼底照片：上＝superior，OD 的視盤在右、OS 的視盤在左；鐘點依檢查者看出去的方向標示。為了看清周邊，視盤放在圖的正中央，從後極到 ora serrata 的距離不按比例。剝離範圍、隆起高度與液體擴散的速度只是示意。OCT 是水平切過 fovea 的示意 B-scan：橫向 6 mm、縱向放大約 4 倍，病變的形狀與大小只是示意，不是真實影像。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -263,7 +285,11 @@ const SRC = {
   S2: { t: 'Chiam NPY, Ting DSW, Lee SY, Ang CL. Rhegmatogenous Retinal Detachment: Features, Part 1. EyeNet Ophthalmic Pearls, AAO, 2018 Dec', u: 'https://www.aao.org/eyenet/article/rhegmatogenous-retinal-detachment-features-part-1' },
   S3: { t: 'EURETINA：Retinal Detachment – Lincoff Rules（教學單張：Rules to Find the Primary Break）', u: 'https://euretina.org/wp-content/uploads/2020/12/Retinal-Detachment-Lincoff-Rules-WEB.pdf' },
   S4: { t: 'Yoshida I, Shiba T, Hori Y, Maeno T. Relationships between retinal break locations and the shapes of the detachments. Clin Ophthalmol 2018;12:2213–2222', u: 'https://doi.org/10.2147/OPTH.S177594' },
-  S5: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), 16.5 Rhegmatogenous Retinal Detachment（Identification of retinal breaks、Symptoms）', u: null }
+  S5: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.681 Rhegmatogenous retinal detachment（Identification of retinal breaks、Symptoms）', u: null },
+  S6: { t: 'Staurenghi G, Sadda S, Chakravarthy U, Spaide RF; IN•OCT Panel. Proposed lexicon for anatomic landmarks in normal posterior segment SD-OCT: the IN•OCT consensus. Ophthalmology 2014;121:1572–1578（全文付費，本頁依摘要）', u: 'https://doi.org/10.1016/j.ophtha.2014.02.023' },
+  S7: { t: 'Duker JS, Kaiser PK, Binder S, et al. The International Vitreomacular Traction Study Group classification of vitreomacular adhesion, traction, and macular hole. Ophthalmology 2013;120:2611–2619（全文付費，本頁依摘要）', u: 'https://doi.org/10.1016/j.ophtha.2013.07.042' },
+  S8: { t: 'Bikbova G, Oshitari T, Baba T, Yamamoto S, Mori K. Pathogenesis and management of macular hole: review of current advances. J Ophthalmol 2019:3467381（轉述 IVTS 的大小切點）', u: 'https://doi.org/10.1155/2019/3467381' },
+  S9: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：p.580 正常 OCT 圖說、p.589 serous PED、p.595 MNV 的 OCT、p.605 CSC、p.609 CMO、pp.611–612 FTMH 與 ERM、p.615 VMA／VMT', u: null }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
@@ -458,12 +484,187 @@ function renderFundus(o) {
   return h + `</svg>`;
 }
 
+/* ---------- OCT 分頁：黃斑 B-scan 示意 ----------
+   橫向 800 px＝6 mm（每 px 7.5 μm）；縱向放大約 4 倍。右側 NFL 較厚＝朝視盤（以 OD 為例）。
+   各層由下往上疊：Bruch → RPE →（PED 時 RPE 被抬高）→（SRF 的空隙）→ 外層 → 內層 */
+const O = { x0: 40, x1: 840, xc: 440, um: 7.5, base: 470 };
+const LNAME = {
+  vit: ['Vitreous', '玻璃體'], hya: ['Posterior hyaloid', '後玻璃體膜'], erm: ['Epiretinal membrane', '視網膜前膜'], oper: ['Operculum', '蓋（玻璃體上的組織塊）'],
+  ilm: ['ILM', '內界膜'], nfl: ['NFL', '神經纖維層'], gcl: ['GCL', '神經節細胞層'], ipl: ['IPL', '內叢狀層'], inl: ['INL', '內核層'], opl: ['OPL', '外叢狀層'],
+  onl: ['HFL + ONL', 'Henle 纖維層＋外核層'], elm: ['ELM', '外界膜'], myoid: ['Myoid zone', '肌樣帶'], ez: ['Ellipsoid zone', '橢圓體帶'], os: ['Outer segments', '感光細胞外節'],
+  iz: ['Interdigitation zone', '交錯帶'], rpe: ['RPE', '視網膜色素上皮'], bruch: ['Bruch’s membrane', '布魯赫膜'], ch: ['Choroid', '脈絡膜'],
+  cyst: ['Intraretinal cyst', '視網膜內的低反射囊腔'], srf: ['Subretinal fluid', '視網膜下液（photoreceptors 與 RPE 之間）'], ped: ['Sub-RPE fluid（PED）', 'RPE 與 Bruch’s membrane 之間的液體'], hole: ['Full-thickness defect', '全層缺損（ILM 到 RPE）']
+};
+const OSTACK = ['iz', 'os', 'ez', 'myoid', 'elm', 'onl', 'opl', 'inl', 'ipl', 'gcl', 'nfl', 'ilm'];
+const OCOL = { ilm: 'hi', nfl: 'mh', gcl: 'm', ipl: 'mh', inl: 'lo', opl: 'mh', onl: 'lo', elm: 'mh', myoid: 'lo', ez: 'hi', os: 'm', iz: 'mh', rpe: 'hi', bruch: 'mh' };
+const LABEL_ORDER = ['ilm', 'nfl', 'gcl', 'ipl', 'inl', 'opl', 'onl', 'elm', 'myoid', 'ez', 'os', 'iz', 'rpe', 'ch'];
+
+function octGeo(c, p) {
+  const xs = []; for (let x = O.x0; x <= O.x1; x += 4) xs.push(x);
+  const g = (d, s) => Math.exp(-((d / s) ** 2)), sig = (d, c0, w) => 1 / (1 + Math.exp(-(d - c0) / w));
+  const hh2 = c === 'ftmh' ? p.hw / O.um / 2 : 0, awp = (c === 'vma' || c === 'vmt') ? p.aw / O.um : 0;
+  // foveal pit：內層在 fovea 往兩側推開；水腫、ERM、VMT 時凹陷變淺
+  const keep = { irf: 0.6, erm: 0.5, vmt: 0.45 }[c] || 0;
+  const inner = (d, c0, w) => keep + (1 - keep) * sig(d, c0, w);
+  const ring = d => c === 'ftmh' ? Math.exp(-(((d - hh2 - 30) / 55) ** 2)) : 0;
+  const tent = d => c === 'vmt' ? g(d, Math.min(awp / 2 * 0.7, 110)) : 0;
+  const T = {
+    iz: () => 3, os: (x, d) => 7 + 3 * g(d, 70), ez: () => 5, myoid: (x, d) => 5 + 2 * g(d, 70), elm: () => 2,
+    onl: (x, d) => 30 + 30 * g(d, 80) + (c === 'irf' ? 28 * g(d, 95) : 0) + 26 * tent(d) + 22 * ring(d),
+    opl: (x, d) => 9 * (0.25 + 0.75 * sig(d, 50, 14)),
+    inl: (x, d) => 22 * inner(d, 70, 16) + (c === 'irf' ? 24 * g(d, 120) : 0) + (c === 'erm' ? 10 * g(d, 170) : 0) + 14 * ring(d),
+    ipl: (x, d) => 18 * inner(d, 80, 16) + (c === 'erm' ? 6 * g(d, 170) : 0),
+    gcl: (x, d) => 26 * inner(d, 88, 16) * (1 + 0.3 * Math.exp(-(((d - 150) / 80) ** 2))),
+    nfl: (x, d) => (x > O.xc ? 4 + 0.04 * (x - O.xc) : 4 + 0.01 * (O.xc - x)) * inner(d, 95, 20) + (c === 'erm' ? 3 * (1 + Math.sin(x / 8)) * g(d, 260) : 0),
+    ilm: () => 2
+  };
+  const dome = (d, R) => d < R ? Math.pow(1 - (d / R) ** 2, 0.6) : 0;
+  const B = {}, bt = O.base - 3;
+  B.bruch = { top: xs.map(() => bt), bot: xs.map(() => O.base) };
+  const pedH = xs.map(x => c === 'ped' ? 60 * dome(Math.abs(x - O.xc), 105) : 0);
+  B.ped = { top: pedH.map(h => bt - h), bot: xs.map(() => bt) };
+  B.rpe = { bot: B.ped.top, top: B.ped.top.map(y => y - 9) };
+  const srfH = xs.map(x => { const d = Math.abs(x - O.xc); return c === 'srf' && d < 180 ? 22 * (1 + Math.cos(Math.PI * d / 180)) : 0; });
+  B.srf = { bot: B.rpe.top, top: B.rpe.top.map((y, i) => y - srfH[i]) };
+  let bot = B.srf.top;
+  OSTACK.forEach(id => { const top = xs.map((x, i) => bot[i] - T[id](x, Math.abs(x - O.xc))); B[id] = { top, bot }; bot = top; });
+  const surf = bot, at = x => Math.max(0, Math.min(xs.length - 1, Math.round((x - O.x0) / 4)));
+  const mid = (id, x, f) => { const i = at(x); return B[id].top[i] + (B[id].bot[i] - B[id].top[i]) * f; };
+  const th = (id, x) => { const i = at(x); return B[id].bot[i] - B[id].top[i]; };
+  const cysts = [];
+  if (c === 'irf') {
+    [-150, -105, -62, -24, 18, 58, 100, 142].forEach((o, k) => {
+      const x = O.xc + o, s = 0.8 + 0.25 * Math.sin(k * 2.1);
+      cysts.push({ x, y: mid('inl', x, 0.5), rx: 11 * s, ry: th('inl', x) * 0.34 * s });
+      if (Math.abs(o) < 115) cysts.push({ x: x + 8, y: mid('onl', x + 8, 0.32), rx: 14 * s, ry: th('onl', x + 8) * 0.22 * s });
+    });
+  }
+  if (c === 'vmt') cysts.push({ x: O.xc, y: mid('onl', O.xc, 0.3), rx: Math.min(awp / 2 * 0.45, 46), ry: th('onl', O.xc) * 0.24 });
+  if (c === 'ftmh') [-1, 1].forEach(sn => [18, 52].forEach((o, k) => { const x = O.xc + sn * (hh2 * 1.75 + o); cysts.push({ x, y: mid(k ? 'inl' : 'onl', x, 0.45), rx: 9, ry: th(k ? 'inl' : 'onl', x) * 0.3 }); }));
+  // macular hole：最窄處在全層 45% 的高度，往上與往下都變寬
+  let hole = null;
+  if (c === 'ftmh') {
+    const yS = Math.min(surf[at(O.xc - hh2 * 1.75)], surf[at(O.xc + hh2 * 1.75)]), yR = B.rpe.top[at(O.xc)];
+    const hwAt = t => hh2 * (t <= 0.45 ? 1 + 0.75 * ((0.45 - t) / 0.45) ** 2 : 1 + 1.3 * ((t - 0.45) / 0.55) ** 2);
+    const L = [], R = [];
+    for (let k = -3; k <= 20; k++) { const t = Math.max(0, k / 20), y = k < 0 ? yS + k * 10 : yS + t * (yR - yS); L.push([O.xc - hwAt(t), y]); R.push([O.xc + hwAt(t), y]); }
+    hole = { L, R, yN: yS + 0.45 * (yR - yS), w: 2 * hh2, yS, yR };
+  }
+  // posterior hyaloid：VMA／VMT 在附著範圍內貼著表面，外面翹起；FTMH 合併 VMT 時接在孔緣與 operculum
+  let hya = null, oper = null;
+  const attH = c === 'ftmh' ? (p.hv ? hh2 * 1.6 : -1) : awp / 2;
+  if (attH > 0) {
+    const ref = c === 'ftmh' ? Math.min(surf[at(O.xc - attH)], surf[at(O.xc + attH)]) - 4 : null;
+    hya = xs.map((x, i) => { const d = Math.abs(x - O.xc), e = Math.max(0, d - attH), y0 = ref == null ? surf[i] - 1.5 : (d < attH ? ref - 10 * (1 - d / attH) : surf[i] - 1.5); return [x, y0 - 58 * (1 - Math.exp(-e / 70))]; });
+    if (c === 'ftmh') oper = { x: O.xc, y: ref - 12, rx: hh2 * 0.7, ry: 5 };
+  }
+  const erm = c === 'erm' ? xs.filter(x => Math.abs(x - O.xc) < 330).map(x => [x, surf[at(x)] - 2.5]) : null;
+  return { xs, B, surf, cysts, hole, hya, oper, erm, at, awp, hh2 };
+}
+
+const inEll = (e, x, y, tol) => ((x - e.x) / (e.rx + tol)) ** 2 + ((y - e.y) / (e.ry + tol)) ** 2 <= 1;
+function inPoly(pts, x, y) { let ok = false; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) { const [xi, yi] = pts[i], [xj, yj] = pts[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) ok = !ok; } return ok; }
+// 點到哪裡：先看病變（囊腔、孔、液體），再看各層
+function octHit(G2, x, y, tol = 0) {
+  if (G2.cysts.some(e => inEll(e, x, y, tol))) return 'cyst';
+  if (G2.hole && inPoly(G2.hole.L.concat(G2.hole.R.slice().reverse()), x, y) && y > G2.hole.yS - 4) return 'hole';
+  if (G2.oper && inEll(G2.oper, x, y, 3)) return 'oper';
+  const i = G2.at(x);
+  for (const id of ['srf', 'ped']) { const L2 = G2.B[id]; if (L2.bot[i] - L2.top[i] > 0.5 && y >= L2.top[i] - tol && y <= L2.bot[i] + tol) return id; }
+  if (G2.erm && Math.abs(x - O.xc) < 330 && Math.abs(y - (G2.surf[i] - 2.5)) < 3 + tol) return 'erm';
+  if (G2.hya && Math.abs(y - G2.hya[i][1]) < 4 + tol && G2.hya[i][1] < G2.surf[i] - 4) return 'hya';
+  if (y > O.base) return 'ch';
+  for (const id of ['bruch', 'rpe', ...OSTACK]) { const L2 = G2.B[id]; if (y >= L2.top[i] - 0.5 && y <= L2.bot[i] + 0.5) return id; }
+  return y < G2.surf[i] ? 'vit' : null;
+}
+
+const OC = {
+  normal: { en: 'Normal macula', zh: '正常黃斑',
+    def: '水平切過 fovea 的正常 B-scan。中央的凹陷是 foveal pit；右側 NFL 較厚，朝向視盤（以 OD 為例）。',
+    look: [`IN•OCT 把確切來源還沒證實的反射帶稱為 zone：myoid zone、ellipsoid zone、interdigitation zone${s('S6')}`, `舊稱 IS/OS junction 的那條高反射線，現在叫 ellipsoid zone${s('S9')}`],
+    more: ['各層的細胞組成與臨床意義，見<a href="../eye-atlas/#retina">眼解剖圖譜的黃斑切面</a>', '點圖上任一層，圖下方會顯示名稱'], src: ['S6', 'S9'] },
+  irf: { en: 'Intraretinal fluid / CME', zh: '視網膜內液、囊樣黃斑水腫', layer: 'INL 與 OPL（圖上 HFL + ONL 這一帶）',
+    def: '視網膜裡出現低反射的囊腔。',
+    look: [`OCT：視網膜增厚、內有低反射囊腔、foveal depression 消失${s('S9')}`, `液體堆在 OPL 與 INL，形成小囊腔；小囊腔可能融合，進展成 foveal lamellar hole${s('S9')}`],
+    more: [`CMO 是各種黃斑水腫共同的表現；原因包括眼科手術與雷射（例如 phaco、PRP）、DR、RVO、uveitis、prostaglandin 眼藥、RP、ERM 等 vitreomacular traction、MNV${s('S9')}`], src: ['S9'] },
+  srf: { en: 'Subretinal fluid', zh: '視網膜下液', layer: 'Photoreceptors（神經感覺層）與 RPE 之間',
+    def: '神經感覺層被抬起來，下面是光學上空白的空間；RPE 留在原位。',
+    look: [`OCT：光學上空白的 neurosensory elevation${s('S9')}`, '和 PED 分辨：SRF 時 RPE 留在原位，空隙在 RPE 上方'],
+    more: [`CSC：常合併小的 PED 與較厚的 choroid${s('S9')}`, `MNV 也會出現 subretinal 與 sub-RPE fluid${s('S9')}`], src: ['S9'] },
+  ped: { en: 'Pigment epithelial detachment', zh: '色素上皮剝離', layer: 'RPE 與 Bruch’s membrane 之間',
+    def: 'RPE 被抬成圓頂狀，Bruch’s membrane 留在原位。',
+    look: [`Serous PED：RPE 被一片光學上空白的空間從 Bruch membrane 分開${s('S9')}`, '和 SRF 分辨：PED 時 RPE 本身被抬高，空隙在 RPE 下方'],
+    more: [`Type 1 MNV 長在 Bruch membrane 之上、RPE 之下，表現為 PED，常是多葉狀、內部反射不均${s('S9')}`], src: ['S9'] },
+  erm: { en: 'Epiretinal membrane', zh: '視網膜前膜', layer: 'ILM 表面（視網膜前）',
+    def: '視網膜表面多一層高反射的膜。',
+    look: [`OCT：黃斑前方一條薄而高反射的膜，視網膜表面出現皺摺${s('S9')}`, '圖上的視網膜增厚與 foveal pit 變淺只是示意'],
+    more: [`ERM 屬於 vitreomacular traction 的一種，是 CMO 的原因之一${s('S9')}`], src: ['S9'] },
+  vma: { en: 'Vitreomacular adhesion', zh: '玻璃體黃斑黏附', layer: 'Posterior hyaloid 附著在黃斑表面',
+    def: 'Fovea 周圍的玻璃體已經分開，但黃斑中央還黏著；fovea 的形狀正常。',
+    look: [`IVTS：perifoveal vitreous 分開、仍有 vitreomacular attachment，fovea 形態沒有被擾動${s('S7')}`, `附著直徑 ≤1500 μm 為 focal，>1500 μm 為 broad${s('S9')}`],
+    more: [`幾乎都是正常玻璃體老化的結果，但可能進展成病理變化${s('S7')}`, `指黃斑中心 3 mm 半徑內仍有附著${s('S9')}`], src: ['S7', 'S9'] },
+  vmt: { en: 'Vitreomacular traction', zh: '玻璃體黃斑牽引', layer: 'Posterior hyaloid 拉扯 fovea',
+    def: 'Posterior hyaloid 還黏在 fovea，而且把 fovea 拉變形。',
+    look: [`IVTS：anomalous PVD 合併 fovea 解剖扭曲，可包括 pseudocysts、macular schisis、CME、SRF${s('S7')}`, `依附著直徑分：≤1500 μm 為 focal，>1500 μm 為 broad${s('S7')}`],
+    more: [`合併其他黃斑疾病時叫 concurrent VMT（例如 AMD、RVO、DR），沒有合併時叫 isolated${s('S7', 'S9')}`, `大致對應舊的 Gass stage 1（impending macular hole）${s('S9')}`], src: ['S7', 'S9'] },
+  ftmh: { en: 'Full-thickness macular hole', zh: '全層黃斑裂孔', layer: '從 ILM 到 RPE 的所有視網膜層都中斷',
+    def: 'Fovea 的全層缺損，底部是 RPE。',
+    look: [`IVTS：fovea 的病灶，從 ILM 到 RPE 的所有視網膜層都中斷${s('S7')}`, `大小在孔最窄處水平量：small ≤250 μm、medium >250 且 ≤400 μm、large >400 μm${s('S8')}；Kanski 寫成 <250、250–400 μm，邊界的寫法文獻不一${s('S9')}`,
+      `再依有沒有 VMT 細分；由 vitreous traction 造成的是 primary，其他病變直接造成的是 secondary${s('S7')}`],
+    more: [`和舊的 Gass 分期大致對應：small 或 medium 合併 VMT ≈ stage 2，large 合併 VMT ≈ stage 3，沒有 VMT ≈ stage 4${s('S9')}`], src: ['S7', 'S8', 'S9'] }
+};
+const OC_ORDER = ['normal', 'irf', 'srf', 'ped', 'erm', 'vma', 'vmt', 'ftmh'];
+const OC_DX = OC_ORDER.filter(c => c !== 'normal');
+const holeSize = w => w <= 250 ? 'Small' : w <= 400 ? 'Medium' : 'Large';
+const attSize = a => a <= 1500 ? 'Focal' : 'Broad';
+const ivLabel = q => q.c === 'ftmh' ? `${holeSize(q.hw)} FTMH ${q.hv ? 'with' : 'without'} VMT` : `${attSize(q.aw)} ${q.c.toUpperCase()}`;
+const IVC = {
+  i1: { c: 'ftmh', hw: 180, hv: true }, i2: { c: 'ftmh', hw: 330, hv: false }, i3: { c: 'ftmh', hw: 560, hv: true }, i4: { c: 'ftmh', hw: 720, hv: false },
+  i5: { c: 'ftmh', hw: 210, hv: false }, i6: { c: 'ftmh', hw: 370, hv: true }, i7: { c: 'vmt', aw: 900 }, i8: { c: 'vmt', aw: 2400 }, i9: { c: 'vma', aw: 1100 }, i10: { c: 'vma', aw: 2800 }
+};
+const FLUID = { irf: 'cyst', srf: 'srf', ped: 'ped' };
+const OCT_KEYS = [...OC_DX.map(c => 'oct:d:' + c), ...Object.keys(IVC).map(k => 'oct:i:' + k), ...Object.keys(FLUID).map(c => 'oct:f:' + c)];
+const octParams = () => ({ aw: st.aw, hw: st.hw, hv: st.hv });
+
+function octSVG(c, p, o) {
+  const G2 = octGeo(c, p), P2 = ([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`;
+  const band = id => { const L2 = G2.B[id]; return 'M' + G2.xs.map((x, i) => P2([x, L2.top[i]])).join('L') + 'L' + G2.xs.map((x, i) => [x, L2.bot[i]]).reverse().map(P2).join('L') + 'Z'; };
+  // 手機只裁中央 3.75 mm（病變都在裡面），圖才不會太扁；層名欄位只在寬螢幕畫
+  const vb = o.narrow ? '190 236 500 340' : '24 226 1016 368', sbx = o.narrow ? 202 : O.x0 + 16;
+  let h = `<svg viewBox="${vb}" role="img" aria-label="黃斑 OCT 示意圖" id="osvg" class="${o.mark ? 'omark' : ''} hitfig">
+    <rect class="o-bg" x="${O.x0}" y="236" width="${O.x1 - O.x0}" height="340"/>
+    <rect class="o-ch" x="${O.x0}" y="${O.base}" width="${O.x1 - O.x0}" height="96"/>`;
+  for (let k = 0; k < 34; k++) { const x = O.x0 + 14 + k * 23.4, y = O.base + 22 + 38 * ((k * 7) % 5) / 5 + (k % 2) * 8; h += `<ellipse class="o-chv" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${7 + (k % 3) * 3}" ry="${4 + (k % 2) * 2}"/>`; }
+  ['bruch', 'rpe', ...OSTACK].forEach(id => { h += `<path class="o-${OCOL[id]}" d="${band(id)}"/>`; });
+  G2.cysts.forEach(e => { h += `<ellipse class="o-bg les" cx="${e.x.toFixed(1)}" cy="${e.y.toFixed(1)}" rx="${e.rx.toFixed(1)}" ry="${Math.max(1.5, e.ry).toFixed(1)}"/>`; });
+  ['srf', 'ped'].forEach(id => { if (c === id) h += `<path class="gapol les" d="${band(id)}"/>`; });
+  // 孔：填色往上延伸進 vitreous（蓋掉孔緣上方的組織），外框只畫視網膜裡的那段
+  if (G2.hole) { const hL = G2.hole.L, hR = G2.hole.R; h += `<path class="o-bg" d="M${hL.map(P2).join('L')}L${hR.slice().reverse().map(P2).join('L')}Z"/><path class="gapol les" d="M${hL.slice(3).map(P2).join('L')}M${hR.slice(3).map(P2).join('L')}"/>`; }
+  if (G2.erm) h += `<path class="o-mem les" d="M${G2.erm.map(P2).join('L')}"/>`;
+  if (G2.hya) h += `<path class="o-hya les" d="M${G2.hya.map(P2).join('L')}"/>`;
+  if (G2.oper) h += `<ellipse class="o-hi les" cx="${G2.oper.x}" cy="${G2.oper.y.toFixed(1)}" rx="${G2.oper.rx.toFixed(1)}" ry="${G2.oper.ry}"/>`;
+  // 量尺：孔在最窄處水平量；VMA／VMT 量附著直徑
+  if (o.cal && G2.hole) { const y = G2.hole.yN, a = O.xc - G2.hh2, b = O.xc + G2.hh2; h += `<g class="deco"><path class="o-cal" d="M${a} ${y}H${b}M${a} ${y - 6}v12M${b} ${y - 6}v12"/><text class="ocal" x="${O.xc}" y="${(G2.hole.yS - 34).toFixed(1)}" text-anchor="middle">最窄 ${p.hw} μm</text></g>`; }
+  if (o.cal && (c === 'vma' || c === 'vmt')) { const a = O.xc - G2.awp / 2, b = O.xc + G2.awp / 2, y = Math.min(...G2.surf) - 40; h += `<g class="deco"><path class="o-cal" d="M${a} ${y}H${b}M${a} ${y - 6}v12M${b} ${y - 6}v12"/><text class="ocal" x="${O.xc}" y="${y - 10}" text-anchor="middle">附著 ${p.aw} μm</text></g>`; }
+  h += `<g class="deco"><path class="o-cal" d="M${sbx} 562h${(500 / O.um).toFixed(1)}"/><text class="ocal sm" x="${sbx}" y="552">500 μm</text></g>`;
+  if (o.pick) h += `<g class="deco"><circle class="pick ${o.pick.ok ? 'ok' : 'bad'}" cx="${o.pick.x.toFixed(1)}" cy="${o.pick.y.toFixed(1)}" r="9"/></g>`;
+  if (!o.narrow) {
+    const i = G2.xs.length - 1, ys = LABEL_ORDER.map(id => id === 'ch' ? O.base + 40 : (G2.B[id].top[i] + G2.B[id].bot[i]) / 2);
+    const ly = ys.slice(); for (let k = 1; k < ly.length; k++) ly[k] = Math.max(ly[k], ly[k - 1] + 15.5);
+    const sh = Math.max(0, ly[ly.length - 1] - 586); for (let k = 0; k < ly.length; k++) ly[k] -= sh;
+    h += `<g class="deco lab">` + LABEL_ORDER.map((id, k) => `<path class="o-lead" d="M${O.x1 + 2} ${ys[k].toFixed(1)}L${O.x1 + 22} ${ly[k].toFixed(1)}H${O.x1 + 28}"/><text class="olab" x="${O.x1 + 32}" y="${(ly[k] + 4.5).toFixed(1)}">${id === 'rpe' ? 'RPE / Bruch’s membrane' : LNAME[id][0]}</text>`).join('') + `</g>`;
+  }
+  return { svg: h + `</svg>`, G2 };
+}
+
 /* ---------- app ---------- */
 const VIEWS = [
-  { id: 'rd', name: '視網膜剝離', en: 'Lincoff rules', subs: [['shape', '看形狀找裂孔'], ['spread', '放裂孔看液體']] }
+  { id: 'rd', name: '視網膜剝離', en: 'Lincoff rules', subs: [['shape', '看形狀找裂孔'], ['spread', '放裂孔看液體']] },
+  { id: 'oct', name: 'OCT 黃斑病變', en: 'Macular OCT' }
 ];
 const $ = q => document.querySelector(q);
-const st = { view: 'rd', sub: 'shape', eye: 'R', pre: null, v: 't', zone: true, labels: true, mode: 'learn', quiz: null, brk: null, t: 1 };
+const st = { view: 'rd', sub: 'shape', eye: 'R', pre: null, v: 't', zone: true, labels: true, mode: 'learn', quiz: null, brk: null, t: 1,
+  ocond: 'normal', aw: 1000, hw: 300, hv: true, omark: true, ohit: null };
 const store = (() => {
   const K = 'retinaAtlas.v1';
   let mem = { wrong: {} };
@@ -472,21 +673,33 @@ const store = (() => {
 })();
 const inQ = () => st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q';
 const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
-// 錯題的 key：rd:形狀_t或n_眼，例如 rd:st_n_L（OS 的 superonasal RD）
+// 錯題的 key：分頁一是 rd:形狀_t或n_眼（例如 rd:st_n_L＝OS 的 superonasal RD）；
+// 分頁二是 oct:d:病變（選診斷）、oct:i:i3（IVTS 分級）、oct:f:srf（點液體）
 const RD_KEYS = PRE_ORDER.flatMap(id => (PRE[id].asym ? ['t', 'n'] : ['t']).flatMap(v => ['R', 'L'].map(e => `rd:${id}_${v}_${e}`)));
 const parseKey = k => { const [id, v, eye] = k.slice(3).split('_'); return { id, v, eye }; };
-const keyLabel = k => { const { id, v, eye } = parseKey(k); return `${PRE[id].en(v)}（${eye === 'R' ? 'OD' : 'OS'}）`; };
-const keyValid = k => RD_KEYS.includes(k);
-const keyView = () => 'rd';
+const keyLabel = k => {
+  if (k.startsWith('oct:d:')) return `${OC[k.slice(6)].zh}（選診斷）`;
+  if (k.startsWith('oct:i:')) return `${ivLabel(IVC[k.slice(6)])}（IVTS 分級）`;
+  if (k.startsWith('oct:f:')) return `${OC[k.slice(6)].zh}（點液體）`;
+  const { id, v, eye } = parseKey(k); return `${PRE[id].en(v)}（${eye === 'R' ? 'OD' : 'OS'}）`;
+};
+const keyValid = k => RD_KEYS.includes(k) || OCT_KEYS.includes(k);
+const keyView = k => k.startsWith('oct:') ? 'oct' : 'rd';
+const narrowFig = () => !!(window.matchMedia && window.matchMedia('(max-width: 560px)').matches);
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
   const V = VIEWS.find(v => v.id === st.view);
-  $('#hintbar').innerHTML = st.mode === 'quiz' ? `<span class="hint">測驗中：標籤已隱藏，在眼底圖上點出裂孔</span>`
+  $('#hintbar').innerHTML = st.mode === 'quiz' ? `<span class="hint">測驗中：標籤已隱藏${st.view === 'rd' ? '，在眼底圖上點出裂孔' : ''}</span>`
+    : !V.subs ? `<span class="hint">點 B-scan 上任一層看名稱；下方選病變</span>`
     : `<div class="seg" role="group" aria-label="圖">${V.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${st.sub === id}">${nm}</button>`).join('')}</div>`;
 }
 function renderTools() {
   let h = '';
+  if (st.view === 'oct') {
+    if (st.mode !== 'quiz') h = `<label class="tog"><input type="checkbox" id="t-mark" ${st.omark ? 'checked' : ''}>標出病變</label>` + (narrowFig() ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>層名</label>`);
+    $('#tools').innerHTML = h; return;
+  }
   if (st.mode !== 'quiz') {
     h = `<div class="seg" role="group" aria-label="眼別">${['R', 'L'].map(e => `<button type="button" data-eye="${e}" aria-pressed="${st.eye === e}">${e === 'R' ? 'OD' : 'OS'}</button>`).join('')}</div>`;
     if (st.sub === 'shape' && st.pre && PRE[st.pre].asym) h += `<div class="seg" role="group" aria-label="側別">${[['t', 'Temporal'], ['n', 'Nasal']].map(([v, t]) => `<button type="button" data-v="${v}" aria-pressed="${st.v === v}">${t}</button>`).join('')}</div>`;
@@ -510,7 +723,16 @@ function figOpts() {
   const P0 = PRE[st.pre];
   return { eye: st.eye, range: preRange(st.pre, st.v, st.eye), rin: P0.rin, kind: P0.kind, zone: st.zone ? preZone(st.pre, st.v, st.eye) : null };
 }
+function octFig() {
+  const it = quizItem(), q = st.quiz;
+  const c = it ? it.c : st.ocond, p = it ? it.p : octParams(), mark = it ? !!q.ans : st.omark;
+  const r = octSVG(c, p, { mark, cal: it ? it.type === 'ivts' : true, narrow: narrowFig(), pick: it && q.ans && q.ans.x != null ? q.ans : null });
+  const fig = $('#fig'); fig.innerHTML = r.svg;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.mode === 'quiz');
+  $('#cap').innerHTML = `<span>示意 B-scan，水平切過 fovea：上＝vitreous、下＝choroid；右側 NFL 較厚，朝向視盤（以 OD 為例）。${mark ? '橘色＝病變。' : ''}</span><span class="ori">${narrowFig() ? '手機版只顯示中央 3.75 mm' : '橫向 6 mm'}；縱向放大約 4 倍</span>`;
+}
 function renderFig() {
+  if (st.view === 'oct') { octFig(); return; }
   const fig = $('#fig');
   fig.innerHTML = renderFundus(figOpts());
   fig.classList.toggle('nolab', !st.labels);
@@ -520,7 +742,16 @@ function renderFig() {
     : ['正像眼底：上＝superior，OD 視盤在右。淡色區＝剝離，藍框＝依 Lincoff rules 預測的裂孔範圍（只表示鐘點，不代表前後位置）。', '剝離範圍為示意'];
   $('#cap').innerHTML = `<span>${cap[0]}</span><span class="ori">${cap[1]}</span>`;
 }
+function octExtra() {
+  if (st.mode === 'quiz') return '';
+  let h = '';
+  if (st.ocond === 'vma' || st.ocond === 'vmt') h += `<div><div class="xh">附著直徑${s('S7')}</div><input type="range" id="o-aw" min="300" max="3000" step="50" value="${st.aw}" aria-label="附著直徑"><p class="rstat" id="o-awv">${st.aw} μm → ${attSize(st.aw)}</p></div>`;
+  if (st.ocond === 'ftmh') h += `<div><div class="xh">最窄孔徑${s('S8')}</div><input type="range" id="o-hw" min="100" max="800" step="10" value="${st.hw}" aria-label="最窄孔徑"><p class="rstat" id="o-hwv">${st.hw} μm → ${holeSize(st.hw)}</p><label class="tog"><input type="checkbox" id="o-hv" ${st.hv ? 'checked' : ''}>合併 VMT</label></div>`;
+  h += `<div><div class="xh">點到的位置</div><p class="rstat" id="ostat">${st.ohit ? `${LNAME[st.ohit][0]}　${LNAME[st.ohit][1]}` : '點 B-scan 上任一層，這裡會顯示名稱。'}</p></div>`;
+  return `<div class="xrow">${h}</div>`;
+}
 function renderExtra() {
+  if (st.view === 'oct') { $('#extra').innerHTML = octExtra(); return; }
   if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
   const legend = `<div><div class="xh">圖例</div><div class="legend">
       <span><i class="sw" style="background:var(--rd)"></i>剝離的視網膜（皺摺線＝bullous）</span>
@@ -538,6 +769,12 @@ function renderExtra() {
 }
 function renderIndex() {
   const ix = $('#index');
+  if (st.view === 'oct') {
+    if (st.mode === 'quiz') { ix.hidden = true; return; }
+    ix.hidden = false;
+    ix.innerHTML = `<span class="lbl">病變（${OC_ORDER.length}）</span>` + OC_ORDER.map(c => `<button type="button" class="chip ${c === st.ocond ? 'on' : ''}" data-oc="${c}">${OC[c].zh} <i>${OC[c].en}</i></button>`).join('');
+    return;
+  }
   if (st.mode === 'quiz' || st.sub !== 'shape') { ix.hidden = true; return; }
   ix.hidden = false;
   ix.innerHTML = `<span class="lbl">剝離形狀（${PRE_ORDER.length}）</span>` + PRE_ORDER.map(id => `<button type="button" class="chip ${id === st.pre ? 'on' : ''}" data-pre="${id}">${PRE[id].zh(st.v)} <i>${PRE[id].en(st.v)}</i></button>`).join('');
@@ -565,9 +802,20 @@ function spreadCard() {
       `病人最先發現視野缺損的象限，裂孔在相反的象限${s('S5')}`])}
     ${srcList(['S4', 'S5'])}</div>`;
 }
+function octCard() {
+  const c = st.ocond, d = OC[c];
+  let v = '';
+  if (c === 'ftmh') v = `目前：最窄 ${st.hw} μm、${st.hv ? '合併 VMT' : '沒有 VMT'} → ${ivLabel({ c, hw: st.hw, hv: st.hv })}`;
+  if (c === 'vma' || c === 'vmt') v = `目前：附著 ${st.aw} μm → ${ivLabel({ c, aw: st.aw })}`;
+  return `<div class="card"><div class="eyebrow">黃斑 OCT · 對照 BCSC 12</div><div><h2>${d.en}</h2></div><p class="zh">${d.zh}</p><p class="def">${d.def}</p>
+    ${d.layer ? `<div class="verdict">位置：${d.layer}</div>` : ''}${v ? `<div class="verdict">${v}</div>` : ''}
+    ${list('OCT 表現', d.look)}${list(c === 'normal' ? '怎麼用' : '延伸', d.more)}
+    ${c !== 'normal' ? `<div class="sec"><h3>正常分層</h3><p style="margin:0;font-size:14px">各層的說明見<a href="../eye-atlas/#retina">眼解剖圖譜的黃斑切面</a>。</p></div>` : ''}${srcList(d.src)}</div>`;
+}
 function renderPanel() {
   const p = $('#panel');
   if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
+  if (st.view === 'oct') { p.innerHTML = octCard(); return; }
   if (st.sub === 'spread') { p.innerHTML = spreadCard(); return; }
   p.innerHTML = st.pre ? preCard() : `<div class="empty-card"><div class="eyebrow">視網膜剝離 · Lincoff rules</div>
     <p>Lincoff 與 Gieser 在 1971 年分析 1,000 例 rhegmatogenous RD，發現剝離依重力擴散，可以從剝離的形狀回推 primary break 的位置${s('S1', 'S4')}。</p>
@@ -580,7 +828,8 @@ function renderSelbar() {
   const b = $('#selbar');
   let t = '';
   if (st.mode === 'learn') {
-    if (st.sub === 'shape' && st.pre) t = `形狀：${PRE[st.pre].zh(st.v)}`;
+    if (st.view === 'oct') { if (st.ocond !== 'normal') t = `病變：${OC[st.ocond].zh}`; }
+    else if (st.sub === 'shape' && st.pre) t = `形狀：${PRE[st.pre].zh(st.v)}`;
     else if (st.sub === 'spread' && st.brk != null) t = `裂孔：${hh(st.brk)} 點`;
   }
   b.hidden = !t;
@@ -612,28 +861,67 @@ function playSpread() {
   RAF = requestAnimationFrame(step);
 }
 
-/* ---------- quiz：看剝離範圍，在眼底圖上點裂孔 ---------- */
+/* ---------- quiz ----------
+   分頁一：看剝離範圍，在眼底圖上點裂孔（break）
+   分頁二：dx 看 B-scan 選診斷、ivts 依量好的數字分級、fluid 在圖上點液體 */
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
-const quizDefaults = () => ({ phase: 'setup', scope: 'all', total: 10 });
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: st.view === 'oct' ? 'mix' : 'break', total: 10 });
+const QT = { rd: [['break', '點出裂孔']], oct: [['dx', '看 B-scan 選診斷'], ['ivts', 'IVTS 分級'], ['fluid', '點出液體']] };
+const QH = { rd: '裂孔在哪裡？', oct: '這是什麼病變？' };
+const QTYPE_ZH = { break: '找裂孔', dx: '選診斷', ivts: 'IVTS 分級', fluid: '點液體' };
+const rnd = (a, b, step) => a + step * Math.floor(Math.random() * ((b - a) / step + 1));
+function octItem(key) {
+  const t = { d: 'dx', i: 'ivts', f: 'fluid' }[key[4]], id = key.slice(6);
+  if (t === 'dx') return { key, type: t, c: id, ans: id, p: { aw: rnd(600, 2800, 100), hw: rnd(180, 650, 10), hv: Math.random() < 0.5 }, opts: shuffle([id, ...shuffle(OC_DX.filter(x => x !== id)).slice(0, 3)]) };
+  if (t === 'ivts') {
+    const q2 = IVC[id], ans = ivLabel(q2);
+    const all = q2.c === 'ftmh' ? ['Small', 'Medium', 'Large'].flatMap(z => [`${z} FTMH with VMT`, `${z} FTMH without VMT`]) : ['Focal', 'Broad'].flatMap(z => [`${z} VMA`, `${z} VMT`]);
+    return { key, type: t, c: q2.c, ans, p: { aw: q2.aw || 1000, hw: q2.hw || 300, hv: !!q2.hv }, opts: shuffle([ans, ...shuffle(all.filter(x => x !== ans)).slice(0, 3)]) };
+  }
+  return { key, type: t, c: id, p: { aw: 1000, hw: 300, hv: true } };
+}
+function octQuizBody(it, q) {
+  const optBtn = o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${it.type === 'dx' ? `${OC[o].zh}　<i>${OC[o].en}</i>` : o}</button>`;
+  let h;
+  if (it.type === 'dx') h = `<div class="prompt"><div class="k">上方是這位病人的黃斑 OCT（示意）</div><div class="q">是哪一種病變？</div></div><div class="opts">${it.opts.map(optBtn).join('')}</div>`;
+  else if (it.type === 'ivts') h = `<div class="prompt"><div class="k">圖上已經量好${it.c === 'ftmh' ? '孔的最窄寬度' : '玻璃體的附著直徑'}</div><div class="q">依 IVTS 分類，這叫什麼？</div></div><div class="opts">${it.opts.map(optBtn).join('')}</div>`;
+  else h = `<div class="prompt"><div class="k">上方是這位病人的黃斑 OCT（示意）</div><div class="q">在圖上點出液體</div></div>`;
+  if (q.ans) {
+    const d = OC[it.c];
+    const more = it.type === 'dx' ? d.look[0] : it.type === 'ivts' ? OC[it.c === 'ftmh' ? 'ftmh' : 'vmt'].look[1]
+      : `液體在 ${d.layer}。${q.ans.hit ? `你點到的是 ${LNAME[q.ans.hit][0]}（${LNAME[q.ans.hit][1]}）。` : ''}`;
+    const pk = q.ans.pick ? (it.type === 'dx' ? OC[q.ans.pick].zh : q.ans.pick) : '';
+    const ans = it.type === 'dx' ? d.zh : it.type === 'ivts' ? it.ans : `${d.zh}（橘色處）`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && pk ? ` 你選的是 ${pk}；` : ' '}答案是 ${ans}。<br>${more}</div>`;
+  }
+  return h;
+}
 function quizHTML() {
   const q = st.quiz;
   if (q.phase === 'setup') {
-    const w = Object.keys(store.get().wrong).filter(keyValid).length;
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · 視網膜剝離</div><h2>裂孔在哪裡？</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${QH[st.view]}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      ${QT[st.view].length > 1 ? `<div class="row"><span class="lbl">題型</span><div class="seg">${QT[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>` : ''}
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">每題給一個剝離範圍（OD 或 OS），在眼底圖上點出最可能的 primary break；點在 Lincoff rules 的預測範圍內就算對。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${st.view === 'rd' ? '每題給一個剝離範圍（OD 或 OS），在眼底圖上點出最可能的 primary break；點在 Lincoff rules 的預測範圍內就算對。'
+        : '三種題型：看 B-scan 選診斷；依 IVTS 分出 macular hole 的大小與有沒有 VMT、VMA／VMT 是 focal 還是 broad（圖上會給量好的數字）；在圖上點出液體。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
     return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
-      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>找裂孔</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>${x.type === 'break' ? QTYPE_ZH.break : '再看一次'}</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
       <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
   }
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  if (it.type !== 'break') {
+    h += octQuizBody(it, q);
+    h += q.ans ? `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>` : `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+    return h + `</div>`;
+  }
   h += `<div class="prompt"><div class="k">${EYEZH[it.eye]}：上方淡色區是剝離範圍${PRE[it.id].kind === 'bul' ? '（有皺摺線＝bullous）' : PRE[it.id].kind === 'shallow' ? '（淺的剝離）' : ''}</div><div class="q">在眼底圖上點出最可能的裂孔位置</div></div>`;
   if (q.ans) {
     const z = preZone(it.id, it.v, it.eye), d = PRE[it.id].info(it.v, preRange(it.id, it.v, it.eye));
@@ -643,21 +931,22 @@ function quizHTML() {
   return h + `</div>`;
 }
 function startQuiz(cfg) {
-  const w = store.get().wrong;
-  let pool = RD_KEYS.slice();
+  const w = store.get().wrong, oct = st.view === 'oct';
+  const types = oct ? (cfg.type === 'mix' ? QT.oct.map(x => x[0]) : [cfg.type]) : ['break'];
+  let pool = oct ? OCT_KEYS.filter(k => types.includes({ d: 'dx', i: 'ivts', f: 'fluid' }[k[4]])) : RD_KEYS.slice();
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
   while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
   keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
-  const items = keys.map(key => Object.assign({ key }, parseKey(key)));
+  const items = keys.map(key => oct ? octItem(key) : Object.assign({ key, type: 'break' }, parseKey(key)));
   st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
   stopAnim(); render();
 }
 function answer(a) {
   const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
   q.ans = a; if (a.ok) q.score++;
-  q.log.push({ key: it.key, ok: a.ok });
+  q.log.push({ key: it.key, ok: a.ok, type: it.type });
   const m = store.get();
   if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
   else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
@@ -671,7 +960,19 @@ function setMode(m) {
   if (m === 'learn') st.t = 1;
   render();
 }
-function goKey(k) { const { id, v, eye } = parseKey(k); st.sub = 'shape'; st.pre = id; st.v = v; st.eye = eye; render(); }
+function setView(v) {
+  stopAnim(); st.view = v;
+  try { history.replaceState(null, '', v === 'rd' ? location.pathname : '#' + v); } catch (e) { }
+  if (st.mode === 'quiz') st.quiz = quizDefaults();
+}
+function goKey(k) {
+  if (k.startsWith('oct:')) {
+    const t = k[4], id = k.slice(6); setView('oct'); st.ohit = null;
+    if (t === 'i') { const q2 = IVC[id]; st.ocond = q2.c; if (q2.aw) st.aw = q2.aw; if (q2.hw) { st.hw = q2.hw; st.hv = q2.hv; } } else st.ocond = id;
+    render(); return;
+  }
+  setView('rd'); const { id, v, eye } = parseKey(k); st.sub = 'shape'; st.pre = id; st.v = v; st.eye = eye; render();
+}
 
 /* ---------- wrong book ---------- */
 function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
@@ -691,7 +992,21 @@ function figPoint(e) {
   const q = p.matrixTransform(svg.getScreenCTM().inverse());
   return { x: q.x, y: q.y, r: Math.hypot(q.x - G.cx, q.y - G.cy), h: clockOf(q.x, q.y) };
 }
+function octClick(e) {
+  const svg = $('#osvg'); if (!svg || !svg.getScreenCTM()) return;
+  const pp = svg.createSVGPoint(); pp.x = e.clientX; pp.y = e.clientY;
+  const q2 = pp.matrixTransform(svg.getScreenCTM().inverse());
+  if (q2.x < O.x0 || q2.x > O.x1) return;
+  if (st.mode === 'quiz') {
+    const it = quizItem(); if (!it || it.type !== 'fluid' || st.quiz.ans) return;
+    const hit = octHit(octGeo(it.c, it.p), q2.x, q2.y, 3);
+    answer({ ok: hit === FLUID[it.c], x: q2.x, y: q2.y, hit }); return;
+  }
+  st.ohit = octHit(octGeo(st.ocond, octParams()), q2.x, q2.y);
+  const el = $('#ostat'); if (el) el.textContent = st.ohit ? `${LNAME[st.ohit][0]}　${LNAME[st.ohit][1]}` : '圖外';
+}
 $('#fig').addEventListener('click', e => {
+  if (st.view === 'oct') { octClick(e); return; }
   const p = figPoint(e); if (!p || p.r > G.ora + 20) return;
   if (st.mode === 'quiz') {
     const it = quizItem(); if (!it || st.quiz.ans) return;
@@ -708,7 +1023,9 @@ document.addEventListener('click', e => {
   if (t.closest('[data-close]')) { closeSheets(); return; }
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
-  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; st.view = tab.dataset.view; render(); return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const oc = t.closest('[data-oc]'); if (oc) { st.ocond = oc.dataset.oc; st.ohit = null; render(); return; }
+  const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
   const sb = t.closest('[data-sub]'); if (sb) { if (inQ()) return; stopAnim(); st.sub = sb.dataset.sub; st.t = 1; render(); return; }
   const ey = t.closest('[data-eye]'); if (ey) { st.eye = ey.dataset.eye; if (RAF) { const tt = st.t; render(); st.t = tt; } else render(); return; }
   const vv = t.closest('[data-v]'); if (vv) { st.v = vv.dataset.v; render(); return; }
@@ -716,8 +1033,8 @@ document.addEventListener('click', e => {
   if (t.closest('#sp-play')) { if (st.brk != null) playSpread(); return; }
   if (t.closest('#sp-end')) { stopAnim(); st.t = 1; render(); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
-  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, total: q.total }); return; }
-  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, total: q.total }; render(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
   if (t.closest('#q-learn')) { setMode('learn'); return; }
   if (t.closest('#q-next')) { nextQ(); return; }
   if (t.closest('#q-skip')) { answer({ ok: false }); return; }
@@ -725,11 +1042,21 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
   if (e.target.id === 't-zone') { st.zone = e.target.checked; renderFig(); }
+  if (e.target.id === 't-mark') { st.omark = e.target.checked; renderFig(); }
+  if (e.target.id === 'o-hv') { st.hv = e.target.checked; renderFig(); renderPanel(); }
 });
+// 拖拉條：只重畫圖與說明卡，不重畫拖拉條本身（才不會中斷拖拉）
+document.addEventListener('input', e => {
+  if (e.target.id === 'o-aw') { st.aw = +e.target.value; $('#o-awv').textContent = `${st.aw} μm → ${attSize(st.aw)}`; }
+  else if (e.target.id === 'o-hw') { st.hw = +e.target.value; $('#o-hwv').textContent = `${st.hw} μm → ${holeSize(st.hw)}`; }
+  else return;
+  renderFig(); renderPanel(); renderSelbar();
+});
+if (window.matchMedia) { const mq = window.matchMedia('(max-width: 560px)'); const re = () => { if (st.view === 'oct') { renderTools(); renderFig(); } }; if (mq.addEventListener) mq.addEventListener('change', re); }
 $('#m-learn').addEventListener('click', () => setMode('learn'));
 $('#m-quiz').addEventListener('click', () => setMode('quiz'));
 $('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
-$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', total: 30 }); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
 let clearArm = 0;
 $('#w-clear').addEventListener('click', e => {
   const b = e.currentTarget;
@@ -762,8 +1089,21 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
     a(inZone(zoneOf(f.range, false), b, G.brk), `${b} 點的裂孔要被回推範圍包住`);
   }
   a(spreadPlan(10).F[0] === 2 && spreadPlan(2).F[1] === 10, '上方裂孔：對側升到和裂孔一樣高（Kanski）');
+  // 分頁二：IVTS 切點與 OCT 示意的幾何
+  a(holeSize(250) === 'Small' && holeSize(251) === 'Medium' && holeSize(400) === 'Medium' && holeSize(401) === 'Large', 'FTMH：≤250 small、≤400 medium、>400 large');
+  a(attSize(1500) === 'Focal' && attSize(1501) === 'Broad', 'VMA／VMT：≤1500 μm 是 focal');
+  const P0 = { aw: 1000, hw: 300, hv: true }, gN = octGeo('normal', P0), gS = octGeo('srf', P0), gP = octGeo('ped', P0), gI = octGeo('irf', P0), ic = gN.at(O.xc);
+  a(gS.B.rpe.top[ic] === gN.B.rpe.top[ic] && gS.B.srf.bot[ic] - gS.B.srf.top[ic] > 20, 'SRF：RPE 留在原位，空隙在 RPE 上方');
+  a(gP.B.bruch.top[ic] === gN.B.bruch.top[ic] && gP.B.rpe.bot[ic] < gN.B.rpe.bot[ic] - 20, 'PED：Bruch 留在原位，RPE 被抬高');
+  a(octHit(gS, O.xc, (gS.B.srf.top[ic] + gS.B.srf.bot[ic]) / 2) === 'srf' && octHit(gP, O.xc, (gP.B.ped.top[ic] + gP.B.ped.bot[ic]) / 2) === 'ped', '點空隙要認得出 SRF、PED');
+  a(octHit(gN, O.xc, (gN.B.onl.top[ic] + gN.B.onl.bot[ic]) / 2) === 'onl' && octHit(gN, O.xc, gN.surf[ic] - 30) === 'vit', '正常：fovea 中央是 ONL，上方是 vitreous');
+  a(gI.cysts.length > 0 && gI.cysts.every(e => octHit(gI, e.x, e.y) === 'cyst'), 'CME 的囊腔都點得到');
+  [180, 400, 720].forEach(w => { const gH = octGeo('ftmh', { aw: 1000, hw: w, hv: true }); a(Math.abs(gH.hole.w * O.um - w) < 1e-6 && octHit(gH, O.xc, gH.hole.yN) === 'hole', `${w} μm 的孔最窄處寬度要對`); });
+  a(Object.values(OC).every(d => d.src.every(k => SRC[k])) && OCT_KEYS.every(keyValid), 'OCT 說明卡的出處與題目 key 都存在');
+  a(Object.values(IVC).every(q2 => /^(Small|Medium|Large) FTMH (with|without) VMT$|^(Focal|Broad) VM[AT]$/.test(ivLabel(q2))), 'IVTS 分級題的答案格式');
 })();
 
+if (location.hash === '#oct') st.view = 'oct';
 render();
 </script>
 
