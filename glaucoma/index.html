@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>青光眼互動圖譜</title>
-<meta name="description" content="互動式青光眼圖譜：在前房角剖面上看房水從 ciliary processes 製造、經 trabecular meshwork 與 uveoscleral 兩條路流出；切換 prostaglandin analogs、beta-blocker、alpha-2 agonist、CAI、pilocarpine、netarsudil、latanoprostene bunod，看各類藥作用在哪個構造、TM 與 ciliary muscle 怎麼變、episcleral venous pressure 怎麼變，附 Goldmann 方程式；gonioscopy 前房角分級：拖拉角度看剖面與鏡下所見同步變化，換算 Shaffer 與 Spaeth（插入點、角度、iris 形狀、色素），分辨 appositional 與 PAS；視野與 RNFL：24-2 缺損型態（paracentral、nasal step、arcuate、temporal wedge）對到眼底的 RNFL 走向與視盤鐘點；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式青光眼圖譜：在前房角剖面上看房水從 ciliary processes 製造、經 trabecular meshwork 與 uveoscleral 兩條路流出；切換 prostaglandin analogs、beta-blocker、alpha-2 agonist、CAI、pilocarpine、netarsudil、latanoprostene bunod，看各類藥作用在哪個構造、TM 與 ciliary muscle 怎麼變、episcleral venous pressure 怎麼變，附 Goldmann 方程式；gonioscopy 前房角分級：拖拉角度看剖面與鏡下所見同步變化，換算 Shaffer 與 Spaeth（插入點、角度、iris 形狀、色素），分辨 appositional 與 PAS；視野與 RNFL：24-2 缺損型態（paracentral、nasal step、arcuate、temporal wedge）對到眼底的 RNFL 走向與視盤鐘點；視盤評估：拖拉 rim 寬度看 ISNT rule，比較同一個 C/D 在大小視盤的意義，依視盤大小與最窄 rim 或 rim 消失的範圍分 DDLS；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -19,6 +19,7 @@
   --t-cornea:#E2E0F1; --t-sclera:#F5F0EC; --t-collagen:#EFC6D3; --t-conj:#F1CFD9; --t-uvea:#8E604B; --t-iris:#7C5342;
   --t-pig:#4A3028; --t-cb:#B98673; --t-muscle:#C55367; --t-lens:#E6ECF7; --t-nuc:#D3D9EA; --t-fluid:#E8F0F8; --t-vit:#EEF3F6;
   --t-sheath:#E2C29E; --t-vein:#4C62AF; --t-nuclear:#7B67C1; --t-plex:#EDC1D2;
+  --d-fun:#F2C9B6; --d-rim:#E59878; --d-cup:#FBF1DD; --warn:#B7791F;
   --aq:#1C6FC0; --aq-band:rgba(28,111,192,.15); --uv:#1D8A6E; --uv-band:rgba(29,138,110,.17); --up:#1D6FB8; --dn:#B5472E; --beam:#FFFFFF;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
@@ -34,6 +35,7 @@
   --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
   --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
   --t-sheath:#6D5541; --t-vein:#7286D8; --t-nuclear:#6552B5; --t-plex:#6E4560;
+  --d-fun:#3B2722; --d-rim:#A65F48; --d-cup:#D8C8A4; --warn:#E3B341;
   --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; --beam:#EDE6CF; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
@@ -43,6 +45,7 @@
   --t-cornea:#302B44; --t-sclera:#3B3647; --t-collagen:#6A3D52; --t-conj:#5C3848; --t-uvea:#704B3B; --t-iris:#6C4839;
   --t-pig:#2B1D17; --t-cb:#7F5648; --t-muscle:#A8435A; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
   --t-sheath:#6D5541; --t-vein:#7286D8; --t-nuclear:#6552B5; --t-plex:#6E4560;
+  --d-fun:#3B2722; --d-rim:#A65F48; --d-cup:#D8C8A4; --warn:#E3B341;
   --aq:#74C0FF; --aq-band:rgba(116,192,255,.16); --uv:#5BD1A8; --uv-band:rgba(91,209,168,.17); --up:#7FC4FF; --dn:#F29A7A; --beam:#EDE6CF; color-scheme:dark }
 
 *{box-sizing:border-box}
@@ -186,6 +189,33 @@ a{color:var(--accent)}
 .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
 .tbl th{font-weight:500;color:var(--muted);font-size:12px}
 .tbl tr.on td{background:var(--accent-soft)}
+.tbl th.hc{color:var(--accent)}
+.tbl td.hit{box-shadow:inset 0 0 0 2px var(--accent);font-weight:600}
+/* 視盤評估 */
+.dfun{fill:var(--d-fun)}
+.drim{fill:var(--d-rim);stroke:var(--t-stroke);stroke-width:1}
+.dcup{fill:var(--d-cup);stroke:var(--t-stroke-2);stroke-width:.8}
+.dcal{stroke:var(--accent);stroke-width:3.2;stroke-linecap:round}
+.ddia{stroke:var(--accent);stroke-width:1.2;stroke-dasharray:5 4}
+.dmiss{fill:none;stroke:var(--bad);stroke-width:5;stroke-linecap:round}
+.dbar{fill:var(--accent)}
+.fig .dcmp{font-family:var(--f-mono);font-size:22px;font-weight:600}
+.fig .dcmp.ok{fill:var(--ok)}
+.fig .dcmp.bad{fill:var(--bad)}
+.fig .dtx{font-family:var(--f-body);font-size:14px}
+.fig .dtx.b{font-weight:600}
+.dscale{stroke:var(--ink);stroke-width:2}
+.dgrid{stroke:var(--line);stroke-width:1}
+.dcls{stroke:var(--line-2);stroke-width:1;stroke-dasharray:4 4}
+.dghc{fill:none;stroke:var(--ink-2);stroke-width:2}
+.dpt{fill:var(--hl);stroke:var(--fig-bg);stroke-width:2}
+.dlad{opacity:.3}
+.dlad.on{opacity:1;stroke:var(--ink);stroke-width:1.5}
+.dlad.z1{fill:var(--ok)}.dlad.z2{fill:var(--warn)}.dlad.z3{fill:var(--bad)}
+.fig .dladt{font-family:var(--f-mono);font-size:15px;font-weight:500}
+.fig .dladt.on{fill:var(--surface)}
+.zd{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.zd.z1{background:var(--ok)}.zd.z2{background:var(--warn)}.zd.z3{background:var(--bad)}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -274,6 +304,8 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .gdeg{font-size:26px}
   .vtitle{font-size:17px}
   .vclk{font-size:16px}
+  .fig .dtx{font-size:18px}
+  .fig .dcmp{font-size:26px}
 }
 </style>
 </head>
@@ -315,7 +347,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>前房角剖面沿用眼解剖圖譜的眼球模型（右眼 OD temporal angle 放大，約 100 px/mm）：上＝周邊 temporal、左＝anterior。房水粒子的多寡與管道粗細只表示藥物作用的方向，不是實際流量；穩定狀態下房水製造量等於流出量。TM、Schlemm canal、ciliary muscle 的變化是示意，放大圖也不是實際比例。前房角分級分頁的剖面同一個模型再放大（約 190 px/mm），鏡下示意由上到下＝由前（角膜側）到後（iris 側）；看得到哪些結構依 Kanski 的 Shaffer 對照，不是光學計算。視野與 RNFL 分頁：視野依病人自己看出去的樣子畫（右眼，左＝nasal），眼底是正像（OD 視盤在右）；RNFL 走向用 Jansonius 2009 的平均模型，缺損點的位置與深淺是示意。</span>
+    <span><b>關於圖：</b>前房角剖面沿用眼解剖圖譜的眼球模型（右眼 OD temporal angle 放大，約 100 px/mm）：上＝周邊 temporal、左＝anterior。房水粒子的多寡與管道粗細只表示藥物作用的方向，不是實際流量；穩定狀態下房水製造量等於流出量。TM、Schlemm canal、ciliary muscle 的變化是示意，放大圖也不是實際比例。前房角分級分頁的剖面同一個模型再放大（約 190 px/mm），鏡下示意由上到下＝由前（角膜側）到後（iris 側）；看得到哪些結構依 Kanski 的 Shaffer 對照，不是光學計算。視野與 RNFL 分頁：視野依病人自己看出去的樣子畫（右眼，左＝nasal），眼底是正像（OD 視盤在右）；RNFL 走向用 Jansonius 2009 的平均模型，缺損點的位置與深淺是示意。視盤評估分頁：右眼視盤正像（上＝superior、左＝temporal），視盤畫成垂直橢圓（Jonas 1988 的平均比例）；C/D 與大小、DDLS 的視盤照實際比例，rim 的形狀是示意。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。藥物機轉以 AAO PPP 與 DailyMed 仿單為主，仿單和 PPP 寫法不同時都列出來。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -371,7 +403,22 @@ const SRC = {
   S30: { t: 'Garway-Heath DF, Poinoosawmy D, Fitzke FW, Hitchings RA. Mapping the visual field to the optic disc in normal tension glaucoma eyes. Ophthalmology 2000;107(10):1809–1815（摘要）', u: 'https://doi.org/10.1016/s0161-6420(00)00284-0' },
   S31: { t: 'Jansonius NM, Nevalainen J, Selig B, et al. A mathematical description of nerve fiber bundle trajectories and their variability in the human retina. Vision Res 2009;49(17):2157–2163', u: 'https://doi.org/10.1016/j.visres.2009.04.029' },
   S32: { t: 'Hood DC, Raza AS, de Moraes CGV, Liebmann JM, Ritch R. Glaucomatous damage of the macula. Prog Retin Eye Res 2013;32:1–21', u: 'https://doi.org/10.1016/j.preteyeres.2012.08.003' },
-  S27: { t: 'Spaeth GL, Aruajo S, Azuara A. Comparison of the configuration of the human anterior chamber angle, as determined by the Spaeth gonioscopic grading system and ultrasound biomicroscopy. Trans Am Ophthalmol Soc 1995;93:337–351（摘要）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1312064/' }
+  S27: { t: 'Spaeth GL, Aruajo S, Azuara A. Comparison of the configuration of the human anterior chamber angle, as determined by the Spaeth gonioscopic grading system and ultrasound biomicroscopy. Trans Am Ophthalmol Soc 1995;93:337–351（摘要）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1312064/' },
+  S33: { t: 'Gedde SJ, et al. Primary Open-Angle Glaucoma Preferred Practice Pattern®. Ophthalmology 2026;133(4):P1–P103（Optic nerve head and retinal nerve fiber layer clinical examination；ONH imaging 的 disc damage likelihood scale）', u: 'https://doi.org/10.1016/j.ophtha.2025.12.029' },
+  S34: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024)：pp.351–352 Normal optic nerve head（neuroretinal rim、ISNT、C/D ratio、optic disc size、Table 11.3）、pp.352–356 Changes in glaucoma', u: null },
+  S35: { t: 'Jonas JB, Gusek GC, Naumann GO. Optic disc, cup and neuroretinal rim size, configuration and correlations in normal eyes. Invest Ophthalmol Vis Sci 1988;29(7):1151–1158（摘要）', u: 'https://pubmed.ncbi.nlm.nih.gov/3417404/' },
+  S36: { t: 'Harizman N, Oliveira C, Chiang A, et al. The ISNT rule and differentiation of normal from glaucomatous eyes. Arch Ophthalmol 2006;124(11):1579–1583（摘要）', u: 'https://doi.org/10.1001/archopht.124.11.1579' },
+  S37: { t: 'Poon LY, Solá-Del Valle D, Turalba AV, et al. The ISNT rule: how often does it apply to disc photographs and retinal nerve fiber layer measurements in the normal population? Am J Ophthalmol 2017;184:19–27', u: 'https://doi.org/10.1016/j.ajo.2017.09.018' },
+  S38: { t: 'Hwang YH, Kim YY. Application of the ISNT rule to neuroretinal rim thickness determined using Cirrus HD optical coherence tomography. J Glaucoma 2015;24(7):503–507（摘要）', u: 'https://doi.org/10.1097/IJG.0000000000000015' },
+  S39: { t: 'Rao HL, Yadav RK, Addepalli UK, et al. The ISNT rule in glaucoma: revisiting with spectral domain optical coherence tomography. Acta Ophthalmol 2015;93(3):e208–e213（摘要）', u: 'https://doi.org/10.1111/aos.12527' },
+  S40: { t: 'Jonas JB, Budde WM, Lang P. Neuroretinal rim width ratios in morphological glaucoma diagnosis. Br J Ophthalmol 1998;82(12):1366–1371（摘要）', u: 'https://doi.org/10.1136/bjo.82.12.1366' },
+  S41: { t: 'Budde WM, Jonas JB, Martus P, Gründler AE. Influence of optic disc size on neuroretinal rim shape in healthy eyes. J Glaucoma 2000;9(5):357–362（摘要）', u: 'https://doi.org/10.1097/00061198-200010000-00003' },
+  S42: { t: 'Jonas JB, Zäch FM, Gusek GC, Naumann GO. Pseudoglaucomatous physiologic large cups. Am J Ophthalmol 1989;107(2):137–144（摘要）', u: 'https://doi.org/10.1016/0002-9394(89)90212-2' },
+  S43: { t: 'Garway-Heath DF, Ruben ST, Viswanathan A, Hitchings RA. Vertical cup/disc ratio in relation to optic disc size: its value in the assessment of the glaucoma suspect. Br J Ophthalmol 1998;82(10):1118–1124（摘要與圖）', u: 'https://doi.org/10.1136/bjo.82.10.1118' },
+  S44: { t: 'Spaeth GL, Henderer J, Liu C, et al. The disc damage likelihood scale: reproducibility of a new method of estimating the amount of optic nerve damage caused by glaucoma. Trans Am Ophthalmol Soc 2002;100:181–186（摘要）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1358961/' },
+  S45: { t: 'Bayer A, Harasymowycz P, Henderer JD, Steinmann WG, Spaeth GL. Validity of a new disk grading scale for estimating glaucomatous damage: correlation with visual field damage. Am J Ophthalmol 2002;133(6):758–763（摘要）', u: 'https://doi.org/10.1016/s0002-9394(02)01422-8' },
+  S46: { t: 'Henderer JD. Disc damage likelihood scale. Br J Ophthalmol 2006;90(4):395–396（Table 1）', u: 'https://doi.org/10.1136/bjo.2005.083360' },
+  S47: { t: 'Zangalli C, Gupta SR, Spaeth GL. The disc as the basis of treatment for glaucoma. Saudi J Ophthalmol 2011;25(4):381–387（Fig 1、Fig 7、Fig 8）', u: 'https://doi.org/10.1016/j.sjopt.2011.07.003' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
@@ -1291,13 +1338,329 @@ function vfItem(key) {
     prompt: ['右邊紅色的是 OCT 上變薄的視盤鐘點（右眼，示意）', '最可能對應哪一種視野缺損？'], more: `${VPAT[id].zh}${s('S29', 'S31')}` };
 }
 
+/* ---------- 分頁四：視盤評估 ----------
+   右眼視盤正像（同眼底照片）：上＝superior、左＝temporal（朝 fovea）、右＝nasal；鐘點 h 的方向角＝(3 − h) × 30°（0°＝右、逆時針）
+   視盤畫成垂直橢圓，水平／垂直直徑比用 Jonas 1988 的平均（1.76／1.92 mm）；rim/disc 比 q＝rim 的徑向寬度 ÷ 同一軸的視盤直徑，所以 cup 邊緣在半徑的 (1 − 2q) 倍 */
+const DASP = 1.76 / 1.92;
+const dRad = (dd, th) => 1 / Math.hypot(Math.cos(th * DEG) / (dd * DASP / 2), Math.sin(th * DEG) / (dd / 2));   // 視盤中心到邊緣（mm），dd＝垂直直徑
+const hAng = h => (3 - h) * 30;
+const angDist = (a, b) => Math.abs(((a - b) % 360 + 540) % 360 - 180);
+const smooth = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+const r2 = v => Math.round(v * 100) / 100;
+const TDc = (cx, cy, sc) => p => [cx + p[0] * sc, cy - p[1] * sc];
+const fMm = v => `${(+v).toFixed(2)} mm`;
+function discBody(T, dd, qf) {   // rim（整個視盤）與 cup
+  const D = [], C = [];
+  for (let t = 0; t < 360; t += 2) { const r = dRad(dd, t); D.push(pt(r, t)); C.push(pt(r * (1 - 2 * clamp(qf(t), 0, 0.5)), t)); }
+  return `<path class="drim" d="${dp(D, T)}"/><path class="dcup" d="${dp(C, T)}"/>`;
+}
+function dLetters(T, dd, gap) {
+  return [[12, 'S'], [3, 'N'], [6, 'I'], [9, 'T']].map(([h, t]) => { const th = hAng(h), q = T(pt(dRad(dd, th) + gap, th)); return `<text class="vclk" x="${fx(q[0])}" y="${fx(q[1] + 5)}" text-anchor="middle">${t}</text>`; }).join('');
+}
+const dHead = (sub, t, z) => `<div class="eyebrow">視盤評估 · ${sub} · 對照 BCSC 10</div><div><h2>${t}</h2></div>${z ? `<p class="zh">${z}</p>` : ''}`;
+
+/* ISNT：12、3、6、9 點鐘的 rim 寬度（mm，同 Harizman 的量法），四點之間用餘弦平滑連接（示意）；視盤固定在 Jonas 1988 的平均大小 */
+const IDD = 1.92;
+const IKEY = ['N', 'S', 'T', 'I'], ISNT_ANG = { N: 0, S: 90, T: 180, I: 270 };
+const INAME = { I: 'Inferior（6 點）', S: 'Superior（12 點）', N: 'Nasal（3 點）', T: 'Temporal（9 點）' };
+function wIsnt(W, th) {
+  const t = ((th % 360) + 360) % 360, k = Math.floor(t / 90) % 4, f = (t - k * 90) / 90, a = W[IKEY[k]], b = W[IKEY[(k + 1) % 4]];
+  return a + (b - a) * (1 - Math.cos(Math.PI * f)) / 2;
+}
+const IPAIRS = [['I', 'S'], ['S', 'N'], ['N', 'T']];
+const geW = (W, x, y) => W[x] >= W[y] - 1e-9;   // 相等算符合（Harizman 的 ≥）
+const isntEval = W => ({ fail: IPAIRS.filter(([x, y]) => !geW(W, x, y)).map(([x, y]) => x + y), ist: geW(W, 'I', 'S') && geW(W, 'S', 'T'), is: geW(W, 'I', 'S') });
+const IFAIL = { IS: 'I < S：inferior 比 superior 窄', SN: 'S < N：superior 比 nasal 窄', NT: 'N < T：nasal 比 temporal 窄' };
+const IPRE = {
+  normal: { zh: '典型正常', W: { I: 0.37, S: 0.34, N: 0.28, T: 0.22 }, note: `I、S 與 T 的比例照 Jonas 1998 正常眼的平均（I/T 1.67、S/T 1.56）${s('S40')}；nasal 的寬度是示意` },
+  nasal: { zh: 'Nasal 比 superior 寬', W: { I: 0.40, S: 0.32, N: 0.38, T: 0.22 }, note: `Poon 的正常眼照片有 29.4% nasal 比 superior 寬，是正常眼不符合 ISNT 最常見的原因；不看 nasal 的 IST、IS 仍然符合${s('S37')}` },
+  tw: { zh: 'Temporal 比 nasal 寬', W: { I: 0.40, S: 0.35, N: 0.21, T: 0.27 }, note: `Poon 的正常眼照片有 14.7% nasal 比 temporal 窄${s('S37')}` },
+  inf: { zh: 'Inferior rim 變窄', W: { I: 0.14, S: 0.35, N: 0.29, T: 0.22 }, note: `青光眼的 rim 變窄多在 inferior、superior 兩極${s('S33')}；inferior 變窄後 IST、IS 也都不符合` },
+  sup: { zh: 'Superior rim 變窄', W: { I: 0.37, S: 0.15, N: 0.29, T: 0.22 }, note: 'Superior 變窄：ISNT、IST 不符合；IS 只比 inferior 和 superior，這裡仍然成立' },
+  both: { zh: '上下兩極都變窄', W: { I: 0.16, S: 0.14, N: 0.29, T: 0.22 }, note: `PPP：約 80% 的青光眼不符合 ISNT，因為 inferior 與 superior 都變窄${s('S33')}` },
+  conc: { zh: '整圈一樣窄', W: { I: 0.12, S: 0.12, N: 0.12, T: 0.12 }, note: `四個方向一樣寬，相等算符合，所以 ISNT 仍成立；Kanski 描述的 concentric 型青光眼就是整圈較均勻地變窄${s('S34')}，符合 ISNT 不代表正常` }
+};
+const ISNT_SRC = ['S33', 'S34', 'S35', 'S36', 'S37', 'S38', 'S39', 'S40'];
+function isntSVG(W, o) {
+  const T = TDc(200, 204, 150), qf = t => wIsnt(W, t) / (2 * dRad(IDD, t));
+  let h = `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="右眼視盤正像：12、3、6、9 點鐘的 rim 寬度"><rect width="400" height="400" fill="var(--fig-bg)"/><rect class="dfun" x="8" y="8" width="384" height="384" rx="14"/>`;
+  h += discBody(T, IDD, qf);
+  IKEY.forEach(k => {
+    const th = ISNT_ANG[k], r = dRad(IDD, th), a = T(pt(r, th)), b = T(pt(r - W[k], th)), vert = k === 'S' || k === 'I', mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    h += `<line class="dcal" x1="${fx(a[0])}" y1="${fx(a[1])}" x2="${fx(b[0])}" y2="${fx(b[1])}"/><g class="lab"><text x="${fx(vert ? mx + 10 : mx)}" y="${fx(vert ? my + 5 : my - 12)}" text-anchor="${vert ? 'start' : 'middle'}">${W[k].toFixed(2)}</text></g>`;
+  });
+  h += dLetters(T, IDD, 0.12);
+  if (!o.quiz) h += `<text class="vtitle" x="20" y="32">右眼視盤（正像）</text><g class="lab note"><text x="20" y="382">← fovea</text></g>`;
+  return h + '</svg>';
+}
+function isntBars(W) {
+  const X = { I: 72, S: 164, N: 256, T: 348 }, y0 = 318, k = 420, EN = { I: 'inferior', S: 'superior', N: 'nasal', T: 'temporal' };
+  let h = `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="四個方向的 rim 寬度比較"><rect width="400" height="400" fill="var(--fig-bg)"/><text class="vtitle" x="20" y="32">rim 寬度（mm）：I ≥ S ≥ N ≥ T</text>`;
+  ['I', 'S', 'N', 'T'].forEach(key => { const v = W[key], y = y0 - v * k; h += `<rect class="dbar" x="${X[key] - 26}" y="${fx(y)}" width="52" height="${fx(v * k)}" rx="3"/><text class="vclk" x="${X[key]}" y="${fx(y - 8)}" text-anchor="middle">${v.toFixed(2)}</text><text class="vclk" x="${X[key]}" y="${y0 + 24}" text-anchor="middle">${key}</text>`; });
+  h += `<g class="lab note">${['I', 'S', 'N', 'T'].map(key => `<text x="${X[key]}" y="${y0 + 48}" text-anchor="middle">${EN[key]}</text>`).join('')}</g>`;
+  IPAIRS.forEach(([x, y]) => { const ok = geW(W, x, y); h += `<text class="dcmp ${ok ? 'ok' : 'bad'}" x="${(X[x] + X[y]) / 2}" y="${y0 - 8}" text-anchor="middle">${ok ? '≥' : '<'}</text>`; });
+  return h + `<line class="vax" x1="28" y1="${y0}" x2="392" y2="${y0}"/></svg>`;
+}
+function isntCard() {
+  const W = st.dW, E = isntEval(W), p = st.dPre ? IPRE[st.dPre] : null, mk = ok => ok ? '<b style="color:var(--ok)">符合</b>' : '<b style="color:var(--bad)">不符合</b>';
+  return `<div class="card">${dHead('ISNT rule', 'ISNT rule', 'Neuroretinal rim：inferior ≥ superior ≥ nasal ≥ temporal')}
+    <div class="verdict"><span>ISNT ${mk(!E.fail.length)}</span><span>IST ${mk(E.ist)}</span><span>IS ${mk(E.is)}</span></div>
+    ${E.fail.length ? list('哪裡不符合', E.fail.map(f => IFAIL[f])) : ''}${p ? list('這個例子', [p.note]) : ''}
+    ${list('定義', [`Neuroretinal rim（NRR）＝cup 外緣到視盤邊緣之間的橘粉色組織${s('S34')}`, `正常眼的 rim 平均以 inferior 最寬，其次 superior、nasal，temporal 最窄${s('S35', 'S34')}；這個順序後來被稱為「ISNT rule」${s('S37')}`, `Harizman 在照片上比 12、3、6、9 點鐘的 rim 寬度，寫成 I ≥ S ≥ N ≥ T${s('S36')}；Poon 用 >，相等的眼睛不納入分析${s('S37')}。本頁同樣只比這四點，相等算符合`])}
+    ${list('準不準', [`青光眼常見 inferior、superior 兩極的 rim 變窄或 notch，所以會打破這個順序${s('S33')}`, `Harizman：ISNT 在 79% 的正常眼、28% 的青光眼成立；不符合時是青光眼的勝算比 6.04（校正年齡），不受種族影響${s('S36')}`, `Kanski：敏感度 81%、特異度 32%，沒有青光眼的眼睛也常不符合${s('S34')}`, `正常眼符合的比例各研究差很多：Poon 的照片 37%、OCT RNFL 43.8%${s('S37')}；Hwang 用 Cirrus OCT 量 rim 厚度只有 13%${s('S38')}。PPP 寫正常眼符合不到 45%、約 80% 的青光眼不符合${s('S33')}`])}
+    ${list('變體', [`Poon：正常眼不符合多半是 nasal 造成；不看 nasal 時，IST（I、S、T 依序）70.9%、IS 76.4% 的正常照片成立，建議改用這兩種${s('S37')}`, `Rao 用 SD-OCT 的 rim 面積：ISNT 敏感度 80.8%、特異度 32.3%；只比 I > T 或 S > T，特異度升到 84.4%、93.8%，敏感度降到 60.0%、29.6%${s('S39')}`, `正常眼的 rim 寬度比：I/T 平均 1.67、S/T 1.56，與視盤大小、年齡、性別無關，但和高眼壓組重疊很多${s('S40')}`])}
+    ${srcList(ISNT_SRC)}</div>`;
+}
+
+/* C/D 與視盤大小：兩個視盤照實際比例畫（75 px/mm），cup 同心，rim/disc 比＝(1 − C/D) ÷ 2（四捨五入到 0.01，免得浮點誤差把 0.1 算成 0.0999…） */
+const qOfCd = cd => r2((1 - cd) / 2);
+const ghMean = dd => (-1.31 + 1.194 * dd) / dd;   // Garway-Heath 1998 摘要的公式：正常人平均的垂直 C/D（dd＝垂直直徑 mm）
+const szEval = (dd, cd) => { const q = qOfCd(cd); return { dd, cd, q, rim: r2(q * dd), ddls: ddlsStage(dd, { q, ang: 0 }), gh: dd <= 2.2 + 1e-9 ? r2(ghMean(dd)) : null }; };
+const SZPRE = {
+  cd6: { zh: '同 C/D 0.6：小與大視盤', a: 1.30, b: 2.30, cd: 0.6 },
+  cd8: { zh: '同 C/D 0.8', a: 1.30, b: 2.30, cd: 0.8 },
+  cd4: { zh: '同 C/D 0.4', a: 1.30, b: 2.30, cd: 0.4 },
+  big: { zh: '大視盤的生理性大 cup', a: 1.75, b: 2.40, cd: 0.7, note: `Jonas 1989 的 pseudoglaucomatous physiologic large cups：視盤很大（平均 4.49 mm²）、垂直 C/D 約 0.71，rim 面積與形狀都正常${s('S42')}；這裡的直徑是示意` }
+};
+const SZ_SRC = ['S33', 'S34', 'S35', 'S41', 'S42', 'S43', 'S46'];
+function sizeSVG(A, B) {
+  let h = `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="同樣 C/D 的兩個視盤，照實際比例"><rect width="400" height="400" fill="var(--fig-bg)"/><rect class="dfun" x="8" y="8" width="384" height="384" rx="14"/><text class="vtitle" x="20" y="32">C/D ${A.cd.toFixed(2)}，照實際比例</text>`;
+  [A, B].forEach((X, i) => { const cx = i ? 296 : 104; h += discBody(TDc(cx, 186, 75), X.dd, () => X.q) + `<text class="dtx" x="${cx}" y="318" text-anchor="middle">${'AB'[i]}　${fMm(X.dd)}</text><text class="dtx b" x="${cx}" y="342" text-anchor="middle">DDLS ${X.ddls}</text>`; });
+  return h + `<line class="dscale" x1="20" y1="372" x2="95" y2="372"/><text class="vclk" x="102" y="376">1 mm</text></svg>`;
+}
+function ghSVG(A, B) {
+  const X0 = 64, X1 = 380, Y0 = 328, Y1 = 80, xs = d => X0 + (d - 1.2) / 1.2 * (X1 - X0), ys = v => Y0 - v * (Y0 - Y1);
+  let h = `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="C/D 與視盤垂直直徑：Garway-Heath 1998 正常人的平均"><rect width="400" height="400" fill="var(--fig-bg)"/><text class="vtitle" x="20" y="32">正常人的平均 C/D（Garway-Heath 1998）</text>`;
+  [0, 0.2, 0.4, 0.6, 0.8, 1].forEach(v => { h += `<line class="dgrid" x1="${X0}" y1="${fx(ys(v))}" x2="${X1}" y2="${fx(ys(v))}"/><text class="vclk" x="${X0 - 8}" y="${fx(ys(v) + 4)}" text-anchor="end">${v.toFixed(1)}</text>`; });
+  [1.2, 1.5, 1.8, 2.1, 2.4].forEach(d => { h += `<text class="vclk" x="${fx(xs(d))}" y="${Y0 + 20}" text-anchor="middle">${d.toFixed(1)}</text>`; });
+  [1.5, 2.0].forEach(d => { h += `<line class="dcls" x1="${fx(xs(d))}" y1="${Y1}" x2="${fx(xs(d))}" y2="${Y0}"/>`; });
+  [['小', 1.35], ['中', 1.75], ['大', 2.2]].forEach(([t, d]) => { h += `<text class="vclk" x="${fx(xs(d))}" y="${Y1 - 8}" text-anchor="middle">${t}</text>`; });
+  const cv = []; for (let d = 1.2; d <= 2.2001; d += 0.02) cv.push([xs(d), ys(ghMean(d))]);
+  h += `<path class="dghc" d="${dp(cv, p => p, false)}"/><g class="lab note"><text x="${fx(xs(2.2))}" y="${fx(ys(ghMean(2.2)) + 24)}" text-anchor="end">平均</text></g>`;
+  [A, B].forEach((X, i) => { const px = xs(Math.min(X.dd, 2.4)), py = ys(X.cd), rt = px > 340; h += `<circle class="dpt" cx="${fx(px)}" cy="${fx(py)}" r="7"/><text class="dtx b" x="${fx(rt ? px - 11 : px + 11)}" y="${fx(py - 9)}" text-anchor="${rt ? 'end' : 'start'}">${'AB'[i]}</text>`; });
+  return h + `<line class="vax" x1="${X0}" y1="${Y0}" x2="${X1}" y2="${Y0}"/><line class="vax" x1="${X0}" y1="${Y1}" x2="${X0}" y2="${Y0}"/><text class="vclk" x="${(X0 + X1) / 2}" y="${Y0 + 44}" text-anchor="middle">垂直直徑（mm）</text></svg>`;
+}
+function szTbl() {
+  const R = [szEval(st.zA, st.zCd), szEval(st.zB, st.zCd)];
+  return `<table><thead><tr><th>視盤</th><th>直徑</th><th>大小</th><th>C/D</th><th>rim/disc</th><th>rim 寬</th><th>平均 C/D</th><th>DDLS</th></tr></thead><tbody>${R.map((X, i) => `<tr><td>${'AB'[i]}</td><td>${fMm(X.dd)}</td><td>${DSZ_S[DSZ(X.dd)]}</td><td>${X.cd.toFixed(2)}</td><td>${X.q.toFixed(2)}</td><td>${fMm(X.rim)}</td><td>${X.gh != null ? X.gh.toFixed(2) : '超出範圍'}</td><td>${X.ddls}</td></tr>`).join('')}</tbody></table>`;
+}
+function sizeCard() {
+  const A = szEval(st.zA, st.zCd), B = szEval(st.zB, st.zCd), p = st.zPre ? SZPRE[st.zPre] : null;
+  const ghL = X => X.gh == null ? `${fMm(X.dd)} 超出原文的範圍` : `${fMm(X.dd)} 的正常視盤平均 C/D 約 ${X.gh.toFixed(2)}`;
+  return `<div class="card">${dHead('C/D 與視盤大小', `C/D ${st.zCd.toFixed(2)}`, '同一個 C/D，放在大小不同的視盤')}
+    <div class="verdict">${[A, B].map((X, i) => `<span>${'AB'[i]} ${fMm(X.dd)}（${DSZ_S[DSZ(X.dd)]}）：DDLS <b class="ar">${X.ddls}</b></span>`).join('')}</div>
+    ${list('這兩個視盤', [`同心的 cup：rim/disc 比＝(1 − C/D) ÷ 2＝${A.q.toFixed(2)}，兩個一樣；換成 mm，A 的 rim 寬 ${fMm(A.rim)}、B ${fMm(B.rim)}`, `依 Garway-Heath 的平均：${ghL(A)}；${ghL(B)}${s('S43')}`, `DDLS 依視盤大小分欄，同樣的 rim/disc 比：A 是 ${A.ddls}、B 是 ${B.ddls}${s('S46')}`])}
+    ${p && p.note ? list('這個例子', [p.note]) : ''}
+    ${list('重點', [`Physiologic cup 的大小和視盤大小有關，視盤越大 cup 越大${s('S33', 'S34')}`, `大視盤有大 cup 可能完全正常；小視盤只要有 cupping 就可能異常。小視盤得了青光眼，cup 變大後仍可能比大視盤的生理性 cup 小${s('S34')}`, `視盤變大時，cup 面積增加得比 rim 面積多；rim 最寬、最窄的位置與視盤大小無關${s('S41')}`, `Henderer 的示意：rim 面積固定約 0.75 mm² 時，1 mm 的視盤 C/D 約 0.2、大視盤約 0.85；只看 C/D，大視盤容易被誤判成青光眼，小視盤容易被當成正常${s('S46')}`])}
+    ${list('數字', [`C/D 大於 0.7 的人只有 2%${s('S34')}`, `Garway-Heath（照片、校正放大率）：正常人的平均 C/D＝(−1.31 + 1.194 × 垂直直徑) ÷ 垂直直徑；依視盤大小訂正常上限時，抓到小、中、大視盤青光眼的比例是 80%、60%、38%，特異度 98.9%${s('S43')}`, `Jonas 量照片的正常眼：視盤平均面積 2.69 mm²、垂直直徑 1.92 mm、水平 1.76 mm，略呈垂直橢圓${s('S35')}；Kanski 寫白人的垂直直徑中位數 1.5–1.7 mm${s('S34')}，兩者量法不同`, `視盤大小依種族不同，非洲裔平均最大；大視盤可能比較容易受損，尤其 NTG${s('S34')}`])}
+    ${list('量視盤大小', [`Slit lamp 加前置鏡，用窄光帶對準 rim 的上下緣（不是外圍的 scleral ring），讀出 mm 再乘鏡片的校正係數${s('S34')}`, `校正係數各來源不同：Volk 78 D Kanski 寫 ×1.1、Henderer ×1.2、Garway-Heath 1.11；Volk 90 D 分別是 ×1.3、×1.33、1.39${s('S34', 'S46', 'S43')}`])}
+    ${srcList(SZ_SRC)}</div>`;
+}
+
+/* DDLS（Spaeth）：表格依 Henderer 2006 Table 1（與 Zangalli 2011 Fig 7 相同）；視盤大小用垂直直徑（Bayer 2002 記錄的是垂直直徑）
+   每一欄由輕到重：['q', v]＝最窄 rim/disc ≥ v（v＝0 是「< 0.1」那一格，rim 還在就算）；['a', v]＝rim 消失、範圍 ≤ v 度。表格的縫（45° 與 46°）歸到較輕的一期 */
+const DSZ = dd => dd < 1.5 ? 0 : dd <= 2.0 ? 1 : 2;
+const DSZ_ZH = ['小視盤（< 1.50 mm）', '中等（1.50–2.00 mm）', '大視盤（> 2.00 mm）'], DSZ_S = ['小', '中', '大'];
+const DDLS_T = [
+  [['q', 0.5], ['q', 0.4], ['q', 0.3], ['q', 0.2], ['q', 0.1], ['q', 0], ['a', 45], ['a', 90], ['a', 180], ['a', 360]],
+  [['q', 0.4], ['q', 0.3], ['q', 0.2], ['q', 0.1], ['q', 0], ['a', 45], ['a', 90], ['a', 180], ['a', 270], ['a', 360]],
+  [['q', 0.3], ['q', 0.2], ['q', 0.1], ['q', 0], ['a', 45], ['a', 90], ['a', 180], ['a', 270], ['a', 360]]
+];
+const DDLS_TXT = [
+  ['≥ 0.5', '≥ 0.4', '≥ 0.3'], ['0.4–0.49', '0.3–0.39', '0.2–0.29'], ['0.3–0.39', '0.2–0.29', '0.1–0.19'], ['0.2–0.29', '0.1–0.19', '< 0.1'],
+  ['0.1–0.19', '< 0.1', '0，< 45°'], ['< 0.1', '0，< 45°', '0，46°–90°'], ['0，< 45°', '0，46°–90°', '0，91°–180°'], ['0，46°–90°', '0，91°–180°', '0，181°–270°'],
+  ['0，91°–180°', '0，181°–270°', '0，> 270°'], ['0，> 180°', '0，> 270°', '—']
+];
+const OLD = ['0a', '0b', '1', '2', '3', '4', '5', '6', '7a', '7b'];
+function ddlsStage(dd, m) {   // m：{ q 最窄 rim/disc, ang rim 消失的度數 }
+  const rows = DDLS_T[DSZ(dd)];
+  for (let i = 0; i < rows.length; i++) { const [t, v] = rows[i]; if (m.ang > 0 ? t === 'a' && m.ang <= v : t === 'q' && m.q > 0 && m.q >= v - 1e-9) return i + 1; }
+  return null;
+}
+const zoneOf = n => n <= 4 ? 1 : n <= 7 ? 2 : 3;
+const DZONE = { 1: { zh: '綠區（1–4）', long: '1–4 綠區：只看一次無法確定是否異常，除非記錄到變化' }, 2: { zh: '黃區（5–7）', long: '5–7 黃區：確定受損，但可能還沒有症狀' }, 3: { zh: '紅區（8–10）', long: '8–10 紅區：已經有失能，例如暗處看不清楚、閱讀困難' } };
+const ddCfg = () => ({ dd: st.ddD, q: st.ddQ, ang: st.ddA, loc: st.ddLoc });
+const ddMeas = c => c.cd != null ? { q: qOfCd(c.cd), ang: 0 } : c.ang > 0 ? { q: 0, ang: c.ang } : { q: c.q, ang: 0 };
+function ddProfile(c) {   // 每個方向的 rim/disc 比（示意）：最窄或消失的地方在 loc 鐘點，往兩側平滑變寬
+  if (c.cd != null) { const q = qOfCd(c.cd); return () => q; }
+  const c0 = hAng(c.loc);
+  if (c.ang > 0) return t => { const d = angDist(t, c0) - c.ang / 2; return d <= 0 ? 0 : 0.15 * smooth(d / 40); };
+  const qe = Math.min(0.5, c.q + 0.12);
+  return t => c.q + (qe - c.q) * smooth(angDist(t, c0) / 60);
+}
+const DLOC = [[12, '上（12 點）'], [10.5, '顳上'], [9, '顳側（9 點）'], [7.5, '顳下'], [6, '下（6 點）']];
+const zNote = `Zangalli 的例子：rim 很窄但還在，中等視盤是 DDLS 5、小視盤 6、大視盤 4${s('S47')}`;
+const DDPRE = {
+  avg5: { zh: '中等視盤、rim 很窄', dd: 1.75, q: 0.07, ang: 0, loc: 7.5, note: zNote },
+  sm6: { zh: '小視盤、一樣窄的 rim', dd: 1.35, q: 0.07, ang: 0, loc: 7.5, note: zNote },
+  lg4: { zh: '大視盤、一樣窄的 rim', dd: 2.30, q: 0.07, ang: 0, loc: 7.5, note: zNote },
+  mild: { zh: '中等視盤、rim 輕度變窄', dd: 1.75, q: 0.25, ang: 0, loc: 6 },
+  n60: { zh: '顳下 rim 消失 60°', dd: 1.75, q: 0.07, ang: 60, loc: 7.5, note: `Kanski：focal ischaemic 型的 notch 在 superior 或 inferior；disc hemorrhage 最常在 inferotemporal${s('S34')}` },
+  lg60: { zh: '大視盤、rim 消失 60°', dd: 2.30, q: 0.07, ang: 60, loc: 7.5, note: `Zangalli 的例子：大視盤的缺損若換成中等視盤是 7，因為視盤大所以是 6；它並不比小視盤的 DDLS 6 健康${s('S47')}` },
+  adv: { zh: 'Rim 消失超過 270°', dd: 1.75, q: 0.07, ang: 300, loc: 9, note: `只剩 nasal 的 rim；Kanski：nasal rim 消失是中度以上的損傷${s('S34')}` }
+};
+const DD_SRC = ['S33', 'S34', 'S44', 'S45', 'S46', 'S47'];
+function ddlsSVG(c, o) {
+  const T = TDc(220, 205, 110), qf = ddProfile(c), m = ddMeas(c), th = hAng(c.loc || 12);
+  let h = `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="右眼視盤正像：最窄的 rim 或 rim 消失的範圍"><rect width="400" height="400" fill="var(--fig-bg)"/><rect class="dfun" x="8" y="8" width="384" height="384" rx="14"/>`;
+  h += discBody(T, c.dd, qf);
+  if (m.ang > 0) {
+    const n = Math.max(2, Math.ceil(m.ang / 2)), pts = [];
+    for (let i = 0; i <= n; i++) { const t = th - m.ang / 2 + m.ang * i / n; pts.push(pt(dRad(c.dd, t) + 0.03, t)); }
+    h += `<path class="dmiss" d="${dp(pts, T, m.ang >= 360)}"/>`;
+  } else if (c.cd == null) {
+    const r = dRad(c.dd, th), a = T(pt(r, th)), b = T(pt(r * (1 - 2 * m.q), th)), e = T(pt(r, th + 180));
+    h += `<line class="ddia" x1="${fx(e[0])}" y1="${fx(e[1])}" x2="${fx(a[0])}" y2="${fx(a[1])}"/><line class="dcal" x1="${fx(a[0])}" y1="${fx(a[1])}" x2="${fx(b[0])}" y2="${fx(b[1])}"/>`;
+  }
+  h += dLetters(T, c.dd, 0.12);
+  if (!o.quiz) h += `<text class="vtitle" x="20" y="32">右眼視盤（正像）</text><g class="lab note"><text x="20" y="56">垂直直徑 ${fMm(c.dd)}</text><text x="20" y="382">${m.ang ? `rim 消失 ${m.ang}°` : `最窄 rim/disc ${m.q.toFixed(2)}`}</text></g>`;
+  return h + '</svg>';
+}
+function ladderSVG(n) {
+  let h = `<svg viewBox="0 0 272 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DDLS 1–10 期與分區"><rect width="272" height="400" fill="var(--fig-bg)"/><text class="vtitle" x="16" y="26">DDLS 與分區</text><text class="vclk" x="64" y="48" text-anchor="middle">期</text><text class="vclk" x="124" y="48">舊制</text>`;
+  for (let i = 1; i <= 10; i++) { const y = 56 + (i - 1) * 33, on = i === n ? ' on' : ''; h += `<rect class="dlad z${zoneOf(i)}${on}" x="16" y="${y}" width="96" height="29" rx="5"/><text class="dladt${on}" x="64" y="${y + 20}" text-anchor="middle">${i}</text><text class="vclk" x="124" y="${y + 19}">${OLD[i - 1]}</text>`; }
+  [[1, 4, '綠 1–4'], [5, 7, '黃 5–7'], [8, 10, '紅 8–10']].forEach(([a, b, t]) => { const y = 56 + ((a - 1) * 33 + (b * 33 - 4)) / 2; h += `<text class="vclk" x="170" y="${y + 5}">${t}</text>`; });
+  return h + '</svg>';
+}
+function ddTblHTML() {
+  const c = ddCfg(), col = DSZ(c.dd), n = ddlsStage(c.dd, ddMeas(c));
+  return `<table><thead><tr><th>DDLS</th>${DSZ_ZH.map((z, j) => `<th class="${j === col ? 'hc' : ''}">${z}</th>`).join('')}<th>舊制</th></tr></thead><tbody>${DDLS_TXT.map((r, i) => `<tr class="${i + 1 === n ? 'on' : ''}"><td><span class="zd z${zoneOf(i + 1)}"></span>${i + 1}</td>${r.map((x, j) => `<td class="${i + 1 === n && j === col ? 'hit' : ''}">${x}</td>`).join('')}<td>${OLD[i]}</td></tr>`).join('')}</tbody></table>`;
+}
+function ddlsCard() {
+  const c = ddCfg(), m = ddMeas(c), n = ddlsStage(c.dd, m), z = DZONE[zoneOf(n)], p = st.ddPre ? DDPRE[st.ddPre] : null, all = [1.3, 1.75, 2.3].map(d => ddlsStage(d, m));
+  return `<div class="card">${dHead('DDLS', `DDLS ${n}`, `Disc Damage Likelihood Scale（舊制 ${OLD[n - 1]}）`)}
+    <div class="verdict"><span>視盤 ${fMm(c.dd)}：${DSZ_ZH[DSZ(c.dd)]}</span><span>${m.ang ? `rim 消失 ${m.ang}°` : `最窄 rim/disc ${m.q.toFixed(2)}`}</span><span><span class="zd z${zoneOf(n)}"></span>${z.zh}</span></div>
+    ${list('這一期', [`Spaeth 的分區，${z.long}${s('S47')}`, `同樣的量測放在小、中、大視盤，分別是 DDLS ${all.join('、')}${s('S46')}`])}${p && p.note ? list('這個例子', [p.note]) : ''}
+    ${list('怎麼量', [`先量視盤大小（Bayer 記錄的是垂直直徑）${s('S45')}，分小（< 1.50 mm）、中（1.50–2.00 mm）、大（> 2.00 mm）${s('S46')}`, `找 rim 最窄的地方：rim 的徑向寬度 ÷ 同一軸的視盤直徑＝rim/disc 比，最大 0.5${s('S46', 'S47')}`, `Rim 完全沒有（比值 0）時，改量缺損沿圓周的範圍（度）${s('S46')}`, `斜坡狀的 rim 不等於沒有 rim，例如近視眼的 temporal${s('S46')}`])}
+    ${list('準不準', [`PPP：可以用 DDLS 記錄視盤，它把視盤大小與 rim 厚度都算進去${s('S33')}`, `再現性（照片）：同一人重看一致 98%（C/D 85%），不同人之間 85%（C/D 74%）；和 Humphrey 視野的相關比任何 HRT 參數都好${s('S44')}`, `和 24-2 視野：DDLS 與 MD 的相關 r＝−0.695、與 PSD r＝0.703；大視盤（> 2.00 mm）病例太少，沒有評估${s('S45')}`])}
+    ${list('限制', [`Tilted disc 不好分期；已經有一處損傷較重時，別處新的損傷不會改變分期；會受放大率誤差影響${s('S46')}`])}
+    ${list('版本與本頁的處理', [`2002 年原始論文寫 8 期（舊制 0a、0b、1–6、7a、7b），後來改成 1–10 期；本頁用 1–10，括號附舊制${s('S44', 'S46')}`, `表格的切點有縫（例如 45° 與 46° 之間），本頁的拉條以 0.01、5° 為一格，45° 算「< 45°」那一期`, `Zangalli 的圖說另寫「小視盤加 1 期、大視盤減 1 期」，在表格兩端不成立（例如大視盤沒有第 10 期），本頁照表格${s('S47')}`])}
+    ${srcList(DD_SRC)}</div>`;
+}
+
+/* 畫面、拉條、說明卡 */
+const DSUBS = [['isnt', 'ISNT'], ['size', 'C/D 與大小'], ['ddls', 'DDLS']];
+const dSl = (id, label, min, max, step, val, f) => `<div class="sl"><label for="${id}">${label} <b id="${id}-v">${f(val)}</b></label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
+const qLab = v => st.ddA > 0 ? '0（rim 已消失）' : (+v).toFixed(2);
+const dPreOf = () => st.dSub === 'size' ? st.zPre : st.dSub === 'ddls' ? st.ddPre : st.dPre;
+function discFig() {
+  const it = quizItem(), quiz = st.learnMode === 'quiz', fig = $('#fig'), ori = '右眼視盤正像（同眼底照片）：上＝superior、左＝temporal（朝 fovea）、右＝nasal';
+  let h, cap, tag = '示意';
+  if (it) {
+    h = `<div class="duo one">${it.type === 'isnt' ? isntSVG(it.W, { quiz: true }) : ddlsSVG(it.c, { quiz: true })}</div>`;
+    cap = `${ori}。${it.type === 'isnt' ? '藍色量尺＝12、3、6、9 點鐘的 rim 寬度。' : it.type === 'ddz' ? 'Cup 與視盤同心。' : '藍色量尺＝最窄的 rim，紅色弧線＝rim 完全消失的範圍。'}`;
+  } else if (st.dSub === 'size') {
+    const A = szEval(st.zA, st.zCd), B = szEval(st.zB, st.zCd);
+    h = `<div class="duo eq">${sizeSVG(A, B)}${ghSVG(A, B)}</div>`;
+    cap = '左：兩個視盤照實際比例畫（75 px/mm），cup 與視盤同心。右：Garway-Heath 1998 正常人的平均 C/D（摘要的公式，只畫到原文圖上的 2.2 mm），點是左邊的兩個視盤；虛線是 DDLS 的大小分界 1.50、2.00 mm。';
+  } else if (st.dSub === 'ddls') {
+    const c = ddCfg();
+    h = `<div class="duo">${ddlsSVG(c, {})}${ladderSVG(ddlsStage(c.dd, ddMeas(c)))}</div>`;
+    cap = `${ori}，照實際比例（110 px/mm）。藍色量尺＝最窄的 rim，虛線＝同一軸的視盤直徑；紅色弧線＝rim 完全消失的範圍。`; tag = 'rim 的形狀是示意';
+  } else {
+    h = `<div class="duo eq">${isntSVG(st.dW, {})}${isntBars(st.dW)}</div>`;
+    cap = `${ori}。藍色量尺＝12、3、6、9 點鐘的 rim 寬度；視盤固定在 Jonas 1988 的平均大小（垂直 1.92 mm）。`; tag = '四點之間平滑連接，示意';
+  }
+  fig.innerHTML = h;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', quiz);
+  $('#cap').innerHTML = `<span>${cap}</span><span class="ori">${tag}</span>`;
+}
+function discExtra() {
+  if (st.dSub === 'size') return `<div class="xrow">${dSl('dx-a', '視盤 A 垂直直徑', 1.2, 2.4, 0.05, st.zA, fMm)}${dSl('dx-b', '視盤 B 垂直直徑', 1.2, 2.4, 0.05, st.zB, fMm)}${dSl('dx-cd', '兩個共同的 C/D', 0, 0.9, 0.05, st.zCd, v => (+v).toFixed(2))}</div>
+    <div class="tbl" id="dx-tbl" style="margin-top:12px">${szTbl()}</div>
+    <p class="rstat" style="font-size:13px;color:var(--muted)">直徑是垂直直徑；「平均 C/D」是同樣大小的正常視盤的平均，用 Garway-Heath 1998 摘要的公式${s('S43')}；原文的圖只畫到 2.2 mm，更大的視盤不外推。</p>`;
+  if (st.dSub === 'ddls') {
+    const c = ddCfg();
+    return `<div class="xrow">${dSl('dx-dd', '視盤垂直直徑', 1.2, 2.6, 0.05, c.dd, fMm)}${dSl('dx-q', '最窄處 rim/disc 比', 0.01, 0.5, 0.01, c.q, qLab)}${dSl('dx-ang', 'Rim 消失的範圍', 0, 360, 5, c.ang, v => `${v}°`)}
+      <div class="sl"><span class="xh" style="margin:0">最窄或消失的位置</span><div class="seg">${DLOC.map(([hr, t]) => `<button type="button" data-dloc="${hr}" aria-pressed="${st.ddLoc === hr}">${t}</button>`).join('')}</div></div></div>
+      <p class="rstat">拖「最窄處 rim/disc 比」時，rim 消失的範圍會歸零；rim 消失的範圍大於 0 時，最窄處就是 0。</p>
+      <div class="xh" style="margin-top:14px">DDLS：最窄的 rim/disc 比，或 rim 消失的範圍${s('S46', 'S47')}</div><div class="tbl" id="dx-tbl">${ddTblHTML()}</div>`;
+  }
+  return `<div class="xrow">${['I', 'S', 'N', 'T'].map(k => dSl('dx-' + k, INAME[k], 0.05, 0.6, 0.01, st.dW[k], fMm)).join('')}</div>
+    <p class="rstat">拖拉條改的是 12、3、6、9 點鐘的 rim 寬度（Harizman 的量法${s('S36')}）；四點之間平滑連接，是示意。視盤固定在 Jonas 1988 的平均大小${s('S35')}。</p>`;
+}
+const discCard = () => st.dSub === 'size' ? sizeCard() : st.dSub === 'ddls' ? ddlsCard() : isntCard();
+function discIndex() {
+  const P = st.dSub === 'size' ? SZPRE : st.dSub === 'ddls' ? DDPRE : IPRE, cur = dPreOf();
+  return `<span class="lbl">例子（${Object.keys(P).length}）</span>` + Object.keys(P).map(k => `<button type="button" class="chip ${k === cur ? 'on' : ''}" data-dpre="${k}">${P[k].zh}</button>`).join('');
+}
+function discSel() {
+  if (st.dSub === 'size') { const A = szEval(st.zA, st.zCd), B = szEval(st.zB, st.zCd); return `C/D ${st.zCd.toFixed(2)}：A DDLS ${A.ddls} · B DDLS ${B.ddls}`; }
+  if (st.dSub === 'ddls') return `DDLS ${ddlsStage(st.ddD, ddMeas(ddCfg()))}`;
+  return `ISNT ${isntEval(st.dW).fail.length ? '不符合' : '符合'}`;
+}
+function setDPre(k) {
+  if (st.dSub === 'size') { const p = SZPRE[k]; Object.assign(st, { zPre: k, zA: p.a, zB: p.b, zCd: p.cd }); }
+  else if (st.dSub === 'ddls') { const p = DDPRE[k]; Object.assign(st, { ddPre: k, ddD: p.dd, ddQ: p.q, ddA: p.ang, ddLoc: p.loc }); }
+  else Object.assign(st, { dPre: k, dW: Object.assign({}, IPRE[k].W) });
+}
+// 拖拉條：只重畫圖、說明卡、表格，不重建拉條
+function discInput(el) {
+  const k = el.id.slice(3), v = +el.value, lb = $('#' + el.id + '-v');
+  if (INAME[k]) { st.dW = Object.assign({}, st.dW, { [k]: v }); st.dPre = null; if (lb) lb.textContent = fMm(v); }
+  else if (k === 'a' || k === 'b' || k === 'cd') { st[{ a: 'zA', b: 'zB', cd: 'zCd' }[k]] = v; st.zPre = null; if (lb) lb.textContent = k === 'cd' ? v.toFixed(2) : fMm(v); }
+  else {
+    st.ddPre = null;
+    if (k === 'dd') { st.ddD = v; if (lb) lb.textContent = fMm(v); }
+    if (k === 'q') { st.ddQ = v; st.ddA = 0; const g = $('#dx-ang'); if (g) { g.value = 0; $('#dx-ang-v').textContent = '0°'; } }
+    if (k === 'ang') { st.ddA = v; if (lb) lb.textContent = `${v}°`; }
+    const ql = $('#dx-q-v'); if (ql) ql.textContent = qLab(st.ddQ);
+  }
+  discFig(); renderPanel(); renderSelbar();
+  const tb = $('#dx-tbl'); if (tb) tb.innerHTML = st.dSub === 'size' ? szTbl() : ddTblHTML();
+  document.querySelectorAll('[data-dpre]').forEach(b => b.classList.toggle('on', b.dataset.dpre === dPreOf()));
+}
+/* 測驗：isnt 看量尺判斷 ISNT 哪一條不成立；ddz 給視盤大小與同心 cup 的 C/D 換 DDLS；ddg 給最窄 rim 或 rim 消失的範圍選 DDLS
+   ISNT 題的四個寬度兩兩相等或至少差 0.06 mm（約 9 px），看得出來 */
+const IQ = {
+  q1: { zh: '依序遞減', W: { I: 0.42, S: 0.35, N: 0.29, T: 0.22 } },
+  q2: { zh: 'Nasal 較寬', W: { I: 0.42, S: 0.30, N: 0.38, T: 0.22 } },
+  q3: { zh: 'Inferior 變窄', W: { I: 0.14, S: 0.36, N: 0.29, T: 0.22 } },
+  q4: { zh: 'Superior 變窄', W: { I: 0.38, S: 0.14, N: 0.29, T: 0.22 } },
+  q5: { zh: 'Temporal 較寬', W: { I: 0.40, S: 0.33, N: 0.20, T: 0.28 } },
+  q6: { zh: '整圈一樣窄', W: { I: 0.12, S: 0.12, N: 0.12, T: 0.12 } }
+};
+const DZQ = { z1: { dd: 1.30, cd: 0.6 }, z2: { dd: 2.30, cd: 0.6 }, z3: { dd: 1.75, cd: 0.6 }, z4: { dd: 1.30, cd: 0.8 }, z5: { dd: 2.30, cd: 0.8 }, z6: { dd: 1.75, cd: 0.4 }, z7: { dd: 1.30, cd: 0.3 }, z8: { dd: 2.30, cd: 0.9 } };
+const DGQ = {
+  g1: { dd: 1.75, ang: 60, loc: 7.5 }, g2: { dd: 2.30, ang: 60, loc: 10.5 }, g3: { dd: 1.30, ang: 60, loc: 7.5 }, g4: { dd: 1.75, ang: 200, loc: 9 }, g5: { dd: 1.30, q: 0.05, loc: 6 },
+  g6: { dd: 2.30, q: 0.05, loc: 7.5 }, g7: { dd: 1.75, ang: 30, loc: 12 }, g8: { dd: 2.30, ang: 300, loc: 9 }, g9: { dd: 1.30, q: 0.35, loc: 7.5 }, g10: { dd: 2.30, q: 0.35, loc: 6 }
+};
+const DKEYS = [...Object.keys(IQ).map(k => 'disc:i:' + k), ...Object.keys(DZQ).map(k => 'disc:z:' + k), ...Object.keys(DGQ).map(k => 'disc:g:' + k)];
+const IOPT = Object.assign({ ok: '符合 ISNT' }, IFAIL);
+const measTxt = m => m.ang ? `rim 消失約 ${m.ang}°` : `最窄處 rim/disc ${m.q.toFixed(2)}`;
+function discKeyLabel(k) {
+  const t = k.split(':')[1], id = k.split(':')[2];
+  if (t === 'i') return `ISNT：${IQ[id].zh}`;
+  if (t === 'z') return `${fMm(DZQ[id].dd)}、C/D ${DZQ[id].cd.toFixed(1)} 換 DDLS`;
+  return `${fMm(DGQ[id].dd)}、${measTxt(ddMeas(DGQ[id]))} 選 DDLS`;
+}
+function ddOpts(ans, alt) {   // 答案、忽略視盤大小的答案（照中等欄）、鄰近的期別，共四個
+  const o = [ans]; if (alt !== ans) o.push(alt);
+  [...shuffle([-2, -1, 1, 2]), 3, -3, 4].forEach(d => { const x = ans + d; if (o.length < 4 && x >= 1 && x <= 10 && !o.includes(x)) o.push(x); });
+  return o.sort((x, y) => x - y).map(String);
+}
+function discItem(key) {
+  const t = key.split(':')[1], id = key.split(':')[2];
+  if (t === 'i') {
+    const W = IQ[id].W, ans = isntEval(W).fail[0] || 'ok', eq = IPAIRS.every(([x, y]) => W[x] === W[y]);
+    return { key, type: 'isnt', W, ans, opts: ['ok', 'IS', 'SN', 'NT'], lab: x => IOPT[x], prompt: ['右眼視盤正像（示意）：藍色量尺是 12、3、6、9 點鐘的 rim 寬度', 'ISNT（I ≥ S ≥ N ≥ T）哪一條不成立？'],
+      more: `I ${W.I.toFixed(2)}、S ${W.S.toFixed(2)}、N ${W.N.toFixed(2)}、T ${W.T.toFixed(2)} mm：${ans !== 'ok' ? `${IOPT[ans]}，ISNT 不成立` : eq ? '四個方向一樣寬，相等算符合；但整圈都窄，符合 ISNT 不代表正常' : '依序遞減，符合'}${s('S36')}` };
+  }
+  const c = t === 'z' ? DZQ[id] : DGQ[id], m = ddMeas(c), ans = ddlsStage(c.dd, m), alt = ddlsStage(1.75, m);
+  const how = t === 'z' ? `rim/disc＝(1 − ${c.cd.toFixed(1)}) ÷ 2＝${m.q.toFixed(2)}` : measTxt(m);
+  return { key, type: t === 'z' ? 'ddz' : 'ddg', c, ans: String(ans), opts: ddOpts(ans, alt), lab: x => `DDLS ${x}`,
+    prompt: [t === 'z' ? `右眼視盤：垂直直徑 ${fMm(c.dd)}，cup 與視盤同心，C/D ${c.cd.toFixed(1)}` : `右眼視盤：垂直直徑 ${fMm(c.dd)}，${m.ang ? `紅色弧線處 rim 完全消失，約 ${m.ang}°` : `藍色量尺處最窄，rim/disc ${m.q.toFixed(2)}`}`, 'DDLS 是幾期？'],
+    more: `${how}；${DSZ_ZH[DSZ(c.dd)]}那一欄是 DDLS ${ans}${alt !== ans ? `（忘了看視盤大小、照中等欄會是 ${alt}）` : ''}${s('S46')}` };
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'aq', name: '房水與藥物', en: 'Aqueous & drugs' }, { id: 'gon', name: '前房角分級', en: 'Gonioscopy' }, { id: 'vf', name: '視野與 RNFL', en: 'Visual field & RNFL' }];
+const VIEWS = [{ id: 'aq', name: '房水與藥物', en: 'Aqueous & drugs' }, { id: 'gon', name: '前房角分級', en: 'Gonioscopy' }, { id: 'vf', name: '視野與 RNFL', en: 'Visual field & RNFL' }, { id: 'disc', name: '視盤評估', en: 'Optic disc' }];
 const $ = q => document.querySelector(q);
 let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
 const st = { view: 'aq', drug: 'none', site: null, labels: true, anim: !reduce, learnMode: 'learn', quiz: null,
   gTh: 40, gCfg: 'F', gPig: 1, gPre: 'wide', gApp: null, gTru: null, gPas: false, gRoot: null, gInd: false,
-  vPat: 'arc_s', vSel: null, vClk: null };
+  vPat: 'arc_s', vSel: null, vClk: null,
+  dSub: 'isnt', dW: Object.assign({}, IPRE.normal.W), dPre: 'normal', zA: 1.30, zB: 2.30, zCd: 0.6, zPre: 'cd6', ddD: 1.75, ddQ: 0.07, ddA: 0, ddLoc: 7.5, ddPre: 'avg5' };
 const store = (() => {
   const K2 = 'glaucomaAtlas.v1';
   let mem = { wrong: {} };
@@ -1310,15 +1673,16 @@ const figDrug = () => { const it = quizItem(); return it ? (it.type === 'anim' ?
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'gon' ? '拖拉條調角度，或下方選例子；左邊剖面、右邊鏡下所見一起變' : st.view === 'vf' ? '下方選缺損型態；點視野上的點或視盤旁的鐘點，看兩邊怎麼對應' : '下方選藥物，看它作用在哪裡；點圖上的構造或標示，看哪些藥作用在那裡'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'gon' ? '拖拉條調角度，或下方選例子；左邊剖面、右邊鏡下所見一起變' : st.view === 'vf' ? '下方選缺損型態；點視野上的點或視盤旁的鐘點，看兩邊怎麼對應' : st.view === 'disc' ? (st.dSub === 'size' ? '拖拉條調兩個視盤的大小與共同的 C/D，或下方選例子' : st.dSub === 'ddls' ? '拖拉條調視盤大小、最窄的 rim 或 rim 消失的範圍，或下方選例子' : '拖拉條調 12、3、6、9 點鐘的 rim 寬度，或下方選例子') : '下方選藥物，看它作用在哪裡；點圖上的構造或標示，看哪些藥作用在那裡'}</span>`;
 }
 function renderTools() {
+  if (st.view === 'disc') { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<div class="seg" role="group" aria-label="主題">${DSUBS.map(([k, t]) => `<button type="button" data-dsub="${k}" aria-pressed="${st.dSub === k}">${t}</button>`).join('')}</div><label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   if (st.view === 'vf') { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   if (st.view === 'gon') { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : (st.gTru ? `<label class="tog"><input type="checkbox" id="t-ind" ${st.gInd ? 'checked' : ''}>壓迫（indentation）</label>` : '') + `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-anim" ${st.anim ? 'checked' : ''}>動畫</label>` + (st.learnMode !== 'quiz' ? `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>` : '');
 }
 function renderFig() {
-  if (st.view === 'gon' || st.view === 'vf') { if (AQ.raf) cancelAnimationFrame(AQ.raf); AQ.raf = null; if (st.view === 'gon') gonFig(); else vfFig(); return; }
+  if (st.view === 'gon' || st.view === 'vf' || st.view === 'disc') { if (AQ.raf) cancelAnimationFrame(AQ.raf); AQ.raf = null; if (st.view === 'gon') gonFig(); else if (st.view === 'vf') vfFig(); else discFig(); return; }
   const fig = $('#fig');
   fig.innerHTML = aqSVG(figDrug(), { quiz: st.learnMode === 'quiz', site: st.learnMode === 'quiz' ? null : st.site });
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
@@ -1329,6 +1693,7 @@ function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
   if (st.view === 'gon') { $('#extra').innerHTML = gonExtra(); return; }
   if (st.view === 'vf') { $('#extra').innerHTML = vfExtra(); return; }
+  if (st.view === 'disc') { $('#extra').innerHTML = discExtra(); return; }
   const an = anatOf(st.drug);
   $('#extra').innerHTML = `<div class="xrow"><div class="ins"><div class="xh">TM 與 Schlemm canal 放大（示意）</div>${tmInset(an)}<p>由 AC 往外：uveal、corneoscleral、juxtacanalicular（JCT）三層，再到 Schlemm canal 內壁的 giant vacuoles；正常阻力主要在 JCT${s('S16', 'S20')}。${st.drug === 'pilo' ? 'Pilocarpine：網眼整體被撐開、Schlemm canal 擴張。' : st.drug === 'rock' ? 'Netarsudil：JCT 空隙變寬、giant vacuoles 變多（摘除眼灌流的觀察）。' : st.drug === 'lbn' ? 'Latanoprostene bunod：NO 讓 TM 細胞放鬆。' : ''}</p></div>
     <div class="ins"><div class="xh">Ciliary muscle 肌束放大（示意）</div>${cmInset(an)}<p>綠色虛線＝肌束之間的空隙，也就是 uveoscleral 路徑${s('S16')}。${an.cmGap > 0 ? '這類藥讓空隙變寬（細胞外基質重塑）。' : an.cmGap < 0 ? 'Pilocarpine：肌肉收縮、空隙變窄。' : ''}</p></div></div>
@@ -1339,15 +1704,16 @@ function renderIndex() {
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
   if (st.view === 'vf') { ix.innerHTML = `<span class="lbl">缺損型態（${VPAT_ORDER.length}）</span><button type="button" class="chip ${!st.vPat && !st.vSel && !st.vClk ? 'on' : ''}" data-vpat="">未選（看說明）</button>` + VPAT_ORDER.map(k => `<button type="button" class="chip ${k === st.vPat && !st.vSel && !st.vClk ? 'on' : ''}" data-vpat="${k}">${VPAT[k].zh} <i>${VPAT[k].en}</i></button>`).join(''); return; }
+  if (st.view === 'disc') { ix.innerHTML = discIndex(); return; }
   if (st.view === 'gon') { ix.innerHTML = `<span class="lbl">例子（${GPRE_ORDER.length}）</span>` + GPRE_ORDER.map(k => `<button type="button" class="chip ${k === st.gPre ? 'on' : ''}" data-gpre="${k}">${GPRE[k].zh}</button>`).join(''); return; }
   ix.innerHTML = `<span class="lbl">藥物（${DRUG_ORDER.length - 1} 類）</span>` + DRUG_ORDER.map(k => `<button type="button" class="chip ${k === st.drug && !st.site ? 'on' : ''}" data-drug="${k}">${k === 'none' ? '未用藥' : DRUGS[k].zh} ${k === 'none' ? '' : `<i>${DRUGS[k].en}</i>`}</button>`).join('');
 }
 function renderPanel() {
-  $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'gon' ? gonCard() : st.view === 'vf' ? vfCard() : st.site ? siteCard(st.site) : drugCard(st.drug);
+  $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'gon' ? gonCard() : st.view === 'vf' ? vfCard() : st.view === 'disc' ? discCard() : st.site ? siteCard(st.site) : drugCard(st.drug);
 }
 function renderSelbar() {
   const G = st.view === 'gon' ? gEval(gonState()) : null;
-  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'vf' ? `目前：${st.vSel ? '視野上的一點' : st.vClk ? `視盤 ${st.vClk} 點鐘` : st.vPat ? VPAT[st.vPat].zh : '未選'}` : G ? `Shaffer ${gLab(G.shaffer)}${G.spaeth ? ` · Spaeth ${G.spaeth}` : ''}` : st.site ? `部位：${SITES[st.site].en}` : `目前：${st.drug === 'none' ? '未用藥' : DRUGS[st.drug].zh}`;
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'disc' ? discSel() : st.view === 'vf' ? `目前：${st.vSel ? '視野上的一點' : st.vClk ? `視盤 ${st.vClk} 點鐘` : st.vPat ? VPAT[st.vPat].zh : '未選'}` : G ? `Shaffer ${gLab(G.shaffer)}${G.spaeth ? ` · Spaeth ${G.spaeth}` : ''}` : st.site ? `部位：${SITES[st.site].en}` : `目前：${st.drug === 'none' ? '未用藥' : DRUGS[st.drug].zh}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -1385,18 +1751,19 @@ const AQ_S = {
   s9: { q: '哪一類藥只減少房水製造，非選擇性的會引起 bronchospasm 與 bradycardia？', ok: ['beta'] }
 };
 const QKEYS = [...AQ_A.map(k => 'aq:a:' + k), ...Object.keys(AQ_S).map(k => 'aq:s:' + k)];
-// 錯題的 key：分頁一 aq:a:…（看圖猜藥）、aq:s:…（給部位選藥）；分頁二 gon:l:…（看鏡下）、gon:d:…（角度換算）、gon:p:…（Spaeth 記法）；冒號後那個字母決定題型
-const keyValid = k => QKEYS.includes(k) || GKEYS.includes(k) || VKEYS.includes(k);
-const keyView = k => k.startsWith('gon:') ? 'gon' : k.startsWith('vf:') ? 'vf' : 'aq';
-const QTV = { aq: [['anim', '看圖猜藥'], ['site', '給部位或機轉選藥']], gon: [['look', '看鏡下判斷'], ['deg', '角度換 Shaffer'], ['spa', 'Spaeth 記法']], vf: [['clk', '看視野點鐘點'], ['mat', '看鐘點選型態']] };
-const QTZ = { a: 'anim', s: 'site', l: 'look', d: 'deg', p: 'spa', k: 'clk', m: 'mat' };
+// 錯題的 key：分頁一 aq:a:…（看圖猜藥）、aq:s:…（給部位選藥）；分頁二 gon:l:…（看鏡下）、gon:d:…（角度換算）、gon:p:…（Spaeth 記法）；分頁四 disc:i:…（ISNT）、disc:z:…（大小與 C/D 換 DDLS）、disc:g:…（看缺損選 DDLS）；冒號後那個字母決定題型
+const keyValid = k => QKEYS.includes(k) || GKEYS.includes(k) || VKEYS.includes(k) || DKEYS.includes(k);
+const keyView = k => k.startsWith('gon:') ? 'gon' : k.startsWith('vf:') ? 'vf' : k.startsWith('disc:') ? 'disc' : 'aq';
+const QTV = { aq: [['anim', '看圖猜藥'], ['site', '給部位或機轉選藥']], gon: [['look', '看鏡下判斷'], ['deg', '角度換 Shaffer'], ['spa', 'Spaeth 記法']], vf: [['clk', '看視野點鐘點'], ['mat', '看鐘點選型態']], disc: [['isnt', 'ISNT 哪裡不符'], ['ddz', '大小與 C/D 換 DDLS'], ['ddg', '看缺損選 DDLS']] };
+const QTZ = { a: 'anim', s: 'site', l: 'look', d: 'deg', p: 'spa', k: 'clk', m: 'mat', i: 'isnt', z: 'ddz', g: 'ddg' };
 const kType = k => QTZ[k.split(':')[1]];
 const dLab = id => `${DRUGS[id].zh}（${DRUGS[id].en}）`;
-const keyLabel = k => k.startsWith('vf:') ? vfKeyLabel(k) : k.startsWith('gon:') ? gonKeyLabel(k) : k[3] === 'a' ? `看圖猜藥：${DRUGS[k.slice(5)].zh}` : AQ_S[k.slice(5)].q;
+const keyLabel = k => k.startsWith('disc:') ? discKeyLabel(k) : k.startsWith('vf:') ? vfKeyLabel(k) : k.startsWith('gon:') ? gonKeyLabel(k) : k[3] === 'a' ? `看圖猜藥：${DRUGS[k.slice(5)].zh}` : AQ_S[k.slice(5)].q;
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 function itemOf(key) {
   if (key.startsWith('gon:')) return gonItem(key);
   if (key.startsWith('vf:')) return vfItem(key);
+  if (key.startsWith('disc:')) return discItem(key);
   const t = QTZ[key[3]], id = key.slice(5);
   if (t === 'anim') {
     const pool = AQ_A.filter(x => x !== id && !(LOOK[id] || []).includes(x));
@@ -1412,12 +1779,12 @@ function quizHTML() {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
     const gv = st.view === 'gon';
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${gv ? '前房角幾級？怎麼記？' : st.view === 'vf' ? '視野缺損對到視盤哪裡？' : '這類藥作用在哪裡？'}</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${gv ? '前房角幾級？怎麼記？' : st.view === 'vf' ? '視野缺損對到視盤哪裡？' : st.view === 'disc' ? '視盤的 rim 還夠嗎？' : '這類藥作用在哪裡？'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">${gv ? '三種題型：看鏡下示意（不壓迫、正視）判斷 Shaffer 分級；給角度換算 Shaffer；讀 Spaeth 記法 (B)D30P1 的每一部分。' : st.view === 'vf' ? '兩種題型：看 24-2 視野缺損，在視盤旁的鐘點環點出受損的鐘點（點到任何一個對應的鐘點都算對）；看 OCT 上變薄的鐘點，選最可能的視野缺損型態（選項裡不會有對到相同鐘點的型態）。' : '兩種題型：看圖上哪些部位在變、往哪個方向（標籤會隱藏），猜是哪一類藥；給作用部位、機轉或特徵副作用選藥。圖上看起來一樣的兩類（beta-blocker 與 CAI、prostaglandin 與 latanoprostene bunod）不會同時出現在選項裡。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${gv ? '三種題型：看鏡下示意（不壓迫、正視）判斷 Shaffer 分級；給角度換算 Shaffer；讀 Spaeth 記法 (B)D30P1 的每一部分。' : st.view === 'disc' ? '三種題型：看右眼視盤 12、3、6、9 點鐘的 rim（藍色量尺），判斷 ISNT 哪一條不成立（相等算符合）；給視盤垂直直徑與同心 cup 的 C/D，換算 DDLS；給最窄的 rim/disc 比或 rim 消失的範圍，選 DDLS。DDLS 的選項會包含「忘了看視盤大小」的答案。' : st.view === 'vf' ? '兩種題型：看 24-2 視野缺損，在視盤旁的鐘點環點出受損的鐘點（點到任何一個對應的鐘點都算對）；看 OCT 上變薄的鐘點，選最可能的視野缺損型態（選項裡不會有對到相同鐘點的型態）。' : '兩種題型：看圖上哪些部位在變、往哪個方向（標籤會隱藏），猜是哪一類藥；給作用部位、機轉或特徵副作用選藥。圖上看起來一樣的兩類（beta-blocker 與 CAI、prostaglandin 與 latanoprostene bunod）不會同時出現在選項裡。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -1438,7 +1805,7 @@ function quizHTML() {
 }
 function startQuiz(cfg) {
   const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
-  let pool = [...QKEYS, ...GKEYS, ...VKEYS].filter(k => keyView(k) === st.view && types.includes(kType(k)));
+  let pool = [...QKEYS, ...GKEYS, ...VKEYS, ...DKEYS].filter(k => keyView(k) === st.view && types.includes(kType(k)));
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
@@ -1471,6 +1838,13 @@ function setMode(m) {
 }
 function setGPre(k) { const p = GPRE[k]; Object.assign(st, { gPre: k, gTh: p.th, gCfg: p.cfg, gPig: p.pig, gApp: p.app || null, gTru: p.tru || null, gPas: !!p.pas, gRoot: p.root || null, gInd: false }); }
 function goKey(k) {
+  if (k.startsWith('disc:')) {
+    setView('disc'); const t = k.split(':')[1], id = k.split(':')[2];
+    if (t === 'i') Object.assign(st, { dSub: 'isnt', dPre: null, dW: Object.assign({}, IQ[id].W) });
+    else if (t === 'z') Object.assign(st, { dSub: 'size', zPre: null, zA: DZQ[id].dd, zCd: DZQ[id].cd });
+    else { const c = DGQ[id]; Object.assign(st, { dSub: 'ddls', ddPre: null, ddD: c.dd, ddQ: c.q || st.ddQ, ddA: c.ang || 0, ddLoc: c.loc }); }
+    render(); return;
+  }
   if (k.startsWith('vf:')) { setView('vf'); Object.assign(st, { vPat: k.split(':')[2], vSel: null, vClk: null }); render(); return; }
   if (k.startsWith('gon:')) {
     setView('gon'); const t = k.split(':')[1], id = k.split(':')[2];
@@ -1502,6 +1876,9 @@ document.addEventListener('click', e => {
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
   const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const ds = t.closest('[data-dsub]'); if (ds) { st.dSub = ds.dataset.dsub; render(); return; }
+  const dpr = t.closest('[data-dpre]'); if (dpr) { setDPre(dpr.dataset.dpre); render(); return; }
+  const dl = t.closest('[data-dloc]'); if (dl) { st.ddLoc = +dl.dataset.dloc; st.ddPre = null; render(); return; }
   const vc = t.closest('[data-vclk]'); if (vc) { const hr = +vc.dataset.vclk, it = quizItem(); if (it && it.type === 'clk') { if (!st.quiz.ans) answer({ ok: it.hours.includes(hr), pick: String(hr) }); return; } if (st.learnMode === 'quiz') return; st.vClk = st.vClk === hr ? null : hr; st.vSel = null; render(); return; }
   const vpt = t.closest('[data-vp]'); if (vpt) { if (st.learnMode === 'quiz') return; st.vSel = st.vSel === vpt.dataset.vp ? null : vpt.dataset.vp; st.vClk = null; render(); return; }
   const vpa = t.closest('[data-vpat]'); if (vpa) { Object.assign(st, { vPat: vpa.dataset.vpat || null, vSel: null, vClk: null }); render(); return; }
@@ -1523,8 +1900,9 @@ document.addEventListener('change', e => {
   if (e.target.id === 't-anim') { st.anim = e.target.checked; aqStart(); }
   if (e.target.id === 't-ind') { st.gInd = e.target.checked; renderFig(); renderPanel(); }
 });
-// 拖拉角度：插入點回到依角度的典型對應，只重畫圖、說明卡與表格
+// 拖拉角度：插入點回到依角度的典型對應，只重畫圖、說明卡與表格；視盤分頁的拉條（dx-…）另外處理
 document.addEventListener('input', e => {
+  if (e.target.id && e.target.id.startsWith('dx-')) { discInput(e.target); return; }
   if (e.target.id !== 'g-th') return;
   Object.assign(st, { gTh: +e.target.value, gPre: null, gApp: null, gTru: null, gPas: false, gRoot: null, gInd: false });
   $('#g-th-v').textContent = `${st.gTh}°`;
@@ -1607,9 +1985,45 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
     a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === 4, `${k} 的選項含答案、不重複、四個`);
     if (it.type === 'anim') a(!it.opts.some(o => o !== it.ans && JSON.stringify(effOf(o)) === JSON.stringify(effOf(it.ans))), `${k}：選項裡沒有圖上看起來一樣的藥`);
   });
+  // 分頁四：視盤評估
+  a(Math.abs(dRad(1.92, 90) - 0.96) < 1e-9 && Math.abs(dRad(1.92, 0) - 0.88) < 1e-9, '視盤：垂直 1.92、水平 1.76 mm（Jonas 1988 的平均）');
+  { const T = TDc(200, 200, 100), p9 = T(pt(1, hAng(9))), p3 = T(pt(1, hAng(3))), p12 = T(pt(1, hAng(12))), p6 = T(pt(1, hAng(6))); a(p9[0] < 200 && p3[0] > 200 && p12[1] < 200 && p6[1] > 200, '右眼正像：9 點鐘（temporal）在左、3 點鐘（nasal）在右、12 點鐘在上'); }
+  a(Object.values(IPRE).every(p => IKEY.every(k => Math.abs(wIsnt(p.W, ISNT_ANG[k]) - p.W[k]) < 1e-9)), 'ISNT：12、3、6、9 點鐘的寬度＝設定值');
+  a(Object.values(IPRE).every(p => { for (let t = 0; t < 360; t += 5) if (wIsnt(p.W, t) >= dRad(IDD, t)) return false; return true; }), 'ISNT：rim 不超過視盤半徑');
+  const IEXP = { normal: '', nasal: 'SN', tw: 'NT', inf: 'IS', sup: 'SN', both: 'SN', conc: '' };
+  a(Object.keys(IEXP).every(k => isntEval(IPRE[k].W).fail.join() === IEXP[k]), 'ISNT 例子：不符合的那一條');
+  a(isntEval(IPRE.nasal.W).ist && isntEval(IPRE.sup.W).is && !isntEval(IPRE.sup.W).ist && !isntEval(IPRE.inf.W).is, 'IST、IS：nasal 較寬仍符合 IST；superior 變窄 IS 仍成立、IST 不成立');
+  a(!isntEval(IPRE.conc.W).fail.length, '相等算符合（Harizman 的 ≥）');
+  a(Math.abs(IPRE.normal.W.I / IPRE.normal.W.T - 1.67) < 0.03 && Math.abs(IPRE.normal.W.S / IPRE.normal.W.T - 1.56) < 0.03, '典型正常的 I/T、S/T 比照 Jonas 1998');
+  a(Object.values(IQ).every(q => isntEval(q.W).fail.length <= 1 && IPAIRS.every(([x, y]) => q.W[x] === q.W[y] || Math.abs(q.W[x] - q.W[y]) >= 0.06 - 1e-9)), 'ISNT 題：最多一條不成立，相鄰兩點相等或差 0.06 mm 以上');
+  // DDLS 表格（Henderer 2006 Table 1、Zangalli 2011 Fig 7）：每一格與邊界
+  [[1.49, .5, 0, 1], [1.49, .49, 0, 2], [1.49, .4, 0, 2], [1.49, .39, 0, 3], [1.49, .3, 0, 3], [1.49, .29, 0, 4], [1.49, .2, 0, 4], [1.49, .19, 0, 5], [1.49, .1, 0, 5], [1.49, .09, 0, 6], [1.49, .01, 0, 6],
+    [1.49, 0, 30, 7], [1.49, 0, 45, 7], [1.49, 0, 50, 8], [1.49, 0, 90, 8], [1.49, 0, 95, 9], [1.49, 0, 180, 9], [1.49, 0, 185, 10], [1.49, 0, 360, 10],
+    [1.5, .4, 0, 1], [1.5, .39, 0, 2], [1.75, .3, 0, 2], [1.75, .29, 0, 3], [1.75, .2, 0, 3], [1.75, .19, 0, 4], [1.75, .1, 0, 4], [2.0, .09, 0, 5], [2.0, 0, 45, 6], [1.75, 0, 50, 7], [1.75, 0, 90, 7], [1.75, 0, 95, 8], [1.75, 0, 180, 8], [1.75, 0, 185, 9], [1.75, 0, 270, 9], [1.75, 0, 275, 10],
+    [2.01, .5, 0, 1], [2.3, .3, 0, 1], [2.3, .29, 0, 2], [2.3, .2, 0, 2], [2.3, .19, 0, 3], [2.3, .1, 0, 3], [2.3, .09, 0, 4], [2.3, 0, 45, 5], [2.3, 0, 50, 6], [2.3, 0, 90, 6], [2.3, 0, 95, 7], [2.3, 0, 180, 7], [2.3, 0, 185, 8], [2.3, 0, 270, 8], [2.3, 0, 275, 9], [2.3, 0, 360, 9]
+  ].forEach(([dd, q, ang, e]) => a(ddlsStage(dd, { q, ang }) === e, `DDLS：${dd} mm、${ang ? ang + '°' : 'rim/disc ' + q} → ${e}`));
+  a(DDLS_TXT.length === 10 && DDLS_T[0].length === 10 && DDLS_T[1].length === 10 && DDLS_T[2].length === 9 && DDLS_TXT[9][2] === '—', 'DDLS：大視盤沒有第 10 期');
+  [[.35, 0], [.25, 0], [.15, 0], [.05, 0], [0, 30], [0, 60], [0, 120], [0, 200]].forEach(([q, ang]) => { const m = { q, ang }, v = ddlsStage(1.75, m); a(ddlsStage(1.3, m) === v + 1 && ddlsStage(2.3, m) === v - 1, `DDLS 2–9 期：小視盤加 1、大視盤減 1（${ang ? ang + '°' : q}）`); });
+  a(ddlsStage(1.75, { q: .07, ang: 0 }) === 5 && ddlsStage(1.3, { q: .07, ang: 0 }) === 6 && ddlsStage(2.3, { q: .07, ang: 0 }) === 4 && ddlsStage(1.75, { q: 0, ang: 60 }) === 7 && ddlsStage(2.3, { q: 0, ang: 60 }) === 6, 'Zangalli 的例子：很窄的 rim 5／6／4；大視盤缺損 7 → 6');
+  a(qOfCd(0.8) === 0.1 && qOfCd(0.6) === 0.2 && ddlsStage(1.75, { q: qOfCd(0.8), ang: 0 }) === 4, 'C/D 換 rim/disc：0.8 → 0.1（不被浮點誤差算成 < 0.1）');
+  a(Math.abs(ghMean(2.2) - 0.6) < 0.01 && ghMean(1.5) < ghMean(2.0), 'Garway-Heath 平均：2.2 mm 約 0.60（同原文圖 3 實線），視盤越大越高');
+  [...Object.values(DDPRE), ...Object.values(DGQ)].forEach(c => {
+    const qf = ddProfile(Object.assign({ q: 0.07, ang: 0 }, c)), m = ddMeas(c); let mn = 1, z = 0;
+    for (let t = 0; t < 360; t++) { const v = qf(t); mn = Math.min(mn, v); if (v === 0) z++; }
+    a(m.ang ? Math.abs(z - m.ang) <= 2 : Math.abs(mn - m.q) < 1e-9 && z === 0, `DDLS 圖：畫出的最窄 rim 或消失範圍＝設定（${c.dd} mm、${measTxt(m)}）`);
+  });
+  for (let n = 0; n < 10; n++) DKEYS.forEach(k => { const it = discItem(k); a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === 4 && (it.type === 'isnt' || it.opts.every(o => +o >= 1 && +o <= 10)), `${k} 的選項含答案、不重複、四個`); });
+  a(Object.keys(DGQ).every(k => { const it = discItem('disc:g:' + k), alt = String(ddlsStage(1.75, ddMeas(DGQ[k]))); return it.opts.includes(alt); }), 'DDLS 題：選項包含忽略視盤大小的答案');
+  const dChk = (sub, html, keys) => a(refs(html).every(k => keys.includes(k)) && keys.every(k => SRC[k]), `視盤分頁 ${sub} 的引用都在它的來源清單`);
+  const st0 = Object.assign({}, st);
+  Object.keys(IPRE).forEach(k => { setDPre(k); dChk('ISNT', isntCard() + discExtra(), ISNT_SRC); });
+  st.dSub = 'size'; Object.keys(SZPRE).forEach(k => { setDPre(k); dChk('C/D 與大小', sizeCard() + discExtra(), SZ_SRC); });
+  st.dSub = 'ddls'; Object.keys(DDPRE).forEach(k => { setDPre(k); dChk('DDLS', ddlsCard() + discExtra(), DD_SRC); });
+  Object.assign(st, st0);
+  a(DKEYS.every(k => refs(discItem(k).more).every(r => SRC[r])), '視盤測驗的引用都存在');
 })();
 
-if (location.hash === '#gon' || location.hash === '#vf') st.view = location.hash.slice(1);
+if (location.hash === '#gon' || location.hash === '#vf' || location.hash === '#disc') st.view = location.hash.slice(1);
 render();
 </script>
 
