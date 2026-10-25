@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>光學與驗光互動圖譜</title>
-<meta name="description" content="互動式光學與驗光：用 reduced eye 光路圖看正視、近視、遠視與散光的焦點位置，加矯正鏡片、調節與看近，Sturm's conoid 與 circle of least confusion；檢影鏡驗光的 with／against／neutral 反光動畫、加減鏡片中和、工作距離換算與兩條子午線組處方，附測驗與錯題本。">
+<meta name="description" content="互動式光學與驗光：用 reduced eye 光路圖看正視、近視、遠視與散光的焦點位置，加矯正鏡片、調節與看近，Sturm's conoid 與 circle of least confusion；檢影鏡驗光的 with／against／neutral 反光動畫、加減鏡片中和、工作距離換算與兩條子午線組處方；正負柱鏡互換、spherical equivalent、power cross、vertex distance 與 Prentice's rule 計算，附測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -134,6 +134,18 @@ a{color:var(--accent)}
 .r-rim{fill:none;stroke:var(--t-stroke);stroke-width:1.2}
 .r-streak{fill:var(--stk)}
 .r-rfx{fill:var(--rfx)}
+.pc-ring{fill:none;stroke:var(--t-stroke-2);stroke-width:1;stroke-dasharray:3 5}
+.pc1{stroke:var(--ray);stroke-width:3.2;stroke-linecap:round}
+.pc2{stroke:var(--ray2);stroke-width:3.2;stroke-linecap:round;stroke-dasharray:9 6}
+.pc-deg{font-family:var(--f-mono)!important;font-size:12px;fill:var(--muted)!important}
+.pc-t1{font-family:var(--f-mono)!important;font-size:15px;fill:var(--ink)!important;font-weight:500}
+.pc-t2{font-family:var(--f-mono)!important;font-size:15px;fill:var(--ink-2)!important}
+.pc-cap{font-family:var(--f-body)!important;font-size:13px;fill:var(--muted)!important}
+.pc-lens{fill:var(--t-lens);fill-opacity:.55;stroke:var(--t-stroke);stroke-width:1.4}
+.pc-oc{stroke:var(--ink);stroke-width:1.6}
+.pc-pup{fill:var(--accent)}
+.pc-arrow{stroke:var(--bad);stroke-width:3;fill:none}
+.pc-base{fill:var(--bad)}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -214,6 +226,9 @@ input[type=range]{width:min(280px,100%);accent-color:var(--accent);margin:0}
   .ftxt{font-size:20px}
   .ltxt{font-size:21px}
   .ruler text,.ruler .mk{font-size:19px}
+  .pc-deg{font-size:18px}
+  .pc-t1,.pc-t2{font-size:21px}
+  .pc-cap{font-size:18px}
   .seg button{padding:5px 10px}
 }
 </style>
@@ -256,7 +271,7 @@ input[type=range]{width:min(280px,100%);accent-color:var(--accent);margin:0}
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>光路圖是眼球側面，光從左邊進來（左＝anterior）。眼睛用 reduced eye（單一折射面）近似，橫向依比例、縱向放大；矯正鏡片當作貼在角膜上（不算 vertex distance）。光斑大小、調節量只是示意。檢影鏡分頁畫的是檢查者看到的病人瞳孔（正面），反光的速度、寬度、亮度只是示意，主子午線只做 90° 與 180°。</span>
+    <span><b>關於圖：</b>光路圖是眼球側面，光從左邊進來（左＝anterior）。眼睛用 reduced eye（單一折射面）近似，橫向依比例、縱向放大；矯正鏡片當作貼在角膜上（不算 vertex distance）。光斑大小、調節量只是示意。檢影鏡分頁畫的是檢查者看到的病人瞳孔（正面），反光的速度、寬度、亮度只是示意，主子午線只做 90° 與 180°。處方計算分頁的 power cross 每條線上寫的是沿那條子午線的屈光力；vertex 與稜鏡用公式算。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -287,7 +302,12 @@ const SRC = {
   S5: { t: 'Iwata Y. Experimental investigation of focal position in regular astigmatic eyes with zero spherical equivalent. Sci Rep 2025;15:43355', u: 'https://doi.org/10.1038/s41598-025-27291-4' },
   S6: { t: 'AAO：Basic Optics, Chapter 12 – Astigmatic Refractive Correction: Retinoscopy（教學投影片）', u: 'https://www.aao.org/Assets/cf750fad-9184-4fda-9760-dfd024f7b1af/637151349588330000/bo12-pdf?inline=1' },
   S7: { t: 'EyeWiki：Retinoscopy', u: 'https://eyewiki.org/Retinoscopy' },
-  S8: { t: 'Wilkinson ME. Plus Cylinder Retinoscopy Instructional Video. EyeRounds.org, University of Iowa, 2015', u: 'https://eyerounds.org/video/Refraction/retinoscopy/index.htm' }
+  S8: { t: 'Wilkinson ME. Plus Cylinder Retinoscopy Instructional Video. EyeRounds.org, University of Iowa, 2015', u: 'https://eyerounds.org/video/Refraction/retinoscopy/index.htm' },
+  S9: { t: 'AAO：Basic Optics, Chapter 15 – Astigmatic Refractive Error: The Power Cross（教學投影片）', u: 'https://www.aao.org/Assets/57e015b9-b53b-450f-bb76-21475b792cf2/637151349591500000/bo15-pdf?inline=1' },
+  S10: { t: 'AAO：Basic Optics, Chapter 10 – Astigmatic Refractive Error: Introduction（教學投影片）', u: 'https://www.aao.org/Assets/327610a9-f1e4-4d7c-90e7-159c479f790e/637151349587270000/bo10-pdf?inline=1' },
+  S11: { t: 'AAO：Basic Optics, Chapter 7 – Vertex Distance（教學投影片）', u: 'https://www.aao.org/Assets/9f2edd17-b675-4961-9eb8-321895c3bd0f/637151349586430000/bo7-pdf?inline=1' },
+  S12: { t: 'EyeWiki：Lensometry', u: 'https://eyewiki.org/Lensometry' },
+  S13: { t: 'Madrolu VSK, Male SR, Bhardwaj R, Theagarayan B. Influence of prismatic effect due to decentration of optical center in ophthalmic lens. Health Sci Rep 2023;6:e1472', u: 'https://doi.org/10.1002/hsr2.1472' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. <a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a></li>`).join('')}</ul></div>`; }
@@ -616,11 +636,162 @@ function retFig() {
   retStartAnim();
 }
 
+/* ---------- 分頁三：處方計算 ----------
+   處方 S C × axis：axis 那條子午線的屈光力＝S，和它垂直的子午線＝S＋C（正負柱鏡都一樣）。
+   角度從水平線開始逆時針算（檢查者面對病人） */
+const q4 = x => Math.round(x * 4) / 4;
+const ax3 = a => String(a).padStart(3, '0');
+const rxStr = (S, C, ax) => Math.abs(C) < 1e-9 ? `${fmtD(S)} DS` : `${fmtD(S)} ${fmtD(C)} × ${ax3(ax)}`;
+const transpose = (S, C, ax) => ({ S: S + C, C: -C, ax: ax > 90 ? ax - 90 : ax + 90 });
+const minusForm = (S, C, ax) => C > 0 ? transpose(S, C, ax) : { S, C, ax };
+const plusForm = (S, C, ax) => C < 0 ? transpose(S, C, ax) : { S, C, ax };
+const perp = ax => ax > 90 ? ax - 90 : ax + 90;
+const merPow = (S, C, ax) => ({ a: S, b: S + C, axA: ax, axB: perp(ax) });       // a：axis 那條；b：垂直那條
+const SE = (S, C) => S + C / 2;
+// vertex：鏡片在角膜前 d（m）。眼鏡 F → 角膜面（隱形眼鏡）＝ F ／（1 − dF）；反過來 ＝ R ／（1 + dR）
+const toCornea = (F, d) => F / (1 - d * F);
+const toSpecs = (R, d) => R / (1 + d * R);
+function contactRx(S, C, ax, dmm) {
+  const d = dmm / 1000, m = merPow(S, C, ax), a = toCornea(m.a, d), b = toCornea(m.b, d);
+  return { exact: { a, b }, rx: minusForm(q4(a), q4(b) - q4(a), ax) };
+}
+// Prentice：稜鏡（Δ）＝ 屈光力（D）× 偏離光學中心（cm）；只算主子午線在 90／180 的情形
+// hx：看出去的點在光學中心的 nasal（＋）或 temporal（−）側（mm）；vy：上（＋）下（−）
+function prentice(S, C, ax, hx, vy) {
+  if (Math.abs(C) > 1e-9 && ax !== 90 && ax !== 180) return null;
+  const F180 = Math.abs(C) < 1e-9 || ax === 180 ? S : S + C, F90 = Math.abs(C) < 1e-9 || ax === 90 ? S : S + C;
+  const H = Math.abs(F180) * Math.abs(hx) / 10, V = Math.abs(F90) * Math.abs(vy) / 10;
+  // 負鏡片：底朝看出去的那一側（鏡片邊緣較厚）；正鏡片：底朝光學中心
+  const hb = !hx || !F180 ? '' : (F180 < 0) === (hx > 0) ? 'BI' : 'BO';
+  const vb = !vy || !F90 ? '' : (F90 < 0) === (vy > 0) ? 'BU' : 'BD';
+  return { H, V, hb, vb, F180, F90 };
+}
+const prStr = (p, b) => `${p.toFixed(2)}Δ ${b}`;
+
+function rxFig(o) {
+  const { S, C, ax, eye, hx, vy } = o, m = merPow(S, C, ax), cx = 195, cy = 182, r = 118;
+  const P2 = (deg, rr) => [cx + rr * Math.cos(deg * Math.PI / 180), cy - rr * Math.sin(deg * Math.PI / 180)];
+  const line = (deg, cls) => { const [x1, y1] = P2(deg, r), [x2, y2] = P2(deg + 180, r); return `<line class="${cls}" x1="${fx(x1)}" y1="${fx(y1)}" x2="${fx(x2)}" y2="${fx(y2)}"/>`; };
+  let h = `<svg viewBox="0 0 760 370" role="img" aria-label="Power cross 與鏡片偏心" id="xsvg"><g class="deco">
+    <circle class="pc-ring" cx="${cx}" cy="${cy}" r="${r}"/>`;
+  [[0, '0'], [45, '45'], [90, '90'], [135, '135'], [180, '180']].forEach(([d, tx]) => { const [x, y] = P2(d, r + 12); h += `<text class="pc-deg" x="${fx(x)}" y="${fx(y + 4)}" text-anchor="middle">${tx}</text>`; });
+  h += line(m.axA, 'pc1') + line(m.axB, 'pc2');
+  // 圖例放在十字下方：實線＝軸那條子午線、虛線＝垂直那條
+  h += `<text class="pc-t1" x="${cx}" y="330" text-anchor="middle">實線 ${ax3(m.axA)}°：${fmtD(m.a)} D</text><text class="pc-t2" x="${cx}" y="356" text-anchor="middle">虛線 ${ax3(m.axB)}°：${fmtD(m.b)} D</text>`;
+  // 右邊：鏡片正面與 Prentice
+  const lx = 565, ly = 182, lr = 112, K = 12, sx = eye === 'R' ? 1 : -1, pr = prentice(S, C, ax, hx, vy);
+  h += `<circle class="pc-lens" cx="${lx}" cy="${ly}" r="${lr}"/><path class="pc-oc" d="M${lx - 10} ${ly}h20M${lx} ${ly - 10}v20"/><text class="pc-deg" x="${lx + 12}" y="${ly - 12}">OC</text>
+    <text class="pc-deg" x="${lx + sx * (lr + 6)}" y="${ly + 4}" text-anchor="${sx > 0 ? 'start' : 'end'}">Nasal</text><text class="pc-deg" x="${lx - sx * (lr + 6)}" y="${ly + 4}" text-anchor="${sx > 0 ? 'end' : 'start'}">Temporal</text>
+    <text class="pc-cap" x="${lx}" y="${ly - lr - 14}" text-anchor="middle">${eye === 'R' ? 'OD' : 'OS'} 鏡片正面（檢查者看）</text>`;
+  const px = lx + sx * hx * K, py = ly - vy * K;
+  h += `<circle class="pc-pup" cx="${fx(px)}" cy="${fx(py)}" r="7"/>`;
+  if (!pr) h += `<text class="pc-cap" x="${lx}" y="${ly + lr + 40}" text-anchor="middle">斜軸要分解成兩個方向，這裡不算</text>`;
+  else {
+    const arrow = (dx, dy, txt, k) => { if (!txt) return ''; const L = 26 + 18 * k, x2 = px + dx * L, y2 = py + dy * L; return `<path class="pc-arrow" d="M${fx(px)} ${fx(py)}L${fx(x2)} ${fx(y2)}"/><circle class="pc-base" cx="${fx(x2)}" cy="${fx(y2)}" r="4"/>`; };
+    const hdx = pr.hb === 'BI' ? sx : -sx, vdy = pr.vb === 'BU' ? -1 : 1;
+    h += arrow(hdx, 0, pr.hb, Math.min(pr.H, 3)) + arrow(0, vdy, pr.vb, Math.min(pr.V, 3));
+    const t = [pr.hb ? prStr(pr.H, pr.hb) : '', pr.vb ? prStr(pr.V, pr.vb) : ''].filter(Boolean).join('、') || '從光學中心看出去：沒有稜鏡效應';
+    h += `<text class="pc-t1" x="${lx}" y="${ly + lr + 40}" text-anchor="middle">${t}</text>`;
+  }
+  return h + `</g></svg>`;
+}
+const rxP = () => ({ S: st.xS, C: st.xC, ax: st.xAx, eye: st.xEye, hx: st.xH, vy: st.xV });
+function rxResults(p) {
+  const mf = minusForm(p.S, p.C, p.ax), pf = plusForm(p.S, p.C, p.ax), cr = contactRx(p.S, p.C, p.ax, st.xVd), m = merPow(p.S, p.C, p.ax), pr = prentice(p.S, p.C, p.ax, p.hx, p.vy);
+  const big = Math.max(Math.abs(m.a), Math.abs(m.b)) >= 5;
+  return { mf, pf, se: SE(p.S, p.C), cr, m, pr, big };
+}
+function rxResultHTML() {
+  const p = rxP(), r = rxResults(p);
+  return `<div class="formula"><span>負柱鏡：<code>${rxStr(r.mf.S, r.mf.C, r.mf.ax)}</code>　正柱鏡：<code>${rxStr(r.pf.S, r.pf.C, r.pf.ax)}</code></span>
+    <span>SE：<code>${fmtD(r.se)} D</code></span>
+    <span>隱形眼鏡（vertex ${st.xVd} mm 換到角膜面，取到 0.25）：<code>${rxStr(r.cr.rx.S, r.cr.rx.C, r.cr.rx.ax)}</code>${r.big ? '' : '（差別小於 ±5 D 的門檻）'}</span>
+    <span>稜鏡：<code>${!r.pr ? '斜軸不算' : [r.pr.hb ? prStr(r.pr.H, r.pr.hb) : '', r.pr.vb ? prStr(r.pr.V, r.pr.vb) : ''].filter(Boolean).join('、') || '0Δ'}</code></span></div>`;
+}
+function rxExtra() {
+  const D = v => `${fmtD(v)} D`;
+  return `<div class="xrow">${slider('x-S', '球面 S', -12, 12, 0.25, st.xS, D)}${slider('x-C', '柱鏡 C（正負都可以）', -6, 6, 0.25, st.xC, D)}${slider('x-A', '軸', 1, 180, 1, st.xAx, v => `${ax3(v)}°`)}
+    ${slider('x-V', 'Vertex distance', 0, 20, 1, st.xVd, v => `${v} mm`)}</div>
+    <div class="xh" style="margin-top:12px">Prentice：從哪裡看出去</div>
+    <div class="xrow"><div class="sl"><label>眼別</label><div class="seg" role="group" aria-label="眼別">${[['R', 'OD'], ['L', 'OS']].map(([k, t]) => `<button type="button" data-xeye="${k}" aria-pressed="${st.xEye === k}">${t}</button>`).join('')}</div></div>
+    ${slider('x-H', '水平：nasal（＋）／temporal（−）', -6, 6, 0.5, st.xH, v => `${(+v).toFixed(1)} mm`)}${slider('x-Vy', '垂直：上（＋）／下（−）', -6, 6, 0.5, st.xV, v => `${(+v).toFixed(1)} mm`)}</div>
+    <div id="xres" style="margin-top:10px">${rxResultHTML()}</div>`;
+}
+const RX_PRE = {
+  bo15: { zh: '+2.00 −1.00 × 180', p: { xS: 2, xC: -1, xAx: 180 } }, obl: { zh: '−4.00 −4.00 × 135', p: { xS: -4, xC: -4, xAx: 135 } },
+  hm: { zh: '−8.00 DS（看 vertex）', p: { xS: -8, xC: 0, xAx: 180, xVd: 12 } }, hp: { zh: '+10.00 DS（看 vertex）', p: { xS: 10, xC: 0, xAx: 180, xVd: 12 } },
+  ew: { zh: '−10.00 DS 偏 2 mm（Prentice）', p: { xS: -10, xC: 0, xAx: 180, xEye: 'R', xH: 2, xV: 0 } }, wtr: { zh: '−1.00 −2.00 × 180', p: { xS: -1, xC: -2, xAx: 180 } }
+};
+const RX_ORDER = Object.keys(RX_PRE);
+function rxCard() {
+  const p = rxP(), r = rxResults(p);
+  return `<div class="card"><div class="eyebrow">處方計算 · 對照 BCSC 3</div><div><h2>${rxStr(r.mf.S, r.mf.C, r.mf.ax)}</h2></div><p class="zh">正柱鏡寫法 ${rxStr(r.pf.S, r.pf.C, r.pf.ax)}</p>
+    <div class="verdict">兩條主子午線：${ax3(r.m.axA)}° ${fmtD(r.m.a)} D、${ax3(r.m.axB)}° ${fmtD(r.m.b)} D；SE <b>${fmtD(r.se)} D</b></div>
+    ${list('正負柱鏡互換（transposition）', [`新球面＝原球面＋柱鏡；柱鏡改變正負號；軸轉 90°（超過 180 就減 180）`, `例：+1.00 +1.00 × 090 ＝ +2.00 −1.00 × 180；−8.00 +4.00 × 045 ＝ −4.00 −4.00 × 135${s('S9')}`, '兩種寫法是同一片鏡片：兩條子午線的屈光力完全一樣'])}
+    ${list('Spherical equivalent', [`SE ＝ 球面 ＋ 柱鏡／2，正負柱鏡寫法算出來一樣${s('S9')}`, `SE 是兩條主子午線屈光力的平均，也就是 circle of least confusion 對應的屈光度${s('S10')}`])}
+    ${list('Power cross', [`把兩條主子午線各自的屈光力畫成十字；任選一條當球面，另一條減掉它就是柱鏡${s('S9')}`, '本頁的畫法：每條線上的數字＝沿著這條子午線方向的屈光力；柱鏡軸就是當成球面的那條線'])}
+    ${list('Vertex distance', [`Vertex distance 是角膜表面到鏡片後表面的距離${s('S11')}`, `矯正鏡片的焦點要落在眼睛的遠點上；遠點位置固定，所以鏡片位置一變，度數就要跟著改${s('S11')}`,
+      `例：遠點在角膜前 20 cm（−5.00 D），眼鏡放在角膜前 2 cm 時要 −5.50 D（1／0.18 m ≈ 5.55 D）${s('S11')}`, `處方 ±5 D 以上要註明驗光時的 vertex distance${s('S11')}`,
+      '換算：隱形眼鏡 ＝ F ／（1 − d × F），d 是 vertex distance（m）；所以近視換隱形眼鏡負度數變少、遠視正度數變多'])}
+    ${list('Prentice’s rule', [`稜鏡量（Δ）＝ 鏡片屈光力（D）× 偏離光學中心的距離（cm）${s('S12', 'S13')}`, `例：−10.00 D 鏡片的光學中心往 temporal 偏 2 mm → 10 × 0.2 ＝ 2Δ BI${s('S12')}`,
+      `正鏡片像兩個稜鏡底對底、負鏡片像頂對頂${s('S12')}：從正鏡片光學中心旁邊看出去，底朝光學中心；負鏡片則底朝外`, '散光鏡片：水平偏心用 180° 子午線的屈光力、垂直偏心用 90° 子午線的屈光力（本頁只算軸在 90 或 180）',
+      `ANSI（1979）的容許值：垂直稜鏡差 0.33Δ、水平 0.67Δ 以內${s('S13')}`, `120 位戴單焦眼鏡的人中，約 57% 沒有從光學中心看出去，平均偏 3.5 mm${s('S13')}`])}
+    ${srcList(['S9', 'S10', 'S11', 'S12', 'S13'])}</div>`;
+}
+function rxFigRender() {
+  const it = quizItem(), fig = $('#fig');
+  let o = rxP();
+  if (it && it.fig) o = it.fig;
+  fig.innerHTML = rxFig(o);
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+  $('#cap').innerHTML = `<span>左：power cross，線上的數字＝沿這條子午線方向的屈光力；角度從水平線逆時針算（檢查者面對病人），實線＝軸那條子午線、虛線＝和它垂直的子午線。右：鏡片正面，十字＝光學中心（OC），圓點＝病人看出去的位置，箭頭指向稜鏡的底。</span><span class="ori">vertex 與稜鏡用公式計算</span>`;
+}
+
+/* 測驗：x 正負柱鏡互換、e 算 SE、v vertex 換算、p Prentice */
+const TQ = { t1: [1, 1, 90], t2: [-8, 4, 45], t3: [-4, 12, 135], t4: [-0.5, -1.5, 135], t5: [3, -2, 10], t6: [-2.25, -0.75, 170] };
+const EQ = { e1: [1, 1, 90], e2: [-8, 4, 45], e3: [-4, 12, 135], e4: [-3, -1.5, 180], e5: [2.5, -3, 90], e6: [-0.25, -0.5, 10] };
+const VQ = { v1: [-5, 12, 'c'], v2: [-8, 12, 'c'], v3: [6, 12, 'c'], v4: [10, 12, 'c'], v5: [-10, 12, 'c'], v6: [-5, 20, 's'] };   // c：眼鏡換隱形眼鏡；s：角膜面換到眼鏡位置
+const PQ = { p1: [-10, 2, 0], p2: [5, 3, 0], p3: [-4, 0, 5], p4: [3, 0, -4], p5: [-6, -3, 0], p6: [8, -2, 0] };   // [屈光力, 水平 mm（nasal＋）, 垂直 mm（上＋）]
+// 錯題 key：rxc:x:t1（互換）、rxc:e:e1（SE）、rxc:v:v1（vertex）、rxc:p:p1（Prentice）
+const XKEYS = [...Object.keys(TQ).map(k => 'rxc:x:' + k), ...Object.keys(EQ).map(k => 'rxc:e:' + k), ...Object.keys(VQ).map(k => 'rxc:v:' + k), ...Object.keys(PQ).map(k => 'rxc:p:' + k)];
+const vxAns = ([F, dmm, dir]) => q4(dir === 'c' ? toCornea(F, dmm / 1000) : toSpecs(F, dmm / 1000));
+const prAns = ([F, h, v]) => { const p = prentice(F, 0, 180, h, v); return h ? prStr(p.H, p.hb) : prStr(p.V, p.vb); };
+const uniq4 = (ans, cands) => shuffle([ans, ...[...new Set(cands)].filter(x => x !== ans)].slice(0, 4));
+function rxItem(key) {
+  const t = { x: 'tp', e: 'se', v: 'vx', p: 'pr' }[key[4]], id = key.slice(6);
+  const base = { S: 0, C: 0, ax: 180, eye: 'R', hx: 0, vy: 0 };
+  if (t === 'tp') { const [S, C, ax] = TQ[id], T2 = transpose(S, C, ax), ans = rxStr(T2.S, T2.C, T2.ax);
+    return { key, type: t, q: rxStr(S, C, ax), ans, opts: uniq4(ans, [rxStr(S, -C, perp(ax)), rxStr(S + C, -C, ax), rxStr(S - C, -C, perp(ax)), rxStr(S + C, C, perp(ax))]), fig: Object.assign({}, base, { S, C, ax }) }; }
+  if (t === 'se') { const [S, C, ax] = EQ[id], f = x => `${fmtD(x)} D`, ans = f(SE(S, C));
+    return { key, type: t, q: rxStr(S, C, ax), ans, opts: uniq4(ans, [f(S + C), f(S), f(S - C / 2), f(S + C / 4)]), fig: Object.assign({}, base, { S, C, ax }) }; }
+  if (t === 'vx') { const [F, d, dir] = VQ[id], f = x => `${fmtD(x)} D`, ans = f(vxAns(VQ[id])), wrong = q4(dir === 'c' ? toSpecs(F, d / 1000) : toCornea(F, d / 1000));
+    return { key, type: t, v: VQ[id], ans, opts: uniq4(ans, [f(F), f(wrong), f(vxAns(VQ[id]) + (F > 0 ? 0.5 : -0.5)), f(q4(2 * vxAns(VQ[id]) - F))]), fig: Object.assign({}, base, { S: F }) }; }
+  const [F, h, v] = PQ[id], ans = prAns(PQ[id]), p = prentice(F, 0, 180, h, v), mag = h ? p.H : p.V, b = h ? p.hb : p.vb, ob = { BI: 'BO', BO: 'BI', BU: 'BD', BD: 'BU' }[b];
+  return { key, type: t, pv: PQ[id], ans, opts: uniq4(ans, [prStr(mag, ob), prStr(mag * 10, b), prStr(mag / 2, b), prStr(mag * 10, ob)]), fig: Object.assign({}, base, { S: F, hx: h, vy: v }) };
+}
+const pdesc = ([F, h, v]) => `${fmtD(F)} D 的鏡片（OD），病人從光學中心${h ? `${h > 0 ? ' nasal' : ' temporal'} 側 ${Math.abs(h)} mm` : `${v > 0 ? '上方' : '下方'} ${Math.abs(v)} mm`} 看出去`;
+const rxKeyLabel = k => { const t = k[4], id = k.slice(6); return t === 'x' ? `${rxStr(...TQ[id])}（互換）` : t === 'e' ? `${rxStr(...EQ[id])}（算 SE）` : t === 'v' ? `${fmtD(VQ[id][0])} D、${VQ[id][1]} mm（vertex）` : `${pdesc(PQ[id])}（Prentice）`; };
+function rxQuizBody(it, q) {
+  const optBtn = o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${o}</button>`;
+  const pr = it.type === 'tp' ? ['把處方換成另一種柱鏡寫法', it.q] : it.type === 'se' ? ['這個處方的 spherical equivalent 是？', it.q]
+    : it.type === 'vx' ? (it.v[2] === 'c' ? [`眼鏡處方 ${fmtD(it.v[0])} DS，vertex distance ${it.v[1]} mm`, '換成隱形眼鏡要幾度？（取到 0.25）'] : [`遠點在角膜前 ${fmtCM(-1 / it.v[0])}（角膜面 ${fmtD(it.v[0])} D）`, `眼鏡放在角膜前 ${it.v[1]} mm，要幾度？（取到 0.25）`])
+    : [pdesc(it.pv), '產生多少稜鏡、底朝哪？'];
+  let h = `<div class="prompt"><div class="k">${pr[0]}</div><div class="q">${pr[1]}</div></div><div class="opts">${it.opts.map(optBtn).join('')}</div>`;
+  if (q.ans) {
+    const more = it.type === 'tp' ? '新球面＝原球面＋柱鏡；柱鏡改變正負號；軸轉 90°。' : it.type === 'se' ? 'SE ＝ 球面 ＋ 柱鏡／2（正負柱鏡寫法算出來一樣）。'
+      : it.type === 'vx' ? (it.v[2] === 'c' ? `隱形眼鏡 ＝ F ／（1 − d × F）＝ ${fmtD(it.v[0])} ／（1 − ${it.v[1] / 1000} × (${fmtD(it.v[0])})）＝ ${toCornea(it.v[0], it.v[1] / 1000).toFixed(2)} D → 取到 0.25。` : `鏡片到遠點的距離 ＝ ${(-100 / it.v[0]).toFixed(1)} − ${it.v[1] / 10} cm，度數 ＝ 1 ／ 這段距離 ＝ ${toSpecs(it.v[0], it.v[1] / 1000).toFixed(2)} D → 取到 0.25。`)
+      : `稜鏡 ＝ ${Math.abs(it.pv[0])} D × ${(Math.abs(it.pv[1] || it.pv[2]) / 10).toFixed(1)} cm；${it.pv[0] < 0 ? '負鏡片的底朝看出去的那一側' : '正鏡片的底朝光學中心'}。`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${q.ans.pick}；` : ' '}答案是 ${it.ans}。<br>${more}</div>`;
+  }
+  return h;
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'ref', name: '屈光與矯正', en: 'Refractive errors' }, { id: 'ret', name: '檢影鏡驗光', en: 'Retinoscopy' }];
+const VIEWS = [{ id: 'ref', name: '屈光與矯正', en: 'Refractive errors' }, { id: 'ret', name: '檢影鏡驗光', en: 'Retinoscopy' }, { id: 'rx', name: '處方計算', en: 'Prescriptions' }];
 const $ = q => document.querySelector(q);
 const st = { view: 'ref', chip: 'myo', mode: 'sph', R: -3, typ: 'axial', Rv: -3, Rh: -1, Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40, labels: true, learnMode: 'learn', quiz: null,
-  rpat: 'myo3', rrand: null, rori: 'v', rS: 0, rC: 0, rAx: 90, rw: 2 / 3, rnum: false };
+  rpat: 'myo3', rrand: null, rori: 'v', rS: 0, rC: 0, rAx: 90, rw: 2 / 3, rnum: false,
+  xpre: 'wtr', xS: -1, xC: -2, xAx: 180, xVd: 12, xEye: 'R', xH: 0, xV: 0 };
 const params = () => ({ mode: st.mode, R: st.R, typ: st.typ, Rv: st.Rv, Rh: st.Rh, Ls: st.Ls, S: st.S, C: st.C, A: st.A, obj: st.obj, dcm: st.dcm });
 const store = (() => {
   const K2 = 'opticsAtlas.v1';
@@ -636,10 +807,11 @@ function curName(p) { const t = stateOf(p); return AST_ZH[t] ? { en: AST_ZH[t], 
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'ret' ? '下方選病人，轉光帶方向、加減鏡片直到中和' : '下方選屈光狀態，拖拉條調度數、鏡片與調節'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'ret' ? '下方選病人，轉光帶方向、加減鏡片直到中和' : st.view === 'rx' ? '拖拉條輸入處方，看互換、SE、vertex 與稜鏡' : '下方選屈光狀態，拖拉條調度數、鏡片與調節'}</span>`;
 }
 function renderTools() {
   let h = '';
+  if (st.view === 'rx') { if (st.learnMode !== 'quiz') h = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; $('#tools').innerHTML = h; return; }
   if (st.view === 'ret') {
     if (st.learnMode !== 'quiz') h = `<label class="tog"><input type="checkbox" id="t-num" ${st.rnum ? 'checked' : ''}>顯示剩下的度數</label><label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
     $('#tools').innerHTML = h; return;
@@ -654,6 +826,7 @@ function renderTools() {
 function figParams() { const it = quizItem(); return it ? Object.assign({ Ls: 0, S: 0, C: 0, A: 0, obj: 'far', dcm: 40, typ: 'axial' }, it.p) : params(); }
 function renderFig() {
   if (st.view === 'ret') { retFig(); return; }
+  if (st.view === 'rx') { rxFigRender(); return; }
   const r = renderEye(figParams(), {});
   const fig = $('#fig'); fig.innerHTML = r.svg;
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
@@ -666,6 +839,7 @@ function statusText(p) {
 }
 const slider = (id, label, min, max, step, val, fmt) => `<div class="sl"><label for="${id}">${label}<b id="${id}-v">${fmt(val)}</b></label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
 function renderExtra() {
+  if (st.view === 'rx') { $('#extra').innerHTML = st.learnMode === 'quiz' ? '' : rxExtra(); return; }
   if (st.view === 'ret') { const it = quizItem(); $('#extra').innerHTML = st.learnMode === 'quiz' ? (it && it.type === 'neut' ? retExtra(true) : '') : retExtra(false); return; }
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
   const D = v => `${fmtD(v)} D`;
@@ -682,6 +856,7 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'rx') { ix.innerHTML = `<span class="lbl">例題（${RX_ORDER.length}）</span>` + RX_ORDER.map(k => `<button type="button" class="chip ${k === st.xpre ? 'on' : ''}" data-xp="${k}">${RX_PRE[k].zh}</button>`).join(''); return; }
   if (st.view === 'ret') { ix.innerHTML = `<span class="lbl">病人（${RP_ORDER.length}）</span>` + RP_ORDER.map(k => `<button type="button" class="chip ${k === st.rpat ? 'on' : ''}" data-rp="${k}">${RP[k].zh}</button>`).join(''); return; }
   ix.innerHTML = `<span class="lbl">屈光狀態（${CHIP_ORDER.length}）</span>` + CHIP_ORDER.map(k => `<button type="button" class="chip ${k === st.chip ? 'on' : ''}" data-chip="${k}">${CHIPS[k].zh} <i>${CHIPS[k].en}</i></button>`).join('');
 }
@@ -697,10 +872,10 @@ function cardHTML() {
 }
 function renderPanel() {
   const p = $('#panel');
-  p.innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'ret' ? retCard() : cardHTML();
+  p.innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'ret' ? retCard() : st.view === 'rx' ? rxCard() : cardHTML();
 }
 function renderSelbar() {
-  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'ret' ? `病人：${RP[st.rpat].zh}` : `目前：${curName(params()).zh}`;
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'ret' ? `病人：${RP[st.rpat].zh}` : st.view === 'rx' ? `處方：${rxStr(minusForm(st.xS, st.xC, st.xAx).S, minusForm(st.xS, st.xC, st.xAx).C, minusForm(st.xS, st.xC, st.xAx).ax)}` : `目前：${curName(params()).zh}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -724,12 +899,13 @@ const nearAns = ([R, A]) => 100 / (A - R);  // cm
 const SQ = ['emm', 'myo', 'hyp', 'cm', 'sm', 'mx', 'sh', 'ch'];
 const QKEYS = [...SQ.map(k => 'opt:s:' + k), ...Object.keys(FQ).map(k => 'opt:f:' + k), ...Object.keys(NQ).map(k => 'opt:n:' + k)];
 // 錯題的 key：分頁一 opt:s／f／n:…；分頁二 ret:m:…（看反光）、ret:w:…（算淨處方）、ret:z:…（中和病人）
-const keyValid = k => QKEYS.includes(k) || RKEYS.includes(k);
-const keyView = k => k.startsWith('ret:') ? 'ret' : 'ref';
-const QTV = { ref: [['state', '看光路圖選狀態'], ['far', '遠點換算度數'], ['near', '算近點']], ret: [['motion', '看反光'], ['wd', '算淨處方'], ['neut', '中和病人']] };
-const QTZ = { s: 'state', f: 'far', n: 'near', m: 'motion', w: 'wd', z: 'neut' };
+const keyValid = k => QKEYS.includes(k) || RKEYS.includes(k) || XKEYS.includes(k);
+const keyView = k => k.startsWith('ret:') ? 'ret' : k.startsWith('rxc:') ? 'rx' : 'ref';
+const QTV = { ref: [['state', '看光路圖選狀態'], ['far', '遠點換算度數'], ['near', '算近點']], ret: [['motion', '看反光'], ['wd', '算淨處方'], ['neut', '中和病人']],
+  rx: [['tp', '正負柱鏡互換'], ['se', '算 SE'], ['vx', 'Vertex 換算'], ['pr', 'Prentice']] };
+const QTZ = { s: 'state', f: 'far', n: 'near', m: 'motion', w: 'wd', z: 'neut', x: 'tp', e: 'se', v: 'vx', p: 'pr' };
 const stZh = k => AST_ZH2[k] || OP[k].zh;
-const keyLabel = k => { if (k.startsWith('ret:')) return retKeyLabel(k); const t = k[4], id = k.slice(6); return t === 's' ? `${stZh(id)}（看光路圖）` : t === 'f' ? `遠點${FQ[id] < 0 ? '在眼前' : '在眼後'} ${farDist(FQ[id])}（換算度數）` : `R ${fmtD(NQ[id][0])}、調節 ${NQ[id][1]} D（算近點）`; };
+const keyLabel = k => { if (k.startsWith('ret:')) return retKeyLabel(k); if (k.startsWith('rxc:')) return rxKeyLabel(k); const t = k[4], id = k.slice(6); return t === 's' ? `${stZh(id)}（看光路圖）` : t === 'f' ? `遠點${FQ[id] < 0 ? '在眼前' : '在眼後'} ${farDist(FQ[id])}（換算度數）` : `R ${fmtD(NQ[id][0])}、調節 ${NQ[id][1]} D（算近點）`; };
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 function stateParams(k) {
@@ -743,6 +919,7 @@ function stateParams(k) {
 }
 function itemOf(key) {
   if (key.startsWith('ret:')) return retItem(key);
+  if (key.startsWith('rxc:')) return rxItem(key);
   const t = QTZ[key[4]], id = key.slice(6);
   if (t === 'state') {
     const p = stateParams(id), pool = AST_ZH[id] ? ['cm', 'sm', 'mx', 'sh', 'ch'] : ['emm', 'myo', 'hyp'];
@@ -763,14 +940,14 @@ const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 
 function quizHTML() {
   const q = st.quiz;
   if (q.phase === 'setup') {
-    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length, ret = st.view === 'ret';
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length, ret = st.view === 'ret', rxv = st.view === 'rx';
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${ret ? '反光怎麼動？處方是多少？' : '焦點在哪？要配幾度？'}</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${ret ? '反光怎麼動？處方是多少？' : rxv ? '處方怎麼換算？' : '焦點在哪？要配幾度？'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">${ret ? '三種題型：看反光動向選下一步；給中和用的鏡片與工作距離算淨處方；自己用試鏡片把病人兩條子午線都中和（誤差 ±0.25 D 內算對）。' : '三種題型：看光路圖判斷屈光狀態（含五型散光）；給遠點距離選矯正度數；給屈光度與調節幅度算近點。鏡片都當作貼在角膜上。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${rxv ? '四種題型：正負柱鏡互換、算 spherical equivalent、vertex distance 換算（取到 0.25）、用 Prentice’s rule 算稜鏡量與底的方向。' : ret ? '三種題型：看反光動向選下一步；給中和用的鏡片與工作距離算淨處方；自己用試鏡片把病人兩條子午線都中和（誤差 ±0.25 D 內算對）。' : '三種題型：看光路圖判斷屈光狀態（含五型散光）；給遠點距離選矯正度數；給屈光度與調節幅度算近點。鏡片都當作貼在角膜上。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -780,8 +957,8 @@ function quizHTML() {
   }
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
-  if (it.key.startsWith('ret:')) {
-    h += retQuizBody(it, q);
+  if (it.key.startsWith('ret:') || it.key.startsWith('rxc:')) {
+    h += it.key.startsWith('ret:') ? retQuizBody(it, q) : rxQuizBody(it, q);
     h += q.ans ? `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>` : `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
     return h + `</div>`;
   }
@@ -800,7 +977,7 @@ function quizHTML() {
 }
 function startQuiz(cfg) {
   const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
-  let pool = (st.view === 'ret' ? RKEYS : QKEYS).filter(k => types.includes(QTZ[k[4]]));
+  let pool = (st.view === 'ret' ? RKEYS : st.view === 'rx' ? XKEYS : QKEYS).filter(k => types.includes(QTZ[k[4]]));
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
@@ -835,6 +1012,11 @@ function setMode(m) {
 function setChip(k) { st.chip = k; Object.assign(st, CHIPS[k].p, { Ls: 0, S: 0, C: 0, A: 0 }); }
 function goKey(k) {
   const t = k[4], id = k.slice(6);
+  if (k.startsWith('rxc:')) {
+    setView('rx'); const f = rxItem(k).fig; Object.assign(st, { xS: f.S, xC: f.C, xAx: f.ax, xEye: f.eye, xH: f.hx, xV: f.vy, xpre: null });
+    if (t === 'v') st.xVd = VQ[id][1];
+    render(); return;
+  }
   if (k.startsWith('ret:')) {
     setView('ret'); resetTrial();
     if (t === 'z') st.rpat = id;
@@ -867,6 +1049,8 @@ document.addEventListener('click', e => {
   if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
   if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
   const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const xp = t.closest('[data-xp]'); if (xp) { st.xpre = xp.dataset.xp; Object.assign(st, { xEye: 'R', xH: 0, xV: 0 }, RX_PRE[st.xpre].p); render(); return; }
+  const xe = t.closest('[data-xeye]'); if (xe) { st.xEye = xe.dataset.xeye; rxLive(); document.querySelectorAll('[data-xeye]').forEach(b => b.setAttribute('aria-pressed', b.dataset.xeye === st.xEye)); return; }
   const rp = t.closest('[data-rp]'); if (rp) { st.rpat = rp.dataset.rp; if (st.rpat === 'rand') st.rrand = randPatient(); resetTrial(); render(); return; }
   const rax = t.closest('[data-rax]'); if (rax) { st.rAx = +rax.dataset.rax; render(); return; }
   const ror = t.closest('[data-rori]'); if (ror) { st.rori = ror.dataset.rori; render(); return; }
@@ -884,7 +1068,10 @@ document.addEventListener('click', e => {
   if (t.closest('#q-skip')) { answer({ ok: false }); return; }
 });
 const SL = { 's-R': 'R', 's-L': 'Ls', 's-Rv': 'Rv', 's-Rh': 'Rh', 's-S': 'S', 's-C': 'C', 's-A': 'A', 's-d': 'dcm' };
+const XSL = { 'x-S': ['xS', v => `${fmtD(v)} D`], 'x-C': ['xC', v => `${fmtD(v)} D`], 'x-A': ['xAx', v => `${ax3(v)}°`], 'x-V': ['xVd', v => `${v} mm`], 'x-H': ['xH', v => `${v.toFixed(1)} mm`], 'x-Vy': ['xV', v => `${v.toFixed(1)} mm`] };
+function rxLive() { renderFig(); renderPanel(); renderSelbar(); const r = $('#xres'); if (r) r.innerHTML = rxResultHTML(); }
 document.addEventListener('input', e => {
+  if (XSL[e.target.id]) { const [k2, f] = XSL[e.target.id]; st[k2] = +e.target.value; st.xpre = null; $('#' + e.target.id + '-v').textContent = f(st[k2]); document.querySelectorAll('[data-xp]').forEach(b => b.classList.remove('on')); rxLive(); return; }
   if (e.target.id === 'r-S' || e.target.id === 'r-C') {
     const k2 = e.target.id === 'r-S' ? 'rS' : 'rC'; st[k2] = +e.target.value;
     $('#' + e.target.id + '-v').textContent = `${fmtD(st[k2])} D`;
@@ -954,10 +1141,20 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   a(wdAns(WQ.w1) === '+1.50 DS' && wdAns(WQ.w4) === '0.00 −1.50 × 090' && wdAns(WQ.w5) === '+1.00 −2.00 × 180', '淨處方換算');
   a(RKEYS.filter(k => k[4] !== 'z').every(k => { const it = retItem(k); return it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length >= 3; }), '檢影題目的選項含答案且不重複');
   a(Object.values(MQ).every(e => motionOf(e) === (Math.abs(e) <= NEUT ? 'neutral' : e > 0 ? 'with' : 'against')), '反光題的動向');
+  // 分頁三：處方計算（例題來自 AAO Basic Optics 與 EyeWiki）
+  const tp = (S, C, ax) => { const T2 = transpose(S, C, ax); return rxStr(T2.S, T2.C, T2.ax); };
+  a(tp(1, 1, 90) === '+2.00 −1.00 × 180' && tp(-8, 4, 45) === '−4.00 −4.00 × 135' && tp(-4, 12, 135) === '+8.00 −12.00 × 045', 'Transposition 對上 Basic Optics 第 15 章的例題');
+  a(XKEYS.filter(k => k[4] === 'x').every(k => { const [S, C, ax] = TQ[k.slice(6)], T2 = transpose(S, C, ax), B = transpose(T2.S, T2.C, T2.ax); return near(B.S, S) && near(B.C, C) && B.ax === ax; }), '互換兩次要回到原處方');
+  a(near(SE(1, 1), 1.5) && near(SE(-8, 4), -6) && near(SE(-4, 12), 2) && near(SE(-4, -4), -6), 'SE 對上 Basic Optics 第 15 章的例題');
+  a(vxAns(VQ.v6) === -5.5 && near(toSpecs(toCornea(-6, 0.012), 0.012), -6, 1e-9), 'Vertex：遠點 20 cm、鏡片在 2 cm → −5.50 D（Basic Optics 第 7 章）；來回換算要一致');
+  a(vxAns(VQ.v1) === -4.75 && vxAns(VQ.v3) === 6.5, 'Vertex：近視換隱形眼鏡負度數變少、遠視正度數變多');
+  a(prAns(PQ.p1) === '2.00Δ BI' && prAns(PQ.p2) === '1.50Δ BO' && prAns(PQ.p3) === '2.00Δ BU' && prAns(PQ.p4) === '1.20Δ BU', 'Prentice：EyeWiki 例題 −10 D 偏 2 mm → 2Δ BI；正鏡片底朝光學中心、負鏡片底朝外');
+  a(prentice(-1, -2, 135, 2, 0) === null && prentice(-1, -2, 180, 2, 0).F180 === -1 && prentice(-1, -2, 180, 0, 2).F90 === -3, 'Prentice 用偏心方向那條子午線的屈光力；斜軸不算');
+  a(XKEYS.every(k => { const it = rxItem(k); return it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length >= 3; }), '處方題的選項含答案且不重複');
 })();
 
 st.rrand = randPatient();
-if (location.hash === '#ret') st.view = 'ret';
+if (location.hash === '#ret' || location.hash === '#rx') st.view = location.hash.slice(1);
 render();
 </script>
 
