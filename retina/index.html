@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>視網膜互動圖譜</title>
-<meta name="description" content="互動式視網膜：看視網膜剝離的形狀，用 Lincoff rules 找 primary break；在眼底圖放裂孔，看視網膜下液怎麼依重力擴散；切換黃斑 OCT 病變（IRF、SRF、PED、ERM、VMA／VMT、macular hole），用 IVTS 分級；在眼底上設定 ROP 病灶，依 ICROP3 判讀 zone、stage、plus，依 ETROP 判斷 Type 1／Type 2；附測驗與錯題本。">
+<meta name="description" content="互動式視網膜：看視網膜剝離的形狀，用 Lincoff rules 找 primary break；在眼底圖放裂孔，看視網膜下液怎麼依重力擴散；切換黃斑 OCT 病變（IRF、SRF、PED、ERM、VMA／VMT、macular hole），用 IVTS 分級；在眼底上設定 ROP 病灶，依 ICROP3 判讀 zone、stage、plus，依 ETROP 判斷 Type 1／Type 2；在四個象限放出血、venous beading、IRMA 與新生血管，用 4-2-1 rule 與 ICDR 分級並對照 PPP 處置表；附測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -19,6 +19,7 @@
   --t-fundus:#EDB18C; --t-fundus-2:#DD9772; --t-disc:#F8E3B8; --t-vessel:#B04530; --t-break:#9E1424;
   --rd:#F1F4FA; --rd-edge:rgba(52,60,92,.6);
   --rop-avas:#F6DCCB; --rop-line:#FFFFFF; --rop-ridge:#FBE7E3; --rop-nv:#A3263A; --rop-rlf:#ECEBF1;
+  --dr-nv:#D81E3A; --dr-vh:#7E1020;
   --oct-bg:#06060A; --oct-hi:#F2F2F2; --oct-mh:#BDBDBD; --oct-m:#7C7C7C; --oct-lo:#2C2C2C; --oct-ch:#6A6A6A; --oct-chv:#262626; --oct-mark:#FF9F1A;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
@@ -33,7 +34,8 @@
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78;
   --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7);
-  --rop-avas:#86655A; --rop-line:#F3EEE9; --rop-ridge:#E7BDB6; --rop-nv:#F06A78; --rop-rlf:#CFCBD8; color-scheme:dark }}
+  --rop-avas:#86655A; --rop-line:#F3EEE9; --rop-ridge:#E7BDB6; --rop-nv:#F06A78; --rop-rlf:#CFCBD8;
+  --dr-nv:#FF8A95; --dr-vh:#C0394A; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
@@ -41,7 +43,8 @@
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78;
   --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7);
-  --rop-avas:#86655A; --rop-line:#F3EEE9; --rop-ridge:#E7BDB6; --rop-nv:#F06A78; --rop-rlf:#CFCBD8; color-scheme:dark }
+  --rop-avas:#86655A; --rop-line:#F3EEE9; --rop-ridge:#E7BDB6; --rop-nv:#F06A78; --rop-rlf:#CFCBD8;
+  --dr-nv:#FF8A95; --dr-vh:#C0394A; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -176,6 +179,28 @@ a{color:var(--accent)}
 .verdict.t0{background:var(--surface-2);border:1px solid var(--line)}
 .ck{display:inline-block;width:1.5em;font-family:var(--f-mono);color:var(--muted)}
 .ck.on{color:var(--ok);font-weight:600}
+/* DR：出血、microaneurysm、venous beading、IRMA、新生血管、玻璃體出血；四個象限 */
+.dr-hem{fill:var(--t-break)}
+.dr-vb{fill:var(--t-vessel)}
+.dr-vbl{fill:none;stroke:var(--t-vessel);stroke-width:2.2;stroke-linecap:round}
+.dr-irma{fill:none;stroke:var(--t-vessel);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.dr-nv{fill:none;stroke:var(--dr-nv);stroke-width:1.5;stroke-linecap:round}
+.dr-vh{fill:var(--dr-vh);opacity:.85}
+.dr-haze{fill:var(--dr-vh);opacity:.18}
+.dr-sel{fill:var(--hl-soft);opacity:.55}
+.dr-ql{stroke:var(--t-stroke-2);stroke-width:1.2;stroke-dasharray:5 6}
+.dr-qt{font-family:var(--f-mono)!important;font-size:16px;font-weight:500;fill:var(--accent)!important}
+.dr-ct{font-family:var(--f-mono)!important;font-size:13px;fill:var(--ink-2)!important}
+.dr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dr-row{border:1px solid var(--line);border-radius:8px;padding:8px 10px 10px;display:flex;flex-direction:column;gap:7px;min-width:0;background:var(--surface)}
+.dr-row.on{border-color:var(--accent);background:var(--accent-soft)}
+.dr-row.all{grid-column:1/-1}
+.dr-row .t{font-size:13px;font-weight:600;color:var(--ink);display:flex;justify-content:space-between;gap:8px;cursor:pointer}
+.dr-row .t i{font-family:var(--f-display);font-weight:400;color:var(--muted)}
+.dr-row .ln{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:12.5px;color:var(--ink-2)}
+.dr-row .ln b{font-family:var(--f-mono);font-weight:500;min-width:2ch}
+.dr-row input[type=range]{width:min(170px,100%)}
+.dr-row .seg button{padding:3px 9px;font-size:12.5px}
 input[type=range]{width:min(320px,100%);accent-color:var(--accent);margin:0}
 .opts{display:flex;flex-direction:column;gap:8px}
 .opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
@@ -258,6 +283,9 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .ocal.sm{font-size:20px}
   .r-ztag{font-size:19px!important}
   .rgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .dr-grid{grid-template-columns:minmax(0,1fr)}
+  .dr-qt{font-size:22px}
+  .dr-ct{font-size:19px}
   .seg button{padding:5px 10px}
 }
 </style>
@@ -300,7 +328,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>眼底示意圖畫成正像，同眼底照片：上＝superior，OD 的視盤在右、OS 的視盤在左；鐘點依檢查者看出去的方向標示。為了看清周邊，視盤放在圖的正中央，從後極到 ora serrata 的距離不按比例。剝離範圍、隆起高度與液體擴散的速度只是示意。ROP 分區圖同樣把視盤放在中央，zone 以視盤為圓心；zone 之間的比例、病灶與血管的樣子只是示意。OCT 是水平切過 fovea 的示意 B-scan：橫向 6 mm、縱向放大約 4 倍，病變的形狀與大小只是示意，不是真實影像。</span>
+    <span><b>關於圖：</b>眼底示意圖畫成正像，同眼底照片：上＝superior，OD 的視盤在右、OS 的視盤在左；鐘點依檢查者看出去的方向標示。為了看清周邊，視盤放在圖的正中央，從後極到 ora serrata 的距離不按比例。剝離範圍、隆起高度與液體擴散的速度只是示意。ROP 分區圖同樣把視盤放在中央，zone 以視盤為圓心；zone 之間的比例、病灶與血管的樣子只是示意。DR 分級圖的四個象限用通過視盤的水平線與垂直線切分，出血的位置與大小、新生血管的樣子只是示意。OCT 是水平切過 fovea 的示意 B-scan：橫向 6 mm、縱向放大約 4 倍，病變的形狀與大小只是示意，不是真實影像。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -338,7 +366,12 @@ const SRC = {
   S12: { t: 'Cryotherapy for Retinopathy of Prematurity Cooperative Group. Multicenter trial of cryotherapy for retinopathy of prematurity: preliminary results. Arch Ophthalmol 1988;106:471–479（本頁依摘要）', u: 'https://doi.org/10.1001/archopht.1988.01060130517027' },
   S13: { t: 'Mintz-Hittner HA, Kennedy KA, Chuang AZ, et al. Efficacy of intravitreal bevacizumab for stage 3+ retinopathy of prematurity. N Engl J Med 2011;364:603–615（BEAT-ROP；PMC 開放全文）', u: 'https://doi.org/10.1056/NEJMoa1007374' },
   S14: { t: 'Stahl A, Lepore D, Fielder A, et al. Ranibizumab versus laser therapy for the treatment of very low birthweight infants with retinopathy of prematurity (RAINBOW): an open-label randomised controlled trial. Lancet 2019;394:1551–1559（PMC 開放全文）', u: 'https://doi.org/10.1016/S0140-6736(19)31344-3' },
-  S15: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.548–549 Retinopathy of prematurity', u: null }
+  S15: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.548–549 Retinopathy of prematurity', u: null },
+  S16: { t: 'Lim JI, Kim SJ, Bailey ST, et al. Diabetic Retinopathy Preferred Practice Pattern®. Ophthalmology 2025;132:P75–P162（AAO PPP；Table 1、Table 5、名詞解釋與處置正文）', u: 'https://doi.org/10.1016/j.ophtha.2024.12.020' },
+  S17: { t: 'Wilkinson CP, Ferris FL, Klein RE, et al. Proposed international clinical diabetic retinopathy and diabetic macular edema disease severity scales. Ophthalmology 2003;110:1677–1682（本頁依摘要；分級表依 PPP 轉載的 Table 1）', u: 'https://doi.org/10.1016/S0161-6420(03)00475-5' },
+  S18: { t: 'Early Treatment Diabetic Retinopathy Study Research Group. Fundus photographic risk factors for progression of diabetic retinopathy. ETDRS report number 12. Ophthalmology 1991;98:823–833（本頁依摘要）', u: 'https://pubmed.ncbi.nlm.nih.gov/2062515/' },
+  S19: { t: 'The Diabetic Retinopathy Study Research Group. Photocoagulation treatment of proliferative diabetic retinopathy: clinical application of DRS findings. DRS report number 8. Ophthalmology 1981;88:583–600（本頁依摘要）', u: 'https://pubmed.ncbi.nlm.nih.gov/7196564/' },
+  S20: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.507–509、512、515 Diabetic retinopathy（分級表 13.1 與各徵象）', u: null }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
@@ -979,16 +1012,243 @@ function ropConceptCard(id) {
     ${d.secs.map(([t, arr]) => list(t, arr)).join('')}${srcList(d.src)}<div><button type="button" class="btn" data-rcard="">← 回到判讀</button></div></div>`;
 }
 
+/* ---------- DR 分頁：ICDR 分級、4-2-1 rule、DRS high-risk、PPP 處置表 ----------
+   眼底同 RD／ROP 分頁（正像、視盤放中央）；用通過視盤的水平線與垂直線分四個象限（示意；PPP 寫的是 4 個 midperipheral quadrants）。
+   象限用解剖名稱：OD 的 ST 在 9–12 點、OS 的 ST 在 12–3 點；病灶位置以 OD 畫，OS 整組鏡射 */
+const DQ = ['ST', 'SN', 'IT', 'IN'];
+const DQ_EN = { ST: 'Superotemporal', SN: 'Superonasal', IT: 'Inferotemporal', IN: 'Inferonasal' };
+const DQ_H = { R: { ST: 9, SN: 0, IN: 3, IT: 6 }, L: { ST: 0, SN: 9, IN: 6, IT: 3 } };   // 象限從幾點開始，順時針 3 個鐘點
+const quadOf = (h, eye) => { const s0 = 3 * Math.floor(norm(h) / 3 + 1e-9) % 12; return DQ.find(q => DQ_H[eye][q] === s0); };
+// 設定的寫法：q 只寫有病灶的象限 [出血數, venous beading, IRMA（0 無、1 輕微、2 prominent）, NVE（0 無、1 小、2 ≥ 1/2 DA）]；
+// nvd 0 無、1 小（< 1/4–1/3 DA）、2 ≥ 1/4–1/3 DA；vh＝玻璃體或視網膜前出血；dme：no／nci／ci
+function drMake(p) {
+  const q = {}; DQ.forEach(k => { const a = (p.q || {})[k] || []; q[k] = { h: a[0] || 0, vb: !!a[1], irma: a[2] || 0, nve: a[3] || 0 }; });
+  return { q, ma: !!p.ma, nvd: p.nvd || 0, vh: !!p.vh, dme: p.dme || 'no' };
+}
+const drCopy = o => drMake({ ma: o.ma, nvd: o.nvd, vh: o.vh, dme: o.dme, q: Object.fromEntries(DQ.map(k => [k, [o.q[k].h, o.q[k].vb, o.q[k].irma, o.q[k].nve]])) });
+// 分級（S16 Table 1 的國際版）：有 PDR 徵象先算 PDR，再用 DRS 的四項中三項分 high-risk；否則看 4-2-1
+function drEval(o) {
+  const Q = DQ.map(k => o.q[k]);
+  const nHem = Q.filter(x => x.h > 20).length, nVB = Q.filter(x => x.vb).length, nIRMA = Q.filter(x => x.irma === 2).length;
+  const c4 = nHem === 4, c2 = nVB >= 2, c1 = nIRMA >= 1, n421 = c4 + c2 + c1;
+  const nv = o.nvd > 0 || Q.some(x => x.nve > 0), pdr = nv || o.vh;
+  const hrf = [nv, o.nvd > 0, o.nvd === 2 || Q.some(x => x.nve === 2), o.vh], nHR = hrf.filter(Boolean).length;
+  const lesion = Q.some(x => x.h > 0 || x.vb || x.irma > 0);
+  const lv = pdr ? (nHR >= 3 ? 'hr' : 'pdr') : n421 ? 'sev' : lesion ? 'mod' : o.ma ? 'mild' : 'none';
+  return { lv, pdr, nHem, nVB, nIRMA, c4, c2, c1, n421, vsev: !pdr && n421 >= 2, hrf, nHR };
+}
+const DR_LV = { none: ['No apparent retinopathy', '沒有明顯的 DR'], mild: ['Mild NPDR', '輕度 NPDR'], mod: ['Moderate NPDR', '中度 NPDR'], sev: ['Severe NPDR', '重度 NPDR'], pdr: ['PDR', 'Proliferative DR，沒有 high-risk 特徵'], hr: ['High-risk PDR', 'Proliferative DR，有 DRS 的 high-risk 特徵'] };
+const DR_ORDER = ['none', 'mild', 'mod', 'sev', 'pdr', 'hr'];
+const drShort = e => e.vsev ? 'Very severe NPDR' : DR_LV[e.lv][0];
+// PPP Table 5（S16）：[追蹤月數, PRP, focal／grid laser, 玻璃體內 anti-VEGF]；* ‡ 是原表的註
+const T5 = {
+  none: { no: ['12', 'No', 'No', 'No'] },
+  mild: { no: ['12', 'No', 'No', 'No'], nci: ['3–6', 'No', 'Sometimes', 'No'], ci: ['1*', 'No', 'Rarely', 'Usually'] },
+  mod: { no: ['6–12‡', 'No', 'No', 'No'], nci: ['3–6', 'No', 'Sometimes', 'Rarely'], ci: ['1*', 'No', 'Rarely', 'Usually'] },
+  sev: { no: ['3–4', 'Sometimes', 'No', 'Sometimes'], nci: ['2–4', 'Sometimes', 'Sometimes', 'Sometimes'], ci: ['1*', 'Sometimes', 'Rarely', 'Usually'] },
+  pdr: { no: ['3–4', 'Sometimes', 'No', 'Sometimes'], nci: ['2–4', 'Sometimes', 'Sometimes', 'Sometimes'], ci: ['1*', 'Sometimes', 'Sometimes', 'Usually'] },
+  hr: { no: ['2–4', 'Recommended', 'No', 'Sometimes'], nci: ['2–4', 'Recommended', 'Sometimes', 'Sometimes'], ci: ['1*', 'Recommended', 'Sometimes', 'Usually'] }
+};
+const T5ZH = { No: '不需要', Sometimes: '有時', Rarely: '很少', Usually: '通常', Recommended: '建議' };
+const DME_ZH = { no: '沒有 DME', nci: 'NCI-DME', ci: 'CI-DME' };
+
+/* 例子（OD 定義） */
+const DRP = {
+  none: { zh: '沒有 DR', p: {} },
+  mild: { zh: '只有 microaneurysms', p: { ma: 1 } },
+  mod: { zh: '少量出血', p: { ma: 1, q: { ST: [6], IT: [4], IN: [2] } } },
+  near: { zh: '差一點到 severe', p: { ma: 1, q: { ST: [24, 0, 1], SN: [22], IT: [25, 1], IN: [12] } } },
+  s4: { zh: '4：四個象限出血 > 20', p: { ma: 1, q: { ST: [24], SN: [22], IT: [26], IN: [23] } } },
+  s2: { zh: '2：兩個象限 venous beading', p: { ma: 1, q: { ST: [8, 1], IT: [6, 1], SN: [3] } } },
+  s1: { zh: '1：一個象限 prominent IRMA', p: { ma: 1, q: { SN: [7, 0, 2], ST: [5], IT: [4] } } },
+  vs: { zh: '兩條都成立', p: { ma: 1, q: { ST: [26, 1], SN: [23], IT: [25, 1, 1], IN: [22] } } },
+  nve: { zh: '小 NVE', p: { ma: 1, q: { ST: [12, 1, 1, 1], IT: [10], SN: [6], IN: [4] } } },
+  nvdL: { zh: 'NVD ≥ 1/4–1/3 DA', p: { ma: 1, nvd: 2, q: { ST: [14, 1], IT: [12, 1], SN: [8], IN: [6] } } },
+  nvdV: { zh: '小 NVD＋玻璃體出血', p: { ma: 1, nvd: 1, vh: 1, q: { ST: [12, 1], IT: [10], SN: [6], IN: [5] } } },
+  nveV: { zh: '小 NVE＋玻璃體出血', p: { ma: 1, vh: 1, q: { ST: [12, 0, 1, 1], IT: [10], SN: [6], IN: [5] } } },
+  dme: { zh: 'Moderate＋CI-DME', p: { ma: 1, dme: 'ci', q: { ST: [9], IT: [7], SN: [3] } } }
+};
+const DRP_ORDER = Object.keys(DRP);
+
+/* 測驗題（OD 定義，出題時隨機換成 OS）；dr:g 看圖選分級、dr:r 選 4-2-1 成立的是哪一條（只用 NPDR 的題） */
+const DCASE = {
+  g1: { ma: 1 }, g2: { ma: 1, q: { ST: [7], IT: [5], SN: [2] } },
+  g3: { ma: 1, q: { ST: [25], SN: [23], IT: [24, 1], IN: [9] } }, g4: { ma: 1, q: { ST: [24], SN: [22], IT: [27], IN: [23] } },
+  g5: { ma: 1, q: { ST: [8, 1], IT: [7, 1], IN: [3] } }, g6: { ma: 1, q: { SN: [6, 0, 2], ST: [5], IT: [4] } },
+  g7: { ma: 1, q: { ST: [26, 1], SN: [24], IT: [25, 1], IN: [23] } }, g8: { ma: 1, q: { ST: [12, 1, 1, 1], IT: [9], SN: [5] } },
+  g9: { ma: 1, nvd: 2, q: { ST: [13, 1], IT: [11], SN: [6] } }, g10: { ma: 1, nvd: 1, vh: 1, q: { ST: [12], IT: [10], SN: [5] } },
+  g11: { ma: 1, vh: 1, q: { IT: [12, 0, 1, 1], ST: [9], SN: [5] } }, g12: { ma: 1, vh: 1, q: { ST: [12, 1, 0, 2], IT: [10], SN: [6] } },
+  g13: {}, g14: { ma: 1, q: { IT: [6, 0, 1], ST: [5], SN: [3] } }
+};
+const DR_RCASES = ['g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g14'];
+const DR_KEYS = [...Object.keys(DCASE).map(c => 'dr:g:' + c), ...DR_RCASES.map(c => 'dr:r:' + c)];
+const G_OPT = { none: 'No DR', mild: 'Mild NPDR', mod: 'Moderate NPDR', sev: 'Severe NPDR', pdr: 'PDR（non-high-risk）', hr: 'High-risk PDR' };
+const R_OPT = { r4: '只有「4」：四個象限出血 > 20', r2: '只有「2」：兩個以上象限 venous beading', r1: '只有「1」：一個以上象限 prominent IRMA', rv: '兩條以上（very severe）', r0: '都不成立（還不到 severe）' };
+const drRuleAns = e => e.n421 >= 2 ? 'rv' : e.c4 ? 'r4' : e.c2 ? 'r2' : e.c1 ? 'r1' : 'r0';
+const drCaseName = c => { const e = drEval(drMake(DCASE[c])); return `${drShort(e)}（題 ${c.slice(1)}）`; };
+// 新生血管與出血的文字描述（示意圖看不準大小，測驗時用文字給）
+function nvDesc(o) {
+  const t = [];
+  if (o.nvd) t.push(`NVD ${o.nvd === 2 ? '≥ 1/4–1/3 DA' : '< 1/4–1/3 DA'}`);
+  DQ.forEach(k => { if (o.q[k].nve) t.push(`${k} 有 NVE ${o.q[k].nve === 2 ? '≥ 1/2 DA' : '< 1/2 DA'}`); });
+  if (o.vh) t.push('有玻璃體／視網膜前出血');
+  return t.length ? t.join('；') : '沒有新生血管、沒有玻璃體出血';
+}
+function drWhy(e, o) {
+  if (e.lv === 'none') return ['沒有任何 DR 病灶'];
+  if (e.lv === 'mild') return [`只有 microaneurysms${s('S16')}`];
+  if (e.lv === 'mod') {
+    const Q = DQ.map(k => o.q[k]), p = [Q.some(x => x.h) && '出血', Q.some(x => x.vb) && 'venous beading', Q.some(x => x.irma) && 'IRMA'].filter(Boolean);
+    return [`有${p.join('、')}，比只有 microaneurysms 多${s('S16')}`, '4-2-1 三條都不成立，所以不到 severe'];
+  }
+  if (e.lv === 'sev') return [`符合 4-2-1 的「${[e.c4 && '4', e.c2 && '2', e.c1 && '1'].filter(Boolean).join('」「')}」，而且沒有 PDR 的徵象${s('S16')}`].concat(e.vsev ? [`符合兩條以上，叫 very severe NPDR${s('S16')}`] : []);
+  return [`有${o.nvd || DQ.some(k => o.q[k].nve) ? '新生血管' : ''}${(o.nvd || DQ.some(k => o.q[k].nve)) && o.vh ? '和' : ''}${o.vh ? '玻璃體／視網膜前出血' : ''}，就是 PDR，不再用 4-2-1 分 NPDR${s('S16')}`,
+    e.lv === 'hr' ? `DRS 的四項符合 ${e.nHR} 項（≥ 3）→ high-risk` : `DRS 的四項只符合 ${e.nHR} 項，不到 high-risk`];
+}
+// PPP Table 5 的這一格
+function drT5(lv, dme) {
+  const r = T5[lv][dme];
+  if (!r) return [`PPP Table 5 沒有「${DR_LV[lv][0]}＋${DME_ZH[dme]}」這個組合${s('S16')}`];
+  const z = x => `${T5ZH[x]}（${x}）`;
+  const out = [`追蹤：${r[0].replace(/[*‡]/g, '')} 個月${s('S16')}`, `PRP：${z(r[1])}`, `Focal／grid laser：${z(r[2])}`, `玻璃體內 anti-VEGF：${z(r[3])}`];
+  if (r[0].includes('*')) out.push('1 個月是指可考慮玻璃體內 corticosteroid 或 anti-VEGF；打 anti-VEGF 的人最早 1 個月就可以複診');
+  if (r[0].includes('‡')) out.push('如果出現接近 severe NPDR 的徵象，追蹤間隔要更短');
+  if (dme === 'ci') out.push('CI-DME 但視力 20/25 或更好：觀察、雷射或 anti-VEGF 的結果沒有差別，可以等視力比 20/25 差再治療');
+  if (lv === 'hr') out.push('只打 anti-VEGF、不做 PRP，適合能規則回診的人（DRCR.net Protocol S）');
+  return out;
+}
+// 還差什麼才會升一級（依定義推）
+function drNext(e) {
+  if (e.lv === 'mild') return ['出現任何出血、venous beading 或 IRMA，就是 moderate'];
+  if (e.lv === 'mod') return [`4：出血 > 20 的象限還差 ${4 - e.nHem} 個`, `2：venous beading 還差 ${2 - e.nVB} 個象限`, '1：任一象限出現 prominent IRMA'];
+  if (e.lv === 'sev' && !e.vsev) return ['再符合一條就是 very severe NPDR'];
+  if (e.lv === 'pdr') return [`DRS 的四項還差 ${3 - e.nHR} 項才到 high-risk`];
+  return [];
+}
+function drCardHTML(o, eye) {
+  const e = drEval(o), L = DR_LV[e.lv], ck = (on, t) => `<span class="ck ${on ? 'on' : ''}">${on ? '✓' : '—'}</span>${t}`;
+  const tone = e.lv === 'none' || e.lv === 'mild' ? 't0' : e.lv === 'mod' ? 't2' : 't1';
+  let h = `<div class="card"><div class="eyebrow">DR 分級 · ${EYEZH[eye]} · 對照 BCSC 12</div><div><h2>${drShort(e)}</h2></div><p class="zh">${L[1]} · ${DME_ZH[o.dme]}</p>
+    <div class="verdict ${tone}">ICDR：${L[0]}${e.vsev ? '（符合兩條以上，very severe）' : ''}</div>`;
+  h += list('為什麼', drWhy(e, o));
+  h += e.pdr ? list('DRS high-risk：四項中有三項', [ck(e.hrf[0], `有新生血管（任何位置）${s('S16')}`), ck(e.hrf[1], '新生血管在視盤上或附近（NVD）'), ck(e.hrf[2], '至少 moderate：NVD ≥ 約 1/4–1/3 DA，或 NVE ≥ 1/2 DA'), ck(e.hrf[3], `玻璃體或視網膜前出血（現在符合 ${e.nHR}／4）`)])
+    : list('4-2-1 rule（國際版）', [ck(e.c4, `4 個象限都有 > 20 個出血：現在 ${e.nHem}／4${s('S16')}`), ck(e.c2, `2 個以上象限有 definite venous beading：現在 ${e.nVB}`), ck(e.c1, `1 個以上象限有 prominent IRMA：現在 ${e.nIRMA}`)]);
+  h += list('PPP 的初始處置（Table 5）', drT5(e.lv, o.dme).concat(e.vsev ? [`Very severe NPDR：一年內進展到 high-risk PDR 的風險將近 50%，ETDRS 認為可以考慮提早 PRP${s('S16')}`] : [])) + list('還差什麼', drNext(e));
+  return h + srcList(['S16', 'S20']) + `</div>`;
+}
+
+/* 說明卡 */
+const DRC = {
+  icdr: { en: 'ICDR severity scale', zh: '國際臨床分級', def: `2003 年 16 個國家、31 位專家用 modified Delphi 訂出：三個低風險的等級、第四級 severe NPDR、第五級 PDR${s('S17')}。`,
+    secs: [['五級', [`No apparent retinopathy：沒有異常${s('S16')}`, `Mild NPDR：只有 microaneurysms${s('S16')}`, `Moderate NPDR：比只有 microaneurysms 多，但不到 severe${s('S16')}`, `Severe NPDR：符合 4-2-1 任一條，而且沒有 PDR 的徵象${s('S16')}`, `PDR：neovascularization 和／或玻璃體或視網膜前出血${s('S16')}`]],
+      ['延伸', [`符合 severe NPDR 兩條以上叫 very severe NPDR；PDR 可再分 high-risk 與 non-high-risk${s('S16')}`, `ICDR 的 DME 先分「看起來有」與「看起來沒有」；訓練與設備足夠時，再依離黃斑中心的距離細分${s('S17')}`]],
+      ['和 ETDRS 的差別', [`ETDRS 的 mild NPDR 是「至少 1 個 microaneurysm、但不到 moderate」；moderate 要出血／microaneurysms 達標準照片 2A，或 soft exudate、venous beading、IRMA 確定存在${s('S16')}`, '所以只有少量出血時，ICDR 已經算 moderate，ETDRS 可能還是 mild；本頁依 ICDR', `Kanski 的表 13.1 是 ETDRS 的簡化版，多了 very mild（只有 microaneurysms）${s('S20')}`]]],
+    src: ['S16', 'S17', 'S20'] },
+  r421: { en: '4-2-1 rule', zh: 'Severe NPDR 的三條', def: `符合任一條、而且沒有 PDR 的徵象，就是 severe NPDR；兩條以上是 very severe NPDR${s('S16')}。`,
+    secs: [['國際版（本頁用這版）', [`4：4 個象限都有 > 20 個視網膜內出血${s('S16')}`, `2：2 個以上象限有 definite venous beading${s('S16')}`, `1：1 個以上象限有 prominent IRMA${s('S16')}`]],
+      ['美國版', [`4：4 個象限都有 severe 的視網膜內出血與 microaneurysms（達 ETDRS 標準照片 2A）${s('S16')}`, `2：2 個以上象限有 venous beading（標準照片 6A）${s('S16')}`, `1：1 個以上象限有 moderate IRMA（達標準照片 8A）${s('S16')}`, `Kanski 的寫法同美國版，並註明 2A 大約是每個象限 20 個中到大的出血${s('S20')}`]],
+      ['為什麼是這三個', [`ETDRS 分析延後治療的眼：IRMA、出血／microaneurysms、venous beading 的嚴重度是預測進展到 PDR 最重要的因素${s('S18')}`, `Very severe NPDR 和 non-high-risk PDR 一年內進展到 high-risk PDR 的風險將近 50%${s('S16')}`, `Kanski：severe NPDR 一年內 PDR 可達 50%、high-risk PDR 可達 15%；very severe 一年內 high-risk PDR 可達 45%${s('S20')}`]],
+      ['圖上', ['每個象限各自數：出血是否 > 20 看拖拉條的數字，點的位置與大小是示意', `PPP 的象限是 4 個 midperipheral quadrants${s('S16')}；本頁用通過視盤的水平線與垂直線切分，是示意`]]],
+    src: ['S16', 'S18', 'S20'] },
+  signs: { en: 'Lesions', zh: '各種病灶長什麼樣子', def: '4-2-1 用到出血、venous beading 與 IRMA；microaneurysm 決定 mild，新生血管與玻璃體出血決定 PDR。',
+    secs: [['Microaneurysm', [`微血管壁局部往外凸，通常是 DR 最早的徵象；看起來是小紅點，常先出現在 fovea 的 temporal 側，臨床上可能和 dot hemorrhage 分不出來${s('S20')}`]],
+      ['視網膜內出血', [`來自微血管的靜脈端、位在視網膜中層，呈 dot／blot 狀${s('S20')}`, `較深、暗而圓的出血是出血性梗塞，範圍越大越可能進展到 PDR${s('S20')}`]],
+      ['Venous beading', [`靜脈局部變窄與變粗交替，像一串珠子；缺血時的靜脈變化還有擴張彎曲、looping、香腸狀分節${s('S20')}`, `有靜脈變化的範圍越大，越可能進展到 PDR${s('S20')}`]],
+      ['IRMA', [`彎曲的視網膜內血管段，口徑從勉強看得到到 31 μm（約視盤邊緣大靜脈寬度的四分之一），偶爾更大；可能不容易和新生血管分開${s('S16')}`, `Kanski：從小動脈接到小靜脈的 shunt，不跨過大血管；FA 不漏、OCT 上不穿過 ILM，這兩點和新生血管不同${s('S20')}`]],
+      ['不在分級條件裡的', [`Cotton wool spot 與 hard exudate 不是 ICDR 分級的條件${s('S16')}`, `Cotton wool spot 是神經纖維層的軸突因缺血而堆積的碎屑；hard exudate 是慢性局部水腫留下的脂蛋白與吞噬脂質的巨噬細胞${s('S20')}`]]],
+    src: ['S16', 'S20'] },
+  pdr: { en: 'PDR and high-risk', zh: '新生血管與 high-risk', def: `PDR 是新生血管長在視網膜內表面、伸進玻璃體，來自更廣泛的缺血；新生血管容易出血，造成玻璃體出血${s('S16')}。`,
+    secs: [['NVD／NVE', [`NVD：在視盤上或離視盤一個視盤直徑以內的新生血管；NVE：離視盤更遠的${s('S20')}`, `新生血管可能纖維化、收縮，造成 ERM、玻璃體視網膜牽引、裂孔與視網膜剝離${s('S16')}`]],
+      ['DRS 的 high-risk：四項中有三項', [`有新生血管（任何位置）${s('S16')}`, `新生血管在視盤上或附近${s('S16')}`, `至少 moderate：NVD 大於約 1/4–1/3 disc area，或 NVE 至少 1/2 disc area${s('S16')}`, `玻璃體或視網膜前出血${s('S16')}`]],
+      ['換成臨床常用的三種', [`NVD 大於標準照片 10A（約 1/3 disc area）；任何 NVD 合併玻璃體出血；NVE 大於 1/2 disc area 合併玻璃體出血${s('S20')}`, `PPP 的名詞解釋寫 NVE ≥ 1/4 disc area 合併出血，和正文的 1/2 不同；本頁依正文的四項中三項${s('S16')}`, `Kanski 正文把四項寫成「任一項」，和它自己的表 13.1、DRS 都不同；本頁依 DRS${s('S20')}`]],
+      ['為什麼要分', [`DRS：雷射讓嚴重視力喪失的風險降低 50% 以上；新生血管合併出血，或 NVD ≥ 1/4–1/3 disc area 時，未治療兩年的風險高於治療的副作用，通常建議盡快治療${s('S19')}`, `PPP 整理的 DRS 數據：high-risk PDR 未治療 2 年、4 年嚴重視力喪失 26%、44%，治療後 11%、20%${s('S16')}`]]],
+    src: ['S16', 'S19', 'S20'] },
+  dme: { en: 'Diabetic macular edema', zh: 'DME：和分級分開看', def: `DME 可以出現在 DR 的任何階段；處置要同時看 DR 分級與有沒有 DME${s('S16')}。`,
+    secs: [['定義', [`CSME：黃斑中心 500 μm 內的視網膜增厚；或 500 μm 內的 hard exudate 合併旁邊增厚；或 1 個 disc area 以上的增厚區、任何部分在中心 1 個視盤直徑內${s('S16')}`, `CSME 再分成 center-involved（CI-DME）與 non-center-involved（NCI-DME）${s('S16')}`, `ICDR：先分看起來有或沒有；條件許可時再依離黃斑中心的距離細分${s('S17')}`]],
+      ['處置重點', [`Anti-VEGF 對有視力下降的 CI-DME 有效${s('S16')}`, `CI-DME 但視力 20/25 或更好：觀察、雷射或 anti-VEGF 的結果沒有差別，可以等視力比 20/25 差再治療${s('S16')}`, `PRP 之後 DME 可能惡化；DME 用 anti-VEGF 治療時，DR 的嚴重度也可能改善${s('S16')}`]],
+      ['圖上', ['本頁不畫 DME，只用三選一的開關，影響判讀卡的處置建議；黃斑的 OCT 表現見「OCT 黃斑病變」分頁']]],
+    src: ['S16', 'S17'] },
+  tx: { en: 'Follow-up and treatment', zh: '各級的追蹤與治療', def: 'PPP Table 5 依 DR 分級與 DME 列出追蹤間隔和三種治療；判讀卡會帶出目前這一格。',
+    secs: [['NPDR', [`沒有或極輕微：每年檢查，因為一年內 5–10% 沒有 DR 的人會出現 DR${s('S16')}`, `Mild 到 moderate、沒有 DME：6–12 個月內再檢查${s('S16')}`, `Severe NPDR 與 non-high-risk PDR 病程相近，2–4 個月內再檢查；DRS 認為可以等出現 high-risk 特徵再做 PRP，ETDRS 則認為 very severe NPDR 可以考慮提早 PRP${s('S16')}`]],
+      ['High-risk PDR', [`大多數應盡快做 PRP，通常能讓新生血管消退${s('S16')}`, `DRCR.net Protocol S：一系列 anti-VEGF（ranibizumab）注射在 2 年時不劣於 PRP，黃斑水腫較少惡化；但失聯的病人結果比 PRP 差，所以只打 anti-VEGF 適合能規則回診的人${s('S16')}`, `玻璃體混濁影響視力或治療、嚴重纖維血管增生、威脅或侵犯黃斑的牽引性 RD：考慮 PPV${s('S16')}`]],
+      ['Kanski 的追蹤間隔（ETDRS 簡化版）', [`Moderate 約 6 個月、severe 4 個月、very severe 2–3 個月${s('S20')}`]]],
+    src: ['S16', 'S20'] }
+};
+const DRC_ORDER = Object.keys(DRC);
+function drConceptCard(id) {
+  const d = DRC[id];
+  return `<div class="card"><div class="eyebrow">DR · 說明卡 · 對照 BCSC 12</div><div><h2>${d.en}</h2></div><p class="zh">${d.zh}</p><p class="def">${d.def}</p>
+    ${d.secs.map(([t, arr]) => list(t, arr)).join('')}${srcList(d.src)}<div><button type="button" class="btn" data-dcard="">← 回到判讀</button></div></div>`;
+}
+
+/* 畫圖：病灶位置以 OD 定義（固定亂數，每次畫都一樣），OS 用整組鏡射 */
+const seeded = sd => () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+const DPOS = Object.fromEntries(DQ.map((q, qi) => { const r = seeded(97 + qi * 131); return [q, Array.from({ length: 30 }, () => [DQ_H.R[q] + 0.15 + 2.7 * r(), 52 + 150 * Math.sqrt(r())])]; }));
+const DMA = (() => { const r = seeded(4242); return Array.from({ length: 16 }, () => [12 * r(), 30 + 90 * r()]); })();
+// 新生血管：從一點放射出去的細小血管環
+function nvWheel(x0, y0, rr, n, rot) {
+  let d = '';
+  for (let k = 0; k < n; k++) {
+    const a = rot + k * 2 * Math.PI / n, ex = x0 + rr * Math.cos(a), ey = y0 + rr * Math.sin(a), w = rr * 0.55;
+    d += `M${x0.toFixed(1)} ${y0.toFixed(1)}Q${(ex + w * Math.cos(a + 1.2)).toFixed(1)} ${(ey + w * Math.sin(a + 1.2)).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}Q${(ex + w * Math.cos(a - 1.2)).toFixed(1)} ${(ey + w * Math.sin(a - 1.2)).toFixed(1)} ${x0.toFixed(1)} ${y0.toFixed(1)}`;
+  }
+  return `<path class="dr-nv" d="${d}"/>`;
+}
+function drLesions(D) {
+  const { cx, cy } = G;
+  let h = D.ma ? DMA.map(([hh0, r]) => { const [x, y] = pt(hh0, r); return `<circle class="dr-hem ma" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.5"/>`; }).join('') : '';
+  DQ.forEach((q, qi) => {
+    const Q = D.q[q], s0 = DQ_H.R[q], rnd = seeded(7 + qi * 53);
+    DPOS[q].slice(0, Q.h).forEach(([hh0, r], i) => { const [x, y] = pt(hh0, r); h += i % 3 === 0 ? `<ellipse class="dr-hem" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="4.6" ry="3.4" transform="rotate(${(rnd() * 180).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>` : `<circle class="dr-hem" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.5"/>`; });
+    if (Q.vb) {
+      const ps = []; for (let r = 70; r <= 196; r += 7) ps.push(pt(s0 + 1.1 + 0.18 * Math.sin(r / 40), r));
+      h += `<path class="dr-vbl" d="M${ps.map(P).join('L')}"/>` + ps.map(([x, y], i) => `<circle class="dr-vb" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${i % 2 ? 2.1 : 3.9}"/>`).join('');
+    }
+    if (Q.irma) {
+      const [ix, iy] = pt(s0 + 2.0, 122), n = Q.irma === 2 ? 7 : 2;
+      for (let k = 0; k < n; k++) {
+        const ox = ix + (rnd() - 0.5) * (Q.irma === 2 ? 40 : 14), oy = iy + (rnd() - 0.5) * (Q.irma === 2 ? 40 : 14), ps = [];
+        for (let j = 0; j < 6; j++) ps.push([ox + j * 3.4, oy + (j % 2 ? 3.5 : -3.5) + (rnd() - 0.5) * 2]);
+        h += `<path class="dr-irma" d="M${ps.map(P).join('L')}"/>`;
+      }
+    }
+    if (Q.nve) { const [nx, ny] = pt(s0 + 1.6, 168); h += nvWheel(nx, ny, Q.nve === 2 ? 11 : 6, Q.nve === 2 ? 8 : 5, qi); }
+  });
+  if (D.nvd) h += nvWheel(cx, cy, D.nvd === 2 ? 12 : 7, D.nvd === 2 ? 9 : 4, 0.4);
+  if (D.vh) { const x0 = cx - 80, y0 = cy + 62; h += `<ellipse class="dr-haze" cx="${cx - 20}" cy="${cy + 150}" rx="210" ry="105"/><path class="dr-vh" d="M${x0} ${y0}H${x0 + 96}Q${x0 + 96} ${y0 + 38} ${x0 + 48} ${y0 + 44}Q${x0} ${y0 + 38} ${x0} ${y0}Z"/>`; }
+  return h;
+}
+function drSVG(o) {
+  const { eye, dr: D } = o, ts = tsign(eye), { cx, cy } = G, fx = cx + ts * 40;
+  let h = `<svg viewBox="20 14 660 672" role="img" aria-label="DR 眼底示意圖" class="${o.hit ? 'hitfig' : ''}" id="fsvg">
+    <circle class="c-fundus" cx="${cx}" cy="${cy}" r="${G.ora}"/>`;
+  if (o.selq) { const s0 = DQ_H[eye][o.selq]; h += `<path class="dr-sel" d="${sector(s0, s0 + 3, G.ora, 0)}"/>`; }
+  h += `<g class="deco"><circle class="c-mac" cx="${fx}" cy="${cy}" r="22" opacity=".55"/><circle class="c-mac" cx="${fx}" cy="${cy}" r="5"/>${vessels(eye)}<circle class="c-disc" cx="${cx}" cy="${cy}" r="13"/></g>
+    <g class="deco"${eye === 'L' ? ` transform="translate(${2 * cx} 0) scale(-1 1)"` : ''}>${drLesions(D)}</g>
+    <g class="deco"><circle class="c-eq" cx="${cx}" cy="${cy}" r="${G.eq}"/><circle class="c-ora" cx="${cx}" cy="${cy}" r="${G.ora}"/>
+    <line class="dr-ql" x1="${cx - G.ora}" y1="${cy}" x2="${cx + G.ora}" y2="${cy}"/><line class="dr-ql" x1="${cx}" y1="${cy - G.ora}" x2="${cx}" y2="${cy + G.ora}"/>`;
+  DQ.forEach(q => { const [x, y] = pt(DQ_H[eye][q] + 1.5, G.ora + 30); h += `<text class="dr-qt" x="${x.toFixed(1)}" y="${(y - 2).toFixed(1)}" text-anchor="middle">${q}</text><text class="dr-ct" x="${x.toFixed(1)}" y="${(y + 16).toFixed(1)}" text-anchor="middle">出血 ${D.q[q].h}</text>`; });
+  const tl = eye === 'R' ? 'TEMPORAL' : 'NASAL', tr = eye === 'R' ? 'NASAL' : 'TEMPORAL';
+  h += `<text class="eyetag" x="40" y="48">${eye === 'R' ? 'OD' : 'OS'}</text>
+    <text class="dir" x="${cx}" y="${cy - G.ora - 44}" text-anchor="middle">SUPERIOR</text><text class="dir" x="${cx}" y="${cy + G.ora + 56}" text-anchor="middle">INFERIOR</text>
+    <text class="dir" x="${cx - G.ora - 46}" y="${cy + 5}" text-anchor="middle" transform="rotate(-90 ${cx - G.ora - 46} ${cy})">${tl}</text>
+    <text class="dir" x="${cx + G.ora + 46}" y="${cy + 5}" text-anchor="middle" transform="rotate(90 ${cx + G.ora + 46} ${cy})">${tr}</text></g>
+    <g class="deco lab"><text x="${cx - ts * 18}" y="${cy + 32}" text-anchor="middle" class="in">Disc</text><text x="${fx}" y="${cy - 28}" text-anchor="middle" class="in">Fovea</text></g>`;
+  return h + `</svg>`;
+}
+
 /* ---------- app ---------- */
 const VIEWS = [
   { id: 'rd', name: '視網膜剝離', en: 'Lincoff rules', subs: [['shape', '看形狀找裂孔'], ['spread', '放裂孔看液體']] },
   { id: 'oct', name: 'OCT 黃斑病變', en: 'Macular OCT' },
-  { id: 'rop', name: 'ROP 分區與分期', en: 'ROP' }
+  { id: 'rop', name: 'ROP 分區與分期', en: 'ROP' },
+  { id: 'dr', name: 'DR 分級', en: 'Diabetic retinopathy' }
 ];
 const $ = q => document.querySelector(q);
 const st = { view: 'rd', sub: 'shape', eye: 'R', pre: null, v: 't', zone: true, labels: true, mode: 'learn', quiz: null, brk: null, t: 1,
   ocond: 'normal', aw: 1000, hw: 300, hv: true, omark: true, ohit: null,
-  rop: presetRop('z2s3', 'R'), rpre: 'z2s3', rcard: null, rzone: true };
+  rop: presetRop('z2s3', 'R'), rpre: 'z2s3', rcard: null, rzone: true,
+  dr: drMake(DRP.near.p), dpre: 'near', dq: 'ST', dcard: null };
 const store = (() => {
   const K = 'retinaAtlas.v1';
   let mem = { wrong: {} };
@@ -999,7 +1259,8 @@ const inQ = () => st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q';
 const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
 // 錯題的 key：分頁一是 rd:形狀_t或n_眼（例如 rd:st_n_L＝OS 的 superonasal RD）；
 // 分頁二是 oct:d:病變（選診斷）、oct:i:i3（IVTS 分級）、oct:f:srf（點液體）；
-// 分頁三是 rop:z:c4（看圖判 zone／stage）、rop:t:c7（ETROP 分型），c 後面是 RCASE 的題號
+// 分頁三是 rop:z:c4（看圖判 zone／stage）、rop:t:c7（ETROP 分型），c 後面是 RCASE 的題號；
+// 分頁四是 dr:g:g4（看圖選分級）、dr:r:g5（4-2-1 哪一條成立），g 後面是 DCASE 的題號；題型看第 4 個字元
 const RD_KEYS = PRE_ORDER.flatMap(id => (PRE[id].asym ? ['t', 'n'] : ['t']).flatMap(v => ['R', 'L'].map(e => `rd:${id}_${v}_${e}`)));
 const parseKey = k => { const [id, v, eye] = k.slice(3).split('_'); return { id, v, eye }; };
 const keyLabel = k => {
@@ -1007,17 +1268,18 @@ const keyLabel = k => {
   if (k.startsWith('oct:i:')) return `${ivLabel(IVC[k.slice(6)])}（IVTS 分級）`;
   if (k.startsWith('oct:f:')) return `${OC[k.slice(6)].zh}（點液體）`;
   if (k.startsWith('rop:')) return `${caseName(k.slice(6))}（${k[4] === 'z' ? '判 zone／stage' : 'ETROP 分型'}）`;
+  if (k.startsWith('dr:')) return `${drCaseName(k.slice(5))}（${k[3] === 'g' ? '選分級' : '4-2-1 哪一條'}）`;
   const { id, v, eye } = parseKey(k); return `${PRE[id].en(v)}（${eye === 'R' ? 'OD' : 'OS'}）`;
 };
-const keyValid = k => RD_KEYS.includes(k) || OCT_KEYS.includes(k) || ROP_KEYS.includes(k);
-const keyView = k => k.startsWith('oct:') ? 'oct' : k.startsWith('rop:') ? 'rop' : 'rd';
+const keyValid = k => RD_KEYS.includes(k) || OCT_KEYS.includes(k) || ROP_KEYS.includes(k) || DR_KEYS.includes(k);
+const keyView = k => k.startsWith('oct:') ? 'oct' : k.startsWith('rop:') ? 'rop' : k.startsWith('dr:') ? 'dr' : 'rd';
 const narrowFig = () => !!(window.matchMedia && window.matchMedia('(max-width: 560px)').matches);
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
   const V = VIEWS.find(v => v.id === st.view);
   $('#hintbar').innerHTML = st.mode === 'quiz' ? `<span class="hint">測驗中：標籤已隱藏${st.view === 'rd' ? '，在眼底圖上點出裂孔' : ''}</span>`
-    : !V.subs ? `<span class="hint">${st.view === 'rop' ? '點眼底上的扇形選病灶的鐘點；下方調位置、stage 與 plus' : '點 B-scan 上任一層看名稱；下方選病變'}</span>`
+    : !V.subs ? `<span class="hint">${st.view === 'rop' ? '點眼底上的扇形選病灶的鐘點；下方調位置、stage 與 plus' : st.view === 'dr' ? '點眼底上的象限，下方對應的那一格會亮起；在格子裡放出血、venous beading、IRMA 與新生血管' : '點 B-scan 上任一層看名稱；下方選病變'}</span>`
     : `<div class="seg" role="group" aria-label="圖">${V.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${st.sub === id}">${nm}</button>`).join('')}</div>`;
 }
 function renderTools() {
@@ -1029,6 +1291,7 @@ function renderTools() {
   if (st.mode !== 'quiz') {
     h = `<div class="seg" role="group" aria-label="眼別">${['R', 'L'].map(e => `<button type="button" data-eye="${e}" aria-pressed="${st.eye === e}">${e === 'R' ? 'OD' : 'OS'}</button>`).join('')}</div>`;
     if (st.view === 'rop') { $('#tools').innerHTML = h + `<label class="tog"><input type="checkbox" id="t-rzone" ${st.rzone ? 'checked' : ''}>分區線</label><label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
+    if (st.view === 'dr') { $('#tools').innerHTML = h + `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
     if (st.sub === 'shape' && st.pre && PRE[st.pre].asym) h += `<div class="seg" role="group" aria-label="側別">${[['t', 'Temporal'], ['n', 'Nasal']].map(([v, t]) => `<button type="button" data-v="${v}" aria-pressed="${st.v === v}">${t}</button>`).join('')}</div>`;
     if (st.sub === 'shape') h += `<label class="tog"><input type="checkbox" id="t-zone" ${st.zone ? 'checked' : ''}>預測範圍</label>`;
     h += `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
@@ -1067,9 +1330,16 @@ function ropFig() {
   const c5 = o.e.sn === 5 && o.rop.stage !== '5A' ? ' 5B／5C：retrolental 組織擋住視盤；5C 的前段變化在眼底圖上看不到。' : '';
   $('#cap').innerHTML = `<span>${it ? '正像眼底：上＝superior；視盤放中央，鐘點依檢查者看出去的方向。' : '正像眼底，視盤放中央：實線＝zone I、zone II 的外界，點線＝posterior zone II 的外界；點扇形選鐘點。'}${c5}</span><span class="ori">zone 的比例、病灶與血管為示意</span>`;
 }
+function drFig() {
+  const it = quizItem();
+  const fig = $('#fig'); fig.innerHTML = drSVG(it ? { eye: it.eye, dr: it.o } : { eye: st.eye, dr: st.dr, selq: st.dq, hit: true });
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.mode === 'quiz');
+  $('#cap').innerHTML = `<span>正像眼底，視盤放中央：虛線把眼底分成四個象限，每個象限旁標出血數。${it ? '' : '點象限可以選取，下方那一格會亮起。'}</span><span class="ori">象限切法、病灶位置與大小為示意</span>`;
+}
 function renderFig() {
   if (st.view === 'oct') { octFig(); return; }
   if (st.view === 'rop') { ropFig(); return; }
+  if (st.view === 'dr') { drFig(); return; }
   const fig = $('#fig');
   fig.innerHTML = renderFundus(figOpts());
   fig.classList.toggle('nolab', !st.labels);
@@ -1102,9 +1372,27 @@ function ropExtra() {
       <div class="rgrid" style="margin-top:10px">${P5.map(([v, nm]) => `<button type="button" class="rmini" data-rstage="${v}" aria-pressed="${o.stage !== '0' && o.stage[0] === v[0]}"><svg viewBox="0 0 114 92" aria-hidden="true">${miniStage(+v[0])}</svg><span>${v[0]} · ${nm}</span></button>`).join('')}</div></div>
     <div style="margin-top:14px"><div class="xh">Plus${s('S10')}</div><div class="rgrid p3">${['Normal', 'Pre-plus', 'Plus'].map((nm, lv) => `<button type="button" class="rmini" data-rplus="${lv}" aria-pressed="${o.plus === lv}"><svg viewBox="${G.cx - 112} ${G.cy - 112} 224 224" aria-hidden="true"><circle class="c-fundus" cx="${G.cx}" cy="${G.cy}" r="110"/>${RVES.map(([h0, k]) => ropVessel(h0, k, 106, lv)).join('')}<circle class="c-disc" cx="${G.cx}" cy="${G.cy}" r="12"/></svg><span>${nm}</span></button>`).join('')}</div></div>`;
 }
+function drExtra() {
+  if (st.mode === 'quiz') return '';
+  const D = st.dr, sg = (attr, val, on, t) => `<button type="button" ${attr}="${val}" aria-pressed="${on}">${t}</button>`;
+  const rows = DQ.map(q => { const Q = D.q[q]; return `<div class="dr-row ${st.dq === q ? 'on' : ''}" data-dq="${q}"><div class="t" data-dqt="${q}"><span>${q}</span><i>${DQ_EN[q]}</i></div>
+      <div class="ln">出血 <input type="range" id="dh-${q}" min="0" max="30" step="1" value="${Q.h}" aria-label="${DQ_EN[q]} 的出血數"><b id="dhv-${q}">${Q.h}</b></div>
+      <div class="ln"><label class="tog"><input type="checkbox" id="dvb-${q}" ${Q.vb ? 'checked' : ''}>Venous beading</label></div>
+      <div class="ln">IRMA <div class="seg">${[[0, '無'], [1, '輕微'], [2, 'Prominent']].map(([v, t]) => sg('data-dirma', `${q}:${v}`, Q.irma === v, t)).join('')}</div></div>
+      <div class="ln">NVE <div class="seg">${[[0, '無'], [1, '< ½ DA'], [2, '≥ ½ DA']].map(([v, t]) => sg('data-dnve', `${q}:${v}`, Q.nve === v, t)).join('')}</div></div></div>`; }).join('');
+  const all = `<div class="dr-row all"><div class="t"><span>全眼</span><i>Whole eye</i></div>
+      <div class="ln"><label class="tog"><input type="checkbox" id="d-ma" ${D.ma ? 'checked' : ''}>Microaneurysms</label><label class="tog"><input type="checkbox" id="d-vh" ${D.vh ? 'checked' : ''}>玻璃體／視網膜前出血</label></div>
+      <div class="ln">NVD <div class="seg">${[[0, '無'], [1, '< ¼–⅓ DA'], [2, '≥ ¼–⅓ DA']].map(([v, t]) => sg('data-dnvd', v, D.nvd === v, t)).join('')}</div></div>
+      <div class="ln">DME <div class="seg">${['no', 'nci', 'ci'].map(v => sg('data-ddme', v, D.dme === v, DME_ZH[v])).join('')}</div></div></div>`;
+  const legend = `<div class="legend" style="flex-direction:row;flex-wrap:wrap;gap:6px 16px">
+      <span><i class="sw" style="background:var(--t-break)"></i>出血、microaneurysm</span><span><i class="sw" style="background:var(--t-vessel)"></i>venous beading、IRMA</span>
+      <span><i class="sw" style="background:var(--dr-nv)"></i>新生血管</span><span><i class="sw" style="background:var(--dr-vh)"></i>玻璃體／視網膜前出血</span></div>`;
+  return `<div class="xh">每個象限的病灶${s('S16')}</div><div class="dr-grid">${rows}${all}</div><div style="margin-top:12px">${legend}</div>`;
+}
 function renderExtra() {
   if (st.view === 'oct') { $('#extra').innerHTML = octExtra(); return; }
   if (st.view === 'rop') { $('#extra').innerHTML = ropExtra(); return; }
+  if (st.view === 'dr') { $('#extra').innerHTML = drExtra(); return; }
   if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
   const legend = `<div><div class="xh">圖例</div><div class="legend">
       <span><i class="sw" style="background:var(--rd)"></i>剝離的視網膜（皺摺線＝bullous）</span>
@@ -1133,6 +1421,13 @@ function renderIndex() {
     ix.hidden = false;
     ix.innerHTML = `<span class="lbl">例子（${RPRE_ORDER.length}）</span>` + RPRE_ORDER.map(id => `<button type="button" class="chip ${id === st.rpre ? 'on' : ''}" data-rpre="${id}">${RPRE[id].zh} <i>${ropShort(ropEval(presetRop(id, st.eye), st.eye))}</i></button>`).join('')
       + `<span class="lbl" style="margin-top:6px">說明卡（${ROPC_ORDER.length}）</span>` + ROPC_ORDER.map(id => `<button type="button" class="chip ${id === st.rcard ? 'on' : ''}" data-rcard="${id}">${ROPC[id].zh} <i>${ROPC[id].en}</i></button>`).join('');
+    return;
+  }
+  if (st.view === 'dr') {
+    if (st.mode === 'quiz') { ix.hidden = true; return; }
+    ix.hidden = false;
+    ix.innerHTML = `<span class="lbl">例子（${DRP_ORDER.length}）</span>` + DRP_ORDER.map(id => `<button type="button" class="chip ${id === st.dpre ? 'on' : ''}" data-dpre="${id}">${DRP[id].zh} <i>${drShort(drEval(drMake(DRP[id].p)))}</i></button>`).join('')
+      + `<span class="lbl" style="margin-top:6px">說明卡（${DRC_ORDER.length}）</span>` + DRC_ORDER.map(id => `<button type="button" class="chip ${id === st.dcard ? 'on' : ''}" data-dcard="${id}">${DRC[id].zh} <i>${DRC[id].en}</i></button>`).join('');
     return;
   }
   if (st.mode === 'quiz' || st.sub !== 'shape') { ix.hidden = true; return; }
@@ -1177,6 +1472,7 @@ function renderPanel() {
   if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
   if (st.view === 'oct') { p.innerHTML = octCard(); return; }
   if (st.view === 'rop') { p.innerHTML = st.rcard ? ropConceptCard(st.rcard) : ropCardHTML(st.rop, st.eye); return; }
+  if (st.view === 'dr') { p.innerHTML = st.dcard ? drConceptCard(st.dcard) : drCardHTML(st.dr, st.eye); return; }
   if (st.sub === 'spread') { p.innerHTML = spreadCard(); return; }
   p.innerHTML = st.pre ? preCard() : `<div class="empty-card"><div class="eyebrow">視網膜剝離 · Lincoff rules</div>
     <p>Lincoff 與 Gieser 在 1971 年分析 1,000 例 rhegmatogenous RD，發現剝離依重力擴散，可以從剝離的形狀回推 primary break 的位置${s('S1', 'S4')}。</p>
@@ -1191,6 +1487,7 @@ function renderSelbar() {
   if (st.mode === 'learn') {
     if (st.view === 'oct') { if (st.ocond !== 'normal') t = `病變：${OC[st.ocond].zh}`; }
     else if (st.view === 'rop') t = st.rcard ? `說明卡：${ROPC[st.rcard].zh}` : `判讀：${ropShort(ropEval(st.rop, st.eye))}`;
+    else if (st.view === 'dr') t = st.dcard ? `說明卡：${DRC[st.dcard].zh}` : `分級：${drShort(drEval(st.dr))}`;
     else if (st.sub === 'shape' && st.pre) t = `形狀：${PRE[st.pre].zh(st.v)}`;
     else if (st.sub === 'spread' && st.brk != null) t = `裂孔：${hh(st.brk)} 點`;
   }
@@ -1228,9 +1525,25 @@ function playSpread() {
    分頁二：dx 看 B-scan 選診斷、ivts 依量好的數字分級、fluid 在圖上點液體 */
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: st.view === 'rd' ? 'break' : 'mix', total: 10 });
-const QT = { rd: [['break', '點出裂孔']], oct: [['dx', '看 B-scan 選診斷'], ['ivts', 'IVTS 分級'], ['fluid', '點出液體']], rop: [['zs', '看圖判 zone 與 stage'], ['type', '判斷要不要治療']] };
-const QH = { rd: '裂孔在哪裡？', oct: '這是什麼病變？', rop: 'ROP 怎麼分、要不要治療？' };
-const QTYPE_ZH = { break: '找裂孔', dx: '選診斷', ivts: 'IVTS 分級', fluid: '點液體', zs: '判 zone／stage', type: 'ETROP 分型' };
+const QT = { rd: [['break', '點出裂孔']], oct: [['dx', '看 B-scan 選診斷'], ['ivts', 'IVTS 分級'], ['fluid', '點出液體']], rop: [['zs', '看圖判 zone 與 stage'], ['type', '判斷要不要治療']], dr: [['grade', '看圖選分級'], ['rule', '4-2-1 哪一條成立']] };
+const QH = { rd: '裂孔在哪裡？', oct: '這是什麼病變？', rop: 'ROP 怎麼分、要不要治療？', dr: 'DR 是哪一級？' };
+const QTYPE_ZH = { break: '找裂孔', dx: '選診斷', ivts: 'IVTS 分級', fluid: '點液體', zs: '判 zone／stage', type: 'ETROP 分型', grade: '選分級', rule: '4-2-1 哪一條' };
+const drType = k => k[3] === 'g' ? 'grade' : 'rule';
+function drItem(key) {
+  const type = drType(key), c = key.slice(5), eye = Math.random() < 0.5 ? 'R' : 'L', o = drMake(DCASE[c]), e = drEval(o);
+  return type === 'grade' ? { key, type, c, eye, o, ans: e.lv, opts: DR_ORDER.slice() } : { key, type, c, eye, o, ans: drRuleAns(e), opts: Object.keys(R_OPT) };
+}
+function drQuizBody(it, q) {
+  const e = drEval(it.o), lab = x => it.type === 'grade' ? G_OPT[x] : R_OPT[x];
+  const optBtn = x => `<button type="button" class="opt ${q.ans ? (x === it.ans ? 'ok' : (q.ans.pick === x ? 'bad' : '')) : ''}" data-opt="${x}" ${q.ans ? 'disabled' : ''}>${lab(x)}</button>`;
+  let h = `<div class="prompt"><div class="k">${EYEZH[it.eye]}：圖上標了每個象限的出血數；${nvDesc(it.o)}</div><div class="q">${it.type === 'grade' ? '依 ICDR，這是哪一級？' : '4-2-1 的哪一條成立？'}</div></div><div class="opts">${it.opts.map(optBtn).join('')}</div>`;
+  if (q.ans) {
+    const pk = q.ans.pick ? lab(q.ans.pick) : '';
+    const more = it.type === 'grade' ? drWhy(e, it.o).join('；') : `出血 > 20：${e.nHem}／4 個象限；venous beading：${e.nVB} 個象限；prominent IRMA：${e.nIRMA} 個象限${s('S16')}`;
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && pk ? ` 你選的是 ${pk}；` : ' '}答案是 ${lab(it.ans)}${it.type === 'grade' && e.vsev ? '（very severe NPDR 在 ICDR 仍歸 severe）' : ''}。<br>${more}</div>`;
+  }
+  return h;
+}
 const ropType = k => k[4] === 'z' ? 'zs' : 'type';
 function ropItem(key) {
   const type = ropType(key), c = key.slice(6), C = RCASE[c], zm = zMain(C.z), eye = Math.random() < 0.5 ? 'R' : 'L', o = caseRop(c, eye);
@@ -1294,6 +1607,7 @@ function quizHTML() {
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
       <p style="margin:0;font-size:13px;color:var(--muted)">${st.view === 'rd' ? '每題給一個剝離範圍（OD 或 OS），在眼底圖上點出最可能的 primary break；點在 Lincoff rules 的預測範圍內就算對。'
+        : st.view === 'dr' ? '兩種題型：看眼底示意圖選 ICDR 分級（新生血管大小與玻璃體出血用文字給）；看圖選出 4-2-1 成立的是哪一條。圖上會標每個象限的出血數，venous beading 與 IRMA 要自己從圖上認。每題隨機用 OD 或 OS。'
         : st.view === 'rop' ? '兩種題型：看眼底示意圖判斷 zone 與 stage（分區線先隱藏，作答後顯示；posterior zone II 算 zone II）；給 zone、stage、範圍與 plus，依 ETROP 判斷 Type 1、Type 2 或兩型都不是。每題隨機用 OD 或 OS。'
         : '三種題型：看 B-scan 選診斷；依 IVTS 分出 macular hole 的大小與有沒有 VMT、VMA／VMT 是 focal 還是 broad（圖上會給量好的數字）；在圖上點出液體。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
@@ -1306,7 +1620,7 @@ function quizHTML() {
   const it = q.items[q.i];
   let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
   if (it.type !== 'break') {
-    h += it.type === 'zs' || it.type === 'type' ? ropQuizBody(it, q) : octQuizBody(it, q);
+    h += it.type === 'zs' || it.type === 'type' ? ropQuizBody(it, q) : it.type === 'grade' || it.type === 'rule' ? drQuizBody(it, q) : octQuizBody(it, q);
     h += q.ans ? `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>` : `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
     return h + `</div>`;
   }
@@ -1319,15 +1633,16 @@ function quizHTML() {
   return h + `</div>`;
 }
 function startQuiz(cfg) {
-  const w = store.get().wrong, oct = st.view === 'oct', rop = st.view === 'rop';
-  const types = oct || rop ? (cfg.type === 'mix' ? QT[st.view].map(x => x[0]) : [cfg.type]) : ['break'];
-  let pool = oct ? OCT_KEYS.filter(k => types.includes({ d: 'dx', i: 'ivts', f: 'fluid' }[k[4]])) : rop ? ROP_KEYS.filter(k => types.includes(ropType(k))) : RD_KEYS.slice();
+  const w = store.get().wrong, oct = st.view === 'oct', rop = st.view === 'rop', dr = st.view === 'dr';
+  const types = oct || rop || dr ? (cfg.type === 'mix' ? QT[st.view].map(x => x[0]) : [cfg.type]) : ['break'];
+  let pool = oct ? OCT_KEYS.filter(k => types.includes({ d: 'dx', i: 'ivts', f: 'fluid' }[k[4]])) : rop ? ROP_KEYS.filter(k => types.includes(ropType(k)))
+    : dr ? DR_KEYS.filter(k => types.includes(drType(k))) : RD_KEYS.slice();
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
   while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
   keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
-  const items = keys.map(key => oct ? octItem(key) : rop ? ropItem(key) : Object.assign({ key, type: 'break' }, parseKey(key)));
+  const items = keys.map(key => oct ? octItem(key) : rop ? ropItem(key) : dr ? drItem(key) : Object.assign({ key, type: 'break' }, parseKey(key)));
   st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
   stopAnim(); render();
 }
@@ -1360,6 +1675,7 @@ function goKey(k) {
     render(); return;
   }
   if (k.startsWith('rop:')) { setView('rop'); st.eye = 'R'; st.rop = caseRop(k.slice(6), 'R'); st.rpre = null; st.rcard = null; render(); return; }
+  if (k.startsWith('dr:')) { setView('dr'); st.eye = 'R'; st.dr = drMake(DCASE[k.slice(5)]); st.dpre = null; st.dcard = null; render(); return; }
   setView('rd'); const { id, v, eye } = parseKey(k); st.sub = 'shape'; st.pre = id; st.v = v; st.eye = eye; render();
 }
 
@@ -1403,9 +1719,16 @@ function ropClick(ev) {
   if (o.stage === '0' && o.hrs.length) o.stage = '1';
   st.rpre = null; st.rcard = null; render();
 }
+// DR：選一個象限，下方那一格亮起（只換外框，不重畫格子，才不會打斷正在拖的拉條）
+function drSetQ(q) {
+  st.dq = q;
+  document.querySelectorAll('.dr-row[data-dq]').forEach(r => r.classList.toggle('on', r.dataset.dq === q));
+  renderFig();
+}
 $('#fig').addEventListener('click', e => {
   if (st.view === 'oct') { octClick(e); return; }
   if (st.view === 'rop') { ropClick(e); return; }
+  if (st.view === 'dr') { if (st.mode === 'quiz') return; const p = figPoint(e); if (p && p.r <= G.ora) drSetQ(quadOf(p.h, st.eye)); return; }
   const p = figPoint(e); if (!p || p.r > G.ora + 20) return;
   if (st.mode === 'quiz') {
     const it = quizItem(); if (!it || st.quiz.ans) return;
@@ -1434,6 +1757,14 @@ document.addEventListener('click', e => {
   const rsg = t.closest('[data-rstage]'); if (rsg) { st.rop.stage = rsg.dataset.rstage; st.rpre = null; st.rcard = null; render(); return; }
   const rpl = t.closest('[data-rplus]'); if (rpl) { st.rop.plus = +rpl.dataset.rplus; st.rpre = null; st.rcard = null; render(); return; }
   if (t.closest('#r-clear')) { st.rop.hrs = []; st.rpre = null; st.rcard = null; render(); return; }
+  const dp = t.closest('[data-dpre]'); if (dp) { st.dpre = dp.dataset.dpre; st.dr = drMake(DRP[st.dpre].p); st.dcard = null; render(); return; }
+  const dc = t.closest('[data-dcard]'); if (dc) { st.dcard = dc.dataset.dcard || null; render(); if (narrowFig() && st.dcard) try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const dsg = t.closest('[data-dirma], [data-dnve], [data-dnvd], [data-ddme]'); if (dsg) {
+    const d = dsg.dataset, [q, v] = (d.dirma || d.dnve || '').split(':');
+    if (d.dirma) { st.dr.q[q].irma = +v; st.dq = q; } else if (d.dnve) { st.dr.q[q].nve = +v; st.dq = q; } else if (d.dnvd) st.dr.nvd = +d.dnvd; else st.dr.dme = d.ddme;
+    st.dpre = null; st.dcard = null; render(); return;
+  }
+  const dqt = t.closest('[data-dqt]'); if (dqt) { drSetQ(dqt.dataset.dqt); return; }
   if (t.closest('#sp-play')) { if (st.brk != null) playSpread(); return; }
   if (t.closest('#sp-end')) { stopAnim(); st.t = 1; render(); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
@@ -1450,6 +1781,11 @@ document.addEventListener('change', e => {
   if (e.target.id === 'o-hv') { st.hv = e.target.checked; renderFig(); renderPanel(); }
   if (e.target.id === 't-rzone') { st.rzone = e.target.checked; renderFig(); }
   if (e.target.id === 'r-notch' || e.target.id === 'r-arop') { st.rop[e.target.id === 'r-notch' ? 'notch' : 'arop'] = e.target.checked; st.rpre = null; st.rcard = null; render(); }
+  const id = e.target.id || '';
+  if (id.startsWith('dvb-') || id === 'd-ma' || id === 'd-vh') {
+    if (id.startsWith('dvb-')) { st.dq = id.slice(4); st.dr.q[st.dq].vb = e.target.checked; } else st.dr[id === 'd-ma' ? 'ma' : 'vh'] = e.target.checked;
+    st.dpre = null; st.dcard = null; render();
+  }
 });
 // 拖拉條：只重畫圖與說明卡，不重畫拖拉條本身（才不會中斷拖拉）
 document.addEventListener('input', e => {
@@ -1460,6 +1796,12 @@ document.addEventListener('input', e => {
     const ev = ropEval(st.rop, st.eye), nb = $('#r-notch');
     $('#r-posv').textContent = ropPosText(st.rop, ev);
     if (nb) { nb.disabled = !ev.canNotch; nb.checked = ev.notch; }
+    renderIndex();
+  }
+  else if (e.target.id.startsWith('dh-')) {
+    const q = e.target.id.slice(3); st.dr.q[q].h = +e.target.value; st.dpre = null; st.dcard = null;
+    $('#dhv-' + q).textContent = st.dr.q[q].h;
+    st.dq = q; document.querySelectorAll('.dr-row[data-dq]').forEach(r => r.classList.toggle('on', r.dataset.dq === q));
     renderIndex();
   }
   else return;
@@ -1542,10 +1884,36 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   const supOK = html => { const used = [...html.matchAll(/<sup class="s">(\d+)<\/sup>/g)].map(m => m[1]), listed = [...html.matchAll(/<li>(\d+)\. /g)].map(m => m[1]); return used.every(x => listed.includes(x)); };
   a(ROPC_ORDER.every(id => supOK(ropConceptCard(id))) && RPRE_ORDER.every(id => ['R', 'L'].every(eye => supOK(ropCardHTML(presetRop(id, eye), eye)))), 'ROP 卡片的上標都列在來源清單');
   a(Object.keys(RCASE).every(c => [0, 1, 2].every(p => supOK(ropCardHTML(Object.assign(caseRop(c, 'R'), { plus: p }), 'R')))), 'ROP 判讀卡（各題目設定）的上標都列在來源清單');
+  // 分頁四：DR 的象限、ICDR 分級、4-2-1（國際版）、DRS high-risk、PPP Table 5
+  a(quadOf(10.5, 'R') === 'ST' && sideWord(10.5, 'R') === 'temporal' && quadOf(1.5, 'L') === 'ST' && sideWord(1.5, 'L') === 'temporal' && quadOf(1.5, 'R') === 'SN' && quadOf(7.5, 'R') === 'IT' && quadOf(4.5, 'L') === 'IT' && quadOf(4.5, 'R') === 'IN', '象限：OD 的 ST 在 9–12 點、OS 的 ST 在 12–3 點');
+  const dE = p => drEval(drMake(p)), all21 = { ST: [21], SN: [21], IT: [21], IN: [21] };
+  a(dE({}).lv === 'none' && dE({ ma: 1 }).lv === 'mild' && dE({ q: { ST: [1] } }).lv === 'mod' && dE({ q: { IT: [0, 1] } }).lv === 'mod' && dE({ q: { IT: [0, 0, 1] } }).lv === 'mod', 'ICDR：只有 microaneurysm 是 mild，任何出血、VB、IRMA 就是 moderate');
+  a(dE({ q: all21 }).lv === 'sev' && dE({ q: { ST: [21], SN: [21], IT: [21], IN: [20] } }).lv === 'mod' && dE({ q: { ST: [30], SN: [30], IT: [30] } }).lv === 'mod', '4：四個象限都要 > 20（剛好 20 不算）');
+  a(dE({ q: { ST: [0, 1], IN: [0, 1] } }).lv === 'sev' && dE({ q: { ST: [0, 1] } }).lv === 'mod', '2：venous beading 要 2 個象限');
+  a(dE({ q: { SN: [0, 0, 2] } }).lv === 'sev' && dE({ q: { SN: [0, 0, 1], ST: [0, 0, 1], IT: [0, 0, 1], IN: [0, 0, 1] } }).lv === 'mod', '1：IRMA 要 prominent，輕微的不算');
+  a(dE({ q: { ...all21, ST: [21, 1], IT: [21, 1] } }).vsev && !dE({ q: all21 }).vsev, 'very severe：兩條以上');
+  a(dE({ q: all21, vh: 1 }).lv === 'pdr' && !dE({ q: all21, vh: 1 }).vsev, '有 PDR 徵象就不再分 severe NPDR');
+  // DRS：四項中有三項 ⇔ 臨床常用的三種組合（大 NVD、任何 NVD＋出血、大 NVE＋出血）
+  a(dE({ nvd: 2 }).lv === 'hr' && dE({ nvd: 1, vh: 1 }).lv === 'hr' && dE({ vh: 1, q: { ST: [0, 0, 0, 2] } }).lv === 'hr', 'high-risk：大 NVD、任何 NVD＋出血、大 NVE＋出血');
+  a(dE({ nvd: 1 }).lv === 'pdr' && dE({ q: { ST: [0, 0, 0, 2] } }).lv === 'pdr' && dE({ vh: 1, q: { ST: [0, 0, 0, 1] } }).lv === 'pdr' && dE({ vh: 1 }).lv === 'pdr', 'non-high-risk：小 NVD、只有大 NVE、小 NVE＋出血、只有出血');
+  a(T5.mod.no.join() === '6–12‡,No,No,No' && T5.mod.nci[3] === 'Rarely' && T5.mild.nci.join() === '3–6,No,Sometimes,No' && T5.sev.ci.join() === '1*,Sometimes,Rarely,Usually' && T5.pdr.ci[2] === 'Sometimes' && T5.hr.no.join() === '2–4,Recommended,No,Sometimes' && T5.hr.ci[3] === 'Usually', 'PPP Table 5 抽查');
+  a(DR_ORDER.every(l => T5[l].no) && DR_ORDER.filter(l => l !== 'none').every(l => T5[l].nci && T5[l].ci), '每一級都有處置');
+  const DW = { none: 'none', mild: 'mild', mod: 'mod', near: 'mod', s4: 'sev', s2: 'sev', s1: 'sev', vs: 'sev', nve: 'pdr', nvdL: 'hr', nvdV: 'hr', nveV: 'pdr', dme: 'mod' };
+  DRP_ORDER.forEach(id => a(drEval(drMake(DRP[id].p)).lv === DW[id], `例子 ${id} 應是 ${DW[id]}`));
+  a(drEval(drMake(DRP.vs.p)).vsev && !drEval(drMake(DRP.near.p)).vsev, '例子：兩條都成立是 very severe、差一點還是 moderate');
+  const GW = { g1: 'mild', g2: 'mod', g3: 'mod', g4: 'sev', g5: 'sev', g6: 'sev', g7: 'sev', g8: 'pdr', g9: 'hr', g10: 'hr', g11: 'pdr', g12: 'hr', g13: 'none', g14: 'mod' };
+  Object.keys(DCASE).forEach(c => a(drEval(drMake(DCASE[c])).lv === GW[c], `題目 ${c} 應是 ${GW[c]}`));
+  a(DR_RCASES.every(c => !drEval(drMake(DCASE[c])).pdr) && new Set(DR_RCASES.map(c => drRuleAns(drEval(drMake(DCASE[c]))))).size === 5, '4-2-1 題只用 NPDR，五個答案都有出現');
+  DR_KEYS.forEach(k => { const it = drItem(k); a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && keyValid(k) && keyView(k) === 'dr', `${k} 的選項`); });
+  // 畫圖：畫出來的出血點數＝設定的數字；OS 是 OD 的鏡像（病灶整組翻轉）
+  const svgR = drSVG({ eye: 'R', dr: drMake(DRP.s4.p) }), svgL = drSVG({ eye: 'L', dr: drMake(DRP.s4.p) });
+  a((svgR.match(/class="dr-hem"/g) || []).length === 24 + 22 + 26 + 23 && (svgR.match(/class="dr-hem ma"/g) || []).length === DMA.length && /scale\(-1 1\)/.test(svgL) && !/scale\(-1 1\)/.test(svgR), '出血點數與 OS 鏡射');
+  a(DRC_ORDER.every(id => supOK(drConceptCard(id))) && [...DRP_ORDER.map(id => drMake(DRP[id].p)), ...Object.values(DCASE).map(drMake)].every(o => ['no', 'nci', 'ci'].every(d => supOK(drCardHTML(Object.assign(drCopy(o), { dme: d }), 'R')))), 'DR 卡片的上標都列在來源清單');
 })();
 
 if (location.hash === '#oct') st.view = 'oct';
 else if (location.hash === '#rop') st.view = 'rop';
+else if (location.hash === '#dr') st.view = 'dr';
 render();
 </script>
 
