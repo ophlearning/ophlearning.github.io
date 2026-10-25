@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>視網膜互動圖譜</title>
+<meta name="description" content="互動式視網膜：看視網膜剝離的形狀，用 Lincoff rules 找 primary break；在眼底圖放裂孔，看視網膜下液怎麼依重力擴散，附測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as neuro-ophth — figure stage on the left, card on the right; fundus is drawn upright like a fundus photo */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --hl:#0A6FD8; --hl-soft:rgba(10,111,216,.2); --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-fundus:#EDB18C; --t-fundus-2:#DD9772; --t-disc:#F8E3B8; --t-vessel:#B04530; --t-break:#9E1424;
+  --rd:#F1F4FA; --rd-edge:rgba(52,60,92,.6);
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78;
+  --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.24); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78;
+  --rd:#C9CFDD; --rd-edge:rgba(236,240,252,.7); color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:560px;max-height:calc(100vh - 150px)}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip i{font-family:var(--f-display);font-size:12.5px}
+
+/* figure */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+.deco{pointer-events:none}
+.deco text{font-family:var(--f-body);font-size:13px;fill:var(--muted)}
+.lab text{font-size:15px;paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.lab text.in{fill:var(--ink);stroke:var(--t-fundus)}
+.nolab .lab,.quiz-on .lab{display:none}
+.clk{font-family:var(--f-mono)!important;font-size:15px;fill:var(--ink-2)!important}
+.dir{font-family:var(--f-body)!important;font-size:13px;letter-spacing:.06em;fill:var(--muted)!important}
+.eyetag{font-family:var(--f-mono)!important;font-size:17px;font-weight:500;fill:var(--accent)!important}
+.c-fundus{fill:var(--t-fundus)}
+.c-ora{fill:none;stroke:var(--t-stroke);stroke-width:1.4}
+.c-eq{fill:none;stroke:var(--t-stroke-2);stroke-width:1.2;stroke-dasharray:4 6}
+.c-tick{stroke:var(--t-stroke-2);stroke-width:1}
+.c-mac{fill:var(--t-fundus-2)}
+.c-disc{fill:var(--t-disc);stroke:var(--t-stroke-2);stroke-width:1}
+.c-ves{fill:none;stroke:var(--t-vessel);stroke-width:3;stroke-linecap:round;opacity:.85}
+.c-ves.thin{stroke-width:2}
+.rd{fill:var(--rd);fill-opacity:.72;stroke:var(--rd-edge);stroke-width:1.8;stroke-linejoin:round}
+.rd.shallow{fill-opacity:.5}
+.fold{fill:none;stroke:var(--rd-edge);stroke-width:1.3;opacity:.7}
+.zone{fill:var(--hl-soft);stroke:var(--hl);stroke-width:2.2;stroke-dasharray:7 5}
+.zone.tri{stroke-dasharray:none}
+.zone.alt{fill:none}
+.brk{fill:var(--t-break);stroke:var(--surface);stroke-width:1.5}
+.pick{fill:none;stroke-width:3}
+.pick.ok{stroke:var(--ok)}.pick.bad{stroke:var(--bad)}
+.hitfig{cursor:crosshair}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.rel{display:flex;flex-wrap:wrap;gap:6px}
+.empty-card{padding:22px 22px 24px;color:var(--ink-2);font-size:14.5px;display:flex;flex-direction:column;gap:10px}
+.empty-card p{margin:0}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--ok-soft)}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.xrow{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-start}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.legend span{display:flex;align-items:center;gap:8px}
+.sw{width:14px;height:14px;border-radius:3px;flex:none;border:1px solid var(--t-stroke)}
+.rstat{margin:10px 0 0;font-size:14px;color:var(--ink);min-height:1.5em}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} .fig svg{max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .fig svg{min-width:0}
+  .lab text{font-size:21px;stroke-width:4.5px}
+  .deco text{font-size:18px}
+  .clk{font-size:22px}
+  .dir{font-size:18px}
+  .eyetag{font-size:24px}
+  .seg button{padding:5px 10px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>視網膜互動圖譜</h1>
+      <span class="sub">Retina · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>眼底示意圖畫成正像，同眼底照片：上＝superior，OD 的視盤在右、OS 的視盤在左；鐘點依檢查者看出去的方向標示。為了看清周邊，視盤放在圖的正中央，從後極到 ora serrata 的距離不按比例。剝離範圍、隆起高度與液體擴散的速度只是示意。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- sources ---------- */
+const SRC = {
+  S1: { t: 'Lincoff H, Gieser R. Finding the retinal hole. Arch Ophthalmol 1971;85:565–569（原文付費、沒有摘要；本頁的規則依 2–5 的轉述）', u: 'https://doi.org/10.1001/archopht.1971.00990050567007' },
+  S2: { t: 'Chiam NPY, Ting DSW, Lee SY, Ang CL. Rhegmatogenous Retinal Detachment: Features, Part 1. EyeNet Ophthalmic Pearls, AAO, 2018 Dec', u: 'https://www.aao.org/eyenet/article/rhegmatogenous-retinal-detachment-features-part-1' },
+  S3: { t: 'EURETINA：Retinal Detachment – Lincoff Rules（教學單張：Rules to Find the Primary Break）', u: 'https://euretina.org/wp-content/uploads/2020/12/Retinal-Detachment-Lincoff-Rules-WEB.pdf' },
+  S4: { t: 'Yoshida I, Shiba T, Hori Y, Maeno T. Relationships between retinal break locations and the shapes of the detachments. Clin Ophthalmol 2018;12:2213–2222', u: 'https://doi.org/10.2147/OPTH.S177594' },
+  S5: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), 16.5 Rhegmatogenous Retinal Detachment（Identification of retinal breaks、Symptoms）', u: null }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+
+/* ---------- fundus geometry ----------
+   鐘點 h：0／12 在上，順時針；3 點在圖右。正像眼底：上＝superior。
+   OD 的 temporal 在圖左（9 點那側）、OS 的 temporal 在圖右。
+   剝離範圍用 [e1, e2] 表示：從 e1 順時針走到 e2，e2 可以大於 12 */
+const G = { cx: 350, cy: 350, ora: 270, eq: 172, brk: 222 };
+const RAD = Math.PI / 6;
+const pt = (h, r) => [G.cx + r * Math.sin(h * RAD), G.cy - r * Math.cos(h * RAD)];
+const P = ([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`;
+const height = h => Math.cos(h * RAD);                       // 越大越上面
+const norm = h => ((h % 12) + 12) % 12;
+const inRange = ([a, b], h) => b - a >= 12 - 1e-9 || norm(h - a) <= b - a + 1e-9;
+const mirrorH = h => norm(12 - h);
+const mirrorR = ([a, b]) => { const n = 12 - b; const a2 = norm(n); return [a2, a2 + (b - a)]; };
+const clockOf = (x, y) => norm(Math.atan2(x - G.cx, G.cy - y) / RAD);
+const hh = h => { h = norm(h); let H = Math.floor(h + 1e-6), m = Math.round((h - H) * 60); if (m === 60) { H++; m = 0; } if (H === 0) H = 12; return m ? `${H}:${String(m).padStart(2, '0')}` : `${H}`; };
+// 圖上那一側是 temporal 還是 nasal：OD 的圖左是 temporal
+const sideWord = (h, eye) => { const right = Math.sin(h * RAD) > 0.01, left = Math.sin(h * RAD) < -0.01; if (!right && !left) return ''; return (right === (eye === 'L')) ? 'temporal' : 'nasal'; };
+
+function arcPts(a, b, r, step = 0.1) {
+  const out = [], n = Math.max(2, Math.ceil(Math.abs(b - a) / step));
+  for (let i = 0; i <= n; i++) out.push(pt(a + (b - a) * i / n, r));
+  return out;
+}
+// 環狀扇形：從 a 順時針到 b，外半徑 ro、內半徑 ri；整圈時畫成整個圓（內緣 ri 為 0）或環
+function sector(a, b, ro, ri) {
+  if (b - a >= 12 - 1e-6) {
+    const c = r => `M${G.cx - r} ${G.cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0Z`;
+    return ri > 0 ? c(ro) + c(ri) : c(ro);
+  }
+  const o = arcPts(a, b, ro), i = ri > 0 ? arcPts(b, a, ri) : [[G.cx, G.cy]];
+  return 'M' + o.map(P).join('L') + 'L' + i.map(P).join('L') + 'Z';
+}
+function wavy(a, b, r, amp) {
+  const n = Math.max(6, Math.ceil((b - a) / 0.08));
+  const ps = []; for (let i = 0; i <= n; i++) { const h = a + (b - a) * i / n; ps.push(pt(h, r + amp * Math.sin(i * 1.3))); }
+  return 'M' + ps.map(P).join('L');
+}
+
+/* ---------- Lincoff rules：從剝離形狀推預測範圍 ----------
+   回傳 { rule, a, b }：裂孔預測在 a 到 b 鐘點（順時針）；rule 2 另畫三角形 */
+function zoneOf(range, bullousInf) {
+  const [e1, e2] = range;
+  if (bullousInf) return { rule: 4, a: 9, b: 15 };
+  if (inRange(range, 0)) return { rule: 2, a: 10.5, b: 13.5 };
+  const y1 = height(e1), y2 = height(e2);
+  if (Math.max(y1, y2) > 0.01) return y2 >= y1 ? { rule: 1, a: e2 - 1.5, b: e2 } : { rule: 1, a: e1, b: e1 + 1.5 };
+  if (Math.abs(y1 - y2) < 0.02) return { rule: '3s', a: 5.5, b: 6.5 };
+  return y2 > y1 ? { rule: 3, a: 6, b: e2 } : { rule: 3, a: e1, b: 6 };
+}
+const RULE_ZH = { 1: 'Rule 1', 2: 'Rule 2', 3: 'Rule 3', '3s': 'Rule 3（兩側一樣高）', 4: 'Rule 4' };
+const inZone = (z, h, r) => r >= 95 && r <= G.ora + 20 && inRange([z.a, z.b], h);
+
+/* ---------- 剝離形狀（以 OD、temporal 在圖左定義；nasal 版或 OS 就鏡射） ---------- */
+const PRE = {
+  st: { r: [5.5, 11], rin: 36, kind: '', asym: true,
+    en: v => v === 'n' ? 'Superonasal RD' : 'Superotemporal RD', zh: v => `上方 ${v === 'n' ? 'nasal' : 'temporal'} 側的剝離`,
+    info: (v, r) => ({
+      def: `剝離在上方 ${v === 'n' ? 'nasal' : 'temporal'} 側、沒有跨過 12 點，往下延伸到 6 點附近。最高的邊界在 ${hh(height(r[0]) > height(r[1]) ? r[0] : r[1])} 點。`,
+      rule: [`Rule 1：superior temporal 或 superior nasal 的剝離，primary break 在離最高邊界 1½ 鐘點以內${s('S2', 'S3')}；Lincoff 原報告的符合率 98%${s('S2')}`],
+      why: [`上方裂孔的液體先沿同一側往下流，再越過下方往對側上升，所以最高的邊界停在裂孔附近${s('S5')}`,
+        `Superonasal 的裂孔：液體會繞過視盤，再從 temporal 側往上升到和裂孔差不多高${s('S5')}`],
+      now: [`2018 年 747 眼的重驗：這一型符合率 92%${s('S4')}`],
+      src: ['S1', 'S2', 'S3', 'S4', 'S5']
+    }) },
+  s12: { r: [8, 16], rin: 30, kind: 'bul', asym: false,
+    en: () => 'Superior RD crossing 12 o’clock', zh: () => '跨過 12 點的上方剝離',
+    info: () => ({
+      def: '剝離跨過 12 點（視盤正上方的垂直線），上方隆起明顯，兩側往下延伸。Total RD 也歸這一條。',
+      rule: [`Rule 2：跨過 12 點的 superior RD 或 total RD，primary break 在 12 點，或在一個三角形內：頂點在 ora serrata、底邊在 equator、從 11 點延伸到 1 點；原報告 93%${s('S2')}`,
+        `EURETINA 的轉述是三角形兩邊各往 12 點兩側延伸 1½ 鐘點${s('S3')}`],
+      why: [`剝離下緣延伸得比較低的那一側，就是裂孔所在的一側${s('S5')}`],
+      now: [`Lincoff 原文對這一型寫過兩種範圍；重驗時「12 點前後 1½ 鐘點」符合 89%，「三角形」只有 70%，作者認為前者較適用${s('S4')}`,
+        `圖上：實線三角形＝原始的三角形，虛線扇形＝12 點前後 1½ 鐘點；測驗時落在虛線範圍內就算對`],
+      src: ['S1', 'S2', 'S3', 'S4', 'S5']
+    }) },
+  ia: { r: [4.5, 8], rin: 112, kind: 'shallow', asym: true,
+    en: v => `Inferior RD, ${v === 'n' ? 'nasal' : 'temporal'} side higher`, zh: v => `下方剝離，${v === 'n' ? 'nasal' : 'temporal'} 側較高`,
+    info: v => ({
+      def: `淺的 inferior RD，跨過 6 點，${v === 'n' ? 'nasal' : 'temporal'} 側的邊界比對側高。`,
+      rule: [`Rule 3：inferior RD 較高的那一側，指出裂孔在視盤的哪一側；裂孔在水平線以下，原報告 95%${s('S2', 'S3')}`],
+      why: [`淺的 inferior RD 液體在某一側稍高，表示 primary break 在那一側的下方${s('S5')}`],
+      now: [`重驗：這一型符合率 86%${s('S4')}`],
+      src: ['S1', 'S2', 'S3', 'S4', 'S5']
+    }) },
+  is: { r: [4, 8], rin: 112, kind: 'shallow', asym: false,
+    en: () => 'Inferior RD, both sides equal', zh: () => '下方剝離，兩側一樣高',
+    info: () => ({
+      def: '淺的 inferior RD，左右兩側的邊界一樣高。',
+      rule: [`兩側一樣高的 inferior RD，裂孔在 6 點${s('S2', 'S5')}`],
+      why: [`6 點的裂孔在最低點，液體往兩側平均散開，所以兩邊一樣高${s('S5')}`],
+      now: [`這一型很少見：747 眼的重驗中只有 3 眼${s('S4')}`],
+      src: ['S1', 'S2', 'S4', 'S5']
+    }) },
+  ib: { r: [3.5, 8.5], rin: 72, kind: 'bul', asym: false,
+    en: () => 'Inferior bullous RD', zh: () => '下方 bullous 剝離',
+    info: () => ({
+      def: '下方的剝離液體多、隆起高（bullous）。',
+      rule: [`Rule 4：inferior bullous RD 的 primary break 在水平線以上${s('S2', 'S5')}；下方的 bullae 來自上方的裂孔${s('S3')}`],
+      why: ['上方裂孔的液體一路往下流、堆在下方，所以只在剝離範圍內往下找，會找不到裂孔'],
+      now: [`重驗：這一型符合率 83%（45／54 眼）${s('S4')}`],
+      src: ['S1', 'S2', 'S3', 'S4', 'S5']
+    }) }
+};
+const PRE_ORDER = ['st', 's12', 'ia', 'is', 'ib'];
+const flipOf = (v, eye) => (v === 'n') !== (eye === 'L');
+const preRange = (id, v, eye) => flipOf(v, eye) ? mirrorR(PRE[id].r) : PRE[id].r.slice();
+const preZone = (id, v, eye) => zoneOf(preRange(id, v, eye), id === 'ib');
+const EYEZH = { R: 'OD 右眼', L: 'OS 左眼' };
+
+/* ---------- 放裂孔：視網膜下液依重力擴散（示意） ----------
+   依 Kanski：上方裂孔的液體先沿同側往下、再越過下方往對側上升，升到和裂孔差不多高；
+   邊界高度與速度只是示意 */
+function spreadPlan(b) {
+  b = norm(b);
+  const d12 = Math.min(b, 12 - b);
+  if (d12 <= 1) return { kind: 'top', S: [b - 0.5, b + 0.5], F: [b - 6, b + 6], rin: 0 };
+  if (Math.abs(b - 6) < 0.26) return { kind: 'six', S: [5.75, 6.25], F: [5, 7], rin: 112 };
+  if (b > 6) { const m = spreadPlan(12 - b); return { kind: m.kind, S: mirrorR(m.S), F: mirrorR(m.F), rin: m.rin, left: true }; }
+  if (height(b) > 0.01) return { kind: 'sup', S: [b - 0.5, b + 0.5], F: [b - 0.5, 12 - b], rin: 40 };
+  return { kind: 'inf', S: [b - 0.5, b + 0.5], F: [b - 0.5, 11.75 - b], rin: 112 };
+}
+const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+function spreadAt(b, t) {
+  const p = spreadPlan(b), k = ease(t);
+  const e1 = p.S[0] + (p.F[0] - p.S[0]) * k, e2 = p.S[1] + (p.F[1] - p.S[1]) * k;
+  return { range: [e1, e2], rin: 170 + (p.rin - 170) * k, plan: p };
+}
+function spreadMsg(b, t) {
+  const { range: [e1, e2], plan: p } = spreadAt(b, t);
+  const passed = p.left ? e1 < 6 : e2 > 6;
+  if (p.kind === 'top') return t < 1 ? '① 裂孔在 12 點附近：液體往兩側同時流下' : '② 兩側都往下流，變成跨過 12 點的 superior／total RD';
+  if (p.kind === 'six') return t < 1 ? '① 裂孔在最低點：液體往兩側平均散開' : '② 兩側一樣高的淺 inferior RD';
+  if (p.kind === 'sup') return t >= 1 ? '③ 對側升到和裂孔差不多高就停住：最高的邊界留在裂孔這一側' : passed ? '② 越過 6 點，往對側上升' : '① 液體先沿裂孔同一側往下流';
+  return t >= 1 ? '③ 對側只升一點：裂孔那一側的邊界比較高' : passed ? '② 越過 6 點，對側只升一點' : '① 液體往下流向 6 點';
+}
+
+/* ---------- drawing ---------- */
+function vessels(eye) {
+  const tx = eye === 'R' ? -1 : 1, { cx, cy } = G, X = d => (cx + tx * d).toFixed(1);
+  const arc = sg => `M${X(2)} ${cy + sg * 8}C${X(26)} ${cy + sg * 62} ${X(96)} ${cy + sg * 78} ${X(170)} ${cy + sg * 52}S${X(218)} ${cy + sg * 80} ${X(236)} ${cy + sg * 128}`;
+  const nas = sg => `M${X(-3)} ${cy + sg * 8}C${X(-30)} ${cy + sg * 50} ${X(-90)} ${cy + sg * 88} ${X(-150)} ${cy + sg * 150}`;
+  const nas2 = sg => `M${X(-6)} ${cy + sg * 3}C${X(-60)} ${cy + sg * 12} ${X(-140)} ${cy + sg * 20} ${X(-200)} ${cy + sg * 52}`;
+  return `<path class="c-ves" d="${arc(-1)}"/><path class="c-ves" d="${arc(1)}"/>
+    <path class="c-ves thin" d="${nas(-1)}"/><path class="c-ves thin" d="${nas(1)}"/><path class="c-ves thin" d="${nas2(-1)}"/><path class="c-ves thin" d="${nas2(1)}"/>`;
+}
+function zoneSVG(z) {
+  if (!z) return '';
+  if (z.rule === 2) {
+    const tri = `M${P(pt(12, G.ora))}L${P(pt(1, G.eq))}L${P(pt(11, G.eq))}Z`;
+    return `<path class="zone alt" d="${sector(z.a, z.b, G.ora, G.eq - 12)}"/><path class="zone tri" d="${tri}"/>`;
+  }
+  return `<path class="zone" d="${sector(z.a, z.b, G.ora, 132)}"/>`;
+}
+function rdSVG(range, rin, kind) {
+  let h = `<path class="rd ${kind === 'shallow' ? 'shallow' : ''}" id="rdp" d="${sector(range[0], range[1], G.ora, rin)}"/>`;
+  if (kind === 'bul') {
+    const [a, b] = range, m = Math.min(0.45, (b - a) / 6), r0 = rin + (G.ora - rin) * 0.45, r1 = rin + (G.ora - rin) * 0.72;
+    h += `<path class="fold" d="${wavy(a + m, b - m, r0, 5)}"/><path class="fold" d="${wavy(a + m * 1.6, b - m * 1.6, r1, 4)}"/>`;
+  }
+  return h;
+}
+function brkSVG(b) { const [x, y] = pt(b, G.brk); return `<g class="deco"><ellipse class="brk" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="9" ry="6.5" transform="rotate(${(b * 30).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})"/></g>`; }
+function renderFundus(o) {
+  const eye = o.eye, tx = eye === 'R' ? -1 : 1, { cx, cy } = G;
+  let h = `<svg viewBox="20 14 660 672" role="img" aria-label="眼底示意圖" class="${o.hit ? 'hitfig' : ''}" id="fsvg">
+    <circle class="c-fundus" cx="${cx}" cy="${cy}" r="${G.ora}"/>
+    <g class="deco"><circle class="c-mac" cx="${cx + tx * 40}" cy="${cy}" r="22" opacity=".55"/><circle class="c-mac" cx="${cx + tx * 40}" cy="${cy}" r="5"/></g>`;
+  // 剝離畫在血管下面：血管長在視網膜上，剝離的視網膜上仍看得到血管
+  if (o.range) h += rdSVG(o.range, o.rin, o.kind);
+  h += `<g class="deco">${vessels(eye)}<circle class="c-disc" cx="${cx}" cy="${cy}" r="13"/></g>
+    <g class="deco"><circle class="c-eq" cx="${cx}" cy="${cy}" r="${G.eq}"/><circle class="c-ora" cx="${cx}" cy="${cy}" r="${G.ora}"/>`;
+  for (let k = 1; k <= 12; k++) {
+    const [x1, y1] = pt(k, G.ora - 8), [x2, y2] = pt(k, G.ora + 6), [lx, ly] = pt(k, G.ora + 26);
+    h += `<line class="c-tick" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/><text class="clk" x="${lx.toFixed(1)}" y="${(ly + 5).toFixed(1)}" text-anchor="middle">${k}</text>`;
+  }
+  const tl = eye === 'R' ? 'Temporal' : 'Nasal', tr = eye === 'R' ? 'Nasal' : 'Temporal';
+  h += `<text class="eyetag" x="40" y="48">${eye === 'R' ? 'OD' : 'OS'}</text>
+    <text class="dir" x="${cx}" y="${cy - G.ora - 44}" text-anchor="middle">SUPERIOR</text><text class="dir" x="${cx}" y="${cy + G.ora + 56}" text-anchor="middle">INFERIOR</text>
+    <text class="dir" x="${cx - G.ora - 46}" y="${cy + 5}" text-anchor="middle" transform="rotate(-90 ${cx - G.ora - 46} ${cy})">${tl.toUpperCase()}</text>
+    <text class="dir" x="${cx + G.ora + 46}" y="${cy + 5}" text-anchor="middle" transform="rotate(90 ${cx + G.ora + 46} ${cy})">${tr.toUpperCase()}</text></g>`;
+  h += `<g class="deco lab"><text x="${cx - tx * 18}" y="${cy + 32}" text-anchor="middle" class="in">Disc</text><text x="${cx + tx * 40}" y="${cy - 28}" text-anchor="middle" class="in">Fovea</text>
+    <text x="${pt(7.5, G.eq + 14)[0].toFixed(1)}" y="${pt(7.5, G.eq + 14)[1].toFixed(1)}" text-anchor="middle" class="in">Equator</text>
+    <text x="${pt(4.5, G.ora - 16)[0].toFixed(1)}" y="${pt(4.5, G.ora - 16)[1].toFixed(1)}" text-anchor="middle" class="in">Ora serrata</text></g>`;
+  if (o.zone) h += `<g class="deco" id="zoneg">${zoneSVG(o.zone)}</g>`;
+  if (o.brk != null) h += brkSVG(o.brk);
+  if (o.pick) h += `<g class="deco"><circle class="pick ${o.pick.ok ? 'ok' : 'bad'}" cx="${o.pick.x.toFixed(1)}" cy="${o.pick.y.toFixed(1)}" r="11"/></g>`;
+  return h + `</svg>`;
+}
+
+/* ---------- app ---------- */
+const VIEWS = [
+  { id: 'rd', name: '視網膜剝離', en: 'Lincoff rules', subs: [['shape', '看形狀找裂孔'], ['spread', '放裂孔看液體']] }
+];
+const $ = q => document.querySelector(q);
+const st = { view: 'rd', sub: 'shape', eye: 'R', pre: null, v: 't', zone: true, labels: true, mode: 'learn', quiz: null, brk: null, t: 1 };
+const store = (() => {
+  const K = 'retinaAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K, JSON.stringify(mem)); } catch (e) { } } };
+})();
+const inQ = () => st.mode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
+// 錯題的 key：rd:形狀_t或n_眼，例如 rd:st_n_L（OS 的 superonasal RD）
+const RD_KEYS = PRE_ORDER.flatMap(id => (PRE[id].asym ? ['t', 'n'] : ['t']).flatMap(v => ['R', 'L'].map(e => `rd:${id}_${v}_${e}`)));
+const parseKey = k => { const [id, v, eye] = k.slice(3).split('_'); return { id, v, eye }; };
+const keyLabel = k => { const { id, v, eye } = parseKey(k); return `${PRE[id].en(v)}（${eye === 'R' ? 'OD' : 'OS'}）`; };
+const keyValid = k => RD_KEYS.includes(k);
+const keyView = () => 'rd';
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  const V = VIEWS.find(v => v.id === st.view);
+  $('#hintbar').innerHTML = st.mode === 'quiz' ? `<span class="hint">測驗中：標籤已隱藏，在眼底圖上點出裂孔</span>`
+    : `<div class="seg" role="group" aria-label="圖">${V.subs.map(([id, nm]) => `<button type="button" data-sub="${id}" aria-pressed="${st.sub === id}">${nm}</button>`).join('')}</div>`;
+}
+function renderTools() {
+  let h = '';
+  if (st.mode !== 'quiz') {
+    h = `<div class="seg" role="group" aria-label="眼別">${['R', 'L'].map(e => `<button type="button" data-eye="${e}" aria-pressed="${st.eye === e}">${e === 'R' ? 'OD' : 'OS'}</button>`).join('')}</div>`;
+    if (st.sub === 'shape' && st.pre && PRE[st.pre].asym) h += `<div class="seg" role="group" aria-label="側別">${[['t', 'Temporal'], ['n', 'Nasal']].map(([v, t]) => `<button type="button" data-v="${v}" aria-pressed="${st.v === v}">${t}</button>`).join('')}</div>`;
+    if (st.sub === 'shape') h += `<label class="tog"><input type="checkbox" id="t-zone" ${st.zone ? 'checked' : ''}>預測範圍</label>`;
+    h += `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
+  }
+  $('#tools').innerHTML = h;
+}
+function figOpts() {
+  const it = quizItem();
+  if (it) {
+    const q = st.quiz, P0 = PRE[it.id];
+    return { eye: it.eye, range: preRange(it.id, it.v, it.eye), rin: P0.rin, kind: P0.kind, hit: !q.ans, zone: q.ans ? preZone(it.id, it.v, it.eye) : null, pick: q.ans && q.ans.x != null ? q.ans : null };
+  }
+  if (st.sub === 'spread') {
+    if (st.brk == null) return { eye: st.eye, hit: true };
+    const a = spreadAt(st.brk, st.t);
+    return { eye: st.eye, hit: true, range: a.range, rin: a.rin, kind: a.plan.kind === 'six' || a.plan.kind === 'inf' ? 'shallow' : '', brk: st.brk, zone: st.t >= 1 ? zoneOf(a.range, false) : null };
+  }
+  if (!st.pre) return { eye: st.eye };
+  const P0 = PRE[st.pre];
+  return { eye: st.eye, range: preRange(st.pre, st.v, st.eye), rin: P0.rin, kind: P0.kind, zone: st.zone ? preZone(st.pre, st.v, st.eye) : null };
+}
+function renderFig() {
+  const fig = $('#fig');
+  fig.innerHTML = renderFundus(figOpts());
+  fig.classList.toggle('nolab', !st.labels);
+  fig.classList.toggle('quiz-on', st.mode === 'quiz');
+  const cap = st.mode === 'quiz' ? ['正像眼底：上＝superior，鐘點依檢查者看出去的方向。淡色區＝剝離範圍。', '點在預測範圍內就算對']
+    : st.sub === 'spread' ? ['點眼底周邊任何位置放一個裂孔（會對齊到最近的半點鐘），看視網膜下液怎麼流。', '擴散速度與邊界高度為示意']
+    : ['正像眼底：上＝superior，OD 視盤在右。淡色區＝剝離，藍框＝依 Lincoff rules 預測的裂孔範圍（只表示鐘點，不代表前後位置）。', '剝離範圍為示意'];
+  $('#cap').innerHTML = `<span>${cap[0]}</span><span class="ori">${cap[1]}</span>`;
+}
+function renderExtra() {
+  if (st.mode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  const legend = `<div><div class="xh">圖例</div><div class="legend">
+      <span><i class="sw" style="background:var(--rd)"></i>剝離的視網膜（皺摺線＝bullous）</span>
+      <span><i class="sw" style="background:var(--hl-soft);border-color:var(--hl)"></i>預測的裂孔範圍</span>
+      <span><i class="sw" style="background:var(--t-break)"></i>裂孔</span></div></div>`;
+  if (st.sub === 'spread') {
+    $('#extra').innerHTML = `<div class="xrow"><div><div class="xh">視網膜下液怎麼擴散${s('S5')}</div>
+      <div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" id="sp-play" ${st.brk == null ? 'disabled' : ''}>重播</button><button type="button" class="btn" id="sp-end" ${st.brk == null ? 'disabled' : ''}>跳到結果</button></div>
+      <p class="rstat" id="rstat">${st.brk == null ? '先在眼底周邊點一下，放一個裂孔。' : spreadMsg(st.brk, st.t)}</p></div>${legend}</div>`;
+    return;
+  }
+  $('#extra').innerHTML = `<div class="xrow"><div><div class="xh">先看形狀，再找裂孔</div><div class="legend" style="max-width:52ch">
+      <span>1. 剝離有沒有跨過 12 點？有 → Rule 2</span><span>2. 上方的剝離 → 找最高的邊界（Rule 1）</span>
+      <span>3. 只有下方：淺的看哪一側高（Rule 3）；bullous 往水平線以上找（Rule 4）</span></div></div>${legend}</div>`;
+}
+function renderIndex() {
+  const ix = $('#index');
+  if (st.mode === 'quiz' || st.sub !== 'shape') { ix.hidden = true; return; }
+  ix.hidden = false;
+  ix.innerHTML = `<span class="lbl">剝離形狀（${PRE_ORDER.length}）</span>` + PRE_ORDER.map(id => `<button type="button" class="chip ${id === st.pre ? 'on' : ''}" data-pre="${id}">${PRE[id].zh(st.v)} <i>${PRE[id].en(st.v)}</i></button>`).join('');
+}
+function preCard() {
+  const z = preZone(st.pre, st.v, st.eye), d = PRE[st.pre].info(st.v, preRange(st.pre, st.v, st.eye));
+  const side = z.rule === 4 ? '' : ` · ${hh(z.a)}–${hh(z.b)} 點`;
+  let h = `<div class="card"><div class="eyebrow">視網膜剝離 · ${EYEZH[st.eye]} · 對照 BCSC 12</div><div><h2>${PRE[st.pre].en(st.v)}</h2></div><p class="zh">${PRE[st.pre].zh(st.v)}</p><p class="def">${d.def}</p>`;
+  h += `<div class="verdict">預測：${RULE_ZH[z.rule]}${z.rule === 4 ? ' · 水平線以上（9 點經 12 點到 3 點）' : side}</div>`;
+  h += list('規則', d.rule) + list('為什麼', d.why) + list('現代的驗證', d.now);
+  return h + srcList(d.src) + `</div>`;
+}
+function spreadCard() {
+  if (st.brk == null) return `<div class="empty-card"><div class="eyebrow">放裂孔看液體</div>
+    <p>在眼底周邊點一下放一個裂孔，視網膜下液會依重力慢慢擴散：上方的裂孔，液體先沿同一側往下流，再越過下方往對側上升${s('S5')}。</p>
+    <p>動畫停下來後，會用 Lincoff rules 從最後的形狀回推裂孔範圍（藍框），看看是不是包住你放的那個裂孔。</p>${srcList(['S5'])}</div>`;
+  const a = spreadAt(st.brk, 1), z = zoneOf(a.range, false), ok = inZone(z, st.brk, G.brk);
+  const sw = sideWord(st.brk, st.eye);
+  return `<div class="card"><div class="eyebrow">放裂孔看液體 · ${EYEZH[st.eye]}</div><div><h2>裂孔在 ${hh(st.brk)} 點</h2></div><p class="zh">${sw ? sw + ' 側、' : ''}${height(st.brk) > 0.01 ? '水平線以上' : height(st.brk) < -0.01 ? '水平線以下' : '水平線上'}</p>
+    <p class="def">${spreadMsg(st.brk, 1).replace(/^[①②③] /, '')}。</p>
+    ${st.t >= 1 ? `<div class="verdict">回推：最後的形狀符合 ${RULE_ZH[z.rule]}，預測 ${hh(z.a)}–${hh(z.b)} 點${ok ? '，包住了這個裂孔。' : '。'}</div>` : ''}
+    ${list('要記得', [`液體擴散由三件事決定：重力、解剖邊界（ora serrata 與視神經），以及 primary break 的位置${s('S5')}`,
+      `約一半的 RD 不只一個裂孔，常在彼此 90° 以內：找到一個之後要繼續找${s('S5')}`,
+      `有多個裂孔時，以最上方的那個當 primary break${s('S4')}`,
+      `病人最先發現視野缺損的象限，裂孔在相反的象限${s('S5')}`])}
+    ${srcList(['S4', 'S5'])}</div>`;
+}
+function renderPanel() {
+  const p = $('#panel');
+  if (st.mode === 'quiz') { p.innerHTML = quizHTML(); return; }
+  if (st.sub === 'spread') { p.innerHTML = spreadCard(); return; }
+  p.innerHTML = st.pre ? preCard() : `<div class="empty-card"><div class="eyebrow">視網膜剝離 · Lincoff rules</div>
+    <p>Lincoff 與 Gieser 在 1971 年分析 1,000 例 rhegmatogenous RD，發現剝離依重力擴散，可以從剝離的形狀回推 primary break 的位置${s('S1', 'S4')}。</p>
+    <p>從下方選一種剝離形狀，眼底圖會畫出剝離範圍和預測的裂孔範圍，右邊說明卡寫出用的是哪一條規則與符合率。上方可以切換 OD／OS；不對稱的形狀還能切換 temporal／nasal。</p>
+    ${list('先記住', [`裂孔分布：superotemporal 約 60%，superonasal、inferotemporal 各約 15%，inferonasal 約 10%；找不到時先仔細看 superotemporal${s('S5')}`,
+      `Lincoff 排除了只在一個象限以內的小剝離，規則用在較大的剝離${s('S4')}`])}
+    ${srcList(['S1', 'S4', 'S5'])}</div>`;
+}
+function renderSelbar() {
+  const b = $('#selbar');
+  let t = '';
+  if (st.mode === 'learn') {
+    if (st.sub === 'shape' && st.pre) t = `形狀：${PRE[st.pre].zh(st.v)}`;
+    else if (st.sub === 'spread' && st.brk != null) t = `裂孔：${hh(st.brk)} 點`;
+  }
+  b.hidden = !t;
+  if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
+}
+
+/* ---------- spread animation：只改剝離的 path，不重畫整張圖 ---------- */
+let RAF = null;
+function stopAnim() { if (RAF) { cancelAnimationFrame(RAF); RAF = null; } }
+function playSpread() {
+  stopAnim();
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { st.t = 1; render(); return; }
+  st.t = 0; render();
+  const t0 = performance.now(), DUR = 4200;
+  let last = '';
+  const step = now => {
+    st.t = Math.min(1, (now - t0) / DUR);
+    const a = spreadAt(st.brk, st.t), el = $('#rdp');
+    if (el) el.setAttribute('d', sector(a.range[0], a.range[1], G.ora, a.rin));
+    const m = spreadMsg(st.brk, st.t), rs = $('#rstat');
+    if (rs && m !== last) { rs.textContent = m; last = m; }
+    if (st.t < 1) RAF = requestAnimationFrame(step); else { RAF = null; render(); }
+  };
+  RAF = requestAnimationFrame(step);
+}
+
+/* ---------- quiz：看剝離範圍，在眼底圖上點裂孔 ---------- */
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', total: 10 });
+function quizHTML() {
+  const q = st.quiz;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).filter(keyValid).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗 · 視網膜剝離</div><h2>裂孔在哪裡？</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}${opt('total', 30, '30')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">每題給一個剝離範圍（OD 或 OS），在眼底圖上點出最可能的 primary break；點在 Lincoff rules 的預測範圍內就算對。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>找裂孔</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i];
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  h += `<div class="prompt"><div class="k">${EYEZH[it.eye]}：上方淡色區是剝離範圍${PRE[it.id].kind === 'bul' ? '（有皺摺線＝bullous）' : PRE[it.id].kind === 'shallow' ? '（淺的剝離）' : ''}</div><div class="q">在眼底圖上點出最可能的裂孔位置</div></div>`;
+  if (q.ans) {
+    const z = preZone(it.id, it.v, it.eye), d = PRE[it.id].info(it.v, preRange(it.id, it.v, it.eye));
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${q.ans.x != null ? ` 你點在約 ${hh(Math.round(q.ans.h * 2) / 2)} 點；` : ' '}這是${PRE[it.id].zh(it.v)}，預測在${z.rule === 4 ? '水平線以上' : ` ${hh(z.a)}–${hh(z.b)} 點`}（藍框）。<br>${d.rule[0]}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong;
+  let pool = RD_KEYS.slice();
+  if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  const items = keys.map(key => Object.assign({ key }, parseKey(key)));
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items, i: 0, score: 0, ans: null, log: [] });
+  stopAnim(); render();
+}
+function answer(a) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  q.ans = a; if (a.ok) q.score++;
+  q.log.push({ key: it.key, ok: a.ok });
+  const m = store.get();
+  if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
+  store.save(); render();
+}
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function setMode(m) {
+  st.mode = m; stopAnim();
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
+  if (m === 'learn') st.t = 1;
+  render();
+}
+function goKey(k) { const { id, v, eye } = parseKey(k); st.sub = 'shape'; st.pre = id; st.v = v; st.eye = eye; render(); }
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
+}
+
+/* ---------- events ---------- */
+function figPoint(e) {
+  const svg = $('#fsvg'); if (!svg || !svg.getScreenCTM()) return null;
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  const q = p.matrixTransform(svg.getScreenCTM().inverse());
+  return { x: q.x, y: q.y, r: Math.hypot(q.x - G.cx, q.y - G.cy), h: clockOf(q.x, q.y) };
+}
+$('#fig').addEventListener('click', e => {
+  const p = figPoint(e); if (!p || p.r > G.ora + 20) return;
+  if (st.mode === 'quiz') {
+    const it = quizItem(); if (!it || st.quiz.ans) return;
+    answer(Object.assign({ ok: inZone(preZone(it.id, it.v, it.eye), p.h, p.r) }, p));
+    return;
+  }
+  if (st.sub !== 'spread' || p.r < 60) return;
+  st.brk = norm(Math.round(p.h * 2) / 2);
+  playSpread();
+});
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.mode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; st.view = tab.dataset.view; render(); return; }
+  const sb = t.closest('[data-sub]'); if (sb) { if (inQ()) return; stopAnim(); st.sub = sb.dataset.sub; st.t = 1; render(); return; }
+  const ey = t.closest('[data-eye]'); if (ey) { st.eye = ey.dataset.eye; if (RAF) { const tt = st.t; render(); st.t = tt; } else render(); return; }
+  const vv = t.closest('[data-v]'); if (vv) { st.v = vv.dataset.v; render(); return; }
+  const pr = t.closest('[data-pre]'); if (pr) { st.pre = st.pre === pr.dataset.pre ? null : pr.dataset.pre; render(); return; }
+  if (t.closest('#sp-play')) { if (st.brk != null) playSpread(); return; }
+  if (t.closest('#sp-end')) { stopAnim(); st.t = 1; render(); return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
+  if (t.closest('#q-skip')) { answer({ ok: false }); return; }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
+  if (e.target.id === 't-zone') { st.zone = e.target.checked; renderFig(); }
+});
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+
+/* ---------- self-check ---------- */
+(() => {
+  const a = (c, m) => console.assert(c, 'retina self-check: ' + m);
+  // 方位：OD 的 9 點是 temporal、OS 的 3 點是 temporal
+  a(sideWord(9, 'R') === 'temporal' && sideWord(3, 'R') === 'nasal' && sideWord(3, 'L') === 'temporal', 'OD 圖左＝temporal，OS 圖右＝temporal');
+  a([0.5, 3, 7.25, 11.5].every(h => Math.abs(clockOf(...pt(h, 200)) - h) < 1e-6), '座標換回鐘點要一致');
+  a(PRE_ORDER.every(id => { const r = mirrorR(mirrorR(PRE[id].r)); return Math.abs(norm(r[0]) - norm(PRE[id].r[0])) < 1e-9 && Math.abs((r[1] - r[0]) - (PRE[id].r[1] - PRE[id].r[0])) < 1e-9; }), '鏡射兩次要回到原形');
+  // 每種形狀對到正確的規則，預測範圍落在剝離裡（Rule 4 例外：裂孔在剝離外的上方）
+  const want = { st: 1, s12: 2, ia: 3, is: '3s', ib: 4 };
+  RD_KEYS.forEach(k => {
+    const { id, v, eye } = parseKey(k), r = preRange(id, v, eye), z = preZone(id, v, eye);
+    a(z.rule === want[id], `${k} 應是 ${want[id]}`);
+    if (id !== 'ib') a(inRange(r, z.a + 0.01) && inRange(r, z.b - 0.01), `${k} 的預測範圍要在剝離內`);
+    a(inZone(z, (z.a + z.b) / 2, G.brk), `${k} 的預測範圍中央要算答對`);
+  });
+  a(preZone('st', 't', 'R').a === 9.5 && preZone('st', 'n', 'R').b === 2.5, 'OD superotemporal 在 9:30–11、superonasal 在 1–2:30');
+  a(norm(preZone('ia', 't', 'L').a) === 4 && preZone('ia', 't', 'L').b === 6, 'OS 的 inferior RD temporal 側高 → 4–6 點');
+  // 放裂孔：每個半點鐘的裂孔，跑完後用 Lincoff rules 回推都要包住原裂孔
+  for (let b = 0; b < 12; b += 0.5) {
+    const f = spreadAt(b, 1);
+    a(inRange(f.range, b), `${b} 點的裂孔要在最後的剝離內`);
+    a(inZone(zoneOf(f.range, false), b, G.brk), `${b} 點的裂孔要被回推範圍包住`);
+  }
+  a(spreadPlan(10).F[0] === 2 && spreadPlan(2).F[1] === 10, '上方裂孔：對側升到和裂孔一樣高（Kanski）');
+})();
+
+render();
+</script>
+
+</body>
+</html>
