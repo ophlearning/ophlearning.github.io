@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>檢查技巧互動圖譜</title>
-<meta name="description" content="互動式眼科檢查技巧圖譜：裂隙燈照明法——切換 diffuse、optic section、parallelepiped、短窄光束、specular reflection、間接照明（proximal）、sclerotic scatter、虹膜反照、眼底反照、虹膜透照，同時看由上往下的光路與從顯微鏡看到的樣子，拖拉條調光源臂角度與光束寬度；練習角膜疤痕、stromal haze、guttata、KP、AC cells、PSC、iris transillumination defect 各該用哪種照法；間接眼底鏡：點鏡中畫面看實際位置與眼底圖紙上的鐘點，病人看哪裡、你站哪裡，20D、Pan Retinal 2.2、28D、30D 聚光鏡的工作距離與空中影像，scleral depression 怎麼把最周邊頂進視線；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式眼科檢查技巧圖譜：裂隙燈照明法——切換 diffuse、optic section、parallelepiped、短窄光束、specular reflection、間接照明（proximal）、sclerotic scatter、虹膜反照、眼底反照、虹膜透照，同時看由上往下的光路與從顯微鏡看到的樣子，拖拉條調光源臂角度與光束寬度；練習角膜疤痕、stromal haze、guttata、KP、AC cells、PSC、iris transillumination defect 各該用哪種照法；間接眼底鏡：點鏡中畫面看實際位置與眼底圖紙上的鐘點，病人看哪裡、你站哪裡，20D、Pan Retinal 2.2、28D、30D 聚光鏡的工作距離與空中影像，scleral depression 怎麼把最周邊頂進視線；Goldmann 眼壓計：拖拉旋鈕讓兩個 fluorescein 半圓的內緣剛好相切，看 fluorescein 太多或太少、沒對齊、高度散光、搏動時的樣子，整理讓讀數偏高或偏低的原因（CCT、角膜水腫、壓到眼球、Valsalva 等）；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -19,6 +19,7 @@
   --t-cornea:#E2E0F1; --t-sclera:#F5F0EC; --t-uvea:#8E604B; --t-iris:#7C5342; --t-pig:#4A3028; --t-cb:#B98673;
   --t-retina:#B7A6E0; --t-lens:#E6ECF7; --t-nuc:#D3D9EA; --t-fluid:#E8F0F8; --t-vit:#EEF3F6; --t-skin:#EBCBB5;
   --t-fundus:#EDB18C; --t-fundus-2:#DD9772; --t-disc:#F8E3B8; --t-vessel:#B04530; --t-break:#9E1424; --ch-red:#D23A3A; --ch-blue:#2257C9;
+  --gt-field:#0E1430; --gt-mire:#38D873; --gt-split:#4A5584; --gt-prism:#DCE6F5; --gt-prism-s:#8A9AC0;
   --sl-beam:#E39B12; --sl-beamk:#A86200; --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-glare:#FFFFFF; --sl-irisglow:#E7B98E;
   --sl-opac:#F7F4EC; --sl-cat:#BDB6A6; --sl-shadow:#1F120C; --sl-reflex:#C9471F; --sl-reflex2:#F28A3E; --sl-pupil:#0F0B0D;
   --sl-mos:#D9B65E; --sl-mos-l:#7A5A1E; --sl-gut:#2A1A08; --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910;
@@ -36,6 +37,7 @@
   --t-cornea:#302B44; --t-sclera:#3B3647; --t-uvea:#704B3B; --t-iris:#6C4839; --t-pig:#2B1D17; --t-cb:#7F5648;
   --t-retina:#5D4D91; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029; --t-skin:#6E5244;
   --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78; --ch-red:#F06A6A; --ch-blue:#7FA6FF;
+  --gt-field:#0E1430; --gt-mire:#38D873; --gt-split:#4A5584; --gt-prism:#34405F; --gt-prism-s:#7F8FB8;
   --sl-beam:#F2C14E; --sl-beamk:#F7D77E; --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-glare:#FFFFFF; --sl-irisglow:#E7B98E;
   --sl-opac:#F7F4EC; --sl-cat:#BDB6A6; --sl-shadow:#1F120C; --sl-reflex:#C9471F; --sl-reflex2:#F28A3E; --sl-pupil:#0F0B0D;
   --sl-mos:#D9B65E; --sl-mos-l:#7A5A1E; --sl-gut:#2A1A08; --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910; color-scheme:dark }}
@@ -47,6 +49,7 @@
   --t-cornea:#302B44; --t-sclera:#3B3647; --t-uvea:#704B3B; --t-iris:#6C4839; --t-pig:#2B1D17; --t-cb:#7F5648;
   --t-retina:#5D4D91; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029; --t-skin:#6E5244;
   --t-fundus:#6A3F30; --t-fundus-2:#56311F; --t-disc:#C6A874; --t-vessel:#B5543C; --t-break:#FF6B78; --ch-red:#F06A6A; --ch-blue:#7FA6FF;
+  --gt-field:#0E1430; --gt-mire:#38D873; --gt-split:#4A5584; --gt-prism:#34405F; --gt-prism-s:#7F8FB8;
   --sl-beam:#F2C14E; --sl-beamk:#F7D77E; --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-glare:#FFFFFF; --sl-irisglow:#E7B98E;
   --sl-opac:#F7F4EC; --sl-cat:#BDB6A6; --sl-shadow:#1F120C; --sl-reflex:#C9471F; --sl-reflex2:#F28A3E; --sl-pupil:#0F0B0D;
   --sl-mos:#D9B65E; --sl-mos-l:#7A5A1E; --sl-gut:#2A1A08; --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910; color-scheme:dark }
@@ -225,6 +228,17 @@ a{color:var(--accent)}
 .bd-sight{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:7 5}
 .bd-miss{fill:none;stroke:var(--bad);stroke-width:5;stroke-linecap:round}
 .bd-hit{fill:var(--hl);stroke:var(--fig-bg);stroke-width:2}
+/* Goldmann：鏡下的 mires（cobalt blue 光下，深淺模式同一組顏色）與側面 */
+.gt-field{fill:var(--gt-field)}
+.gt-rim{fill:none;stroke:var(--line-2);stroke-width:6}
+.gt-split{stroke:var(--gt-split);stroke-width:1;stroke-dasharray:4 5}
+.gt-mire{fill:var(--gt-mire)}
+.gt-mk{fill:none;stroke:var(--sl-lab-ink);stroke-width:1.6}
+.gt-prism{fill:var(--gt-prism);stroke:var(--gt-prism-s);stroke-width:1.2}
+.gt-pl{stroke:var(--gt-prism-s);stroke-width:1.2;stroke-dasharray:5 4}
+.gt-men{fill:var(--gt-mire);stroke:none}
+.gt-arr{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round}
+.gt-arh{fill:var(--accent)}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -344,7 +358,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>裂隙燈分頁左邊的上視圖沿用眼解剖圖譜的眼球模型（右眼水平切面由上往下看：上＝temporal、左＝anterior），光束畫成直線、不畫折射；右邊是從顯微鏡看出去的樣子（檢查者面對病人：左＝temporal、右＝nasal、上＝superior），像照片一樣，深淺模式都用同一組顏色。光源臂角度、光束寬度、病灶的位置與大小都是示意；有出處的設定寫在說明卡。間接眼底鏡分頁畫右眼：鏡中畫面是病人平躺、你站在頭側時看到的樣子（同眼底照片方位：上＝superior、左＝temporal），實際位置＝鏡中轉 180°；站位圖從天花板往下看（病人頭在上、病人的右側在畫面左）；壓鞏膜是矢狀切面（上＝superior、左＝anterior）。裂孔、同心圓間距、壓陷深度都是示意。</span>
+    <span><b>關於圖：</b>裂隙燈分頁左邊的上視圖沿用眼解剖圖譜的眼球模型（右眼水平切面由上往下看：上＝temporal、左＝anterior），光束畫成直線、不畫折射；右邊是從顯微鏡看出去的樣子（檢查者面對病人：左＝temporal、右＝nasal、上＝superior），像照片一樣，深淺模式都用同一組顏色。光源臂角度、光束寬度、病灶的位置與大小都是示意；有出處的設定寫在說明卡。間接眼底鏡分頁畫右眼：鏡中畫面是病人平躺、你站在頭側時看到的樣子（同眼底照片方位：上＝superior、左＝temporal），實際位置＝鏡中轉 180°；站位圖從天花板往下看（病人頭在上、病人的右側在畫面左）；壓鞏膜是矢狀切面（上＝superior、左＝anterior）。裂孔、同心圓間距、壓陷深度都是示意。Goldmann 分頁左邊是從目鏡看 prism 裡的兩個半圓（cobalt blue 光下，深淺模式同一組顏色；上半圓偏左、下半圓偏右是示意），右邊是側面（左＝anterior）；半圓大小與壓平直徑依 Imbert–Fick 粗算，不是實際比例。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；只找到講義或專業學會教學頁的地方，說明卡會註明。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -396,7 +410,13 @@ const SRC = {
   S24: { t: 'Castanos MV, Najac T, Dauhajre J, Buxton DF. Late intraocular lens dislocation following scleral depression: a case report. BMC Ophthalmol 2020;20(1):39', u: 'https://doi.org/10.1186/s12886-020-1327-3' },
   S25: { t: 'Trevino R, Stewart B. Change in intraocular pressure during scleral depression. J Optom 2015;8(4):244–251', u: 'https://doi.org/10.1016/j.optom.2014.09.002' },
   S26: { t: 'Raevis J（計畫主持人）. DEPRESS study 試驗計畫書（ClinicalTrials.gov NCT04115917，2017-09-17 版）', u: 'https://cdn.clinicaltrials.gov/large-docs/17/NCT04115917/Prot_SAP_000.pdf' },
-  S27: { t: 'Mercieca K, Dharmasena A, Hopley C. Corneal perforation during scleral indentation in a patient with pellucid marginal degeneration. Indian J Ophthalmol 2016;64(3):233–234', u: 'https://doi.org/10.4103/0301-4738.181750' }
+  S27: { t: 'Mercieca K, Dharmasena A, Hopley C. Corneal perforation during scleral indentation in a patient with pellucid marginal degeneration. Indian J Ophthalmol 2016;64(3):233–234', u: 'https://doi.org/10.4103/0301-4738.181750' },
+  // Goldmann 眼壓計
+  S28: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.28–30 Tonometry：Goldmann tonometry（principles、technique、sources of error）', u: null },
+  S29: { t: 'EyeWiki：IOP and Tonometry（Piltz-Seymour J, Tai TYT, et al.；2026-10 編修）', u: 'https://eyewiki.org/IOP_and_Tonometry' },
+  S30: { t: 'EyeWiki：The Reliability of Intraocular Pressure Measurements（Khanal R, Moore DB, Kamat S；2026-05 審閱）', u: 'https://eyewiki.org/The_Reliability_of_Intraocular_Pressure_Measurements' },
+  S31: { t: 'Stevens S, Gilbert C, Astbury N. How to measure intraocular pressure: applanation tonometry. Community Eye Health 2007;20(64):74–75', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2206330/' },
+  S32: { t: 'Whitacre MM, Stein R. Sources of error with use of Goldmann-type tonometers. Surv Ophthalmol 1993;38(1):1–30（摘要）', u: 'https://doi.org/10.1016/0039-6257(93)90053-a' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
@@ -976,11 +996,97 @@ function bioFig(it) {
   $('#cap').innerHTML = `<span>${cap[0]}</span><span class="ori">${cap[1]}</span>`;
 }
 
+/* ---------- Goldmann applanation tonometry ----------
+   壓平直徑 d 用 Imbert–Fick 粗算：同一個眼壓下，壓平面積和旋鈕的力成正比，所以 d＝3.06 × √(旋鈕讀數 ÷ 眼壓)（示意）。
+   雙稜鏡把上半圈往左、下半圈往右各錯開 3.06 ÷ 2 mm；d＝3.06 mm 時兩個半圓的內緣剛好相切 */
+const GS = 3.06, GK = 40, GC = [210, 196], GFR = 168, GT_AMP = 4;   // 鏡下 40 px/mm；GT_AMP＝「搏動明顯」時眼壓擺動的幅度（mmHg，示意）
+const GMODES = [['ok', '正確'], ['thick', 'fluorescein 太多'], ['thin', 'fluorescein 太少'], ['mis', '上下沒對齊'], ['ast', '高度散光'], ['pulse', '搏動明顯']];
+const GMZ = Object.fromEntries(GMODES), GPRES = [14, 22, 30];
+function gtGeom(R, P, mode) {   // R＝旋鈕（mmHg）、P＝這隻眼睛的眼壓
+  const d = GS * Math.sqrt(Math.max(R, 0.5) / P);
+  return { d, w: (mode === 'thick' ? 0.3 : mode === 'thin' ? 0.035 : 0.12) * d, dy: mode === 'mis' ? 0.5 : 0, ex: mode === 'ast' ? [1.2, 0.84] : [1, 1] };
+}
+const mireState = (R, P) => R < P ? 'sep' : R > P ? 'ovl' : 'end';   // 和 gtGeom 一致：d＜3.06 ⇔ R＜P
+const dialTxt = R => `${(R / 10).toFixed(1)}（× 10 ＝ ${R} mmHg）`;
+function ringD(cx, cy, ri, ro, ex) { const e = r => { const rx = r * ex[0], ry = r * ex[1]; return `M${fx(cx - rx)} ${fx(cy)}A${fx(rx)} ${fx(ry)} 0 1 0 ${fx(cx + rx)} ${fx(cy)}A${fx(rx)} ${fx(ry)} 0 1 0 ${fx(cx - rx)} ${fx(cy)}Z`; }; return e(ro) + e(ri); }
+function mireG(g) {
+  const ri = g.d / 2 * GK, ro = ri + g.w * GK, cy = GC[1] - g.dy * GK, off = GS / 2 * GK;
+  return `<g clip-path="url(#gt-up)"><path class="gt-mire" fill-rule="evenodd" d="${ringD(GC[0] - off, cy, ri, ro, g.ex)}"/></g><g clip-path="url(#gt-dn)"><path class="gt-mire" fill-rule="evenodd" d="${ringD(GC[0] + off, cy, ri, ro, g.ex)}"/></g>`;
+}
+function mireSVG(c) {
+  const g = gtGeom(c.R, c.P, c.mode), off = GS / 2 * GK, ri = g.d / 2 * GK, cy = GC[1] - g.dy * GK;
+  let s = `<svg viewBox="0 0 420 400" role="img" aria-label="prism 裡的兩個 fluorescein 半圓"><defs><clipPath id="gt-f"><circle cx="${GC[0]}" cy="${GC[1]}" r="${GFR}"/></clipPath><clipPath id="gt-up"><rect x="0" y="0" width="420" height="${GC[1]}"/></clipPath><clipPath id="gt-dn"><rect x="0" y="${GC[1]}" width="420" height="${400 - GC[1]}"/></clipPath></defs>`;
+  s += `<circle class="gt-field" cx="${GC[0]}" cy="${GC[1]}" r="${GFR}"/><g clip-path="url(#gt-f)"><path class="gt-split" d="M0 ${GC[1]}H420"/><g id="gt-m">${mireG(g)}</g></g><circle class="gt-rim" cx="${GC[0]}" cy="${GC[1]}" r="${GFR + 3}"/>`;
+  const st0 = c.mode === 'pulse' ? null : mireState(c.R, c.P), lb = [];
+  lb.push([[GC[0] - off, cy - ri - g.w * GK / 2], [16, 26], '上半圓', 'start'], [[GC[0] + off, cy + ri + g.w * GK / 2], [16, 392], '下半圓', 'start']);
+  if (st0 === 'end' && c.mode === 'ok') { s += `<circle class="gt-mk" cx="${GC[0]}" cy="${GC[1]}" r="9"/>`; lb.push([[GC[0] + 9, GC[1] + 4], [404, 392], '內緣剛好相切', 'end']); }
+  else if (st0 === 'sep' && c.mode === 'ok') lb.push([[GC[0], GC[1]], [404, 392], '內緣還沒碰到', 'end']);
+  else if (st0 === 'ovl' && c.mode === 'ok') lb.push([[GC[0], GC[1]], [404, 392], '內緣重疊', 'end']);
+  else if (c.mode !== 'ok') lb.push([null, [404, 392], { thick: '半圓太粗', thin: '半圓太細', mis: '一大一小', ast: '變成橢圓', pulse: '隨脈搏一開一合' }[c.mode], 'end']);
+  return s + lb.map(x => labP(x[0], x[1], x[2], x[3])).join('') + '</svg>';
+}
+const SK = 60, SX = 170, SY = 200;   // 側面：60 px/mm，角膜頂點在 (SX, SY)，左＝anterior
+function sideSVG(c) {
+  const g = gtGeom(c.R, c.P, c.mode), h = Math.min(g.d / 2, 3.0), xf = SX + (7.8 - Math.sqrt(7.8 ** 2 - h * h)) * SK;
+  const fr = y => Math.abs(y) < h ? xf : SX + (7.8 - Math.sqrt(7.8 ** 2 - y * y)) * SK, bk = y => SX + (0.52 + 6.5 - Math.sqrt(6.5 ** 2 - y * y)) * SK;   // CCT 0.52 mm（GAT 設計時假設 520 μm）
+  const ys = vsOf(-3.3, 3.3, 66), Y = y => SY - y * SK;
+  let s = `<svg viewBox="0 0 420 400" role="img" aria-label="側面：prism 壓平角膜">`;
+  s += `<path class="c-fluid" d="M${fx(bk(-3.3))} ${fx(Y(-3.3))}${ys.map(y => `L${fx(bk(y))} ${fx(Y(y))}`).join('')}L420 ${fx(Y(3.3))}L420 ${fx(Y(-3.3))}Z"/>`;
+  s += `<path class="c-cornea" d="M${[...ys.map(y => [fr(y), Y(y)]), ...rev(ys).map(y => [bk(y), Y(y)])].map(p => fx(p[0]) + ' ' + fx(p[1])).join('L')}Z"/>`;
+  const pc = SY + g.dy * SK, ph = 2.9 * SK;   // prism（示意）；沒對齊時 prism 的分界線偏離壓平的圓心
+  s += `<rect class="gt-prism" x="34" y="${fx(pc - ph)}" width="${fx(xf - 34)}" height="${fx(2 * ph)}" rx="6"/><path class="gt-pl" d="M34 ${fx(pc)}H${fx(xf)}"/>`;
+  [1, -1].forEach(k => { const y0 = k * h, y1 = k * (h + g.w); s += `<path class="gt-men" d="M${fx(xf)} ${fx(Y(y0))}L${fx(xf)} ${fx(Y(y1))}L${fx(fr(y1 * 1.0001))} ${fx(Y(y1))}Z"/>`; });
+  s += `<path class="gt-arr" d="M6 ${SY}H26"/><path class="gt-arh" d="M32 ${SY}l-9 -6v12z"/>`;
+  s += `<path class="lz-dim" d="M${fx(xf + 22)} ${fx(Y(h))}V${fx(Y(-h))}M${fx(xf + 16)} ${fx(Y(h))}H${fx(xf + 28)}M${fx(xf + 16)} ${fx(Y(-h))}H${fx(xf + 28)}"/>`;
+  const lb = [[[xf + 22, SY], [404, 236], `壓平直徑 ${g.d.toFixed(2)} mm`, 'end'], [[(fr(-1.9) + bk(-1.9)) / 2, Y(-1.9)], [404, 330], 'CCT（設計時假設 520 μm）', 'end'], [[xf + 2, Y(h + g.w * 0.5)], [228, 26], 'fluorescein 淚液', 'start'], [null, [10, SY - 14], 'F', 'start'], [[90, SY - 60], [40, 386], 'prism（雙稜鏡）', 'start']];
+  return s + lb.map(x => labP(x[0], x[1], x[2], x[3])).join('') + '</svg>';
+}
+function gtVerdict(c) {
+  const m = c.mode, st0 = mireState(c.R, c.P);
+  if (m === 'mis') return '兩個半圓一大一小：先用搖桿把 tonometer 移回中央，讀數才能用';
+  if (m === 'thick') return '半圓太粗（fluorescein 太多）：這樣量會偏高；收回 tonometer、擦乾 prism 再量';
+  if (m === 'thin') return '半圓太細（fluorescein 太少）：這樣量會偏低；請病人眨眼再量，必要時補 fluorescein';
+  if (m === 'ast') return '半圓變成橢圓：散光大於 3 D；轉 prism 對準散光軸，或轉 90° 再量一次取平均';
+  if (m === 'pulse') return `內緣隨脈搏一開一合：擺動明顯時，取中間或最高的位置（目前旋鈕 ${dialTxt(c.R)}）`;
+  return st0 === 'sep' ? `內緣還沒碰到：力量不夠，旋鈕轉大（目前 ${dialTxt(c.R)}）` : st0 === 'ovl' ? `內緣重疊：力量太大，旋鈕轉小（目前 ${dialTxt(c.R)}）` : `內緣剛好相切：讀數 ${dialTxt(c.R)}`;
+}
+const gtCfg = () => ({ R: st.gtR, P: st.gtP, mode: st.gtMode });
+function gtCard() {
+  const v = `<div class="verdict"><span>${gtVerdict(gtCfg())}</span></div>`;
+  const body = list('原理', [`Imbert–Fick：理想的乾燥薄壁球體，內壓＝壓平表面需要的力 ÷ 壓平的面積（P＝F ÷ A）${s('S28')}`, `角膜有硬度、會抵抗壓平，淚液的毛細吸力則把 prism 往角膜拉；壓平直徑剛好 3.06 mm 時兩者互相抵消${s('S28')}`, `壓平需要的力（克）× 10 ＝ 眼壓（mmHg）${s('S28', 'S29', 'S30')}`, `設計時假設角膜厚度 520 μm${s('S28', 'S29')}`])
+    + list('步驟', [`先點表面麻醉，再點少量 fluorescein${s('S28', 'S31')}`, `病人放鬆、不要有太緊的領口，最好先坐正約 5 分鐘${s('S29')}；額頭貼緊頭靠、看正前方、正常呼吸${s('S28')}，兩眼都張開${s('S31')}`, `Cobalt blue 濾鏡，光開到最亮、斜約 60° 照向 prism${s('S28')}；Stevens 另外建議 ×10、光束開到最寬，量右眼時光從病人右側來${s('S31')}`, `旋鈕先設在 1（＝10 mmHg）${s('S28', 'S31')}`, `用拇指撐上眼瞼，不要壓到眼球${s('S31', 'S28')}`, `慢慢往前推，直到 prism 剛碰到角膜中央${s('S28', 'S31')}`, `看到上下兩個綠色半圓；粗細約整個弧直徑的 10%，上下、左右要置中${s('S28')}`, `轉旋鈕，直到兩個半圓的內緣剛好相切${s('S28', 'S29', 'S31')}；讀數 × 10 ＝ mmHg${s('S28')}`])
+    + list('看半圓調整', [`太粗：收回 tonometer、擦乾 prism；太細：請病人眨眼再量，必要時補 fluorescein${s('S29')}`, `沒置中：用搖桿把 tonometer 移回中央${s('S29')}`, `力量太大就把旋鈕轉小，太小就轉大${s('S29')}。壓平直徑隨力量變大，所以內緣還沒碰到＝還沒壓到 3.06 mm、力量不夠；內緣重疊＝力量太大（依 3.06 mm 原理的推論）`, `散光大於 3 D，半圓會變橢圓：轉 prism 讓紅線對準 minus cylinder 的軸，或轉 90° 再量一次取平均${s('S28')}；EyeWiki 寫成讓紅線對準角膜最平的那條軸${s('S29')}`, `內緣隨脈搏小幅擺動是正常的；擺動明顯時，可以取中間或最高的位置${s('S28')}`])
+    + list('讀數偏高', [`角膜比 520 μm 厚${s('S28', 'S29')}；角膜疤痕、ectasia 等形狀不規則的角膜${s('S29')}`, `Fluorescein 太多、半圓太粗${s('S28', 'S29')}`, `手指壓到眼球、病人用力閉眼、thyroid myopathy 等眼外肌受限${s('S28')}`, `憋氣（Valsalva）、領口太緊${s('S28', 'S29', 'S32')}`])
+    + list('讀數偏低', [`角膜比 520 μm 薄，例如 refractive surgery 後（角膜變薄、結構也改變）${s('S28', 'S29')}`, `Fluorescein 太少、半圓太細${s('S28', 'S29')}`, `角膜水腫${s('S28', 'S29', 'S32')}；但也有研究發現 contact lens 造成的水腫讓讀數偏高${s('S30')}`, `短時間內重複量很多次${s('S28', 'S29', 'S32')}`, `隔著 contact lens 量${s('S29')}`])
+    + list('CCT 換算', [`沒有公認的換算公式；EyeWiki 估計每差 50 μm 約差 2.5–3.5 mmHg${s('S30')}`])
+    + list('校正與誤差', [`校正：Kanski 建議每次門診前用校正桿檢查${s('S28')}；Stevens 寫每 6 個月檢查 0、2、6 三個位置${s('S31')}；EyeWiki 引用的建議是至少一年兩次，舊機器要更常檢查${s('S29')}`, `同一個人重複量，單次讀數可能差 3 mmHg 以上${s('S30')}`]);
+  return `<div class="card"><div class="eyebrow">Goldmann 眼壓計 · ${GMZ[st.gtMode]} · 對照 BCSC 10</div><div><h2>Goldmann applanation tonometry</h2></div><p class="zh">Goldmann 壓平眼壓計</p><p class="def">用雙稜鏡把角膜中央壓平成直徑 3.06 mm 的圓；兩個 fluorescein 半圓的內緣剛好相切時，旋鈕讀數 × 10 就是眼壓（mmHg）。</p>${v}${body}${srcList(refs(body))}</div>`;
+}
+function gtExtra() {
+  return `<div class="xh">旋鈕（示意）</div><div class="rng"><label for="gt-r">旋鈕的力</label><input type="range" id="gt-r" min="0" max="60" step="1" value="${st.gtR}"><span class="v" id="gt-r-v">${dialTxt(st.gtR)}</span></div><p class="hint" style="margin:0">往右＝力量變大、壓平的範圍變大；兩個半圓的內緣剛好相切時停下來讀數。半圓大小依 Imbert–Fick 粗算，不是實際比例。</p>`;
+}
+function gtFig(c) {
+  const fig = $('#fig');
+  fig.innerHTML = `<div class="duo"><div><div class="vh">從目鏡看 prism 裡的半圓</div>${mireSVG(c)}</div><div><div class="vh">側面：prism 壓平角膜</div>${sideSVG(c)}</div></div>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+  $('#cap').innerHTML = '<span>左：從裂隙燈目鏡看 prism 裡的兩個 fluorescein 半圓（cobalt blue 光；上半圓偏左、下半圓偏右是示意）。右：側面看 prism 壓平角膜（左＝anterior），壓平直徑隨旋鈕的力變大。</span><span class="ori">半圓與壓平直徑依 Imbert–Fick 粗算，示意</span>';
+}
+const GT = { raf: null };   // 「搏動明顯」：只改 #gt-m 裡的兩個半圓
+function gtTick(now) {
+  GT.raf = null;
+  const g = document.getElementById('gt-m');
+  if (!g || st.view !== 'gat' || st.gtMode !== 'pulse' || !st.anim) return;
+  g.innerHTML = mireG(gtGeom(st.gtR, st.gtP + GT_AMP * Math.sin(now / 1000 * 2 * Math.PI / 0.9), 'pulse'));
+  GT.raf = requestAnimationFrame(gtTick);
+}
+function gtStart() { if (GT.raf) cancelAnimationFrame(GT.raf); GT.raf = st.view === 'gat' && st.gtMode === 'pulse' && st.anim && st.learnMode === 'learn' ? requestAnimationFrame(gtTick) : null; }
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'sl', name: '裂隙燈照明法', en: 'Slit lamp illumination' }, { id: 'bio', name: '間接眼底鏡', en: 'Indirect ophthalmoscopy' }];
+const VIEWS = [{ id: 'sl', name: '裂隙燈照明法', en: 'Slit lamp illumination' }, { id: 'bio', name: '間接眼底鏡', en: 'Indirect ophthalmoscopy' }, { id: 'gat', name: 'Goldmann 眼壓計', en: 'Applanation tonometry' }];
 const $ = q => document.querySelector(q);
+let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
 const st = { view: 'sl', slT: 'sec', slL: 'scar', slA: null, slW: null, labels: true, learnMode: 'learn', quiz: null,
-  bSub: 'inv', bH: 10.5, bArea: 't', bLens: '20', bDep: true };
+  bSub: 'inv', bH: 10.5, bArea: 't', bLens: '20', bDep: true, gtMode: 'ok', gtR: 10, gtP: 22, anim: !reduce };
 const store = (() => {
   const K2 = 'examAtlas.v1';
   let mem = { wrong: {} };
@@ -1011,27 +1117,35 @@ function slExtra() {
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
   const BH = { inv: '點鏡中畫面任何一處放裂孔，或下方選位置；看實際位置與圖紙上的鐘點', pos: '下方選要看的區域，看病人往哪看、你站哪裡', lens: '下方選聚光鏡，看工作距離、空中影像的位置與倍率', dep: '上方切換「壓」，看最周邊怎麼被頂進視線' };
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'bio' ? BH[st.bSub] : '下方選照明法與病灶；左邊看光怎麼打，右邊看從顯微鏡看到什麼'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'bio' ? BH[st.bSub] : st.view === 'gat' ? '拖拉下方的旋鈕，讓兩個半圓的內緣剛好相切；也可以選看到的狀況與病人眼壓' : '下方選照明法與病灶；左邊看光怎麼打，右邊看從顯微鏡看到什麼'}</span>`;
 }
 function renderTools() {
   if (st.learnMode === 'quiz') { $('#tools').innerHTML = ''; return; }
   const lab = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
-  $('#tools').innerHTML = st.view === 'bio' ? `<div class="seg" role="group" aria-label="主題">${BSUBS.map(([k, t]) => `<button type="button" data-bsub="${k}" aria-pressed="${st.bSub === k}">${t}</button>`).join('')}</div>${st.bSub === 'dep' ? `<label class="tog"><input type="checkbox" id="t-dep" ${st.bDep ? 'checked' : ''}>壓</label>` : ''}${lab}` : lab;
+  $('#tools').innerHTML = st.view === 'bio' ? `<div class="seg" role="group" aria-label="主題">${BSUBS.map(([k, t]) => `<button type="button" data-bsub="${k}" aria-pressed="${st.bSub === k}">${t}</button>`).join('')}</div>${st.bSub === 'dep' ? `<label class="tog"><input type="checkbox" id="t-dep" ${st.bDep ? 'checked' : ''}>壓</label>` : ''}${lab}`
+    : st.view === 'gat' && st.gtMode === 'pulse' ? `<label class="tog"><input type="checkbox" id="t-anim" ${st.anim ? 'checked' : ''}>動畫</label>${lab}` : lab;
 }
 function renderFig() {
   const it = quizItem();
+  if (GT.raf && st.view !== 'gat') { cancelAnimationFrame(GT.raf); GT.raf = null; }
   if (st.view === 'bio') { bioFig(it); return; }
+  if (st.view === 'gat') { gtFig(it ? it.fig : gtCfg()); gtStart(); return; }
   const t = it ? (it.type === 'fig' ? it.tech : 'dif') : st.slT, L = it ? 'none' : st.slL, c = slCfg(t, !!it);
   const fig = $('#fig');
   fig.innerHTML = `<div class="duo"><div><div class="vh">由上往下看：光怎麼打</div>${topSVG(c, L)}</div><div><div class="vh">從顯微鏡看到的樣子</div>${frontSVG(c, L)}</div></div>`;
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
   $('#cap').innerHTML = `<span>左：右眼水平切面由上往下看（同眼解剖圖譜：上＝temporal、左＝anterior），光畫成直線、不畫折射；黃色＝光束、○＝光的焦點、＋＝顯微鏡對焦處${L !== 'none' ? '、藍色＝病灶' : ''}。右：從顯微鏡看出去（檢查者面對病人：左＝temporal、右＝nasal、上＝superior）。</span><span class="ori">角度、光束大小、病灶位置都是示意</span>`;
 }
-function renderExtra() { $('#extra').innerHTML = st.learnMode === 'quiz' ? '' : st.view === 'bio' ? bioExtra() : slExtra(); }
+function renderExtra() { $('#extra').innerHTML = st.learnMode === 'quiz' ? '' : st.view === 'bio' ? bioExtra() : st.view === 'gat' ? gtExtra() : slExtra(); }
 function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz' || (st.view === 'bio' && st.bSub === 'dep')) { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'gat') {
+    ix.innerHTML = `<span class="lbl">看到的半圓（mires）</span>` + GMODES.map(([k, t]) => `<button type="button" class="chip ${k === st.gtMode ? 'on' : ''}" data-gtm="${k}">${t}</button>`).join('')
+      + `<span class="lbl">這隻眼睛的眼壓（示意）</span>` + GPRES.map(p => `<button type="button" class="chip ${p === st.gtP ? 'on' : ''}" data-gtp="${p}">${p} mmHg</button>`).join('');
+    return;
+  }
   if (st.view === 'bio') {
     ix.innerHTML = st.bSub === 'inv' ? `<span class="lbl">裂孔位置（也可以直接點鏡中畫面）</span>` + BPOS.map(h => `<button type="button" class="chip ${h === st.bH ? 'on' : ''}" data-bh="${h}">鏡中${MZH[qIdx(h)]} <i>${clkTxt(h)}</i></button>`).join('')
       : st.bSub === 'pos' ? `<span class="lbl">要看的區域（右眼）</span>` + QCODE.map((c, i) => `<button type="button" class="chip ${c === st.bArea ? 'on' : ''}" data-barea="${c}"><i>${QUAD[i]}</i></button>`).join('')
@@ -1041,10 +1155,10 @@ function renderIndex() {
   const chips = g => TORDER.filter(t => TECH[t].g === g).map(t => `<button type="button" class="chip ${t === st.slT ? 'on' : ''}" data-tech="${t}">${TECH[t].zh} <i>${TECH[t].en}</i></button>`).join('');
   ix.innerHTML = `<span class="lbl">直接照明：光和顯微鏡對焦在同一處</span>${chips('d')}<span class="lbl">間接照明：看的地方不是光的焦點</span>${chips('i')}<span class="lbl">病灶（示意）</span>` + LORDER.map(k => `<button type="button" class="chip ${k === st.slL ? 'on' : ''}" data-les="${k}">${LES[k].zh}</button>`).join('');
 }
-function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'bio' ? bioCard() : slCard(); }
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'bio' ? bioCard() : st.view === 'gat' ? gtCard() : slCard(); }
 function renderSelbar() {
   const bt = { inv: () => `鏡中${MZH[qIdx(st.bH)]}＝圖紙 ${clkTxt(st.bH)}`, pos: () => `看 ${QUAD[QCODE.indexOf(st.bArea)]}`, lens: () => LENS[st.bLens].zh, dep: () => st.bDep ? '壓下去' : '沒有壓' };
-  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'bio' ? `目前：${bt[st.bSub]()}` : `目前：${TECH[st.slT].zh}${st.slL !== 'none' ? ' · ' + LES[st.slL].zh : ''}`;
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'bio' ? `目前：${bt[st.bSub]()}` : st.view === 'gat' ? `目前：${GMZ[st.gtMode]} · 旋鈕 ${dialTxt(st.gtR)}` :`目前：${TECH[st.slT].zh}${st.slL !== 'none' ? ' · ' + LES[st.slL].zh : ''}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -1067,14 +1181,25 @@ const GQ = {
 // 錯題的 key：sl:g:…（給病灶選照法）、sl:f:…（看圖認照法）、bio:m:…（鏡中位置換鐘點，例如 bio:m:105＝10 點半）、bio:s:…（看哪裡、站哪裡）；第二段的字母決定題型
 const SKEYS = [...Object.keys(GQ).map(k => 'sl:g:' + k), ...TORDER.map(t => 'sl:f:' + t)];
 const BKEYS = [...BPOS.map(h => 'bio:m:' + hCode(h)), ...QCODE.map(c => 'bio:s:' + c)];
-const keyValid = k => SKEYS.includes(k) || BKEYS.includes(k);
-const keyView = k => k.startsWith('bio:') ? 'bio' : 'sl';
-const QTV = { sl: [['goal', '給病灶選照法'], ['fig', '看圖認照法']], bio: [['mir', '鏡中位置換鐘點'], ['pos', '看哪裡、站哪裡']] };
-const QTZ = { g: 'goal', f: 'fig', m: 'mir', s: 'pos' };
+// Goldmann：gat:d:…（看半圓判斷下一步）、gat:e:…（讀數偏高還是偏低）
+const GTA = { up: '內緣還沒碰到：旋鈕轉大', down: '內緣重疊：旋鈕轉小', read: '剛好相切：可以讀數', center: '兩個半圓不一樣大：先用搖桿置中', dry: '半圓太粗：收回、擦乾 prism 再量', blink: '半圓太細：請病人眨眼，必要時補 fluorescein', rot: '半圓變成橢圓：轉 prism 對準散光軸' };
+const GDQ = { sep: { ans: 'up', mode: 'ok', dR: -8, zh: '內緣分開' }, ovl: { ans: 'down', mode: 'ok', dR: 8, zh: '內緣重疊' }, end: { ans: 'read', mode: 'ok', dR: 0, zh: '剛好相切' }, mis: { ans: 'center', mode: 'mis', dR: 0, zh: '一大一小' }, thick: { ans: 'dry', mode: 'thick', dR: 0, zh: '太粗' }, thin: { ans: 'blink', mode: 'thin', dR: 0, zh: '太細' }, ast: { ans: 'rot', mode: 'ast', dR: 0, zh: '橢圓' } };
+const GEQ = {
+  e1: { q: '角膜很厚（比 520 μm 厚很多）', ans: 'hi', src: ['S28', 'S29'] }, e2: { q: 'Refractive surgery 後，角膜變薄', ans: 'lo', src: ['S28', 'S29'] },
+  e3: { q: 'Fluorescein 點太多，半圓很粗', ans: 'hi', src: ['S28', 'S29'], mode: 'thick' }, e4: { q: 'Fluorescein 太少，半圓很細', ans: 'lo', src: ['S28', 'S29'], mode: 'thin' },
+  e5: { q: '撐眼瞼時手指壓到眼球，或病人用力閉眼', ans: 'hi', src: ['S28'] }, e6: { q: '角膜水腫', ans: 'lo', src: ['S28', 'S29', 'S32'] },
+  e7: { q: '病人憋氣（Valsalva），或領口太緊', ans: 'hi', src: ['S28', 'S29'] }, e8: { q: '短時間內重複量很多次', ans: 'lo', src: ['S28', 'S29', 'S32'] },
+  e9: { q: '隔著 contact lens 量', ans: 'lo', src: ['S29'] }, e10: { q: 'Thyroid eye disease，眼外肌受限', ans: 'hi', src: ['S28'] }
+};
+const GTKEYS = [...Object.keys(GDQ).map(k => 'gat:d:' + k), ...Object.keys(GEQ).map(k => 'gat:e:' + k)];
+const keyValid = k => SKEYS.includes(k) || BKEYS.includes(k) || GTKEYS.includes(k);
+const keyView = k => k.startsWith('bio:') ? 'bio' : k.startsWith('gat:') ? 'gat' : 'sl';
+const QTV = { sl: [['goal', '給病灶選照法'], ['fig', '看圖認照法']], bio: [['mir', '鏡中位置換鐘點'], ['pos', '看哪裡、站哪裡']], gat: [['dir', '看半圓判斷下一步'], ['err', '讀數偏高還是偏低']] };
+const QTZ = { g: 'goal', f: 'fig', m: 'mir', s: 'pos', d: 'dir', e: 'err' };
 const kType = k => QTZ[k.split(':')[1]];
 const tLab = o => `${TECH[o].zh}（${TECH[o].en}）`;
 const bH = id => BPOS.find(x => hCode(x) === id);
-const keyLabel = k => { const [v, ty, id] = k.split(':'); if (v === 'bio') return ty === 'm' ? `鏡中${MZH[qIdx(bH(id))]}：圖上畫在幾點` : `要看 ${QUAD[QCODE.indexOf(id)]}：病人看哪裡、你站哪裡`; return ty === 'f' ? `看圖認照法：${TECH[id].zh}` : GQ[id].q; };
+const keyLabel = k => { const [v, ty, id] = k.split(':'); if (v === 'gat') return ty === 'd' ? `看半圓判斷下一步（${GDQ[id].zh}）` : `${GEQ[id].q}：偏高還是偏低`; if (v === 'bio') return ty === 'm' ? `鏡中${MZH[qIdx(bH(id))]}：圖上畫在幾點` : `要看 ${QUAD[QCODE.indexOf(id)]}：病人看哪裡、你站哪裡`; return ty === 'f' ? `看圖認照法：${TECH[id].zh}` : GQ[id].q; };
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 function bioItem(key) {
   const [, ty, id] = key.split(':');
@@ -1088,7 +1213,19 @@ function bioItem(key) {
   return { key, type: 'pos', area: id, ans: id, opts: shuffle([id, QCODE[(i + 4) % 8], QCODE[(i + 1) % 8], QCODE[(i + 7) % 8]]), lab: x => `病人${ST[x][0]}，你${ST[x][1]}`,
     prompt: ['病人平躺，你可以繞著床頭走', `要看右眼 ${QUAD[i]} 的周邊：病人往哪看、你站哪裡？`], more: `要看哪一區，就請病人往那個方向看，你站到對面${s('S10', 'S12')}` };
 }
+function gatItem(key) {
+  const [, ty, id] = key.split(':'), P = 22;
+  if (ty === 'd') {
+    const g = GDQ[id];
+    return { key, type: 'dir', ans: g.ans, fig: { R: P + g.dR, P, mode: g.mode }, opts: shuffle([g.ans, ...shuffle(Object.keys(GTA).filter(x => x !== g.ans)).slice(0, 3)]), lab: x => GTA[x],
+      prompt: ['看 prism 裡的兩個半圓（標籤已隱藏）', '下一步該怎麼做？'], more: `終點是兩個半圓一樣大、置中，粗細約弧直徑的 10%，內緣剛好相切${s('S28', 'S29')}` };
+  }
+  const g = GEQ[id];
+  return { key, type: 'err', ans: g.ans, fig: { R: P, P, mode: g.mode || 'ok' }, opts: shuffle(['hi', 'lo']), lab: x => x === 'hi' ? '讀數偏高' : '讀數偏低',
+    prompt: ['Goldmann 量到的眼壓', `${g.q}：讀數會偏高還是偏低？`], more: `${g.q}：讀數${g.ans === 'hi' ? '偏高' : '偏低'}${s(...g.src)}${id === 'e6' ? '；也有研究發現 contact lens 造成的水腫讓讀數偏高' + s('S30') : ''}` };
+}
 function itemOf(key) {
+  if (key.startsWith('gat:')) return gatItem(key);
   if (key.startsWith('bio:')) return bioItem(key);
   const [, ty, id] = key.split(':');
   if (ty === 'f') return { key, type: 'fig', tech: id, ans: id, opts: shuffle([id, ...shuffle(TORDER.filter(x => x !== id)).slice(0, 3)]), prompt: ['上方是某一種照明法：左邊是光路，右邊是從顯微鏡看到的樣子（標籤已隱藏）', '這是哪一種照明法？'], more: TECH[id].def };
@@ -1101,13 +1238,13 @@ function quizHTML() {
   if (q.phase === 'setup') {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    const bv = st.view === 'bio';
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${bv ? '鏡中看到的，畫在哪裡？' : '這個要用哪種照法看？'}</h2>
+    const bv = st.view === 'bio', gv = st.view === 'gat';
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${bv ? '鏡中看到的，畫在哪裡？' : gv ? '這次的讀數能用嗎？' : '這個要用哪種照法看？'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">${bv ? '兩種題型：病人平躺、你站在頭側看右眼，給鏡中裂孔的位置，選圖紙上的鐘點與實際的區域（選項一定有正對面那個答案）；給要看的區域，選病人看的方向與你站的位置。' : '兩種題型：給病灶或檢查目的，選來源建議的照明法（容易混淆、來源也提到的照法不會同時當選項）；看光路與鏡下示意（標籤隱藏），認出是哪一種照明法。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${gv ? '兩種題型：看 prism 裡的兩個半圓（標籤隱藏），判斷下一步要轉大、轉小、讀數，還是先處理 fluorescein、置中或散光；給一個情境，判斷 Goldmann 的讀數會偏高還是偏低。' : bv ?'兩種題型：病人平躺、你站在頭側看右眼，給鏡中裂孔的位置，選圖紙上的鐘點與實際的區域（選項一定有正對面那個答案）；給要看的區域，選病人看的方向與你站的位置。' : '兩種題型：給病灶或檢查目的，選來源建議的照明法（容易混淆、來源也提到的照法不會同時當選項）；看光路與鏡下示意（標籤隱藏），認出是哪一種照明法。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -1127,7 +1264,7 @@ function quizHTML() {
 }
 function startQuiz(cfg) {
   const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
-  let pool = [...SKEYS, ...BKEYS].filter(k => keyView(k) === st.view && types.includes(kType(k)));
+  let pool = [...SKEYS, ...BKEYS, ...GTKEYS].filter(k => keyView(k) === st.view && types.includes(kType(k)));
   if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
   if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
   let keys = [];
@@ -1160,6 +1297,7 @@ function setMode(m) {
 function setTech(t) { Object.assign(st, { slT: t, slA: null, slW: null }); }
 function goKey(k) {
   const [v, ty, id] = k.split(':');
+  if (v === 'gat') { setView('gat'); const f = gatItem(k).fig; Object.assign(st, { gtMode: f.mode, gtR: f.R, gtP: f.P }); render(); return; }
   if (v === 'bio') { setView('bio'); if (ty === 'm') Object.assign(st, { bSub: 'inv', bH: bH(id) }); else Object.assign(st, { bSub: 'pos', bArea: id }); render(); return; }
   setView('sl');
   if (ty === 'f') { setTech(id); st.slL = 'none'; }
@@ -1188,6 +1326,8 @@ document.addEventListener('click', e => {
   const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
   const tc = t.closest('[data-tech]'); if (tc) { setTech(tc.dataset.tech); render(); return; }
   const le = t.closest('[data-les]'); if (le) { st.slL = le.dataset.les; render(); return; }
+  const gm = t.closest('[data-gtm]'); if (gm) { st.gtMode = gm.dataset.gtm; render(); return; }
+  const gp = t.closest('[data-gtp]'); if (gp) { st.gtP = +gp.dataset.gtp; render(); return; }
   const bs = t.closest('[data-bsub]'); if (bs) { st.bSub = bs.dataset.bsub; render(); return; }
   const bh = t.closest('[data-bh]'); if (bh) { st.bH = +bh.dataset.bh; render(); return; }
   const ba = t.closest('[data-barea]'); if (ba) { st.bArea = ba.dataset.barea; render(); return; }
@@ -1209,10 +1349,12 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
   if (e.target.id === 't-dep') { st.bDep = e.target.checked; renderFig(); renderPanel(); renderSelbar(); }
+  if (e.target.id === 't-anim') { st.anim = e.target.checked; renderFig(); }
 });
 // 拖拉角度、寬度：只重畫圖與說明卡，拉條本身不重畫（才拖得動）；寬度跨過分界時切換 optic section 與 parallelepiped
 document.addEventListener('input', e => {
   const id = e.target.id;
+  if (id === 'gt-r') { st.gtR = +e.target.value; $('#gt-r-v').textContent = dialTxt(st.gtR); renderFig(); renderPanel(); renderSelbar(); return; }
   if (id === 'sl-a') { st.slA = +e.target.value; $('#sl-a-v').textContent = `${st.slA}°`; renderFig(); return; }
   if (id === 'sl-w') {
     st.slW = +e.target.value;
@@ -1295,9 +1437,21 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   st.bSub = 'lens'; LENS_ORDER.forEach(k => { st.bLens = k; refs(lensCard() + bioExtra()).forEach(r => a(SRC[r], `${k} 的引用 ${r}`)); });
   Object.assign(st, st1);
   BKEYS.forEach(k => refs(itemOf(k).more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`)));
+  // Goldmann：讀數＝眼壓時壓平直徑剛好 3.06 mm、兩個半圓的內緣剛好相切；力量不夠時分開、太大時重疊
+  const innerGap = (R, P) => { const g = gtGeom(R, P, 'ok'); return (GS / 2 - g.d / 2) * 2; };   // 上半圓內緣右端與下半圓內緣左端的距離（正＝分開）
+  GPRES.forEach(P => { a(Math.abs(gtGeom(P, P, 'ok').d - GS) < 1e-9 && Math.abs(innerGap(P, P)) < 1e-9, `${P} mmHg：讀數＝眼壓時內緣剛好相切`); a(innerGap(P - 2, P) > 0 && mireState(P - 2, P) === 'sep' && innerGap(P + 2, P) < 0 && mireState(P + 2, P) === 'ovl', `${P} mmHg：力量不夠分開、太大重疊`); });
+  a(dialTxt(22) === '2.2（× 10 ＝ 22 mmHg）' && dialTxt(10) === '1.0（× 10 ＝ 10 mmHg）', '旋鈕 × 10 ＝ mmHg');
+  a(gtGeom(22, 22, 'thick').w > gtGeom(22, 22, 'ok').w && gtGeom(22, 22, 'thin').w < gtGeom(22, 22, 'ok').w, 'fluorescein 太多半圓較粗、太少較細');
+  a(Math.abs(gtGeom(22, 22, 'ok').w / gtGeom(22, 22, 'ok').d - 0.12) < 1e-9, '正確的半圓粗細約弧直徑的一成（Kanski 寫約 10%，示意）');
+  a(7.8 - Math.sqrt(7.8 ** 2 - (GS / 2) ** 2) < 0.52, '側面：壓平處的弧高小於角膜厚度');
+  Object.entries(GDQ).forEach(([k, g]) => { const f = gatItem('gat:d:' + k).fig, s0 = mireState(f.R, f.P); a(g.mode !== 'ok' || (g.ans === 'up' ? s0 === 'sep' : g.ans === 'down' ? s0 === 'ovl' : s0 === 'end'), `gat:d:${k} 的圖和答案一致`); });
+  for (let n = 0; n < 20; n++) GTKEYS.forEach(k => { const it = itemOf(k), nOpt = it.type === 'dir' ? 4 : 2; a(it.opts.includes(it.ans) && it.opts.length === nOpt && new Set(it.opts).size === nOpt, `${k} 的選項含答案、不重複`); });
+  a(Object.values(GEQ).every(g => ['hi', 'lo'].includes(g.ans) && g.src.every(r => SRC[r])), 'GEQ 的答案與來源');
+  refs(gtCard()).forEach(r => a(SRC[r], `Goldmann 說明卡的引用 ${r}`));
+  GTKEYS.forEach(k => refs(itemOf(k).more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`)));
 })();
 
-if (location.hash === '#bio') st.view = 'bio';
+if (location.hash === '#bio' || location.hash === '#gat') st.view = location.hash.slice(1);
 render();
 </script>
 
