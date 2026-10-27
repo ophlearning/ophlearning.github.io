@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>檢查技巧互動圖譜</title>
+<meta name="description" content="互動式眼科檢查技巧圖譜：裂隙燈照明法——切換 diffuse、optic section、parallelepiped、短窄光束、specular reflection、間接照明（proximal）、sclerotic scatter、虹膜反照、眼底反照、虹膜透照，同時看由上往下的光路與從顯微鏡看到的樣子，拖拉條調光源臂角度與光束寬度；練習角膜疤痕、stromal haze、guttata、KP、AC cells、PSC、iris transillumination defect 各該用哪種照法；附說明卡、測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as glaucoma — figure stage on the left, card on the right; the top view reuses the eye-atlas model (top = temporal, left = anterior) */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --hl:#0A6FD8; --hl-soft:rgba(10,111,216,.16); --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-cornea:#E2E0F1; --t-sclera:#F5F0EC; --t-uvea:#8E604B; --t-iris:#7C5342; --t-pig:#4A3028; --t-cb:#B98673;
+  --t-retina:#B7A6E0; --t-lens:#E6ECF7; --t-nuc:#D3D9EA; --t-fluid:#E8F0F8; --t-vit:#EEF3F6;
+  --sl-beam:#E39B12; --sl-beamk:#A86200; --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-glare:#FFFFFF; --sl-irisglow:#E7B98E;
+  --sl-opac:#F7F4EC; --sl-cat:#BDB6A6; --sl-shadow:#1F120C; --sl-reflex:#C9471F; --sl-reflex2:#F28A3E; --sl-pupil:#0F0B0D;
+  --sl-mos:#D9B65E; --sl-mos-l:#7A5A1E; --sl-gut:#2A1A08; --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-cornea:#302B44; --t-sclera:#3B3647; --t-uvea:#704B3B; --t-iris:#6C4839; --t-pig:#2B1D17; --t-cb:#7F5648;
+  --t-retina:#5D4D91; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
+  --sl-beam:#F2C14E; --sl-beamk:#F7D77E; --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-glare:#FFFFFF; --sl-irisglow:#E7B98E;
+  --sl-opac:#F7F4EC; --sl-cat:#BDB6A6; --sl-shadow:#1F120C; --sl-reflex:#C9471F; --sl-reflex2:#F28A3E; --sl-pupil:#0F0B0D;
+  --sl-mos:#D9B65E; --sl-mos-l:#7A5A1E; --sl-gut:#2A1A08; --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --hl:#D6F062; --hl-soft:rgba(214,240,98,.2); --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-cornea:#302B44; --t-sclera:#3B3647; --t-uvea:#704B3B; --t-iris:#6C4839; --t-pig:#2B1D17; --t-cb:#7F5648;
+  --t-retina:#5D4D91; --t-lens:#2A3147; --t-nuc:#3A4261; --t-fluid:#1D2434; --t-vit:#1A2029;
+  --sl-beam:#F2C14E; --sl-beamk:#F7D77E; --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-glare:#FFFFFF; --sl-irisglow:#E7B98E;
+  --sl-opac:#F7F4EC; --sl-cat:#BDB6A6; --sl-shadow:#1F120C; --sl-reflex:#C9471F; --sl-reflex2:#F28A3E; --sl-pupil:#0F0B0D;
+  --sl-mos:#D9B65E; --sl-mos-l:#7A5A1E; --sl-gut:#2A1A08; --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative}
+.fig svg{display:block;width:100%;height:auto}
+.duo{display:grid;grid-template-columns:1.05fr 1fr}
+.duo>div{min-width:0}
+.vh{font-size:12.5px;color:var(--muted);letter-spacing:.04em;padding:8px 12px 0}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip i{font-family:var(--f-display);font-size:12.5px}
+
+/* figure: anatomy classes from the eye atlas */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+.lab text{font-family:var(--f-body);font-size:14px;fill:var(--ink-2);paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.lab line{stroke:var(--t-stroke);stroke-width:.8}
+.lab circle{fill:var(--t-stroke)}
+.lab.dk text{fill:var(--sl-lab-ink);stroke:var(--sl-lab-halo)}
+.lab.dk line{stroke:var(--sl-lab-ink);stroke-opacity:.7}
+.lab.dk circle{fill:var(--sl-lab-ink)}
+.nolab .lab,.quiz-on .lab{display:none}
+.c-cornea{fill:var(--t-cornea);stroke:var(--t-stroke);stroke-width:1}
+.c-sclera{fill:var(--t-sclera);stroke:var(--t-stroke);stroke-width:1}
+.c-uvea{fill:var(--t-uvea);stroke:var(--t-stroke);stroke-width:.6}
+.c-ret{fill:var(--t-retina);stroke:var(--t-stroke);stroke-width:.6}
+.c-iris{fill:var(--t-iris);stroke:var(--t-stroke);stroke-width:.8}
+.c-cb{fill:var(--t-cb);stroke:var(--t-stroke);stroke-width:.8}
+.c-lens{fill:var(--t-lens);stroke:var(--t-stroke-2);stroke-width:.8}
+.c-nuc{fill:var(--t-nuc);stroke:var(--t-stroke-2);stroke-width:.8}
+.c-fluid{fill:var(--t-fluid);stroke:none}
+.c-vit{fill:var(--t-vit);stroke:none}
+/* 上視圖：光束、顯微鏡、焦點 */
+.sl-beam{fill:var(--sl-beam);fill-opacity:.5;stroke:var(--sl-beam);stroke-width:.8}
+.sl-beam.wide{fill-opacity:.2}
+.sl-beam.coax{fill-opacity:.24}
+.sl-ref{fill:none;stroke:var(--sl-beam);stroke-width:2.4;stroke-dasharray:3 3}
+.sl-tir{fill:none;stroke:var(--sl-beamk);stroke-width:1.8;stroke-linejoin:round}
+.sl-ret{fill:none;stroke:var(--sl-reflex);stroke-width:2;stroke-dasharray:6 4}
+.sl-reth{fill:var(--sl-reflex)}
+.sl-mic{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:7 5}
+.sl-ocu{fill:var(--surface);stroke:var(--accent);stroke-width:1.6}
+.sl-lamp{fill:var(--sl-beam);stroke:var(--t-stroke);stroke-width:1}
+.sl-fk{fill:none;stroke:var(--sl-beamk);stroke-width:2.2}
+.sl-mk{stroke:var(--accent);stroke-width:2.2}
+.sl-les{fill:var(--hl);stroke:none}
+.sl-les.h{fill-opacity:.4}
+/* 鏡下所見（像照片，深淺模式都用同一組顏色） */
+.fv-bg{fill:var(--t-sclera)}
+.fv-iris{fill:var(--t-iris)}
+.fv-tex{fill:none;stroke:var(--t-pig);stroke-width:1;opacity:.45}
+.fv-pupil{fill:var(--sl-pupil)}
+.fv-limb{fill:none;stroke:var(--t-stroke);stroke-width:1}
+.fv-dark{fill:var(--sl-dark);opacity:.82}
+.fv-sheen{fill:var(--sl-light);opacity:.12}
+.fv-glare{fill:var(--sl-glare)}
+.fv-sec{fill:var(--sl-light);opacity:.62}
+.fv-sec.w{opacity:.5}
+.fv-sec.f{opacity:.3}
+.fv-irb{fill:var(--sl-irisglow);opacity:.85}
+.fv-lens{fill:var(--sl-light);opacity:.32}
+.fv-opq{fill:var(--sl-opac)}
+.fv-hz{fill:var(--sl-opac);opacity:.55}
+.fv-haze0{fill:var(--sl-opac);opacity:.18}
+.fv-kp0{fill:var(--sl-opac);opacity:.92}
+.fv-psc0{fill:var(--sl-cat);opacity:.6}
+.fv-glow{fill:var(--sl-glare);opacity:.78}
+.fv-glow.h{opacity:.36}
+.fv-cell{fill:var(--sl-glare)}
+.fv-sh{fill:var(--sl-shadow);opacity:.72}
+.fv-kpr{fill:var(--sl-shadow);stroke:var(--sl-glare);stroke-width:1.2;stroke-opacity:.85}
+.fv-tid{fill:var(--sl-reflex);opacity:.88}
+.fv-mos{stroke:var(--sl-glare);stroke-width:1;stroke-opacity:.55}
+.fv-hexb{fill:var(--sl-mos)}
+.fv-hexl{fill:none;stroke:var(--sl-mos-l);stroke-width:.8}
+.fv-gut{fill:var(--sl-gut)}
+.fv-ring{fill:none;stroke:var(--sl-light);opacity:.62}
+.fv-ins{fill:none;stroke:var(--sl-lab-ink);stroke-width:1.1;stroke-opacity:.75}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--accent-soft);display:flex;flex-wrap:wrap;gap:4px 14px}
+.lk{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font:inherit}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras: 拉條與基本設定 */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.rng{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-2);margin-bottom:8px}
+.rng label{min-width:10em}
+.rng input[type=range]{flex:1 1 160px;accent-color:var(--accent);min-width:0}
+.rng .v{font-family:var(--f-mono);font-size:12.5px;color:var(--ink);min-width:9em}
+.gl{margin:0 0 10px;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:13.5px;color:var(--ink-2)}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} }
+@media (max-width: 700px){ .duo{grid-template-columns:1fr} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .lab text{font-size:19px;stroke-width:4.5px}
+  .seg button{padding:5px 10px}
+  .rng label{min-width:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>檢查技巧互動圖譜</h1>
+      <span class="sub">Examination techniques · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>裂隙燈分頁左邊的上視圖沿用眼解剖圖譜的眼球模型（右眼水平切面由上往下看：上＝temporal、左＝anterior），光束畫成直線、不畫折射；右邊是從顯微鏡看出去的樣子（檢查者面對病人：左＝temporal、右＝nasal、上＝superior），像照片一樣，深淺模式都用同一組顏色。光源臂角度、光束寬度、病灶的位置與大小都是示意；有出處的設定寫在說明卡。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；只找到講義或專業學會教學頁的地方，說明卡會註明。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ---------- sources ---------- */
+const SRC = {
+  S1: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.20–21 Slit lamp biomicroscopy of the anterior segment（direct illumination、scleral scatter、retroillumination、specular reflection）', u: null },
+  S2: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.260–261 Fuchs endothelial corneal dystrophy（Fig 7.52B：specular reflection 下的 cornea guttata）', u: null },
+  S3: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.431 Uveitis 的 anterior chamber cells（SUN 分級）', u: null },
+  S4: { t: 'EyeWiki：Slit Lamp Examination（Brandner D, Yamanuha J, Montezuma SR；2026-06 審閱）', u: 'https://eyewiki.org/Slit_Lamp_Examination' },
+  S5: { t: 'Gilman JP. Slit Lamp Biomicrography: Direct Illumination. Ophthalmic Photographers’ Society（眼科攝影學會教學頁）', u: 'https://mail.opsweb.org/OpPhoto/SlitLamp/SL/SlitLamp3.html' },
+  S6: { t: 'Gilman JP. Slit Lamp Biomicrography: Indirect Illumination. Ophthalmic Photographers’ Society（眼科攝影學會教學頁）', u: 'https://mail.opsweb.org/OpPhoto/SlitLamp/SL/SlitLamp4.html' },
+  S7: { t: 'Abusharha A. Slit lamp biomicroscope（Lecture 2 & 3，OPTO 314 驗光課程講義）. King Saud University', u: 'https://faculty.ksu.edu.sa/sites/default/files/opto_314_lecture_3_4.pdf' }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+
+/* ---------- geometry helpers（同眼解剖圖譜） ---------- */
+const DEG = Math.PI / 180;
+const fx = n => Math.round(n * 10) / 10;
+function arc(r, a0, a1, cx = 0, cy = 0, step = 1.2) {
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) / step)), o = [];
+  for (let i = 0; i <= n; i++) { const a = (a0 + (a1 - a0) * i / n) * DEG; o.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
+  return o;
+}
+function arcF(rf, a0, a1, step = 0.8) {
+  const n = Math.max(2, Math.ceil(Math.abs(a1 - a0) / step)), o = [];
+  for (let i = 0; i <= n; i++) { const ad = a0 + (a1 - a0) * i / n, a = ad * DEG, r = rf(ad); o.push([r * Math.cos(a), r * Math.sin(a)]); }
+  return o;
+}
+const pt = (r, a) => [r * Math.cos(a * DEG), r * Math.sin(a * DEG)];
+function bez(p0, p1, p2, p3, n = 20) {
+  const o = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n, u = 1 - t;
+    o.push([u*u*u*p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t*t*t*p3[0], u*u*u*p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t*t*t*p3[1]]);
+  }
+  return o;
+}
+function cr(pts, seg = 8) {
+  const o = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || pts[i + 1];
+    for (let j = 0; j < seg; j++) {
+      const t = j / seg, t2 = t * t, t3 = t2 * t;
+      const f = k => 0.5 * ((2 * p1[k]) + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t3);
+      o.push([f(0), f(1)]);
+    }
+  }
+  o.push(pts[pts.length - 1]);
+  return o;
+}
+const mir = pts => pts.map(p => [p[0], -p[1]]);
+const rev = pts => pts.slice().reverse();
+function mkT(sc, x0, y0) { return p => [(p[0] - x0) * sc, (y0 - p[1]) * sc]; }
+function dp(pts, T, close = true) { return 'M' + pts.map(p => { const q = T(p); return fx(q[0]) + ' ' + fx(q[1]); }).join('L') + (close ? 'Z' : ''); }
+const vsOf = (a, b, n = 24) => Array.from({ length: n + 1 }, (_, i) => a + (b - a) * i / n);
+
+/* ---------- 眼球模型：從眼解剖圖譜 EYE 複製，只留上視圖看得到的部分（mm，原點＝眼球中心，+x posterior、+y temporal）；眼解剖圖譜改了，這裡要跟著改 ---------- */
+const EYE = (() => {
+  const Ro = 11.3, Rsi = 10.5, Rci = 10.15, Rri = 9.8;
+  const thLo = 148.83, thJ = 149.94, spurA = 146.53, cbEnd = 133.62, oraT = 113.34, oraN = -118.41, cbEndN = -133.62;
+  const thF = 6.6, thD = -15.2, cT = -10.3, cB = -20.1;
+  const J = [-9.09, 5.26], SPUR = [-8.76, 5.79];
+  const rIn = a => Rri + 0.24 * Math.exp(-(((a - thF) / 2.8) ** 2));
+  const cup = a => Rri + 0.42 * Math.exp(-(((a - thD) / 2.4) ** 2));
+  const LA = bez([-8.76, 0], [-8.76, 2.7], [-8.0, 4.6], [-7.25, 4.75], 28);
+  const LP = bez([-7.25, 4.75], [-6.45, 4.9], [-4.76, 3.0], [-4.76, 0], 28);
+  const lens = [...LA, ...LP.slice(1), ...rev(mir(LP)).slice(1), ...rev(mir(LA)).slice(1, -1)];
+  const scaleAbout = (pts, c, sx, sy) => pts.map(p => [c[0] + (p[0] - c[0]) * sx, c[1] + (p[1] - c[1]) * sy]);
+  const nucleus = scaleAbout(lens, [-6.9, 0], 0.6, 0.6);
+  const A = cr([[-8.62, 5.45], [-8.80, 4.9], [-8.95, 4.2], [-9.05, 3.4], [-8.98, 2.6], [-8.90, 2.0]], 6);
+  const B = cr([[-8.30, 5.40], [-8.42, 4.8], [-8.52, 4.1], [-8.58, 3.3], [-8.60, 2.6], [-8.62, 2.0]], 6);
+  const iris = [...A, [-8.77, 1.94], ...rev(B)];
+  const PROC = cr([[-7.00, 7.35], [-7.25, 6.75], [-7.55, 6.15], [-7.80, 5.55], [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]], 6);
+  const procTipIdx = PROC.findIndex(p => p[1] < 5.3);
+  const cb = [SPUR, ...arc(Rsi, spurA, cbEnd), ...PROC, [-8.62, 5.45], [-8.70, 5.62]];
+  const lensFront2 = LA.filter(p => p[1] <= 2.0);
+  const ac = [J, ...arc(Rsi, thJ, spurA), [-8.70, 5.62], [-8.62, 5.45], ...A, ...rev(lensFront2), ...mir(lensFront2).slice(1),
+    ...rev(mir(A)), [-8.62, -5.45], [-8.70, -5.62], ...arc(Rsi, -spurA, -thJ), ...arc(6.5, 233.94, 126.06, -5.26, 0)];
+  const pc = [...B, ...LA.filter(p => p[1] >= 2.0 && p[1] <= 4.5), [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]];
+  // 散瞳（約 7.4 mm）
+  const A2 = cr([[-8.62, 5.45], [-8.86, 5.08], [-8.93, 4.55], [-8.70, 3.98], [-8.26, 3.68]], 6);
+  const B2 = cr([[-8.30, 5.40], [-8.40, 4.95], [-8.36, 4.40], [-8.12, 3.83]], 6);
+  const lfD = LA.filter(p => p[1] <= 3.67);
+  const dil = {
+    iris: [...A2, [-8.15, 3.73], ...rev(B2)],
+    ac: [J, ...arc(Rsi, thJ, spurA), [-8.70, 5.62], [-8.62, 5.45], ...A2, ...rev(lfD), ...mir(lfD).slice(1),
+      ...rev(mir(A2)), [-8.62, -5.45], [-8.70, -5.62], ...arc(Rsi, -spurA, -thJ), ...arc(6.5, 233.94, 126.06, -5.26, 0)],
+    pc: [...B2, ...LA.filter(p => p[1] >= 3.8 && p[1] <= 4.5), [-7.84, 5.26], [-8.05, 5.20], [-8.30, 5.40]]
+  };
+  const cornea = [...arc(7.8, 131.4, 228.6, -4.51, 0), ...arc(6.5, 233.94, 126.06, -5.26, 0)];
+  const scleraT = [...arc(Ro, thLo, cT), ...arc(Rsi, cT, thJ)];
+  const scleraN = [...arc(Ro, -thLo, cB), ...arc(Rsi, cB, -thJ)];
+  const choroidT = [...arc(Rsi, oraT, cT), ...arc(Rci, cT, oraT)];
+  const choroidN = [...arc(Rsi, cB, oraN), ...arc(Rci, oraN, cB)];
+  const ppT = [...arc(Rsi, cbEnd, oraT), ...arc(Rci, oraT, cbEnd)];
+  const ppN = [...arc(Rsi, cbEndN, oraN), ...arc(Rci, oraN, cbEndN)];
+  const retT = [...arc(Rci, oraT, cT), ...arcF(rIn, cT, oraT)];
+  const retN = [...arc(Rci, cB, oraN), ...arcF(rIn, oraN, cB)];
+  const procHalf = PROC.slice(0, procTipIdx + 1);
+  const vit = [...arcF(rIn, oraT, cT), ...arcF(cup, cT, cB, 0.4), ...arcF(rIn, cB, oraN), ...arc(Rci, oraN, cbEndN),
+    ...mir(procHalf), ...mir(LP).slice(0), ...rev(LP).slice(1), ...rev(procHalf), ...arc(Rci, cbEnd, oraT)];
+  return { lens, nucleus, iris, cb, ac, pc, dil, cornea, scleraT, scleraN, choroidT, choroidN, ppT, ppN, retT, retN, vit };
+})();
+
+/* ---------- 裂隙燈的幾何：正面座標 u＝往 nasal、v＝往 superior，z＝距角膜頂點的深度（mm，數值取自眼球模型） ---------- */
+const XA = -4.51 - 7.8;   // 角膜前表面頂點的 x
+const XI = -8.95;         // iris 前表面（示意取平均）
+const ZP = 0.55, ZI = XI - XA, ZL1 = -8.76 - XA, ZL2 = -4.76 - XA;   // 中央 endothelium、iris、水晶體前極與後極的深度
+const RL = 7.8 * Math.sin(131.4 * DEG), ZLIM = -4.51 + 7.8 * Math.cos(131.4 * DEG) - XA;   // limbus 的半徑與深度
+const RP = 1.94, RPD = 3.7;   // 瞳孔半徑：沒散瞳、散瞳（同眼解剖圖譜）
+const sagF = r => 7.8 - Math.sqrt(7.8 ** 2 - r * r), sagB = r => 6.5 - Math.sqrt(6.5 ** 2 - r * r);
+const zAnt = (u, v = 0) => sagF(Math.hypot(u, v)), zPost = (u, v = 0) => ZP + sagB(Math.hypot(u, v));
+const zMid = u => (zAnt(u) + zPost(u)) / 2;
+const toTop = q => [XA + q[1], -q[0]];   // 正面座標（u, z）換成上視圖（x, y）
+
+/* 病灶（示意）：U、V＝正面範圍，D＝表面下的深度 */
+const SCAR = { blob: cr([[-1.8, 0.35], [-1.55, 0.72], [-1.1, 0.75], [-0.7, 0.5], [-0.6, 0.1], [-0.95, -0.15], [-1.45, -0.12], [-1.8, 0.35]], 6), U: [-1.8, -0.6], V: [-0.15, 0.75], D: [0.03, 0.17], c: [-1.2, 0.3] };
+const HAZE = { r: 2.0, D: [0.06, 0.36], c: [1.2, -1.2] };
+const KPS = [[2.55, -0.2, 0.14], [2.85, -0.5, 0.11], [3.05, -0.15, 0.09], [2.7, -0.85, 0.12], [3.0, -1.05, 0.08], [2.45, -0.7, 0.09], [2.9, 0.15, 0.08]];   // u, v, 半徑
+const PSC = { blob: cr([[-0.9, 0.2], [-0.55, 0.8], [0.2, 0.95], [0.85, 0.45], [0.9, -0.3], [0.35, -0.85], [-0.4, -0.8], [-0.9, 0.2]], 6), z: ZL2 - 0.15, c: [0.2, -0.4] };
+const TIDS = [[3.3, 15], [3.9, 52], [3.5, 95], [4.2, 130], [3.6, 170], [4.0, 215], [3.4, 250], [4.3, 290], [3.7, 330]];   // 半徑、角度
+const GUTS = [[0.25, 0.35, 0.07], [0.55, -0.1, 0.09], [0.35, -0.5, 0.06], [0.7, 0.45, 0.06], [0.15, -0.15, 0.05], [0.6, -0.55, 0.07]];   // 鏡面反射區旁的位置
+let seed = 11;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const CELLS = Array.from({ length: 30 }, () => [rnd(), rnd(), rnd()]);   // 前房 cells：深度、高度、橫向（0–1，依光束換算，固定亂數）
+
+/* ---------- 照明法 ---------- */
+const TORDER = ['dif', 'sec', 'par', 'ac', 'spe', 'prx', 'scl', 'rti', 'rtf', 'tra'];
+// 預設設定：a＝光源臂與顯微鏡的夾角（度）、w＝光束寬、h＝光束高（mm）、F＝光的焦點、M＝顯微鏡對焦處（u, z）；角度與大小是示意，有出處的寫在說明卡
+const TP = {
+  dif: { a: 40, w: 8, h: 10, F: [0, zMid(0)] },
+  sec: { a: 60, w: 0.15, h: 6, F: [-1.2, zMid(-1.2)] },
+  par: { a: 45, w: 1.5, h: 6, F: [-1.2, zMid(-1.2)] },
+  ac: { a: 45, w: 1, h: 3, F: [0, 2.0] },
+  spe: { a: 60, w: 0.6, h: 2, F: [0, ZP] },
+  prx: { a: 45, w: 0.6, h: 5, F: [0.3, zMid(0.3)], M: [-1.2, zMid(-1.2)] },
+  scl: { a: 50, w: 1, h: 4, F: [-RL, ZLIM], M: [0, zMid(0)] },
+  rti: { a: 45, w: 1.2, h: 4, F: [2.8, ZI], M: [2.8, zMid(2.8)] },
+  rtf: { a: 4, w: 2 * RPD, h: 2 * RPD, F: [0, ZI], M: [0, PSC.z], dil: true, coax: true },
+  tra: { a: 2, w: 2 * RP, h: 2 * RP, F: [0, ZI], M: [0, ZI], coax: true }
+};
+const WSEC = 0.5;   // 光束寬度拉條：比這個細算 optic section（示意）
+const TECH = {
+  dif: { zh: '散射照明', en: 'Diffuse illumination', g: 'd',
+    def: '在光束前放 diffuser（毛玻璃），光變寬、變柔，整個前段被均勻照亮。',
+    set: [`光束開到最寬、放下 diffuser${s('S4', 'S7')}`, `低倍率：多數裂隙燈 6–40×，6–10× 視野大，適合一般檢查${s('S4')}`, `講義寫光源與顯微鏡夾 30–45°${s('S7')}；本圖用 40°`],
+    best: [`看全貌、找明顯的異常${s('S1')}`, `Lids、lashes、sclera、cornea、iris、pupil 的整體外觀與明顯混濁${s('S7')}`, `EyeWiki 的 conjunctival injection、hypopyon 照片都在 diffuse illumination 下拍${s('S4')}`] },
+  sec: { zh: '光學切面', en: 'Optic section', g: 'd',
+    def: '把光束收到很細、斜著打進角膜，切出一片角膜的橫切面；光和顯微鏡對焦在同一處。',
+    set: [`窄光束、光源臂斜放${s('S1', 'S4')}`, `眼科攝影學會：觀察方向和細光束約 60°；角度大一點，顯微鏡很淺的景深裡看得到比較多層${s('S5')}`, `講義：用最高倍率；光束不要拉太長，免得病人太刺眼${s('S7')}`],
+    best: [`判斷病灶深度：很細的切面掃過角膜，看病灶在哪一層${s('S1')}`, `切面上靠光源那側是表層，另一側是 endothelium，例如 KP 在 endothelium 那側${s('S4')}`, `角膜水腫或變薄、iris 病灶、角膜或結膜腫塊、白內障、含液囊腫${s('S5')}`, `調光束高度可以量病灶的大小${s('S1')}`],
+    note: ['本圖的疤痕落在切面靠左（光源那側）的部分＝前基質。光穿過前房落在 nasal iris 上，和角膜切面分開；角度越大分得越開（幾何示意）'] },
+  par: { zh: '寬光束（parallelepiped）', en: 'Parallelepiped', g: 'd',
+    def: '光束比 optic section 寬，照出一塊有厚度的長方體角膜，看病灶的範圍與形狀。',
+    set: [`講義：光束 1–2 mm 寬，顯微鏡在正前方，光源約 45°${s('S7')}`, `更寬的直接照明常先用來看大範圍${s('S7')}`],
+    best: [`角膜的結構與缺損；用比寬光更高的倍率看疤痕、異物的深度與範圍${s('S7')}`, `細縫看深度與位置比較清楚，寬縫看範圍與形狀比較清楚${s('S7')}`],
+    note: ['下方「光束寬度」拉條往細的方向拉，就變成 optic section'] },
+  ac: { zh: '短窄光束看前房', en: 'Short narrow beam (conical beam)', g: 'd',
+    def: '光束又窄又短，穿過前房；背景是黑的瞳孔，浮在 aqueous 裡的 cells 被照成一顆顆小亮點，像陽光照出房間裡的灰塵。',
+    set: [`光束窄到約 1 mm、高度調到約 3 mm${s('S4')}`, `講義的 conical beam：再把高度縮成小光點，光源 45–60°、16–25×、亮度開最大，對焦在角膜和水晶體之間的暗區${s('S7')}`],
+    best: [`Anterior chamber 的 cells 與 flare、hyphema、hypopyon；cells 是浮在 aqueous 裡的反光小點${s('S4')}`],
+    note: [`SUN 分級數的是 1 mm × 1 mm 光束裡的 cells，要在散瞳前做，散瞳可能讓色素細胞掉進 aqueous${s('S3')}；本頁不做分級`] },
+  spe: { zh: '鏡面反射', en: 'Specular reflection', g: 'd',
+    def: '光源和顯微鏡分在角膜表面法線的兩側、角度相等，就會看到角膜表面像鏡子一樣的亮反光；在反光區旁邊看得到 endothelium 的細胞排列。',
+    set: [`光源與顯微鏡和角膜法線的夾角相等、方向相反（講義的例子：各約 30°）；移動光源直到出現很亮的反光區（zone of specular reflection）${s('S7')}`],
+    best: [`Endothelium 的異常，例如細胞密度變少、guttata${s('S1')}`, `Fuchs endothelial corneal dystrophy：endothelial mosaic 裡的小黑點，進展成 beaten-metal 外觀${s('S2')}`, `講義：角膜前後表面、水晶體前表面（看 pseudoexfoliation）${s('S7')}`],
+    note: [`Pseudoguttata 可能是可逆的 endothelial cell 水腫，與 endothelium 下方的發炎細胞${s('S1')}`] },
+  prx: { zh: '間接照明（proximal）', en: 'Indirect (proximal) illumination', g: 'i',
+    def: '光束對焦在要看的地方旁邊，用周圍散開的光照亮病灶；看的地方和光的焦點不在同一處。',
+    set: [`窄到中等寬度的光束、偏離中心（decentred），約 12×${s('S7')}`],
+    best: [`透明度下降區域旁邊的東西：infiltrates、角膜疤痕、deposits、上皮與基質缺損${s('S7')}`],
+    note: ['這一種只找到大學驗光課程講義當出處，等級比教科書低'] },
+  scl: { zh: '鞏膜散射', en: 'Sclerotic scatter', g: 'i',
+    def: '光打在角膜緣，顯微鏡看中央角膜；光在角膜裡靠全反射傳過去，基質裡的病灶把光往前散射出來而發亮。',
+    set: [`光束橫向偏移到 limbus，顯微鏡對焦在中央${s('S1')}`, `眼科攝影學會：寬光束打在 temporal sclera，不開輔助燈${s('S6')}`, `講義：亮而窄的光束，光源與顯微鏡約 40–60°，低倍率；放對了，limbus 一圈會亮起來${s('S7')}`],
+    best: [`淡的 stromal haze、cellular 或 lipid infiltration${s('S1')}`, `細微的角膜變化：疤痕、vortex dystrophy、crystalline keratopathy${s('S6')}`, `講義：中央 epithelial edema、角膜擦傷、nebula 與 macula${s('S7')}`],
+    note: ['光束寬窄兩份來源寫法不同（攝影學會寫寬、講義寫窄），兩種都列'] },
+  rti: { zh: '虹膜反照', en: 'Retroillumination from the iris', g: 'i',
+    def: '光打在病灶後面的 iris 上，iris 反射回來的光從後面照亮角膜；顯微鏡仍然對焦在角膜。',
+    set: [`眼科攝影學會：中等偏細的光束以 45° 打在 iris，焦點留在角膜${s('S6')}`, `講義：中等寬度的光束打在角膜病灶正後方的 iris，16–25×，顯微鏡在正前方${s('S7')}`],
+    best: [`細微的上皮與 endothelium 變化：epithelial cysts、KP、小血管${s('S1')}`, `別的照法看不出來的透明不規則；在 iris 亮區和暗區的交界最清楚${s('S6')}`, `講義：最常用來找 KP 和 endothelium 上的碎屑${s('S7')}`] },
+  rtf: { zh: '眼底反照', en: 'Retroillumination from the fundus', g: 'i',
+    def: '光幾乎和觀察方向同軸、穿過散大的瞳孔，眼底反射回來的橘紅色光（red reflex）從後面照亮水晶體與角膜；混濁在紅色背景上變成暗影。',
+    set: [`先散瞳；光和觀察方向非常接近同軸，光束調到和瞳孔一樣大，再收成半月形放在瞳孔緣內側${s('S6')}`],
+    best: [`Posterior capsule 與 posterior subcapsular cataract${s('S4')}`, `白內障、角膜疤痕、透明囊腫、折光小體${s('S6')}`, `眼底反射的光照亮角膜，也看得到 KP 這類細微變化${s('S1')}`] },
+  tra: { zh: '虹膜透照', en: 'Iris transillumination', g: 'i',
+    def: '瞳孔不散大，把短而窄的光束直接從瞳孔照進去；眼底反射回來的光從 iris 變薄的地方透出來。',
+    set: [`短而窄的光束直接照進瞳孔${s('S4')}`, `眼科攝影學會：不散瞳；光與觀察同軸，光圈不超過瞳孔大小，免得照到 iris；是所有照法裡最暗的${s('S6')}`],
+    best: [`Iris transillumination defect；瀰漫性透照是 ocular albinism 的特徵${s('S4')}`, `Iris 變薄：ocular albinism、pigmentary glaucoma${s('S6')}`] }
+};
+const LORDER = ['none', 'scar', 'haze', 'gut', 'kp', 'cell', 'psc', 'tid'];
+const LES = {
+  none: { zh: '正常（沒有病灶）' },
+  scar: { zh: '角膜疤痕（前基質）', best: 'sec', c: SCAR.c,
+    why: `很細的 optic section 掃過角膜，可以判斷病灶在哪一層${s('S1')}；本圖疤痕落在切面靠光源那側＝前基質`,
+    also: [`Diffuse 先看整體${s('S1')}；寬光束看範圍與形狀${s('S7')}`, `Sclerotic scatter、眼底反照下也看得到疤痕${s('S6')}`, `間接照明（proximal）看透明度下降區域旁的疤痕${s('S7')}`] },
+  haze: { zh: '淡的 stromal haze／infiltrate', best: 'scl', c: HAZE.c,
+    why: `Sclerotic scatter 特別適合看淡的 stromal haze、cellular 或 lipid infiltration${s('S1')}` },
+  gut: { zh: 'Cornea guttata', best: 'spe', c: [0.45, 0.1],
+    why: `Specular reflection 看 endothelium：細胞密度變少、guttata${s('S1')}；guttata 在 endothelial mosaic 裡是小黑點${s('S2')}` },
+  kp: { zh: '細小的 KP', best: 'rti', c: [2.8, -0.5],
+    why: `Retroillumination 從後面照亮角膜，看得到 KP、epithelial cysts、小血管這類細微變化${s('S1')}；講義說 retroillumination 最常用來找 KP${s('S7')}`,
+    also: [`在 optic section 上，KP 在 endothelium 那側${s('S4')}`] },
+  cell: { zh: 'Anterior chamber cells', best: 'ac', c: null,
+    why: `窄而短的光束穿過前房，cells 是浮在 aqueous 裡的反光小點${s('S4')}`,
+    also: [`SUN 分級用 1 mm × 1 mm 的光束、散瞳前做${s('S3')}；本頁不做分級`] },
+  psc: { zh: 'Posterior subcapsular cataract', best: 'rtf', c: PSC.c,
+    why: `Posterior capsule 與 subcapsular 的白內障，用眼底 red reflex 反照最容易看出來${s('S4')}` },
+  tid: { zh: 'Iris transillumination defect', best: 'tra', c: pt(TIDS[0][0], TIDS[0][1]),
+    why: `短而窄的光束直接照進瞳孔，看 iris 透光的地方；瀰漫性透照是 ocular albinism 的特徵${s('S4')}`,
+    also: [`不散瞳做；ocular albinism、pigmentary glaucoma 的 iris 變薄${s('S6')}`] }
+};
+
+function slCfg(t, raw = false) {   // raw：測驗與 self-check 用預設值，不套拉條
+  const p = TP[t], wOn = t === 'sec' || t === 'par';
+  return { t, a: !raw && st.slA != null && !p.coax ? st.slA : p.a, w: !raw && wOn && st.slW != null ? st.slW : p.w, h: p.h, F: p.F, M: p.M || p.F, dil: !!p.dil, coax: !!p.coax };
+}
+function beamOf(c) {   // 光束：深度 z 處的橫向位置（從顯微鏡看）、半寬、穿過角膜的位置
+  const t = Math.tan(c.a * DEG), hw = c.w / 2 / Math.cos(c.a * DEG), u = z => c.F[0] + (z - c.F[1]) * t;
+  return { t, hw, u, uc: u(0.3) };
+}
+function corneaSec(c, B) {   // 光束在角膜裡照到的範圍（從顯微鏡看）：左緣＝前表面、右緣＝endothelium
+  const vs = vsOf(-c.h / 2, c.h / 2);
+  return [...vs.map(v => [B.u(zAnt(B.uc, v)) - B.hw, v]), ...rev(vs.map(v => [B.u(zPost(B.uc, v)) + B.hw, v]))];
+}
+function litPart(c, B, U, V, D) {   // 病灶（正面範圍 U、V，表面下深度 D）被光束照到的部分
+  const v0 = Math.max(V[0], -c.h / 2), v1 = Math.min(V[1], c.h / 2); if (v0 >= v1) return null;
+  const L = [], R = [];
+  vsOf(v0, v1, 12).forEach(v => { const za = zAnt(B.uc, v), l = Math.max(B.u(za + D[0]) - B.hw, U[0]), r = Math.min(B.u(za + D[1]) + B.hw, U[1]); if (l < r) { L.push([l, v]); R.push([r, v]); } });
+  return L.length > 1 ? [...L, ...rev(R)] : null;
+}
+const kpLit = (c, B, k) => Math.abs(B.u(zPost(k[0], k[1])) - k[0]) < B.hw && Math.abs(k[1]) < c.h / 2;
+function cellPts(c, B, n) {   // 光束穿過前房那一段裡的 cells（u, v, z）
+  return CELLS.slice(0, n).map(q => { const z0 = zPost(B.uc) + 0.15, z = z0 + q[0] * (ZI - 0.15 - z0); return [B.u(z) + (q[2] - 0.5) * 1.7 * B.hw, (q[1] - 0.5) * c.h * 0.9, z]; }).filter(p => Math.hypot(p[0], p[1]) < RL - 0.4);
+}
+
+/* ---------- 上視圖：右眼水平切面由上往下看（同眼解剖圖譜：上＝temporal、左＝anterior），24 px/mm ---------- */
+const TS = mkT(24, -21.5, 8.3), DT = (pts, c = true) => dp(pts, TS, c);
+const W1 = 440, H1 = 400, XL = -20.6, YT = 7.9;   // 光源與顯微鏡畫到的左緣、上緣（mm）
+function labT(a, t, text, anc) {   // a＝指到的點（mm）、t＝文字位置（px）
+  const A = a && TS(a);
+  return `<g class="lab">${A ? `<line x1="${fx(A[0])}" y1="${fx(A[1])}" x2="${fx(t[0])}" y2="${fx(t[1] - 14)}"/><circle cx="${fx(A[0])}" cy="${fx(A[1])}" r="2.3"/>` : ''}<text x="${fx(t[0])}" y="${fx(t[1])}" text-anchor="${anc}">${text}</text></g>`;
+}
+function topLes(L) {
+  const P = (pts, cls) => `<path class="${cls}" d="${DT(pts)}"/>`, C = (p, r) => { const q = TS(p); return `<circle class="sl-les" cx="${fx(q[0])}" cy="${fx(q[1])}" r="${fx(Math.max(r * 24, 1.6))}"/>`; };
+  const layer = (U, D, cls) => { const us = vsOf(U[0], U[1], 12); return P([...us.map(u => toTop([u, zAnt(u) + D[0]])), ...rev(us).map(u => toTop([u, zAnt(u) + D[1]]))], cls); };
+  if (L === 'scar') return layer(SCAR.U, SCAR.D, 'sl-les');
+  if (L === 'haze') return layer([-HAZE.r, HAZE.r], HAZE.D, 'sl-les h');
+  if (L === 'gut') return GUTS.map(g => C(toTop([g[0] - 0.4, zPost(g[0] - 0.4) + 0.04]), 0.05)).join('');
+  if (L === 'kp') return KPS.map(k => C(toTop([k[0], zPost(k[0]) + k[2] * 0.6]), k[2] * 0.6)).join('');
+  if (L === 'cell') return CELLS.slice(0, 18).map(q => { const u = (q[2] - 0.5) * 7, z = zPost(u) + 0.2 + q[0] * (ZI - zPost(u) - 0.4); return C(toTop([u, z]), 0.06); }).join('');
+  if (L === 'psc') return P([toTop([-1, ZL2 - 0.32]), toTop([1, ZL2 - 0.32]), toTop([1, ZL2 - 0.08]), toTop([-1, ZL2 - 0.08])], 'sl-les');
+  return '';
+}
+function topSVG(c, L) {
+  const E = EYE, D = c.dil ? E.dil : E, rp = c.dil ? RPD : RP;
+  const P = (pts, cls) => `<path class="${cls}" d="${DT(pts)}"/>`;
+  let h = `<svg viewBox="0 0 ${W1} ${H1}" role="img" aria-label="由上往下看的光路">`;
+  h += P(E.vit, 'c-vit') + P(E.retT, 'c-ret') + P(E.retN, 'c-ret') + P(E.choroidT, 'c-uvea') + P(E.choroidN, 'c-uvea') + P(E.ppT, 'c-cb') + P(E.ppN, 'c-cb') + P(E.scleraT, 'c-sclera') + P(E.scleraN, 'c-sclera');
+  h += P(E.cb, 'c-cb') + P(mir(E.cb), 'c-cb') + P(D.pc, 'c-fluid') + P(mir(D.pc), 'c-fluid') + P(D.ac, 'c-fluid') + P(E.lens, 'c-lens') + P(E.nucleus, 'c-nuc') + P(D.iris, 'c-iris') + P(mir(D.iris), 'c-iris') + P(E.cornea, 'c-cornea');
+  h += topLes(L);
+  // 光束：從光源到光的焦點，直接照明再穿過前房落在 iris（或穿過瞳孔）
+  const F = toTop(c.F), M = toTop(c.M), spe = c.t === 'spe', b = (spe ? c.a / 2 : c.a) * DEG, d = [Math.cos(b), -Math.sin(b)], n = [Math.sin(b), Math.cos(b)];
+  const L1 = Math.min((F[0] - XL) / d[0], (YT - F[1]) / Math.max(-d[1], 1e-6)), S0 = [F[0] - d[0] * L1, F[1] - d[1] * L1];
+  let E1 = F;
+  if (c.coax) E1 = [-3.3, F[1] + d[1] * (-3.3 - F[0]) / d[0]];
+  else if (!['rti', 'scl', 'spe'].includes(c.t)) {
+    const y1 = F[1] + d[1] * (XI - F[0]) / d[0];
+    E1 = Math.abs(y1) > rp ? [XI, y1] : [-4.76, F[1] + d[1] * (-4.76 - F[0]) / d[0]];
+  }
+  const hw = c.w / 2, off = (p, k) => [p[0] + n[0] * k, p[1] + n[1] * k];
+  h += `<path class="sl-beam${c.t === 'dif' ? ' wide' : c.coax ? ' coax' : ''}" d="${DT([off(S0, hw), off(E1, hw), off(E1, -hw), off(S0, -hw)])}"/>`;
+  if (c.t === 'scl') {   // 光在角膜裡全反射
+    const pts = []; for (let k = 0; k <= 12; k++) { const r = k % 2 ? 7.27 : 7.78; pts.push(pt(r, 133 + k * 7.8).map((v, i) => i ? v : v - 4.51)); }
+    h += `<path class="sl-tir" d="${DT(pts, false)}"/>`;
+  }
+  // 顯微鏡：一般在正前方；鏡面反射時放在法線的另一側，接住反射光
+  const mo = spe ? [-Math.cos(b), -Math.sin(b)] : [-1, 0];
+  const Lm = Math.min((M[0] - XL) / -mo[0], mo[1] < 0 ? (M[1] + YT) / -mo[1] : Infinity), Mo = [M[0] + mo[0] * Lm, M[1] + mo[1] * Lm];
+  if (spe) h += `<path class="sl-ref" d="${DT([M, Mo], false)}"/>`;
+  if (c.coax) { const y = -0.75, a0 = TS([-3.6, y]), a1 = TS([-19.2, y]); h += `<path class="sl-ret" d="M${fx(a0[0])} ${fx(a0[1])}H${fx(a1[0] + 8)}"/><path class="sl-reth" d="M${fx(a1[0])} ${fx(a1[1])}l10 -5v10z"/>`; }
+  h += `<path class="sl-mic" d="${DT([Mo, M], false)}"/>`;
+  const q0 = TS(Mo), q1 = TS(M), ang = Math.atan2(q1[1] - q0[1], q1[0] - q0[0]) / DEG;
+  h += `<g transform="translate(${fx(q0[0])} ${fx(q0[1])}) rotate(${fx(ang)})"><rect class="sl-ocu" x="-4" y="-8" width="16" height="16" rx="3"/></g>`;
+  const ls = TS(S0);
+  h += `<circle class="sl-lamp" cx="${fx(ls[0])}" cy="${fx(ls[1])}" r="8"/>`;
+  const fq = TS(F), mq = TS(M);
+  if (!c.coax) h += `<circle class="sl-fk" cx="${fx(fq[0])}" cy="${fx(fq[1])}" r="6"/>`;
+  h += `<path class="sl-mk" d="M${fx(mq[0] - 7)} ${fx(mq[1])}H${fx(mq[0] + 7)}M${fx(mq[0])} ${fx(mq[1] - 7)}V${fx(mq[1] + 7)}"/>`;
+  // 標籤
+  const lampTxt = c.t === 'dif' ? `光源＋diffuser · 與顯微鏡夾 ${c.a}°` : spe ? `光源 · 與顯微鏡夾 ${c.a}°（法線兩側各 ${c.a / 2}°）` : c.coax ? '光源：幾乎和顯微鏡同軸' : `光源 · 與顯微鏡夾 ${c.a}°`;
+  const right = ls[0] > 200;
+  h += labT(null, [right ? ls[0] - 14 : Math.max(ls[0] + 14, 10), Math.max(ls[1] + 5, 24) + (c.coax ? -16 : 0)], lampTxt, right ? 'end' : 'start');
+  h += labT(null, [Math.max(q0[0] - 6, 10), q0[1] + (spe ? -16 : 28)], '顯微鏡', 'start');
+  if (c.t === 'scl') h += labT(pt(7.5, 205).map((v, i) => i ? v : v - 4.51), [150, 352], '光在角膜裡全反射', 'middle');
+  if (c.coax) h += labT(null, [110, TS([0, -0.75])[1] + 22], '眼底反射回來的光', 'start');
+  [[[-10.6, -4.3], 196, '角膜'], [[-10.0, -3.0], 250, '前房'], [[-8.75, -4.0], 304, 'iris'], [[-6.5, -3.0], 376, '水晶體']].forEach(([a, x, t]) => { h += labT(a, [x, 390], t, 'middle'); });
+  return h + '</svg>';
+}
+
+/* ---------- 鏡下所見：從顯微鏡看出去（檢查者面對病人：左＝temporal、右＝nasal、上＝superior），27 px/mm ---------- */
+const KF = 27, TF = p => [210 + p[0] * KF, 200 - p[1] * KF], DF = (pts, c = true) => dp(pts, TF, c);
+const cF = (u, v, r, cls) => { const q = TF([u, v]); return `<circle class="${cls}" cx="${fx(q[0])}" cy="${fx(q[1])}" r="${fx(r * KF)}"/>`; };
+const eF = (u, v, rx, ry, cls, rot = 0) => { const q = TF([u, v]); return `<ellipse class="${cls}" cx="${fx(q[0])}" cy="${fx(q[1])}" rx="${fx(rx * KF)}" ry="${fx(ry * KF)}"${rot ? ` transform="rotate(${fx(-rot)} ${fx(q[0])} ${fx(q[1])})"` : ''}/>`; };
+const pF = (pts, cls) => `<path class="${cls}" d="${DF(pts)}"/>`;
+const boxF = (u0, u1, v0, v1) => [[u0, v0], [u1, v0], [u1, v1], [u0, v1]];
+const cirD = (r, cx = 0, cy = 0) => DF(arc(r, 0, 360, cx, cy, 3));
+function hexD(a) { const h = Math.sqrt(3) * a; return `M0 ${fx(h / 2)}L${fx(a / 2)} 0L${fx(1.5 * a)} 0L${fx(2 * a)} ${fx(h / 2)}L${fx(1.5 * a)} ${fx(h)}L${fx(a / 2)} ${fx(h)}ZM${fx(2 * a)} ${fx(h / 2)}L${fx(3 * a)} ${fx(h / 2)}`; }
+const hexPat = (id, a) => { const h = Math.sqrt(3) * a; return `<pattern id="${id}" width="${fx(3 * a)}" height="${fx(h)}" patternUnits="userSpaceOnUse"><rect class="fv-hexb" width="${fx(3 * a)}" height="${fx(h)}"/><path class="fv-hexl" d="${hexD(a)}"/></pattern>`; };
+function labF(a, t, text, anc, dk = true) {   // a、t 都是正面座標（mm）
+  const A = a && TF(a), T = TF(t);
+  return `<g class="lab${dk ? ' dk' : ''}">${A ? `<line x1="${fx(A[0])}" y1="${fx(A[1])}" x2="${fx(T[0])}" y2="${fx(T[1] + (T[1] < A[1] ? 5 : -15))}"/><circle cx="${fx(A[0])}" cy="${fx(A[1])}" r="2.3"/>` : ''}<text x="${fx(T[0])}" y="${fx(T[1])}" text-anchor="${anc}">${text}</text></g>`;
+}
+const INS = [4.9, 4.6, 2.0];   // 鏡面反射的放大圖：圓心與半徑
+const insOf = g => [INS[0] + (g[0] - 0.4) * 2.4, INS[1] + g[1] * 2.4, g[2] * 2.4];
+let fvShown = false;   // 這次畫的鏡下所見有沒有畫出選的病灶（self-check 用）
+function frontSVG(c, L) {
+  fvShown = false;
+  const B = beamOf(c), rp = c.dil ? RPD : RP, t = c.t, lb = [];
+  let h = `<svg viewBox="0 0 420 400" role="img" aria-label="從顯微鏡看到的樣子"><defs>
+<clipPath id="fv-ic"><path clip-rule="evenodd" d="${cirD(RL)} ${cirD(rp)}"/></clipPath><clipPath id="fv-pc"><path d="${cirD(rp)}"/></clipPath>
+<clipPath id="fv-sc"><path d="${DF(SCAR.blob)}"/></clipPath><clipPath id="fv-hc"><path d="${cirD(HAZE.r)}"/></clipPath>
+<filter id="fv-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter><filter id="fv-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+<radialGradient id="fv-rr"><stop offset="0" style="stop-color:var(--sl-reflex2)"/><stop offset="1" style="stop-color:var(--sl-reflex)"/></radialGradient>${hexPat('fv-hex', 2.6)}${hexPat('fv-hex2', 8)}</defs>`;
+  h += `<rect class="fv-bg" width="420" height="400"/><path class="fv-iris" d="${cirD(RL)}"/>`;
+  for (let k = 0; k < 36; k++) { const p0 = pt(rp + 0.15, k * 10), p1 = pt(RL - 0.2, k * 10 + 4); h += `<path class="fv-tex" d="${DF([p0, p1], false)}"/>`; }
+  h += `<path class="fv-tex" d="${cirD(rp + (RL - rp) * 0.33)}"/><path class="fv-pupil" d="${cirD(rp)}"/><path class="fv-limb" d="${cirD(RL)}"/>`;
+  const secMid = v => [B.u((zAnt(B.uc, v) + zPost(B.uc, v)) / 2), v];
+  if (t === 'dif') {   // 房間燈光般整片照亮
+    h += eF(-0.8, 0.7, 6.2, 5.6, 'fv-sheen');
+    if (L === 'scar') { fvShown = true; h += pF(SCAR.blob, 'fv-opq'); }
+    if (L === 'haze') { fvShown = true; h += `<path class="fv-haze0" d="${cirD(HAZE.r)}"/>`; }
+    if (L === 'kp') { fvShown = true; h += KPS.map(k => cF(k[0], k[1], k[2], 'fv-kp0')).join(''); }
+    if (L === 'psc') { fvShown = true; h += `<g clip-path="url(#fv-pc)">${pF(PSC.blob, 'fv-psc0')}</g>`; }
+    h += eF(-0.9, 1.0, 0.22, 0.14, 'fv-glare');
+    lb.push([null, [-7.4, 6.6], 'diffuse：整片均勻照亮', 'start']);
+  } else {
+    h += `<rect class="fv-dark" width="420" height="400"/>`;
+    if (['sec', 'par', 'ac', 'prx'].includes(t)) {   // 光束穿過角膜、前房，落在 iris 或水晶體
+      h += `<g clip-path="url(#fv-pc)">${pF(boxF(B.u(ZL1) - B.hw, B.u(ZL2) + B.hw, -c.h / 2, c.h / 2), 'fv-lens')}</g>`;
+      h += `<g clip-path="url(#fv-ic)"><g filter="url(#fv-blur)">${pF(boxF(B.u(ZI) - B.hw, B.u(ZI) + B.hw, -c.h / 2, c.h / 2), 'fv-irb')}</g></g>`;
+      h += pF(corneaSec(c, B), t === 'sec' ? 'fv-sec' : 'fv-sec w');
+      if (t === 'prx') {   // 散開的光照亮旁邊的病灶
+        if (L === 'scar') { fvShown = true; h += `<g filter="url(#fv-soft)">${pF(SCAR.blob, 'fv-glow')}</g>`; }
+        if (L === 'haze') { fvShown = true; h += `<g filter="url(#fv-soft)"><path class="fv-glow h" d="${cirD(HAZE.r)}"/></g>`; }
+      } else {
+        if (L === 'scar') { const p = litPart(c, B, SCAR.U, SCAR.V, SCAR.D); if (p) { fvShown = true; h += `<g clip-path="url(#fv-sc)">${pF(p, 'fv-opq')}</g>`; } }
+        if (L === 'haze') { const p = litPart(c, B, [-HAZE.r, HAZE.r], [-HAZE.r, HAZE.r], HAZE.D); if (p) { fvShown = true; h += `<g clip-path="url(#fv-hc)">${pF(p, 'fv-hz')}</g>`; } }
+      }
+      if (L === 'kp') { const lit = KPS.filter(k => kpLit(c, B, k)); if (lit.length) { fvShown = true; h += lit.map(k => cF(k[0], k[1], k[2], 'fv-kp0')).join(''); } }
+      if (L === 'cell') { const ps = cellPts(c, B, t === 'ac' ? 26 : 12); if (ps.length) { fvShown = true; h += ps.map(p => cF(p[0], p[1], 0.065, 'fv-cell')).join(''); } }
+      const ui = B.u(ZI), onIris = Math.hypot(ui, c.h / 2 - 0.4) > rp;
+      if (t === 'sec') lb.push([secMid(2.3), [-7.4, 6.4], '角膜切面（optic section）', 'start'], [[ui, -c.h / 2 + 0.4], [7.4, -6.4], 'iris 上的光帶（沒對焦）', 'end']);
+      if (t === 'par') lb.push([secMid(2.3), [-7.4, 6.4], '寬光束照出的一塊角膜', 'start'], [[ui, -c.h / 2 + 0.4], [7.4, -6.4], onIris ? 'iris 上的光帶（沒對焦）' : '光落在水晶體上', 'end']);
+      if (t === 'ac') lb.push([secMid(1.0), [-7.4, 5.0], '角膜', 'start'], [[(B.u(zPost(B.uc)) + B.u(ZL1)) / 2, -1.1], [0, -5.6], '前房：黑色背景', 'middle'], [[Math.min(B.u(ZL1) + 0.15, rp - 0.25), 0.4], [7.4, 5.0], '水晶體前表面', 'end']);
+      if (t === 'prx') lb.push([secMid(1.8), [7.4, 5.8], '光束對焦在病灶旁邊', 'end']);
+    }
+    if (t === 'spe') {   // 反光區＋旁邊的 endothelial mosaic，右上放大
+      h += pF(boxF(-0.78, -0.48, -1, 1), 'fv-sec f');
+      h += `<path class="fv-mos" d="${DF(boxF(-0.05, 0.85, -0.75, 0.75))}" fill="url(#fv-hex)"/>`;
+      h += eF(-0.28, 0, 0.17, 0.78, 'fv-glare');
+      const c0 = TF([0.85, 0.75]), c1 = TF([INS[0] - INS[2] * 0.72, INS[1] - INS[2] * 0.72]);
+      h += `<line class="fv-ins" x1="${fx(c0[0])}" y1="${fx(c0[1])}" x2="${fx(c1[0])}" y2="${fx(c1[1])}"/><path class="fv-mos" d="${cirD(INS[2], INS[0], INS[1])}" fill="url(#fv-hex2)"/><path class="fv-ins" d="${cirD(INS[2], INS[0], INS[1])}"/>`;
+      if (L === 'gut') { fvShown = true; h += GUTS.map(g => cF(g[0], g[1], g[2], 'fv-gut')).join('') + GUTS.map(g => { const q = insOf(g); return cF(q[0], q[1], q[2], 'fv-gut'); }).join(''); }
+      lb.push([[-0.28, 0.75], [-7.4, 4.4], '反光區（鏡面反射）', 'start'], [[0.6, -0.75], [7.4, -5.2], '旁邊是 endothelium 的細胞排列', 'end'], [null, [INS[0], INS[1] - INS[2] - 0.65], '放大（示意）', 'middle']);
+    }
+    if (t === 'scl') {   // limbus 一圈亮起，基質病灶發亮
+      h += `<g filter="url(#fv-soft)"><path class="fv-ring" d="${cirD(RL)}" stroke-width="7"/></g><g filter="url(#fv-blur)">${eF(-RL, 0, 0.55, 1.3, 'fv-glare')}</g>`;
+      if (L === 'scar') { fvShown = true; h += `<g filter="url(#fv-soft)">${pF(SCAR.blob, 'fv-glow')}</g>`; }
+      if (L === 'haze') { fvShown = true; h += `<g filter="url(#fv-soft)"><path class="fv-glow h" d="${cirD(HAZE.r)}"/></g>`; }
+      lb.push([[-RL, 1.0], [-7.4, 6.6], '光打在 limbus', 'start'], [pt(RL, 40), [7.4, 6.6], 'limbus 一圈亮起', 'end']);
+    }
+    if (t === 'rti') {   // iris 亮區（沒對焦）＋前面的 KP 變成暗影
+      h += pF(corneaSec(c, B), 'fv-sec f');
+      h += `<g clip-path="url(#fv-ic)"><g filter="url(#fv-blur)">${pF(boxF(c.F[0] - B.hw, c.F[0] + B.hw, -c.h / 2, c.h / 2), 'fv-irb')}</g></g>`;
+      if (L === 'kp') { const lit = KPS.filter(k => Math.abs(k[0] - c.F[0]) < B.hw && Math.abs(k[1]) < c.h / 2); if (lit.length) { fvShown = true; h += lit.map(k => cF(k[0], k[1], k[2], 'fv-kpr')).join(''); } }
+      lb.push([[c.F[0], 1.7], [7.4, 6.2], 'iris 反光（沒對焦）', 'end'], [secMid(1.6), [-7.4, 6.2], '光從這裡穿過角膜', 'start']);
+    }
+    if (t === 'rtf' || t === 'tra') {   // 瞳孔裡的 red reflex
+      h += `<path d="${cirD(rp)}" fill="url(#fv-rr)"/>` + eF(-0.5, 0.6, 0.12, 0.09, 'fv-glare');
+      if (t === 'rtf') {
+        if (L === 'psc') { fvShown = true; h += pF(PSC.blob, 'fv-sh'); }
+        if (L === 'scar') { fvShown = true; h += pF(SCAR.blob, 'fv-sh'); }
+        if (L === 'kp') { fvShown = true; h += KPS.map(k => cF(k[0], k[1], k[2], 'fv-sh')).join(''); }
+        lb.push([[2.4, 2.4], [7.4, 6.4], 'red reflex（已散瞳）', 'end']);
+      } else {
+        if (L === 'tid') { fvShown = true; h += TIDS.map(([r, a]) => { const p = pt(r, a); return eF(p[0], p[1], 0.36, 0.14, 'fv-tid', a); }).join(''); }
+        lb.push([[0.9, 1.1], [7.4, 6.4], '瞳孔裡的 red reflex（不散瞳）', 'end']);
+      }
+    }
+  }
+  if (fvShown && LES[L].c) lb.push([LES[L].c, [-7.4, -6.6], LES[L].zh, 'start']);
+  if (fvShown && L === 'cell') lb.push([cellPts(c, B, 26)[0].slice(0, 2), [-7.4, -6.6], LES.cell.zh, 'start']);
+  h += lb.map(x => labF(x[0], x[1], x[2], x[3], t !== 'dif')).join('');
+  return h + '</svg>';
+}
+
+/* ---------- app ---------- */
+const VIEWS = [{ id: 'sl', name: '裂隙燈照明法', en: 'Slit lamp illumination' }];
+const $ = q => document.querySelector(q);
+const st = { view: 'sl', slT: 'sec', slL: 'scar', slA: null, slW: null, labels: true, learnMode: 'learn', quiz: null };
+const store = (() => {
+  const K2 = 'examAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K2); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K2, JSON.stringify(mem)); } catch (e) { } } };
+})();
+const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
+
+function slCard() {
+  const t = st.slT, T = TECH[t], L = st.slL !== 'none' ? LES[st.slL] : null;
+  const grp = [t === 'dif' ? `Kanski 把 diffuse 歸在 direct illumination：用散開的光看明顯的異常${s('S1')}` : T.g === 'd' ? `直接照明：光和顯微鏡對焦在同一處${s('S7')}` : `間接照明：看的地方不是光的焦點；光打在旁邊、limbus 或後面的構造，再用散開或反射回來的光看${s('S7')}`,
+    T.g === 'd' ? `病灶不透明、結晶或乳白色時，直接照明比較清楚${s('S5')}` : `病灶透明、會折光、幾乎看不見時，間接照明比較能凸顯細節，直接照明反而會把它蓋過${s('S5')}`];
+  const v = L ? `<div class="verdict"><span>${L.best === t ? `看「${L.zh}」：來源建議的就是這種照法` : `看「${L.zh}」：來源建議改用 <button type="button" class="lk" data-tech="${L.best}">${TECH[L.best].zh}</button>`}</span></div>` : '';
+  const body = `${list('怎麼設定', T.set)}${list('最適合看', T.best)}${T.note ? list('注意', T.note) : ''}${L ? list(`病灶：${L.zh}`, [L.why, ...(L.also || [])]) : ''}${list('分類', grp)}`;
+  return `<div class="card"><div class="eyebrow">裂隙燈照明法 · ${T.g === 'd' ? '直接照明' : '間接照明'} · 對照 BCSC 8</div><div><h2>${T.en}</h2></div><p class="zh">${T.zh}</p><p class="def">${T.def}</p>${v}${body}${srcList(refs(body))}</div>`;
+}
+function slExtra() {
+  const c = slCfg(st.slT), wOn = st.slT === 'sec' || st.slT === 'par';
+  const basics = [`倍率：多數裂隙燈 6–40×；一般檢查用 6–10×，視野大${s('S4')}`, `濾鏡：cobalt blue 配 fluorescein${s('S1')}，看 corneal abrasion、dendritic lesion${s('S4')}；red-free 讓紅色的東西變黑，血管、出血比較清楚${s('S1', 'S4')}`, `檢查順序：外部與附屬器 → 眼瞼與睫毛 → conjunctiva 與 sclera → cornea → anterior chamber → iris 與 pupil → lens → anterior vitreous；先右眼、再左眼${s('S4')}`];
+  return `<div class="xh">調整（示意）</div>
+    <div class="rng"><label for="sl-a">${st.slT === 'spe' ? '光源與顯微鏡的夾角' : '光源臂與顯微鏡的夾角'}</label><input type="range" id="sl-a" min="15" max="75" step="1" value="${c.a}" ${c.coax ? 'disabled' : ''}><span class="v" id="sl-a-v">${c.coax ? '幾乎同軸' : c.a + '°'}</span></div>
+    ${wOn ? `<div class="rng"><label for="sl-w">光束寬度</label><input type="range" id="sl-w" min="0.1" max="3" step="0.05" value="${c.w}"><span class="v" id="sl-w-v">${c.w < WSEC ? '細：optic section' : '寬：parallelepiped'}</span></div>` : ''}
+    <p class="hint" style="margin:0 0 14px">${c.coax ? '眼底反照與虹膜透照：光和觀察方向幾乎同軸，不調角度。' : '角度越大，角膜切面越寬，落在 iris 上的光帶離角膜切面越遠（幾何示意）。'}${wOn ? '光束寬度拉條在 optic section 與 parallelepiped 之間切換。' : ''}</p>
+    <div class="xh">基本設定</div><ul class="gl">${basics.map(x => `<li>${x}</li>`).join('')}</ul>${srcList(refs(basics.join('')))}`;
+}
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選照明法與病灶；左邊看光怎麼打，右邊看從顯微鏡看到什麼'}</span>`;
+}
+function renderTools() {
+  $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
+}
+function renderFig() {
+  const it = quizItem(), t = it ? (it.type === 'fig' ? it.tech : 'dif') : st.slT, L = it ? 'none' : st.slL, c = slCfg(t, !!it);
+  const fig = $('#fig');
+  fig.innerHTML = `<div class="duo"><div><div class="vh">由上往下看：光怎麼打</div>${topSVG(c, L)}</div><div><div class="vh">從顯微鏡看到的樣子</div>${frontSVG(c, L)}</div></div>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+  $('#cap').innerHTML = `<span>左：右眼水平切面由上往下看（同眼解剖圖譜：上＝temporal、左＝anterior），光畫成直線、不畫折射；黃色＝光束、○＝光的焦點、＋＝顯微鏡對焦處${L !== 'none' ? '、藍色＝病灶' : ''}。右：從顯微鏡看出去（檢查者面對病人：左＝temporal、右＝nasal、上＝superior）。</span><span class="ori">角度、光束大小、病灶位置都是示意</span>`;
+}
+function renderExtra() { $('#extra').innerHTML = st.learnMode === 'quiz' ? '' : slExtra(); }
+function renderIndex() {
+  const ix = $('#index');
+  if (st.learnMode === 'quiz') { ix.hidden = true; return; }
+  ix.hidden = false;
+  const chips = g => TORDER.filter(t => TECH[t].g === g).map(t => `<button type="button" class="chip ${t === st.slT ? 'on' : ''}" data-tech="${t}">${TECH[t].zh} <i>${TECH[t].en}</i></button>`).join('');
+  ix.innerHTML = `<span class="lbl">直接照明：光和顯微鏡對焦在同一處</span>${chips('d')}<span class="lbl">間接照明：看的地方不是光的焦點</span>${chips('i')}<span class="lbl">病灶（示意）</span>` + LORDER.map(k => `<button type="button" class="chip ${k === st.slL ? 'on' : ''}" data-les="${k}">${LES[k].zh}</button>`).join('');
+}
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : slCard(); }
+function renderSelbar() {
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : `目前：${TECH[st.slT].zh}${st.slL !== 'none' ? ' · ' + LES[st.slL].zh : ''}`;
+  b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
+}
+
+/* ---------- quiz ----------
+   goal：給病灶或檢查目的，選來源建議的照明法；fig：看光路與鏡下示意（標籤隱藏），認出是哪一種 */
+const GQ = {
+  g1: { l: 'scar', q: '要判斷角膜疤痕在哪一層', excl: ['par'] },
+  g2: { l: 'haze', q: '很淡的 stromal haze，或 cellular、lipid infiltration', excl: ['prx'] },
+  g3: { l: 'gut', q: '看 endothelium 的 guttata、細胞密度變少', excl: ['rtf'] },
+  g4: { l: 'kp', q: '找細小的 KP、epithelial cysts', excl: ['rtf', 'sec'] },
+  g5: { l: 'cell', q: '看 anterior chamber 有沒有 cells', excl: ['sec', 'par'] },
+  g6: { l: 'psc', q: '看 posterior subcapsular cataract', excl: ['rti', 'tra'] },
+  g7: { l: 'tid', q: '看 iris transillumination defect（例如 ocular albinism）', excl: ['rtf', 'rti'] },
+  g8: { ans: 'dif', q: '一開始看 lids、lashes、conjunctiva 的全貌，找明顯的異常', excl: ['par'] }
+};
+// 錯題的 key：sl:g:…（給病灶選照法）、sl:f:…（看圖認照法）；第二段的字母決定題型
+const SKEYS = [...Object.keys(GQ).map(k => 'sl:g:' + k), ...TORDER.map(t => 'sl:f:' + t)];
+const keyValid = k => SKEYS.includes(k);
+const keyView = () => 'sl';
+const QTV = { sl: [['goal', '給病灶選照法'], ['fig', '看圖認照法']] };
+const QTZ = { g: 'goal', f: 'fig' };
+const kType = k => QTZ[k.split(':')[1]];
+const tLab = o => `${TECH[o].zh}（${TECH[o].en}）`;
+const keyLabel = k => { const [, ty, id] = k.split(':'); return ty === 'f' ? `看圖認照法：${TECH[id].zh}` : GQ[id].q; };
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+function itemOf(key) {
+  const [, ty, id] = key.split(':');
+  if (ty === 'f') return { key, type: 'fig', tech: id, ans: id, opts: shuffle([id, ...shuffle(TORDER.filter(x => x !== id)).slice(0, 3)]), prompt: ['上方是某一種照明法：左邊是光路，右邊是從顯微鏡看到的樣子（標籤已隱藏）', '這是哪一種照明法？'], more: TECH[id].def };
+  const g = GQ[id], ans = g.ans || LES[g.l].best, pool = TORDER.filter(x => x !== ans && !g.excl.includes(x));
+  return { key, type: 'goal', ans, opts: shuffle([ans, ...shuffle(pool).slice(0, 3)]), prompt: ['要看的病灶或目的', g.q], more: g.l ? LES[g.l].why : TECH.dif.best[0] };
+}
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
+function quizHTML() {
+  const q = st.quiz;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>這個要用哪種照法看？</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">兩種題型：給病灶或檢查目的，選來源建議的照明法（容易混淆、來源也提到的照法不會同時當選項）；看光路與鏡下示意（標籤隱藏），認出是哪一種照明法。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>再看一次</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i];
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  h += `<div class="prompt"><div class="k">${it.prompt[0]}</div><div class="q">${it.prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${tLab(o)}</button>`).join('')}</div>`;
+  if (q.ans) {
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${TECH[q.ans.pick].zh}；` : ' '}答案是 ${tLab(it.ans)}。<br>${it.more}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
+  let pool = SKEYS.filter(k => keyView(k) === st.view && types.includes(kType(k)));
+  if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
+  render();
+}
+function answer(a) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  q.ans = a; if (a.ok) q.score++;
+  q.log.push({ key: it.key, ok: a.ok, type: it.type });
+  const m = store.get();
+  if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
+  store.save(); render();
+}
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function setView(v) {
+  st.view = v;
+  try { history.replaceState(null, '', v === 'sl' ? location.pathname : '#' + v); } catch (e) { }
+  if (st.learnMode === 'quiz') st.quiz = quizDefaults();
+}
+function setMode(m) {
+  st.learnMode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
+  render();
+}
+function setTech(t) { Object.assign(st, { slT: t, slA: null, slW: null }); }
+function goKey(k) {
+  const [, ty, id] = k.split(':');
+  setView('sl');
+  if (ty === 'f') { setTech(id); st.slL = 'none'; }
+  else { const g = GQ[id]; setTech(g.ans || LES[g.l].best); st.slL = g.l || 'none'; }
+  render();
+}
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.learnMode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const tc = t.closest('[data-tech]'); if (tc) { setTech(tc.dataset.tech); render(); return; }
+  const le = t.closest('[data-les]'); if (le) { st.slL = le.dataset.les; render(); return; }
+  const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
+  if (t.closest('#q-skip')) { answer({ ok: false }); return; }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
+});
+// 拖拉角度、寬度：只重畫圖與說明卡，拉條本身不重畫（才拖得動）；寬度跨過分界時切換 optic section 與 parallelepiped
+document.addEventListener('input', e => {
+  const id = e.target.id;
+  if (id === 'sl-a') { st.slA = +e.target.value; $('#sl-a-v').textContent = `${st.slA}°`; renderFig(); return; }
+  if (id === 'sl-w') {
+    st.slW = +e.target.value;
+    const t = st.slW < WSEC ? 'sec' : 'par', ch = t !== st.slT; st.slT = t;
+    $('#sl-w-v').textContent = t === 'sec' ? '細：optic section' : '寬：parallelepiped';
+    renderFig(); renderPanel(); renderSelbar(); if (ch) renderIndex();
+  }
+});
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+
+/* ---------- self-check ---------- */
+(() => {
+  const a = (c, m) => console.assert(c, 'exam self-check: ' + m);
+  // 每個病灶在來源建議的照法下都有畫出來
+  Object.keys(LES).filter(k => k !== 'none').forEach(k => { frontSVG(slCfg(LES[k].best, true), k); a(fvShown, `${k} 在 ${LES[k].best} 下有畫出來`); });
+  a(TORDER.every(t => TP[t] && TECH[t]) && Object.keys(TECH).length === TORDER.length, '每種照法都有設定與說明卡');
+  a(TP.sec.w < WSEC && TP.par.w >= WSEC, '寬度拉條的分界在 optic section 與 parallelepiped 之間');
+  // 幾何：optic section 切過疤痕，疤痕落在切面靠前表面那側
+  const cs = slCfg('sec', true), Bs = beamOf(cs), v0 = SCAR.c[1], za = zAnt(Bs.uc, v0);
+  const sL = Bs.u(za) - Bs.hw, sR = Bs.u(zPost(Bs.uc, v0)) + Bs.hw, sc = Bs.u(za + (SCAR.D[0] + SCAR.D[1]) / 2);
+  a(sc > sL && sc < sR && sc - sL < sR - sc, 'optic section：疤痕在切面裡、靠前表面那側');
+  a(sc > SCAR.U[0] && sc < SCAR.U[1], 'optic section 有切過疤痕');
+  a(KPS.every(k => !kpLit(cs, Bs, k)), 'optic section（對焦在疤痕）照不到 nasal 的 KP');
+  ['sec', 'prx'].forEach(t => { const c = slCfg(t, true), B = beamOf(c), ui = B.u(ZI); a(Math.abs(ui) - B.hw > RP && Math.abs(ui) + B.hw < RL, `${t}：iris 上的光帶在瞳孔外、limbus 內`); });
+  const cp = slCfg('prx', true), Bp = beamOf(cp);
+  a(Bp.u(zAnt(Bp.uc)) - Bp.hw > SCAR.U[1], 'proximal：光束在疤痕旁邊、沒有直接照到');
+  const ca = slCfg('ac', true), Ba = beamOf(ca), cps = cellPts(ca, Ba, 26);
+  a(cps.length >= 20 && cps.every(p => p[2] > zPost(p[0], p[1]) && p[2] < ZI), '前房 cells 都在 endothelium 與 iris 之間');
+  const cr2 = slCfg('rti', true), Br = beamOf(cr2);
+  a(Math.abs(cr2.F[0]) - Br.hw > RP, 'retroillumination：光打在瞳孔外的 iris');
+  a(KPS.every(k => Math.abs(k[0] - cr2.F[0]) < Br.hw && Math.abs(k[1]) < cr2.h / 2), 'KP 都在 iris 亮區前面');
+  const sf = toTop(TP.scl.F); a(Math.abs(Math.hypot(sf[0] + 4.51, sf[1]) - 7.8) < 1e-9 && sf[1] > 0, 'sclerotic scatter：光打在 temporal limbus');
+  a(KPS.every(k => Math.hypot(k[0], k[1]) + k[2] < RPD) && SCAR.blob.every(p => Math.hypot(p[0], p[1]) < RPD) && PSC.blob.every(p => Math.hypot(p[0], p[1]) < RP), '眼底反照：KP、疤痕在散大的瞳孔裡；PSC 在沒散瞳的瞳孔裡');
+  a(TIDS.every(([r]) => r - 0.36 > RP && r + 0.36 < RL), 'TID 都在 iris 上');
+  a(GUTS.every(g => g[0] - g[2] > -0.05 && g[0] + g[2] < 0.85 && Math.abs(g[1]) + g[2] < 0.75) && GUTS.every(g => { const q = insOf(g); return Math.hypot(q[0] - INS[0], q[1] - INS[1]) + q[2] < INS[2]; }), 'guttata 在 endothelium 區與放大圖裡');
+  a(Math.abs(RL - 5.85) < 0.01 && Math.abs(ZI - 3.36) < 0.01 && Math.abs(ZL2 - 7.55) < 0.01, '深度與 limbus 半徑對到眼球模型');
+  // 測驗：選項含答案、四個不重複、不含容易混淆的照法
+  for (let n = 0; n < 20; n++) SKEYS.forEach(k => { const it = itemOf(k), g = GQ[k.split(':')[2]]; a(it.opts.includes(it.ans) && it.opts.length === 4 && new Set(it.opts).size === 4, `${k} 的選項含答案、四個不重複`); if (k[3] === 'g') a(!it.opts.some(o => g.excl.includes(o)), `${k} 的選項不含容易混淆的照法`); });
+  a(Object.values(GQ).every(g => !g.excl.includes(g.ans || LES[g.l].best)), '答案不在排除清單裡');
+  // 引用都在來源清單
+  const st0 = Object.assign({}, st);
+  TORDER.forEach(t => LORDER.forEach(l => { Object.assign(st, { slT: t, slL: l }); refs(slCard()).forEach(r => a(SRC[r], `${t}／${l} 的引用 ${r}`)); }));
+  Object.assign(st, st0);
+  refs(slExtra()).forEach(r => a(SRC[r], `基本設定的引用 ${r}`));
+  SKEYS.forEach(k => refs(itemOf(k).more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`)));
+})();
+
+render();
+</script>
+
+</body>
+</html>
