@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>斜視互動圖譜</title>
-<meta name="description" content="互動式斜視圖譜：角膜反光——選偏斜的方向（ET、XT、HT、HoT）、哪一眼與角度，看兩眼角膜反光落在瞳孔緣、虹膜中段還是角膜緣，用 Hirschberg test 換算度數與 prism diopter，改瞳孔大小看地標估法為什麼會跑掉；打開 prism 練 Krimsky test，放在注視眼或偏斜眼、選 base 方向、加到兩眼反光對稱；假性斜視例子：epicanthus、IPD 寬或窄、positive 與 negative angle kappa；cover test——按遮右眼、遮左眼、拿開，看 tropia 的偏斜眼怎麼移去注視、phoria 的眼睛在遮眼板後面偏掉又回來，交替遮看全部的偏斜與控制差的 phoria 失代償，比較看遠、看近（convergence excess ET）；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式斜視圖譜：角膜反光——選偏斜的方向（ET、XT、HT、HoT）、哪一眼與角度，看兩眼角膜反光落在瞳孔緣、虹膜中段還是角膜緣，用 Hirschberg test 換算度數與 prism diopter，改瞳孔大小看地標估法為什麼會跑掉；打開 prism 練 Krimsky test，放在注視眼或偏斜眼、選 base 方向、加到兩眼反光對稱；假性斜視例子：epicanthus、IPD 寬或窄、positive 與 negative angle kappa；cover test——按遮右眼、遮左眼、拿開，看 tropia 的偏斜眼怎麼移去注視、phoria 的眼睛在遮眼板後面偏掉又回來，交替遮看全部的偏斜與控制差的 phoria 失代償，比較看遠、看近（convergence excess ET）；prism cover test——選 prism 放哪一眼、base 方向與 prism bar 的度數，看交替遮時移動變小、中和、過頭反向，base 放反時移動變大；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -124,6 +124,8 @@ a{color:var(--accent)}
 .ctbar .btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .ctlog{margin:0;padding:2px 14px 12px 34px;font-size:13.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:2px}
 .ctlog:empty{display:none}
+.pbar{display:flex;flex-wrap:wrap;gap:4px}
+.pbar .chip{font-family:var(--f-mono);min-width:2.8em;text-align:center}
 /* 放大尺 */
 .r-p{fill:var(--t-pupil);stroke:var(--t-stroke);stroke-width:1}
 .r-i{fill:var(--t-iris);stroke:var(--t-stroke);stroke-width:1}
@@ -247,7 +249,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>外眼正面是檢查者面對病人看到的樣子（同九方向眼位圖：圖左＝病人右眼 OD），penlight 從正前方照，白點是角膜反光。偏斜時畫成角膜在反光底下轉動，每 7° 移 1 mm；眼裂形狀、IPD、angle kappa 的大小都是示意，預設不畫 angle kappa。下方放大尺量的是反光離瞳孔中心的距離。Krimsky 只畫反光相對瞳孔的位置，prism 放在注視眼時兩眼怎麼轉沒有畫出來。Cover test 分頁同樣是檢查者面對病人，遮眼板後面的眼睛畫成虛線（示意，實際上看不到），偏斜大小與移動速度是示意；除了 convergence excess ET，看遠看近畫成一樣。麻痺性斜視（CN III、IV、VI palsy、INO）與九方向眼位見<a href="../neuro-ophth/#eom">神經眼科圖譜的眼外肌分頁</a>。</span>
+    <span><b>關於圖：</b>外眼正面是檢查者面對病人看到的樣子（同九方向眼位圖：圖左＝病人右眼 OD），penlight 從正前方照，白點是角膜反光。偏斜時畫成角膜在反光底下轉動，每 7° 移 1 mm；眼裂形狀、IPD、angle kappa 的大小都是示意，預設不畫 angle kappa。下方放大尺量的是反光離瞳孔中心的距離。Krimsky 只畫反光相對瞳孔的位置，prism 放在注視眼時兩眼怎麼轉沒有畫出來。Cover test 分頁同樣是檢查者面對病人，遮眼板後面的眼睛畫成虛線（示意，實際上看不到），偏斜大小與移動速度是示意；除了 convergence excess ET，看遠看近畫成一樣。Prism cover test 分頁畫的是眼球實際轉的方向（prism 眼注視時往 apex 轉），不是隔著 prism 看到的影像；偏斜量與 prism bar 的格數是示意。麻痺性斜視（CN III、IV、VI palsy、INO）與九方向眼位見<a href="../neuro-ophth/#eom">神經眼科圖譜的眼外肌分頁</a>。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；用到驗光專業雜誌的地方，說明卡會註明。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -398,10 +400,10 @@ function eyeG(c, e) {
   return `<clipPath id="${id}"><path d="${d}"/></clipPath><path class="c-eyew" d="${d}"/><g clip-path="url(#${id})"><circle class="c-iris" cx="${ix}" cy="${iy}" r="${rr}"/><circle class="c-limb" cx="${ix}" cy="${iy}" r="${rr}"/><circle class="c-pupil" cx="${ix}" cy="${iy}" r="${fx(c.rp * K)}"/><circle class="c-refl" cx="${fx(X + G.cx * K)}" cy="${fx(CY + G.cy * K)}" r="4.8"/></g><path class="c-eyeo" d="${d}"/>${c.ps === 'epi' ? `<path class="c-fold" d="${foldD(X, CY, e)}"/>` : ''}`;
 }
 function prismG(c) {   // 從正面看 prism：粗邊＝base
-  const pe = prismEye(c), X = eyeCX(pe, c.ps), n = nas(pe), B = c.kr.B, h = (RL + 0.9) * K;
+  const pe = prismEye(c), X = eyeCX(pe, c.ps), n = nas(pe), B = c.kr.B, w = (RL + 0.9) * K, h = (RL + 0.3) * K;
   const dx = B === 'BO' ? -n : B === 'BI' ? n : 0, dy = B === 'BU' ? -1 : B === 'BD' ? 1 : 0;
-  const base = dx ? `M${fx(X + dx * h)} ${fx(CY - h)}V${fx(CY + h)}` : `M${fx(X - h)} ${fx(CY + dy * h)}H${fx(X + h)}`;
-  return `<rect class="c-prism" x="${fx(X - h)}" y="${fx(CY - h)}" width="${fx(2 * h)}" height="${fx(2 * h)}" rx="6"/><path class="c-pbase" d="${base}"/><text class="ptx" x="${X}" y="${fx(CY + h - (B === 'BD' ? 14 : 10))}" text-anchor="middle">${B} ${c.kr.P}Δ</text>`;
+  const base = dx ? `M${fx(X + dx * w)} ${fx(CY - h)}V${fx(CY + h)}` : `M${fx(X - w)} ${fx(CY + dy * h)}H${fx(X + w)}`;
+  return `<rect class="c-prism" x="${fx(X - w)}" y="${fx(CY - h)}" width="${fx(2 * w)}" height="${fx(2 * h)}" rx="6"/><path class="c-pbase" d="${base}"/><text class="ptx" x="${X}" y="${fx(CY + h - (B === 'BD' ? 14 : 10))}" text-anchor="middle">${B} ${c.kr.P}Δ</text>`;
 }
 function hbFig(c, quiz) {
   const nose = [-1, 1].map(n => `<path class="c-nose" d="M${360 + n * 30} 0Q${360 + n * 16} ${FH * 0.55} ${360 + n * 26} ${FH}"/>`).join('');
@@ -604,7 +606,7 @@ function ctFig(S, o, quiz) {
   return h + '</svg>';
 }
 const CTP = { item: null, S: null, obs: null, log: [], timers: [], raf: 0 };   // 測驗的播放狀態；學習模式用 st.ctH
-function ctStop() { CTP.timers.forEach(clearTimeout); CTP.timers = []; cancelAnimationFrame(CTP.raf); }
+function ctStop() { CTP.timers.forEach(clearTimeout); CTP.timers = []; cancelAnimationFrame(CTP.raf); CTP.loop = false; }
 function ctAnimate(o) {   // 圖已畫在新位置：先把虹膜拉回舊位置再轉過去，只改 #ct-iR／L 與 #ct-gR／L 的 transform
   cancelAnimationFrame(CTP.raf);
   const t0 = performance.now(), L = o.moves.map(m => ({ dur: ctDur(m, o), dx: -nas(m.e) * m.dh / DPM * K, dy: m.dv / DPM * K, n: [$(`#ct-i${m.e}`), $(`#ct-g${m.e}`)].filter(Boolean) }));
@@ -679,12 +681,142 @@ function ctItem(key) {
     more: q === 'dir' ? `拿開的那眼${mvTxt(ms)}去注視 → ${DKZ[ans]}；交替遮看到的是全部的偏斜（tropia＋phoria）${s('S1', 'S8')}` : `${XOZ[ans]}。控制好的 phoria 做完還是正的，控制差的可能失代償成明顯的偏斜${s('S1')}` };
 }
 
+/* ---------- prism cover test：交替遮時一定有一眼被遮；眼位用角度（度），畫的是眼球實際轉的方向（prism 眼注視時往 apex 轉） ---------- */
+const PBAR = [0, 1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 25, 30, 35, 40, 45, 50];   // prism bar（格數示意）
+const PAMT = PBAR.filter(p => p >= 4);                                               // 偏斜量只用 bar 上有的格數，才找得到中和的那一格
+const PCD = ['et', 'xt', 'rh', 'lh'];
+const PCZ = { et: 'ET：往內的偏斜（eso）', xt: 'XT：往外的偏斜（exo）', rh: '右眼比較高（右眼 hyper）', lh: '左眼比較高（左眼 hyper）' };
+const PVZ = { et: 'eso（往內）', xt: 'exo（往外）', rh: '右眼 hyper', lh: '左眼 hyper' };
+const PCOPP = { et: 'xt', xt: 'et', rh: 'lh', lh: 'rh' };
+const PCKEY = { et: 'eso', xt: 'exo', rh: 'hyR', lh: 'hyL' };
+const pcDev = c => ({ eso: c.dir === 'et' ? c.amt : c.dir === 'xt' ? -c.amt : 0, rl: c.dir === 'rh' ? c.amt : c.dir === 'lh' ? -c.amt : 0 });
+const pcOff = c => c.B === 'BO' ? [c.P, 0] : c.B === 'BI' ? [-c.P, 0] : c.B === 'BU' ? [0, -c.P] : [0, c.P];   // prism 眼注視時往 apex 轉（Δ；h＝往 nasal、v＝往上）
+function pcPos(c) {   // 注視眼（另一眼被遮）：有 prism 就往 apex 轉；被遮的眼帶著偏斜（兩眼 nasal 轉的和＝eso，右眼減左眼的高度＝rl）
+  const X = c.cov, F = other(X), o = c.pe === F ? pcOff(c) : [0, 0], d = pcDev(c), pos = {};
+  pos[F] = [o[0] / PDD, o[1] / PDD];
+  pos[X] = [(d.eso - o[0]) / PDD, (X === 'R' ? o[1] + d.rl : o[1] - d.rl) / PDD];
+  return pos;
+}
+function pcRes(c) { const d = pcDev(c), o = pcOff(c), sg = c.pe === 'R' ? 1 : -1; return { eso: d.eso - o[0], rl: d.rl - sg * o[1] }; }   // 交替遮時看到的移動（Δ）
+function pcBase(dir, pe) { return dir === 'et' ? 'BO' : dir === 'xt' ? 'BI' : (dir === 'rh') === (pe === 'R') ? 'BD' : 'BU'; }   // 同 krBase：base 和偏斜相反；垂直放另一眼時反過來
+function pcKey(c) {   // done 中和、more 不夠、less 過頭（reversal）、flip base 放錯
+  const r = pcRes(c), d = pcDev(c);
+  if (Math.hypot(r.eso, r.rl) < EPS) return 'done';
+  if (c.P && c.B !== pcBase(c.dir, c.pe)) return 'flip';
+  return r.eso * d.eso + r.rl * d.rl > 0 ? 'more' : 'less';
+}
+function pcApply(S, act) {   // act：['sw'] 換遮另一眼、['p', 度數] 換 prism（沒有動畫）
+  const T = Object.assign({}, S);
+  if (act[0] === 'sw') T.cov = other(S.cov); else T.P = act[1];
+  T.pos = pcPos(T);
+  const moves = act[0] !== 'sw' ? [] : ['R', 'L'].map(e => ({ e, dh: T.pos[e][0] - S.pos[e][0], dv: T.pos[e][1] - S.pos[e][1], vis: T.cov !== e })).filter(m => Math.hypot(m.dh, m.dv) > EPS);
+  return { S: T, obs: { kind: act[0] === 'sw' ? 'sw' : 'p', eye: T.cov, prev: S.cov, moves, dk: 'pc' } };
+}
+const pcMk = (dir, amt, pe, B, P, cov) => { const S = { dir, amt, pe, B, P, cov }; S.pos = pcPos(S); return S; };
+function pcLogTxt(o, quiz, S) {
+  if (o.kind === 'p') return `prism 換成 ${S.B} ${S.P}Δ`;
+  const V = vMoves(o);
+  return quiz ? `換遮${EZ[o.eye]}` : `換遮${EZ[o.eye]} → ${V.length ? V.map(m => `${EZ[m.e]}${mvTxt(m)}`).join('，') : `${EZ[o.prev]}沒有動`}`;
+}
+function pcStep(H, act, quiz) { const r = pcApply(H.S, act); H.S = r.S; H.obs = r.obs.kind === 'sw' ? r.obs : null; H.log = [...H.log, pcLogTxt(r.obs, quiz, r.S)].slice(-6); return r.obs; }
+function pcPrismG(S) {   // 從正面看 prism：粗邊＝base
+  if (!S.P) return '';
+  const X = EX[S.pe], n = nas(S.pe), w = (RL + 0.9) * K, h = (RL + 0.3) * K, B = S.B;
+  const dx = B === 'BO' ? -n : B === 'BI' ? n : 0, dy = B === 'BU' ? -1 : B === 'BD' ? 1 : 0;
+  const base = dx ? `M${fx(X + dx * w)} ${fx(CY - h)}V${fx(CY + h)}` : `M${fx(X - w)} ${fx(CY + dy * h)}H${fx(X + w)}`;
+  return `<rect class="c-prism" x="${fx(X - w)}" y="${fx(CY - h)}" width="${fx(2 * w)}" height="${fx(2 * h)}" rx="6"/><path class="c-pbase" d="${base}"/><text class="ptx" x="${X}" y="${fx(CY + h - (B === 'BD' ? 14 : 10))}" text-anchor="middle">${B} ${S.P}Δ</text>`;
+}
+const pcFig = (S, o, quiz) => ctFig(S, o, quiz).replace('</svg>', pcPrismG(S) + '</svg>');
+function pcVerdict(S) {
+  const k = pcKey(S), r = pcRes(S), right = pcBase(S.dir, S.pe);
+  const mv = Math.abs(r.eso) > EPS ? (r.eso > 0 ? '往外移（abduct）' : '往內移（adduct）') : '上下移動';
+  if (k === 'done') return `交替遮時兩眼都不動：中和了，偏斜 ≈ ${S.P}Δ ${PVZ[S.dir]}${s('S1', 'S8')}；Kanski 建議再加到移動方向反過來，再減回這一格確認${s('S1')}`;
+  if (k === 'flip') return `Base 方向不對：${S.B} 沒有抵消偏斜，反而讓移動變大或多出另一個方向的移動；${PCZ[S.dir]}、prism 放在${EZ[S.pe]}前要用 ${right}${s('S1', 'S7')}`;
+  if (k === 'less') return `移動方向反過來了（拿開的眼睛${mv}）：prism 加過頭，減回去找沒有移動的那一格${s('S1', 'S3')}`;
+  return S.P ? `拿開的眼睛還是${mv}，比沒放 prism 時小：還沒到終點，再加${s('S1')}` : `還沒放 prism：交替遮看到的是全部的偏斜（拿開的眼睛${mv}）；在${EZ[S.pe]}前放 ${right}，從下方的 prism bar 開始加${s('S1')}`;
+}
+function pcCard() {
+  const S = st.pcH.S;
+  const def = `交替遮的同時在一眼前加 prism，加到交替遮時眼睛不再移動，這時的 prism 度數就是偏斜的角度${s('S1', 'S8')}`;
+  const how = [`先做交替遮，看出偏斜的方向與大概的量${s('S1')}`, `Prism 放在一眼前，base 和偏斜方向相反（apex 指向偏斜的方向）：例如 ET 用 BO、右眼 HT 在右眼前放 BD${s('S1')}`,
+    `邊交替遮邊換更強的 prism，通常用 prism bar；移動會越來越小${s('S1')}`, `沒有移動就接近終點；再加到移動方向反過來（reversal），再減回來找中和的度數，確定量到最大的角度${s('S1', 'S3')}`];
+  const read = [`中和時的 prism 度數＝偏斜的角度${s('S1', 'S8')}`, `交替遮打破融像，量到的是全部的偏斜（tropia＋phoria）${s('S1', 'S8')}`];
+  const where = [`看遠的目標：正前方與另外八個診斷眼位；正前方再量看近${s('S1')}`, `Intermittent exotropia 還要看更遠的地方${s('S1')}`];
+  const vert = [`垂直偏斜放到另一眼時 base 反過來，例如右眼 hyper：右眼 BD 或左眼 BU${s('S7')}`];
+  const v = pcVerdict(S), body = `${list('怎麼做', how)}${list('讀數', read)}${list('在哪些眼位量', where)}${list('垂直偏斜', vert)}`;
+  return `<div class="card"><div class="eyebrow">Prism cover test · 對照 BCSC 6</div><div><h2>Prism cover test</h2></div><p class="zh">稜鏡交替遮蓋試驗</p><p class="def">${def}</p><div class="verdict"><span>${v}</span></div>${body}${srcList(refs(def + v + body))}</div>`;
+}
+function pcExtra() {
+  const S = st.pcH.S;
+  return `<div class="rng"><label for="pc-amt">偏斜量（示意）</label><input type="range" id="pc-amt" min="0" max="${PAMT.length - 1}" step="1" value="${PAMT.indexOf(S.amt)}"><span class="v" id="pc-amt-v">${S.amt}Δ</span></div>
+    <div class="rng"><span class="rl">Prism 放在</span><div class="seg" role="group" aria-label="prism 放在哪一眼">${['R', 'L'].map(e => `<button type="button" data-pce="${e}" aria-pressed="${S.pe === e}">${EZ[e]}</button>`).join('')}</div></div>
+    <div class="rng"><span class="rl">Base</span><div class="seg" role="group" aria-label="prism 的 base">${['BO', 'BI', 'BU', 'BD'].map(b => `<button type="button" data-pcb="${b}" aria-pressed="${S.B === b}">${b}</button>`).join('')}</div></div>
+    <div class="xh">Prism bar（Δ，格數示意）</div><div class="pbar">${PBAR.map(p => `<button type="button" class="chip ${S.P === p ? 'on' : ''}" data-pcp="${p}">${p}</button>`).join('')}</div>
+    <p class="hint" style="margin:8px 0 0">BO＝base-out（朝 temporal）、BI＝base-in（朝 nasal）、BU＝朝上、BD＝朝下。</p>`;
+}
+function pcSet(patch, log) {
+  const S = Object.assign({}, st.pcH.S, patch); S.pos = pcPos(S);
+  st.pcH.S = S; st.pcH.obs = null;
+  if (log) st.pcH.log = [...st.pcH.log, `設定：${PVZ[S.dir]} ${S.amt}Δ；${S.P ? `${EZ[S.pe]}前放 ${S.B} ${S.P}Δ` : '沒放 prism'}`].slice(-6);
+}
+function pcDo(act) { const o = pcStep(st.pcH, act, false); renderFig(); if (o.kind === 'sw') ctAnimate(o); }
+function pcTick() { CTP.timers = [setTimeout(() => { if (st.view !== 'pc' || st.learnMode !== 'learn' || !st.pcAuto) { CTP.loop = false; return; } pcDo(['sw']); pcTick(); }, 1500)]; }   // 只留下一個計時器，自動交替遮開很久也不會越積越多
+function pcEnsureLoop() { if (st.pcAuto && !CTP.loop && st.view === 'pc' && st.learnMode === 'learn') { CTP.loop = true; pcTick(); } }
+function pcPlay(H, seq, quiz) {   // 依序播放（測驗、錯題本的「再看一次」）
+  let i = 0;
+  const next = () => {
+    const o = pcStep(H, seq[i++], quiz);
+    renderFig(); if (!quiz) { renderPanel(); renderSelbar(); renderExtra(); }
+    if (o.kind === 'sw') ctAnimate(o);
+    if (i < seq.length) CTP.timers.push(setTimeout(next, o.kind === 'p' ? 500 : 1400));
+  };
+  CTP.timers.push(setTimeout(next, 800));
+}
+function pcStartItem(it) { ctStop(); Object.assign(CTP, { item: it, S: it.S0, obs: null, log: [] }); pcPlay(CTP, it.seq, true); }
+function pcRenderFig(it) {
+  if (it && CTP.item !== it) pcStartItem(it);
+  if (!it && CTP.item) { ctStop(); CTP.item = null; }
+  const H = it ? CTP : st.pcH;
+  const bar = it ? `<span class="hint">病人看 6 m 遠的目標</span><div class="grp"><button type="button" class="btn" data-pc="replay">再播一次</button></div>`
+    : `<span class="hint">交替遮：${st.pcAuto ? '自動來回換' : '按右邊的按鈕換'}</span><div class="grp"><button type="button" class="btn" data-pc="sw">換遮另一眼</button></div>`;
+  $('#fig').innerHTML = `<div class="vh">外眼正面：檢查者面對病人，病人看 6 m 遠的目標，交替遮</div>${pcFig(H.S, H.obs, !!it)}<div class="ctbar">${bar}</div><ol class="ctlog">${H.log.map(x => `<li>${x}</li>`).join('')}</ol>`;
+  $('#cap').innerHTML = `<span>檢查者面對病人（同九方向眼位圖）：圖左＝病人右眼 OD；方框＝prism，粗邊＝base。畫的是眼球實際轉的方向（prism 眼注視時往 apex 轉），不是隔著 prism 看到的影像。${it ? '' : '黃色箭頭＝剛剛拿開的眼睛怎麼動。'}</span><span class="ori">偏斜量與 prism bar 的格數是示意</span>`;
+  if (!it) pcEnsureLoop();
+}
+/* prism cover test 測驗：b＝選 base、m＝下一步加還是減、v＝讀中和值（預期答案由 self-check 用模擬核對） */
+const QB = { b1: ['et', 'R'], b2: ['xt', 'L'], b3: ['rh', 'R'], b4: ['rh', 'L'], b5: ['lh', 'L'], b6: ['lh', 'R'] };
+const QM = { m1: ['et', 30, 'R', 'BO', 20, 'more'], m2: ['et', 30, 'R', 'BO', 35, 'less'], m3: ['xt', 25, 'L', 'BI', 25, 'done'], m4: ['rh', 12, 'R', 'BD', 8, 'more'], m5: ['xt', 20, 'R', 'BO', 10, 'flip'], m6: ['lh', 10, 'R', 'BU', 14, 'less'], m7: ['et', 16, 'L', 'BO', 16, 'done'] };
+const QV = { v1: ['et', 30, 'R', [25, 30, 35]], v2: ['xt', 20, 'L', [18, 20, 25]], v3: ['rh', 14, 'R', [12, 14, 16]], v4: ['et', 45, 'L', [40, 45, 50]] };
+const MZ = { more: '還是往原本的方向移：再加 prism', less: '往反方向移：加過頭，減回去', done: '沒有移動：中和了，讀數', flip: 'Base 放反了：換方向' };
+const PMORE = `Base 和偏斜方向相反（apex 指向偏斜的方向）：ET 用 BO、XT 用 BI、右眼 HT 在右眼前放 BD${s('S1')}；垂直偏斜放到另一眼時 base 反過來（右眼 hyper：右眼 BD 或左眼 BU）${s('S7')}`;
+function pcItem(key) {
+  const [, ty, id] = key.split(':');
+  if (ty === 'b') {
+    const [dir, pe] = QB[id], ans = pcBase(dir, pe), vert = dir === 'rh' || dir === 'lh';
+    return { key, type: 'bas', ans, opts: ['BO', 'BI', 'BU', 'BD'], lab: x => BL[x], S0: pcMk(dir, vert ? 12 : 20, pe, ans, 0, other(pe)), seq: [['sw'], ['sw'], ['sw']],
+      prompt: [`交替遮看到${PCZ[dir]}`, `Prism 放在${EZ[pe]}前，base 朝哪？`], more: PMORE };
+  }
+  if (ty === 'm') {
+    const [dir, amt, pe, B, P] = QM[id], S0 = pcMk(dir, amt, pe, B, P, other(pe)), ans = pcKey(S0), right = pcBase(dir, pe);
+    const why = { done: `沒有移動＝中和：讀數就是這個 prism 的度數；再加到 reversal 再減回來確認${s('S1')}`, more: `移動方向和原本的偏斜一樣：還不夠，再加${s('S1')}`,
+      less: `移動方向反過來（reversal）：加過頭，減回去找沒有移動的那一格${s('S1', 'S3')}`, flip: `${PCZ[dir]}、prism 放在${EZ[pe]}前要用 ${right}，${B} 放反了${s('S1', 'S7')}` };
+    return { key, type: 'nxt', ans, opts: ['more', 'less', 'done', 'flip'], lab: x => MZ[x], S0, seq: [['sw'], ['sw'], ['sw']],
+      prompt: [`交替遮看到${PCZ[dir]}；${EZ[pe]}前放 ${B} ${P}Δ`, '看拿開的那眼怎麼動：下一步？'], more: why[ans] };
+  }
+  const [dir, amt, pe, steps] = QV[id], B = pcBase(dir, pe), ans = `${amt}-${dir}`;
+  return { key, type: 'neu', ans, opts: shuffle([ans, `${amt}-${PCOPP[dir]}`, `${steps[0]}-${dir}`, `${steps[2]}-${dir}`]), lab: x => { const [n, d] = x.split('-'); return `${n}Δ ${PVZ[d]}`; },
+    S0: pcMk(dir, amt, pe, B, steps[0], pe), seq: [['sw'], ['sw'], ['p', steps[1]], ['sw'], ['sw'], ['p', steps[2]], ['sw'], ['sw']],
+    prompt: [`交替遮；${EZ[pe]}前的 ${B} prism 依序換成 ${steps.join('、')}Δ`, '偏斜是多少、往哪個方向？'],
+    more: `${amt}Δ 時兩眼都不動：中和的度數就是偏斜量${s('S1', 'S8')}；${B} 抵消的是${PVZ[dir]}的偏斜（base 和偏斜方向相反）${s('S1')}` };
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'hb', name: '角膜反光', en: 'Hirschberg & Krimsky' }, { id: 'ct', name: 'Cover test', en: 'Cover–uncover & alternate' }];
+const VIEWS = [{ id: 'hb', name: '角膜反光', en: 'Hirschberg & Krimsky' }, { id: 'ct', name: 'Cover test', en: 'Cover–uncover & alternate' }, { id: 'pc', name: 'Prism cover test', en: 'Alternate prism cover' }];
 const $ = q => document.querySelector(q);
 let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
 const st = { view: 'hb', dir: 'et', eye: 'R', deg: 20, pup: 4, ps: 'none', kr: false, krAt: 'fix', krB: 'BO', krP: 0, labels: true, learnMode: 'learn', quiz: null,
-  ctGhost: true, ctH: { S: ctState('etR', 'd'), obs: null, log: [] } };
+  ctGhost: true, ctH: { S: ctState('etR', 'd'), obs: null, log: [] },
+  pcAuto: !reduce, pcH: { S: pcMk('et', 30, 'R', 'BO', 0, 'L'), obs: null, log: [] } };
 const hbCfg = () => ({ dir: st.ps === 'none' ? st.dir : 'o', eye: st.eye, deg: st.deg, rp: st.pup / 2, ps: st.ps, kr: st.kr ? { at: st.krAt, B: st.krB, P: st.krP } : null });
 const store = (() => {
   const K2 = 'strabAtlas.v1';
@@ -697,17 +829,20 @@ const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'ct' ? '下方選病人，按「遮右眼」「遮左眼」「拿開」；遮著一眼時直接按另一眼＝交替遮' : '下方選偏斜的方向、哪一眼與角度，看兩眼的角膜反光；打開「放 prism」練 Krimsky'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'ct' ? '下方選病人，按「遮右眼」「遮左眼」「拿開」；遮著一眼時直接按另一眼＝交替遮' : st.view === 'pc' ? '下方選偏斜與 prism（放哪一眼、base、prism bar 的度數），看交替遮時拿開的眼睛還動不動' : '下方選偏斜的方向、哪一眼與角度，看兩眼的角膜反光；打開「放 prism」練 Krimsky'}</span>`;
 }
 function renderTools() {
   if (st.learnMode === 'quiz') { $('#tools').innerHTML = ''; return; }
   const lab = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
-  $('#tools').innerHTML = st.view === 'ct' ? `<label class="tog"><input type="checkbox" id="t-ghost" ${st.ctGhost ? 'checked' : ''}>看遮眼板後面（示意）</label>${lab}`
+  const ghost = `<label class="tog"><input type="checkbox" id="t-ghost" ${st.ctGhost ? 'checked' : ''}>看遮眼板後面（示意）</label>`;
+  $('#tools').innerHTML = st.view === 'ct' ? ghost + lab
+    : st.view === 'pc' ? `<label class="tog"><input type="checkbox" id="t-auto" ${st.pcAuto ? 'checked' : ''}>自動交替遮</label>${ghost}${lab}`
     : `<label class="tog"><input type="checkbox" id="t-kr" ${st.kr ? 'checked' : ''}>放 prism（Krimsky）</label>${lab}`;
 }
 function renderFig() {
   const it = quizItem(), fig = $('#fig');
   if (st.view === 'ct') ctRenderFig(it);
+  else if (st.view === 'pc') pcRenderFig(it);
   else {
     if (CTP.item) { ctStop(); CTP.item = null; }
     const c = it ? it.cfg : hbCfg();
@@ -716,20 +851,22 @@ function renderFig() {
   }
   fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
 }
-function renderExtra() { $('#extra').innerHTML = st.learnMode === 'quiz' || st.view === 'ct' ? '' : hbExtra(); }
+function renderExtra() { $('#extra').innerHTML = st.learnMode === 'quiz' || st.view === 'ct' ? '' : st.view === 'pc' ? pcExtra() : hbExtra(); }
 function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
   const chip = (attr, v, on, t) => `<button type="button" class="chip ${on ? 'on' : ''}" data-${attr}="${v}">${t}</button>`;
   if (st.view === 'ct') { ix.innerHTML = CTG.map(([g, t]) => `<span class="lbl">${t}</span>` + Object.keys(CTC).filter(k => CTC[k].g === g).map(k => chip('ctc', k, st.ctH.S.cs === k, CTC[k].zh)).join('')).join(''); return; }
+  if (st.view === 'pc') { ix.innerHTML = `<span class="lbl">交替遮看到的偏斜（示意）</span>` + PCD.map(d => chip('pcd', d, st.pcH.S.dir === d, PCZ[d])).join(''); return; }
   ix.innerHTML = `<span class="lbl">偏斜（示意）</span>` + DIRS.map(d => chip('dir', d, st.ps === 'none' && st.dir === d, d === 'o' ? '正位' : `${DZ[d]} <i>${ZHD[d]}</i>`)).join('')
     + (st.ps === 'none' && st.dir !== 'o' ? `<span class="lbl">哪一眼偏</span>` + ['R', 'L'].map(e => chip('eye', e, st.eye === e, `${EZ[e]} ${EO[e]}`)).join('') : '')
     + `<span class="lbl">瞳孔大小</span>` + PUPS.map(p => chip('pup', p, st.pup === p, `${p} mm`)).join('')
     + `<span class="lbl">假性斜視（兩眼都是正的）</span>` + PSK.map(k => chip('ps', k, st.ps === k, PS[k].zh)).join('');
 }
-function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'ct' ? ctCard() : hbCard(); }
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'ct' ? ctCard() : st.view === 'pc' ? pcCard() : hbCard(); }
 function selTxt() {
+  if (st.view === 'pc') { const S = st.pcH.S; return `${PVZ[S.dir]} ${S.amt}Δ · ${S.P ? `${EZ[S.pe]}前 ${S.B} ${S.P}Δ` : '沒放 prism'}`; }
   if (st.view === 'ct') { const S = st.ctH.S; return `${CTC[S.cs].zh} · ${S.dist === 'd' ? '看遠' : '看近'}${S.cov ? ` · 遮${EZ[S.cov]}` : ''}`; }
   const c = hbCfg();
   const d = c.ps !== 'none' ? `假性：${PS[c.ps].zh}` : c.dir === 'o' ? '正位' : `${EZ[c.eye]} ${DZ[c.dir]} ${c.deg}°`;
@@ -759,16 +896,23 @@ const BL = { BO: 'Base-out（BO，朝 temporal）', BI: 'Base-in（BI，朝 nasa
 const KMORE = `Base 和偏斜方向相反（apex 指向偏斜的方向）${s('S1')}；放在偏斜眼：ET 用 BO、XT 用 BI、HT 用 BD、HoT 用 BU${s('S3')}；垂直偏斜放到另一眼時 base 反過來，例如右眼 hyper：右眼 BD 或左眼 BU${s('S7')}`;
 // cover test：ct:c:…（遮一眼看另一眼）、ct:u:…（遮了拿開看那眼）、ct:x:…（交替遮）；題型字母整頁不重複
 const KEYS = [...Object.keys(QA).map(k => 'hb:a:' + k), ...QD.map(k => 'hb:d:' + k), ...Object.keys(QP).map(k => 'hb:p:' + k), ...Object.keys(QK).map(k => 'hb:k:' + k),
-  ...Object.keys(QC).map(k => 'ct:c:' + k), ...Object.keys(QU).map(k => 'ct:u:' + k), ...Object.keys(QX).map(k => 'ct:x:' + k)];
+  ...Object.keys(QC).map(k => 'ct:c:' + k), ...Object.keys(QU).map(k => 'ct:u:' + k), ...Object.keys(QX).map(k => 'ct:x:' + k),
+  ...Object.keys(QB).map(k => 'pc:b:' + k), ...Object.keys(QM).map(k => 'pc:m:' + k), ...Object.keys(QV).map(k => 'pc:v:' + k)];
 const keyValid = k => KEYS.includes(k);
 const keyView = k => k.split(':')[0];
-const QTV = { hb: [['ang', '看反光估角度'], ['dir', '哪一眼、往哪偏'], ['ps', '真斜視還是假性'], ['kb', 'Krimsky 的 base']], ct: [['cov', 'Cover test'], ['unc', 'Uncover test'], ['alt', '交替遮']] };
-const QTZ = { a: 'ang', d: 'dir', p: 'ps', k: 'kb', c: 'cov', u: 'unc', x: 'alt' };
+const QTV = { hb: [['ang', '看反光估角度'], ['dir', '哪一眼、往哪偏'], ['ps', '真斜視還是假性'], ['kb', 'Krimsky 的 base']], ct: [['cov', 'Cover test'], ['unc', 'Uncover test'], ['alt', '交替遮']],
+  pc: [['bas', '選 base'], ['nxt', '加還是減'], ['neu', '讀中和值']] };
+const QTZ = { a: 'ang', d: 'dir', p: 'ps', k: 'kb', c: 'cov', u: 'unc', x: 'alt', b: 'bas', m: 'nxt', v: 'neu' };
 const kType = k => QTZ[k.split(':')[1]];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pairOpp = (a, b) => (a === 'ipdN' && b === 'ipdW') || (a === 'ipdW' && b === 'ipdN');
 function keyLabel(k) {
   const [v, ty, id] = k.split(':');
+  if (v === 'pc') {
+    if (ty === 'b') { const [dir, pe] = QB[id]; return `選 base：${PCZ[dir]}，prism 放在${EZ[pe]}`; }
+    if (ty === 'm') { const [dir, amt, pe, B, P] = QM[id]; return `加還是減：${PVZ[dir]} ${amt}Δ，${EZ[pe]}前 ${B} ${P}Δ`; }
+    const [dir, amt] = QV[id]; return `讀中和值：${PVZ[dir]} ${amt}Δ`;
+  }
   if (v === 'ct') {
     if (ty === 'c') { const [cs, X, dist] = QC[id]; return `Cover test：${CTC[cs].zh}，遮${EZ[X]}${CTC[cs].nearOnly ? (dist === 'n' ? '（看近）' : '（看遠）') : ''}`; }
     if (ty === 'u') { const [cs, X] = QU[id]; return `Uncover test：${CTC[cs].zh}，遮${EZ[X]}後拿開`; }
@@ -781,6 +925,7 @@ function keyLabel(k) {
 }
 function itemOf(key) {
   if (key.startsWith('ct:')) return ctItem(key);
+  if (key.startsWith('pc:')) return pcItem(key);
   const [, ty, id] = key.split(':');
   if (ty === 'a') {   // 反光放在地標上（瞳孔 4 mm）
     const [dir, eye, at] = QA[id], d = lmD(at, 2);
@@ -814,12 +959,13 @@ function quizHTML() {
   if (q.phase === 'setup') {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${st.view === 'ct' ? '眼睛怎麼動，代表什麼？' : '反光在哪裡，偏斜就有多大？'}</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${st.view === 'ct' ? '眼睛怎麼動，代表什麼？' : st.view === 'pc' ? '加到幾 Δ 才不動？' : '反光在哪裡，偏斜就有多大？'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
       <p style="margin:0;font-size:13px;color:var(--muted)">${st.view === 'ct' ? '三種題型：遮一眼時看另一眼怎麼動（cover test，包括另一眼不動的情況）；遮 2–3 秒後拿開，看被遮的那眼怎麼動（uncover test）；交替遮時每次拿開的那眼怎麼動、拿開遮眼板之後的樣子。測驗時看不到遮眼板後面，按「再播一次」可以重看。'
+        : st.view === 'pc' ? '三種題型：交替遮看到某個方向的偏斜，prism 放在哪一眼時 base 朝哪；看目前的 prism 下拿開的眼睛怎麼動，判斷要再加、要減回去、base 放反了，還是已經中和；看 prism 依序換三格，讀出中和的度數與方向。按「再播一次」可以重看。'
         : '四種題型：看反光落在哪個地標，估偏斜幾度；看哪一眼的反光偏、往哪偏，判斷是哪一眼的 ET、XT、HT 或 HoT（選項一定有同一眼反方向與另一眼的答案）；判斷是真的斜視還是假性斜視；Krimsky 的 prism 放在偏斜眼或注視眼時 base 朝哪。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
@@ -874,6 +1020,7 @@ function setMode(m) {
 function goKey(k) {   // 錯題本「再看一次」：回到學習模式的同一個設定；cover test 會把題目的步驟再播一次
   const it = itemOf(k), c = it.cfg;
   if (k.startsWith('ct:')) { setView('ct'); ctSet(it.cs, it.dist); render(); ctPlay(st.ctH, it.seq, false); return; }
+  if (k.startsWith('pc:')) { setView('pc'); st.pcAuto = false; st.pcH = { S: it.S0, obs: null, log: [] }; render(); pcPlay(st.pcH, it.seq, false); return; }
   setView('hb');
   Object.assign(st, { dir: c.dir, eye: c.eye, deg: Math.round(c.deg) || st.deg, pup: 4, ps: c.ps, kr: false });
   if (it.type === 'kb') Object.assign(st, { kr: true, krAt: it.at, krB: it.ans, krP: Math.round(c.deg) * PDD });
@@ -913,6 +1060,15 @@ document.addEventListener('click', e => {
   }
   const cc = t.closest('[data-ctc]'); if (cc) { ctSet(cc.dataset.ctc, st.ctH.S.dist); render(); return; }
   const cd = t.closest('[data-ctd]'); if (cd) { ctSet(st.ctH.S.cs, cd.dataset.ctd); render(); return; }
+  const pa = t.closest('[data-pc]'); if (pa) {
+    if (pa.dataset.pc === 'replay') { const it = quizItem(); if (it) { pcStartItem(it); renderFig(); } }
+    else pcDo(['sw']);
+    return;
+  }
+  const pd = t.closest('[data-pcd]'); if (pd) { pcSet({ dir: pd.dataset.pcd, P: 0 }, true); render(); return; }
+  const pe = t.closest('[data-pce]'); if (pe) { pcSet({ pe: pe.dataset.pce }, true); render(); return; }
+  const pb = t.closest('[data-pcb]'); if (pb) { pcSet({ B: pb.dataset.pcb }, true); render(); return; }
+  const pp = t.closest('[data-pcp]'); if (pp) { pcSet({ P: +pp.dataset.pcp }, true); render(); return; }
   const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
   if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
@@ -925,12 +1081,14 @@ document.addEventListener('change', e => {
   if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
   if (e.target.id === 't-kr') { st.kr = e.target.checked; render(); }
   if (e.target.id === 't-ghost') { st.ctGhost = e.target.checked; renderFig(); renderPanel(); }
+  if (e.target.id === 't-auto') { st.pcAuto = e.target.checked; ctStop(); renderFig(); }
 });
 // 拖拉角度、prism 度數：只重畫圖、說明卡與目前設定，拉條本身不重畫（才拖得動）
 document.addEventListener('input', e => {
   const id = e.target.id;
   if (id === 'hb-deg') { st.deg = +e.target.value; $('#hb-deg-v').textContent = degTxt(st.deg); }
   else if (id === 'kr-p') { st.krP = +e.target.value; $('#kr-p-v').textContent = `${st.krP}Δ`; }
+  else if (id === 'pc-amt') { pcSet({ amt: PAMT[+e.target.value] }, false); $('#pc-amt-v').textContent = `${st.pcH.S.amt}Δ`; }
   else return;
   renderFig(); renderPanel(); renderSelbar();
 });
@@ -1025,9 +1183,32 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
     refs(ctCard()).forEach(r => a(SRC[r], `cover test ${cs} 的引用 ${r}`));
   }));
   st.ctH = H0;
+  // prism cover test：不放 prism 時交替遮的移動＝偏斜量；base 對、度數＝偏斜時不動；少一格同方向、多一格反方向（各差幾 Δ 就動幾 Δ）；base 反了動得更大
+  const swOf = S => { const o = pcApply(S, ['sw']).obs; return { m: vMoves(o)[0], n: vMoves(o).length }; };
+  const amtOf = m => m ? Math.hypot(m.dh, m.dv) * PDD : 0, FLIP = { BO: 'BI', BI: 'BO', BU: 'BD', BD: 'BU' };
+  a(PAMT.every(p => PBAR.includes(p)) && PBAR.every((p, i) => !i || p > PBAR[i - 1]), 'prism bar 由小到大，且找得到每個偏斜量');
+  PCD.forEach(dir => ['R', 'L'].forEach(pe => ['R', 'L'].forEach(cov => PAMT.forEach(amt => {
+    const B = pcBase(dir, pe), tag = `${dir} ${amt}Δ，prism 在${pe}、遮${cov}`, mk = (b, P) => pcMk(dir, amt, pe, b, P, cov);
+    const z = swOf(mk(B, 0)); a(z.n === 1 && Math.abs(amtOf(z.m) - amt) < 1e-9 && devKey(z.m, cov) === PCKEY[dir], `${tag}：不放 prism 時拿開的眼睛移動＝偏斜量、方向對`);
+    const d0 = swOf(mk(B, amt)); a(!d0.n && pcKey(mk(B, amt)) === 'done', `${tag}：中和時不動`);
+    const lo = PBAR.filter(p => p > 0 && p < amt).pop(), hi = PBAR.find(p => p > amt);
+    if (lo) { const r = swOf(mk(B, lo)); a(pcKey(mk(B, lo)) === 'more' && Math.abs(amtOf(r.m) - (amt - lo)) < 1e-9 && devKey(r.m, cov) === PCKEY[dir], `${tag}：少一格同方向、動 ${amt - lo}Δ`); }
+    if (hi) { const r = swOf(mk(B, hi)); a(pcKey(mk(B, hi)) === 'less' && Math.abs(amtOf(r.m) - (hi - amt)) < 1e-9 && devKey(r.m, cov) === PCKEY[PCOPP[dir]], `${tag}：多一格反方向、動 ${hi - amt}Δ`); }
+    const w = swOf(mk(FLIP[B], 4)); a(pcKey(mk(FLIP[B], 4)) === 'flip' && amtOf(w.m) > amt, `${tag}：base 反了動得更大`);
+  }))));
+  a(pcBase('et', 'L') === krBase('et', 'L', 'dev') && pcBase('rh', 'R') === 'BD' && pcBase('rh', 'L') === 'BU' && pcBase('lh', 'R') === 'BU' && pcBase('xt', 'R') === 'BI', 'base 規則同 Krimsky（ET 用 BO、右眼 HT 在右眼前放 BD，Kanski；右眼 hyper 也可左眼 BU，Tea）');
+  Object.entries(QM).forEach(([id, q]) => a(itemOf('pc:m:' + id).ans === q[5], `pc:m:${id} 的模擬答案＝${q[5]}`));
+  Object.entries(QV).forEach(([id, q]) => {
+    const it = itemOf('pc:v:' + id); let S = it.S0; const seen = [];
+    it.seq.forEach(x => { const r = pcApply(S, x); if (x[0] === 'sw') seen.push([S.P, vMoves(r.obs).length]); S = r.S; });
+    a(q[3][1] === q[1] && seen.every(([P, n]) => (P === q[1]) === !n), `pc:v:${id}：只有 ${q[1]}Δ 那格不動`);
+  });
+  const P0 = st.pcH;
+  PCD.forEach(dir => ['R', 'L'].forEach(pe => ['BO', 'BI', 'BU', 'BD'].forEach(B => [0, 10, 30, 50].forEach(P => { st.pcH = { S: pcMk(dir, 30, pe, B, P, 'L'), obs: null, log: [] }; refs(pcCard()).forEach(r => a(SRC[r], `prism cover test ${dir}／${pe}／${B} ${P} 的引用 ${r}`)); }))));
+  st.pcH = P0;
 })();
 
-if (location.hash === '#ct') st.view = 'ct';
+if (location.hash === '#ct' || location.hash === '#pc') st.view = location.hash.slice(1);
 render();
 </script>
 
