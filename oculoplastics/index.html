@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>眼整形互動圖譜</title>
-<meta name="description" content="互動式眼整形圖譜：ptosis 評估與術式——拖上下眼瞼緣，用放大尺讀 MRD1、MRD2、PFH；看 levator function 怎麼壓眉量、往下看時先天與後天 ptosis 的差別、crease 高低；抬起下垂的眼瞼看對側有沒有掉下來（Hering），點 phenylephrine 看 Müller muscle 的反應，練 myasthenia gravis 的 fatigability 與 Cogan twitch、Marcus Gunn 張嘴時的 jaw-winking；四種 pseudoptosis：對側 lid retraction、同側 hypotropia、brow ptosis、dermatochalasis；依 LF、下垂量與 phenylephrine 反應走術式流程（frontalis sling、levator advancement、MMCR），各來源切點不同的地方兩種都列；下眼瞼內翻與外翻——打開水平鬆弛、retractor 鬆脫、preseptal orbicularis 疊上來、內眥韌帶鬆四個開關，看矢狀切面與外眼特寫的內翻、外翻與 punctal eversion，做 distraction、snap-back、往下看、往外拉看 punctum、往內拉看外眥，對照 lateral tarsal strip、Wies、retractor reinsertion、medial spindle；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式眼整形圖譜：ptosis 評估與術式——拖上下眼瞼緣，用放大尺讀 MRD1、MRD2、PFH；看 levator function 怎麼壓眉量、往下看時先天與後天 ptosis 的差別、crease 高低；抬起下垂的眼瞼看對側有沒有掉下來（Hering），點 phenylephrine 看 Müller muscle 的反應，練 myasthenia gravis 的 fatigability 與 Cogan twitch、Marcus Gunn 張嘴時的 jaw-winking；四種 pseudoptosis：對側 lid retraction、同側 hypotropia、brow ptosis、dermatochalasis；依 LF、下垂量與 phenylephrine 反應走術式流程（frontalis sling、levator advancement、MMCR），各來源切點不同的地方兩種都列；下眼瞼內翻與外翻——打開水平鬆弛、retractor 鬆脫、preseptal orbicularis 疊上來、內眥韌帶鬆四個開關，看矢狀切面與外眼特寫的內翻、外翻與 punctal eversion，做 distraction、snap-back、往下看、往外拉看 punctum、往內拉看外眥，對照 lateral tarsal strip、Wies、retractor reinsertion、medial spindle；淚道沖洗與 Jones test——選阻塞的位置，從下 punctum 插入沖洗針看 hard 或 soft stop，打水看從哪個 punctum 逆流、逆流的是什麼、淚囊有沒有鼓起來、病人嚐不嚐得到鹹水，做 Jones primary 與 secondary；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -20,6 +20,7 @@
   --t-occ:#2E2A3B; --t-brow:#6B4A3A; --t-crease:rgba(44,32,74,.55); --t-ruler:rgba(255,255,255,.8); --t-tick:#1E1A2B;
   --t-band:rgba(75,60,160,.24); --t-thumb:#DDB79F; --t-guide:rgba(44,32,74,.55); --t-hood:#E5C4AF;
   --t-mus:#C96F5F; --t-tars:#F2E7D2; --t-conj:#E39A9A; --t-fat:#F2D88E; --t-bone:#D8D2C6; --t-retr:#CDBB98; --t-cornea:rgba(120,170,215,.55); --t-skin:#D3A288; --t-lash:#2B201A;
+  --t-water:rgba(52,132,214,.9); --t-pus:#D4A62A; --t-fluo:#6CC625; --t-nose:#F4ECE8; --t-bud:#FFFFFF; --t-cann:#8A8F99;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -34,7 +35,8 @@
   --t-face:#5E4638; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.8);
   --t-occ:#3A3450; --t-brow:#2A1C15; --t-crease:rgba(232,226,248,.42); --t-ruler:rgba(240,238,248,.82); --t-tick:#15121F;
   --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142;
-  --t-mus:#94504A; --t-tars:#6A6150; --t-conj:#A85F63; --t-fat:#7F6C31; --t-bone:#4B4740; --t-retr:#7A6A4E; --t-cornea:rgba(120,165,215,.42); --t-skin:#8A6650; --t-lash:#EDE3D6; color-scheme:dark }}
+  --t-mus:#94504A; --t-tars:#6A6150; --t-conj:#A85F63; --t-fat:#7F6C31; --t-bone:#4B4740; --t-retr:#7A6A4E; --t-cornea:rgba(120,165,215,.42); --t-skin:#8A6650; --t-lash:#EDE3D6;
+  --t-water:rgba(110,175,240,.92); --t-pus:#D8B040; --t-fluo:#8EE04A; --t-nose:#3A2E2B; --t-bud:#E8E4F0; --t-cann:#A6ABB5; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
@@ -43,7 +45,8 @@
   --t-face:#5E4638; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.8);
   --t-occ:#3A3450; --t-brow:#2A1C15; --t-crease:rgba(232,226,248,.42); --t-ruler:rgba(240,238,248,.82); --t-tick:#15121F;
   --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142;
-  --t-mus:#94504A; --t-tars:#6A6150; --t-conj:#A85F63; --t-fat:#7F6C31; --t-bone:#4B4740; --t-retr:#7A6A4E; --t-cornea:rgba(120,165,215,.42); --t-skin:#8A6650; --t-lash:#EDE3D6; color-scheme:dark }
+  --t-mus:#94504A; --t-tars:#6A6150; --t-conj:#A85F63; --t-fat:#7F6C31; --t-bone:#4B4740; --t-retr:#7A6A4E; --t-cornea:rgba(120,165,215,.42); --t-skin:#8A6650; --t-lash:#EDE3D6;
+  --t-water:rgba(110,175,240,.92); --t-pus:#D8B040; --t-fluo:#8EE04A; --t-nose:#3A2E2B; --t-bud:#E8E4F0; --t-cann:#A6ABB5; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -149,6 +152,21 @@ a.chip{text-decoration:none;display:inline-block}
 .s-cj{fill:var(--t-conj)}
 .s-pun{fill:var(--t-pupil);stroke:var(--t-conj);stroke-width:1.5}
 .s-roll{fill:none;stroke:var(--t-stroke);stroke-width:1.4}
+/* 淚道 */
+.l-nose{fill:var(--t-nose);stroke:var(--t-stroke-2);stroke-width:1}
+.l-turb{fill:var(--t-conj);fill-opacity:.55;stroke:var(--t-stroke-2);stroke-width:1}
+.l-ducto{fill:none;stroke:var(--t-stroke);stroke-linecap:round;stroke-linejoin:round}
+.l-duct{fill:none;stroke:var(--t-conj);stroke-linecap:round;stroke-linejoin:round}
+.l-sac{fill:var(--t-conj);stroke:var(--t-stroke);stroke-width:1.4}
+.l-sacd{fill:none;stroke:var(--t-stroke);stroke-width:1.4;stroke-dasharray:5 4}
+.l-fl{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.l-w{stroke:var(--t-water)} .l-p{stroke:var(--t-pus)} .l-f{stroke:var(--t-fluo)}
+.l-wf{fill:var(--t-water)} .l-pf{fill:var(--t-pus)} .l-ff{fill:var(--t-fluo)}
+.l-obs{stroke:var(--bad);stroke-width:4;stroke-linecap:round}
+.l-cann{fill:none;stroke:var(--t-cann);stroke-linecap:round;stroke-linejoin:round}
+.l-syr{fill:var(--surface);stroke:var(--t-stroke);stroke-width:1.2}
+.l-bud{stroke:var(--t-stroke);stroke-width:1.2}
+.l-stick{stroke:var(--t-bone);stroke-width:4;stroke-linecap:round}
 .fig .rlt{font-family:var(--f-mono);font-size:10.5px;fill:var(--t-tick)}
 .fig .eyen{font-family:var(--f-body);font-size:15px;fill:var(--ink-2)}
 .lab text.brt{font-family:var(--f-mono);font-size:13px;fill:var(--accent)}
@@ -287,7 +305,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>外眼正面是檢查者面對病人看到的樣子（同九方向眼位圖：圖左＝病人右眼 OD），penlight 從正前方照，白點是角膜反光；放大尺的 0 對齊反光，每格 1 mm。正常眼畫成 MRD1 4 mm、MRD2 5 mm、LF 15 mm、crease 9 mm；眼裂形狀、眉毛與皮膚、往上看與往下看時眼瞼移動的量、phenylephrine 與 Hering 造成的變化量、MG 下垂的速度都是示意。LF 小圖的尺固定在臉上，往下看時 0 對齊上眼瞼緣。下眼瞼分頁的矢狀切面是眼瞼中央（左＝anterior、上＝superior，同眼解剖圖譜的眼瞼切面），外眼特寫是右眼（檢查者面對病人：左＝temporal）；四個開關怎麼組合成內翻或外翻是簡化的示意規則，眼瞼轉的角度、檢查的 mm 數與秒數也是示意。眼瞼的解剖見<a href="../eye-atlas/#lid">眼解剖圖譜的眼瞼分頁</a>；Horner syndrome 與 CN III palsy 見<a href="../neuro-ophth/#pup">神經眼科圖譜的瞳孔分頁</a>與<a href="../neuro-ophth/#eom">眼外肌分頁</a>。</span>
+    <span><b>關於圖：</b>外眼正面是檢查者面對病人看到的樣子（同九方向眼位圖：圖左＝病人右眼 OD），penlight 從正前方照，白點是角膜反光；放大尺的 0 對齊反光，每格 1 mm。正常眼畫成 MRD1 4 mm、MRD2 5 mm、LF 15 mm、crease 9 mm；眼裂形狀、眉毛與皮膚、往上看與往下看時眼瞼移動的量、phenylephrine 與 Hering 造成的變化量、MG 下垂的速度都是示意。LF 小圖的尺固定在臉上，往下看時 0 對齊上眼瞼緣。下眼瞼分頁的矢狀切面是眼瞼中央（左＝anterior、上＝superior，同眼解剖圖譜的眼瞼切面），外眼特寫是右眼（檢查者面對病人：左＝temporal）；四個開關怎麼組合成內翻或外翻是簡化的示意規則，眼瞼轉的角度、檢查的 mm 數與秒數也是示意。淚道分頁是右眼由前往後看（左＝lateral，同眼解剖圖譜的淚道正視圖），canaliculus、淚囊、NLD 的長度照 Kanski，阻塞的位置、水流的速度與量是示意。眼瞼的解剖見<a href="../eye-atlas/#lid">眼解剖圖譜的眼瞼分頁</a>；Horner syndrome 與 CN III palsy 見<a href="../neuro-ophth/#pup">神經眼科圖譜的瞳孔分頁</a>與<a href="../neuro-ophth/#eom">眼外肌分頁</a>。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；各來源寫法不同的地方，說明卡與術式流程兩種都列，測驗只用各來源都同意的切點。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -325,7 +343,11 @@ const SRC = {
   S11: { t: 'EyeWiki：Entropion（Weber AC, Chundury RV, Perry JD, Sundar G, et al.；2026-02 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Entropion' },
   S12: { t: 'EyeWiki：Ectropion（Belliveau MJ, Phelps P, Giacometti J, et al.；2026-10 審閱）', u: 'https://eyewiki.org/Ectropion' },
   S13: { t: 'EyeWiki：Medial Spindle Procedure（Mukit FA, Sundar G, et al.；2026-02 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Medial_Spindle_Procedure' },
-  S14: { t: 'EyeWiki：Examination Techniques for Lower Eyelid Malposition（Mukit FA, Thyparampil P, et al.；2026-05 審閱）', u: 'https://eyewiki.org/Examination_Techniques_for_Lower_Eyelid_Malposition' }
+  S14: { t: 'EyeWiki：Examination Techniques for Lower Eyelid Malposition（Mukit FA, Thyparampil P, et al.；2026-05 審閱）', u: 'https://eyewiki.org/Examination_Techniques_for_Lower_Eyelid_Malposition' },
+  S15: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.98–102 Lacrimal drainage system：anatomy、physiology、causes of a watering eye、external examination、lacrimal irrigation（hard 與 soft stop）、Jones dye testing', u: null },
+  S16: { t: 'EyeWiki：Canalicular Obstruction（Alsuhaibani A, AlBloushi AF, Heymann H, et al.；2026-04 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Canalicular_Obstruction' },
+  S17: { t: 'EyeWiki：Secondary Acquired Nasolacrimal Duct Obstruction（Sweeney AR, Lee H, Yen MT, et al.；2026-09 審閱）', u: 'https://eyewiki.org/Secondary_Acquired_Nasolacrimal_Duct_Obstruction' },
+  S18: { t: 'Stevens S. Lacrimal syringing. Community Eye Health 2009;22(70):31（社區眼科的技術教材）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2760283/' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
@@ -857,12 +879,222 @@ const LACTZ = { dis: 'Distraction test', snap: 'Snap-back test', down: '往下�
 const LPRE = { n: ['正常', ''], en: ['Involutional entropion', 'LRO'], enN: ['內翻（沒有水平鬆弛）', 'RO'], ec: ['Involutional ectropion', 'L'], ecR: ['外翻＋retractor 鬆脫', 'LR'], med: ['內側外翻＋水平鬆弛', 'LM1'], mct: ['內眥韌帶明顯鬆＋水平鬆弛', 'LM2'], pe: ['只有 punctal eversion', 'M1'], rd: ['只有 retractor 鬆脫', 'R'] };
 const lidKey = F => { const f = lidF(F); return comboKey(f).replace('M', f.M === 2 ? 'M2' : 'M1'); };
 
+/* ---------- 分頁三：淚道沖洗與 Jones test ----------
+   每個狀況：stop（hard／hardG＝先有點卡再 hard／soft）、rf 逆流（L 下 punctum＝同側、U 上 punctum、u 上 punctum 一點點、UL 上下都有）、thr 喉嚨（y 嚐得到、s 一部分、n 沒有）、j1／j2 Jones primary 與 secondary（+、-；null＝不用做） */
+const LAC = {
+  hyper: { zh: '通暢（流淚是分泌過多）', en: 'Patent drainage · hypersecretion', stop: 'hard', rf: '', thr: 'y', j1: '+', j2: null },
+  pump: { zh: 'Lacrimal pump failure', en: 'Lacrimal pump failure', stop: 'hard', rf: '', thr: 'y', j1: '-', j2: '-' },
+  lcs: { zh: '下 canaliculus 狹窄', en: 'Inferior canalicular stenosis', stop: 'hardG', rf: 'L', thr: 's', j1: '-', j2: '-' },
+  lc: { zh: '下 canaliculus 阻塞', en: 'Inferior canalicular obstruction', stop: 'soft', rf: 'L', thr: 'n', j1: null, j2: null },
+  cc: { zh: 'Common canaliculus 阻塞', en: 'Common canalicular obstruction', stop: 'soft', rf: 'U', thr: 'n', j1: null, j2: null },
+  nlds: { zh: 'NLD 部分阻塞', en: 'Partial nasolacrimal duct obstruction', stop: 'hard', rf: 'u', thr: 'y', j1: '-', j2: '+' },
+  nld: { zh: 'NLD 完全阻塞', en: 'Complete nasolacrimal duct obstruction', stop: 'hard', rf: 'UL', thr: 'n', j1: null, j2: null, dist: true }
+};
+const LACK = Object.keys(LAC);
+function lacSite(R) {   // 從沖洗結果反推位置（測驗的答案；self-check 核對每個狀況都對得回去）
+  if (R.stop === 'soft') return R.rf === 'L' ? 'lc' : R.rf === 'U' ? 'cc' : '?';
+  if (R.thr === 'n') return R.rf.includes('U') && R.dist ? 'nld' : '?';
+  if (R.stop === 'hardG' && R.rf === 'L') return 'lcs';
+  return R.rf === '' ? 'pat' : R.rf === 'u' ? 'nlds' : '?';
+}
+function jonesRead(j1, j2) {   // Kanski 的判讀
+  if (j1 === '+') return 'hyper';
+  if (j2 == null) return 'next';
+  return j2 === '+' ? 'nlds' : 'upper';
+}
+
+/* 幾何：右眼，由前往後看（左＝lateral、右＝medial）；mm，原點＝內眥，x 往 medial、y 往下；13 px/mm */
+const K5 = 13, LW5 = 720, LH5 = 540, OX5 = 430, OY5 = 160;
+const LP = p => `${fx(OX5 + p[0] * K5)} ${fx(OY5 + p[1] * K5)}`;
+function lidCurve(P0, P3, y) {   // 眼瞼緣：兩端 P0、P3，中央在 y
+  const c1 = [P0[0] + (P3[0] - P0[0]) * 0.225, cOf(y, P0[1])], c2 = [P0[0] + (P3[0] - P0[0]) * 0.775, c1[1]];
+  const at = s => [0, 1].map(i => (1 - s) ** 3 * P0[i] + 3 * (1 - s) ** 2 * s * c1[i] + 3 * (1 - s) * s * s * c2[i] + s ** 3 * P3[i]);
+  const atX = x => { let lo = 0, hi = 1; const up = P3[0] > P0[0]; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if ((at(m)[0] < x) === up) lo = m; else hi = m; } return at((lo + hi) / 2); };
+  return { c1, c2, at, atX };
+}
+const LEW = 22, LELC = [-LEW, Y0], LEMC = [0, Y0];   // 眼裂寬（示意）、外眥、內眥
+const LUP = lidCurve(LELC, LEMC, -N1), LLO = lidCurve(LEMC, LELC, N2);
+const PUN_U = LUP.atX(-LEW / 6 + 0.1), PUN_L = LLO.atX(-LEW / 6 - 0.1);   // puncta 在眼瞼緣內側 1/6（Kanski p.98）
+const AMP_U = [PUN_U[0], PUN_U[1] - 2], AMP_L = [PUN_L[0], PUN_L[1] + 2];   // canaliculus 先垂直約 2 mm（Kanski）
+const CC0 = [2.4, 0.4], SACW = [3.8, 0.4], SACM = [7.3, 0.6], SAC = { x0: 3.8, x1: 7.6, y0: -4.6, y1: 6.4 };   // common canaliculus、淚囊外側壁、內側壁；淚囊 11 mm
+const NLD0 = [5.7, 6.4], NLD1 = [4.9, 21.0], HAS = [5.3, 21.8];   // NLD 往下、稍微往 lateral，開口在 inferior meatus（inferior turbinate 的外下方）
+const CAN_U = [PUN_U, AMP_U, [-1.2, -3.4], [1.0, -1.2], CC0], CAN_L = [PUN_L, AMP_L, [-1.4, 4.0], [0.9, 2.0], CC0];
+const CANN = [...CAN_L, SACW, SACM], NOSE = [HAS, [8.6, 23.4], [13.5, 24.6], [18.6, 25.0]];
+const plen = pts => pts.reduce((s, p, i) => i ? s + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0, 0);
+function cutAt(pts, d) {   // 沿折線走 d mm 為止
+  const out = [pts[0]];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (d <= L) { out.push([a[0] + (b[0] - a[0]) * d / L, a[1] + (b[1] - a[1]) * d / L]); return out; }
+    d -= L; out.push(b);
+  }
+  return out;
+}
+const OBS_LC = 5.2, OBS_NLD = 15;   // 下 canaliculus 阻塞在離 punctum 約 5 mm（mid-canalicular 3–8 mm，EyeWiki）；NLD 阻塞的高度（示意）
+function lacTip(cs) {   // 沖洗針停在哪：hard＝淚囊內側壁；soft＝阻塞前面
+  const c = LAC[cs];
+  if (c.stop !== 'soft') return CANN;
+  return cs === 'lc' ? cutAt(CANN, OBS_LC - 0.3) : cutAt(CANN, plen(CAN_L) + 0.2);
+}
+const nldAt = y => [NLD0[0] + (NLD1[0] - NLD0[0]) * (y - NLD0[1]) / (NLD1[1] - NLD0[1]), y];
+function lacFlow(cs, dye) {   // 打水時流到哪裡：[點, 開始, 結束, 粗細 mm, 顏色]（顏色 w 生理食鹽水、p 黏液膿、f 染色）
+  const c = LAC[cs], col = cs === 'nld' && st.lac.muc ? 'p' : dye ? 'f' : 'w', NL = [NLD0, nldAt(12), NLD1, HAS], rev = a => a.slice().reverse();
+  const toU = rev(CAN_U), outU = [PUN_U, [PUN_U[0] - 0.8, PUN_U[1] - 1.6]], outL = [PUN_L, [PUN_L[0] - 0.8, PUN_L[1] + 1.6]];
+  const F = { sac: null, dist: null, seg: [] };
+  if (cs === 'lc') { F.seg.push([rev(cutAt(CAN_L, OBS_LC - 0.3)), 0.05, 0.35, 0.7, col], [outL, 0.35, 0.5, 0.6, col]); return F; }
+  if (cs === 'cc') { F.seg.push([toU, 0.1, 0.5, 0.7, col], [outU, 0.5, 0.65, 0.6, col]); return F; }
+  F.sac = [0, 0.25];
+  if (cs === 'nld') { F.dist = [0.25, 0.45]; F.seg.push([[NLD0, nldAt(OBS_NLD - 0.4)], 0.2, 0.35, 1.2, col], [[SACW, CC0, ...toU.slice(1)], 0.45, 0.75, 0.7, col], [outU, 0.75, 0.88, 0.6, col], [rev(CAN_L), 0.5, 0.8, 0.6, col], [outL, 0.8, 0.92, 0.6, col]); return F; }
+  const thin = cs === 'nlds' || cs === 'lcs';
+  F.seg.push([NL, 0.25, thin ? 0.7 : 0.5, thin ? 0.55 : 1.2, col], [NOSE, thin ? 0.7 : 0.5, thin ? 0.92 : 0.75, thin ? 0.45 : 0.8, col]);
+  if (cs === 'nlds') F.seg.push([[SACW, CC0, ...toU.slice(1)], 0.4, 0.7, 0.35, col], [outU, 0.7, 0.8, 0.35, col]);
+  if (cs === 'lcs') F.seg.push([rev(CAN_L), 0.25, 0.55, 0.4, col], [outL, 0.55, 0.65, 0.4, col]);
+  return F;
+}
+function lacDye(cs) {   // Jones primary：5 分鐘後 fluorescein 到了哪裡（Kanski 的判讀反推，示意）
+  const NL = [NLD0, nldAt(12), NLD1, HAS];
+  if (cs === 'hyper') return { seg: [CAN_U, CAN_L, [CC0, SACW], NL, NOSE.slice(0, 2)], sac: true, bud: true };
+  if (cs === 'nlds') return { seg: [CAN_U, CAN_L, [CC0, SACW], [NLD0, nldAt(10)]], sac: true, bud: false };
+  return { seg: [], sac: false, bud: false };
+}
+function lacFig(cs, act, t, quiz) {
+  const c = LAC[cs], T = t == null ? 1 : t, k = (a, b) => clamp01((T - a) / (b - a)), mm = v => fx(v * K5);
+  const tube = (pts, w, cls) => `<path class="${cls}" style="stroke-width:${mm(w)}" d="${crvL(pts)}"/>`;
+  let h = `<svg viewBox="0 0 ${LW5} ${LH5}" role="img" aria-label="右眼淚道正視圖，由前往後看：左＝lateral、右＝medial"><rect class="c-face" width="${LW5}" height="${LH5}" rx="12"/>`;
+  h += `<path class="s-bone" d="M${[[2.6, -6.5], [9.4, -6.5], [9.4, 3], [8.6, 15], [7.6, 20.2], [3.2, 20.6], [2.4, 10]].map(LP).join('L')}Z"/>`;
+  h += `<path class="l-nose" d="M${[[9.4, 3], [19.6, 3], [19.6, 26.6], [3.0, 26.6], [3.0, 21.4], [7.6, 20.8], [8.6, 15]].map(LP).join('L')}Z"/>`;
+  h += [[13.6, 8.6, 4.6, 2.2], [12.0, 18.0, 5.0, 2.0]].map(([x, y, rx, ry]) => `<ellipse class="l-turb" cx="${LP([x, y]).split(' ')[0]}" cy="${LP([x, y]).split(' ')[1]}" rx="${mm(rx)}" ry="${mm(ry)}"/>`).join('');
+  // 眼睛（內側一半）
+  const fis = `M${LP(LELC)}C${LP(LUP.c1)} ${LP(LUP.c2)} ${LP(LEMC)}C${LP(LLO.c1)} ${LP(LLO.c2)} ${LP(LELC)}Z`, ic = LP([-LEW / 2, 0]).split(' ');
+  h += `<clipPath id="lc-c"><path d="${fis}"/></clipPath><path class="c-eyew" d="${fis}"/><g clip-path="url(#lc-c)"><circle class="c-iris" cx="${ic[0]}" cy="${ic[1]}" r="${mm(RL)}"/><circle class="c-pupil" cx="${ic[0]}" cy="${ic[1]}" r="${mm(2)}"/><ellipse class="s-cj" cx="${LP([-1.0, 0.5]).split(' ')[0]}" cy="${LP([-1.0, 0.5]).split(' ')[1]}" rx="${mm(1.1)}" ry="${mm(0.9)}"/></g><path class="c-eyeo" d="${fis}"/>`;
+  if (act === 'j1' && !quiz) { const lake = Array.from({ length: 9 }, (_, i) => LLO.atX(-0.6 - i * 1.4)); h += `<path class="l-fl l-f" style="stroke-width:${mm(0.6)}" d="${crvL(lake)}"/>`; }   // fluorescein 在淚河
+  // 淚道
+  const ducts = [CAN_U, CAN_L, [CC0, SACW]];
+  h += ducts.map(p => tube(p, 1.25, 'l-ducto')).join('') + ducts.map(p => tube(p, 1.0, 'l-duct')).join('');
+  h += tube([NLD0, nldAt(12), NLD1, HAS], 2.3, 'l-ducto') + tube([NLD0, nldAt(12), NLD1, HAS], 2.0, 'l-duct');
+  const sacR = (g, cls) => `<rect class="${cls}" x="${mm(SAC.x0 - g) * 1 + OX5}" y="${mm(SAC.y0 - g) * 1 + OY5}" width="${mm(SAC.x1 - SAC.x0 + 2 * g)}" height="${mm(SAC.y1 - SAC.y0 + 2 * g)}" rx="${mm(1.8 + g)}"/>`;
+  h += sacR(0, 'l-sac');
+  [PUN_U, PUN_L].forEach(p => { const q = LP(p).split(' '); h += `<circle class="c-pupil" cx="${q[0]}" cy="${q[1]}" r="3.4"/>`; });
+  // 阻塞的位置（測驗時不畫）
+  if (!quiz) {
+    const bar = (p, d, w = 1.1) => `<path class="l-obs" d="M${LP([p[0] - d[1] * w, p[1] + d[0] * w])}L${LP([p[0] + d[1] * w, p[1] - d[0] * w])}"/>`;
+    if (cs === 'lc') { const a = cutAt(CANN, OBS_LC), p = a[a.length - 1], q = a[a.length - 2], L = Math.hypot(p[0] - q[0], p[1] - q[1]); h += bar(p, [(p[0] - q[0]) / L, (p[1] - q[1]) / L]); }
+    if (cs === 'cc') h += bar([(CC0[0] + SACW[0]) / 2, CC0[1]], [1, 0]);
+    if (cs === 'nld') h += bar(nldAt(OBS_NLD), [0, 1], 1.6);
+    if (cs === 'nlds') h += [-1, 1].map(s => `<path class="l-obs" style="stroke-width:3" d="M${LP([nldAt(OBS_NLD)[0] + s * 1.5, OBS_NLD])}L${LP([nldAt(OBS_NLD)[0] + s * 0.55, OBS_NLD])}"/>`).join('');
+    if (cs === 'lcs') { const a = cutAt(CANN, OBS_LC), p = a[a.length - 1]; h += [-1, 1].map(s => `<path class="l-obs" style="stroke-width:3" d="M${LP([p[0] - 0.3, p[1] + s * 1.4])}L${LP([p[0] - 0.1, p[1] + s * 0.55])}"/>`).join(''); }
+  }
+  // 流體與染色
+  const fl = (pts, w, col, kk) => kk > 0 ? `<path class="l-fl l-${col}" pathLength="1" style="stroke-width:${mm(w)};stroke-dasharray:1 1;stroke-dashoffset:${(1 - kk).toFixed(3)}" d="${crvL(pts)}"/>` : '';
+  if (act === 'irr' || act === 'j2') {
+    const F = lacFlow(cs, act === 'j2' && cs === 'nlds');
+    if (F.dist && k(...F.dist) > 0) h += sacR(0.9 * k(...F.dist), 'l-sacd');
+    if (F.sac) { const col = cs === 'nld' && st.lac.muc ? 'p' : act === 'j2' && cs === 'nlds' ? 'f' : 'w'; h += `<g style="opacity:${fx(0.75 * k(...F.sac))}">${sacR(-0.35, `l-${col}f`)}</g>`; }
+    F.seg.forEach(([pts, a, b, w, col]) => { h += fl(pts, w, col, k(a, b)); });
+  }
+  if (act === 'j1') { const D = lacDye(cs); D.seg.forEach(p => { h += fl(p, 0.6, 'f', 1); }); if (D.sac) h += `<g style="opacity:.7">${sacR(-0.35, 'l-ff')}</g>`; }
+  // 沖洗針（插入、打水、secondary）
+  if (act === 'probe' || act === 'irr' || act === 'j2') {
+    const tip = lacTip(cs), H0 = [-8.6, 10.2], H1 = [-15.8, 16.2], d = [H0[0] - H1[0], H0[1] - H1[1]], L = Math.hypot(...d), n = [-d[1] / L * 1.1, d[0] / L * 1.1];
+    h += `<path class="l-syr" d="M${LP([H1[0] + n[0], H1[1] + n[1]])}L${LP([H0[0] + n[0], H0[1] + n[1]])}L${LP([H0[0] - n[0], H0[1] - n[1]])}L${LP([H1[0] - n[0], H1[1] - n[1]])}Z"/>`;
+    h += `<path class="l-cann" style="stroke-width:${mm(0.42)}" d="${crvL([H0, [-5.6, 7.2], [PUN_L[0] - 0.2, PUN_L[1] + 3.4], ...tip.slice(1)])}"/>`;
+  }
+  // 棉棒（Jones）：從鼻孔伸到 inferior turbinate 下面的 NLD 開口
+  if (act === 'j1' || act === 'j2') {
+    const D = act === 'j1' ? lacDye(cs).bud : cs === 'nlds' && k(0.7, 0.92) > 0.4, b0 = LP([6.3, 22.2]).split(' ');
+    h += `<path class="l-stick" d="M${LP([19.2, 26.2])}L${LP([7.0, 22.4])}"/><ellipse class="l-bud" cx="${b0[0]}" cy="${b0[1]}" rx="${mm(1.3)}" ry="${mm(0.8)}" style="fill:var(${D ? '--t-fluo' : '--t-bud'})"/>`;
+  }
+  // 標籤
+  const lb = (p, t, anc = 'start') => { const q = LP(p).split(' '); return `<text x="${q[0]}" y="${q[1]}" text-anchor="${anc}">${t}</text>`; };
+  const ld = (a, b) => `<path class="c-guide" style="stroke-dasharray:none;stroke-width:1" d="M${LP(a)}L${LP(b)}"/>`;
+  h += `<g class="lab">${ld([12.6, -5.4], [7.0, -3.0])}${lb([19.3, -5.0], 'lacrimal sac', 'end')}${ld([-7.2, -7.0], [PUN_U[0] - 0.2, PUN_U[1] - 0.3])}${lb([-7.4, -7.2], 'upper punctum', 'end')}`
+    + `${ld([-1.0, -7.8], [-0.2, -2.8])}${lb([-0.8, -8.0], 'canaliculi', 'middle')}${ld([9.8, -7.4], [3.1, 0.4])}${lb([19.3, -7.0], 'common canaliculus', 'end')}${ld([0.6, 12.5], [5.2, 12.5])}${lb([0.2, 12.7], 'NLD', 'end')}`
+    + `${lb([12.0, 18.4], 'inferior turbinate', 'middle')}${lb([0.6, 23.2], 'inferior meatus', 'end')}${lb([13.6, 8.9], 'middle turbinate', 'middle')}${lb([19.3, 26.0], '→ 鼻咽、喉嚨', 'end')}`
+    + `${act === 'probe' || act === 'irr' || act === 'j2' ? lb([-15.6, 18.6], '沖洗針（從下 punctum）', 'middle') : ''}${act === 'j1' || act === 'j2' ? lb([12.5, 22.4], '棉棒', 'middle') : ''}</g>`;
+  h += `<text class="eyen" x="${LP([-LEW / 2, 8.6]).split(' ')[0]}" y="${LP([-LEW / 2, 8.6]).split(' ')[1]}" text-anchor="middle">右眼 OD</text><g class="lab o">${lb([-20.5, 26.2], 'lateral', 'middle')}${lb([16.5, 1.8], 'medial（鼻）', 'middle')}</g>`;
+  return h + '</svg>';
+}
+function crvL(pts) {   // 經過每一點的平滑曲線（淚道圖）
+  let d = `M${LP(pts[0])}`;
+  for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2; d += `C${LP([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6])} ${LP([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6])} ${LP(p2)}`; }
+  return d;
+}
+
+/* 文字 */
+const RFZ = { '': '沒有逆流', L: '從下 punctum（同一個）逆流', U: '從上 punctum（對側）逆流', u: '上 punctum 有一點點逆流', UL: '上下 punctum 都逆流' };
+const STOPZ = { hard: 'hard stop', hardG: '通過時有點卡，之後 hard stop', soft: 'soft stop' };
+const THRZ = { y: '嚐得到鹹水', s: '有一部分流到鼻子', n: '嚐不到鹹水' };
+function lacFind(cs, muc) {   // 沖洗結果（測驗題目也用）
+  const c = LAC[cs];
+  return [`插入沖洗針：${STOPZ[c.stop]}`, `打水：${RFZ[c.rf]}${c.rf && c.rf !== 'u' ? (cs === 'nld' && muc ? '，逆流出黏液膿' : '，逆流的是清的水') : ''}`, c.dist ? '淚囊稍微鼓起來' : '淚囊沒有鼓起來', `病人${THRZ[c.thr]}`];
+}
+function lacStatus(cs, act) {
+  const c = LAC[cs], muc = st.lac.muc;
+  switch (act) {
+    case 'probe': return c.stop === 'soft' ? `Soft stop：停在 common canaliculus 與淚囊交界或更前面，壓到軟組織、沒有進淚囊${s('S15')}。${cs === 'lc' ? '這裡停在下 canaliculus 中段' : '這裡停在 common canaliculus'}；canaliculus 折到、針尖頂到管壁也會像 soft stop，先退一點、拉緊眼瞼再試${s('S15')}`
+      : c.stop === 'hardG' ? `通過下 canaliculus 時有點卡（gritty）、輕微阻力＝canaliculus stenosis${s('S16')}；之後碰到淚囊內側壁，hard stop${s('S15')}` : `Hard stop：碰到淚囊內側壁，隔著摸得到硬的 lacrimal bone＝針進了淚囊，排除 canaliculus 完全阻塞${s('S15')}`;
+    case 'irr': return {
+      hyper: `水流到鼻子、喉嚨，病人嚐到鹹味，沒有逆流：淚道通${s('S15', 'S17')}；仍可能有狹窄或輕微的 pump failure，要再分辨時做 Jones test${s('S15')}`,
+      pump: `水流到鼻子、喉嚨，沒有逆流：沖洗是通的${s('S15', 'S17')}；症狀可能來自輕微的 lacrimal pump failure${s('S15')}`,
+      lcs: `從同一個（下）punctum 回水，但還有一部分流到鼻子：canaliculus stenosis${s('S16')}`,
+      lc: `Soft stop，水從下 punctum（同一個）逆流、沒有到喉嚨：下 canaliculus 阻塞${s('S15', 'S17')}`,
+      cc: `Soft stop，清的水從上 punctum（對側）逆流：上下 canaliculus 都通、common canaliculus 阻塞${s('S15', 'S16')}`,
+      nlds: `病人嚐得到鹹水，上 punctum 只有一點點逆流：NLD 狹窄的病人感覺得到水流到鼻子、對側逆流很少${s('S16')}；Kanski：通了也可能還有狹窄${s('S15')}`,
+      nld: `Hard stop，水到不了喉嚨：NLD 完全阻塞；淚囊稍微鼓起來，通常上下 punctum 都逆流，逆流物可以是清的、黏液或膿，看淚囊裡有什麼${s('S15')}；EyeWiki：對側 punctum 逆流帶黏液、或淚囊鼓起來＝NLD 阻塞${s('S16', 'S17')}${muc ? '' : '（這裡設成清的）'}`
+    }[cs];
+    case 'j1': return c.j1 == null ? `沖洗時嚐不到鹹水：不用做 Jones test，Jones 只在懷疑 partial obstruction、沖洗嚐得到鹽水時才做${s('S15')}`
+      : c.j1 === '+' ? `5 分鐘後棉棒有螢光：淚道通，流淚是分泌過多，不用再檢查${s('S15')}` : `5 分鐘後棉棒沒有螢光：partial obstruction（位置不明）或 pump failure，要馬上做 secondary；primary 的偽陰性很多${s('S15')}`;
+    case 'j2': return c.j1 == null ? `沖洗時嚐不到鹹水：不用做 Jones test${s('S15')}` : c.j2 == null ? `Primary 已經陽性，不用做 secondary${s('S15')}`
+      : c.j2 === '+' ? `洗掉結膜囊的 fluorescein 再沖洗，鼻子沖出染色的水：fluorescein 進過淚囊，上段通，推論淚囊以下的 NLD 部分阻塞${s('S15')}` : `沖出來的水沒有染色：fluorescein 沒進淚囊，punctum 或 canaliculus 功能不良（部分阻塞或 pump failure）${s('S15')}`;
+  }
+  return `${c.zh}：照順序按下方的按鈕（插入沖洗針 → 打水 → 需要時做 Jones test）`;
+}
+const LACTZ3 = { probe: '插入沖洗針', irr: '打水沖洗', j1: 'Jones primary', j2: 'Jones secondary' };
+const IRR_HOW = [`先在裂隙燈下看 punctum，再沖洗：沖洗會暫時撐開 punctum、把 stenosis 蓋掉${s('S15')}；punctum 沒有或嚴重狹窄要先擴大；急性感染時不要沖洗${s('S15')}`,
+  `點表面麻醉，用 punctum dilator 垂直進去再轉水平，同時往外拉住眼瞼${s('S15')}`,
+  `26 或 27 G 的鈍頭彎沖洗針接 3 ml 生理食鹽水，從下 punctum 進去，往外拉住眼瞼、沿 canaliculus 推進幾 mm${s('S15')}`,
+  `社區眼科的教材：請病人往上、往外看，慢慢推水，先告訴病人可能會嚐到鹹味、想吞${s('S18')}`];
+const IRR_READ = [`Hard stop：碰到淚囊內側壁，隔著摸得到硬的 lacrimal bone＝針進了淚囊，排除 canaliculus 完全阻塞${s('S15')}；EyeWiki：hard stop 表示 canaliculus 通，通過時有點卡＝狹窄，推不過去的軟阻力＝阻塞${s('S16')}`,
+  `Soft stop：停在 common canaliculus 與淚囊交界或更前面，軟軟的${s('S15')}；下 canaliculus 阻塞時從下 punctum 逆流，從上 punctum 逆流＝上下 canaliculus 通、common canaliculus 阻塞${s('S15')}`,
+  `嚐到鹹水＝淚道通，但仍可能有狹窄或 pump failure${s('S15')}；病人沒感覺＝某處阻塞${s('S18')}`,
+  `EyeWiki：同一個 punctum 逆流＝canaliculus 的問題；對側 punctum＝common canaliculus；對側逆流帶黏液或淚囊鼓起來＝NLD 阻塞${s('S17')}`,
+  `壓淚囊時 punctum 逆流出黏液膿＝mucocoele：canaliculus 通，阻塞在淚囊下端或更下面${s('S15')}；EyeWiki：黏液膿逆流表示 NLD 阻塞${s('S16')}`];
+const JONES = [`只在懷疑 partial obstruction 時做：有流淚、punctum 正常、沖洗時嚐得到鹽水${s('S15')}`,
+  `Primary：一眼點 2% fluorescein，約 5 分鐘後把沾了麻藥的棉棒伸到 inferior turbinate 下面的 NLD 開口${s('S15')}；有螢光＝通、流淚是分泌過多；沒有＝partial obstruction（位置不明）或 pump failure，要馬上做 secondary${s('S15')}`,
+  `Primary 的偽陰性很多；用鈷藍光看口咽、看到一小時，可以把偽陰性降到幾乎沒有${s('S15')}`,
+  `Secondary：點麻藥、洗掉結膜囊剩下的 fluorescein，再沖洗，棉棒放在 inferior turbinate 下面；有染色的水＝fluorescein 進過淚囊、上段通，推論淚囊以下的 NLD 部分阻塞；沒染色＝fluorescein 沒進淚囊，punctum 或 canaliculus 功能不良（部分阻塞或 pump failure）${s('S15')}`,
+  `EyeWiki：Jones 1 在 2 與 5 分鐘各看一次；這兩個檢查逐漸少用${s('S17')}`];
+const LDIFF3 = [`完全 NLD 阻塞的逆流：Kanski 寫通常上下 punctum 都逆流，逆流物可以是清的、黏液或膿${s('S15')}；EyeWiki 寫對側 punctum 逆流帶黏液，或淚囊鼓起來${s('S16', 'S17')}。測驗用「上下都逆流＋淚囊鼓起來」，兩邊都成立`,
+  `Common canaliculus 阻塞：Kanski 用 soft stop 加上 punctum 逆流${s('S15')}；EyeWiki 寫從對側 punctum 回清的水${s('S16')}`,
+  `Jones primary 看幾分鐘：Kanski 約 5 分鐘${s('S15')}；EyeWiki 2 與 5 分鐘各看一次${s('S17')}`,
+  `淚河高度：Kanski 寫正常 0.2–0.4 mm、≥ 0.6 mm 偏高${s('S15')}；EyeWiki SANDO 頁寫正常約 1 mm${s('S17')}`];
+const LAN3 = [`Punctum 在眼瞼緣後緣、有睫毛的外側 5/6 與沒睫毛的內側 1/6 交界${s('S15')}`, `Canaliculus 先垂直約 2 mm，再往內水平約 8 mm 到淚囊；超過 90% 的人上下 canaliculus 先匯成 common canaliculus，開口在淚囊外側壁，交界處有 Rosenmüller valve 防止逆流${s('S15')}`,
+  `淚囊長 10–12 mm；NLD 長 12–18 mm，往下、稍微往外往後，開口在 inferior turbinate 外下方的 inferior meatus，開口有 valve of Hasner${s('S15')}`, `每次眨眼 orbicularis 擠壓 canaliculus、讓淚囊產生正壓把淚水推下 NLD；張眼時 canaliculus 與淚囊擴張產生負壓把淚水吸進來（lacrimal pump）${s('S15')}`,
+  `解剖圖見<a href="../eye-atlas/#lacrimal">眼解剖圖譜的淚道分頁</a>`];
+function lacCard() {
+  const cs = st.lac.cs, c = LAC[cs];
+  const D = {
+    hyper: { def: `流淚有兩種機轉，其中之一是分泌過多：前段疾病（例如乾眼造成的反射性流淚、發炎）引起，通常用藥物處理${s('S15')}`, mg: [`乾眼常造成反射性流淚${s('S15')}`, `淚水流到臉頰上比較像排出不良，不像分泌過多${s('S15')}`] },
+    pump: { def: `下眼瞼鬆弛或 orbicularis 無力（例如 facial nerve palsy）時，眨眼擠壓淚道的幫浦失效${s('S15')}`, mg: [`沖洗是通的，問題在幫浦；DCG 正常但有流淚也表示 pump failure，用簡單的沖洗更容易看出來${s('S15')}`, `下眼瞼鬆弛的檢查與 lateral tarsal strip 見下眼瞼分頁`] },
+    lcs: { def: `Canaliculus 變窄但沒有完全塞住${s('S16')}`, mg: [`不完全阻塞或狹窄可以放 canalicular stent 或 intubation${s('S16')}`] },
+    lc: { def: `Canalicular obstruction 佔阻塞性流淚的 16–25%；可以在 proximal（距 punctum 2–3 mm）、mid（3–8 mm）或 distal（common canaliculus 開口到淚囊）${s('S16')}`, mg: [`近端到中段的局部阻塞可以切掉再接合、放 stent；DCR 合併逆行插管也有效${s('S16')}`, `較遠端的可以 trephination 後放 stent；嚴重到無法重建時做 conjunctivo-DCR（放 Jones tube）${s('S16')}`] },
+    cc: { def: `超過 90% 的人上下 canaliculus 先匯成 common canaliculus 再進淚囊${s('S15')}；阻塞在這裡時，上下 canaliculus 都通${s('S15')}`, mg: [`Common canaliculus 完全阻塞：切掉 common canaliculus，把剩下的 canaliculus 直接接到淚囊黏膜、放 silicone stent（canaliculo-DCR）${s('S16')}`] },
+    nlds: { def: `淚囊以下的 NLD 變窄但沒有完全塞住：沖洗時嚐得到鹹水，Jones secondary 陽性${s('S15')}`, mg: [`Probing 加 silicone intubation、balloon dacryoplasty 對部分 NLD 阻塞有效的報告；在 SANDO 的角色還沒確立${s('S17')}`] },
+    nld: { def: `NLD 阻塞是持續性流淚最常見的原因，阻塞最常在淚囊以下${s('S16', 'S17')}；看得到黏液膿分泌物時，比較可能是 NLD 阻塞而不是更上面${s('S15')}`, mg: [`DCR 把淚囊接到鼻腔、繞過 NLD，是 NLD 阻塞的主要手術；前提是 punctum 與 canaliculus 要通${s('S15', 'S17')}`, `External DCR 是 lacrimal bypass 的 gold standard，NLD 阻塞的成功率多在 95% 以上${s('S17')}`, `急性感染（急性 dacryocystitis）時不要沖洗，壓淚囊會痛也不要壓${s('S15')}`] }
+  }[cs];
+  const R = lacFind(cs, st.lac.muc), J = c.j1 == null ? '不用做（沖洗時嚐不到鹹水）' : `primary ${c.j1 === '+' ? '陽性' : '陰性'}${c.j2 ? `、secondary ${c.j2 === '+' ? '陽性（染色）' : '陰性（沒染色）'}` : ''}`;
+  const v = `${R.join('；')}；Jones：${J}`;
+  const body = list('這個位置的處理', D.mg) + list('沖洗怎麼做', IRR_HOW) + list('怎麼判讀', IRR_READ) + list('Jones dye test', JONES) + list('解剖與 lacrimal pump', LAN3) + list('文獻不一', LDIFF3);
+  return `<div class="card"><div class="eyebrow">淚道 · ${c.stop === 'soft' ? 'canaliculus' : cs.startsWith('nld') ? 'NLD' : '通的'} · 對照 BCSC 7</div><div><h2>${c.en}</h2></div><p class="zh">${c.zh}</p><p class="def">${D.def}</p><div class="verdict"><span>${v}</span></div>${body}${srcList(refs(D.def + v + body))}</div>`;
+}
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'pt', name: 'Ptosis', en: 'Evaluation & surgery' }, { id: 'lid', name: '下眼瞼內翻外翻', en: 'Entropion & ectropion' }];
+const VIEWS = [{ id: 'pt', name: 'Ptosis', en: 'Evaluation & surgery' }, { id: 'lid', name: '下眼瞼內翻外翻', en: 'Entropion & ectropion' }, { id: 'lac', name: '淚道沖洗', en: 'Syringing & Jones test' }];
 const $ = q => document.querySelector(q);
 let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
 const st = { view: 'pt', cs: 'invM', ov: { R: {}, L: {} }, act: null, gaze: 'p', pe: 'y', wink: 's', t: 1, ref: false, under: false, labels: true, learnMode: 'learn', quiz: null,
-  lid: { F: parseF('LRO'), act: null, t: 1 } };   // 分頁二：開關、檢查動作、snap-back 動畫進度
+  lid: { F: parseF('LRO'), act: null, t: 1 },   // 分頁二：開關、檢查動作、snap-back 動畫進度
+  lac: { cs: 'nld', act: null, t: 1, muc: true } };   // 分頁三：阻塞位置、檢查動作、打水動畫進度、NLD 完全阻塞時淚囊裡是不是黏液膿
 const cur = () => ({ cs: st.cs, ov: st.ov, act: st.act, gaze: st.gaze, pe: st.pe, wink: st.wink, t: st.t });
 const st0 = (cs, ov, x) => Object.assign({ cs, ov, act: null, gaze: 'p', pe: CASES[cs].pe || 'n', wink: 's', t: 1 }, x);
 const store = (() => {
@@ -874,7 +1106,15 @@ const store = (() => {
 const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
 const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
 const AN = { raf: 0 };
-function animStop() { cancelAnimationFrame(AN.raf); st.t = 1; st.lid.t = 1; }
+function animStop() { cancelAnimationFrame(AN.raf); st.t = 1; st.lid.t = 1; st.lac.t = 1; }
+function renderLacSVG() { const el = $('#lac-svg'); if (el) el.innerHTML = lacFig(st.lac.cs, st.lac.act, st.lac.t, false); }
+function lacAnim() {   // 打水、secondary：只重畫 #lac-svg
+  cancelAnimationFrame(AN.raf);
+  const L = st.lac;
+  if (reduce) { L.t = 1; renderLacSVG(); return; }
+  const t0 = performance.now(), step = now => { L.t = Math.min(1, (now - t0) / 2800); renderLacSVG(); if (L.t < 1) AN.raf = requestAnimationFrame(step); };
+  L.t = 0; renderLacSVG(); AN.raf = requestAnimationFrame(step);
+}
 function renderLidSag() { const el = $('#lid-sag'), a = st.lid.act; if (el) el.innerHTML = lidSag(st.lid.F, a === 'dis' || a === 'snap' ? a : null, st.lid.t); }
 function lidAnim() {   // snap-back：只重畫 #lid-sag
   cancelAnimationFrame(AN.raf);
@@ -898,11 +1138,11 @@ function setCase(cs) {
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'lid' ? '下方打開開關或選例子，按圖下的按鈕做檢查' : '下方選例子；拖圖上的圓點改上下眼瞼的高度，按圖下的按鈕做檢查'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'lac' ? '下方選阻塞的位置，照順序按圖下的按鈕：插入沖洗針、打水、Jones test' : st.view === 'lid' ? '下方打開開關或選例子，按圖下的按鈕做檢查' : '下方選例子；拖圖上的圓點改上下眼瞼的高度，按圖下的按鈕做檢查'}</span>`;
 }
 function renderTools() {
   if (st.learnMode === 'quiz') { $('#tools').innerHTML = ''; return; }
-  if (st.view === 'lid') { $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
+  if (st.view === 'lid' || st.view === 'lac') { $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   const hood = ['R', 'L'].some(e => eyeBase(st.cs, e, st.ov).hood != null);
   $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-ref" ${st.ref ? 'checked' : ''}>正常高度</label>${hood ? `<label class="tog"><input type="checkbox" id="t-under" ${st.under ? 'checked' : ''}>看皮膚底下（示意）</label>` : ''}<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
 }
@@ -932,7 +1172,17 @@ function lidExtra() {
     <div class="rng"><span class="rl">內眥韌帶</span><div class="seg" role="group" aria-label="內眥韌帶鬆弛">${[[0, '不鬆'], [1, '輕度'], [2, '嚴重']].map(([v, t]) => `<button type="button" data-lm="${v}" aria-pressed="${f.M === v}">${t}</button>`).join('')}</div></div>
     <p class="hint" style="margin:0">${f.R ? '' : 'Preseptal 疊上來要先打開 retractor 鬆脫（EyeWiki：retractor 和 orbicularis、皮膚的連結變弱後才會疊上來）。'}外觀：${OUTZ[lidOut(f)]}；術式 → ${PLANZ[lidPlan(f)]}</p>`;
 }
+function lacRenderFig(it) {
+  const fig = $('#fig'), L = st.lac, c = LAC[L.cs], dis = k => (k === 'j1' || k === 'j2') && c.j1 == null || k === 'j2' && c.j2 == null;
+  const bt = k => `<button type="button" class="btn ${L.act === k ? 'on' : ''}" data-ca="${k}" ${dis(k) ? 'disabled' : ''}>${LACTZ3[k]}</button>`;
+  if (it) fig.innerHTML = `<div class="vh">右眼淚道正視圖：由前往後看，左＝lateral、右＝medial</div>${lacFig('hyper', null, 1, true)}`;
+  else fig.innerHTML = `<div class="vh">右眼淚道正視圖：由前往後看，左＝lateral、右＝medial（示意）</div><div id="lac-svg">${lacFig(L.cs, L.act, L.t, false)}</div>`
+    + `<div class="ctbar"><span class="hint">${c.j1 == null ? 'Jones test 只在沖洗嚐得到鹹水時做' : '照順序做'}</span><div class="grp">${['probe', 'irr', 'j1', 'j2'].map(bt).join('')}</div></div><div class="rd">${lacStatus(L.cs, L.act)}</div>`;
+  $('#cap').innerHTML = `<span>右眼淚道由前往後看（同眼解剖圖譜的淚道正視圖）：左＝lateral、右＝medial；紅線＝阻塞或狹窄的位置${it ? '' : '；按鈕再按一次＝取消，打水與 secondary 再按一次＝重播'}。藍＝生理食鹽水、黃＝黏液膿、綠＝fluorescein。</span><span class="ori">淚道的長度照 Kanski；阻塞的位置、水流的速度與量是示意</span>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+}
 function renderFig() {
+  if (st.view === 'lac') { lacRenderFig(quizItem()); return; }
   if (st.view === 'lid') { lidRenderFig(quizItem()); return; }
   const it = quizItem(), fig = $('#fig');
   if (it) fig.innerHTML = `<div class="vh">${it.vh}</div><div id="pt-svg"></div>`;
@@ -949,6 +1199,12 @@ function renderFlow() { const f = $('#flow'); if (f) f.innerHTML = flowHTML(cur(
 function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
   if (st.view === 'lid') { $('#extra').innerHTML = lidExtra(); return; }
+  if (st.view === 'lac') {
+    const c = LAC[st.lac.cs];
+    $('#extra').innerHTML = (st.lac.cs === 'nld' ? `<div class="rng"><span class="rl">淚囊裡（示意）</span><div class="seg" role="group" aria-label="淚囊裡的東西">${[[true, '黏液膿'], [false, '清的']].map(([v, t]) => `<button type="button" data-cm="${v}" aria-pressed="${st.lac.muc === v}">${t}</button>`).join('')}</div></div>` : '')
+      + `<div class="xh">這個位置的結果</div><p class="hint" style="margin:0">${lacFind(st.lac.cs, st.lac.muc).join('；')}；Jones：${c.j1 == null ? '不用做' : `primary ${c.j1 === '+' ? '陽性' : '陰性'}${c.j2 ? `、secondary ${c.j2 === '+' ? '陽性' : '陰性'}` : ''}`}</p>`;
+    return;
+  }
   const c = CASES[st.cs], ce = ceOf(st.cs, st.ov), E = eyeBase(st.cs, ce, st.ov);
   let h = '';
   if (!c.ps) h += `<div class="rng"><label for="pt-m1">${EZ[ce]} MRD1</label><input type="range" id="pt-m1" min="-1.5" max="7" step="0.5" value="${E.m1}"><span class="v" id="pt-m1-v">${fx(E.m1)} mm</span></div>
@@ -961,6 +1217,11 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'lac') {
+    ix.innerHTML = `<span class="lbl">阻塞的位置（從下 punctum 沖洗）</span>` + LACK.map(k => `<button type="button" class="chip ${st.lac.cs === k ? 'on' : ''}" data-cl="${k}">${LAC[k].zh}</button>`).join('')
+      + `<span class="lbl">其他頁</span><a class="chip" href="../eye-atlas/#lacrimal">淚道解剖 → 眼解剖圖譜</a>`;
+    return;
+  }
   if (st.view === 'lid') {
     const k0 = lidKey(st.lid.F);
     ix.innerHTML = `<span class="lbl">例子（設定四個開關）</span>` + Object.keys(LPRE).map(k => `<button type="button" class="chip ${LPRE[k][1] === k0 ? 'on' : ''}" data-lp="${k}">${LPRE[k][0]}</button>`).join('')
@@ -970,9 +1231,9 @@ function renderIndex() {
   ix.innerHTML = CG.map(([g, t]) => `<span class="lbl">${t}</span>` + Object.keys(CASES).filter(k => CASES[k].g === g).map(k => `<button type="button" class="chip ${st.cs === k ? 'on' : ''}" data-cs="${k}">${CASES[k].zh}</button>`).join('')).join('')
     + `<span class="lbl">其他頁</span><a class="chip" href="../neuro-ophth/#pup">Horner、瞳孔 → 神經眼科圖譜</a><a class="chip" href="../neuro-ophth/#eom">CN III palsy → 神經眼科圖譜</a><a class="chip" href="../eye-atlas/#lid">眼瞼解剖 → 眼解剖圖譜</a>`;
 }
-function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'lid' ? lidCard() : ptCard(); }
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'lac' ? lacCard() : st.view === 'lid' ? lidCard() : ptCard(); }
 function renderSelbar() {
-  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'lid' ? `目前：${OUTZ[lidOut(st.lid.F)]}${st.lid.act ? ` · ${LACTZ[st.lid.act]}` : ''}` : `目前：${CASES[st.cs].zh} · ${st.act ? ACTZ[st.act] : st.gaze === 'd' ? '往下看' : '正前方'}`;
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'lac' ? `目前：${LAC[st.lac.cs].zh}${st.lac.act ? ` · ${LACTZ3[st.lac.act]}` : ''}` : st.view === 'lid' ? `目前：${OUTZ[lidOut(st.lid.F)]}${st.lid.act ? ` · ${LACTZ[st.lid.act]}` : ''}` : `目前：${CASES[st.cs].zh} · ${st.act ? ACTZ[st.act] : st.gaze === 'd' ? '往下看' : '正前方'}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -997,12 +1258,35 @@ const QF = { f1: 'LRO', f2: 'RO', f3: 'L', f4: 'LM1', f5: 'M1', f6: 'R', f7: 'LM
 const QR = { r1: ['LRO', ['entL', 'ent', 'ecL', 'medL']], r2: ['RO', ['ent', 'entL', 'ecL', 'med']], r3: ['L', ['ecL', 'entL', 'med', 'mctL']], r4: ['LM1', ['medL', 'ecL', 'mctL', 'ent']], r5: ['LM2', ['mctL', 'ecL', 'ent', 'med']], r6: ['M1', ['med', 'ecL', 'entL', 'mctL']] };   // 開關、選項（第一個是預期答案，由 lidPlan 核對）
 const PLANQ = { ent: 'Wies 或 retractor reinsertion（不用 LTS）', entL: 'LTS ＋ Wies 或 retractor reinsertion', ecL: 'Lateral tarsal strip（LTS）', medL: 'Medial spindle ＋ LTS', mctL: '先穩定內眥韌帶，再做 LTS', med: 'Medial spindle 或 medial conjunctivoplasty（不用 LTS）' };
 const FPOOL = ['LRO', 'RO', 'L', 'LR', 'LM', 'M', 'R', 'LRM', 'RM', 'LROM'];
+// 分頁三：lac:w:…（給沖洗結果判斷位置）、lac:d:…（判讀 Jones dye test）
+const QW = { w1: ['lc', true], w2: ['cc', true], w3: ['nld', true], w4: ['hyper', true], w5: ['nld', false], w6: ['lcs', true] };   // 狀況、NLD 完全阻塞時淚囊裡是不是黏液膿
+const WZ = { pat: '沒有完全阻塞（嚐得到鹹水）', lcs: '下 canaliculus 狹窄', lc: '下 canaliculus 阻塞', cc: 'Common canaliculus 阻塞', nld: 'NLD 完全阻塞' };
+const QD = { d1: ['+', null], d2: ['-', '+'], d3: ['-', '-'], d4: ['-', undefined] };   // primary、secondary（undefined＝還沒做）
+const DZ3 = { hyper: '淚道通：流淚是分泌過多，不用再檢查', nlds: 'NLD 部分阻塞（淚囊以下）', upper: 'Punctum 或 canaliculus 功能不良，或 lacrimal pump failure', next: '還不能判斷：馬上做 secondary（primary 的偽陰性多）' };
 const KEYS = [...Object.keys(QMR).map(k => 'pt:m:' + k), ...Object.keys(QS).map(k => 'pt:s:' + k), ...Object.keys(QP).map(k => 'pt:p:' + k), ...Object.keys(QCG).map(k => 'pt:c:' + k),
-  ...Object.keys(QF).map(k => 'lid:f:' + k), ...Object.keys(QR).map(k => 'lid:r:' + k)];
+  ...Object.keys(QF).map(k => 'lid:f:' + k), ...Object.keys(QR).map(k => 'lid:r:' + k), ...Object.keys(QW).map(k => 'lac:w:' + k), ...Object.keys(QD).map(k => 'lac:d:' + k)];
 const keyValid = k => KEYS.includes(k);
 const keyView = k => k.split(':')[0];
-const QTV = { pt: [['mrd', '讀 MRD、算 PFH'], ['surg', '選術式'], ['ps', '真假 ptosis'], ['cg', '先天或後天']], lid: [['mech', '找機轉'], ['rep', '選術式']] };
-const QTZ = { m: 'mrd', s: 'surg', p: 'ps', c: 'cg', f: 'mech', r: 'rep' };
+const QTV = { pt: [['mrd', '讀 MRD、算 PFH'], ['surg', '選術式'], ['ps', '真假 ptosis'], ['cg', '先天或後天']], lid: [['mech', '找機轉'], ['rep', '選術式']], lac: [['site', '沖洗找位置'], ['jones', '判讀 Jones']] };
+const QTZ = { m: 'mrd', s: 'surg', p: 'ps', c: 'cg', f: 'mech', r: 'rep', w: 'site', d: 'jones' };
+const pairPL = (a, b) => (a === 'pat' && b === 'lcs') || (a === 'lcs' && b === 'pat');   // 「沒有完全阻塞」也包含狹窄，不同時出
+function lacItem(key) {
+  const [, ty, id] = key.split(':');
+  if (ty === 'w') {
+    const [cs, muc] = QW[id], c = LAC[cs], ans = lacSite(Object.assign({}, c, { dist: !!c.dist })), opts = [ans];
+    shuffle(Object.keys(WZ).filter(x => x !== ans)).forEach(x => { if (opts.length < 4 && !opts.some(o => pairPL(o, x))) opts.push(x); });
+    const why = { lc: `Soft stop 加上從同一個（下）punctum 逆流：下 canaliculus 阻塞${s('S15', 'S17')}`, cc: `Soft stop 加上從上 punctum（對側）回清的水：上下 canaliculus 都通、common canaliculus 阻塞${s('S15', 'S16')}`,
+      nld: `Hard stop（針進了淚囊）、水到不了喉嚨、淚囊鼓起來、上下 punctum 都逆流：NLD 完全阻塞${s('S15')}；EyeWiki：淚囊鼓起來或對側逆流帶黏液＝NLD 阻塞${s('S17')}`,
+      pat: `Hard stop、沒有逆流、嚐得到鹹水：淚道通，但仍可能有狹窄或 pump failure，要再分辨時做 Jones test${s('S15')}`, lcs: `通過時有點卡＝canaliculus 狹窄；從同一個 punctum 回水、但還有一部分流到鼻子${s('S16')}` };
+    return { key, type: 'site', ans, opts: shuffle(opts), lab: x => WZ[x], cs, muc, go: [cs, muc],
+      prompt: [`從下 punctum 沖洗。${lacFind(cs, muc).join('；')}`, '阻塞在哪裡？'], more: why[ans] };
+  }
+  const [j1, j2] = QD[id], ans = jonesRead(j1, j2), cs = { hyper: 'hyper', nlds: 'nlds', upper: 'pump', next: 'pump' }[ans];
+  return { key, type: 'jones', ans, opts: shuffle(Object.keys(DZ3)), lab: x => DZ3[x], cs, go: [cs, true],
+    prompt: [`流淚、punctum 正常，沖洗時嚐得到鹹水。Jones primary：5 分鐘後棉棒${j1 === '+' ? '有' : '沒有'}螢光${j2 === undefined ? '；還沒做 secondary' : j2 == null ? '' : `；secondary：沖出來的水${j2 === '+' ? '有染色' : '沒有染色'}`}`, '代表什麼？'],
+    more: { hyper: `Primary 陽性：淚道通，流淚是分泌過多，不用再檢查${s('S15')}`, next: `Primary 陰性：partial obstruction（位置不明）或 pump failure，要馬上做 secondary；primary 的偽陰性很多${s('S15')}`,
+      nlds: `Secondary 有染色：fluorescein 進過淚囊、上段通，推論淚囊以下的 NLD 部分阻塞${s('S15')}`, upper: `Secondary 沒染色：fluorescein 沒進淚囊，punctum 或 canaliculus 功能不良，可能是部分阻塞或 pump failure${s('S15')}` }[ans] };
+}
 function lidWhy(F) {
   const f = lidF(F), T = lidTests(f);
   return `Distraction ${T.dis} mm、${T.snap === 'blink' ? '要眨眼才回去' : '馬上回去'}、外眥移 ${T.lc} mm → ${f.L ? '水平鬆弛' : '沒有水平鬆弛'}${s('S8', 'S11')}；往下看下眼瞼往下 ${fx(T.dg)} mm → ${f.R ? 'retractor 鬆脫' : 'retractor 正常'}${s('S11')}；${f.O ? 'preseptal 疊上來' : '沒有 orbicularis 疊上來'}${s('S9')}；往外拉 punctum 移 ${fx(T.pun)} mm → ${f.M ? '內眥韌帶鬆' : '內眥韌帶正常'}${s('S8')}`;
@@ -1029,6 +1313,7 @@ const pairBD = (a, b) => (a === 'brow' && b === 'derm') || (a === 'derm' && b ==
 const sCase = (k, lf) => k === 'acq' ? 'invM' : k === 'cong' ? (lf < 4 ? 'conS' : 'conM') : 'mgjw';
 function keyLabel(k) {
   const [v, ty, id] = k.split(':');
+  if (v === 'lac') { if (ty === 'w') { const [cs, muc] = QW[id]; return `沖洗找位置：${LAC[cs].zh}${cs === 'nld' ? (muc ? '（黏液膿）' : '（清的）') : ''}`; } const [j1, j2] = QD[id]; return `判讀 Jones：primary ${j1 === '+' ? '陽性' : '陰性'}${j2 === undefined ? '' : j2 == null ? '' : `、secondary ${j2 === '+' ? '陽性' : '陰性'}`}`; }
   if (v === 'lid') { const F = parseF(ty === 'f' ? QF[id] : QR[id][0]); return `${ty === 'f' ? '找機轉' : '選術式'}：${OUTZ[lidOut(F)]}（${comboLab(comboKey(F))}${lidF(F).M === 2 ? '，嚴重' : ''}）`; }
   if (ty === 'm') { const [e, m1, m2] = QMR[id]; return `讀 MRD：${EZ[e]} MRD1 ${m1}、MRD2 ${m2} mm`; }
   if (ty === 's') { const [t, d, lf] = QS[id]; return `選術式：${SKZ[t]}，低 ${d} mm、LF ${lf} mm`; }
@@ -1037,6 +1322,7 @@ function keyLabel(k) {
 }
 function itemOf(key) {
   if (key.startsWith('lid:')) return lidItem(key);
+  if (key.startsWith('lac:')) return lacItem(key);
   const [, ty, id] = key.split(':');
   if (ty === 'm') {   // 選項：答案、MRD1 與 MRD2 對調、MRD1 少 1、MRD2 多 1、MRD1 多 1（不重複的前四個）
     const [e, m1, m2] = QMR[id], ov = { R: {}, L: {} }, ans = `${m1}/${m2}`, opts = [ans];
@@ -1080,12 +1366,12 @@ function quizHTML() {
   if (q.phase === 'setup') {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${st.view === 'lid' ? '哪裡鬆了，就修哪裡' : '量得準，才選得對術式'}</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${st.view === 'lac' ? '水從哪裡回來，就塞在哪裡' : st.view === 'lid' ? '哪裡鬆了，就修哪裡' : '量得準，才選得對術式'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">${st.view === 'lid' ? '兩種題型：給外觀與各項檢查結果（distraction、snap-back、往下看、orbicularis、往外拉 punctum、往內拉外眥），找出哪些結構鬆了；給同樣的資料選術式。檢查的數字只用各來源都同意的值（distraction 2 或 10 mm、snap-back 馬上回去或要眨眼才回去）。' : '四種題型：用放大尺讀一眼的 MRD1、MRD2 並算 PFH；給下垂量、LF 與 phenylephrine 反應選術式（只用各來源都同意的切點：LF ≤ 3 mm 或 ≥ 6 mm，MMCR 要 LF > 10 mm、下垂 ≤ 2 mm、phenylephrine 有反應、後天）；看圖與做過的檢查，判斷是真的 ptosis 還是哪一種 pseudoptosis；看病人往下看的樣子判斷先天或後天。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${st.view === 'lac' ? '兩種題型：給從下 punctum 沖洗的結果（hard 或 soft stop、從哪個 punctum 逆流、逆流的是什麼、淚囊有沒有鼓起來、嚐不嚐得到鹹水），判斷阻塞在哪裡；給 Jones primary 與 secondary 的結果，判讀代表什麼。測驗時圖上不畫阻塞的位置。' : st.view === 'lid' ? '兩種題型：給外觀與各項檢查結果（distraction、snap-back、往下看、orbicularis、往外拉 punctum、往內拉外眥），找出哪些結構鬆了；給同樣的資料選術式。檢查的數字只用各來源都同意的值（distraction 2 或 10 mm、snap-back 馬上回去或要眨眼才回去）。' : '四種題型：用放大尺讀一眼的 MRD1、MRD2 並算 PFH；給下垂量、LF 與 phenylephrine 反應選術式（只用各來源都同意的切點：LF ≤ 3 mm 或 ≥ 6 mm，MMCR 要 LF > 10 mm、下垂 ≤ 2 mm、phenylephrine 有反應、後天）；看圖與做過的檢查，判斷是真的 ptosis 還是哪一種 pseudoptosis；看病人往下看的樣子判斷先天或後天。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -1137,6 +1423,7 @@ function setMode(m) {
 function goKey(k) {   // 錯題本「再看一次」：回到學習模式的同一個設定
   const g = itemOf(k).go;
   if (k.startsWith('lid:')) { setView('lid'); st.lid = { F: parseF(g), act: null, t: 1 }; render(); return; }
+  if (k.startsWith('lac:')) { setView('lac'); st.lac = { cs: g[0], act: k.split(':')[1] === 'w' ? 'irr' : 'j1', t: 1, muc: g[1] }; render(); return; }
   setView('pt'); setCase(g.cs);
   Object.assign(st, { ov: JSON.parse(JSON.stringify(g.ov || { R: {}, L: {} })), act: g.act || null, gaze: g.gaze || 'p', ref: !!g.ref, under: !!g.under });
   if (g.pe) st.pe = g.pe;
@@ -1170,6 +1457,15 @@ document.addEventListener('click', e => {
     animStop();
     if (st.act === k && !ANIM[k]) st.act = null; else st.act = k;   // 動畫的按鈕再按一次＝重播
     render(); if (ANIM[st.act]) animStart(st.act);
+    return;
+  }
+  const cl = t.closest('[data-cl]'); if (cl) { animStop(); st.lac = Object.assign({}, st.lac, { cs: cl.dataset.cl, act: null, t: 1 }); render(); return; }
+  const cm = t.closest('[data-cm]'); if (cm) { animStop(); st.lac.muc = cm.dataset.cm === 'true'; render(); return; }
+  const ca = t.closest('[data-ca]'); if (ca) {
+    const k = ca.dataset.ca, an = k === 'irr' || k === 'j2';
+    animStop();
+    st.lac.act = st.lac.act === k && !an ? null : k;   // 打水、secondary 再按一次＝重播
+    render(); if (an) lacAnim();
     return;
   }
   const lf = t.closest('[data-lf]'); if (lf) { const k = lf.dataset.lf, F = Object.assign({}, st.lid.F); F[k] = !lidF(F)[k]; if (k === 'R' && !F.R) F.O = false; animStop(); st.lid = { F, act: null, t: 1 }; render(); return; }
@@ -1381,7 +1677,55 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   ALL.forEach(F => ['down', 'latp', 'medp', null].forEach(act => { const G = lidFrontGeom(F, act); a(FY0 + (G.yl + (act === 'latp' || act === 'medp' ? 3.9 : 1.8)) * K4 < FH2 - 18 && FX0 - FA * K4 > 0 && FX0 + FA * K4 < FW && FY0 + (G.yu - 1) * K4 > 30, `${comboKey(F)}／${act}：正面在框內`); }));
 })();
 
-if (location.hash === '#lid') st.view = 'lid';
+/* 分頁三的 self-check */
+(() => {
+  const a = (c, m) => console.assert(c, 'oculoplastics lac self-check: ' + m), E9 = 1e-9;
+  // 解剖長度（Kanski p.98）
+  a(Math.abs(plen([PUN_U, AMP_U]) - 2) < E9 && Math.abs(plen([PUN_L, AMP_L]) - 2) < E9, 'canaliculus 垂直段 2 mm');
+  [CAN_U, CAN_L].forEach((p, i) => { const L = plen(p.slice(1)); a(L >= 7 && L <= 9, `${i ? '下' : '上'} canaliculus 水平段約 8 mm（${fx(L)}）`); });
+  a(SAC.y1 - SAC.y0 >= 10 && SAC.y1 - SAC.y0 <= 12, '淚囊 10–12 mm');
+  { const L = plen([NLD0, NLD1]); a(L >= 12 && L <= 18 && NLD1[0] < NLD0[0], `NLD 12–18 mm、往下稍微往 lateral（${fx(L)}）`); }
+  a(Math.abs(-PUN_L[0] - LEW / 6) < 0.2 && Math.abs(-PUN_U[0] - LEW / 6) < 0.2, 'puncta 在眼瞼緣內側 1/6');
+  a(HAS[1] > 18.0 + 2.0 && HAS[0] < 12.0 - 5.0, 'NLD 開口在 inferior turbinate 的外下方');
+  // 規則：soft stop 只在 canaliculus 阻塞；嚐不到鹹水＝完全阻塞；逆流的 punctum；Jones 只在嚐得到時做
+  LACK.forEach(cs => {
+    const c = LAC[cs];
+    a((c.stop === 'soft') === (cs === 'lc' || cs === 'cc'), `${cs}：soft stop 只在 canaliculus 阻塞`);
+    a((c.thr === 'n') === ['lc', 'cc', 'nld'].includes(cs), `${cs}：嚐不到鹹水＝完全阻塞`);
+    a(cs === 'lc' ? c.rf === 'L' : cs === 'cc' ? c.rf === 'U' : cs === 'nld' ? c.rf === 'UL' && c.dist : !c.dist, `${cs}：逆流的 punctum、淚囊鼓起來（Kanski）`);
+    a((c.j1 == null) === (c.thr === 'n'), `${cs}：嚐不到鹹水才不用做 Jones（Kanski）`);
+    a(lacSite(Object.assign({}, c, { dist: !!c.dist })) === ({ hyper: 'pat', pump: 'pat' }[cs] || cs), `${cs}：從沖洗結果反推得回位置`);
+    if (c.j1) a(jonesRead(c.j1, c.j2) === { hyper: 'hyper', pump: 'upper', lcs: 'upper', nlds: 'nlds' }[cs], `${cs}：Jones 判讀`);
+    // 沖洗針：hard stop 停在淚囊內側壁，soft stop 停在阻塞前面
+    const tip = lacTip(cs).slice(-1)[0];
+    if (c.stop === 'soft') a(tip[0] < SACW[0] && (cs === 'cc' ? tip[0] > CC0[0] - E9 : plen(lacTip(cs)) < OBS_LC), `${cs}：soft stop 停在阻塞前、沒進淚囊`);
+    else a(Math.abs(tip[0] - SACM[0]) < E9 && tip[0] > SAC.x0 && tip[0] < SAC.x1, `${cs}：hard stop 在淚囊內側壁`);
+    // 水流：到鼻子的只有沒完全阻塞的；從哪個 punctum 流出來和規則一致
+    [true, false].forEach(muc => {
+      const sv = st.lac.muc; st.lac.muc = muc; const F = lacFlow(cs, false); st.lac.muc = sv;
+      const ends = F.seg.map(q => q[0][q[0].length - 1]), outU = ends.some(p => p[1] < PUN_U[1] - 1), outL = ends.some(p => p[1] > PUN_L[1] + 1 && p[0] < PUN_L[0]), nose = F.seg.some(q => q[0] === NOSE);
+      a(nose === (c.thr !== 'n'), `${cs}：水到鼻子、喉嚨`);
+      a(outU === (c.rf.includes('U') || c.rf === 'u') && outL === c.rf.includes('L'), `${cs}：從上下 punctum 流出來`);
+      a(!!F.dist === !!c.dist && F.seg.every(q => q[1] < q[2] && q[1] >= 0 && q[2] <= 1), `${cs}：淚囊鼓起來、動畫時間`);
+      if (cs === 'nld') a(F.seg.every(q => q[4] === (muc ? 'p' : 'w') && q[0].every(p => p[1] <= OBS_NLD + E9)), 'NLD 完全阻塞：逆流物的顏色、水停在阻塞上面');
+    });
+    const D = lacDye(cs); a(D.bud === (c.j1 === '+') && (c.j1 == null || D.sac === (c.j1 === '+' || c.j2 === '+')), `${cs}：Jones primary 的染色和判讀一致`);
+  });
+  // 測驗：選項含答案、四個不重複、「沒有完全阻塞」與「狹窄」不同時出
+  for (let n = 0; n < 20; n++) KEYS.filter(k => k.startsWith('lac:')).forEach(k => { const it = itemOf(k); a(it.opts.includes(it.ans) && it.opts.length === 4 && new Set(it.opts).size === 4 && !it.opts.some(o => it.opts.some(x => pairPL(o, x))), `${k} 的選項`); });
+  Object.entries(QW).forEach(([id, [cs]]) => a(itemOf('lac:w:' + id).ans === ({ hyper: 'pat' }[cs] || cs), `lac:w:${id} 的答案`));
+  Object.entries(QD).forEach(([id, [j1, j2]]) => a(itemOf('lac:d:' + id).ans === (j1 === '+' ? 'hyper' : j2 === '+' ? 'nlds' : j2 === '-' ? 'upper' : 'next'), `lac:d:${id} 的答案`));
+  // 引用都在來源清單
+  const sv = st.lac;
+  LACK.forEach(cs => [true, false].forEach(muc => [null, 'probe', 'irr', 'j1', 'j2'].forEach(act => { st.lac = { cs, act, t: 1, muc }; refs(lacCard() + lacStatus(cs, act)).forEach(r => a(SRC[r], `${cs}／${act} 的引用 ${r}`)); })));
+  st.lac = sv;
+  KEYS.filter(k => k.startsWith('lac:')).forEach(k => refs(itemOf(k).more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`)));
+  // 圖在框內
+  const inF = p => OX5 + p[0] * K5 > 4 && OX5 + p[0] * K5 < LW5 - 4 && OY5 + p[1] * K5 > 4 && OY5 + p[1] * K5 < LH5 - 4;
+  [LELC, PUN_U, AMP_U, PUN_L, AMP_L, HAS, ...NOSE, [SAC.x1 + 0.9, SAC.y0 - 0.9], [-15.8 - 1.1, 16.2 + 1.1], [19.6, 26.6], [-LEW / 2, 8.6]].forEach(p => a(inF(p), `淚道圖的點在框內 ${p}`));
+})();
+
+if (location.hash === '#lid' || location.hash === '#lac') st.view = location.hash.slice(1);
 render();
 </script>
 
