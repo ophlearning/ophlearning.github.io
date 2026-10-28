@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>眼整形互動圖譜</title>
-<meta name="description" content="互動式眼整形圖譜：ptosis 評估與術式——拖上下眼瞼緣，用放大尺讀 MRD1、MRD2、PFH；看 levator function 怎麼壓眉量、往下看時先天與後天 ptosis 的差別、crease 高低；抬起下垂的眼瞼看對側有沒有掉下來（Hering），點 phenylephrine 看 Müller muscle 的反應，練 myasthenia gravis 的 fatigability 與 Cogan twitch、Marcus Gunn 張嘴時的 jaw-winking；四種 pseudoptosis：對側 lid retraction、同側 hypotropia、brow ptosis、dermatochalasis；依 LF、下垂量與 phenylephrine 反應走術式流程（frontalis sling、levator advancement、MMCR），各來源切點不同的地方兩種都列；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式眼整形圖譜：ptosis 評估與術式——拖上下眼瞼緣，用放大尺讀 MRD1、MRD2、PFH；看 levator function 怎麼壓眉量、往下看時先天與後天 ptosis 的差別、crease 高低；抬起下垂的眼瞼看對側有沒有掉下來（Hering），點 phenylephrine 看 Müller muscle 的反應，練 myasthenia gravis 的 fatigability 與 Cogan twitch、Marcus Gunn 張嘴時的 jaw-winking；四種 pseudoptosis：對側 lid retraction、同側 hypotropia、brow ptosis、dermatochalasis；依 LF、下垂量與 phenylephrine 反應走術式流程（frontalis sling、levator advancement、MMCR），各來源切點不同的地方兩種都列；下眼瞼內翻與外翻——打開水平鬆弛、retractor 鬆脫、preseptal orbicularis 疊上來、內眥韌帶鬆四個開關，看矢狀切面與外眼特寫的內翻、外翻與 punctal eversion，做 distraction、snap-back、往下看、往外拉看 punctum、往內拉看外眥，對照 lateral tarsal strip、Wies、retractor reinsertion、medial spindle；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -19,6 +19,7 @@
   --t-face:#EFD5C4; --t-white:#FFFFFF; --t-iris:#7C5342; --t-limb:#4A3028; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.6);
   --t-occ:#2E2A3B; --t-brow:#6B4A3A; --t-crease:rgba(44,32,74,.55); --t-ruler:rgba(255,255,255,.8); --t-tick:#1E1A2B;
   --t-band:rgba(75,60,160,.24); --t-thumb:#DDB79F; --t-guide:rgba(44,32,74,.55); --t-hood:#E5C4AF;
+  --t-mus:#C96F5F; --t-tars:#F2E7D2; --t-conj:#E39A9A; --t-fat:#F2D88E; --t-bone:#D8D2C6; --t-retr:#CDBB98; --t-cornea:rgba(120,170,215,.55); --t-skin:#D3A288; --t-lash:#2B201A;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -32,7 +33,8 @@
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-face:#5E4638; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.8);
   --t-occ:#3A3450; --t-brow:#2A1C15; --t-crease:rgba(232,226,248,.42); --t-ruler:rgba(240,238,248,.82); --t-tick:#15121F;
-  --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142; color-scheme:dark }}
+  --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142;
+  --t-mus:#94504A; --t-tars:#6A6150; --t-conj:#A85F63; --t-fat:#7F6C31; --t-bone:#4B4740; --t-retr:#7A6A4E; --t-cornea:rgba(120,165,215,.42); --t-skin:#8A6650; --t-lash:#EDE3D6; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
@@ -40,7 +42,8 @@
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
   --t-face:#5E4638; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.8);
   --t-occ:#3A3450; --t-brow:#2A1C15; --t-crease:rgba(232,226,248,.42); --t-ruler:rgba(240,238,248,.82); --t-tick:#15121F;
-  --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142; color-scheme:dark }
+  --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142;
+  --t-mus:#94504A; --t-tars:#6A6150; --t-conj:#A85F63; --t-fat:#7F6C31; --t-bone:#4B4740; --t-retr:#7A6A4E; --t-cornea:rgba(120,165,215,.42); --t-skin:#8A6650; --t-lash:#EDE3D6; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -61,6 +64,7 @@ a{color:var(--accent)}
 .seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button:disabled{opacity:.45;cursor:default}
 .btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .btn:hover{border-color:var(--accent);color:var(--ink)}
 .btn:disabled{opacity:.5;cursor:default}
@@ -127,6 +131,24 @@ a.chip{text-decoration:none;display:inline-block}
 .c-rul{fill:var(--t-ruler);stroke:var(--t-stroke-2);stroke-width:1}
 .c-tick{stroke:var(--t-tick);stroke-width:1}
 .c-br{fill:none;stroke:var(--accent);stroke-width:1.6}
+/* 下眼瞼切面 */
+.s-soft{fill:var(--t-face)}
+.s-fat{fill:var(--t-fat);stroke:var(--t-stroke-2);stroke-width:1}
+.s-bone{fill:var(--t-bone);stroke:var(--t-stroke);stroke-width:1}
+.s-globe{fill:var(--t-white);stroke:var(--t-stroke);stroke-width:1.2}
+.s-cor{fill:none;stroke:var(--t-cornea);stroke-linecap:round}
+.s-tars{fill:none;stroke:var(--t-tars);stroke-linecap:round}
+.s-tarso{fill:none;stroke:var(--t-stroke);stroke-width:1}
+.s-mus{fill:none;stroke:var(--t-mus);stroke-linecap:round}
+.s-conj{fill:none;stroke:var(--t-conj);stroke-linecap:round;stroke-linejoin:round}
+.s-retr{fill:none;stroke:var(--t-retr);stroke-linecap:round}
+.s-sep{fill:none;stroke:var(--t-stroke);stroke-width:2}
+.s-skin{fill:none;stroke:var(--t-skin);stroke-linecap:round;stroke-linejoin:round}
+.s-lash{fill:none;stroke:var(--t-lash);stroke-width:2.4;stroke-linecap:round}
+.s-lashi{fill:none;stroke:var(--t-lash);stroke-width:2;stroke-linecap:round;stroke-dasharray:4 3}
+.s-cj{fill:var(--t-conj)}
+.s-pun{fill:var(--t-pupil);stroke:var(--t-conj);stroke-width:1.5}
+.s-roll{fill:none;stroke:var(--t-stroke);stroke-width:1.4}
 .fig .rlt{font-family:var(--f-mono);font-size:10.5px;fill:var(--t-tick)}
 .fig .eyen{font-family:var(--f-body);font-size:15px;fill:var(--ink-2)}
 .lab text.brt{font-family:var(--f-mono);font-size:13px;fill:var(--accent)}
@@ -265,7 +287,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>外眼正面是檢查者面對病人看到的樣子（同九方向眼位圖：圖左＝病人右眼 OD），penlight 從正前方照，白點是角膜反光；放大尺的 0 對齊反光，每格 1 mm。正常眼畫成 MRD1 4 mm、MRD2 5 mm、LF 15 mm、crease 9 mm；眼裂形狀、眉毛與皮膚、往上看與往下看時眼瞼移動的量、phenylephrine 與 Hering 造成的變化量、MG 下垂的速度都是示意。LF 小圖的尺固定在臉上，往下看時 0 對齊上眼瞼緣。眼瞼的解剖見<a href="../eye-atlas/#lid">眼解剖圖譜的眼瞼分頁</a>；Horner syndrome 與 CN III palsy 見<a href="../neuro-ophth/#pup">神經眼科圖譜的瞳孔分頁</a>與<a href="../neuro-ophth/#eom">眼外肌分頁</a>。</span>
+    <span><b>關於圖：</b>外眼正面是檢查者面對病人看到的樣子（同九方向眼位圖：圖左＝病人右眼 OD），penlight 從正前方照，白點是角膜反光；放大尺的 0 對齊反光，每格 1 mm。正常眼畫成 MRD1 4 mm、MRD2 5 mm、LF 15 mm、crease 9 mm；眼裂形狀、眉毛與皮膚、往上看與往下看時眼瞼移動的量、phenylephrine 與 Hering 造成的變化量、MG 下垂的速度都是示意。LF 小圖的尺固定在臉上，往下看時 0 對齊上眼瞼緣。下眼瞼分頁的矢狀切面是眼瞼中央（左＝anterior、上＝superior，同眼解剖圖譜的眼瞼切面），外眼特寫是右眼（檢查者面對病人：左＝temporal）；四個開關怎麼組合成內翻或外翻是簡化的示意規則，眼瞼轉的角度、檢查的 mm 數與秒數也是示意。眼瞼的解剖見<a href="../eye-atlas/#lid">眼解剖圖譜的眼瞼分頁</a>；Horner syndrome 與 CN III palsy 見<a href="../neuro-ophth/#pup">神經眼科圖譜的瞳孔分頁</a>與<a href="../neuro-ophth/#eom">眼外肌分頁</a>。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；各來源寫法不同的地方，說明卡與術式流程兩種都列，測驗只用各來源都同意的切點。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -296,7 +318,14 @@ const SRC = {
   S4: { t: 'EyeWiki：Blepharoptosis（Alsuhaibani A, Phelps P, et al.；2026-09 審閱）', u: 'https://eyewiki.org/Blepharoptosis' },
   S5: { t: 'EyeWiki：Müller’s Muscle-Conjunctival Resection (MMCR)（Pharo AM, al Hariri A, Barmettler A, et al.；2026-06 審閱）', u: 'https://eyewiki.org/M%C3%BCller%E2%80%99s_Muscle-Conjunctival_Resection_(MMCR)_Blepharoptosis_Repair' },
   S6: { t: 'EyeWiki：Congenital Blepharoptosis (Ptosis)（Suh DW, Thyparampil P, et al.；2026-08 審閱）', u: 'https://eyewiki.org/Ptosis,_Congenital' },
-  S7: { t: 'EyeWiki：Aponeurotic Blepharoptosis (Ptosis)（Galván Molina J, Barmettler A, et al.；2025-09 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Aponeurotic_Ptosis' }
+  S7: { t: 'EyeWiki：Aponeurotic Blepharoptosis (Ptosis)（Galván Molina J, Barmettler A, et al.；2025-09 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Aponeurotic_Ptosis' },
+  S8: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.80–85 Ectropion：involutional（horizontal lid laxity、lateral 與 medial canthal tendon laxity、treatment）、cicatricial、paralytic、mechanical', u: null },
+  S9: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.85–86 Entropion：involutional（aetiology、temporary measures、everting sutures、Wies procedure、lower lid retractor reinsertion、horizontal tightening）', u: null },
+  S10: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.104–105 Secondary punctal stenosis：punctal eversion（retropunctal cautery、medial conjunctivoplasty）', u: null },
+  S11: { t: 'EyeWiki：Entropion（Weber AC, Chundury RV, Perry JD, Sundar G, et al.；2026-02 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Entropion' },
+  S12: { t: 'EyeWiki：Ectropion（Belliveau MJ, Phelps P, Giacometti J, et al.；2026-10 審閱）', u: 'https://eyewiki.org/Ectropion' },
+  S13: { t: 'EyeWiki：Medial Spindle Procedure（Mukit FA, Sundar G, et al.；2026-02 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Medial_Spindle_Procedure' },
+  S14: { t: 'EyeWiki：Examination Techniques for Lower Eyelid Malposition（Mukit FA, Thyparampil P, et al.；2026-05 審閱）', u: 'https://eyewiki.org/Examination_Techniques_for_Lower_Eyelid_Malposition' }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
@@ -601,11 +630,239 @@ function ptCard() {
   return `<div class="card"><div class="eyebrow">${c.ps ? '' : 'Ptosis · '}${T.eb} · 對照 BCSC 7</div><div><h2>${c.en}</h2></div><p class="zh">${c.zh}</p><p class="def">${T.def}</p><div class="verdict"><span>${v}</span></div>${body}${srcList(refs(T.def + v + body))}</div>`;
 }
 
+/* ---------- 分頁二：下眼瞼內翻與外翻 ----------
+   四個開關：L 水平鬆弛、R retractor 鬆脫、O preseptal orbicularis 疊上來（要先有 R）、M 內眥韌帶鬆（0 無、1 輕、2 重）；外觀與術式由 lidOut、lidPlan 決定（這頁的示意規則，說明卡列出每一條的出處） */
+const LFZ = { L: '水平鬆弛', R: 'Retractor 鬆脫', O: 'Preseptal 疊上來', M: '內眥韌帶鬆' };
+const lidF = F => ({ L: !!F.L, R: !!F.R, O: !!(F.O && F.R), M: F.M || 0 });   // preseptal 要等 retractor 和 orbicularis、皮膚的連結變弱才疊上來（EyeWiki Entropion）
+function lidOut(F) { F = lidF(F); return F.R && F.O ? 'en' : F.L ? 'ec' : F.M ? 'pe' : F.R ? 'rd' : 'n'; }
+function lidPlan(F) {
+  F = lidF(F); const o = lidOut(F);
+  if (o === 'en') return F.L ? 'entL' : 'ent';
+  if (o === 'ec') return F.M === 2 ? 'mctL' : F.M === 1 ? 'medL' : F.R ? 'ecLR' : 'ecL';
+  if (o === 'pe') return F.M === 2 ? 'medS' : 'med';
+  return 'none';
+}
+const OUTZ = { n: '正常', en: '內翻（involutional entropion）', ec: '外翻（involutional ectropion）', pe: '內側外翻、punctal eversion', rd: '沒有內翻或外翻' };
+const PLANZ = { ent: 'Wies 或 retractor reinsertion（暫時可以用 everting sutures）', entL: 'Lateral tarsal strip ＋ Wies 或 retractor reinsertion', ecL: 'Lateral tarsal strip', ecLR: 'Lateral tarsal strip（EyeWiki 另外用 Jones procedure 把 retractor 縫回 tarsus）',
+  medL: 'Medial spindle ＋ lateral tarsal strip', mctL: '先穩定內眥韌帶，再做 lateral tarsal strip', med: 'Medial spindle 或 medial conjunctivoplasty（只有 punctum 外翻可以用 Ziegler cautery）', medS: 'Medial spindle；內眥韌帶明顯鬆時考慮內眥韌帶穩定縫線', none: '不需要矯正內翻或外翻' };
+const PUNX = 9.3;   // 下 punctum 離角膜中心幾 mm（nasal，示意）
+function lidTests(F) {   // 檢查的結果（mm，示意）：distraction、snap-back、往下看下眼瞼往下幾 mm、往外拉 punctum 移幾 mm、往內拉外眥移幾 mm
+  F = lidF(F);
+  return { dis: F.L ? 10 : 2, snap: F.L ? 'blink' : 'fast', dg: F.R ? 1 : 3.5, ov: F.O, pun: F.M === 2 ? PUNX - 2 : F.M === 1 ? PUNX - RL : 1, lc: F.L ? 4 : 1 };
+}
+const comboKey = F => { F = lidF(F); return (F.L ? 'L' : '') + (F.R ? 'R' : '') + (F.O ? 'O' : '') + (F.M ? 'M' : ''); };
+const comboLab = k => k ? [...k].map(c => LFZ[c]).join('＋') : '都沒有';
+const parseF = k => ({ L: k.includes('L'), R: k.includes('R'), O: k.includes('O'), M: k.includes('M2') ? 2 : k.includes('M') ? 1 : 0 });
+function findLines(F) {   // 檢查結果的文字（測驗題目也用）
+  const T = lidTests(F), f = lidF(F);
+  return [`Distraction test：拉開 ${T.dis} mm`, `Snap-back：${T.snap === 'blink' ? '放開後不眨眼就回不去' : '放開後馬上回去'}`, `往下看：下眼瞼往下 ${fx(T.dg)} mm`,
+    f.O ? '閉眼時 preseptal orbicularis 疊到 pretarsal 前面' : '沒有 orbicularis 疊上來', `往外拉：punctum ${f.M === 2 ? '移到瞳孔' : f.M === 1 ? '移到 limbus' : '只移約 1 mm'}`, `往內拉：外眥${f.L ? '圓鈍、移 4 mm' : '只移約 1 mm'}`];
+}
+function comboFromTests(T) {   // 從檢查結果反推開關（self-check 核對題目只有一個答案）
+  return (T.dis >= 8 && T.snap === 'blink' && T.lc > 2 ? 'L' : '') + (T.dg < 3 ? 'R' : '') + (T.ov ? 'O' : '') + (T.pun > 2 ? 'M' : '');
+}
+
+/* 矢狀切面（左＝anterior、上＝superior；mm，x 往 posterior、y 往下；18 px/mm，左邊留 3 mm、y＝−6 在最上面） */
+const K3 = 18, SW = 720, SH = 440, SX0 = 3, SY0 = 6;
+const SXp = x => fx((x + SX0) * K3), SYp = y => fx((y + SY0) * K3), SP = p => `${SXp(p[0])} ${SYp(p[1])}`;
+const GC = [25, -4.5], GR = 12;   // 眼球（示意，半徑 12 mm）
+const gp = deg => [GC[0] - GR * Math.cos(deg * Math.PI / 180), GC[1] + GR * Math.sin(deg * Math.PI / 180)];   // 眼球表面：從正前方往下幾度
+const A_LM = Math.asin((RL - 1) / GR) * 180 / Math.PI;   // 下眼瞼緣在下方 limbus 上約 1 mm（Kanski p.75）
+const LM0 = gp(A_LM), LL0 = gp(A_LM + 20);   // 眼瞼緣、tarsus 下緣的後面（貼著眼球；tarsus 高度示意）
+const TU = Math.hypot(LL0[0] - LM0[0], LL0[1] - LM0[1]), TT = [(LL0[0] - LM0[0]) / TU, (LL0[1] - LM0[1]) / TU], TN = [-TT[1], TT[0]];   // TT 沿 tarsus 往下、TN 往 anterior
+const loc = (u, v) => [LM0[0] + u * TT[0] + v * TN[0], LM0[1] + u * TT[1] + v * TN[1]];
+const AEN = 88, AEC = 52, LTH = 2.4;   // 內翻、外翻時眼瞼轉幾度（示意）；眼瞼厚度
+function rotP(p, c, a) { const r = a * Math.PI / 180, x = p[0] - c[0], y = p[1] - c[1]; return [c[0] + x * Math.cos(r) - y * Math.sin(r), c[1] + x * Math.sin(r) + y * Math.cos(r)]; }
+const lxf = (X, p) => { const q = rotP(p, X.c, X.a); return [q[0] + X.d[0], q[1] + X.d[1]]; };
+function snapK(F, t) {   // snap-back：0–0.25 往前下拉，0.25 放開；正常 0.25–0.35 回去，鬆弛的要等 0.7 眨眼才回去（時間示意）
+  if (t < 0.25) return smooth(t / 0.2);
+  if (!lidF(F).L) return 1 - smooth((t - 0.25) / 0.1);
+  return t < 0.7 ? 1 : 1 - smooth((t - 0.7) / 0.1);
+}
+function lidXf(F, act, t) {   // tarsus 以上那一塊眼瞼：繞 c 轉 a 度（正＝下緣往前），再平移 d
+  const o = lidOut(F), T = lidTests(F);
+  const R = o === 'en' ? { c: LM0, a: AEN, d: [0, 0] } : o === 'ec' ? { c: LL0, a: -AEC, d: [-1, 0.6] } : { c: LM0, a: 0, d: [0, 0] };   // 靜止的位置
+  if (act === 'dis') return { c: LM0, a: 0, d: [-T.dis, 0] };   // 抓住眼瞼中央往正前方拉（先拉直）
+  if (act === 'snap') { const k = snapK(F, t == null ? 1 : t); return { c: R.c, a: R.a * (1 - k), d: [R.d[0] * (1 - k) - 5 * k, R.d[1] * (1 - k) + 1.5 * k] }; }
+  return R;
+}
+function crv(pts) {   // 經過每一點的平滑曲線
+  let d = `M${SP(pts[0])}`;
+  for (let i = 0; i < pts.length - 1; i++) { const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2; d += `C${SP([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6])} ${SP([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6])} ${SP(p2)}`; }
+  return d;
+}
+const RIM = [[10.4, 13.2], [11.4, 12.2], [12.6, 12.3], [14.0, 13.0], [20, 13.2], [36, 12.7], [36, 16.5], [10.6, 16.5], [10.0, 14.8]], RT = [11.8, 12.2], FXP = gp(64);
+const RETR = [[20.6, 7.0], [23.8, 9.3], [29, 11.4], [36, 12.1]], RFREE = [19.4, 6.55];   // retractor 的走向（往 inferior rectus）、鬆脫時的斷端（示意）
+const LASH = [-10, 0, 10].map(da => { const r = (35 + da) * Math.PI / 180; return [-TT[0] * Math.cos(r) + TN[0] * Math.sin(r), -TT[1] * Math.cos(r) + TN[1] * Math.sin(r)]; });
+function lidGeom(F, act, t) {   // 切面上會用到的點（self-check 也用）
+  const X = lidXf(F, act, t), L = p => lxf(X, p), f = lidF(F);
+  const lashes = LASH.map((d, i) => { const r = L(loc(0.15, 1.95 + 0.17 * i)), dd = rotP([d[0], d[1]], [0, 0], X.a); return [r, [r[0] + dd[0] * 2.6, r[1] + dd[1] * 2.6]]; });
+  return { X, L, f, M: L(loc(0, 0)), LB: L(loc(TU, 0)), lashes, post: rotP(TN.map(v => -v), [0, 0], X.a) };
+}
+function lidSag(F, act, t) {
+  const G = lidGeom(F, act, t), L = G.L, f = G.f, l = (u, v) => L(loc(u, v)), wd = mm => fx(mm * K3);
+  const bump = u => f.O ? 0.85 * smooth((u - 0.9) / 0.9) : 0;   // preseptal 疊上來時皮膚被頂出去
+  let h = `<svg viewBox="0 0 ${SW} ${SH}" role="img" aria-label="下眼瞼矢狀切面：左＝anterior、上＝superior"><defs><clipPath id="sg-c"><rect width="${SW}" height="${SH}" rx="12"/></clipPath></defs><rect width="${SW}" height="${SH}" rx="12" style="fill:var(--fig-bg)"/><g clip-path="url(#sg-c)">`;
+  h += `<circle class="s-globe" cx="${SXp(GC[0])}" cy="${SYp(GC[1])}" r="${fx(GR * K3)}"/>`;
+  const cor = []; for (let a = -40; a <= 29.2; a += 3) cor.push(gp(a).map((v, i) => v + (i ? 0 : -0.25)));
+  h += `<path class="s-cor" style="stroke-width:${wd(0.5)}" d="${crv(cor)}"/>`;
+  // septum 與 fat（septum 在 tarsus 下緣附近和 retractor 融合）
+  const sepTop = l(TU + 0.1, 0.9), sep = [sepTop, [14.4, 8.3], [12.8, 10.7], RT];
+  h += `<path class="s-fat" d="${crv(sep)}L${SP([14.0, 13.0])}L${SP([19.5, 13.1])}L${SP([24.6, 10.0])}L${SP(RETR[0])}L${SP([18.0, 5.6])}Z"/>`;
+  // 前面的軟組織（皮膚到 septum 之間），再畫骨頭
+  const skin = [...Array.from({ length: 7 }, (_, i) => l(i * (TU + 0.4) / 6, LTH + bump(i * (TU + 0.4) / 6))), [12.7, 8.9], [10.6, 11.4], [9.3, 13.0], [8.5, 15.0], [7.9, 16.6]];
+  h += `<path class="s-soft" d="${crv(skin)}L${SP([12, 16.6])}L${SP(RT)}L${SP([12.8, 10.7])}L${SP([14.4, 8.3])}L${SP(sepTop)}L${SP(l(TU + 0.4, 0))}L${SP(l(0, 0))}Z"/>`;
+  h += `<path class="s-bone" d="M${RIM.map(SP).join('L')}Z"/>`;
+  h += `<path class="s-sep" d="${crv(sep)}"/>`;
+  // retractor：從 tarsus 下緣往 inferior rectus；鬆脫時斷在下面
+  h += `<path class="s-retr" style="stroke-width:${wd(0.5)}" d="${crv([f.R ? RFREE : l(TU - 0.1, 0.35), ...RETR])}"/>`;
+  // 結膜：tarsus 後面 → 下穹窿 → 眼球表面
+  const bul = []; for (let a = 64; a >= 26; a -= 4) bul.push(gp(a).map((v, i) => v - (i ? 0 : 0.12)));
+  h += `<path class="s-conj" style="stroke-width:${wd(0.28)}" d="${crv([l(0.05, 0.12), l(TU / 2, 0.12), l(TU, 0.12), [FXP[0] - 0.5, FXP[1] + 0.4], ...bul])}"/>`;
+  // preseptal orbicularis：正常接在 pretarsal 下面；疊上來時跑到 pretarsal 前面
+  const pre = f.O ? [l(1.2, LTH + 0.42), l(TU * 0.7, LTH + 0.42), l(TU + 0.3, LTH - 0.2), [13.3, 8.6], [11.3, 11.1], [10.2, 12.3]] : [l(TU + 0.35, 1.7), [13.6, 8.4], [11.6, 10.9], [10.4, 12.3]];
+  h += `<path class="s-mus" style="stroke-width:${wd(0.8)}" d="${crv(pre)}"/>`;
+  // 眼瞼本體：tarsus、pretarsal orbicularis、皮膚、眼瞼緣、睫毛
+  h += `<path class="s-tars" style="stroke-width:${wd(1)}" d="M${SP(l(0.35, 0.7))}L${SP(l(TU - 0.15, 0.7))}"/>`;
+  h += `<path class="s-mus" style="stroke-width:${wd(0.75)}" d="M${SP(l(0.5, 1.65))}L${SP(l(TU - 0.05, 1.65))}"/>`;
+  h += `<path class="s-skin" style="stroke-width:${wd(0.4)}" d="${crv(skin)}"/><path class="s-tarso" d="M${SP(l(0, 0.05))}L${SP(l(0, LTH))}"/>`;
+  h += G.lashes.map(([a, b]) => `<path class="s-lash" d="M${SP(a)}L${SP(b)}"/>`).join('');
+  h += `</g>`;
+  // 標籤
+  const lb = (p, t, anc = 'middle') => `<text x="${SXp(p[0])}" y="${SYp(p[1])}" text-anchor="${anc}">${t}</text>`;
+  h += `<g class="lab">${lb([28, -1.5], '眼球')}${lb([12.6, -3.2], 'cornea', 'end')}${lb([31.5, 14.8], 'orbital rim、floor')}${lb([20.6, 11.4], 'fat')}${lb([28.5, 9.4], f.R ? 'retractor（鬆脫）' : 'lower lid retractors', 'middle')}`
+    + `${lb([20.6, 5.2], '結膜穹窿', 'start')}${lb([13.0, 10.4], 'septum', 'start')}`
+    + (act ? '' : [[-0.6, 'tarsus', l(TU * 0.55, 0.7)], [1.4, 'pretarsal', l(TU * 0.6, 1.65)], [8.6, f.O ? 'preseptal（疊上來）' : 'preseptal', pre[1]]]   // 引線標籤（做檢查時先藏起來）
+      .map(([y, t, p]) => `<path class="c-guide" style="stroke-dasharray:none;stroke-width:1" d="M${SP([7.4, y - 0.25])}L${SP(p)}"/>${lb([-2.6, y], t, 'start')}`).join('')) + '</g>';
+  if (act === 'dis') {   // 拉開的距離：眼瞼緣後面到眼球表面（同一高度）
+    const y = G.M[1], gx = GC[0] - Math.sqrt(GR * GR - (y - GC[1]) ** 2);
+    h += `<g class="lab"><path class="c-br" d="M${SP([G.M[0], y])}H${SXp(gx)}M${SP([G.M[0], y - 0.3])}V${SYp(y + 0.3)}M${SP([gx, y - 0.3])}V${SYp(y + 0.3)}"/><text class="brt" x="${SXp((G.M[0] + gx) / 2)}" y="${SYp(y - 0.7)}" text-anchor="middle">拉開 ${fx(gx - G.M[0])} mm</text></g>`;
+  }
+  if (act === 'snap') { const tt = t == null ? 1 : t, k = snapK(F, tt); h += `<g class="lab"><text x="${SXp(-2.6)}" y="${SYp(-4.7)}" text-anchor="start">${tt < 0.25 ? '往前下拉…' : k > 0.02 ? (tt < 0.7 ? '放開：還沒回去（沒有眨眼）' : '眨眼 → 回去') : '回到原位'}</text></g>`; }
+  return h + '</svg>';
+}
+
+/* 正面特寫（右眼 OD，檢查者面對病人：左＝temporal、右＝nasal；16 px/mm） */
+const K4 = 16, FH2 = 350, FX0 = 360, FY0 = 120;
+const FP = (x, y) => `${fx(FX0 + x * K4)} ${fx(FY0 + y * K4)}`;
+function cub(P0, P3, y) {   // 眼瞼緣：兩端 P0、P3，中央在 y；回傳 path 片段與取點函式
+  const c1 = [P0[0] + (P3[0] - P0[0]) * 0.225, cOf(y, (P0[1] + P3[1]) / 2)], c2 = [P0[0] + (P3[0] - P0[0]) * 0.775, c1[1]];
+  const at = s => [0, 1].map(i => (1 - s) ** 3 * P0[i] + 3 * (1 - s) ** 2 * s * c1[i] + 3 * (1 - s) * s * s * c2[i] + s ** 3 * P3[i]);
+  const atX = x => { let lo = 0, hi = 1; const up = P3[0] > P0[0]; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if ((at(m)[0] < x) === up) lo = m; else hi = m; } return at((lo + hi) / 2); };
+  return { d: `C${FP(...c1)} ${FP(...c2)} ${FP(...P3)}`, at, atX };
+}
+function lidFrontGeom(F, act) {
+  const f = lidF(F), o = lidOut(f), T = lidTests(f);
+  const pm = act === 'latp' ? T.pun : 0, lc = act === 'medp' ? T.lc : 0, down = act === 'down';
+  const yl = (o === 'ec' ? N2 + 2.3 : o === 'en' ? N2 - 0.4 : N2) + (down ? T.dg : 0), yf = o === 'ec' ? N2 + 0.7 + (down ? T.dg : 0) : yl;   // yl＝下眼瞼緣、yf＝露出來的眼球下緣
+  const P0 = [FA - pm, Y0 + 0.2], P3 = [-FA + lc, Y0 + 0.2];
+  const low = cub(P0, P3, yl), glob = cub(P0, P3, yf), pun = low.atX(PUNX - pm);
+  return { f, o, T, pm, lc, down, yl, yf, P0, P3, low, glob, pun, yu: down ? 2.5 : -N1, iy: down ? DG.d : 0 };
+}
+function lidFront(F, act) {
+  const G = lidFrontGeom(F, act), f = G.f, o = G.o;
+  const up = cub([-FA, Y0], [FA, Y0], G.yu);
+  const fis = `M${FP(-FA, Y0)}${up.d}L${FP(...G.P0)}${G.glob.d}L${FP(-FA, Y0)}Z`;
+  let h = `<svg viewBox="0 0 ${FW} ${FH2}" role="img" aria-label="右眼外眼特寫，檢查者面對病人：左＝temporal、右＝nasal"><rect class="c-face" width="${FW}" height="${FH2}" rx="12"/>`;
+  h += `<clipPath id="lf-c"><path d="${fis}"/></clipPath><path class="c-eyew" d="${fis}"/><g clip-path="url(#lf-c)"><circle class="c-iris" cx="${FX0}" cy="${fx(FY0 + G.iy * K4)}" r="${fx(RL * K4)}"/><circle class="c-limb" cx="${FX0}" cy="${fx(FY0 + G.iy * K4)}" r="${fx(RL * K4)}"/><circle class="c-pupil" cx="${FX0}" cy="${fx(FY0 + G.iy * K4)}" r="${fx(2 * K4)}"/><ellipse class="s-cj" cx="${fx(FX0 + (FA - 0.9) * K4)}" cy="${fx(FY0 + (Y0 + 0.3) * K4)}" rx="${fx(1.1 * K4)}" ry="${fx(0.9 * K4)}"/></g><path class="c-eyeo" d="${fis}"/>`;
+  if (o === 'ec') h += `<path class="s-cj" d="M${FP(...G.P0)}${G.glob.d}L${FP(...G.P3)}${cub(G.P3, G.P0, G.yl).d}Z"/>`;   // 外翻：露出來的紅色結膜
+  if (o === 'pe') { const p = G.pun; h += `<ellipse class="s-cj" cx="${fx(FX0 + (p[0] - 0.4) * K4)}" cy="${fx(FY0 + (p[1] + 0.45) * K4)}" rx="${fx(1.5 * K4)}" ry="${fx(0.55 * K4)}"/>`; }
+  h += `<path class="c-eyeo" style="stroke-width:${o === 'en' ? 3 : 1.4}" d="M${FP(...G.P0)}${G.low.d}"/>`;
+  // 睫毛：punctum 外側才有；內翻時轉向內（虛線＝貼在眼球上，示意）
+  for (let i = 0; i < 13; i++) {
+    const x = -FA * 0.82 + G.lc + i * ((PUNX - G.pm - 1) - (-FA * 0.82 + G.lc)) / 12, p = G.low.atX(x);
+    h += o === 'en' ? `<path class="s-lashi" d="M${FP(p[0], p[1] - 0.2)}L${FP(p[0] - 0.4, p[1] - 1.6)}"/>` : `<path class="s-lash" d="M${FP(p[0], p[1])}L${FP(p[0] - 0.45, p[1] + 1.6)}"/>`;
+  }
+  if (f.O) h += `<path class="s-roll" d="M${FP(-6.5, G.yl + 1.4)}Q${FP(0, G.yl + 2.6)} ${FP(6, G.yl + 1.5)}"/>`;   // 疊上來的 orbicularis（示意）
+  const p = G.pun, ev = o === 'ec' || o === 'pe';
+  h += `<circle class="${ev ? 's-pun' : 'c-pupil'}" cx="${fx(FX0 + p[0] * K4)}" cy="${fx(FY0 + (p[1] + (ev ? 0.35 : -0.05)) * K4)}" r="${ev ? 5.5 : 2.6}"/>`;
+  // 檢查的標記
+  const lab = [];
+  if (act === 'latp' || act === 'medp') {
+    const left = act === 'latp', tx = left ? -6.5 : 5.5, ty = G.yl + 2.6;
+    h += `<ellipse class="c-thumb" cx="${fx(FX0 + tx * K4)}" cy="${fx(FY0 + ty * K4)}" rx="${fx(2.2 * K4)}" ry="${fx(1.3 * K4)}"/><path class="c-br" d="M${FP(tx + (left ? -2.6 : 2.6), ty)}l${left ? -24 : 24} 0m${left ? 8 : -8} -6l${left ? -8 : 8} 6l${left ? 8 : -8} 6"/>`;
+    if (left) [[RL, 'limbus'], [2, '瞳孔']].forEach(([x, t]) => { h += `<path class="c-guide" d="M${FP(x, -2)}V${fx(FY0 + 9 * K4)}"/>`; lab.push(`<text x="${fx(FX0 + x * K4)}" y="${fx(FY0 + 10.2 * K4)}" text-anchor="middle">${t}</text>`); });
+    lab.push(left ? `<text class="brt" x="${fx(FX0 + p[0] * K4)}" y="${fx(FY0 + (p[1] + 2.6) * K4)}" text-anchor="middle">punctum 移 ${fx(G.pm)} mm</text>` : `<text class="brt" x="${fx(FX0 + (-FA + G.lc) * K4)}" y="${fx(FY0 + 3.4 * K4)}" text-anchor="middle">外眥移 ${fx(G.lc)} mm</text>`);
+  }
+  if (G.down) { const y0 = fx(FY0 + (G.yl - G.T.dg) * K4), y1 = fx(FY0 + G.yl * K4); h += `<path class="c-guide" d="M${fx(FX0 - 8 * K4)} ${y0}H${fx(FX0 + 8 * K4)}"/>`; lab.push(`<path class="c-br" d="M${fx(FX0 - 3.2 * K4)} ${y0}V${y1}M${fx(FX0 - 3.2 * K4 - 4)} ${y0}h8M${fx(FX0 - 3.2 * K4 - 4)} ${y1}h8"/><text class="brt" x="${fx(FX0 - 3.2 * K4 - 7)}" y="${fx((+y0 + +y1) / 2 + 4)}" text-anchor="end">往下 ${fx(G.T.dg)} mm</text>`); }
+  lab.push(`<text x="${fx(FX0 + (PUNX - G.pm) * K4)}" y="${fx(FY0 + (p[1] + 1.9) * K4)}" text-anchor="middle">${act === 'latp' ? '' : 'punctum'}</text>`);
+  h += `<g class="lab">${lab.join('')}</g><g class="lab o"><text x="${fx(FX0 - 13.5 * K4)}" y="${FH2 - 10}" text-anchor="middle">temporal</text><text x="${fx(FX0 + 13.5 * K4)}" y="${FH2 - 10}" text-anchor="middle">nasal</text></g><text class="eyen" x="${FX0}" y="22" text-anchor="middle">右眼 OD</text>`;
+  return h + '</svg>';
+}
+
+/* 說明卡與檢查文字 */
+const LTESTS = [`Distraction test：把下眼瞼中央往前拉離眼球；Kanski 寫拉得開 ≥ 8 mm＝水平鬆弛${s('S8')}；EyeWiki 寫正常 2–3 mm、> 5 mm 是明顯鬆弛${s('S12')}，內翻的病人可以拉開 6–15 mm${s('S11')}`,
+  `Snap-back test：放開後不眨眼就回不去＝鬆弛${s('S8', 'S11')}；EyeWiki 依回去的秒數分級：< 2 秒 0 級、2–3 秒 I 級、4–5 秒 II 級、> 5 秒且要眨眼才回去 III 級、回不去 IV 級${s('S14')}；另一頁寫 > 2 秒就算陽性${s('S13')}`,
+  `往外拉看 punctum（內眥韌帶）：正常 punctum 移不到 1–2 mm；輕度鬆弛到 limbus、嚴重到瞳孔${s('S8')}；EyeWiki：> 2 mm 是陽性${s('S13')}`,
+  `往內拉看外眥（外眥韌帶）：外眥圓鈍、可以往內拉 > 2 mm＝外眥韌帶鬆${s('S8')}；EyeWiki 寫移動超過 1–3 mm 記為有，沒有統一的分級${s('S14')}`,
+  `往下看（retractor）：正常從正前方到往下看，下眼瞼緣往下 3–4 mm；變少或沒有＝retractor 無力或鬆脫${s('S11')}`,
+  `Punctum 的位置：正常朝後、泡在內側淚湖裡；朝外是 punctal ectropion，早期眼瞼位置看起來正常時用裂隙燈才看得出來${s('S14')}`];
+const LDIFF = [`Distraction 的切點：Kanski ≥ 8 mm${s('S8')}；EyeWiki Ectropion 與 Medial Spindle > 5 mm${s('S12', 'S13')}；EyeWiki Entropion 寫內翻時 6–15 mm、正常 2–3 mm${s('S11')}。測驗只用 2 mm（正常）與 10 mm（鬆弛）`,
+  `Snap-back：Kanski 看要不要眨眼才回去${s('S8')}；EyeWiki 用秒數分 0–IV 級${s('S14')}或 > 2 秒算陽性${s('S13')}。測驗只用「馬上回去」與「要眨眼才回去」`,
+  `內眥韌帶：Kanski 用 punctum 到 limbus、到瞳孔分輕重${s('S8')}；EyeWiki 引 Olver 以 plica（0 級）、內側 limbus（2 級）、瞳孔中央（4 級）分級，0–1 級不用手術、3–4 級可以考慮穩定縫線，也引 Fante 依 mm 分級（0–2 mm 正常、2–4 輕度、4–6 中度、> 6 嚴重）${s('S14')}`,
+  `Retractor 和外翻：EyeWiki 把 retractor 鬆脫列為 involutional ectropion 的原因之一，用 Jones procedure 縫回${s('S12', 'S13')}；Kanski 的外翻段落只列水平鬆弛與內外眥韌帶鬆弛${s('S8')}`];
+const LRULE = [`水平鬆弛（tarsus 與內外眥韌帶被拉長${s('S9')}）：單獨或加上 retractor 鬆脫 → 外翻${s('S8', 'S12')}`,
+  `Retractor 鬆脫：單獨時這頁把靜止位置畫成正常，只有往下看時下眼瞼往下得少${s('S9', 'S11')}`,
+  `Preseptal orbicularis 疊上來：retractor 和 orbicularis、皮膚的連結變弱後才會發生${s('S11')}，所以要先打開 retractor 鬆脫；兩個一起 → 內翻${s('S9', 'S11')}`,
+  `內眥韌帶鬆：punctum 轉離淚湖（medial ectropion、punctal eversion）${s('S12', 'S13')}`,
+  `實際的病人常是幾個因素一起：內翻是多個因素合併${s('S11')}，水平鬆弛在內翻也通常存在${s('S9')}`];
+function lidCard() {
+  const F = lidF(st.lid.F), o = lidOut(F), plan = lidPlan(F), on = Object.keys(LFZ).filter(k => k === 'M' ? F.M : F[k]);
+  const fac = { L: `水平鬆弛：tarsus 與內外眥韌帶被拉長${s('S9')}`, R: `Retractor 鬆脫：retractor 變薄、裂開或從 tarsus 脫開，下眼瞼垂直方向不穩${s('S9')}；retractor 提供垂直方向的穩定，相當於上眼瞼的 levator aponeurosis 與 Müller muscle${s('S11')}`,
+    O: `Preseptal 疊上來：閉眼時 preseptal orbicularis 疊到 pretarsal 前面，把 tarsus 下緣往前推、上緣往眼球推，眼瞼往內翻${s('S9')}`, M: `內眥韌帶鬆${F.M === 2 ? '（嚴重：往外拉 punctum 到瞳孔）' : '（輕度：往外拉 punctum 到 limbus）'}${s('S8')}` };
+  const C = {
+    n: { en: 'Lower eyelid', zh: '下眼瞼的支撐', def: `下眼瞼靠 pretarsal orbicularis 的張力、lower lid retractors、tarsus 與內外眥韌帶維持在眼球上${s('S11')}。在下方打開開關，看內翻、外翻怎麼來`,
+      secs: [['分層', [`前層＝皮膚與 orbicularis；中層＝orbital septum 與 septum 後面的脂肪；後層＝tarsus、結膜與 lower lid retractors${s('S14')}`, `Orbicularis 的 palpebral 部分分成 pretarsal 與 preseptal；pretarsal 在內側形成內眥韌帶、外側形成外眥韌帶${s('S14')}`,
+        `Retractor 的 capsulopalpebral head 繞過 inferior oblique，在 tarsus 下緣和 septum 融合；後層的 retractor 拉力最大${s('S11')}`, `眼瞼的解剖見<a href="../eye-atlas/#lid">眼解剖圖譜的眼瞼分頁</a>`]], ['四個開關（這頁的示意規則）', LRULE], ['檢查（圖下的按鈕）', LTESTS], ['文獻不一', LDIFF]] },
+    en: { en: 'Involutional entropion', zh: '老年性下眼瞼內翻', def: `下眼瞼緣往內轉，睫毛與皮膚朝向角膜${s('S11')}；involutional entropion 主要在下眼瞼${s('S9')}`,
+      secs: [['後果', [`睫毛長期磨角膜（pseudotrichiasis）：刺激、punctate epithelial erosions，嚴重時 pannus 與潰瘍${s('S9')}`]],
+        ['暫時處理', [`潤滑、貼膠帶、軟式 bandage contact lens、botulinum toxin 打 orbicularis，時間越短越好${s('S9')}`]],
+        ['術式', [`Transverse everting sutures：防止 preseptal 疊上來，快又簡單，效果通常維持幾個月，適合不能接受較複雜手術的病人（例如意識混亂）${s('S9')}；EyeWiki：Quickert sutures 6 個月復發超過 21%、兩年近 50%${s('S11')}`,
+          `Wies procedure：全層水平切開眼瞼再放 everting sutures；疤痕隔開 preseptal 與 pretarsal，everting suture 把 retractor 的拉力從 tarsus 轉到皮膚與 orbicularis，效果持久${s('S9')}`,
+          `Lower lid retractor reinsertion：直接找到 retractor 往前縫回，比 Wies 精準；subciliary 切口與縫合也能擋住 preseptal 疊上來；可以第一次就做，也可以留給復發${s('S9')}`,
+          `水平鬆弛通常也有：lateral canthal sling（tarsal strip），較少用全層 lateral pentagon excision；拉緊也讓眼瞼貼住眼球、避免矯正過頭${s('S9')}`,
+          `EyeWiki：tarsal strip 加 retractor advancement 成功率 96.7%；everting sutures 加 tarsal strip 18 個月沒有復發，只做 everting sutures 有 21% 復發${s('S11')}`]],
+        ['鑑別', [`Trichiasis、distichiasis、epiblepharon 也會讓睫毛碰角膜，但眼瞼緣的位置正常，處理不同${s('S11')}`]], ['檢查（圖下的按鈕）', LTESTS], ['文獻不一', LDIFF]] },
+    ec: { en: 'Involutional ectropion', zh: '老年性下眼瞼外翻', def: `下眼瞼緣往外翻${s('S12')}；involutional ectropion 發生在年長者的下眼瞼${s('S8')}`,
+      secs: [['後果', [`溢淚（epiphora），讓 ocular surface disease 變糟；露出來的結膜紅、外觀不好；拖久了 tarsal conjunctiva 會慢性發炎、變厚、keratinized${s('S8')}`]],
+        ['術式', [`全面的外翻：修水平鬆弛，lateral tarsal strip（把外眥韌帶下支縮短、固定到 lateral orbital rim）；外眥圓鈍、鬆、合併溢淚時特別有幫助${s('S8')}`, `另一個選擇是切 tarsoconjunctival pentagon，可以順便切掉長歪的睫毛或 keratinized 的結膜${s('S8')}`,
+          `內側外翻輕度：medial conjunctival diamond excision（medial spindle），常合併 tarsal strip，因為水平鬆弛常同時存在${s('S8', 'S13')}`, `內眥韌帶明顯鬆時，要先穩定內眥韌帶再做水平縮短，免得把 punctum 拉向外側${s('S8')}；只拉緊外側、沒處理內側鬆弛，會把 punctum 拉向外側、造成慢性溢淚${s('S13')}`,
+          `EyeWiki：retractor 鬆脫用 Jones procedure 把 retractor 縫回 tarsus${s('S12', 'S13')}`]],
+        ['其他類型（這頁沒畫）', [`Cicatricial：皮膚與下層組織結疤收縮；把皮膚往上推過 orbital margin 外翻就消失，張嘴會更明顯${s('S8')}`, `Paralytic：同側 facial nerve palsy${s('S8')}`, `Mechanical：眼瞼緣附近的腫瘤把眼瞼推出去${s('S8')}`,
+          `EyeWiki：把外眥往外上推，involutional 外翻通常會消失，推不回去要想到 cicatricial${s('S12')}`]], ['檢查（圖下的按鈕）', LTESTS], ['文獻不一', LDIFF]] },
+    pe: { en: 'Punctal eversion', zh: '內側外翻、淚點外翻', def: `內側鬆弛時，下 punctum 轉離眼球表面與淚湖${s('S12')}；medial spindle 處理的就是 involutional medial ectropion 合併 punctal eversion${s('S13')}`,
+      secs: [['後果', [`Punctum 接不到淚水 → 溢淚${s('S13')}；長期外翻讓淚水進不去，可能續發 punctal stenosis${s('S10')}`]],
+        ['術式', [`只有 punctum 外翻：retropunctal（Ziegler）cautery，燒 punctum 下方約 5 mm 的結膜，組織收縮讓 punctum 翻回去${s('S10')}`, `內側較大範圍外翻、沒有明顯水平鬆弛：medial conjunctivoplasty，切一塊約 4 mm 高、8 mm 寬的菱形 tarsoconjunctiva 再縫合，縫線帶到 lower lid retractors 更好${s('S10')}`,
+          `EyeWiki：medial spindle（菱形切除內側結膜與 retractor 再縫回），可以單獨做，也常和外側拉緊一起做${s('S13')}`, `術前沖洗淚道，確認沒有阻塞${s('S13')}`, `EyeWiki 引 Olver：內眥韌帶鬆到 3–4 級時可以考慮內眥韌帶穩定縫線${s('S14')}`]], ['檢查（圖下的按鈕）', LTESTS], ['文獻不一', LDIFF]] },
+    rd: { en: 'Lower lid retractor dehiscence', zh: 'Retractor 鬆脫', def: `Retractor 變薄、裂開或從 tarsus 脫開，下眼瞼垂直方向不穩${s('S9')}`,
+      secs: [['看得到的', [`往下看時下眼瞼往下得少${s('S9')}；正常從正前方到往下看，下眼瞼緣往下 3–4 mm${s('S11')}`, `有時在下穹窿看得到 tarsus 下緣下方 3–4 mm 的白線，是脫開的 retractor${s('S11')}`, `內翻的病人，retractor 到 tarsus 下緣的距離平均多 1.4 mm${s('S11')}`]],
+        ['和其他因素一起', [`加上 preseptal 疊上來 → 內翻${s('S9', 'S11')}；加上水平鬆弛 → 外翻（EyeWiki）${s('S12')}`, `單獨 retractor 鬆脫時，這頁把靜止位置畫成正常（示意）`]], ['檢查（圖下的按鈕）', LTESTS], ['文獻不一', LDIFF]] }
+  }[o];
+  const v = `${OUTZ[o]}：${on.length ? on.map(k => LFZ[k]).join('＋') : '四個開關都關'}；術式 → ${PLANZ[plan]}`;
+  const body = (on.length && o !== 'n' ? list('這個例子的機轉', on.map(k => fac[k])) : '') + C.secs.map(([t, a]) => list(t, a)).join('');
+  return `<div class="card"><div class="eyebrow">下眼瞼 · ${o === 'n' ? '解剖與檢查' : o === 'en' ? '內翻' : o === 'ec' ? '外翻' : o === 'pe' ? '淚點' : 'Retractor'} · 對照 BCSC 7</div><div><h2>${C.en}</h2></div><p class="zh">${C.zh}</p><p class="def">${C.def}</p><div class="verdict"><span>${v}</span></div>${body}${srcList(refs(C.def + v + body))}</div>`;
+}
+function lidStatus(F, act) {
+  const f = lidF(F), T = lidTests(f);
+  switch (act) {
+    case 'dis': return `把下眼瞼中央往前拉：拉開 ${T.dis} mm → ${f.L ? `水平鬆弛（Kanski ≥ 8 mm${s('S8')}；EyeWiki > 5 mm${s('S12')}）` : `正常（EyeWiki：2–3 mm${s('S11', 'S12')}）`}`;
+    case 'snap': return f.L ? `放開後不眨眼就回不去，眨眼後才回去：水平鬆弛${s('S8')}（EyeWiki 分級：> 5 秒、要眨眼才回去是 III 級${s('S14')}；動畫時間縮短）` : `放開後馬上回去、不用眨眼：正常（EyeWiki：< 2 秒是 0 級${s('S14')}）`;
+    case 'down': return `從正前方到往下看，下眼瞼往下 ${fx(T.dg)} mm → ${f.R ? `變少：retractor 無力或鬆脫${s('S9', 'S11')}` : `正常（3–4 mm${s('S11')}）`}`;
+    case 'latp': return `把下眼瞼往外拉：punctum 移 ${fx(T.pun)} mm${f.M === 2 ? '，到瞳孔：嚴重的內眥韌帶鬆弛' : f.M === 1 ? '，到 limbus：輕度的內眥韌帶鬆弛' : '：正常（不超過 1–2 mm）'}${s('S8')}${f.M ? `；EyeWiki：> 2 mm 就算陽性${s('S13')}` : ''}`;
+    case 'medp': return `把下眼瞼往內拉：外眥移 ${T.lc} mm → ${f.L ? `> 2 mm：外眥韌帶鬆${s('S8')}` : '正常'}`;
+  }
+  return `${OUTZ[lidOut(f)]}${f.O ? `；切面上 preseptal orbicularis 疊到 pretarsal 前面，把 tarsus 下緣往前推、上緣往眼球推${s('S9')}` : ''}${f.R ? `；retractor 從 tarsus 下緣脫開${s('S9')}` : ''}。按圖下的按鈕做檢查`;
+}
+const LACTZ = { dis: 'Distraction test', snap: 'Snap-back test', down: '往下看', latp: '往外拉（看 punctum）', medp: '往內拉（看外眥）' };
+const LPRE = { n: ['正常', ''], en: ['Involutional entropion', 'LRO'], enN: ['內翻（沒有水平鬆弛）', 'RO'], ec: ['Involutional ectropion', 'L'], ecR: ['外翻＋retractor 鬆脫', 'LR'], med: ['內側外翻＋水平鬆弛', 'LM1'], mct: ['內眥韌帶明顯鬆＋水平鬆弛', 'LM2'], pe: ['只有 punctal eversion', 'M1'], rd: ['只有 retractor 鬆脫', 'R'] };
+const lidKey = F => { const f = lidF(F); return comboKey(f).replace('M', f.M === 2 ? 'M2' : 'M1'); };
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'pt', name: 'Ptosis', en: 'Evaluation & surgery' }];
+const VIEWS = [{ id: 'pt', name: 'Ptosis', en: 'Evaluation & surgery' }, { id: 'lid', name: '下眼瞼內翻外翻', en: 'Entropion & ectropion' }];
 const $ = q => document.querySelector(q);
 let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
-const st = { view: 'pt', cs: 'invM', ov: { R: {}, L: {} }, act: null, gaze: 'p', pe: 'y', wink: 's', t: 1, ref: false, under: false, labels: true, learnMode: 'learn', quiz: null };
+const st = { view: 'pt', cs: 'invM', ov: { R: {}, L: {} }, act: null, gaze: 'p', pe: 'y', wink: 's', t: 1, ref: false, under: false, labels: true, learnMode: 'learn', quiz: null,
+  lid: { F: parseF('LRO'), act: null, t: 1 } };   // 分頁二：開關、檢查動作、snap-back 動畫進度
 const cur = () => ({ cs: st.cs, ov: st.ov, act: st.act, gaze: st.gaze, pe: st.pe, wink: st.wink, t: st.t });
 const st0 = (cs, ov, x) => Object.assign({ cs, ov, act: null, gaze: 'p', pe: CASES[cs].pe || 'n', wink: 's', t: 1 }, x);
 const store = (() => {
@@ -617,7 +874,15 @@ const store = (() => {
 const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
 const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
 const AN = { raf: 0 };
-function animStop() { cancelAnimationFrame(AN.raf); st.t = 1; }
+function animStop() { cancelAnimationFrame(AN.raf); st.t = 1; st.lid.t = 1; }
+function renderLidSag() { const el = $('#lid-sag'), a = st.lid.act; if (el) el.innerHTML = lidSag(st.lid.F, a === 'dis' || a === 'snap' ? a : null, st.lid.t); }
+function lidAnim() {   // snap-back：只重畫 #lid-sag
+  cancelAnimationFrame(AN.raf);
+  const L = st.lid;
+  if (reduce) { L.t = 1; renderLidSag(); return; }
+  const t0 = performance.now(), step = now => { L.t = Math.min(1, (now - t0) / 3600); renderLidSag(); if (L.t < 1) AN.raf = requestAnimationFrame(step); };
+  L.t = 0; renderLidSag(); AN.raf = requestAnimationFrame(step);
+}
 function animStart(kind) {   // 只重畫 #pt-svg
   cancelAnimationFrame(AN.raf);
   if (reduce) { st.t = 1; renderMainSVG(); return; }
@@ -633,10 +898,11 @@ function setCase(cs) {
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選例子；拖圖上的圓點改上下眼瞼的高度，按圖下的按鈕做檢查'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'lid' ? '下方打開開關或選例子，按圖下的按鈕做檢查' : '下方選例子；拖圖上的圓點改上下眼瞼的高度，按圖下的按鈕做檢查'}</span>`;
 }
 function renderTools() {
   if (st.learnMode === 'quiz') { $('#tools').innerHTML = ''; return; }
+  if (st.view === 'lid') { $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; return; }
   const hood = ['R', 'L'].some(e => eyeBase(st.cs, e, st.ov).hood != null);
   $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-ref" ${st.ref ? 'checked' : ''}>正常高度</label>${hood ? `<label class="tog"><input type="checkbox" id="t-under" ${st.under ? 'checked' : ''}>看皮膚底下（示意）</label>` : ''}<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
 }
@@ -646,7 +912,28 @@ function actBar(G) {
   return `<div class="seg" role="group" aria-label="看哪裡">${[['p', '正前方'], ['d', '往下看']].map(([k, t]) => `<button type="button" data-gz="${k}" aria-pressed="${!st.act && st.gaze === k}">${t}</button>`).join('')}</div><div class="grp">${A.map(([k, t, dis]) => `<button type="button" class="btn ${st.act === k ? 'on' : ''}" data-act="${k}" ${dis ? 'disabled' : ''}>${t}</button>`).join('')}</div>`;
 }
 function renderMainSVG() { const it = quizItem(), el = $('#pt-svg'); if (!el) return; el.innerHTML = it ? ptFig(geomOf(it.S), { ref: it.ref, under: it.under }) : ptFig(geomOf(cur()), { ref: st.ref, under: st.under, hdl: !st.act }); }
+function lidRenderFig(it) {
+  const fig = $('#fig'), L = st.lid, bt = k => `<button type="button" class="btn ${L.act === k ? 'on' : ''}" data-la="${k}">${LACTZ[k]}</button>`, sag = L.act === 'dis' || L.act === 'snap';
+  if (it) fig.innerHTML = `<div class="vh">外眼特寫：右眼 OD，檢查者面對病人（左＝temporal、右＝nasal）</div>${lidFront(it.F, null)}`;
+  else {
+    const t = `<div class="rd">${lidStatus(L.F, L.act)}</div>`;
+    fig.innerHTML = `<div class="vh">下眼瞼矢狀切面：左＝anterior、上＝superior（眼瞼中央，示意）</div><div id="lid-sag">${lidSag(L.F, sag ? L.act : null, L.t)}</div>`
+      + `<div class="ctbar"><span class="hint">切面上看</span><div class="grp">${bt('dis')}${bt('snap')}</div></div>${sag ? t : ''}`
+      + `<div class="vh">外眼特寫：右眼 OD，檢查者面對病人（左＝temporal、右＝nasal）</div>${lidFront(L.F, sag ? null : L.act)}`
+      + `<div class="ctbar"><span class="hint">正面看</span><div class="grp">${bt('down')}${bt('latp')}${bt('medp')}</div></div>${sag ? '' : t}`;
+  }
+  $('#cap').innerHTML = `<span>${it ? '' : '切面：左＝anterior、上＝superior，同眼解剖圖譜的眼瞼切面；'}正面：右眼 OD，檢查者面對病人，左＝temporal。${it ? '' : '按鈕再按一次＝取消。'}</span><span class="ori">眼瞼轉的角度、檢查的 mm 數與秒數都是示意</span>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+}
+function lidExtra() {
+  const F = st.lid.F, f = lidF(F);
+  const tg = k => `<button type="button" data-lf="${k}" aria-pressed="${!!f[k]}" ${k === 'O' && !f.R ? 'disabled' : ''}>${LFZ[k]}</button>`;
+  return `<div class="xh">開關（示意）</div><div class="rng"><div class="seg" role="group" aria-label="鬆弛的結構">${['L', 'R', 'O'].map(tg).join('')}</div></div>
+    <div class="rng"><span class="rl">內眥韌帶</span><div class="seg" role="group" aria-label="內眥韌帶鬆弛">${[[0, '不鬆'], [1, '輕度'], [2, '嚴重']].map(([v, t]) => `<button type="button" data-lm="${v}" aria-pressed="${f.M === v}">${t}</button>`).join('')}</div></div>
+    <p class="hint" style="margin:0">${f.R ? '' : 'Preseptal 疊上來要先打開 retractor 鬆脫（EyeWiki：retractor 和 orbicularis、皮膚的連結變弱後才會疊上來）。'}外觀：${OUTZ[lidOut(f)]}；術式 → ${PLANZ[lidPlan(f)]}</p>`;
+}
 function renderFig() {
+  if (st.view === 'lid') { lidRenderFig(quizItem()); return; }
   const it = quizItem(), fig = $('#fig');
   if (it) fig.innerHTML = `<div class="vh">${it.vh}</div><div id="pt-svg"></div>`;
   else {
@@ -661,6 +948,7 @@ function renderFig() {
 function renderFlow() { const f = $('#flow'); if (f) f.innerHTML = flowHTML(cur()); }
 function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  if (st.view === 'lid') { $('#extra').innerHTML = lidExtra(); return; }
   const c = CASES[st.cs], ce = ceOf(st.cs, st.ov), E = eyeBase(st.cs, ce, st.ov);
   let h = '';
   if (!c.ps) h += `<div class="rng"><label for="pt-m1">${EZ[ce]} MRD1</label><input type="range" id="pt-m1" min="-1.5" max="7" step="0.5" value="${E.m1}"><span class="v" id="pt-m1-v">${fx(E.m1)} mm</span></div>
@@ -673,12 +961,18 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'lid') {
+    const k0 = lidKey(st.lid.F);
+    ix.innerHTML = `<span class="lbl">例子（設定四個開關）</span>` + Object.keys(LPRE).map(k => `<button type="button" class="chip ${LPRE[k][1] === k0 ? 'on' : ''}" data-lp="${k}">${LPRE[k][0]}</button>`).join('')
+      + `<span class="lbl">其他頁</span><a class="chip" href="../eye-atlas/#lid">眼瞼解剖 → 眼解剖圖譜</a>`;
+    return;
+  }
   ix.innerHTML = CG.map(([g, t]) => `<span class="lbl">${t}</span>` + Object.keys(CASES).filter(k => CASES[k].g === g).map(k => `<button type="button" class="chip ${st.cs === k ? 'on' : ''}" data-cs="${k}">${CASES[k].zh}</button>`).join('')).join('')
     + `<span class="lbl">其他頁</span><a class="chip" href="../neuro-ophth/#pup">Horner、瞳孔 → 神經眼科圖譜</a><a class="chip" href="../neuro-ophth/#eom">CN III palsy → 神經眼科圖譜</a><a class="chip" href="../eye-atlas/#lid">眼瞼解剖 → 眼解剖圖譜</a>`;
 }
-function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : ptCard(); }
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'lid' ? lidCard() : ptCard(); }
 function renderSelbar() {
-  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : `目前：${CASES[st.cs].zh} · ${st.act ? ACTZ[st.act] : st.gaze === 'd' ? '往下看' : '正前方'}`;
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : st.view === 'lid' ? `目前：${OUTZ[lidOut(st.lid.F)]}${st.lid.act ? ` · ${LACTZ[st.lid.act]}` : ''}` : `目前：${CASES[st.cs].zh} · ${st.act ? ACTZ[st.act] : st.gaze === 'd' ? '往下看' : '正前方'}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -698,23 +992,51 @@ const QP = { p1: ['retr', 'ref'], p2: ['hypo', 'cover'], p3: ['brow', 'brow'], p
 const PSL = { true: '真的 ptosis', retr: 'Pseudoptosis：對側 lid retraction', hypo: 'Pseudoptosis：同側 hypotropia', brow: 'Pseudoptosis：brow ptosis', derm: 'Pseudoptosis：dermatochalasis' };
 const QCG = { c1: 'conS', c2: 'conM', c3: 'mgjw', c4: 'invM', c5: 'invH', c6: 'mg' };
 const CGL = { cH: '先天：往下看時下垂的眼瞼比較高', cL: '先天：往下看時下垂的眼瞼同高或比較低', aH: '後天：往下看時下垂的眼瞼比較高', aL: '後天：往下看時下垂的眼瞼同高或比較低' };
-const KEYS = [...Object.keys(QMR).map(k => 'pt:m:' + k), ...Object.keys(QS).map(k => 'pt:s:' + k), ...Object.keys(QP).map(k => 'pt:p:' + k), ...Object.keys(QCG).map(k => 'pt:c:' + k)];
+// 分頁二：lid:f:…（給檢查結果找機轉）、lid:r:…（給檢查結果選術式）；題目表的開關寫法同 parseF（M1 輕度、M2 嚴重）
+const QF = { f1: 'LRO', f2: 'RO', f3: 'L', f4: 'LM1', f5: 'M1', f6: 'R', f7: 'LM2', f8: 'LR' };
+const QR = { r1: ['LRO', ['entL', 'ent', 'ecL', 'medL']], r2: ['RO', ['ent', 'entL', 'ecL', 'med']], r3: ['L', ['ecL', 'entL', 'med', 'mctL']], r4: ['LM1', ['medL', 'ecL', 'mctL', 'ent']], r5: ['LM2', ['mctL', 'ecL', 'ent', 'med']], r6: ['M1', ['med', 'ecL', 'entL', 'mctL']] };   // 開關、選項（第一個是預期答案，由 lidPlan 核對）
+const PLANQ = { ent: 'Wies 或 retractor reinsertion（不用 LTS）', entL: 'LTS ＋ Wies 或 retractor reinsertion', ecL: 'Lateral tarsal strip（LTS）', medL: 'Medial spindle ＋ LTS', mctL: '先穩定內眥韌帶，再做 LTS', med: 'Medial spindle 或 medial conjunctivoplasty（不用 LTS）' };
+const FPOOL = ['LRO', 'RO', 'L', 'LR', 'LM', 'M', 'R', 'LRM', 'RM', 'LROM'];
+const KEYS = [...Object.keys(QMR).map(k => 'pt:m:' + k), ...Object.keys(QS).map(k => 'pt:s:' + k), ...Object.keys(QP).map(k => 'pt:p:' + k), ...Object.keys(QCG).map(k => 'pt:c:' + k),
+  ...Object.keys(QF).map(k => 'lid:f:' + k), ...Object.keys(QR).map(k => 'lid:r:' + k)];
 const keyValid = k => KEYS.includes(k);
 const keyView = k => k.split(':')[0];
-const QTV = { pt: [['mrd', '讀 MRD、算 PFH'], ['surg', '選術式'], ['ps', '真假 ptosis'], ['cg', '先天或後天']] };
-const QTZ = { m: 'mrd', s: 'surg', p: 'ps', c: 'cg' };
+const QTV = { pt: [['mrd', '讀 MRD、算 PFH'], ['surg', '選術式'], ['ps', '真假 ptosis'], ['cg', '先天或後天']], lid: [['mech', '找機轉'], ['rep', '選術式']] };
+const QTZ = { m: 'mrd', s: 'surg', p: 'ps', c: 'cg', f: 'mech', r: 'rep' };
+function lidWhy(F) {
+  const f = lidF(F), T = lidTests(f);
+  return `Distraction ${T.dis} mm、${T.snap === 'blink' ? '要眨眼才回去' : '馬上回去'}、外眥移 ${T.lc} mm → ${f.L ? '水平鬆弛' : '沒有水平鬆弛'}${s('S8', 'S11')}；往下看下眼瞼往下 ${fx(T.dg)} mm → ${f.R ? 'retractor 鬆脫' : 'retractor 正常'}${s('S11')}；${f.O ? 'preseptal 疊上來' : '沒有 orbicularis 疊上來'}${s('S9')}；往外拉 punctum 移 ${fx(T.pun)} mm → ${f.M ? '內眥韌帶鬆' : '內眥韌帶正常'}${s('S8')}`;
+}
+const PWHY = { ent: `內翻、沒有水平鬆弛（distraction 2 mm）：處理 retractor 與 preseptal 疊上來就好，用 Wies 或 retractor reinsertion${s('S9')}`,
+  entL: `內翻合併水平鬆弛：retractor reinsertion 或 Wies 處理垂直方向與疊上來的 orbicularis，再加 lateral tarsal strip 拉緊，也避免矯正過頭${s('S9')}；EyeWiki：兩者合併的成功率較高${s('S11')}`,
+  ecL: `全面的外翻、水平鬆弛：lateral tarsal strip${s('S8', 'S12')}`, medL: `內側外翻合併水平鬆弛：medial spindle 常和 tarsal strip 一起做${s('S8', 'S13')}`,
+  mctL: `內眥韌帶明顯鬆（punctum 拉到瞳孔）：要先穩定內眥韌帶，再做水平縮短，免得把 punctum 拉向外側${s('S8')}`,
+  med: `只有內側外翻、沒有水平鬆弛：medial spindle 可以單獨做${s('S13')}；Kanski 寫沒有明顯水平鬆弛時用 medial conjunctivoplasty${s('S10')}` };
+function lidItem(key) {
+  const [, ty, id] = key.split(':');
+  if (ty === 'f') {
+    const k = QF[id], F = parseF(k), ans = comboKey(F);
+    return { key, type: 'mech', ans, opts: shuffle([ans, ...shuffle(FPOOL.filter(x => x !== ans)).slice(0, 3)]), lab: comboLab, F, go: k,
+      prompt: [`外觀：${OUTZ[lidOut(F)]}。${findLines(F).join('；')}`, '哪些結構鬆了？'], more: lidWhy(F) };
+  }
+  const [k, opts] = QR[id], F = parseF(k), ans = lidPlan(F);
+  return { key, type: 'rep', ans, opts: shuffle(opts.slice()), lab: x => PLANQ[x], F, go: k,
+    prompt: [`外觀：${OUTZ[lidOut(F)]}。${findLines(F).join('；')}`, '術式怎麼選？'], more: PWHY[ans] };
+}
 const kType = k => QTZ[k.split(':')[1]];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pairBD = (a, b) => (a === 'brow' && b === 'derm') || (a === 'derm' && b === 'brow');   // 抬眉與皮膚會互相混淆，不同時出
 const sCase = (k, lf) => k === 'acq' ? 'invM' : k === 'cong' ? (lf < 4 ? 'conS' : 'conM') : 'mgjw';
 function keyLabel(k) {
-  const [, ty, id] = k.split(':');
+  const [v, ty, id] = k.split(':');
+  if (v === 'lid') { const F = parseF(ty === 'f' ? QF[id] : QR[id][0]); return `${ty === 'f' ? '找機轉' : '選術式'}：${OUTZ[lidOut(F)]}（${comboLab(comboKey(F))}${lidF(F).M === 2 ? '，嚴重' : ''}）`; }
   if (ty === 'm') { const [e, m1, m2] = QMR[id]; return `讀 MRD：${EZ[e]} MRD1 ${m1}、MRD2 ${m2} mm`; }
   if (ty === 's') { const [t, d, lf] = QS[id]; return `選術式：${SKZ[t]}，低 ${d} mm、LF ${lf} mm`; }
   if (ty === 'p') return `真假 ptosis：${CASES[QP[id][0]].zh}`;
   return `先天或後天：${CASES[QCG[id]].zh}`;
 }
 function itemOf(key) {
+  if (key.startsWith('lid:')) return lidItem(key);
   const [, ty, id] = key.split(':');
   if (ty === 'm') {   // 選項：答案、MRD1 與 MRD2 對調、MRD1 少 1、MRD2 多 1、MRD1 多 1（不重複的前四個）
     const [e, m1, m2] = QMR[id], ov = { R: {}, L: {} }, ans = `${m1}/${m2}`, opts = [ans];
@@ -758,12 +1080,12 @@ function quizHTML() {
   if (q.phase === 'setup') {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>量得準，才選得對術式</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${st.view === 'lid' ? '哪裡鬆了，就修哪裡' : '量得準，才選得對術式'}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">四種題型：用放大尺讀一眼的 MRD1、MRD2 並算 PFH；給下垂量、LF 與 phenylephrine 反應選術式（只用各來源都同意的切點：LF ≤ 3 mm 或 ≥ 6 mm，MMCR 要 LF > 10 mm、下垂 ≤ 2 mm、phenylephrine 有反應、後天）；看圖與做過的檢查，判斷是真的 ptosis 還是哪一種 pseudoptosis；看病人往下看的樣子判斷先天或後天。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${st.view === 'lid' ? '兩種題型：給外觀與各項檢查結果（distraction、snap-back、往下看、orbicularis、往外拉 punctum、往內拉外眥），找出哪些結構鬆了；給同樣的資料選術式。檢查的數字只用各來源都同意的值（distraction 2 或 10 mm、snap-back 馬上回去或要眨眼才回去）。' : '四種題型：用放大尺讀一眼的 MRD1、MRD2 並算 PFH；給下垂量、LF 與 phenylephrine 反應選術式（只用各來源都同意的切點：LF ≤ 3 mm 或 ≥ 6 mm，MMCR 要 LF > 10 mm、下垂 ≤ 2 mm、phenylephrine 有反應、後天）；看圖與做過的檢查，判斷是真的 ptosis 還是哪一種 pseudoptosis；看病人往下看的樣子判斷先天或後天。'}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -814,6 +1136,7 @@ function setMode(m) {
 }
 function goKey(k) {   // 錯題本「再看一次」：回到學習模式的同一個設定
   const g = itemOf(k).go;
+  if (k.startsWith('lid:')) { setView('lid'); st.lid = { F: parseF(g), act: null, t: 1 }; render(); return; }
   setView('pt'); setCase(g.cs);
   Object.assign(st, { ov: JSON.parse(JSON.stringify(g.ov || { R: {}, L: {} })), act: g.act || null, gaze: g.gaze || 'p', ref: !!g.ref, under: !!g.under });
   if (g.pe) st.pe = g.pe;
@@ -847,6 +1170,16 @@ document.addEventListener('click', e => {
     animStop();
     if (st.act === k && !ANIM[k]) st.act = null; else st.act = k;   // 動畫的按鈕再按一次＝重播
     render(); if (ANIM[st.act]) animStart(st.act);
+    return;
+  }
+  const lf = t.closest('[data-lf]'); if (lf) { const k = lf.dataset.lf, F = Object.assign({}, st.lid.F); F[k] = !lidF(F)[k]; if (k === 'R' && !F.R) F.O = false; animStop(); st.lid = { F, act: null, t: 1 }; render(); return; }
+  const lm = t.closest('[data-lm]'); if (lm) { animStop(); st.lid = { F: Object.assign({}, st.lid.F, { M: +lm.dataset.lm }), act: null, t: 1 }; render(); return; }
+  const lp = t.closest('[data-lp]'); if (lp) { animStop(); st.lid = { F: parseF(LPRE[lp.dataset.lp][1]), act: null, t: 1 }; render(); return; }
+  const la = t.closest('[data-la]'); if (la) {
+    const k = la.dataset.la;
+    animStop();
+    st.lid.act = st.lid.act === k && k !== 'snap' ? null : k;   // snap-back 再按一次＝重播
+    render(); if (st.lid.act === 'snap') lidAnim();
     return;
   }
   const pe = t.closest('[data-pe]'); if (pe) { st.pe = pe.dataset.pe; render(); return; }
@@ -1004,7 +1337,51 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   a(CY - 8.4 * K > 22 && CY + 7.4 * K < FH - 20 && EX.R - OCW >= 0 && EX.L + OCW <= FW && EX.R + FA * K < EX.L - FA * K, '尺、遮眼板在框內，兩眼不重疊');
   Object.keys(CASES).forEach(cs => { const E = eyeBase(cs, ceOf(cs, {})), yd = ydOf(E); a(LCY + (yd - Math.max(E.lf + 2, 8) - 0.4) * K2 > 0 && LCY + (yd - E.lf) * K2 > 0 && LCY + (E.m2 + DG.l) * K2 < LH - 24 && LCY + (E.yb - 2) * K2 > 0, `${cs}：LF 小圖在框內`); });
 })();
+/* 分頁二的 self-check */
+(() => {
+  const a = (c, m) => console.assert(c, 'oculoplastics lid self-check: ' + m), E9 = 1e-9;
+  const ALL = []; [0, 1].forEach(L => [0, 1].forEach(R => [0, 1].forEach(O => [0, 1, 2].forEach(M => ALL.push({ L: !!L, R: !!R, O: !!O, M })))));
+  const gd = p => Math.hypot(p[0] - GC[0], p[1] - GC[1]) - GR;   // 離眼球表面多遠（正＝在外面）
+  // 規則：O 要有 R 才算；R＋O 內翻；有 L 外翻；只有 M 是 punctal eversion；只有 R 沒有內外翻
+  ALL.forEach(F => {
+    const f = lidF(F), o = lidOut(F), p = lidPlan(F), tag = comboKey(F) + F.M;
+    a(f.O === (F.O && F.R), `${tag}：preseptal 要先有 retractor 鬆脫`);
+    a(o === (f.R && f.O ? 'en' : f.L ? 'ec' : f.M ? 'pe' : f.R ? 'rd' : 'n'), `${tag}：外觀`);
+    a(o === 'en' ? p === (f.L ? 'entL' : 'ent') : o === 'ec' ? (f.M === 2 ? p === 'mctL' : f.M === 1 ? p === 'medL' : p === (f.R ? 'ecLR' : 'ecL')) : o === 'pe' ? p.startsWith('med') : p === 'none', `${tag}：術式`);
+    const T = lidTests(F);   // 檢查值落在各來源都同意的範圍
+    a(f.L ? T.dis >= 8 && T.dis >= 6 && T.dis <= 15 && T.snap === 'blink' && T.lc > 2 : T.dis <= 3 && T.snap === 'fast' && T.lc <= 2, `${tag}：水平鬆弛的檢查（Kanski ≥ 8 mm、EyeWiki 正常 2–3 mm、內翻 6–15 mm、外眥 > 2 mm）`);
+    a(f.R ? T.dg < 3 : T.dg >= 3 && T.dg <= 4, `${tag}：往下看（正常 3–4 mm）`);
+    a(f.M === 0 ? T.pun <= 2 : f.M === 1 ? Math.abs(PUNX - T.pun - RL) < E9 && T.pun > 2 : Math.abs(PUNX - T.pun - 2) < E9, `${tag}：punctum 正常 ≤ 2 mm、輕度到 limbus、嚴重到瞳孔（Kanski）`);
+    a(comboFromTests(T) === comboKey(F), `${tag}：從檢查結果能反推開關`);
+    // 切面：內翻時睫毛碰到眼球；外翻時眼瞼緣離開眼球、結膜朝前；distraction 拉開的距離＝設定值
+    const G = lidGeom(F, null, 1);
+    if (o === 'en') a(G.lashes.some(([, tip]) => gd(tip) < 0) && G.LB[0] < LL0[0] - 1, `${tag}：內翻時睫毛碰到眼球、tarsus 下緣往前`);
+    else if (o === 'ec') a(gd(G.M) > 1.5 && G.post[0] < 0.1, `${tag}：外翻時眼瞼緣離開眼球、結膜朝前`);
+    else a(Math.abs(gd(G.M)) < 0.3 && Math.abs(gd(G.LB)) < 0.3 && G.lashes.every(([, tip]) => gd(tip) > 0), `${tag}：靜止時 tarsus 貼著眼球、睫毛朝外`);
+    { const D = lidGeom(F, 'dis', 1), y = D.M[1], gx = GC[0] - Math.sqrt(GR * GR - (y - GC[1]) ** 2); a(Math.abs(gx - D.M[0] - T.dis) < 1e-6, `${tag}：distraction 拉開 ${T.dis} mm`); }
+    // snap-back：放開前拉開、正常很快回去、鬆弛的要等眨眼
+    a(snapK(F, 0.24) > 0.9 && snapK(F, 1) === 0 && (f.L ? snapK(F, 0.6) === 1 : snapK(F, 0.4) === 0), `${tag}：snap-back`);
+    // 正面：睫毛只在 punctum 外側；外翻的眼瞼緣比較低；往外拉時 punctum 移的距離＝設定；往下看移動量＝設定
+    const N = lidFrontGeom(F, null), P = lidFrontGeom(F, 'latp'), Q = lidFrontGeom(F, 'medp'), D2 = lidFrontGeom(F, 'down');
+    a(Math.abs(N.pun[0] - PUNX) < 0.01 && Math.abs(P.pun[0] - (PUNX - T.pun)) < 0.01 && Math.abs(Q.P3[0] - (-FA + T.lc)) < E9 && Math.abs(D2.yl - N.yl - T.dg) < E9, `${tag}：正面的檢查位置`);
+    a(o === 'ec' ? N.yl > N2 + 1 && N.yf < N.yl : N.yf === N.yl, `${tag}：外翻時露出結膜`);
+  });
+  a(Math.abs(LM0[1] - GC[1] - (RL - 1)) < E9, '下眼瞼緣在下方 limbus 上 1 mm（Kanski p.75）');
+  // 測驗：選項含答案、四個不重複；找機轉的答案＝題目的開關；選術式的答案＝表上第一個
+  for (let n = 0; n < 20; n++) KEYS.filter(k => k.startsWith('lid:')).forEach(k => { const it = itemOf(k); a(it.opts.includes(it.ans) && it.opts.length === 4 && new Set(it.opts).size === 4, `${k} 的選項含答案、四個不重複`); });
+  Object.entries(QF).forEach(([id, k]) => { const it = itemOf('lid:f:' + id); a(it.ans === comboFromTests(lidTests(parseF(k))) && FPOOL.includes(it.ans), `lid:f:${id} 的答案＝檢查結果反推的開關`); });
+  Object.entries(QR).forEach(([id, [k, o]]) => { const it = itemOf('lid:r:' + id); a(it.ans === o[0] && o.every(x => PLANQ[x]) && !['ecLR', 'medS', 'none'].includes(it.ans), `lid:r:${id} 的答案＝${o[0]}`); });
+  // 引用都在來源清單
+  const sv = st.lid;
+  ALL.forEach(F => [null, 'dis', 'snap', 'down', 'latp', 'medp'].forEach(act => { st.lid = { F, act, t: 1 }; refs(lidCard() + lidStatus(F, act) + lidExtra()).forEach(r => a(SRC[r], `${comboKey(F)}／${act} 的引用 ${r}`)); }));
+  st.lid = sv;
+  KEYS.filter(k => k.startsWith('lid:')).forEach(k => refs(itemOf(k).more + itemOf(k).prompt.join('')).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`)));
+  // 圖在框內
+  ALL.forEach(F => [null, 'dis', 'snap'].forEach(act => { const G = lidGeom(F, act, act === 'snap' ? 0.5 : 1); [G.M, G.LB, ...G.lashes.flat()].forEach(p => a(+SXp(p[0]) > 4 && +SXp(p[0]) < SW && +SYp(p[1]) > 0 && +SYp(p[1]) < SH, `${comboKey(F)}／${act}：切面的點在框內`)); }));
+  ALL.forEach(F => ['down', 'latp', 'medp', null].forEach(act => { const G = lidFrontGeom(F, act); a(FY0 + (G.yl + (act === 'latp' || act === 'medp' ? 3.9 : 1.8)) * K4 < FH2 - 18 && FX0 - FA * K4 > 0 && FX0 + FA * K4 < FW && FY0 + (G.yu - 1) * K4 > 30, `${comboKey(F)}／${act}：正面在框內`); }));
+})();
 
+if (location.hash === '#lid') st.view = 'lid';
 render();
 </script>
 
