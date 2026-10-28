@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>眼整形互動圖譜</title>
+<meta name="description" content="互動式眼整形圖譜：ptosis 評估與術式——拖上下眼瞼緣，用放大尺讀 MRD1、MRD2、PFH；看 levator function 怎麼壓眉量、往下看時先天與後天 ptosis 的差別、crease 高低；抬起下垂的眼瞼看對側有沒有掉下來（Hering），點 phenylephrine 看 Müller muscle 的反應，練 myasthenia gravis 的 fatigability 與 Cogan twitch、Marcus Gunn 張嘴時的 jaw-winking；四種 pseudoptosis：對側 lid retraction、同側 hypotropia、brow ptosis、dermatochalasis；依 LF、下垂量與 phenylephrine 反應走術式流程（frontalis sling、levator advancement、MMCR），各來源切點不同的地方兩種都列；附說明卡、測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as the strabismus page — figure stage on the left, card on the right; the external view is the examiner facing the patient (figure left = patient's right eye) */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-face:#EFD5C4; --t-white:#FFFFFF; --t-iris:#7C5342; --t-limb:#4A3028; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.6);
+  --t-occ:#2E2A3B; --t-brow:#6B4A3A; --t-crease:rgba(44,32,74,.55); --t-ruler:rgba(255,255,255,.8); --t-tick:#1E1A2B;
+  --t-band:rgba(75,60,160,.24); --t-thumb:#DDB79F; --t-guide:rgba(44,32,74,.55); --t-hood:#E5C4AF;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-face:#5E4638; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.8);
+  --t-occ:#3A3450; --t-brow:#2A1C15; --t-crease:rgba(232,226,248,.42); --t-ruler:rgba(240,238,248,.82); --t-tick:#15121F;
+  --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-face:#5E4638; --t-white:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-refl:#FFFFFF; --t-refl-ring:rgba(21,18,31,.8);
+  --t-occ:#3A3450; --t-brow:#2A1C15; --t-crease:rgba(232,226,248,.42); --t-ruler:rgba(240,238,248,.82); --t-tick:#15121F;
+  --t-band:rgba(169,157,255,.3); --t-thumb:#7B5D4B; --t-guide:rgba(232,226,248,.55); --t-hood:#6B5142; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative}
+.fig svg{display:block;width:100%;height:auto}
+.vh{font-size:12.5px;color:var(--muted);letter-spacing:.04em;padding:8px 12px 6px}
+.rd{padding:2px 14px 12px;font-size:13.5px;color:var(--ink-2)}
+.rd b{font-family:var(--f-mono);font-weight:500;color:var(--ink)}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+a.chip{text-decoration:none;display:inline-block}
+
+/* figure */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+.lab text{font-family:var(--f-body);font-size:14px;fill:var(--ink-2);paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.lab.o text{font-size:12.5px}
+.nolab .lab,.quiz-on .lab{display:none}
+.c-face{fill:var(--t-face)}
+.c-nose{fill:none;stroke:var(--t-stroke-2);stroke-width:1.4}
+.c-eyew{fill:var(--t-white)}
+.c-eyeo{fill:none;stroke:var(--t-stroke);stroke-width:1.2}
+.c-iris{fill:var(--t-iris)}
+.c-limb{fill:none;stroke:var(--t-limb);stroke-width:1.6}
+.c-pupil{fill:var(--t-pupil)}
+.c-refl{fill:var(--t-refl);stroke:var(--t-refl-ring);stroke-width:1.6}
+.c-occ{fill:var(--t-occ)}
+.c-brow{fill:none;stroke:var(--t-brow);stroke-linecap:round}
+.c-crease{fill:none;stroke:var(--t-crease);stroke-width:1.5}
+.c-hood{fill:var(--t-face)}
+.c-hoods{fill:none;stroke:var(--t-hood);stroke-width:7;stroke-linecap:round}
+.c-hoode{fill:none;stroke:var(--t-stroke);stroke-width:1.5}
+.c-true{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:6 4}
+.c-band{fill:var(--t-band);stroke:var(--accent);stroke-width:1;stroke-dasharray:4 3}
+.c-thumb{fill:var(--t-thumb);stroke:var(--t-stroke);stroke-width:1}
+.c-guide{fill:none;stroke:var(--t-guide);stroke-width:1.2;stroke-dasharray:7 5}
+.c-sep{stroke:var(--t-stroke-2);stroke-width:1}
+.c-rul{fill:var(--t-ruler);stroke:var(--t-stroke-2);stroke-width:1}
+.c-tick{stroke:var(--t-tick);stroke-width:1}
+.c-br{fill:none;stroke:var(--accent);stroke-width:1.6}
+.fig .rlt{font-family:var(--f-mono);font-size:10.5px;fill:var(--t-tick)}
+.fig .eyen{font-family:var(--f-body);font-size:15px;fill:var(--ink-2)}
+.lab text.brt{font-family:var(--f-mono);font-size:13px;fill:var(--accent)}
+.hdl{cursor:ns-resize;touch-action:none}
+.hdl .z{fill:transparent}
+.hdl .k{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.quiz-on .hdl{display:none}
+.ctbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:8px 12px 6px}
+.ctbar .grp{display:flex;flex-wrap:wrap;gap:6px}
+.ctbar .btn{padding:5px 12px;font-size:13.5px}
+.ctbar .btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* 術式流程 */
+.flow{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.flow li{border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:13.5px;color:var(--ink-2);background:var(--surface-2)}
+.flow li b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+.flow li.on{border-color:var(--accent)}
+.flow li.skip{opacity:.55}
+.flow .fr{display:block;padding:1px 0 1px 10px;border-left:3px solid transparent}
+.flow .fr.cur{border-left-color:var(--accent);color:var(--ink)}
+.flow .fr.ok{color:var(--ok)}
+.flow .fr.no{color:var(--bad)}
+.flow .res{display:block;margin-top:4px;color:var(--ink);font-weight:500}
+.rec{margin-top:8px;border-radius:8px;padding:9px 12px;background:var(--accent-soft);font-size:14.5px;font-weight:500}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--accent-soft);display:flex;flex-wrap:wrap;gap:4px 14px}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras: 拉條 */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0 8px}
+.rng{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-2);margin-bottom:8px}
+.rng label,.rng .rl{min-width:8em}
+.rng input[type=range]{flex:1 1 160px;accent-color:var(--accent);min-width:0}
+.rng .v{font-family:var(--f-mono);font-size:12.5px;color:var(--ink);min-width:11em}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .lab text{font-size:19px;stroke-width:4.5px}
+  .lab.o text{font-size:20px}
+  .lab text.brt{font-size:19px}
+  .fig .eyen{font-size:24px}
+  .fig .rlt{font-size:16px}
+  .seg button{padding:5px 10px}
+  .rng label,.rng .rl{min-width:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>眼整形互動圖譜</h1>
+      <span class="sub">Oculoplastics · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>外眼正面是檢查者面對病人看到的樣子（同九方向眼位圖：圖左＝病人右眼 OD），penlight 從正前方照，白點是角膜反光；放大尺的 0 對齊反光，每格 1 mm。正常眼畫成 MRD1 4 mm、MRD2 5 mm、LF 15 mm、crease 9 mm；眼裂形狀、眉毛與皮膚、往上看與往下看時眼瞼移動的量、phenylephrine 與 Hering 造成的變化量、MG 下垂的速度都是示意。LF 小圖的尺固定在臉上，往下看時 0 對齊上眼瞼緣。眼瞼的解剖見<a href="../eye-atlas/#lid">眼解剖圖譜的眼瞼分頁</a>；Horner syndrome 與 CN III palsy 見<a href="../neuro-ophth/#pup">神經眼科圖譜的瞳孔分頁</a>與<a href="../neuro-ophth/#eom">眼外肌分頁</a>。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；各來源寫法不同的地方，說明卡與術式流程兩種都列，測驗只用各來源都同意的切點。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ---------- sources ---------- */
+const SRC = {
+  S1: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.75–77 Ptosis：classification、pseudoptosis、measurements（margin–reflex distance、palpebral fissure height、levator function、upper lid crease）、associated signs（Hering、fatigability、Cogan twitch、Bell phenomenon）', u: null },
+  S2: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.77–79 Simple congenital ptosis、Marcus Gunn jaw-winking syndrome、involutional ptosis、mechanical ptosis', u: null },
+  S3: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.79 Ptosis surgery：eyelids of Asians、conjunctiva–Müller resection、levator advancement、brow (frontalis) suspension', u: null },
+  S4: { t: 'EyeWiki：Blepharoptosis（Alsuhaibani A, Phelps P, et al.；2026-09 審閱）', u: 'https://eyewiki.org/Blepharoptosis' },
+  S5: { t: 'EyeWiki：Müller’s Muscle-Conjunctival Resection (MMCR)（Pharo AM, al Hariri A, Barmettler A, et al.；2026-06 審閱）', u: 'https://eyewiki.org/M%C3%BCller%E2%80%99s_Muscle-Conjunctival_Resection_(MMCR)_Blepharoptosis_Repair' },
+  S6: { t: 'EyeWiki：Congenital Blepharoptosis (Ptosis)（Suh DW, Thyparampil P, et al.；2026-08 審閱）', u: 'https://eyewiki.org/Ptosis,_Congenital' },
+  S7: { t: 'EyeWiki：Aponeurotic Blepharoptosis (Ptosis)（Galván Molina J, Barmettler A, et al.；2025-09 審閱，頁面標示 Update Pending）', u: 'https://eyewiki.org/Aponeurotic_Ptosis' }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+const fx = n => Math.round(n * 10) / 10;
+
+/* ---------- 外眼正面的幾何（mm；圖上 +x 往右、+y 往下，原點＝角膜反光；檢查者面對病人：圖左＝病人右眼） ---------- */
+const RL = 5.85;              // limbus 半徑（眼解剖圖譜的眼球模型，同斜視圖譜）
+const FA = 10.5, Y0 = 0.3;    // 眼裂半寬、內外眥的高度（示意）
+const N1 = 4, N2 = 5;         // 正常眼（示意）：MRD1 4 mm＝上眼瞼蓋住上方角膜約 2 mm、MRD2 5 mm＝下眼瞼在下方 limbus 上約 1 mm（Kanski p.75）
+const DG = { d: 6.5, u: -5, l: 2.5 };   // 往下看、往上看時角膜移動幾 mm，往下看時下眼瞼下移幾 mm（示意）
+const EZ = { R: '右眼', L: '左眼' }, EO = { R: 'OD', L: 'OS' };
+const other = e => e === 'R' ? 'L' : 'R';
+const nas = e => e === 'R' ? 1 : -1;   // 圖上 nasal 的方向：圖左＝右眼，右眼的 nasal 在右
+const cOf = (y, y0 = Y0) => (4 * y - y0) / 3;   // cubic 的控制點高度：讓曲線中央剛好在 y（兩端在 y0）
+const lerp = (a, b, k) => a + (b - a) * k, clamp01 = x => Math.max(0, Math.min(1, x)), smooth = x => { x = clamp01(x); return x * x * (3 - 2 * x); };
+
+/* 例子：每眼可設 m1（MRD1）、m2（MRD2）、lf（LF）、cr（crease，null＝沒有）、dn（往下看時上眼瞼下降幾 mm）、gy（眼球往下幾 mm）、yb（眉毛高度）、hood（皮膚垂到哪裡，y）；沒寫的用正常值，數值都是示意 */
+const CASES = {
+  norm: { g: 'n', zh: '正常', en: 'Normal eyelids', eye: 'R' },
+  invM: { g: 't', zh: 'Involutional（輕度）', en: 'Involutional ptosis', eye: 'R', kind: 'acq', pe: 'y', R: { m1: 2, lf: 14, cr: 12, dn: 7.5 } },
+  invH: { g: 't', zh: 'Involutional（雙側不對稱）', en: 'Asymmetric involutional ptosis', eye: 'R', kind: 'acq', pe: 'y', her: 1.5, R: { m1: 0, lf: 12, cr: 13, dn: 5.5 }, L: { cr: 11 } },
+  conS: { g: 't', zh: 'Simple congenital（重度）', en: 'Simple congenital ptosis', eye: 'L', kind: 'cong', L: { m1: -1, lf: 3, cr: null, dn: 2 } },
+  conM: { g: 't', zh: 'Simple congenital（中度）', en: 'Simple congenital ptosis', eye: 'R', kind: 'cong', R: { m1: 1, lf: 8, dn: 3.5 } },
+  mg: { g: 't', zh: 'Myasthenia gravis', en: 'Myasthenic ptosis', eye: 'R', kind: 'acq', mg: true, R: { m1: 2, lf: 12, dn: 6.5 } },
+  mgjw: { g: 't', zh: 'Marcus Gunn jaw-winking', en: 'Marcus Gunn jaw-winking syndrome', eye: 'L', kind: 'cong', jaw: 6.5, L: { m1: 1, lf: 7, dn: 3.5 } },
+  retr: { g: 'p', zh: '對側 lid retraction', en: 'Contralateral lid retraction', eye: 'R', ps: 'retr', L: { m1: 7 } },
+  hypo: { g: 'p', zh: '同側 hypotropia', en: 'Ipsilateral hypotropia', eye: 'R', ps: 'hypo', hy: 2, R: { m1: 2, gy: 2 } },
+  brow: { g: 'p', zh: 'Brow ptosis', en: 'Brow ptosis', eye: 'R', ps: 'brow', R: { yb: -10, hood: -2.5 } },
+  derm: { g: 'p', zh: 'Dermatochalasis', en: 'Dermatochalasis', eye: 'R', ps: 'derm', R: { hood: -1.5 }, L: { hood: -2.5 } }
+};
+const CG = [['n', '正常'], ['t', '真的 ptosis'], ['p', 'Pseudoptosis（看起來像 ptosis）']];
+const PSK = ['retr', 'hypo', 'brow', 'derm'];
+const PSZ = { retr: '對側 lid retraction', hypo: '同側 hypotropia', brow: 'brow ptosis', derm: 'dermatochalasis' };
+function eyeBase(cs, e, ov) { return Object.assign({ m1: N1, m2: N2, lf: 15, cr: 9, dn: 8.5, gy: 0, yb: -14, hood: null }, CASES[cs][e] || {}, (ov && ov[e]) || {}); }
+const ydOf = E => Math.min(-E.m1 + E.dn, E.m2 + DG.l - 0.5);   // 往下看時上眼瞼緣的高度（不低過下眼瞼）
+function ceOf(cs, ov) {   // 下垂（或看起來下垂）的那一眼；正常的例子取比較低的那眼
+  if (cs !== 'norm') return CASES[cs].eye;
+  return eyeBase(cs, 'L', ov).m1 < eyeBase(cs, 'R', ov).m1 ? 'L' : 'R';
+}
+function geomOf(S) {   // S：cs 例子、ov 拖拉改的值、act 檢查動作、gaze 看哪裡、pe phenylephrine 反應、t 動畫進度 → 兩眼畫圖用的位置
+  const c = CASES[S.cs], ce = ceOf(S.cs, S.ov), oe = other(ce), B = { R: eyeBase(S.cs, 'R', S.ov), L: eyeBase(S.cs, 'L', S.ov) }, t = S.t == null ? 1 : S.t;
+  let gaze = S.gaze || 'p', occ = null, finger = null;
+  const up = () => { if (B[ce].m1 < N1) { B[ce].m1 = N1; B[oe].m1 -= c.her || 0; } };   // 患側抬到正常高度；有 Hering 時對側掉下來
+  switch (S.act) {
+    case 'lift': gaze = 'p'; if (!B[ce].hood) { finger = ce; up(); } break;
+    case 'pe': gaze = 'p'; if (!c.ps && S.pe === 'y') up(); break;
+    case 'jaw': gaze = 'p'; if (c.jaw) B[ce].m1 = c.jaw; break;
+    case 'brow': gaze = 'p'; B[ce].yb = -14.5; if (c.ps === 'brow') B[ce].hood = null; break;
+    case 'cover': gaze = 'p'; occ = oe; if (c.ps === 'hypo') { B[ce].m1 += B[ce].gy; B[ce].gy = 0; B[oe].gy = -c.hy; } break;   // 遮住健側：hypotropic 眼去注視，上眼瞼跟著眼球回來
+    case 'fat': gaze = 'u'; break;
+    case 'cogan': gaze = 'cg'; break;
+  }
+  const eyes = {};
+  ['R', 'L'].forEach(e => {
+    const E = B[e], yp = -E.m1, yld = E.m2 + DG.l, yd = ydOf(E);
+    let g;
+    if (gaze === 'p') g = { yu: yp, yl: E.m2, iy: E.gy, refl: true, hood: E.hood };
+    else if (gaze === 'd') g = { yu: yd, yl: yld, iy: E.gy + DG.d, cr: E.cr != null ? yd - E.cr : null };
+    else if (gaze === 'u') g = { yu: yd - E.lf + (c.mg && e === ce ? 2 * (1 - (1 - t) ** 2) : 0), yl: E.m2 - 1, iy: E.gy + DG.u };   // MG：往上看越來越垂（示意 2 mm）
+    else {   // Cogan：0–0.3 往下看，0.3–0.4 回到正前方（MG 衝過頭），之後落回
+      const k = smooth((t - 0.3) / 0.1), ovs = c.mg && e === ce && t < 1 ? 1.8 * (t < 0.4 ? k : Math.exp(-(t - 0.4) * 9)) : 0;
+      g = { yu: lerp(yd, yp, k) - ovs, yl: lerp(yld, E.m2, k), iy: E.gy + lerp(DG.d, 0, k), refl: k >= 1, hood: k >= 1 ? E.hood : null };
+    }
+    eyes[e] = Object.assign({ hood: null, cr: null, refl: false, yb: E.yb }, g);
+  });
+  return { gaze: gaze === 'cg' && t >= 1 ? 'p' : gaze, occ, finger, eyes, B, ce, oe };
+}
+function meas(g, under) {   // 量到的 MRD1、MRD2、PFH（有皮膚蓋住時量皮膚的邊緣，under＝量皮膚底下真正的眼瞼緣）
+  const top = !under && g.hood != null && g.hood > g.yu ? g.hood : g.yu;
+  return { m1: -top, m2: g.yl, pfh: g.yl - top };
+}
+const coverOf = g => g.yu - g.iy + RL;   // 上眼瞼蓋住上方角膜幾 mm（負＝露出上方鞏膜）
+function grade(d) { return d <= 0 ? '沒有比較低' : d <= 2 ? 'mild' : d < 3 ? '介於 mild 與 moderate' : d === 3 ? 'moderate' : d < 4 ? '介於 moderate 與 severe' : 'severe'; }   // 和對側比（Kanski）
+function lfK(lf) { return lf >= 15 ? 'normal' : lf >= 12 && lf <= 14 ? 'good' : lf >= 5 && lf <= 11 ? 'fair' : lf <= 4 ? 'poor' : '介於兩級之間'; }   // Kanski 的分級
+
+/* ---------- 術式流程：各來源都同意的切點才給答案，其他標「文獻不一」 ---------- */
+function flowIn(S) {
+  const c = CASES[S.cs], ce = ceOf(S.cs, S.ov), E = eyeBase(S.cs, ce, S.ov), O = eyeBase(S.cs, other(ce), S.ov);
+  return { ps: c.ps || null, mg: !!c.mg, jaw: !!c.jaw, wink: S.wink, cong: c.kind === 'cong', d: O.m1 - E.m1, lf: E.lf, pe: S.pe };
+}
+function mmcrChk(F) {   // MMCR 的傳統條件：ok 都符合、no 都不符合、gray 各來源寫法不同
+  return [
+    [F.lf > 10 ? 'ok' : F.lf === 10 ? 'gray' : 'no', `LF ${fx(F.lf)} mm：Kanski 要 ≥ 10 mm、EyeWiki 要 > 10 mm${s('S3', 'S5')}`],
+    [F.d <= 2 ? 'ok' : F.d <= 3 ? 'gray' : 'no', `比對側低 ${fx(F.d)} mm：Kanski 寫最多抬 2–3 mm、EyeWiki 寫傳統約 2–3 mm（≤ 2 mm 才算兩邊都符合）${s('S3', 'S5')}`],
+    [F.pe === 'y' ? 'ok' : 'gray', `Phenylephrine ${F.pe === 'y' ? '有' : '沒有'}反應：EyeWiki 要有反應${s('S4', 'S5')}；Kanski 沒有寫`],
+    [F.cong ? 'gray' : 'ok', `${F.cong ? '先天' : '後天'}：Kanski 把輕度先天 ptosis 列在適應症${s('S3')}；EyeWiki 寫對先天 ptosis 效果不好、不常用${s('S4', 'S6')}`]
+  ];
+}
+function ptFlow(F) {
+  if (F.ps) return { rec: 'pseudo', path: ['ps'] };
+  if (F.d <= 0) return { rec: 'none', path: ['ps'] };
+  const path = ['ps', 'cause'];
+  if (F.mg) return { rec: 'mg', path };
+  if (F.jaw) { path.push('mgjw'); if (F.wink === 's') return { rec: 'mgjw', path }; }
+  path.push('lf');
+  const band = F.lf < 4 ? 'sling' : F.lf <= 5 ? 'gray' : 'lev';
+  if (band !== 'lev') return { rec: band, band, path };
+  path.push('mmcr');
+  const ck = mmcrChk(F).map(x => x[0]), mm = ck.includes('no') ? 'no' : ck.includes('gray') ? 'gray' : 'yes';
+  return { rec: mm === 'yes' ? 'both' : 'lev', band, mm, path };
+}
+const REC = { none: '沒有 ptosis', pseudo: 'Pseudoptosis：處理原因', mg: '先處理 MG', mgjw: 'Levator disinsertion ＋ frontalis sling', sling: 'Frontalis sling（brow suspension）', gray: 'LF 4–5 mm：各來源的切點不同', lev: 'Levator advancement', both: 'MMCR 或 levator advancement' };
+const recTxt = R => R.rec === 'lev' && R.mm === 'gray' ? 'Levator advancement（MMCR 有一項各來源寫法不同）' : REC[R.rec];
+const MK = { ok: '✓', no: '✗', gray: '？' };
+function flowHTML(S) {
+  const F = flowIn(S), R = ptFlow(F), P = R.path;
+  const li = (k, t, b, res) => `<li class="${P.includes(k) ? 'on' : 'skip'}"><b>${t}</b>${b}${P.includes(k) && res ? `<span class="res">${res}</span>` : ''}</li>`;
+  const row = (k, t) => `<span class="fr ${R.band === k ? 'cur' : ''}">${t}</span>`;
+  let h = '<ol class="flow">';
+  h += li('ps', '1. 是真的 ptosis 嗎？', `先排除 pseudoptosis：和對側比高度、遮住健側眼、把眉毛抬高、看皮膚底下的眼瞼緣${s('S1')}`,
+    F.ps ? `→ Pseudoptosis（${PSZ[F.ps]}）：處理原因；brow ptosis、dermatochalasis 的手術和 ptosis 不同${s('S4')}` : F.d <= 0 ? '→ 兩眼一樣高：沒有 ptosis' : `→ 真的 ptosis，比對側低 ${fx(F.d)} mm（${grade(F.d)}）${s('S1')}`);
+  h += li('cause', '2. 有沒有要先處理的？', `看瞳孔，排除 Horner syndrome 與 CN III palsy${s('S1')}（<a href="../neuro-ophth/#pup">神經眼科圖譜</a>）；懷疑 MG 先看 fatigability、做 ice test${s('S1', 'S4')}；同時有斜視時先矯正斜視${s('S4')}`,
+    F.mg ? `→ MG：可能用藥物改善，轉給適當的醫師處理${s('S4')}` : '→ 這個例子沒有');
+  if (F.jaw) h += li('mgjw', '3. Marcus Gunn：jaw-winking 明不明顯？', `Kanski：中度用單側 levator disinsertion ＋ 同側 brow suspension；輕度、LF ≥ 5 mm、synkinesis 少用單側 levator advancement${s('S2')}。EyeWiki：明顯才切除 levator 再做 frontalis sling，不明顯只矯正 ptosis${s('S4')}`,
+    F.wink === 's' ? '→ 明顯：levator disinsertion ＋ frontalis sling' : '→ 不明顯：只矯正 ptosis，看 LF 選術式');
+  h += li('lf', `${F.jaw ? 4 : 3}. LF 決定術式`, row('sling', `LF < 4 mm → frontalis（brow）suspension${s('S3', 'S4', 'S6')}；Kanski 寫的是 severe ptosis（> 4 mm）且 LF < 4 mm${s('S3')}`)
+    + row('gray', `LF 4–5 mm → 各來源的切點不同：Kanski 寫 levator advancement 要 LF ≥ 5 mm、brow suspension 用在 < 4 mm${s('S3')}；EyeWiki Blepharoptosis 寫 levator > 5 mm、frontalis < 4 mm${s('S4')}；EyeWiki Aponeurotic 寫 < 5 mm 用 frontalis${s('S7')}；EyeWiki Congenital 寫 > 4 且 < 6 mm 做 ≥ 22 mm 的 levator resection、< 4 mm 不做${s('S6')}`)
+    + row('lev', `LF > 5 mm → levator advancement（resection）${s('S3', 'S4')}`), `→ 這個例子 LF ${fx(F.lf)} mm`);
+  h += li('mmcr', `${F.jaw ? 5 : 4}. MMCR 的傳統條件（從結膜面做，不留皮膚疤${s('S5')}）`, mmcrChk(F).map(([k, t]) => `<span class="fr ${k}">${MK[k]} ${t}</span>`).join(''),
+    R.mm === 'yes' ? '→ 都符合：MMCR 或 levator advancement 都可以' : R.mm === 'gray' ? '→ 標 ？ 的那項各來源寫法不同' : '→ 不符合：levator advancement');
+  return h + `</ol><div class="rec">術式流程 → ${recTxt(R)}</div>`;
+}
+function flowWhy(F, R) {   // 測驗的解說
+  if (R.rec === 'sling') return `LF ${fx(F.lf)} mm < 4 mm：levator 太弱，做 frontalis（brow）suspension${s('S3', 'S4', 'S6')}；Kanski 寫的是 severe ptosis（> 4 mm）且 LF < 4 mm，這題低 ${fx(F.d)} mm${s('S3')}`;
+  if (R.rec === 'mgjw') return `Jaw-winking 明顯：levator disinsertion（處理 winking）＋ frontalis（brow）suspension，眼瞼只靠 frontalis 抬${s('S2', 'S4')}`;
+  if (R.rec === 'both') return `LF ${fx(F.lf)} mm、只低 ${fx(F.d)} mm、phenylephrine 有反應、後天：符合 MMCR 的傳統條件${s('S3', 'S5')}；LF > 5 mm 也可以做 levator advancement${s('S3', 'S4')}`;
+  const why = [F.lf < 10 ? `LF 不到 10 mm` : '', F.d > 3 ? `下垂超過 2–3 mm` : ''].filter(Boolean).join('、');
+  return `LF ${fx(F.lf)} mm > 5 mm：可以做 levator advancement${s('S3', 'S4')}；MMCR 不符合：${why}${s('S3', 'S5')}${F.jaw ? `。Jaw-winking 不明顯時只矯正 ptosis${s('S2', 'S4')}` : ''}`;
+}
+
+/* ---------- 畫圖：外眼正面，14 px/mm ---------- */
+const K = 14, FW = 720, FH = 380, CY = 250, EX = { R: 180, L: 540 };
+const OCW = (FA + 0.8) * K, OCT = CY - 6.2 * K, OCB = CY + 6.5 * K;   // 遮眼板（示意）
+function lidD(X, Y, y, k = K, y0 = Y0, w = FA) { const P = (x, yy) => `${fx(X + x * k)} ${fx(Y + yy * k)}`, b = w * 0.55, c = cOf(y, y0); return `M${P(-w, y0)}C${P(-b, c)} ${P(b, c)} ${P(w, y0)}`; }
+function fisD(X, Y, yu, yl, k = K) {   // 眼裂：上下眼瞼緣在中央的高度 yu、yl
+  const P = (x, y) => `${fx(X + x * k)} ${fx(Y + y * k)}`, b = FA * 0.55;
+  return `M${P(-FA, Y0)}C${P(-b, cOf(yu))} ${P(b, cOf(yu))} ${P(FA, Y0)}C${P(b, cOf(yl))} ${P(-b, cOf(yl))} ${P(-FA, Y0)}Z`;
+}
+function rulerG(X, Y, n, k, z, lo, hi, every, half) {   // 垂直的尺：量測邊在瞳孔中線旁 0.45 mm，刻度往 temporal；z＝0 的高度，往上為正
+  const ex = X - n * 0.45 * k, w = 2.6 * k, x0 = n > 0 ? ex - w : ex, yOf = i => Y + (z - i) * k;
+  let h = `<g><rect class="c-rul" x="${fx(x0)}" y="${fx(yOf(hi) - 0.4 * k)}" width="${fx(w)}" height="${fx((hi - lo + 0.8) * k)}" rx="2"/>`;
+  for (let i = lo; i <= hi + 1e-9; i += half ? 0.5 : 1) {
+    const major = Math.abs(i % every) < 1e-9, whole = Math.abs(i % 1) < 1e-9, L = major ? 1.15 : whole ? 0.7 : 0.38;
+    h += `<line class="c-tick" x1="${fx(ex)}" y1="${fx(yOf(i))}" x2="${fx(ex - n * L * k)}" y2="${fx(yOf(i))}"/>`;
+    if (major) h += `<text class="rlt" x="${fx(ex - n * 1.85 * k)}" y="${fx(yOf(i) + 3.8)}" text-anchor="middle">${Math.abs(i)}</text>`;
+  }
+  return h + '</g>';
+}
+function brk(x, y1, y2, txt, side) {   // 量測線＋兩端短橫線＋文字
+  return `<path class="c-br" d="M${fx(x)} ${fx(y1)}V${fx(y2)}M${fx(x - 4)} ${fx(y1)}H${fx(x + 4)}M${fx(x - 4)} ${fx(y2)}H${fx(x + 4)}"/><text class="brt" x="${fx(x + side * 7)}" y="${fx((y1 + y2) / 2 + 4.5)}" text-anchor="${side > 0 ? 'start' : 'end'}">${txt}</text>`;
+}
+function browD(X, Y, yb, n, k) { const P = (x, y) => `${fx(X + n * x * k)} ${fx(Y + y * k)}`; return `M${P(-(FA + 1.2), yb + 1.1)}Q${P(0.5, yb - 1.7)} ${P(FA - 0.8, yb + 0.5)}`; }
+function eyeSVG(e, G, o) {
+  const g = G.eyes[e], X = EX[e], n = nas(e), Y = CY, P = (x, y) => `${fx(X + n * x * K)} ${fx(Y + y * K)}`, b = FA * 0.55, id = `pf-${e}`;
+  const fis = fisD(X, Y, g.yu, g.yl), iy = fx(Y + g.iy * K), rr = fx(RL * K);
+  let h = `<clipPath id="${id}"><path d="${fis}"/></clipPath><path class="c-eyew" d="${fis}"/><g clip-path="url(#${id})"><circle class="c-iris" cx="${X}" cy="${iy}" r="${rr}"/><circle class="c-limb" cx="${X}" cy="${iy}" r="${rr}"/><circle class="c-pupil" cx="${X}" cy="${iy}" r="${fx(2 * K)}"/>${g.refl ? `<circle class="c-refl" cx="${X}" cy="${Y}" r="4.8"/>` : ''}</g><path class="c-eyeo" d="${fis}"/>`;
+  if (g.cr != null) h += `<path class="c-crease" d="${lidD(X, Y, g.cr, K, g.cr + 2.4, FA * 0.92)}"/>`;
+  if (g.hood != null) {   // 垂下來的皮膚（示意）
+    const ye = Y0 - 2.2, w = FA + 1.4, c = cOf(g.hood, ye);
+    h += `<path class="c-hood" d="M${P(-w, -9.6)}L${P(-w, ye)}C${P(-b, c)} ${P(b, c)} ${P(w, ye)}L${P(w, -9.6)}Z"/><path class="c-hoods" transform="translate(0 -4)" d="M${P(-w + 1, ye)}C${P(-b, c)} ${P(b, c)} ${P(w - 1, ye)}"/><path class="c-hoode" d="M${P(-w, ye)}C${P(-b, c)} ${P(b, c)} ${P(w, ye)}"/>`;
+    if (o.under) h += `<path class="c-true" d="${lidD(X, Y, g.yu)}"/>`;
+  }
+  h += `<path class="c-brow" style="stroke-width:${fx(0.85 * K)}" d="${browD(X, Y, g.yb, n, K)}"/>`;
+  if (o.ref && G.gaze === 'p' && G.occ !== e) { const t = g.iy - (RL - 1), u = g.iy - (RL - 2); h += `<rect class="c-band" x="${fx(X - (RL + 1.5) * K)}" y="${fx(Y + t * K)}" width="${fx(2 * (RL + 1.5) * K)}" height="${fx((u - t) * K)}"/>`; }
+  if (G.gaze === 'p' && G.occ !== e) {
+    h += rulerG(X, Y, n, K, 0, -7, 8, 2, true);
+    const m = meas(g, o.under), top = Y - m.m1 * K, bot = Y + m.m2 * K;
+    h += `<g class="lab">${brk(X + n * 1.6 * K, Y, top, `MRD1 ${fx(m.m1)}`, n)}${brk(X + n * 1.6 * K, Y, bot, `MRD2 ${fx(m.m2)}`, n)}${brk(X - n * 3.7 * K, top, bot, `PFH ${fx(m.pfh)}`, -n)}</g>`;
+    if (o.hdl && g.hood == null) h += ['u', 'l'].map(w => { const y = fx(Y + (w === 'u' ? g.yu : g.yl) * K), x = fx(X + n * 0.9 * K); return `<g class="hdl" data-hdl="${e}-${w}"><circle class="z" cx="${x}" cy="${y}" r="16"/><circle class="k" cx="${x}" cy="${y}" r="5.5"/></g>`; }).join('');
+  }
+  if (G.gaze === 'd') h += `<g class="lab">${g.cr != null ? brk(X + n * 1.6 * K, Y + g.cr * K, Y + g.yu * K, `crease ${fx(g.yu - g.cr)} mm`, n) : `<text class="brt" x="${fx(X + n * 1.6 * K)}" y="${fx(Y + (g.yu - 2) * K)}" text-anchor="${n > 0 ? 'start' : 'end'}">沒有 crease</text>`}</g>`;
+  if (G.finger === e) { const fxc = fx(X + n * 2.6 * K); h += `<ellipse class="c-thumb" cx="${fxc}" cy="${fx(Y + (g.yu - 2.1) * K)}" rx="${fx(2.4 * K)}" ry="${fx(1.3 * K)}"/><g class="lab"><text x="${fxc}" y="${fx(Y + (g.yu - 3.8) * K)}" text-anchor="middle">手指抬起</text></g>`; }
+  if (G.occ === e) h += `<g class="c-occ"><rect x="${fx(X - OCW)}" y="${fx(OCT)}" width="${fx(2 * OCW)}" height="${fx(OCB - OCT)}" rx="40"/><rect x="${X - 13}" y="${fx(OCB - 4)}" width="26" height="${fx(FH - OCB + 4)}" rx="6"/></g>`;
+  return h;
+}
+function ptFig(G, o) {
+  let h = `<svg viewBox="0 0 ${FW} ${FH}" role="img" aria-label="兩眼外眼正面，檢查者面對病人：圖左＝病人右眼"><rect class="c-face" width="${FW}" height="${FH}" rx="12"/>` + [-1, 1].map(n => `<path class="c-nose" d="M${360 + n * 30} 0Q${360 + n * 16} ${FH * 0.55} ${360 + n * 26} ${FH}"/>`).join('');
+  h += eyeSVG('R', G, o) + eyeSVG('L', G, o);
+  if (G.gaze === 'd') { const y = fx(CY + G.eyes[G.oe].yu * K); h += `<path class="c-guide" d="M14 ${y}H${FW - 14}"/>`; }   // 虛線＝對側上眼瞼緣的高度
+  h += ['R', 'L'].map(e => { const X = EX[e], n = nas(e); return `<text class="eyen" x="${X}" y="20" text-anchor="middle">${EZ[e]} ${EO[e]}</text><g class="lab o"><text x="${fx(X - n * 9.3 * K)}" y="${FH - 8}" text-anchor="middle">temporal</text><text x="${fx(X + n * 9.3 * K)}" y="${FH - 8}" text-anchor="middle">nasal</text></g>`; }).join('');
+  return h + '</svg>';
+}
+/* LF 量法小圖：同一眼，左＝壓眉往下看、右＝往上看；尺固定在臉上，0 對齊往下看時的上眼瞼緣（10 px/mm） */
+const K2 = 10, LH = 290, LCY = 172;
+function lfFig(E, e) {
+  const n = nas(e), yld = E.m2 + DG.l, yd = ydOf(E), yu = yd - E.lf, top = Math.min(Math.max(E.lf + 2, 8), Math.floor(yd + 14.5));
+  const pan = (X, up) => {
+    const Y = LCY, yl = up ? E.m2 - 1 : yld, ylid = up ? yu : yd, iy = fx(Y + (up ? DG.u : DG.d) * K2), id = `lf-${up ? 'u' : 'd'}`, fis = fisD(X, Y, ylid, yl, K2), rr = fx(RL * K2);
+    let h = `<clipPath id="${id}"><path d="${fis}"/></clipPath><path class="c-eyew" d="${fis}"/><g clip-path="url(#${id})"><circle class="c-iris" cx="${X}" cy="${iy}" r="${rr}"/><circle class="c-limb" cx="${X}" cy="${iy}" r="${rr}"/><circle class="c-pupil" cx="${X}" cy="${iy}" r="${fx(2 * K2)}"/></g><path class="c-eyeo" d="${fis}"/>`;
+    h += `<path class="c-brow" style="stroke-width:${fx(0.85 * K2)}" d="${browD(X, Y, E.yb, n, K2)}"/><ellipse class="c-thumb" cx="${fx(X + n * K2)}" cy="${fx(Y + (E.yb - 0.2) * K2)}" rx="${fx(3.4 * K2)}" ry="${fx(1.7 * K2)}"/>`;
+    h += rulerG(X, Y, n, K2, yd, -1, top, 5, false);
+    h += up ? `<g class="lab">${brk(X + n * 1.6 * K2, Y + yd * K2, Y + yu * K2, `LF ${fx(E.lf)} mm`, n)}</g>`
+      : `<g class="lab"><text x="${fx(X + n * 1.6 * K2)}" y="${fx(Y + yd * K2 + 5)}" text-anchor="${n > 0 ? 'start' : 'end'}">← 眼瞼緣對齊 0</text><text x="${fx(X + n * 4.8 * K2)}" y="${fx(Y + (E.yb + 0.3) * K2)}" text-anchor="${n > 0 ? 'start' : 'end'}">拇指壓住眉毛</text></g>`;
+    return h;
+  };
+  return `<svg viewBox="0 0 ${FW} ${LH}" role="img" aria-label="Levator function 量法：左＝往下看、右＝往上看"><rect class="c-face" width="${FW}" height="${LH}" rx="12"/><path class="c-sep" d="M360 10V${LH - 10}"/>${pan(180, false)}${pan(540, true)}<text class="eyen" x="180" y="${LH - 10}" text-anchor="middle">往下看</text><text class="eyen" x="540" y="${LH - 10}" text-anchor="middle">往上看</text></svg>`;
+}
+
+/* ---------- 檢查動作與說明 ---------- */
+const ACTZ = { lift: '抬起眼瞼', pe: 'phenylephrine', cover: '遮健側眼', brow: '抬眉', fat: '往上看 30–60 秒', cogan: '往下看 → 回正前方', jaw: '張嘴、咀嚼' };
+const ANIM = { fat: 2600, cogan: 1500 };
+function diffTxt(G, under) {
+  const a = meas(G.eyes[G.ce], under).m1, b = meas(G.eyes[G.oe], under).m1, d = b - a;
+  return d > 0 ? `${EZ[G.ce]}比${EZ[G.oe]}低 ${fx(d)} mm（和對側比：${grade(d)}${s('S1')}）` : d < 0 ? `${EZ[G.ce]}比${EZ[G.oe]}高 ${fx(-d)} mm` : '兩眼一樣高';
+}
+function statusTxt(S, G) {
+  const c = CASES[S.cs], ce = G.ce, oe = G.oe;
+  switch (S.act) {
+    case 'lift': return c.ps === 'brow' || c.ps === 'derm' ? '' : c.her ? `手指把${EZ[ce]}抬到正常高度，${EZ[oe]}掉下來 ${c.her} mm（示意）：Hering 把${EZ[oe]}的 ptosis 遮住了，其實是雙側不對稱；術前要告訴病人手術後${EZ[oe]}可能變低${s('S1', 'S7')}` : `手指抬起${EZ[ce]}，${EZ[oe]}沒有動：沒有 Hering 現象${s('S1')}`;
+    case 'pe': return S.pe === 'y' ? `點表面麻醉，再點 2.5% 或 10% phenylephrine，每分鐘一滴共三次，最後一滴後 5 分鐘再量${s('S5')}：${EZ[ce]}抬到 MRD1 ${N1} mm（示意）＝Müller muscle 有反應${s('S4', 'S5')}${c.her ? `；${EZ[oe]}掉下來 ${c.her} mm：PE 也會把對側被遮住的 ptosis 逼出來${s('S5')}` : ''}`
+      : `點了 phenylephrine，5 分鐘後${EZ[ce]}沒有抬起來（這個例子設定成沒反應，示意；下方可以切換）`;
+    case 'cover': return c.ps === 'hypo' ? `遮住${EZ[oe]}後，${EZ[ce]}往上轉去注視，上眼瞼跟著回到正常：同側 hypotropia 造成的 pseudoptosis${s('S1')}` : `遮住${EZ[oe]}，${EZ[ce]}的眼瞼高度沒有變：不是 hypotropia 造成的${s('S1')}`;
+    case 'brow': return c.ps === 'brow' ? `把眉毛抬回去，皮膚不再壓住眼瞼，${EZ[ce]}的眼瞼緣在正常高度：brow ptosis 造成的 pseudoptosis${s('S1')}` : `抬高${EZ[ce]}的眉毛，眼瞼緣的高度沒有變（示意）`;
+    case 'fat': return c.mg ? `往上看、不眨眼 30–60 秒：${EZ[ce]}越來越垂${s('S1')}，懷疑 MG，接著可以做 ice test${s('S4')}（動畫把時間縮短，下垂的量是示意）` : `往上看、不眨眼 30–60 秒：眼瞼沒有越來越垂（示意）${s('S1')}`;
+    case 'cogan': return c.mg ? `從往下看快速回到正前方：${EZ[ce]}上眼瞼先衝過頭再落回，是 Cogan twitch${s('S1')}` : '從往下看回到正前方：上眼瞼沒有衝過頭（示意）';
+    case 'jaw': return c.jaw ? `張嘴、咀嚼或下巴往對側動時，下垂的${EZ[ce]}往上縮，比${EZ[oe]}還高（高度是示意）：Marcus Gunn jaw-winking${s('S2')}` : '張嘴、咀嚼時眼瞼沒有變（示意）';
+  }
+  if (G.gaze === 'd') {
+    const dd = G.eyes[ce].yu - G.eyes[oe].yu, rel = dd < -1e-9 ? `高 ${fx(-dd)} mm` : dd > 1e-9 ? `低 ${fx(dd)} mm` : '一樣高';
+    const cr = ['R', 'L'].map(e => `${EZ[e]} ${G.B[e].cr != null ? `${G.B[e].cr} mm` : '沒有'}`).join('、');
+    return `往下看：${EZ[ce]}的上眼瞼比${EZ[oe]}${rel}${c.kind === 'cong' ? ` → 先天 ptosis 的 levator 放鬆不好，往下看時下垂的眼瞼反而比較高${s('S2')}` : c.kind === 'acq' ? ` → 後天 ptosis 往下看時同高或比較低${s('S2')}` : ''}。Crease（往下看時量）：${cr}${s('S1')}`;
+  }
+  const m = ['R', 'L'].map(e => { const q = meas(G.eyes[e], st.under); return `${EZ[e]} MRD1 <b>${fx(q.m1)}</b>、MRD2 <b>${fx(q.m2)}</b>、PFH <b>${fx(q.pfh)}</b> mm`; }).join('；');
+  const d = meas(G.eyes[oe], st.under).m1 - meas(G.eyes[ce], st.under).m1;
+  return `${m} → ${c.ps && d > 0 ? `${EZ[ce]}看起來比${EZ[oe]}低 ${fx(d)} mm，但這是 pseudoptosis（${PSZ[c.ps]}）` : diffTxt(G, st.under)}${G.eyes[ce].hood != null && !st.under ? '；有皮膚蓋住時量到的是皮膚的邊緣（上方打開「看皮膚底下」）' : ''}`;
+}
+
+/* ---------- 說明卡 ---------- */
+const MEAS = [`MRD1：病人注視 penlight，量上眼瞼緣到角膜反光的距離；正常 4–5 mm${s('S1', 'S7')}。反光被眼瞼蓋住時記 0 或負值${s('S7')}`,
+  `MRD2：反光到下眼瞼緣的距離，常見 4–5 mm；MRD2 大表示眼睛露出來的多，術後乾眼的風險較高${s('S4', 'S7')}`,
+  `PFH（palpebral fissure height）：在瞳孔中央的直線上量上下眼瞼緣的距離，男 7–10 mm、女 8–12 mm${s('S1', 'S4')}；三個都在同一條線上量，所以 MRD1＋MRD2＝PFH`,
+  `單側 ptosis 可以和對側比：差 ≤ 2 mm 是 mild、3 mm 是 moderate、≥ 4 mm 是 severe${s('S1')}`,
+  `這些都要在點眼藥之前量完${s('S4')}`];
+const LFM = [`拇指用力壓住眉毛，擋掉 frontalis；病人先往下看，再盡量往上看，用尺量上眼瞼緣移動的距離（下方小圖）${s('S1')}`];
+const LFG = [`Kanski：normal ≥ 15、good 12–14、fair 5–11、poor ≤ 4 mm${s('S1')}`, `EyeWiki Blepharoptosis：> 10 mm 是 excellent、0–5 mm 是 poor${s('S4')}`, `EyeWiki Aponeurotic：常見 12–17 mm；good ≥ 8、fair 5–7、poor ≤ 4 mm${s('S7')}`];
+const CRS = [`往下看時量眼瞼緣到 crease 的距離：Kanski 寫女約 10 mm、男約 8 mm${s('S1')}；EyeWiki 寫往下看 45°，白人男 8–9 mm、女 9–11 mm，東亞人常只有 2–5 mm${s('S7')}`,
+  `約一半的亞洲人 crease 低或沒有（levator aponeurosis 附著得低、靠近睫毛）${s('S3')}`,
+  `先天 ptosis 沒有 crease 表示 LF 差；crease 高表示 aponeurosis 有問題（通常是 involutional）${s('S1')}`];
+const HER = [`單側 ptosis 時，送到下垂那側 levator 的神經衝動會增加，對側正常的 levator 也一起收到，對側就被撐高${s('S1')}`,
+  `手動抬起下垂的那眼，看對側會不會掉下來；會的話，術前要告訴病人手術後對側可能變低${s('S1', 'S7')}`,
+  `雙側不對稱的 ptosis 可能被這樣遮住，看起來只有一眼${s('S4', 'S7')}`];
+const PSG = [`眼球撐不住眼瞼（義眼、microphthalmos、phthisis bulbi、enophthalmos）、對側 lid retraction、同側 hypotropia、brow ptosis、dermatochalasis 都會看起來像 ptosis${s('S1')}`,
+  `EyeWiki 另外列了 blepharochalasis 與舊的 facial nerve palsy${s('S4')}`];
+const OTH = [`問有沒有複視、一天之中會不會變、是不是容易累${s('S1')}`,
+  `看瞳孔，排除 Horner syndrome 與不明顯的 pupil-involving CN III palsy${s('S1')}：見<a href="../neuro-ophth/#pup">神經眼科圖譜的瞳孔分頁</a>`,
+  `Bell phenomenon 弱時，術後 exposure keratopathy 的風險較高，尤其是大的 levator resection 或 suspension${s('S1')}`,
+  `看 tear film：量少或不穩的 tear film 可能在 ptosis 手術後變糟，術前盡量處理${s('S1')}`];
+const NORMD = [`正常上眼瞼緣的位置：Kanski 寫蓋住上方角膜約 2 mm${s('S1')}；EyeWiki Blepharoptosis 寫蓋住 1–2 mm${s('S4')}；EyeWiki Congenital 寫在上方 limbus 下約 0.5–1 mm${s('S6')}。這頁的正常眼畫成 MRD1 4 mm（蓋住約 1.9 mm）`];
+const PEM = [`先量 MRD1，點表面麻醉，再點 2.5% 或 10% phenylephrine，每分鐘一滴共三次；最後一滴後 5 分鐘再量 MRD1${s('S5')}`,
+  `Phenylephrine 刺激 sympathetic 支配的 Müller muscle 收縮；Müller 收縮約抬高眼瞼 2 mm（EyeWiki Blepharoptosis）或 2.5 mm（EyeWiki MMCR）${s('S4', 'S5')}`,
+  `2.5% 和 10% 抬高的差距不到 0.4 mm${s('S5')}；PE test 不保證 MMCR 一定成功${s('S5')}`,
+  `PE 也可以把對側被遮住的 ptosis 逼出來${s('S5')}`];
+function caseTxt(cs) {   // 每個例子的說明卡內容：eb＝分類、def＝定義、secs＝[標題, 條列]
+  const INV = { eb: '後天 · aponeurotic', def: `年紀相關：levator aponeurosis dehiscence、disinsertion 或被拉長，正常 levator 的力量傳不到眼瞼${s('S2')}；aponeurotic ptosis 是最常見的後天 ptosis${s('S7')}`,
+    secs: [['特徵', [`通常雙側、程度不一；crease 高、LF 好${s('S2')}`, `嚴重時 crease 可能消失，tarsus 上方的眼瞼很薄、上方 sulcus 很深${s('S2')}`, `Müller muscle 疲勞，傍晚常變重，容易和 MG 混淆${s('S2')}`,
+      `往下看時下垂的眼瞼和對側同高或比較低${s('S2')}；aponeurotic ptosis 往下看會更垂，看書時比較困擾${s('S7')}`, `風險因子：長期戴隱形眼鏡、常揉眼、眼內手術或眼內注射等${s('S7')}`]],
+    ['Phenylephrine test', PEM],
+    ['術式', [`Kanski：levator resection、advancement with reinsertion 或 anterior levator repair${s('S2')}`, `PE 反應好，可以考慮 MMCR（從結膜面做，不留皮膚疤）${s('S4', 'S5')}；有多餘皮膚要另外做 blepharoplasty${s('S5')}`,
+      `LF 好的病人，有些醫師用 PE 反應決定做 anterior levator advancement 還是 MMCR${s('S7')}`]]] };
+  const CON = { eb: '先天', def: `可能是神經元移行或發育失敗，再造成肌肉的變化；少數有家族史${s('S2')}。EyeWiki：多數是 levator 局部的 myogenic dysgenesis，肌肉被纖維與脂肪組織取代${s('S6')}`,
+    secs: [['特徵', [`單側或雙側、程度不一；crease 沒有、LF 差${s('S2')}`, `往下看時下垂的眼瞼比正常的高（levator 放鬆不好）；後天 ptosis 則是同高或比較低${s('S2')}`, `手術後往下看的 lid lag 可能更明顯${s('S2')}`]],
+      ['合併', [`可能合併 superior rectus 無力（和 levator 胚胎上關係密切）${s('S2')}；要評估眼球運動，矯正同側 hypotropia 可能改善 ptosis${s('S1')}`, `嚴重雙側時下巴會抬高代償${s('S2')}`, `屈光不正很常見，比 ptosis 本身更常造成 amblyopia${s('S2')}`]],
+      ['手術時機', [`Kanski：學齡前、可以量準時手術；嚴重的可以提早，避免 amblyopia${s('S2')}`, `EyeWiki：不急時常等到 3–4 歲，量得比較準；有明顯 amblyopia 或 torticollis 要早一點${s('S6')}`]]] };
+  switch (cs) {
+    case 'norm': return { eb: '量法', def: `正常的上眼瞼緣在上方角膜下一點：Kanski 寫蓋住上方角膜約 2 mm、下眼瞼在下方 limbus 上約 1 mm${s('S1')}。拖拉圖上的圓點或下方拉條改眼瞼高度，看 MRD1、MRD2、PFH 怎麼變`,
+      secs: [['MRD 與 PFH', MEAS], ['Levator function（LF）', LFM], ['LF 分級（文獻不一）', LFG], ['Crease', CRS], ['Hering', HER], ['Pseudoptosis', PSG], ['其他要看的', OTH], ['文獻不一', NORMD]] };
+    case 'invM': return INV;
+    case 'invH': return Object.assign({}, INV, { secs: [['Hering：被遮住的對側 ptosis', HER], ...INV.secs] });
+    case 'conS': return Object.assign({}, CON, { secs: [...CON.secs, ['術式', [`Frontalis（brow）suspension：Kanski 用在 severe（> 4 mm）且 LF 很差（< 4 mm）${s('S3')}；EyeWiki 寫 LF < 4 mm${s('S4', 'S6')}`,
+      `用 silicone、autologous fascia lata 等材料，把 tarsus 吊到 frontalis 上${s('S3')}`, `嚴重單側時，做雙側 sling 外觀最對稱，但家長常不願意動正常的那一眼${s('S4')}`,
+      `術後幾週到幾個月睡覺時眼睛閉不緊，要大量潤滑${s('S4', 'S6')}`, `Bell phenomenon 弱時術後 exposure keratopathy 的風險較高${s('S1')}`]], ['LF 分級（文獻不一）', LFG]] });
+    case 'conM': return Object.assign({}, CON, { secs: [...CON.secs, ['術式', [`Kanski：通常要做 levator resection${s('S2')}`, `EyeWiki 依 LF 定切除量：LF > 4 且 < 6 mm 切 ≥ 22 mm、6–8 mm 切 16–18 mm、> 8 mm 切 10–13 mm${s('S6')}`]],
+      ['MMCR 用在先天 ptosis（文獻不一）', [`Kanski 把輕度先天 ptosis 列在 conjunctiva–Müller resection 的適應症${s('S3')}`, `EyeWiki 寫對先天 ptosis 效果不好、不常用，近年的報告變多${s('S4', 'S6')}`]], ['LF 分級（文獻不一）', LFG]] });
+    case 'mg': return { eb: '後天 · myogenic', def: `神經肌肉接合處的傳導障礙造成的 myogenic ptosis${s('S1')}`,
+      secs: [['檢查', [`問有沒有複視、一天之中會不會變、是不是容易累${s('S1')}`, `Fatigability：請病人往上看、不眨眼 30–60 秒，一側或兩側越來越垂、撐不住，懷疑 MG${s('S1')}；EyeWiki 寫極度往上看 1–2 分鐘${s('S7')}`,
+        `Cogan twitch：從往下看快速回到正前方時，上眼瞼先衝過頭；往側邊看時會「跳」一下${s('S1')}`, `Ice pack test：冰敷後眼瞼抬高＝陽性${s('S4')}`, `抽血驗 acetylcholine receptor antibody，或做 single-fiber EMG；Tensilon test 已經買不到${s('S4')}`]],
+        ['分辨', [`Involutional ptosis 也會傍晚變重，容易和 ocular MG 混淆${s('S2')}`, `症狀整天起伏時，要排除 statin 與 ocular MG${s('S7')}`]],
+        ['處理', [`MG 可能用藥物改善，要轉給適當的醫師處理${s('S4')}`]]] };
+    case 'mgjw': return { eb: '先天 · synkinesis', def: `約 5% 的先天 ptosis 合併 Marcus Gunn jaw-winking，多數是單側；推測 CN V 下頜支的一支錯接到 levator${s('S2')}。EyeWiki 寫支配 external pterygoid 的運動神經錯接到同側 levator${s('S4', 'S6')}`,
+      secs: [['特徵', [`咀嚼、吸吮、張嘴，或下巴往對側動時（刺激同側 pterygoid），下垂的眼瞼往上縮${s('S2')}`, `比較少見的誘發：下巴往前推、笑、吞嚥、咬牙${s('S2')}`, `不會隨年紀變好，病人可能學會掩飾${s('S2')}`,
+        `檢查：請病人咀嚼、下巴左右動${s('S1')}；先天 ptosis 都要檢查有沒有 jaw-winking${s('S4')}`]],
+        ['術式（文獻不一）', [`Kanski：輕度、LF ≥ 5 mm、synkinesis 少 → 單側 levator advancement；中度 → 單側 levator disinsertion（處理 winking）＋ 同側 brow suspension；也可以雙側 disinsertion ＋ 雙側 brow suspension 求對稱${s('S2')}`,
+          `EyeWiki：術式有爭議；winking 不明顯時只矯正 ptosis（依 LF 做 levator advancement 或 frontalis sling），明顯時切除 levator 再做 frontalis sling${s('S4')}`]]] };
+    case 'retr': return { eb: 'Pseudoptosis', def: `對側的眼瞼縮上去，正常的這一眼看起來反而像 ptosis${s('S1')}`,
+      secs: [['怎麼分辨', [`比較兩眼上眼瞼的高度，並記得正常的上眼瞼緣蓋住上方角膜約 2 mm${s('S1')}（上方打開「正常高度」）`, `EyeWiki 也把對側 eyelid retraction 列為 pseudoptosis 的原因${s('S4')}`]], ['其他 pseudoptosis', PSG]] };
+    case 'hypo': return { eb: 'Pseudoptosis', def: `上眼瞼跟著往下偏的眼球一起往下，看起來像 ptosis${s('S1')}`,
+      secs: [['怎麼分辨', [`遮住正常眼，讓 hypotropic 的眼睛去注視，pseudoptosis 就消失${s('S1')}（cover test 見<a href="../strabismus/#ct">斜視圖譜</a>）`, `上眼瞼蓋住角膜的量和對側一樣：眼瞼跟著眼球動${s('S1')}（上方打開「正常高度」）`]],
+        ['處理', [`先天 ptosis 也要看眼球運動（尤其 superior rectus）；矯正同側 hypotropia 可能改善 ptosis 的程度${s('S1')}`, `同時有斜視和 ptosis 時，先矯正斜視${s('S4')}`]], ['其他 pseudoptosis', PSG]] };
+    case 'brow': return { eb: 'Pseudoptosis', def: `眉毛的皮膚過多，或 seventh nerve palsy，眉毛往下壓，看起來像 ptosis${s('S1')}`,
+      secs: [['怎麼分辨', [`手動把眉毛抬高就能診斷${s('S1')}`, `Brow ptosis、dermatochalasis 要和 blepharoptosis 分開，因為手術處理不同${s('S4')}`]], ['其他 pseudoptosis', PSG]] };
+    case 'derm': return { eb: 'Pseudoptosis', def: `上眼瞼多出來的皮膚垂下來，蓋住眼瞼緣，可能被誤認為 ptosis${s('S1')}`,
+      secs: [['怎麼分辨', [`MRD1 量的是眼瞼緣到反光${s('S1')}，要找到真正的眼瞼緣，不是皮膚的邊緣（上方打開「看皮膚底下」）`, `年長的病人要仔細看，多出來的皮膚可能讓人以為是 ptosis${s('S7')}`]],
+        ['注意', [`Dermatochalasis 也可能真的造成 mechanical ptosis${s('S1', 'S2')}`, `Dermatochalasis 是另一個發現，可以和 blepharoptosis 同時存在；手術處理不同，要分開${s('S4')}`, `有多餘皮膚時，MMCR 之外要另外做 blepharoplasty${s('S5')}`]], ['其他 pseudoptosis', PSG]] };
+  }
+}
+function ptCard() {
+  const S = cur(), c = CASES[S.cs], T = caseTxt(S.cs), G0 = geomOf(Object.assign({}, S, { act: null, gaze: 'p' })), R = ptFlow(flowIn(S));
+  const v = `${c.ps ? `${EZ[G0.ce]}看起來比${EZ[G0.oe]}低 ${fx(meas(G0.eyes[G0.oe]).m1 - meas(G0.eyes[G0.ce]).m1)} mm，但不是真的 ptosis` : diffTxt(G0, false)}；術式流程 → ${recTxt(R)}`;
+  const body = T.secs.map(([t, a]) => list(t, a)).join('');
+  return `<div class="card"><div class="eyebrow">${c.ps ? '' : 'Ptosis · '}${T.eb} · 對照 BCSC 7</div><div><h2>${c.en}</h2></div><p class="zh">${c.zh}</p><p class="def">${T.def}</p><div class="verdict"><span>${v}</span></div>${body}${srcList(refs(T.def + v + body))}</div>`;
+}
+
+/* ---------- app ---------- */
+const VIEWS = [{ id: 'pt', name: 'Ptosis', en: 'Evaluation & surgery' }];
+const $ = q => document.querySelector(q);
+let reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
+const st = { view: 'pt', cs: 'invM', ov: { R: {}, L: {} }, act: null, gaze: 'p', pe: 'y', wink: 's', t: 1, ref: false, under: false, labels: true, learnMode: 'learn', quiz: null };
+const cur = () => ({ cs: st.cs, ov: st.ov, act: st.act, gaze: st.gaze, pe: st.pe, wink: st.wink, t: st.t });
+const st0 = (cs, ov, x) => Object.assign({ cs, ov, act: null, gaze: 'p', pe: CASES[cs].pe || 'n', wink: 's', t: 1 }, x);
+const store = (() => {
+  const K3 = 'oculoAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K3); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K3, JSON.stringify(mem)); } catch (e) { } } };
+})();
+const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
+const AN = { raf: 0 };
+function animStop() { cancelAnimationFrame(AN.raf); st.t = 1; }
+function animStart(kind) {   // 只重畫 #pt-svg
+  cancelAnimationFrame(AN.raf);
+  if (reduce) { st.t = 1; renderMainSVG(); return; }
+  const t0 = performance.now(), dur = ANIM[kind];
+  const step = now => { st.t = Math.min(1, (now - t0) / dur); renderMainSVG(); if (st.t < 1) AN.raf = requestAnimationFrame(step); };
+  st.t = 0; renderMainSVG(); AN.raf = requestAnimationFrame(step);
+}
+function setCase(cs) {
+  animStop();
+  Object.assign(st, { cs, ov: { R: {}, L: {} }, act: null, gaze: 'p', pe: CASES[cs].pe || 'n', wink: 's', under: false });
+  if (cs === 'retr') st.ref = true;
+}
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選例子；拖圖上的圓點改上下眼瞼的高度，按圖下的按鈕做檢查'}</span>`;
+}
+function renderTools() {
+  if (st.learnMode === 'quiz') { $('#tools').innerHTML = ''; return; }
+  const hood = ['R', 'L'].some(e => eyeBase(st.cs, e, st.ov).hood != null);
+  $('#tools').innerHTML = `<label class="tog"><input type="checkbox" id="t-ref" ${st.ref ? 'checked' : ''}>正常高度</label>${hood ? `<label class="tog"><input type="checkbox" id="t-under" ${st.under ? 'checked' : ''}>看皮膚底下（示意）</label>` : ''}<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`;
+}
+function actBar(G) {
+  const c = CASES[st.cs], ce = G.ce, oe = G.oe, hood = eyeBase(st.cs, ce, st.ov).hood != null;
+  const A = [['lift', `抬起${EZ[ce]}眼瞼`, hood], ['pe', `${EZ[ce]}點 phenylephrine`, !!c.ps], ['cover', `遮住${EZ[oe]}`], ['brow', `抬高${EZ[ce]}眉毛`, c.ps === 'derm'], ['fat', '往上看 30–60 秒'], ['cogan', '往下看 → 回正前方'], ['jaw', '張嘴、咀嚼']];
+  return `<div class="seg" role="group" aria-label="看哪裡">${[['p', '正前方'], ['d', '往下看']].map(([k, t]) => `<button type="button" data-gz="${k}" aria-pressed="${!st.act && st.gaze === k}">${t}</button>`).join('')}</div><div class="grp">${A.map(([k, t, dis]) => `<button type="button" class="btn ${st.act === k ? 'on' : ''}" data-act="${k}" ${dis ? 'disabled' : ''}>${t}</button>`).join('')}</div>`;
+}
+function renderMainSVG() { const it = quizItem(), el = $('#pt-svg'); if (!el) return; el.innerHTML = it ? ptFig(geomOf(it.S), { ref: it.ref, under: it.under }) : ptFig(geomOf(cur()), { ref: st.ref, under: st.under, hdl: !st.act }); }
+function renderFig() {
+  const it = quizItem(), fig = $('#fig');
+  if (it) fig.innerHTML = `<div class="vh">${it.vh}</div><div id="pt-svg"></div>`;
+  else {
+    const S = cur(), G = geomOf(S), t = statusTxt(S, G);
+    fig.innerHTML = `<div class="vh">外眼正面：檢查者面對病人，penlight 從正前方照</div><div id="pt-svg"></div><div class="ctbar">${actBar(G)}</div>${t ? `<div class="rd">${t}</div>` : ''}<div class="vh">LF 量法（${EZ[G.ce]}）：拇指壓住眉毛擋掉 frontalis，往下看 → 盡量往上看</div>${lfFig(eyeBase(S.cs, G.ce, S.ov), G.ce)}`;
+  }
+  renderMainSVG();
+  const gz = geomOf(it ? it.S : cur()).gaze;
+  $('#cap').innerHTML = `<span>檢查者面對病人（同九方向眼位圖）：圖左＝病人右眼 OD。${gz === 'p' ? `白點＝角膜反光，放大尺的 0 對齊反光、每格 1 mm。${it ? '' : '圓點可以上下拖；虛線帶＝正常上眼瞼緣（蓋住上方角膜 1–2 mm）。'}` : gz === 'd' ? '病人往下看；橫虛線＝對側上眼瞼緣的高度，crease 在往下看時量。' : '病人往上看或剛回到正前方。'}</span><span class="ori">眼裂、眉毛、皮膚與各種變化量都是示意</span>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+}
+function renderFlow() { const f = $('#flow'); if (f) f.innerHTML = flowHTML(cur()); }
+function renderExtra() {
+  if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  const c = CASES[st.cs], ce = ceOf(st.cs, st.ov), E = eyeBase(st.cs, ce, st.ov);
+  let h = '';
+  if (!c.ps) h += `<div class="rng"><label for="pt-m1">${EZ[ce]} MRD1</label><input type="range" id="pt-m1" min="-1.5" max="7" step="0.5" value="${E.m1}"><span class="v" id="pt-m1-v">${fx(E.m1)} mm</span></div>
+    <div class="rng"><label for="pt-lf">${EZ[ce]} LF</label><input type="range" id="pt-lf" min="0" max="16" step="0.5" value="${E.lf}"><span class="v" id="pt-lf-v">${fx(E.lf)} mm（Kanski：${lfK(E.lf)}）</span></div>
+    <div class="rng"><span class="rl">Phenylephrine（示意）</span><div class="seg" role="group" aria-label="phenylephrine 反應">${[['y', '有反應'], ['n', '沒反應']].map(([k, t]) => `<button type="button" data-pe="${k}" aria-pressed="${st.pe === k}">${t}</button>`).join('')}</div></div>`
+    + (c.jaw ? `<div class="rng"><span class="rl">Jaw-winking</span><div class="seg" role="group" aria-label="jaw-winking 明不明顯">${[['s', '明顯'], ['m', '不明顯']].map(([k, t]) => `<button type="button" data-wink="${k}" aria-pressed="${st.wink === k}">${t}</button>`).join('')}</div></div>` : '');
+  $('#extra').innerHTML = h + `<div class="xh">術式流程</div><div id="flow">${flowHTML(cur())}</div>`;
+}
+function renderIndex() {
+  const ix = $('#index');
+  if (st.learnMode === 'quiz') { ix.hidden = true; return; }
+  ix.hidden = false;
+  ix.innerHTML = CG.map(([g, t]) => `<span class="lbl">${t}</span>` + Object.keys(CASES).filter(k => CASES[k].g === g).map(k => `<button type="button" class="chip ${st.cs === k ? 'on' : ''}" data-cs="${k}">${CASES[k].zh}</button>`).join('')).join('')
+    + `<span class="lbl">其他頁</span><a class="chip" href="../neuro-ophth/#pup">Horner、瞳孔 → 神經眼科圖譜</a><a class="chip" href="../neuro-ophth/#eom">CN III palsy → 神經眼科圖譜</a><a class="chip" href="../eye-atlas/#lid">眼瞼解剖 → 眼解剖圖譜</a>`;
+}
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : ptCard(); }
+function renderSelbar() {
+  const b = $('#selbar'), t = st.learnMode !== 'learn' ? '' : `目前：${CASES[st.cs].zh} · ${st.act ? ACTZ[st.act] : st.gaze === 'd' ? '往下看' : '正前方'}`;
+  b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
+}
+
+/* ---------- quiz ----------
+   錯題的 key：pt:m:…（讀 MRD、算 PFH）、pt:s:…（選術式）、pt:p:…（真的 ptosis 還是 pseudoptosis）、pt:c:…（先天或後天）；第二段的字母決定題型，之後的分頁用 lid:、lac: */
+const QMR = { m1: ['R', 2, 5], m2: ['L', 1, 5], m3: ['R', 5, 4], m4: ['L', 3, 6], m5: ['R', 6, 5], m6: ['L', 2, 4], m7: ['R', 3, 3], m8: ['L', 4, 6] };   // 哪一眼、MRD1、MRD2；另一眼正常
+// 選術式：種類、比對側低幾 mm、LF、phenylephrine（y 有反應、n 沒反應、- 沒寫）、預期答案；都避開各來源切點不同的地方（self-check 核對）
+const QS = { s1: ['acq', 2, 14, 'y', 'both'], s2: ['acq', 4, 12, 'y', 'lev'], s3: ['acq', 2, 8, 'y', 'lev'], s4: ['cong', 5, 2, '-', 'sling'], s5: ['cong', 3, 8, '-', 'lev'],
+  s6: ['mgjwS', 3, 7, '-', 'mgjw'], s7: ['mgjwM', 2, 7, '-', 'lev'], s8: ['acq', 5, 3, '-', 'sling'], s9: ['acq', 1, 15, 'y', 'both'], s10: ['acq', 5, 13, 'n', 'lev'] };
+const SKZ = { acq: '後天（aponeurotic）ptosis', cong: 'Simple congenital ptosis', mgjwS: 'Marcus Gunn jaw-winking，張嘴時 winking 明顯', mgjwM: 'Marcus Gunn jaw-winking，winking 不明顯' };
+const SURZ = { sling: 'Frontalis sling（brow suspension）', lev: 'Levator advancement（MMCR 的條件不符）', both: 'MMCR 或 levator advancement 都可以', mgjw: 'Levator disinsertion ＋ frontalis sling' };
+const QP = { p1: ['retr', 'ref'], p2: ['hypo', 'cover'], p3: ['brow', 'brow'], p4: ['derm', 'under'], p5: ['invM', 'cover'], p6: ['conS', 'ref'], p7: ['invH', 'ref'], p8: ['mg', 'cover'] };   // 例子、圖上做了什麼
+const PSL = { true: '真的 ptosis', retr: 'Pseudoptosis：對側 lid retraction', hypo: 'Pseudoptosis：同側 hypotropia', brow: 'Pseudoptosis：brow ptosis', derm: 'Pseudoptosis：dermatochalasis' };
+const QCG = { c1: 'conS', c2: 'conM', c3: 'mgjw', c4: 'invM', c5: 'invH', c6: 'mg' };
+const CGL = { cH: '先天：往下看時下垂的眼瞼比較高', cL: '先天：往下看時下垂的眼瞼同高或比較低', aH: '後天：往下看時下垂的眼瞼比較高', aL: '後天：往下看時下垂的眼瞼同高或比較低' };
+const KEYS = [...Object.keys(QMR).map(k => 'pt:m:' + k), ...Object.keys(QS).map(k => 'pt:s:' + k), ...Object.keys(QP).map(k => 'pt:p:' + k), ...Object.keys(QCG).map(k => 'pt:c:' + k)];
+const keyValid = k => KEYS.includes(k);
+const keyView = k => k.split(':')[0];
+const QTV = { pt: [['mrd', '讀 MRD、算 PFH'], ['surg', '選術式'], ['ps', '真假 ptosis'], ['cg', '先天或後天']] };
+const QTZ = { m: 'mrd', s: 'surg', p: 'ps', c: 'cg' };
+const kType = k => QTZ[k.split(':')[1]];
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pairBD = (a, b) => (a === 'brow' && b === 'derm') || (a === 'derm' && b === 'brow');   // 抬眉與皮膚會互相混淆，不同時出
+const sCase = (k, lf) => k === 'acq' ? 'invM' : k === 'cong' ? (lf < 4 ? 'conS' : 'conM') : 'mgjw';
+function keyLabel(k) {
+  const [, ty, id] = k.split(':');
+  if (ty === 'm') { const [e, m1, m2] = QMR[id]; return `讀 MRD：${EZ[e]} MRD1 ${m1}、MRD2 ${m2} mm`; }
+  if (ty === 's') { const [t, d, lf] = QS[id]; return `選術式：${SKZ[t]}，低 ${d} mm、LF ${lf} mm`; }
+  if (ty === 'p') return `真假 ptosis：${CASES[QP[id][0]].zh}`;
+  return `先天或後天：${CASES[QCG[id]].zh}`;
+}
+function itemOf(key) {
+  const [, ty, id] = key.split(':');
+  if (ty === 'm') {   // 選項：答案、MRD1 與 MRD2 對調、MRD1 少 1、MRD2 多 1、MRD1 多 1（不重複的前四個）
+    const [e, m1, m2] = QMR[id], ov = { R: {}, L: {} }, ans = `${m1}/${m2}`, opts = [ans];
+    ov[e] = { m1, m2 };
+    [`${m2}/${m1}`, `${m1 - 1}/${m2}`, `${m1}/${m2 + 1}`, `${m1 + 1}/${m2}`].forEach(x => { if (opts.length < 4 && !opts.includes(x)) opts.push(x); });
+    return { key, type: 'mrd', ans, opts: shuffle(opts), lab: x => { const [a, b] = x.split('/').map(Number); return `MRD1 ${a} mm · MRD2 ${b} mm · PFH ${a + b} mm`; }, S: st0('norm', ov), vh: '外眼正面：放大尺的 0 對齊角膜反光，每格 1 mm',
+      prompt: ['Penlight 從正前方照，病人看著光（檢查者面對病人：圖左＝病人右眼）', `${EZ[e]}的 MRD1、MRD2、PFH 各是多少？`],
+      more: `MRD1＝上眼瞼緣到反光 ${m1} mm、MRD2＝反光到下眼瞼緣 ${m2} mm，PFH＝MRD1＋MRD2＝${m1 + m2} mm${s('S1', 'S4')}${m1 < N1 ? `。和對側（MRD1 ${N1} mm）比低 ${N1 - m1} mm：${grade(N1 - m1)}${s('S1')}` : ''}`, go: { cs: 'norm', ov } };
+  }
+  if (ty === 's') {
+    const [k, d, lf, pe] = QS[id], cs = sCase(k, lf), ce = CASES[cs].eye, ov = { R: {}, L: {} };
+    ov[ce] = { m1: N1 - d, lf };
+    const S = st0(cs, ov, { pe: pe === 'y' ? 'y' : 'n', wink: k === 'mgjwM' ? 'm' : 's' }), F = flowIn(S), R = ptFlow(F);
+    return { key, type: 'surg', ans: R.rec, opts: ['sling', 'lev', 'both', 'mgjw'], lab: x => SURZ[x], S, vh: '外眼正面：檢查者面對病人（圖左＝病人右眼）',
+      prompt: [`${SKZ[k]}：${EZ[ce]}比對側低 ${d} mm、LF ${lf} mm${pe === 'y' ? '、phenylephrine 後抬到和對側差不多' : pe === 'n' ? '、phenylephrine 沒有反應' : ''}`, '依各來源都同意的切點，術式怎麼選？'],
+      more: flowWhy(F, R), go: { cs, ov, pe: S.pe, wink: S.wink } };
+  }
+  if (ty === 'p') {   // 一定有「真的 ptosis」；brow ptosis 與 dermatochalasis 不同時出
+    const [cs, how] = QP[id], c = CASES[cs], ce = c.eye, oe = other(ce), ans = c.ps || 'true', opts = [ans];
+    if (ans !== 'true') opts.push('true');
+    shuffle(PSK.filter(x => x !== ans)).forEach(x => { if (opts.length < 4 && !opts.some(o => pairBD(o, x))) opts.push(x); });
+    const S = st0(cs, { R: {}, L: {} }, { act: how === 'cover' || how === 'brow' ? how : null });
+    const DO = { ref: '虛線帶＝正常的上眼瞼緣（蓋住上方角膜 1–2 mm）', cover: `圖是遮住${EZ[oe]}之後的樣子`, brow: `圖是把${EZ[ce]}的眉毛往上抬之後的樣子`, under: '虛線＝皮膚底下真正的上眼瞼緣（示意）' };
+    const WHY = { retr: `${EZ[ce]}的眼瞼在正常位置（蓋住上方角膜 1–2 mm），是${EZ[oe]}縮上去、露出上方的鞏膜：對側 lid retraction${s('S1')}`,
+      hypo: `遮住${EZ[oe]}後，${EZ[ce]}往上轉去注視，上眼瞼跟著回到正常：同側 hypotropia 讓上眼瞼跟著眼球往下${s('S1')}`,
+      brow: `把眉毛抬回去，${EZ[ce]}的眼瞼緣高度正常：brow ptosis${s('S1')}`,
+      derm: `皮膚底下的眼瞼緣在正常高度：多出來的皮膚蓋住眼瞼緣，看起來像 ptosis；不過 dermatochalasis 也可能真的造成 mechanical ptosis${s('S1')}`,
+      true: how === 'ref' ? `${EZ[ce]}的眼瞼緣比正常位置低（Kanski：正常蓋住上方角膜約 2 mm${s('S1')}；EyeWiki：1–2 mm${s('S4')}），${EZ[oe]}在正常範圍：真的 ptosis` : `遮住${EZ[oe]}後${EZ[ce]}的眼瞼沒有變，不是 hypotropia 造成的：真的 ptosis${s('S1')}` };
+    return { key, type: 'ps', ans, opts: shuffle(opts), lab: x => PSL[x], S, ref: how === 'ref', under: how === 'under', vh: '外眼正面：檢查者面對病人（圖左＝病人右眼）',
+      prompt: [`${EZ[ce]}看起來比較垂。${DO[how]}`, '是真的 ptosis，還是 pseudoptosis？'], more: WHY[ans], go: { cs, act: S.act, ref: how === 'ref', under: how === 'under' } };
+  }
+  const cs = QCG[id], c = CASES[cs], S = st0(cs, { R: {}, L: {} }, { gaze: 'd' }), G = geomOf(S), dd = G.eyes[G.ce].yu - G.eyes[G.oe].yu, ans = dd < 0 ? 'cH' : 'aL';
+  return { key, type: 'cg', ans, opts: ['cH', 'cL', 'aH', 'aL'], lab: x => CGL[x], S, vh: '外眼正面：病人往下看',
+    prompt: [`檢查者面對病人（圖左＝病人右眼）；${EZ[G.ce]}是下垂的那一眼，虛線＝${EZ[G.oe]}上眼瞼緣的高度`, '病人往下看：先天還是後天？'],
+    more: `往下看時${EZ[G.ce]}比${EZ[G.oe]}${dd < 0 ? `高 ${fx(-dd)} mm` : dd > 0 ? `低 ${fx(dd)} mm` : '一樣高'}。先天 ptosis 的 levator 放鬆不好，往下看時下垂的眼瞼比正常的高；後天的同高或比較低${s('S2')}${cs === 'conS' ? `；這個例子也沒有 crease，先天 ptosis 沒有 crease 表示 LF 差${s('S1')}` : ''}${c.mg ? `；MG 也是後天的 ptosis${s('S1')}` : ''}`,
+    go: { cs, gaze: 'd' } };
+}
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
+function quizHTML() {
+  const q = st.quiz, lab0 = x => x;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>量得準，才選得對術式</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">四種題型：用放大尺讀一眼的 MRD1、MRD2 並算 PFH；給下垂量、LF 與 phenylephrine 反應選術式（只用各來源都同意的切點：LF ≤ 3 mm 或 ≥ 6 mm，MMCR 要 LF > 10 mm、下垂 ≤ 2 mm、phenylephrine 有反應、後天）；看圖與做過的檢查，判斷是真的 ptosis 還是哪一種 pseudoptosis；看病人往下看的樣子判斷先天或後天。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>再看一次</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i], lab = it.lab || lab0;
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  h += `<div class="prompt"><div class="k">${it.prompt[0]}</div><div class="q">${it.prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${lab(o)}</button>`).join('')}</div>`;
+  if (q.ans) {
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${lab(q.ans.pick)}；` : ' '}答案是 ${lab(it.ans)}。<br>${it.more}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
+  let pool = KEYS.filter(k => keyView(k) === st.view && types.includes(kType(k)));
+  if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
+  render();
+}
+function answer(a) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  q.ans = a; if (a.ok) q.score++;
+  q.log.push({ key: it.key, ok: a.ok, type: it.type });
+  const m = store.get();
+  if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
+  store.save(); render();
+}
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function setView(v) {
+  animStop(); st.view = v;
+  try { history.replaceState(null, '', v === 'pt' ? location.pathname : '#' + v); } catch (e) { }
+  if (st.learnMode === 'quiz') st.quiz = quizDefaults();
+}
+function setMode(m) {
+  animStop(); st.learnMode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
+  render();
+}
+function goKey(k) {   // 錯題本「再看一次」：回到學習模式的同一個設定
+  const g = itemOf(k).go;
+  setView('pt'); setCase(g.cs);
+  Object.assign(st, { ov: JSON.parse(JSON.stringify(g.ov || { R: {}, L: {} })), act: g.act || null, gaze: g.gaze || 'p', ref: !!g.ref, under: !!g.under });
+  if (g.pe) st.pe = g.pe;
+  if (g.wink) st.wink = g.wink;
+  render();
+}
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.learnMode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const cs = t.closest('[data-cs]'); if (cs) { setCase(cs.dataset.cs); render(); return; }
+  const gz = t.closest('[data-gz]'); if (gz) { animStop(); Object.assign(st, { gaze: gz.dataset.gz, act: null }); render(); return; }
+  const ac = t.closest('[data-act]'); if (ac) {
+    const k = ac.dataset.act;
+    animStop();
+    if (st.act === k && !ANIM[k]) st.act = null; else st.act = k;   // 動畫的按鈕再按一次＝重播
+    render(); if (ANIM[st.act]) animStart(st.act);
+    return;
+  }
+  const pe = t.closest('[data-pe]'); if (pe) { st.pe = pe.dataset.pe; render(); return; }
+  const wk = t.closest('[data-wink]'); if (wk) { st.wink = wk.dataset.wink; render(); return; }
+  const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
+  if (t.closest('#q-skip')) { answer({ ok: false }); return; }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); }
+  if (e.target.id === 't-ref') { st.ref = e.target.checked; renderMainSVG(); }
+  if (e.target.id === 't-under') { st.under = e.target.checked; renderFig(); renderPanel(); }
+});
+function setLid(e, key, v) {   // 拖拉或拉條改眼瞼高度：兩個眼瞼緣至少相隔 1 mm
+  const E = eyeBase(st.cs, e, st.ov), o = Object.assign({}, st.ov[e]);
+  if (key === 'm1') o.m1 = Math.max(-1.5, Math.min(7, Math.max(v, 1 - E.m2)));
+  else if (key === 'm2') o.m2 = Math.max(2, Math.min(7, Math.max(v, 1 - E.m1)));
+  else o[key] = v;
+  st.ov = Object.assign({}, st.ov, { [e]: o });
+}
+function afterEdit() {   // 只重畫圖、說明卡、流程與目前設定，拉條本身不重畫（才拖得動）
+  const S = cur(), G = geomOf(S), ce = G.ce, E = eyeBase(st.cs, ce, st.ov);
+  renderFig(); renderPanel(); renderFlow(); renderSelbar();
+  const m = $('#pt-m1'), l = $('#pt-lf');
+  if (m && document.activeElement !== m) m.value = E.m1;
+  if ($('#pt-m1-v')) $('#pt-m1-v').textContent = `${fx(E.m1)} mm`;
+  if (l && document.activeElement !== l) l.value = E.lf;
+  if ($('#pt-lf-v')) $('#pt-lf-v').textContent = `${fx(E.lf)} mm（Kanski：${lfK(E.lf)}）`;
+}
+document.addEventListener('input', e => {
+  const id = e.target.id, ce = ceOf(st.cs, st.ov);
+  if (id === 'pt-m1') setLid(ce, 'm1', +e.target.value);
+  else if (id === 'pt-lf') setLid(ce, 'lf', +e.target.value);
+  else return;
+  if (st.act) { animStop(); st.act = null; }
+  afterEdit();
+});
+let drag = null;
+document.addEventListener('pointerdown', e => { const h = e.target.closest('[data-hdl]'); if (!h || st.learnMode !== 'learn') return; e.preventDefault(); drag = h.dataset.hdl; });
+window.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const svg = $('#pt-svg svg'); if (!svg) return;
+  const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+  const y = (pt.matrixTransform(svg.getScreenCTM().inverse()).y - CY) / K, v = Math.round(y * 2) / 2, [eye, w] = drag.split('-');
+  const E = eyeBase(st.cs, eye, st.ov);
+  if (w === 'u' ? -v === E.m1 : v === E.m2) return;
+  setLid(eye, w === 'u' ? 'm1' : 'm2', w === 'u' ? -v : v);
+  afterEdit();
+});
+window.addEventListener('pointerup', () => { drag = null; });
+window.addEventListener('pointercancel', () => { drag = null; });
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+
+/* ---------- self-check ---------- */
+(() => {
+  const a = (c, m) => console.assert(c, 'oculoplastics self-check: ' + m), E9 = 1e-9, S0 = (cs, x) => st0(cs, { R: {}, L: {} }, x);
+  // 眼瞼曲線：cubic 的中點剛好是設定的高度；畫出的 path 也一樣
+  [-1.5, 0, 2.5, 4, 7].forEach(y => [Y0, -1.9, 5].forEach(y0 => a(Math.abs((2 * y0 + 6 * cOf(y, y0)) / 8 - y) < E9, `眼瞼曲線的中點 ${y}`)));
+  [[-4, 5], [0, 6], [1, 3]].forEach(([u, l]) => { const v = fisD(EX.R, CY, u, l).match(/-?\d+(\.\d+)?/g).map(Number), mid = i => (v[i] + 3 * v[i + 2] + 3 * v[i + 4] + v[i + 6]) / 8; a(Math.abs(mid(1) - (CY + u * K)) < 0.3 && Math.abs(mid(7) - (CY + l * K)) < 0.3, `畫出的眼裂 ${u}／${l}`); });
+  // 正常眼：MRD1 4–5 mm、蓋住上方角膜 1–2 mm（Kanski 約 2）、下眼瞼在下方 limbus 上約 1 mm、PFH 在男女的正常範圍裡
+  a(N1 >= 4 && N1 <= 5 && RL - N1 >= 1 && RL - N1 <= 2 && Math.abs(RL - N2 - 1) <= 0.2 && N1 + N2 >= 8 && N1 + N2 <= 10, '正常眼的眼瞼位置');
+  // MRD1＋MRD2＝PFH：每個例子、每個動作、兩種 phenylephrine 反應、每一眼、量皮膚或皮膚底下
+  const ACTS = [null, 'lift', 'pe', 'cover', 'brow', 'jaw'];
+  Object.keys(CASES).forEach(cs => ACTS.forEach(act => ['y', 'n'].forEach(pe => {
+    const G = geomOf(S0(cs, { act, pe }));
+    ['R', 'L'].forEach(e => [false, true].forEach(u => { const m = meas(G.eyes[e], u); a(Math.abs(m.m1 + m.m2 - m.pfh) < E9 && m.pfh > 0, `${cs}／${act}／${e}：MRD1＋MRD2＝PFH`); }));
+  })));
+  // 每個例子的患側看起來比較低
+  Object.keys(CASES).filter(k => k !== 'norm').forEach(cs => { const G = geomOf(S0(cs)); a(meas(G.eyes[G.oe]).m1 > meas(G.eyes[G.ce]).m1, `${cs}：${G.ce} 看起來比較低`); });
+  // pseudoptosis：做了對的檢查之後就不低
+  { const G = geomOf(S0('retr')); a(coverOf(G.eyes.R) >= 1 - E9 && coverOf(G.eyes.R) <= 2 + E9 && coverOf(G.eyes.L) < 0, '對側 retraction：患側在正常範圍、對側露出上方鞏膜'); }
+  { const A = geomOf(S0('hypo')), B = geomOf(S0('hypo', { act: 'cover' })); a(B.occ === 'L' && Math.abs(meas(B.eyes.R).m1 - N1) < E9 && Math.abs(coverOf(A.eyes.R) - coverOf(B.eyes.R)) < E9 && A.eyes.R.iy > 0 && B.eyes.R.iy === 0, '同側 hypotropia：遮健側後回到正常，眼瞼跟著眼球'); }
+  { const B = geomOf(S0('brow', { act: 'brow' })); a(Math.abs(meas(B.eyes.R).m1 - N1) < E9 && B.eyes.R.hood == null, 'brow ptosis：抬眉後正常'); }
+  { const G = geomOf(S0('derm')); ['R', 'L'].forEach(e => a(meas(G.eyes[e]).m1 < N1 && Math.abs(meas(G.eyes[e], true).m1 - N1) < E9, 'dermatochalasis：皮膚底下的眼瞼緣正常')); }
+  // 真的 ptosis：遮對側、抬眉都不會變
+  Object.keys(CASES).filter(k => CASES[k].g === 't').forEach(cs => ['cover', 'brow'].forEach(act => { const A = geomOf(S0(cs)), B = geomOf(S0(cs, { act })); a(Math.abs(meas(A.eyes[A.ce]).m1 - meas(B.eyes[B.ce]).m1) < E9, `${cs}：${act} 不改變真的 ptosis`); }));
+  // Hering：抬起患側（或 PE 有反應）時，只有設定 her 的例子對側掉下來，掉的量＝her；PE 沒反應時不變
+  Object.keys(CASES).forEach(cs => ['lift', 'pe'].forEach(act => ['y', 'n'].forEach(pe => {
+    const c = CASES[cs], A = geomOf(S0(cs, { pe })), B = geomOf(S0(cs, { act, pe })), low = A.B[A.ce].m1 < N1;
+    const ok = act === 'lift' ? low && A.B[A.ce].hood == null : low && !c.ps && pe === 'y', drop = A.B[A.oe].m1 - B.B[B.oe].m1;
+    a(Math.abs(drop - (ok ? c.her || 0 : 0)) < E9 && Math.abs(B.B[B.ce].m1 - (ok ? N1 : A.B[A.ce].m1)) < E9, `${cs}／${act}／PE ${pe}：Hering 與抬起的量`);
+  })));
+  a(CASES.invH.her > 0 && Object.keys(CASES).filter(k => CASES[k].her).length === 1, '只有雙側不對稱的 involutional 有 Hering');
+  // Marcus Gunn：張嘴時患側縮到比對側高；其他例子不變
+  Object.keys(CASES).forEach(cs => { const A = geomOf(S0(cs)), B = geomOf(S0(cs, { act: 'jaw' })); a(CASES[cs].jaw ? meas(B.eyes[B.ce]).m1 > meas(B.eyes[B.oe]).m1 : meas(A.eyes[A.ce]).m1 === meas(B.eyes[B.ce]).m1, `${cs}：jaw-winking`); });
+  // MG：往上看越來越垂、Cogan twitch 衝過頭再落回；其他例子沒有
+  Object.keys(CASES).forEach(cs => {
+    const mg = !!CASES[cs].mg, ce = ceOf(cs, {}), f = t => geomOf(S0(cs, { act: 'fat', t })).eyes[ce].yu, g = t => geomOf(S0(cs, { act: 'cogan', t }));
+    a(mg ? f(1) - f(0) > 1.5 : Math.abs(f(1) - f(0)) < E9, `${cs}：fatigability`);
+    a(g(0).gaze === 'cg' && g(1).gaze === 'p' && Math.abs(meas(g(1).eyes[ce], true).m1 - eyeBase(cs, ce, {}).m1) < E9 && (mg ? g(0.4).eyes[ce].yu < g(1).eyes[ce].yu - 1 : g(0.4).eyes[ce].yu >= g(1).eyes[ce].yu - E9), `${cs}：Cogan twitch`);
+  });
+  // 往下看：先天的患側比對側高、後天同高或比較低（Kanski）；crease：重度先天沒有、involutional 比對側高
+  Object.keys(CASES).forEach(cs => { const c = CASES[cs]; if (!c.kind) return; const G = geomOf(S0(cs, { gaze: 'd' })), dd = G.eyes[G.ce].yu - G.eyes[G.oe].yu; a(c.kind === 'cong' ? dd < -0.9 : dd >= -E9, `${cs}：往下看的高度`); a(G.eyes[G.ce].yu < G.eyes[G.ce].yl, `${cs}：往下看時眼裂沒有闔起來`); });
+  a(eyeBase('conS', 'L').cr == null && ['invM', 'invH'].every(cs => eyeBase(cs, 'R').cr > eyeBase(cs, 'L').cr), 'crease：重度先天沒有、involutional 比較高（Kanski）');
+  // LF：小圖的移動量＝LF；例子的分級（Kanski）：involutional good、重度先天 poor
+  Object.keys(CASES).forEach(cs => { const ce = ceOf(cs, {}), E = eyeBase(cs, ce), D = geomOf(S0(cs, { gaze: 'd' })), U = geomOf(S0(cs, { act: 'fat', t: 0 })); a(Math.abs(D.eyes[ce].yu - U.eyes[ce].yu - E.lf) < E9 && D.eyes[ce].yu === ydOf(E), `${cs}：往下看到往上看＝LF`); });
+  a(lfK(14) === 'good' && lfK(12) === 'good' && lfK(3) === 'poor' && lfK(4) === 'poor' && lfK(5) === 'fair' && lfK(11) === 'fair' && lfK(15) === 'normal' && lfK(4.5) === '介於兩級之間', 'LF 分級（Kanski）');
+  a(lfK(eyeBase('invM', 'R').lf) === 'good' && lfK(eyeBase('conS', 'L').lf) === 'poor', '例子的 LF：involutional 好、先天差（Kanski）');
+  a(grade(2) === 'mild' && grade(3) === 'moderate' && grade(4) === 'severe' && grade(2.5) !== 'mild', '下垂分級（Kanski）');
+  // 術式流程：LF < 4 sling、4–5 文獻不一、> 5 levator；MMCR 只有 LF > 10、低 ≤ 2、PE 有反應、後天才算都符合
+  for (let lf = 0; lf <= 17; lf += 0.5) for (let d = 0.5; d <= 6; d += 0.5) ['y', 'n'].forEach(pe => [false, true].forEach(cong => {
+    const R = ptFlow({ ps: null, mg: false, jaw: false, wink: 's', cong, d, lf, pe });
+    a(lf < 4 ? R.rec === 'sling' : lf <= 5 ? R.rec === 'gray' : R.rec === 'lev' || R.rec === 'both', `LF ${lf} mm 的術式`);
+    a((R.rec === 'both') === (lf > 10 && d <= 2 && pe === 'y' && !cong), `MMCR：LF ${lf}、低 ${d}、PE ${pe}、${cong ? '先天' : '後天'}`);
+    if (R.rec === 'lev') a((lf < 10 || d > 3) === (R.mm === 'no'), `MMCR 不符合的理由：LF ${lf}、低 ${d}`);
+  }));
+  const F0 = { ps: null, mg: false, jaw: false, wink: 's', cong: false, d: 3, lf: 12, pe: 'y' };
+  a(ptFlow(Object.assign({}, F0, { ps: 'retr' })).rec === 'pseudo' && ptFlow(Object.assign({}, F0, { mg: true })).rec === 'mg' && ptFlow(Object.assign({}, F0, { jaw: true, cong: true })).rec === 'mgjw'
+    && ptFlow(Object.assign({}, F0, { jaw: true, cong: true, wink: 'm', lf: 7 })).rec === 'lev' && ptFlow(Object.assign({}, F0, { d: 0 })).rec === 'none', '流程：pseudoptosis、MG、Marcus Gunn、沒有 ptosis');
+  // 測驗：選項含答案、四個不重複；答案和圖一致
+  for (let n = 0; n < 20; n++) KEYS.forEach(k => {
+    const it = itemOf(k);
+    a(it.opts.includes(it.ans) && it.opts.length === 4 && new Set(it.opts).size === 4, `${k} 的選項含答案、四個不重複`);
+    if (it.type === 'ps') a(!it.opts.some(o => it.opts.some(x => pairBD(o, x))) && it.opts.includes('true'), `${k}：有「真的 ptosis」、brow 與 derm 不同時出`);
+  });
+  Object.entries(QMR).forEach(([id, [e, m1, m2]]) => { const it = itemOf('pt:m:' + id), m = meas(geomOf(it.S).eyes[e]), o = meas(geomOf(it.S).eyes[other(e)]); a(it.ans === `${m.m1}/${m.m2}` && m.pfh === m1 + m2 && o.m1 === N1 && o.m2 === N2 && m1 >= 1, `pt:m:${id}：圖上量到的＝答案`); });
+  Object.entries(QS).forEach(([id, q]) => {
+    const it = itemOf('pt:s:' + id), F = flowIn(it.S), R = ptFlow(F);
+    a(it.ans === q[4] && Math.abs(F.d - q[1]) < E9 && F.lf === q[2] && (F.lf <= 3 || F.lf >= 6) && R.mm !== 'gray' && (R.rec !== 'sling' || F.d > 4), `pt:s:${id}：答案＝${q[4]}，且避開切點不同的地方`);
+  });
+  Object.entries(QP).forEach(([id, [cs, how]]) => {
+    const it = itemOf('pt:p:' + id), G = geomOf(it.S), c = CASES[cs], ce = G.ce, oe = G.oe;
+    if (c.ps === 'retr') a(how === 'ref' && coverOf(G.eyes[ce]) <= 2 + E9 && coverOf(G.eyes[oe]) < 0, `pt:p:${id}：retraction`);
+    else if (c.ps) a(Math.abs(meas(G.eyes[ce], it.under).m1 - N1) < E9, `pt:p:${id}：做了檢查之後正常`);
+    else a(coverOf(G.eyes[ce]) > 2 + E9 && coverOf(G.eyes[oe]) <= 2 + E9 && coverOf(G.eyes[oe]) >= 1 - E9, `pt:p:${id}：真的 ptosis 在正常範圍以下`);
+  });
+  Object.entries(QCG).forEach(([id, cs]) => { const it = itemOf('pt:c:' + id), G = geomOf(it.S), dd = G.eyes[G.ce].yu - G.eyes[G.oe].yu; a(G.gaze === 'd' && it.ans === (CASES[cs].kind === 'cong' ? 'cH' : 'aL') && (dd < 0) === (CASES[cs].kind === 'cong'), `pt:c:${id}：往下看的圖和答案一致`); });
+  // 引用都在來源清單
+  const sv = Object.assign({}, st);
+  Object.keys(CASES).forEach(cs => [null, 'lift', 'pe', 'cover', 'brow', 'fat', 'cogan', 'jaw'].forEach(act => ['p', 'd'].forEach(gaze => ['y', 'n'].forEach(pe => ['s', 'm'].forEach(wink => {
+    Object.assign(st, { cs, ov: { R: {}, L: {} }, act, gaze, pe, wink, t: 1 });
+    refs(ptCard() + flowHTML(cur()) + statusTxt(cur(), geomOf(cur()))).forEach(r => a(SRC[r], `${cs}／${act} 的引用 ${r}`));
+  })))));
+  Object.assign(st, sv);
+  KEYS.forEach(k => refs(itemOf(k).more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`)));
+  // 圖在框內：眉毛、眼瞼、尺、遮眼板；兩眼不重疊
+  Object.keys(CASES).forEach(cs => [null, 'brow', 'jaw', 'lift'].forEach(act => ['p', 'd'].forEach(gaze => {
+    const G = geomOf(S0(cs, { act, gaze }));
+    ['R', 'L'].forEach(e => { const g = G.eyes[e]; a(CY + (g.yb - 1.3) * K > 22 && CY + g.yl * K < FH - 20 && CY + g.yu * K > 40, `${cs}／${act}／${gaze}／${e}：在框內`); });
+  })));
+  a(CY - 8.4 * K > 22 && CY + 7.4 * K < FH - 20 && EX.R - OCW >= 0 && EX.L + OCW <= FW && EX.R + FA * K < EX.L - FA * K, '尺、遮眼板在框內，兩眼不重疊');
+  Object.keys(CASES).forEach(cs => { const E = eyeBase(cs, ceOf(cs, {})), yd = ydOf(E); a(LCY + (yd - Math.max(E.lf + 2, 8) - 0.4) * K2 > 0 && LCY + (yd - E.lf) * K2 > 0 && LCY + (E.m2 + DG.l) * K2 < LH - 24 && LCY + (E.yb - 2) * K2 > 0, `${cs}：LF 小圖在框內`); });
+})();
+
+render();
+</script>
+
+</body>
+</html>
