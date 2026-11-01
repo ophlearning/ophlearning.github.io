@@ -1,0 +1,5 @@
+# agent-browser（瀏覽器自動化）的截圖、下載、登入狀態與網路紀錄，不進 git
+qa-screenshots/
+agent-browser-downloads/
+agent-browser-state/
+*.har
