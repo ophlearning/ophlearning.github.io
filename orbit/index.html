@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>眼眶互動圖譜</title>
+<meta name="description" content="互動式眼眶圖譜：眼突與 Hertel——由頭頂往下看兩眼眶，Hertel 的兩腳架在 lateral orbital rim 上，拉條改兩眼眼球的位置，讀角膜頂點對到的刻度；對照 Kanski、EyeWiki 與華人常模的切點判讀 proptosis 與兩眼差；例子包括 TED、肌錐內與肌錐外腫塊（axial proptosis 與 dystopia）、Valsalva 時變大的眼眶靜脈異常，以及四種 pseudoproptosis：眼瞼退縮、對側 enophthalmos、眼球變大、lateral rim 不對稱；附說明卡、測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as the uveitis page — figure stage on the left, card on the right.
+   Top view = looking down from above the head (same as the visual pathway diagram: up = anterior, left = patient's left);
+   external view = examiner facing the patient (left = patient's right eye) */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5); --t-stroke-2:rgba(44,32,74,.28);
+  --t-bone:#E6DFD0; --t-bone-s:#B3A68C; --t-fat:#F6EBC6; --t-globe:#FFFFFF; --t-cor:rgba(120,170,215,.55); --t-nerve:#E2BE6A;
+  --t-inst:#5B6170; --t-inst-f:#E4E6EC; --t-mass:#C97B84; --t-vein:#3F6FB8; --t-sight:#4B3CA0;
+  --t-face:#EFD5C4; --t-sclera:#FFFFFF; --t-iris:#7C5342; --t-limb:#4A3028; --t-pupil:#15121F; --t-tick:#1E1A2B;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-bone:#3E3A33; --t-bone-s:#6E6555; --t-fat:#5A5032; --t-globe:#D9D4E6; --t-cor:rgba(120,165,215,.45); --t-nerve:#9E8240;
+  --t-inst:#AEB3C0; --t-inst-f:#2C2A36; --t-mass:#A0606A; --t-vein:#7EA6E6; --t-sight:#A99DFF;
+  --t-face:#5E4638; --t-sclera:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-tick:#ECE9F5; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38); --t-stroke-2:rgba(232,226,248,.18);
+  --t-bone:#3E3A33; --t-bone-s:#6E6555; --t-fat:#5A5032; --t-globe:#D9D4E6; --t-cor:rgba(120,165,215,.45); --t-nerve:#9E8240;
+  --t-inst:#AEB3C0; --t-inst-f:#2C2A36; --t-mass:#A0606A; --t-vein:#7EA6E6; --t-sight:#A99DFF;
+  --t-face:#5E4638; --t-sclera:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-tick:#ECE9F5; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative}
+.fig svg{display:block;width:100%;height:auto}
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.duo>div{min-width:0}
+.solo{max-width:560px;margin:0 auto;width:100%}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.vh{font-size:12.5px;color:var(--muted);letter-spacing:.04em;padding:8px 12px 6px}
+.rd{padding:6px 14px 12px;font-size:13.5px;color:var(--ink-2)}
+.rd b{font-family:var(--f-mono);font-weight:500;color:var(--ink)}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+a.chip{text-decoration:none;display:inline-block}
+.ctbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:8px 12px 6px}
+.ctbar .grp{display:flex;flex-wrap:wrap;gap:6px}
+.ctbar .btn{padding:5px 12px;font-size:13.5px}
+.ctbar .btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+
+/* figure */
+.fig text{font-family:var(--f-display);fill:var(--ink)}
+.lab text{font-family:var(--f-body);font-size:13px;fill:var(--ink-2);paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.lab line{stroke:var(--t-stroke);stroke-width:1}
+.nolab .lab,.quiz-on .lab{display:none}
+.tv-bone{fill:var(--t-bone);stroke:var(--t-bone-s);stroke-width:1.2;stroke-linejoin:round}
+.tv-fat{fill:var(--t-fat);opacity:.75}
+.tv-globe{fill:var(--t-globe);stroke:var(--t-stroke);stroke-width:1.2}
+.tv-cor{fill:var(--t-cor);stroke:var(--t-stroke);stroke-width:1}
+.tv-nerve{fill:none;stroke:var(--t-nerve);stroke-width:10;stroke-linecap:round}
+.tv-mass{fill:var(--t-mass);stroke:var(--t-stroke);stroke-width:1}
+.tv-vein{fill:none;stroke:var(--t-vein);stroke-width:5;stroke-linecap:round}
+.tv-inst{fill:var(--t-inst-f);stroke:var(--t-inst);stroke-width:1.4}
+.tv-bar{stroke:var(--t-inst);stroke-width:5;stroke-linecap:round}
+.tv-tick{stroke:var(--t-tick);stroke-width:1}
+.tv-sight{fill:none;stroke:var(--t-sight);stroke-width:1.6;stroke-dasharray:5 4}
+.tv-ref{fill:none;stroke:var(--t-stroke);stroke-width:1;stroke-dasharray:3 4}
+.fig .tnum{font-family:var(--f-mono);font-size:10.5px;fill:var(--t-tick)}
+.fig .rdg{font-family:var(--f-mono);font-size:14px;font-weight:500;fill:var(--t-sight);paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px}
+.fig .eyen{font-family:var(--f-body);font-size:14px;fill:var(--ink-2)}
+.fv-face{fill:var(--t-face)}
+.fv-scl{fill:var(--t-sclera)}
+.fv-iris{fill:var(--t-iris)}
+.fv-limb{fill:none;stroke:var(--t-limb);stroke-width:1.4}
+.fv-pupil{fill:var(--t-pupil)}
+.fv-lid{fill:none;stroke:var(--t-stroke);stroke-width:1.6}
+.zv-bg{fill:var(--fig-bg)}
+.tvw{max-width:600px;margin:0 auto;width:100%}
+.zvw{max-width:300px;margin:0 auto;width:100%}
+.duo.keep{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.quiz-on .lab-q{display:none}
+
+@media (max-width: 560px){ .fig .tnum{font-size:14px} .fig .rdg{font-size:19px} .fig .eyen{font-size:19px} }
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--accent-soft);display:flex;flex-wrap:wrap;gap:4px 14px}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras: 拉條 */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0 8px}
+.rng{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-2);margin-bottom:8px}
+.rng label,.rng .rl{min-width:8em}
+.rng input[type=range]{flex:1 1 160px;accent-color:var(--accent);min-width:0}
+.rng .v{font-family:var(--f-mono);font-size:12.5px;color:var(--ink);min-width:11em}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .lab text{font-size:19px;stroke-width:4.5px}
+  .seg button{padding:5px 10px}
+  .rng label,.rng .rl{min-width:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>眼眶互動圖譜</h1>
+      <span class="sub">Orbit · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>上視圖是由頭頂往下看兩眼眶（同神經眼科圖譜的視路示意圖：上＝anterior、左＝病人左側，所以 OS 在左、OD 在右），Hertel 的兩腳架在 lateral orbital rim 上，虛線＝角膜頂點對到的刻度；放大圖是同一個方位的刻度與角膜頂點，不是鏡子裡實際看到的樣子。外眼正面是檢查者面對病人（同九方向眼位圖：圖左＝病人右眼 OD）。眼眶骨、眼球、視神經、腫塊的形狀與大小，各例子的讀數、眼瞼與 dystopia 的量都是示意。眼眶骨與眼外肌的解剖見<a href="../eye-atlas/#orbit">眼解剖圖譜的眼眶分頁</a>；對側眼瞼退縮造成的 pseudoptosis 見<a href="../oculoplastics/">眼整形圖譜的 ptosis 分頁</a>；眼外肌麻痺見<a href="../neuro-ophth/#eom">神經眼科圖譜</a>。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；各來源的正常值與切點不同，說明卡全部並列，測驗只用各來源都同意的讀數。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ---------- sources ---------- */
+const SRC = {
+  S1: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.114–115 Orbit › Clinical features：proptosis（optic nerve 的長度）、axial proptosis 與 dystopia、dystopia 的量法、exophthalmometer', u: null },
+  S2: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.116 Exophthalmometer 的讀數、Valsalva、pseudoproptosis、enophthalmos、dynamic properties', u: null },
+  S3: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.117 Thyroid eye disease › Introduction', u: null },
+  S4: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.120 Thyroid eye disease › Lid retraction、Proptosis', u: null },
+  S5: { t: 'EyeWiki：Exophthalmometry（Mukit FA, Giacometti J, et al.；2026-10 審閱）', u: 'https://eyewiki.org/Exophthalmometry' },
+  S6: { t: 'Cheung JJC, et al. Exophthalmometry values in the Hong Kong Chinese adult population from a population-based study. Medicine 2019;98(47):e17993（PMC 全文）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6882604/' },
+  S7: { t: 'Wu D, et al. Normal values of Hertel exophthalmometry in a Chinese Han population from Shenyang, Northeast China. Sci Rep 2015;5:8526（PMC 全文）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4336939/' }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+const fx = n => Math.round(n * 10) / 10;
+const mm = n => (Math.round(n * 2) / 2).toFixed(1);   // 讀數寫到 0.5 mm
+const EZ = { R: '右眼', L: '左眼' }, EO = { R: 'OD', L: 'OS' };
+
+/* ---------- 例子（mm，示意）：每眼 P＝眼球比正常的 lateral rim 線往前幾 mm、al＝眼軸、rim＝這側 lateral rim 往後退幾 mm、
+   ul＝上眼瞼緣在上方 limbus 之上幾 mm（−2＝正常，蓋住 2 mm）、ll＝下眼瞼緣在下方 limbus 之下幾 mm、dys＝眼球往下幾 mm、mass、vs＝Valsalva 時多突幾 mm ---------- */
+const E0 = { P: 15, al: 24, rim: 0, ul: -2, ll: 0, dys: 0, mass: null, vs: 0 };
+const EX = {
+  norm: { zh: '正常', g: 'n', R: {}, L: {} },
+  ted1: { zh: 'TED：單側', g: 't', cat: 'true', R: { P: 22, ul: 0.5 }, L: {} },
+  ted2: { zh: 'TED：雙側不對稱', g: 't', cat: 'true', R: { P: 24, ul: 1, ll: 1 }, L: { P: 21, ul: 0.5 } },
+  ic: { zh: '肌錐內腫塊', g: 't', cat: 'true', R: { P: 21, mass: 'ic' }, L: {} },
+  ec: { zh: '肌錐外腫塊（淚腺）', g: 't', cat: 'true', R: { P: 19, mass: 'ec', dys: 3 }, L: {} },
+  varix: { zh: '眼眶靜脈異常（Valsalva）', g: 't', R: { vs: 4 }, L: {} },
+  lr: { zh: '眼瞼退縮', g: 'p', cat: 'lr', R: { ul: 1.5 }, L: {} },
+  eno: { zh: '對側 enophthalmos', g: 'p', cat: 'eno', R: {}, L: { P: 11.5 } },
+  myo: { zh: '眼球變大（高度近視）', g: 'p', cat: 'globe', R: { P: 18, al: 29 }, L: {} },
+  rim: { zh: 'Lateral rim 不對稱', g: 'p', cat: 'rim', R: { rim: 3 }, L: {} }
+};
+const EXG = [['n', '正常'], ['t', '真的 proptosis'], ['p', 'Pseudoproptosis 與讀數不可靠']];
+const mirror = ex => Object.assign({}, ex, { R: ex.L, L: ex.R });
+function eyeOf(ex, ov, e, vs) {   // 例子＋拉條改的值 → 這一眼現在的狀態；H＝Hertel 讀數＝眼球位置＋rim 往後退的量
+  const E = Object.assign({}, E0, ex[e], ov && ov[e] != null ? { P: ov[e] } : {});
+  E.P = fx(E.P + (vs ? E.vs : 0)); E.H = fx(E.P + E.rim);
+  return E;
+}
+
+/* ---------- 判讀：各來源的切點 ---------- */
+function judge(R, L) {
+  const mx = Math.max(R, L), mn = Math.min(R, L), d = fx(Math.abs(R - L));
+  return { mx, mn, d,
+    k: [mx > 20, d >= 3, d >= 2 && d < 3],   // Kanski：> 20 mm＝proptosis；兩眼差 2–3 mm 以上可疑
+    w: [mx > 21, mn < 12, d > 2],            // EyeWiki：正常 12–21 mm；兩眼差 > 2 mm 不正常
+    c: [mx > 19] };                          // 瀋陽漢人：平均＋2 SD 約 19 mm
+}
+function judgeLines(R, L) {
+  const J = judge(R, L);
+  return [
+    `Kanski：${J.k[0] ? '有一眼 > 20 mm → proptosis' : '兩眼都 ≤ 20 mm'}；兩眼差 ${J.d} mm${J.k[1] ? ' → 可疑' : J.k[2] ? '（剛好在 2–3 mm 之間）' : ''}${s('S2')}`,
+    `EyeWiki：${J.w[0] ? '超過正常範圍 21 mm' : J.w[1] ? '低於正常範圍 12 mm' : '在正常範圍 12–21 mm 內'}；兩眼差${J.w[2] ? ' > 2 mm → 不正常' : ' ≤ 2 mm'}${s('S5')}`,
+    `瀋陽漢人的正常上限約 19 mm：${J.c[0] ? '有一眼超過' : '都沒超過'}${s('S7')}`
+  ];
+}
+
+/* ---------- 上視圖（mm；原點＝兩側 lateral rim 連線的中點，+x 往右、+y 往後；由頭頂往下看：上＝anterior、左＝病人左側） ---------- */
+const K = 4, OX = 240, OY = 176, TW = 480, TH = 384;
+const TX = x => fx(OX + x * K), TY = y => fx(OY + y * K);
+const GX = 31, RX = 50, BAR = -34, AP = 44;   // 眼球中心離中線、lateral rim 離中線、Hertel 橫桿、眶尖的位置（示意）
+const sg = e => e === 'R' ? 1 : -1;            // 病人右眼在圖右
+const CORR = 7.8, CORW = 5.85;                 // 角膜的曲率半徑與半寬（mm，示意）
+function globeOf(E, e) { const R = E.al / 2, ay = -E.P; return { x: sg(e) * GX, ay, R, cy: ay + R + 0.8 }; }   // 角膜頂點在 ay
+function corneaD(x, ay) { const h = CORR - Math.sqrt(CORR * CORR - CORW * CORW); return `M${TX(x - CORW)} ${TY(ay + h)}A${CORR * K} ${CORR * K} 0 0 1 ${TX(x + CORW)} ${TY(ay + h)}Z`; }
+function boneD(E) {   // 頭骨：繞過兩個眼眶（眼眶前面是開的）
+  const P = [[-60, 52], [-60, 8], [-53, E.L.rim + 1.5], [-RX, E.L.rim], [-17, AP], [-13, AP], [-12, -3], [-5, -9], [0, -10], [5, -9], [12, -3], [13, AP], [17, AP], [RX, E.R.rim], [53, E.R.rim + 1.5], [60, 8], [60, 52]];
+  return 'M' + P.map(p => `${TX(p[0])} ${TY(p[1])}`).join('L') + 'Z';
+}
+const orbitD = (e, rim) => { const g = sg(e); return 'M' + [[g * RX, rim], [g * 17, AP], [g * 13, AP], [g * 12, -3]].map(p => `${TX(p[0])} ${TY(p[1])}`).join('L') + 'Z'; };
+function labT(p, q, t, an) {   // p＝指的點，q＝字的位置（mm）
+  return `<g class="lab">${p ? `<line x1="${TX(p[0])}" y1="${TY(p[1])}" x2="${TX(q[0])}" y2="${TY(q[1] + (q[1] > p[1] ? -3.2 : 1))}"/>` : ''}<text x="${TX(q[0])}" y="${TY(q[1])}" text-anchor="${an}">${t}</text></g>`;
+}
+function topFig(ex, ov, o) {   // o：vs（Valsalva）、read（寫讀數）、mass（畫腫塊）
+  const E = { R: eyeOf(ex, ov, 'R', o.vs), L: eyeOf(ex, ov, 'L', o.vs) };
+  let h = `<svg viewBox="0 0 ${TW} ${TH}" role="img" aria-label="由頭頂往下看兩眼眶與 Hertel"><path class="tv-bone" d="${boneD(E)}"/>`;
+  ['L', 'R'].forEach(e => {
+    const G = globeOf(E[e], e), g = sg(e), m = E[e].mass;
+    h += `<path class="tv-fat" d="${orbitD(e, E[e].rim)}"/>`;
+    h += `<path class="tv-nerve" d="M${TX(G.x)} ${TY(G.cy + G.R - 1)}Q${TX(g * 24)} ${TY(G.cy + G.R + 12)} ${TX(g * 15)} ${TY(AP - 1)}"/>`;
+    if (m === 'ic' && o.mass) h += `<ellipse class="tv-mass" cx="${TX(g * 27)}" cy="${TY(G.cy + G.R + 6.5)}" rx="${6 * K}" ry="${5 * K}"/>`;
+    if (m === 'ec' && o.mass) h += `<ellipse class="tv-mass" cx="${TX(g * 41.5)}" cy="${TY(4)}" rx="${5 * K}" ry="${6 * K}"/>`;
+    if (E[e].vs && o.vs) h += `<path class="tv-vein" d="M${TX(g * 19)} ${TY(G.cy + G.R + 4)}c${3 * K} ${-3 * K} ${6 * K} ${3 * K} ${9 * K} 0s${6 * K} ${3 * K} ${9 * K} 0"/>`;
+    h += `<circle class="tv-globe" cx="${TX(G.x)}" cy="${TY(G.cy)}" r="${G.R * K}"/><path class="tv-cor" d="${corneaD(G.x, G.ay)}"/>`;
+  });
+  // Hertel：橫桿與兩個腳（腳的凹槽架在各自的 lateral rim）；刻度從 rim 往前量
+  h += `<line class="tv-bar" x1="${TX(-57)}" y1="${TY(BAR)}" x2="${TX(57)}" y2="${TY(BAR)}"/>`;
+  ['L', 'R'].forEach(e => {
+    const g = sg(e), r0 = E[e].rim, x0 = g * RX, x1 = g * (RX + 6), G = globeOf(E[e], e);
+    h += `<path class="tv-inst" d="M${TX(x0)} ${TY(r0)}L${TX(x0)} ${TY(BAR)}L${TX(x1)} ${TY(BAR)}L${TX(x1)} ${TY(r0 - 1.5)}Z"/>`;
+    for (let d = 8; d <= 30; d++) { const y = r0 - d, L = d % 5 ? 1.2 : 2.4; h += `<line class="tv-tick" x1="${TX(x0)}" y1="${TY(y)}" x2="${TX(x0 + g * L)}" y2="${TY(y)}"/>`; if (!(d % 5)) h += `<text class="tnum" x="${TX(g * (RX + 4.2))}" y="${TY(y + 1)}" text-anchor="middle">${d}</text>`; }
+    h += `<path class="tv-sight" d="M${TX(G.x)} ${TY(G.ay)}L${TX(x0)} ${TY(G.ay)}"/>`;
+    if (o.read) h += `<text class="rdg" x="${TX(g * (RX - 2))}" y="${TY(G.ay - 1.4)}" text-anchor="${g > 0 ? 'end' : 'start'}">${mm(E[e].H)}</text>`;
+    h += `<text class="eyen" x="${TX(g * GX)}" y="${TY(49.5)}" text-anchor="middle">${EO[e]}（${EZ[e]}）</text>`;
+  });
+  h += labT([-RX, E.L.rim], [-36, 30], 'lateral orbital rim', 'middle') + labT([-57, BAR], [-57, BAR - 4.5], 'Hertel：腳架在 rim 上', 'start') + labT([14, 20], [24, 37], '眼眶', 'middle');
+  if (o.mass && E.R.mass === 'ic') h += labT([27, globeOf(E.R, 'R').cy + 12 + 6.5], [36, 40], '肌錐內腫塊', 'middle');
+  if (o.mass && E.R.mass === 'ec') h += labT([41.5, 9], [44, 22], '淚腺腫塊', 'middle');
+  return h + '</svg>';
+}
+
+/* ---------- 放大：一眼的刻度與角膜頂點（同上視圖的方位，10 px/mm） ---------- */
+const ZW = 200, ZH = 170;
+function zFig(e, H, shift) {   // shift：刻度窗往下移幾 mm（測驗時讓答案不總在同一個位置）
+  const w0 = Math.floor(H) - 5 - shift, y = d => fx(155 - (d - w0) * 10), lat = e === 'R' ? 1 : -1, rx = lat > 0 ? 150 : 50, cx = lat > 0 ? 66 : 134;
+  const hh = (CORR - Math.sqrt(CORR * CORR - CORW * CORW)) * 10, ay = y(H);
+  let h = `<svg viewBox="0 0 ${ZW} ${ZH}" role="img" aria-label="${EO[e]} 的刻度放大"><defs><clipPath id="zc-${e}"><rect x="0" y="8" width="${ZW}" height="${ZH - 16}"/></clipPath></defs><rect class="zv-bg" width="${ZW}" height="${ZH}"/><g clip-path="url(#zc-${e})">`;
+  h += `<path class="tv-globe" d="M${cx - 62} ${ZH}L${cx - CORW * 10} ${fx(ay + hh + 8)}L${cx + CORW * 10} ${fx(ay + hh + 8)}L${cx + 62} ${ZH}Z"/>`;
+  h += `<path class="tv-cor" d="M${cx - CORW * 10} ${fx(ay + hh)}A${CORR * 10} ${CORR * 10} 0 0 1 ${cx + CORW * 10} ${fx(ay + hh)}L${cx + CORW * 10} ${fx(ay + hh + 8)}L${cx - CORW * 10} ${fx(ay + hh + 8)}Z"/>`;
+  h += `<rect class="tv-inst" x="${lat > 0 ? rx : rx - 26}" y="0" width="26" height="${ZH}"/>`;
+  for (let d = w0; d <= w0 + 15; d += 0.5) { const L = d % 5 === 0 ? 12 : d % 1 === 0 ? 8 : 4; h += `<line class="tv-tick" x1="${rx}" y1="${y(d)}" x2="${rx + lat * L}" y2="${y(d)}"/>`; if (d % 2 === 0) h += `<text class="tnum" x="${rx + lat * 19}" y="${fx(y(d) + 4)}" text-anchor="middle">${d}</text>`; }
+  h += `<path class="tv-sight" d="M${cx} ${ay}L${rx} ${ay}"/></g>`;
+  return h + `<text class="eyen" x="${lat > 0 ? 8 : ZW - 8}" y="22" text-anchor="${lat > 0 ? 'start' : 'end'}">${EO[e]}</text></svg>`;
+}
+
+/* ---------- 外眼正面（檢查者面對病人：圖左＝病人右眼；5 px/mm） ---------- */
+const FK = 5, FCX = 230, FCY = 88, FW = 460, FH = 186, RL = 5.85, RPU = 1.8, FA = 13, FY0 = 0.4;
+const FX = (e, x) => fx(FCX + (e === 'R' ? -GX : GX) * FK + x * FK), FY = y => fx(FCY + y * FK);
+const cOf = (y, y0 = FY0) => (4 * y - y0) / 3;
+function apD(e, E) {   // 眼裂：上眼瞼緣在 −RL − ul、下眼瞼緣在 RL + ll（眼球往下 dys 時眼瞼跟著往下，示意）
+  const u = -RL - E.ul + E.dys, l = RL + E.ll + E.dys, y0 = FY0 + E.dys;
+  return `M${FX(e, -FA)} ${FY(y0)}C${FX(e, -FA * .55)} ${FY(cOf(u, y0))} ${FX(e, FA * .55)} ${FY(cOf(u, y0))} ${FX(e, FA)} ${FY(y0)}C${FX(e, FA * .55)} ${FY(cOf(l, y0))} ${FX(e, -FA * .55)} ${FY(cOf(l, y0))} ${FX(e, -FA)} ${FY(y0)}Z`;
+}
+function frontFig(ex, ov, o) {
+  const E = { R: eyeOf(ex, ov, 'R', o.vs), L: eyeOf(ex, ov, 'L', o.vs) };
+  let h = `<svg viewBox="0 0 ${FW} ${FH}" role="img" aria-label="外眼正面"><defs>${['R', 'L'].map(e => `<clipPath id="fa-${e}"><path d="${apD(e, E[e])}"/></clipPath>`).join('')}</defs><rect class="fv-face" width="${FW}" height="${FH}"/>`;
+  h += `<path class="tv-ref" d="M14 ${FY(0)}H${FW - 14}"/>`;
+  ['R', 'L'].forEach(e => {
+    const D = E[e], cy = D.dys;
+    h += `<g clip-path="url(#fa-${e})"><rect class="fv-scl" width="${FW}" height="${FH}"/><circle class="fv-iris" cx="${FX(e, 0)}" cy="${FY(cy)}" r="${RL * FK}"/><circle class="fv-pupil" cx="${FX(e, 0)}" cy="${FY(cy)}" r="${RPU * FK}"/><circle class="fv-limb" cx="${FX(e, 0)}" cy="${FY(cy)}" r="${RL * FK}"/></g><path class="fv-lid" d="${apD(e, D)}"/>`;
+    h += `<text class="eyen" x="${FX(e, 0)}" y="${FH - 26}" text-anchor="middle">${EO[e]} · Hertel ${mm(D.H)}</text>`;
+    if (D.dys) h += `<text class="eyen lab-q" x="${FX(e, 0)}" y="${FH - 8}" text-anchor="middle">往下 ${D.dys} mm</text>`;
+  });
+  h += `<g class="lab"><text x="${FCX}" y="${FY(0) - 6}" text-anchor="middle">瞳孔原本的高度</text></g>`;
+  return h + '</svg>';
+}
+
+/* ---------- 說明卡 ---------- */
+const PSEUDO = `Pseudoproptosis（看起來突，其實沒有 proptosis）的原因：臉不對稱、眼球變大（例如高度近視、buphthalmos）、眼瞼退縮、對側 enophthalmos${s('S2')}`;
+const EXC = {
+  norm: { en: 'Normal', def: '兩眼讀數一樣，在各來源的正常範圍內（示意）。', sec: [] },
+  ted1: { en: 'Thyroid eye disease', def: `TED 是成人單側與雙側 proptosis 最常見的原因${s('S3')}。`, sec: [['TED 的 proptosis', [`Axial，可以單側或雙側、對稱或不對稱，常是永久的${s('S4')}`, `嚴重時眼瞼閉不起來，加上眼瞼退縮與淚液問題，會造成 exposure keratopathy、角膜潰瘍與感染${s('S4')}`]]] },
+  ic: { en: 'Intraconal mass', def: `肌錐內的佔位病灶，例如 cavernous haemangioma 或視神經腫瘤，造成 axial proptosis：眼球直直往前${s('S1')}。`, sec: [['和肌錐外比較', [`肌錐外的病灶通常造成 proptosis 加上 dystopia${s('S1')}`]]] },
+  ec: { en: 'Extraconal mass', def: `肌錐外的病灶通常造成 proptosis 加上 dystopia；dystopia＝眼球在冠狀面上移位，通常是肌錐外的腫塊，例如淚腺腫瘤${s('S1')}。`, sec: [['怎麼量 dystopia', [`水平：從中線（鼻子）量到瞳孔中心${s('S1')}`, `垂直：在鼻樑上放一把水平尺，用和它垂直的尺讀${s('S1')}`, `被量的眼要往前注視，必要時遮住另一眼${s('S1')}`]]] },
+  varix: { en: 'Orbital venous anomaly', def: `頭低、Valsalva 或壓頸靜脈讓靜脈壓上升時，眼眶靜脈異常（或嬰兒的 orbital capillary haemangioma）的 proptosis 會出現或變大${s('S2')}。`, sec: [['量法', [`Hertel 可以放鬆時量一次、做 Valsalva 再量一次${s('S2')}`, `EyeWiki 把 orbital varix 同時列在 enophthalmos 與 exophthalmos 的原因裡${s('S5')}`, '按圖下的「Valsalva」看右眼往前（示意）']]] },
+  lr: { en: 'Lid retraction', def: PSEUDO + '。', sec: [['眼瞼的位置', [`正常上眼瞼緣在上方 limbus 下 2 mm、下眼瞼緣在下方 limbus；露出鞏膜（scleral show）就要懷疑眼瞼退縮${s('S4')}`, '這個例子兩眼 Hertel 一樣，只是右眼上眼瞼退縮（示意）']]] },
+  eno: { en: 'Contralateral enophthalmos', def: PSEUDO + '。', sec: [['Enophthalmos', [`原因：先天或外傷的眶壁異常、眼眶內容物萎縮（例如放射治療、scleroderma、盲童長期戳眼的 oculodigital sign），或 sclerosis（例如轉移性 scirrhous carcinoma、sclerosing orbital inflammatory disease）${s('S2')}`, `反過來，眼球小或萎縮、ptosis、對側 proptosis 會讓人以為有 enophthalmos（pseudoenophthalmos）${s('S2')}`, '這個例子右眼其實正常，是左眼凹進去（示意）']]] },
+  myo: { en: 'Enlarged globe', def: PSEUDO + '。', sec: [['眼球變大', [`香港華人研究：眼軸越長、近視越深，Hertel 讀數越高${s('S6')}`, '眼眶裡沒有東西把眼球推出來，是眼球本身變大，角膜頂點跟著往前（示意）']]] },
+  rim: { en: 'Asymmetric lateral rim', def: PSEUDO + '。', sec: [['讀數不可靠', [`Lateral orbital rim 錯位（例如 ZMC 骨折）時 Hertel 讀數不可靠；可以改用以上下眶緣為基準的 Naugle exophthalmometer${s('S5')}`, '這個例子右側 lateral rim 往後退 3 mm（示意）：兩眼眼球位置一樣，右眼讀數卻多 3 mm']]] }
+};
+EXC.ted2 = EXC.ted1;
+const HOW = [`用最小的 base（兩腳之間的距離），不要壓到眼瞼、不讓病人不舒服；病人往前看、注視一點${s('S5')}`, `記下 base，之後用同一台、同一個 base 量，前後才能比較${s('S5')}`, `可以放鬆時量一次、做 Valsalva 再量一次${s('S2')}`, `有斜視時一次只讓被量的眼注視，大角度斜視會讓讀數不準${s('S5')}`, `也要記眼裂大小與有沒有 lagophthalmos${s('S2')}`];
+const NORM = [`EyeWiki：正常 12–21 mm，隨種族與年齡不同，男性比女性高約 1–1.5 mm；EyeWiki 引的研究裡亞洲人平均 14.4 mm，比白人低${s('S5')}`, `香港華人社區研究：平均男性右眼 15.3、左眼 15.2 mm，女性右眼 14.4、左眼 14.3 mm${s('S6')}`, `瀋陽漢人研究（8–87 歲）：讀數 10–22 mm，正常上限（平均＋2 SD）右眼 19.0、左眼 18.8 mm，兩眼差平均 0.20 mm${s('S7')}`, `Kanski：讀數 > 20 mm 代表 proptosis；不管絕對值，兩眼差 2–3 mm 以上就可疑${s('S2')}`, `EyeWiki：兩眼差 > 2 mm 不正常，要進一步檢查${s('S5')}`];
+const LIMIT = [`Hertel 準確度不高、不同人量的差異大、再現性差，而且有視差（parallax）誤差${s('S5')}`, `Lateral rim 的位置不對（例如 ZMC 骨折、lateral decompression 後）時讀數不可靠${s('S5')}`];
+function hxCard() {
+  const H = st.hx, ex = EX[H.ex], c = EXC[H.ex], E = { R: eyeOf(ex, H.ov, 'R', H.vs), L: eyeOf(ex, H.ov, 'L', H.vs) };
+  const v = `<div class="verdict"><span>OD <b>${mm(E.R.H)}</b> mm、OS <b>${mm(E.L.H)}</b> mm（兩眼差 ${fx(Math.abs(E.R.H - E.L.H))} mm）</span></div>`;
+  const def = `Hertel 量的是角膜頂點到 lateral orbital rim 的前後距離${s('S5')}：兩個腳架在兩側 lateral orbital rim 的骨頭上，從刻度讀角膜頂點的位置${s('S1', 'S5')}。`;
+  const body = (H.ex === 'norm' ? '' : `<div class="sec"><h3>這個例子：${ex.zh}</h3><ul><li>${c.def}</li></ul></div>` + c.sec.map(([t, a]) => list(t, a)).join(''))
+    + list('各來源怎麼判讀現在的讀數', judgeLines(E.R.H, E.L.H)) + list('怎麼量', HOW) + list('正常值（各來源不同）', NORM) + list('Hertel 的限制', LIMIT)
+    + list('為什麼眼球能突很多', [`眼眶內的視神經長 25 mm，比眼球後面到 optic canal 的 18 mm 長，所以眼球可以往前突很多而不過度拉扯視神經${s('S1')}`]);
+  return `<div class="card"><div class="eyebrow">眼突 · Hertel · 對照 BCSC 7</div><div><h2>${H.ex === 'norm' ? 'Hertel exophthalmometry' : c.en}</h2></div><p class="zh">${H.ex === 'norm' ? '眼突計' : ex.zh}</p><p class="def">${def}</p>${v}${body}${srcList(refs(def + body))}</div>`;
+}
+
+/* ---------- app ---------- */
+const VIEWS = [{ id: 'hx', name: '眼突與 Hertel', en: 'Proptosis & Hertel' }];
+const $ = q => document.querySelector(q);
+const st = { view: 'hx', labels: true, learnMode: 'learn', quiz: null, hx: { ex: 'norm', ov: {}, vs: false } };   // 例子、拉條改的眼球位置、Valsalva
+const store = (() => {
+  const K3 = 'orbitAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K3); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K3, JSON.stringify(mem)); } catch (e) { } } };
+})();
+const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方選例子，或拉條改兩眼眼球的位置'}</span>`;
+}
+function renderTools() { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; }
+const VHT = '由頭頂往下看：上＝anterior、左＝病人左側（OS 在左、OD 在右）', VHF = '外眼正面：檢查者面對病人（圖左＝病人右眼 OD）', VHZ = '刻度放大';
+function figHTML(ex, ov, vs, o) {
+  const E = { R: eyeOf(ex, ov, 'R', vs), L: eyeOf(ex, ov, 'L', vs) };
+  return `<div class="vh">${VHT}</div><div class="tvw" id="hx-top">${topFig(ex, ov, { vs, read: o.read, mass: o.mass })}</div>`
+    + `<div class="duo keep"><div><div class="vh">${VHZ}：OS</div><div class="zvw">${zFig('L', E.L.H, 0)}</div></div><div><div class="vh">${VHZ}：OD</div><div class="zvw">${zFig('R', E.R.H, 0)}</div></div></div>`
+    + `<div class="vh">${VHF}</div><div class="tvw">${frontFig(ex, ov, { vs })}</div>`;
+}
+function renderFig() {
+  const it = quizItem(), fig = $('#fig'), H = st.hx;
+  if (it) {
+    if (it.type === 'read') fig.innerHTML = `<div class="vh">${VHZ}：${EO[it.e]}（${EZ[it.e]}）</div><div class="zvw">${zFig(it.e, it.H, it.shift)}</div>`;
+    else fig.innerHTML = `<div class="vh">${VHT}</div><div class="tvw">${topFig(it.ex, {}, { vs: false, read: true, mass: it.type !== 'dys' })}</div><div class="vh">${VHF}</div><div class="tvw">${frontFig(it.ex, {}, { vs: false })}</div>`;
+  } else {
+    fig.innerHTML = figHTML(EX[H.ex], H.ov, H.vs, { read: true, mass: true })
+      + (EX[H.ex].R.vs || EX[H.ex].L.vs ? `<div class="ctbar"><span class="hint">Valsalva：讓病人憋氣用力</span><div class="grp"><button type="button" class="btn ${H.vs ? 'on' : ''}" id="hx-vs">Valsalva</button></div></div>` : '');
+  }
+  $('#cap').innerHTML = `<span>上視圖：由頭頂往下看（上＝anterior、左＝病人左側），Hertel 的腳架在 lateral orbital rim，虛線＝角膜頂點對到的刻度（從 rim 往前量）。外眼正面：檢查者面對病人，圖左＝OD。</span><span class="ori">骨頭、眼球、腫塊的形狀與各例子的數值都是示意</span>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+}
+function renderExtra() {
+  if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  const H = st.hx, ex = EX[H.ex];
+  $('#extra').innerHTML = `<div class="xh">眼球的位置（比正常的 rim 線往前幾 mm，示意）</div>` + ['R', 'L'].map(e => { const E = eyeOf(ex, H.ov, e, false); return `<div class="rng"><label for="hx-${e}">${EO[e]}（${EZ[e]}）</label><input type="range" id="hx-${e}" min="8" max="28" step="0.5" value="${E.P}"><span class="v" id="hx-${e}-v">Hertel ${mm(eyeOf(ex, H.ov, e, H.vs).H)} mm</span></div>`; }).join('')
+    + `<div class="rng"><button type="button" class="btn" id="hx-reset" ${Object.keys(H.ov).length ? '' : 'disabled'}>回到例子的數值</button></div>`;
+}
+function renderIndex() {
+  const ix = $('#index');
+  if (st.learnMode === 'quiz') { ix.hidden = true; return; }
+  ix.hidden = false;
+  ix.innerHTML = EXG.map(([g, t]) => `<span class="lbl">${t}</span>` + Object.keys(EX).filter(k => EX[k].g === g).map(k => `<button type="button" class="chip ${st.hx.ex === k ? 'on' : ''}" data-ex="${k}">${EX[k].zh}</button>`).join('')).join('')
+    + `<span class="lbl">其他頁</span><a class="chip" href="../eye-atlas/#orbit">眼眶解剖 → 眼解剖圖譜</a><a class="chip" href="../oculoplastics/">眼瞼退縮造成的 pseudoptosis → 眼整形圖譜</a><a class="chip" href="../neuro-ophth/#eom">眼外肌麻痺 → 神經眼科圖譜</a>`;
+}
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : hxCard(); }
+function renderSelbar() {
+  const b = $('#selbar'), H = st.hx, ex = EX[H.ex], t = st.learnMode !== 'learn' ? '' : `目前：${ex.zh} · OD ${mm(eyeOf(ex, H.ov, 'R', H.vs).H)}、OS ${mm(eyeOf(ex, H.ov, 'L', H.vs).H)} mm`;
+  b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
+}
+
+/* ---------- quiz ----------
+   錯題的 key：hx:r:…（讀刻度）、hx:p:…（判讀讀數）、hx:s:…（真的還是假的 proptosis）、hx:d:…（肌錐內或肌錐外）；第二段的字母決定題型，之後的分頁用 cas:、rm: */
+const QR = { r1: ['R', 17.5, 1], r2: ['L', 14, 2], r3: ['R', 22.5, 0], r4: ['L', 19, 3], r5: ['R', 12.5, 2], r6: ['L', 24, 1], r7: ['R', 20, 3], r8: ['L', 16.5, 0] };   // 哪一眼、讀數、刻度窗往下移幾 mm
+const QP = { p1: [15, 15.5], p2: [23, 22.5], p3: [14, 18], p4: [24, 16], p5: [13, 13], p6: [17.5, 13.5], p7: [16, 22.5] };   // OD、OS 讀數；只用各來源都同意的讀數（self-check 核對）
+const QS = { s1: ['ted1', 0], s2: ['lr', 0], s3: ['eno', 0], s4: ['myo', 0], s5: ['rim', 0], s6: ['ic', 0], s7: ['lr', 1], s8: ['eno', 1] };   // 例子、1＝左右對調
+const QD = { d1: ['ic', 0], d2: ['ec', 0], d3: ['ic', 1], d4: ['ec', 1] };
+const PZ = { norm: '兩眼都在正常範圍，而且差不多', prop: '有 proptosis：有一眼超過各來源的上限', asym: '讀數都在正常範圍，但兩眼差太多' };
+const SZ = { true: '真的 proptosis：眼眶裡的東西把眼球往前推', lr: 'Pseudoproptosis：眼瞼退縮', eno: 'Pseudoproptosis：其實是對側 enophthalmos', globe: 'Pseudoproptosis：眼球本身變大', rim: 'Lateral rim 不對稱，讀數不可靠' };
+const DZ = { ic: '肌錐內病灶（例如 cavernous haemangioma、視神經腫瘤）', ec: '肌錐外病灶（例如淚腺腫瘤）' };
+function pAns(R, L) {   // 各來源都同意才出題：proptosis 要 > 21；正常範圍要 12–19；兩眼差太多要 > 3，差不多要 ≤ 1
+  const J = judge(R, L);
+  if (J.mx > 21) return 'prop';
+  if (J.mx <= 19 && J.mn >= 12 && J.d > 3) return 'asym';
+  if (J.mx <= 19 && J.mn >= 12 && J.d <= 1) return 'norm';
+  return null;
+}
+const KEYS = [...Object.keys(QR).map(k => 'hx:r:' + k), ...Object.keys(QP).map(k => 'hx:p:' + k), ...Object.keys(QS).map(k => 'hx:s:' + k), ...Object.keys(QD).map(k => 'hx:d:' + k)];
+const keyValid = k => KEYS.includes(k);
+const keyView = k => k.split(':')[0];
+const QTV = { hx: [['read', '讀刻度'], ['judge', '判讀讀數'], ['pseudo', '真的還是假的'], ['dys', '肌錐內或外']] };
+const QTZ = { r: 'read', p: 'judge', s: 'pseudo', d: 'dys' };
+const kType = k => QTZ[k.split(':')[1]];
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const exOf = (k, m) => m ? mirror(EX[k]) : EX[k];
+function keyLabel(k) {
+  const [, ty, id] = k.split(':');
+  if (ty === 'r') return `讀刻度：${EO[QR[id][0]]} ${mm(QR[id][1])} mm`;
+  if (ty === 'p') return `判讀：OD ${mm(QP[id][0])}、OS ${mm(QP[id][1])} mm`;
+  if (ty === 's') return `真的還是假的：${EX[QS[id][0]].zh}${QS[id][1] ? '（左眼）' : ''}`;
+  return `肌錐內或外：${EX[QD[id][0]].zh}${QD[id][1] ? '（左眼）' : ''}`;
+}
+function itemOf(key) {
+  const [, ty, id] = key.split(':');
+  if (ty === 'r') {
+    const [e, H, shift] = QR[id], ans = mm(H), drop = +id.slice(1) % 2 ? H + 1 : H - 1;
+    const opts = [H - 1, H - 0.5, H, H + 0.5, H + 1].filter(x => x !== drop).map(mm);
+    return { key, type: 'read', e, H, shift, prompt: ['讀刻度', `${EO[e]}（${EZ[e]}）的角膜頂點對到幾 mm？`], opts, ans, lab: x => `${x} mm`,
+      more: `虛線從角膜頂點水平拉到刻度，對到 ${ans} mm；刻度是從 lateral orbital rim 往前量的距離${s('S5')}。`, go: { ex: 'norm', ov: { [e]: H } } };
+  }
+  if (ty === 'p') {
+    const [R, L] = QP[id], ans = pAns(R, L), ex = { zh: '', R: { P: R }, L: { P: L } };
+    return { key, type: 'judge', ex, prompt: ['判讀讀數', `Hertel：OD ${mm(R)} mm、OS ${mm(L)} mm。怎麼判讀？`], opts: ['norm', 'prop', 'asym'], ans, lab: x => PZ[x],
+      more: judgeLines(R, L).join('；') + '。三個來源的結論一樣。', go: { ex: 'norm', ov: { R, L } } };
+  }
+  if (ty === 's') {
+    const [k, m] = QS[id], ex = exOf(k, m), ans = EX[k].cat, all = Object.keys(SZ);
+    const pick = shuffle(all.filter(x => x !== ans)).slice(0, 3);
+    return { key, type: 'pseudo', ex, prompt: ['真的還是假的', `${m ? '左眼' : '右眼'}看起來比較突。看上視圖、Hertel 讀數與外眼正面，最可能是哪一種？`], opts: all.filter(x => x === ans || pick.includes(x)), ans, lab: x => SZ[x],
+      more: `${EX[k].zh}：${EXC[k].def}${EXC[k].sec.map(x => x[1].join('；')).join('；')}`, go: { ex: k, ov: {} }, m };
+  }
+  const [k, m] = QD[id], ex = exOf(k, m), ans = k;
+  return { key, type: 'dys', ex, prompt: ['肌錐內或外', `${m ? '左眼' : '右眼'} proptosis。看外眼正面眼球的高度，病灶最可能在哪裡？（圖上不畫腫塊）`], opts: ['ic', 'ec'], ans, lab: x => DZ[x],
+    more: `${EX[k].R.dys ? '眼球同時往下移位（dystopia）' : '眼球直直往前、沒有移位（axial proptosis）'}：${EXC[k].def}`, go: { ex: k, ov: {} } };
+}
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
+function quizHTML() {
+  const q = st.quiz, lab0 = x => x;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>讀得準，才判斷得對</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">四種題型：看刻度放大圖讀 Hertel（讀到 0.5 mm）；給兩眼讀數判斷正常、proptosis 或兩眼差太多（只用 Kanski、EyeWiki 與華人常模都同意的讀數）；看上視圖、讀數與外眼正面，判斷是真的 proptosis 還是哪一種 pseudoproptosis；看眼球有沒有移位，判斷病灶在肌錐內或肌錐外。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>再看一次</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i], lab = it.lab || lab0;
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  h += `<div class="prompt"><div class="k">${it.prompt[0]}</div><div class="q">${it.prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${lab(o)}</button>`).join('')}</div>`;
+  if (q.ans) {
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${lab(q.ans.pick)}；` : ' '}答案是 ${lab(it.ans)}。<br>${it.more}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
+  let pool = KEYS.filter(k => keyView(k) === st.view && types.includes(kType(k)));
+  if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
+  render();
+}
+function answer(a) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  q.ans = a; if (a.ok) q.score++;
+  q.log.push({ key: it.key, ok: a.ok, type: it.type });
+  const m = store.get();
+  if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
+  store.save(); renderPanel();
+  $('#wrong-ct').textContent = Object.keys(m.wrong).filter(keyValid).length;
+}
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function setView(v) {
+  st.view = v;
+  try { history.replaceState(null, '', v === 'hx' ? location.pathname : '#' + v); } catch (e) { }
+  if (st.learnMode === 'quiz') st.quiz = quizDefaults();
+}
+function setMode(m) {
+  st.learnMode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
+  render();
+}
+function goKey(k) { const g = itemOf(k).go; setView('hx'); st.hx = { ex: g.ex, ov: Object.assign({}, g.ov), vs: false }; render(); }   // 錯題本「再看一次」
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
+}
+
+/* ---------- events ---------- */
+function afterSlide() {   // 拉條：只重畫圖、讀數與說明卡，拉條本身不重畫（才拖得動）
+  const H = st.hx, ex = EX[H.ex];
+  $('#fig').innerHTML = ''; renderFig(); renderPanel(); renderSelbar();
+  ['R', 'L'].forEach(e => { const v = $(`#hx-${e}-v`); if (v) v.textContent = `Hertel ${mm(eyeOf(ex, H.ov, e, H.vs).H)} mm`; });
+  const r = $('#hx-reset'); if (r) r.disabled = !Object.keys(H.ov).length;
+}
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.learnMode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const ex = t.closest('[data-ex]'); if (ex) { st.hx = { ex: ex.dataset.ex, ov: {}, vs: false }; render(); return; }
+  if (t.closest('#hx-vs')) { st.hx.vs = !st.hx.vs; render(); return; }
+  if (t.closest('#hx-reset')) { st.hx.ov = {}; render(); return; }
+  const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
+  if (t.closest('#q-skip')) { answer({ ok: false }); return; }
+});
+document.addEventListener('change', e => { if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); } });
+document.addEventListener('input', e => { const m = /^hx-([RL])$/.exec(e.target.id); if (m) { st.hx.ov = Object.assign({}, st.hx.ov, { [m[1]]: +e.target.value }); afterSlide(); } });
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+
+/* ---------- self-check ---------- */
+(() => {
+  const a = (c, m) => console.assert(c, 'orbit self-check: ' + m), num = (h, re) => (h.match(re) || []).map(x => +x.replace(/[^\d.-]/g, ''));
+  // 讀數＝眼球位置＋rim 往後退的量；上視圖的虛線從角膜頂點水平拉到刻度，刻度從各自的 rim 往前量
+  Object.keys(EX).forEach(k => [false, true].forEach(vs => ['R', 'L'].forEach(e => {
+    const E = eyeOf(EX[k], {}, e, vs), G = globeOf(E, e);
+    a(Math.abs(E.H - (E.P + E.rim)) < 1e-9, `${k} ${e}：讀數＝眼球位置＋rim`);
+    a(Math.abs((E.rim - E.H) - G.ay) < 1e-9, `${k} ${e}：角膜頂點在 rim 前 ${E.H} mm`);
+    a(TY(G.ay) > 12 && TY(G.ay) < TY(BAR) + 200 && TY(G.ay) > TY(BAR) + 4, `${k} ${e}：角膜頂點在橫桿後面、圖內`);
+    a(G.cy + G.R < AP - 6, `${k} ${e}：眼球在眶尖前面`);
+  })));
+  for (let P = 8; P <= 28; P += 0.5) ['R', 'L'].forEach(e => { const G = globeOf(Object.assign({}, E0, { P }), e); a(TY(G.ay) > TY(BAR) + 4 && TX(G.x + G.R) <= TW && TX(G.x - G.R) >= 0, `拉條 ${P} mm：眼球在圖內、在橫桿後面`); });
+  // 例子的設定和說明一致
+  const ER = k => eyeOf(EX[k], {}, 'R', false), EL = k => eyeOf(EX[k], {}, 'L', false);
+  a(ER('lr').H === EL('lr').H && ER('lr').ul > 0 && EL('lr').ul < 0, '眼瞼退縮：兩眼讀數一樣，只有右眼露鞏膜');
+  a(ER('eno').H === 15 && EL('eno').H < 12, '對側 enophthalmos：右眼正常、左眼凹');
+  a(ER('myo').al > EL('myo').al && ER('myo').H > EL('myo').H, '眼球變大：眼軸長、讀數高');
+  a(ER('rim').P === EL('rim').P && ER('rim').H - EL('rim').H === 3, 'rim 不對稱：眼球位置一樣、讀數差 3 mm');
+  a(eyeOf(EX.varix, {}, 'R', true).H - ER('varix').H === 4 && eyeOf(EX.varix, {}, 'L', true).H === EL('varix').H, 'Valsalva 只讓右眼往前');
+  a(ER('ec').dys > 0 && ER('ic').dys === 0 && ER('ic').mass === 'ic' && ER('ec').mass === 'ec', '肌錐外有 dystopia、肌錐內沒有');
+  a(Object.keys(EX).every(k => ['norm', 'varix'].includes(k) ? !EX[k].cat : !!SZ[EX[k].cat]), '例子的分類');
+  // 外眼正面：上眼瞼在 limbus 之上（ul > 0）才露鞏膜
+  [-2, 0.5, 1.5].forEach(ul => { const E = Object.assign({}, E0, { ul }), u = -RL - ul; a((u < -RL) === (ul > 0), `ul ${ul}：露鞏膜與否`); a(FY(u) > 0 && FY(RL + 1) < FH - 30, `ul ${ul}：眼瞼在圖內`); });
+  // 放大圖：角膜頂點在窗內、刻度有讀數那一格
+  Object.values(QR).forEach(([e, H, sh]) => { const h = zFig(e, H, sh), w0 = Math.floor(H) - 5 - sh, y = 155 - (H - w0) * 10; a(y > 20 && y < 150, `放大圖 ${H}：頂點在窗內`); a(h.includes(`y1="${fx(y)}"`), `放大圖 ${H}：有 ${H} 的刻度`); });
+  // 判讀：每題三個來源的結論一致、答案唯一
+  Object.entries(QP).forEach(([id, [R, L]]) => {
+    const ans = pAns(R, L), J = judge(R, L);
+    a(ans, `hx:p:${id} 避開各來源切點不同的讀數`);
+    if (ans === 'prop') a(J.k[0] && J.w[0] && J.c[0], `hx:p:${id} 三個來源都說 proptosis`);
+    if (ans === 'asym') a(!J.k[0] && !J.w[0] && !J.c[0] && J.k[1] && J.w[2], `hx:p:${id} 三個來源都說正常範圍但兩眼差太多`);
+    if (ans === 'norm') a(!J.k[0] && !J.w[0] && !J.w[1] && !J.c[0] && !J.k[1] && !J.k[2] && !J.w[2], `hx:p:${id} 三個來源都說正常`);
+  });
+  a(new Set(Object.values(QP).map(([R, L]) => pAns(R, L))).size === 3, '判讀題三種答案都有');
+  // 題目：選項含答案、不重複；讀刻度的選項相差 0.5 mm
+  for (let n = 0; n < 10; n++) KEYS.forEach(k => {
+    const it = itemOf(k);
+    a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === { read: 4, judge: 3, pseudo: 4, dys: 2 }[it.type], `${k} 的選項`);
+    refs(it.more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`));
+  });
+  Object.entries(QS).forEach(([id, [k, m]]) => { const it = itemOf('hx:s:' + id), E = { R: eyeOf(it.ex, {}, 'R'), L: eyeOf(it.ex, {}, 'L') }, big = m ? 'L' : 'R'; a(E[big].H >= E[m ? 'R' : 'L'].H && (E[big].H > E[m ? 'R' : 'L'].H || E[big].ul > 0), `hx:s:${id}：題目說比較突的那眼讀數比較大或露鞏膜`); });
+  Object.entries(QD).forEach(([id, [k, m]]) => { const it = itemOf('hx:d:' + id), E = eyeOf(it.ex, {}, m ? 'L' : 'R'); a((E.dys > 0) === (k === 'ec') && !topFig(it.ex, {}, { mass: false }).includes('tv-mass'), `hx:d:${id}：dystopia 和答案一致、圖上不畫腫塊`); });
+  // 說明卡的引用都在來源清單
+  const sv = st.hx;
+  Object.keys(EX).forEach(ex => { st.hx = { ex, ov: {}, vs: false }; refs(hxCard()).forEach(r => a(SRC[r], `${ex} 的引用 ${r}`)); });
+  st.hx = sv;
+})();
+
+if (location.hash === '#hx') st.view = 'hx';
+render();
+</script>
+
+</body>
+</html>
