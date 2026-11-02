@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>葡萄膜炎互動圖譜</title>
+<meta name="description" content="互動式葡萄膜炎圖譜：前房 cells 與 flare——在裂隙燈鏡下所見與 1 mm × 1 mm 光束的放大圖上，拉條改 cell 數看 SUN 分級（0、0.5+、1+、2+、3+、4+），或自己點 cell 數完再對答案；改 flare 0–4+ 看 iris 與水晶體的細節從清楚變模糊、4+ 出現 fibrin；切到散瞳後看色素顆粒混進 aqueous；看細小 KP、mutton fat KP、Fuchs 的 stellate KP、hypopyon、posterior synechiae；附說明卡、測驗與錯題本。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
+<style>
+/* Layout: same atlas plate as the oculoplastics page — figure stage on the left, card on the right; slit lamp view is the examiner facing the patient (OD: left = temporal) */
+:root{
+  --paper:#F3F2F7; --surface:#FFFFFF; --surface-2:#F8F7FB; --ink:#1E1A2B; --ink-2:#4B465D; --muted:#77718A;
+  --line:#DFDCE7; --line-2:#C8C3D6; --accent:#4B3CA0; --accent-ink:#FFFFFF; --accent-soft:#ECE9F8;
+  --ok:#1D8657; --ok-soft:rgba(29,134,87,.14); --bad:#C2363F; --bad-soft:rgba(194,54,63,.12);
+  --fig-bg:#FBFAFD; --t-stroke:rgba(44,32,74,.5);
+  --t-sclera:#E9E3DE; --t-iris:#7C5342; --t-irtex:#4A3028; --t-pupil:#15121F; --t-skin:#C99B83;
+  --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-beam:#E39B12; --sl-beamk:#A86200; --sl-glare:#FFFFFF; --sl-cor:#DCEBF5;
+  --sl-cell:#FFFFFF; --sl-pig:#B86A2A; --sl-fib:#F4EEDC; --sl-kp:#F4F0E6; --sl-kpm:#EAD9A6; --sl-hyp:#EFE5C9; --sl-mark:#4FD1A0;
+  --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910;
+  --f-display:"Spectral","Noto Serif TC",Georgia,serif;
+  --f-title:"Noto Serif TC","Spectral",Georgia,serif;
+  --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38);
+  --t-sclera:#B9B2BF; --t-iris:#8A5E4A; --t-irtex:#2B1D17; --t-pupil:#15121F; --t-skin:#5E4638;
+  --sl-beam:#F2C14E; --sl-beamk:#F7D77E; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
+  --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
+  --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
+  --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38);
+  --t-sclera:#B9B2BF; --t-iris:#8A5E4A; --t-irtex:#2B1D17; --t-pupil:#15121F; --t-skin:#5E4638;
+  --sl-beam:#F2C14E; --sl-beamk:#F7D77E; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1440px;margin:0 auto;padding-inline:20px;padding-block:14px 40px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;min-width:0}
+.brand h1{margin:0;font-family:var(--f-title);font-weight:600;font-size:28px;letter-spacing:.04em;line-height:1.1}
+.brand .sub{font-family:var(--f-display);font-style:italic;color:var(--muted);font-size:15px}
+.brand .editor{font-size:13.5px;color:var(--ink-2);letter-spacing:.03em;padding-left:14px;border-left:1px solid var(--line-2);white-space:nowrap}
+.brand .editor .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:5px 14px;border-radius:999px;cursor:pointer;color:var(--ink-2);font-size:14px;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{border:1px solid var(--line-2);background:var(--surface);padding:6px 14px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn .ct{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 7px}
+
+/* view tabs */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end}
+.tab{border:0;background:transparent;padding:8px 14px 9px;cursor:pointer;color:var(--muted);font-size:15px;border-bottom:2px solid transparent;display:flex;align-items:baseline;gap:8px}
+.tab .en{font-family:var(--f-display);font-style:italic;font-size:13px;opacity:.85}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:500}
+.tabs-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-width:0}
+.stage-bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.stage-bar .grp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tog{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);cursor:pointer;border:1px solid var(--line-2);border-radius:999px;padding:4px 11px;background:var(--surface);user-select:none}
+.tog input{accent-color:var(--accent);margin:0}
+.hint{font-size:13px;color:var(--muted)}
+.fig{background:var(--fig-bg);position:relative}
+.fig svg{display:block;width:100%;height:auto}
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.duo>div{min-width:0}
+.solo{max-width:560px;margin:0 auto;width:100%}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.vh{font-size:12.5px;color:var(--muted);letter-spacing:.04em;padding:8px 12px 6px}
+.rd{padding:6px 14px 12px;font-size:13.5px;color:var(--ink-2)}
+.rd b{font-family:var(--f-mono);font-weight:500;color:var(--ink)}
+.cap{display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.cap .ori{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.02em}
+.selbar{display:none}
+@media (max-width:1080px){.selbar:not([hidden]){display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-top:1px solid var(--line);background:var(--accent-soft);font-size:14px}}
+.extra{padding:12px 14px;border-top:1px solid var(--line)}
+.extra:empty{display:none}
+.index{padding:10px 14px 14px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px}
+.index .lbl{width:100%;font-size:11.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.chip{border:1px solid var(--line-2);background:var(--surface-2);border-radius:6px;padding:3px 9px;font-size:12.5px;cursor:pointer;color:var(--ink-2);line-height:1.4}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+a.chip{text-decoration:none;display:inline-block}
+.ctbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:8px 12px 6px}
+.ctbar .grp{display:flex;flex-wrap:wrap;gap:6px}
+.ctbar .btn{padding:5px 12px;font-size:13.5px}
+.ctbar .btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* figure：兩張圖都是暗室裡的裂隙燈畫面，淺色與深色模式都用暗底 */
+.lab text{font-family:var(--f-body);font-size:14px;fill:var(--sl-lab-ink);paint-order:stroke;stroke:var(--sl-lab-halo);stroke-width:3.5px;stroke-linejoin:round}
+.lab line{stroke:var(--sl-lab-ink);stroke-width:1;opacity:.7}
+.nolab .lab,.quiz-on .lab{display:none}
+.a-bg,.b-bg{fill:var(--sl-dark)}
+.a-skin{fill:var(--t-skin);opacity:.35}
+.a-scl{fill:var(--t-sclera)}
+.a-lid{fill:none;stroke:var(--t-stroke);stroke-width:1.4}
+.a-iris{fill:var(--t-iris)}
+.a-tex{fill:none;stroke:var(--t-irtex);stroke-width:1.1;opacity:.6}
+.a-pupil{fill:var(--t-pupil)}
+.a-limb{fill:none;stroke:var(--t-irtex);stroke-width:1.4}
+.a-veil,.a-bfl,.b-flare{fill:var(--sl-light)}
+.a-sec{fill:var(--sl-light);opacity:.9}
+.a-lens{fill:var(--sl-beam);opacity:.75}
+.a-box{fill:none;stroke:var(--sl-lab-ink);stroke-width:1;stroke-dasharray:3 2.5}
+.a-kp{fill:var(--sl-kp)}
+.a-kpm{fill:var(--sl-kpm);stroke:var(--t-irtex);stroke-width:.6;opacity:.95}
+.a-kps{fill:none;stroke:var(--sl-kp);stroke-width:1.2;stroke-linecap:round}
+.a-hyp{fill:var(--sl-hyp)}
+.a-hypl{fill:none;stroke:var(--sl-glare);stroke-width:1.2;opacity:.8}
+.a-fib{fill:var(--sl-fib);opacity:.55}
+.a-fibs,.b-fib{fill:none;stroke:var(--sl-fib);stroke-linecap:round;opacity:.8}
+.a-fibs{stroke-width:1.4}
+.b-fib{stroke-width:2.2}
+.b-fibm{fill:var(--sl-fib);opacity:.2}
+.a-ps{fill:var(--t-irtex)}
+.b-cor{fill:var(--sl-cor);opacity:.85}
+.b-ltx{fill:none;stroke:var(--sl-beamk);stroke-width:1.2;opacity:.85}
+.b-box{fill:none;stroke:var(--sl-lab-ink);stroke-width:1.2;stroke-dasharray:6 5;opacity:.75}
+.b-cell{fill:var(--sl-cell)}
+.b-pig{fill:var(--sl-pig)}
+.b-hit{fill:transparent;cursor:pointer}
+.b-mark{fill:none;stroke:var(--sl-mark);stroke-width:2}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.card{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1.15;text-wrap:balance}
+.card .zh{margin:-8px 0 0;font-size:17px;font-weight:500;color:var(--ink-2)}
+.card .def{margin:0;font-size:15px;color:var(--ink)}
+.sec h3{margin:0 0 6px;font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.sec li{font-size:14.2px;line-height:1.55}
+.sec li::marker{color:var(--line-2)}
+.sec .src{font-size:12.5px;color:var(--muted)}
+sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:2px}
+.verdict{border-radius:8px;padding:10px 12px;font-size:14px;background:var(--accent-soft);display:flex;flex-wrap:wrap;gap:4px 14px}
+
+/* quiz */
+.qz{padding:18px 20px 22px;display:flex;flex-direction:column;gap:14px}
+.qz h2{margin:0;font-size:20px}
+.qz .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.qz .lbl{font-size:12.5px;color:var(--muted);width:100%}
+.prog{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.prompt{border:1px solid var(--line-2);border-radius:var(--r);padding:14px 16px;background:var(--surface-2)}
+.prompt .k{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.prompt .q{font-size:18px;font-weight:500;margin-top:4px}
+.fb{border-radius:8px;padding:10px 12px;font-size:14px}
+.fb.ok{background:var(--ok-soft)}
+.fb.bad{background:var(--bad-soft)}
+.fb b{font-weight:600}
+.score{font-family:var(--f-display);font-size:44px;line-height:1;font-weight:600}
+.wl{display:flex;flex-direction:column;gap:6px}
+.wl button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px}
+.wl button span:last-child{font-family:var(--f-mono);font-size:12px;color:var(--bad)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(18,14,30,.42);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 24px) 16px 24px}
+.sheet .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden}
+.sheet .hd{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sheet .hd h2{margin:0;font-size:19px}
+.sheet .bd{overflow:auto;padding:4px 18px 18px}
+
+/* extras: 拉條 */
+.xh{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0 8px}
+.rng{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-2);margin-bottom:8px}
+.rng label,.rng .rl{min-width:8em}
+.rng input[type=range]{flex:1 1 160px;accent-color:var(--accent);min-width:0}
+.rng .v{font-family:var(--f-mono);font-size:12.5px;color:var(--ink);min-width:11em}
+.foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
+.foot b{color:var(--ink-2);font-weight:500}
+.foot a{color:var(--ink-2)}
+
+@media (max-width: 1080px){ .work{grid-template-columns:minmax(0,1fr)} .panel{position:static;max-height:none} }
+@media (max-width: 560px){
+  .wrap{padding-inline:16px}
+  .brand h1{font-size:23px}
+  .brand .editor{padding-left:0;border-left:0;width:100%}
+  .tab{padding:7px 10px 8px;font-size:14px}
+  .tab .en{display:none}
+  .lab text{font-size:19px;stroke-width:4.5px}
+  .seg button{padding:5px 10px}
+  .rng label,.rng .rl{min-width:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>葡萄膜炎互動圖譜</h1>
+      <span class="sub">Uveitis · 示意圖</span>
+      <span class="editor"><span class="k">Editor</span>基隆長庚 張博淳</span>
+    </div>
+    <div class="top-actions">
+      <div class="seg" role="group" aria-label="模式">
+        <button type="button" id="m-learn" aria-pressed="true">學習</button>
+        <button type="button" id="m-quiz" aria-pressed="false">測驗</button>
+      </div>
+      <button type="button" class="btn" id="b-wrong">錯題本 <span class="ct" id="wrong-ct">0</span></button>
+    </div>
+  </header>
+
+  <div class="tabs-row">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="主題"></nav>
+  </div>
+
+  <main class="work">
+    <section class="stage" aria-label="示意圖">
+      <div class="stage-bar">
+        <div class="grp" id="hintbar"></div>
+        <div class="grp" id="tools"></div>
+      </div>
+      <div class="fig" id="fig"></div>
+      <div class="selbar" id="selbar" hidden></div>
+      <div class="cap" id="cap"></div>
+      <div class="extra" id="extra"></div>
+      <div class="index" id="index"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="foot">
+    <span><b>關於圖：</b>裂隙燈鏡下所見是右眼 OD、檢查者面對病人看到的樣子（同檢查技巧圖譜：左＝temporal、右＝nasal），用 diffuse 照明畫出整個前段，再加一道從 temporal 側斜照的 1 mm × 1 mm 光束；放大圖是這道光束穿過前房的那一格，左＝角膜切面、右＝水晶體前表面，虛線框＝數 cell 的範圍。Cell 與色素顆粒的位置、flare 的濃淡、KP、hypopyon、瞳孔與眼瞼的形狀都是示意，不是照片。裂隙燈怎麼調光束見<a href="../exam/">檢查技巧圖譜的裂隙燈分頁</a>；前房與 iris 的解剖見<a href="../eye-atlas/#angle">眼解剖圖譜</a>；CMO 的 OCT 見<a href="../retina/#oct">視網膜圖譜的 OCT 分頁</a>。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；分級表依 SUN Working Group 2005 原文與 Kanski 轉載的表格。</span>
+    <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
+    <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet-wrong" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="wrong-title">
+    <div class="hd">
+      <h2 id="wrong-title">錯題本</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button type="button" class="btn primary" id="w-practice">練習錯題</button>
+        <button type="button" class="btn" id="w-clear">清除</button>
+        <button type="button" class="btn" data-close>關閉</button>
+      </div>
+    </div>
+    <div class="bd" id="wrong-body"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ---------- sources ---------- */
+const SRC = {
+  S1: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.431 Anterior uveitis › Clinical features：miosis、anterior chamber cells、aqueous flare、hypopyon、keratic precipitates、fibrinous exudate、iris nodules、posterior synechiae', u: null },
+  S2: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.432 Table 12.2 SUN grading of anterior chamber cells、Table 12.3 SUN grading of anterior chamber flare、posterior segment examination', u: null },
+  S3: { t: 'SUN Working Group（Jabs DA, Nussenblatt RB, Rosenbaum JT）. Standardization of uveitis nomenclature for reporting clinical data. Results of the First International Workshop. Am J Ophthalmol 2005;140:509–516（PMC 全文）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8935739/' },
+  S4: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.439 Treatment：topical steroids（chronic anterior uveitis 的治療目標）、cycloplegic agents', u: null }
+};
+const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
+const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
+function srcList(keys) { return `<div class="sec"><h3>來源</h3><ul class="src">${keys.map(k => `<li>${k.replace('S', '')}. ${SRC[k].u ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${SRC[k].t}</a>` : SRC[k].t}</li>`).join('')}</ul></div>`; }
+function list(title, arr) { return arr && arr.length ? `<div class="sec"><h3>${title}</h3><ul>${arr.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''; }
+const fx = n => Math.round(n * 10) / 10;
+function rng(seed) {   // 固定亂數（mulberry32）：同一個 seed 每次畫出一樣的位置
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+/* ---------- SUN 分級（Kanski p.432 Table 12.2、12.3；SUN 2005 Table 3、4） ---------- */
+const ACG = [['0', 0, 0], ['0.5+', 1, 5], ['1+', 6, 15], ['2+', 16, 25], ['3+', 26, 50], ['4+', 51, Infinity]];   // 分級、1 mm × 1 mm 光束裡的 cell 數下限與上限
+const GR = ACG.map(g => g[0]);
+const acGrade = n => ACG.find(g => n >= g[1] && n <= g[2])[0];
+const acRange = g => { const x = ACG.find(y => y[0] === g); return x[1] === 0 ? '< 1' : x[2] === Infinity ? '> 50' : `${x[1]}–${x[2]}`; };
+const FLG = [['0', 'none', '沒有'], ['1+', 'faint', '淡淡的'], ['2+', 'moderate', '中等，iris 與水晶體的細節清楚'], ['3+', 'marked', '明顯，iris 與水晶體的細節模糊'], ['4+', 'intense', '很濃，有 fibrin 或 plastic aqueous']];
+const FL = FLG.map(g => g[0]);
+const FLV = [{ op: 0, bl: 0 }, { op: .1, bl: 0 }, { op: .22, bl: 0 }, { op: .34, bl: 1.6 }, { op: .4, bl: 2.4, fib: true }];   // 畫面：霧的濃度、iris 與水晶體細節的模糊程度、fibrin（示意）
+
+/* ---------- 放大圖：1 mm × 1 mm 光束穿過前房的那一格（px；左＝角膜切面、右＝水晶體前表面） ---------- */
+const BW = 420, BH = 300, BOX = { x: 110, y: 40, s: 220 };
+const COR = [[48, 40], [78, 40], [92, 260], [62, 260]];   // 角膜切面（示意）
+const LX = 340;   // 水晶體前表面
+const CR = 3.4, PR = 2.6, DMIN = 15, MARG = 8, NMAX = 80, NPIG = 9;   // cell 半徑、色素半徑、最小間距、離框的距離、最多幾個 cell、散瞳後幾個色素顆粒
+const PTS = {};
+function cellSeq(seed) {   // 同一個 seed 的點依序產生：前 n 個就是 n 個 cell，拉條加減時只多或少最後幾個
+  if (PTS[seed]) return PTS[seed];
+  const r = rng(seed), out = [];
+  for (let k = 0; out.length < NMAX && k < 40000; k++) {
+    const x = BOX.x + MARG + r() * (BOX.s - 2 * MARG), y = BOX.y + MARG + r() * (BOX.s - 2 * MARG);
+    if (out.every(p => Math.hypot(p[0] - x, p[1] - y) >= DMIN)) out.push([fx(x), fx(y), fx(CR * (0.8 + r() * 0.4))]);
+  }
+  return (PTS[seed] = out);
+}
+function pigPts(seed, cells) {   // 散瞳後掉進 aqueous 的色素顆粒（示意），不和 cell 重疊
+  const r = rng(seed * 7 + 3), out = [];
+  for (let k = 0; out.length < NPIG && k < 20000; k++) {
+    const x = BOX.x + MARG + r() * (BOX.s - 2 * MARG), y = BOX.y + MARG + r() * (BOX.s - 2 * MARG);
+    if (cells.concat(out).every(p => Math.hypot(p[0] - x, p[1] - y) >= DMIN - 2)) out.push([fx(x), fx(y)]);
+  }
+  return out;
+}
+const FIB = ['M96 70C140 52 180 104 228 82S300 64 334 92', 'M100 150C150 128 196 176 246 150S306 136 336 160', 'M94 222C136 206 186 246 236 222S302 210 336 232', 'M150 48C138 100 172 150 156 200S168 248 160 258'];
+function bFig(o) {   // o：n（cell 數）、seed、fl（flare 0–4）、dil（散瞳後）、marks（點過的 cell）
+  const P = cellSeq(o.seed).slice(0, o.n), V = FLV[o.fl], pig = o.dil ? pigPts(o.seed, P) : [], mk = o.marks || new Set();
+  let h = `<svg viewBox="0 0 ${BW} ${BH}" role="img" aria-label="放大：1 mm × 1 mm 光束穿過前房"><defs><filter id="b-bl" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="${V.bl}"/></filter>
+<linearGradient id="b-lg" x1="0" x2="1"><stop offset="0" style="stop-color:var(--sl-light);stop-opacity:.95"/><stop offset="1" style="stop-color:var(--sl-beam);stop-opacity:.6"/></linearGradient></defs><rect class="b-bg" width="${BW}" height="${BH}"/>`;
+  if (V.op) h += `<path class="b-flare" style="opacity:${V.op}" d="M${COR[1][0]} ${BOX.y}L${LX} ${BOX.y}L${LX} ${BOX.y + BOX.s}L${COR[2][0]} ${BOX.y + BOX.s}Z"/>`;
+  h += `<path class="b-cor" d="M${COR.map(p => p.join(' ')).join('L')}Z"/>`;
+  h += `<g${V.bl ? ' filter="url(#b-bl)"' : ''}><rect x="${LX}" y="${BOX.y}" width="52" height="${BOX.s}" fill="url(#b-lg)"/>`;
+  for (let i = 0; i < 9; i++) { const x = LX + 6 + i * 5, y = BOX.y + 12 + (i % 3) * 22 + Math.floor(i / 3) * 58; h += `<path class="b-ltx" d="M${x} ${y}l2 40"/>`; }
+  h += `</g><rect class="b-box" x="${BOX.x}" y="${BOX.y}" width="${BOX.s}" height="${BOX.s}"/>`;
+  if (V.fib) h += `<path class="b-fibm" d="M120 100C160 80 260 90 300 120C320 160 290 210 240 220C190 232 130 210 118 170C110 140 108 112 120 100Z"/>` + FIB.map(d => `<path class="b-fib" d="${d}"/>`).join('');
+  h += pig.map(p => `<circle class="b-pig" cx="${p[0]}" cy="${p[1]}" r="${PR}"/>`).join('');
+  h += P.map((p, i) => `<g data-ci="${i}"><circle class="b-hit" cx="${p[0]}" cy="${p[1]}" r="10"/><circle class="b-cell" cx="${p[0]}" cy="${p[1]}" r="${p[2]}"/>${mk.has(i) ? `<circle class="b-mark" cx="${p[0]}" cy="${p[1]}" r="${CR + 4}"/>` : ''}</g>`).join('');
+  h += `<g class="lab"><text x="44" y="26">角膜（optic section）</text><text x="396" y="26" text-anchor="end">水晶體前表面</text><text x="${BOX.x + BOX.s / 2}" y="${BOX.y + BOX.s + 26}" text-anchor="middle">虛線框：1 mm × 1 mm</text></g>`;
+  return h + '</svg>';
+}
+
+/* ---------- 裂隙燈鏡下所見（mm；原點＝角膜中心，+x 往右＝nasal、+y 往下；右眼 OD，檢查者面對病人） ---------- */
+const AW = 420, AH = 330, AK = 20, ACX = 210, ACY = 160;
+const RL = 5.85, RP = 1.75, RPD = 3.75;   // limbus 半徑（眼解剖圖譜的眼球模型）、瞳孔半徑（發炎時 miosis、散瞳後；示意）
+const FA = 10.4, Y0 = 0.3, UL = -(RL - 1.8), LL = RL + 0.3;   // 眼裂半寬、內外眥高度、上眼瞼緣（蓋住上方角膜約 2 mm）、下眼瞼緣（示意）
+const X = x => fx(ACX + x * AK), Y = y => fx(ACY + y * AK);
+const cOf = (y, y0 = Y0) => (4 * y - y0) / 3;   // cubic 的控制點高度：讓曲線中央剛好在 y
+const cirD = (r, cx = 0, cy = 0) => `M${X(cx - r)} ${Y(cy)}A${fx(r * AK)} ${fx(r * AK)} 0 1 0 ${X(cx + r)} ${Y(cy)}A${fx(r * AK)} ${fx(r * AK)} 0 1 0 ${X(cx - r)} ${Y(cy)}Z`;
+const APD = `M${X(-FA)} ${Y(Y0)}C${X(-FA * .55)} ${Y(cOf(UL))} ${X(FA * .55)} ${Y(cOf(UL))} ${X(FA)} ${Y(Y0)}C${X(FA * .55)} ${Y(cOf(LL))} ${X(-FA * .55)} ${Y(cOf(LL))} ${X(-FA)} ${Y(Y0)}Z`;
+const PSA = [60, 150, 300], PSW = 16;   // posterior synechiae 黏住的方向（SVG 角度：0＝右、90＝下）與寬度（示意）
+function pupilR(th, dil, ps) {   // 瞳孔半徑：散瞳時黏住的地方張不開
+  if (!dil) return RP;
+  if (!ps) return RPD;
+  const k = Math.max(...PSA.map(a => { const d = ((th - a) % 360 + 540) % 360 - 180; return Math.exp(-((d / PSW) ** 2)); }));
+  return RPD - (RPD - RP * 1.05) * k;
+}
+function pupilD(dil, ps) {
+  if (!dil || !ps) return cirD(dil ? RPD : RP);
+  let d = '';
+  for (let i = 0; i < 144; i++) { const th = i * 2.5, r = pupilR(th, dil, ps), a = th * Math.PI / 180; d += `${i ? 'L' : 'M'}${X(r * Math.cos(a))} ${Y(r * Math.sin(a))}`; }
+  return d + 'Z';
+}
+const KTF = [1.3, 4.7, 2.7], KTM = [1.7, 4.4, 2.5];   // Arlt triangle：尖端的 y、底邊的 y、底邊半寬（mm，示意）
+const KPC = {};
+function kpPts(kind, v) {   // 每個 KP：x、y、半徑（mm）、轉角
+  const id = kind + v; if (KPC[id]) return KPC[id];
+  const r = rng(101 + v * 17 + { kpf: 0, kpm: 5, kps: 9 }[kind]), out = [];
+  const N = { kpf: 34, kpm: 8, kps: 42 }[kind], dmin = { kpf: 0.32, kpm: 0.95, kps: 0.75 }[kind];
+  for (let k = 0; out.length < N && k < 20000; k++) {
+    let x, y, rad;
+    if (kind === 'kps') { const a = r() * Math.PI * 2, d = Math.sqrt(r()) * (RL - 0.7); x = d * Math.cos(a); y = d * Math.sin(a); rad = 0.16 + r() * 0.08; if (y < UL + 0.5) continue; }
+    else { const T = kind === 'kpf' ? KTF : KTM; y = T[0] + (T[1] - T[0]) * Math.sqrt(r()); x = (r() * 2 - 1) * T[2] * (y - T[0]) / (T[1] - T[0]); rad = kind === 'kpf' ? 0.07 + r() * 0.05 : 0.3 + r() * 0.15; }
+    if (Math.hypot(x, y) + rad > RL - 0.25) continue;
+    if (out.every(p => Math.hypot(p[0] - x, p[1] - y) >= dmin)) out.push([x, y, rad, r() * 180]);
+  }
+  return (KPC[id] = out);
+}
+const HYL = RL - 1.5;   // hypopyon 的液面高度（mm，示意）
+const BM = { h: 0.5, c: [[-0.92, -0.5], [-0.7, -0.5], [-0.62, 0.5], [-0.84, 0.5]], b0: -0.62, b1: 0.38, l1: 0.62 };   // 光束：角膜切面、虛線框（1 mm × 1 mm）、照到水晶體
+function labA(p, q, t, an) {   // p＝指的點，q＝字的位置（mm）
+  const ln = p ? `<line x1="${X(p[0])}" y1="${Y(p[1])}" x2="${X(q[0] + (an === 'end' ? -1.2 : 1.2))}" y2="${Y(q[1] + (q[1] < 0 ? 0.35 : -0.95))}"/>` : '';
+  return `<g class="lab">${ln}<text x="${X(q[0])}" y="${Y(q[1])}" text-anchor="${an}">${t}</text></g>`;
+}
+function aFig(o) {   // o：fl、dil、sign（kpf、kpm、kps、hyp、ps）、v（KP 的變化）、beam（畫不畫光束）
+  const V = FLV[o.fl], ps = o.sign === 'ps', rp = o.dil ? RPD : RP;
+  let h = `<svg viewBox="0 0 ${AW} ${AH}" role="img" aria-label="裂隙燈鏡下所見：右眼"><defs><clipPath id="a-ap"><path d="${APD}"/></clipPath><clipPath id="a-cc"><path d="${cirD(RL)}"/></clipPath>
+<filter id="a-bl" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${V.bl}"/></filter></defs>`;
+  h += `<rect class="a-bg" width="${AW}" height="${AH}"/><ellipse class="a-skin" cx="${ACX}" cy="${Y(0.6)}" rx="${fx((FA + 0.8) * AK)}" ry="${fx(7.6 * AK)}"/>`;
+  h += `<g clip-path="url(#a-ap)"><rect class="a-scl" width="${AW}" height="${AH}"/><path class="a-iris" d="${cirD(RL)}"/><g${V.bl ? ' filter="url(#a-bl)"' : ''}>`;
+  for (let k = 0; k < 40; k++) { const a0 = k * 9 * Math.PI / 180, a1 = a0 + 0.06, r0 = rp + 0.15, r1 = RL - 0.25; h += `<path class="a-tex" d="M${X(r0 * Math.cos(a0))} ${Y(r0 * Math.sin(a0))}L${X(r1 * Math.cos(a1))} ${Y(r1 * Math.sin(a1))}"/>`; }
+  h += `<path class="a-tex" d="${cirD(rp + (RL - rp) * 0.35)}"/></g><path class="a-pupil" d="${pupilD(o.dil, ps)}"/>`;
+  if (ps && !o.dil) h += PSA.map(a => { const t = a * Math.PI / 180; return `<path class="a-ps" d="M${X((RP - 0.05) * Math.cos(t - 0.12))} ${Y((RP - 0.05) * Math.sin(t - 0.12))}L${X((RP - 0.3) * Math.cos(t))} ${Y((RP - 0.3) * Math.sin(t))}L${X((RP - 0.05) * Math.cos(t + 0.12))} ${Y((RP - 0.05) * Math.sin(t + 0.12))}Z"/>`; }).join('');
+  h += `<path class="a-limb" d="${cirD(RL)}"/>`;
+  if (V.op) h += `<path class="a-veil" style="opacity:${fx(V.op * 0.4 * 100) / 100}" d="${cirD(RL)}"/>`;
+  if (V.fib) { const r0 = Math.min(rp, RP) * 0.95; h += `<path class="a-fib" d="${cirD(r0 * 0.85, 0.1, 0.05)}"/><path class="a-fibs" d="M${X(-r0)} ${Y(-0.3)}C${X(-0.4)} ${Y(-0.9)} ${X(0.5)} ${Y(0.6)} ${X(r0)} ${Y(0.1)}M${X(-0.6)} ${Y(r0 * 0.8)}C${X(-0.2)} ${Y(0)} ${X(0.3)} ${Y(-0.2)} ${X(0.5)} ${Y(-r0 * 0.8)}"/>`; }
+  if (o.sign === 'kpf') h += kpPts('kpf', o.v || 0).map(p => `<circle class="a-kp" cx="${X(p[0])}" cy="${Y(p[1])}" r="${fx(p[2] * AK)}"/>`).join('');
+  if (o.sign === 'kpm') h += kpPts('kpm', o.v || 0).map(p => `<ellipse class="a-kpm" cx="${X(p[0])}" cy="${Y(p[1])}" rx="${fx(p[2] * AK)}" ry="${fx(p[2] * AK * 0.85)}" transform="rotate(${fx(p[3])} ${X(p[0])} ${Y(p[1])})"/>`).join('');
+  if (o.sign === 'kps') h += kpPts('kps', o.v || 0).map(p => { const r = p[2]; return [0, 60, 120].map(d => { const a = (p[3] + d) * Math.PI / 180, dx = r * Math.cos(a), dy = r * Math.sin(a); return `<path class="a-kps" d="M${X(p[0] - dx)} ${Y(p[1] - dy)}L${X(p[0] + dx)} ${Y(p[1] + dy)}"/>`; }).join(''); }).join('');
+  if (o.sign === 'hyp') { const xh = Math.sqrt(RL * RL - HYL * HYL); h += `<g clip-path="url(#a-cc)"><rect class="a-hyp" x="${X(-RL)}" y="${Y(HYL)}" width="${fx(2 * RL * AK)}" height="${fx((RL - HYL) * AK + 2)}"/></g><path class="a-hypl" d="M${X(-xh)} ${Y(HYL)}L${X(xh)} ${Y(HYL)}"/>`; }
+  if (o.beam) {
+    h += `<path class="a-sec" d="M${BM.c.map(p => `${X(p[0])} ${Y(p[1])}`).join('L')}Z"/>`;
+    if (V.op) h += `<rect class="a-bfl" style="opacity:${fx(V.op * 1.6 * 100) / 100}" x="${X(BM.b0)}" y="${Y(-BM.h)}" width="${fx((BM.b1 - BM.b0) * AK)}" height="${fx(2 * BM.h * AK)}"/>`;
+    h += `<rect class="a-lens" x="${X(BM.b1)}" y="${Y(-BM.h)}" width="${fx((BM.l1 - BM.b1) * AK)}" height="${fx(2 * BM.h * AK)}"/><rect class="a-box" x="${X(BM.b0)}" y="${Y(-BM.h)}" width="${fx((BM.b1 - BM.b0) * AK)}" height="${fx(2 * BM.h * AK)}"/>`;
+  }
+  h += `</g><path class="a-lid" d="${APD}"/>`;
+  if (o.beam) h += labA([BM.b1, -BM.h], [10, -6.9], '1 mm × 1 mm 光束（看放大圖）', 'end');
+  if (V.fib) h += labA([-0.6, -0.2], [-10, -6.9], 'fibrin（plastic aqueous）', 'start');
+  const SL = { kpf: [[0, 3.6], '細小 KP（Arlt triangle）'], kpm: [[0, 3.4], 'mutton fat KP'], kps: [[kpPts('kps', o.v || 0)[0][0], kpPts('kps', o.v || 0)[0][1]], 'stellate KP：散在整個角膜'], hyp: [[1.8, HYL + 0.5], 'hypopyon：水平的液面'], ps: [[pupilR(PSA[0], o.dil, true) * Math.cos(PSA[0] * Math.PI / 180), pupilR(PSA[0], o.dil, true) * Math.sin(PSA[0] * Math.PI / 180)], 'posterior synechiae（黏住的地方）'] }[o.sign];
+  if (SL) h += labA(SL[0], [-10, 7.75], SL[1], 'start');
+  return h + '</svg>';
+}
+/* ---------- 說明卡 ---------- */
+const KPDIFF = [`Kanski 用 KP 的大小推測是 granulomatous 還是 non-granulomatous${s('S1')}；SUN 2005 對 KP 該怎麼描述、能不能用 granulomatous 形容 KP 都沒有共識，建議之後用一套標準照片訂描述詞${s('S3')}`];
+const KPWHERE = `通常集中在下方：受重力與 aqueous 對流影響，常排成尖端朝上的三角形（Arlt triangle）${s('S1')}`;
+const SG = {
+  kpf: { en: 'Keratic precipitates', zh: '細小 KP（non-granulomatous）', def: `KP 是沉積在角膜 endothelium 上的發炎細胞，例如 lymphocyte、plasma cell、macrophage${s('S1')}。`,
+    sec: [['長在哪裡', [KPWHERE, `例外是 Fuchs uveitis syndrome，KP 散在整個角膜${s('S1')}`]], ['長什麼樣', [`Non-granulomatous 發炎（典型是 AAU）的 KP 比較小${s('S1')}`, `發炎消退時 KP 通常會吸收；存在很久的可能變成有色素${s('S1')}`, `真正聚成 KP 之前，會先看到一顆顆細胞散在 endothelium 上（endothelial dusting）${s('S1')}`]], ['文獻不一', KPDIFF]] },
+  kpm: { en: 'Mutton fat KP', zh: 'Mutton fat KP（granulomatous）', def: `Granulomatous 發炎（典型是 chronic）的 KP 中到大，裡面的細胞可能包括 epithelioid cell 與 multinucleated cell；又大又像油脂的叫 mutton fat KP${s('S1')}。`,
+    sec: [['長在哪裡', [KPWHERE]], ['之後的變化', [`Granulomatous KP 可能變成有色素，或變得像毛玻璃（ground glass）${s('S1')}`]], ['文獻不一', KPDIFF]] },
+  kps: { en: 'Stellate KP', zh: 'Stellate KP（Fuchs uveitis syndrome）', def: `Fuchs uveitis syndrome 的 KP 小到中，呈星狀（stellate）或絲狀，散在整個角膜，不像其他 KP 集中在下方${s('S1')}。`,
+    sec: [['文獻不一', KPDIFF]] },
+  hyp: { en: 'Hypopyon', zh: '前房積膿', def: `前房下方一層白色的膿樣滲出物，由大量發炎細胞組成，受重力形成水平的液面${s('S1')}。`,
+    sec: [['常見在哪裡', [`HLA-B27 相關的 AAU 常見；fibrin 多，所以不會流動、吸收得慢${s('S1')}`, `Behçet disease 的 hypopyon fibrin 少，會隨頭的姿勢移動${s('S1')}`, `嚴重的 AAU 常有前房 fibrin 滲出，和 hypopyon 一樣常見於 HLA-B27 相關的發炎${s('S1')}`]], ['怎麼記錄', [`SUN：hypopyon 另外記錄，不併進 cell 分級${s('S3')}`]]] },
+  ps: { en: 'Posterior synechiae', zh: '虹膜後沾黏', def: `Posterior synechiae（PS）是瞳孔緣和水晶體前囊之間的發炎沾黏${s('S1')}。`,
+    sec: [['為什麼會長', [`發炎時 sphincter 痙攣造成 miosis，容易形成 PS${s('S1')}`, `可能在 Koeppe nodule（長在瞳孔緣的 iris nodule）的位置形成${s('S1')}`]], ['怎麼處理', [`PS 形成得很快，所以除了很輕微的 AAU，一開始都會點散瞳劑預防；已經形成的要盡量在變成永久之前拉開${s('S1')}`, `Cycloplegic 用來預防 PS、拉開剛形成的沾黏，也能放鬆瞳孔與 ciliary muscle 的痙攣、減輕不適${s('S4')}`]], ['圖上看', ['切到「散瞳後」：黏住的地方張不開，瞳孔變得不規則（示意）']]] }
+};
+const SGK = ['kpf', 'kpm', 'kps', 'hyp', 'ps'];
+const KPZ = { kpf: 'Non-granulomatous：細小的 KP', kpm: 'Granulomatous：mutton fat KP', kps: 'Fuchs uveitis syndrome：stellate KP' };
+const CELLS = [
+  [`用 1 mm × 1 mm 的光束，光要夠亮、倍率要夠大，估計光束裡有幾個 cell${s('S1', 'S3')}`, `要在散瞳前數：散瞳可能讓色素細胞掉進 aqueous${s('S1')}。切到「散瞳後」，褐色的就是色素顆粒（示意），不要算進去`, `Cell 也常出現在 anterior vitreous${s('S1')}`],
+  ACG.map((g, i) => `<b>${g[0]}</b>：${acRange(g[0])} 個${i ? '' : s('S2', 'S3')}`),
+  [`SUN 用「0.5+」取代「trace」；分級只是順序，數字之間沒有倍數關係${s('S3')}`, `Hypopyon 另外記錄，不併進 cell 分級${s('S3')}`, `報告研究結果時，inactive＝0 級（最多偶爾一個 cell）；每個視野都有 1 個 cell 已經是 0.5+，不算 inactive${s('S3')}`],
+  FLG.map((g, i) => `<b>${g[0]}</b>：${g[1]}（${g[2]}）${i ? '' : s('S2', 'S3')}`),
+  [`臨床上依 iris 與水晶體的細節被遮住多少來分級；有 laser flare photometry 時比較客觀${s('S1')}`, `依 JIA 相關 chronic anterior uveitis 的研究，現在認為多數或所有病人有 flare 就代表發炎還在活動，長期併發症的風險較高${s('S1')}`, `Chronic anterior uveitis 的治療目標是完全壓住發炎：沒有 cell，也沒有 flare${s('S4')}`, `SUN 2005 建議之後做一套 flare 的標準照片輔助分級${s('S3')}`],
+  [`每個 anterior uveitis 都要看後段：找偽裝成 anterior uveitis 的原因（例如視網膜剝離、腫瘤）、原發在 intermediate 或 posterior 的發炎，以及 CMO 等併發症${s('S2')}`]
+];
+function verdictTxt() {
+  const A = st.ac, cm = A.cm, fl = FLG[A.fl];
+  const c = cm ? (cm.shown ? `實際 <b>${cm.n}</b> 個 cell → <b>${acGrade(cm.n)}</b>（${acRange(acGrade(cm.n))}）；你標了 <b>${st.mk.set.size}</b> 個` : `自己數：你標了 <b>${st.mk.set.size}</b> 個，數完按「對答案」`) : `光束裡 <b>${A.n}</b> 個 cell → <b>${acGrade(A.n)}</b>（${acRange(acGrade(A.n))}）`;
+  return `${c}；flare <b>${fl[0]}</b>（${fl[1]}）${A.dil ? '；褐色的是散瞳後掉進 aqueous 的色素（示意），不算 cell' : ''}`;
+}
+function acCard() {
+  const A = st.ac, g = SG[A.sign], v = `<div class="verdict"><span>${verdictTxt()}</span></div>`;
+  if (g) {
+    const body = g.sec.map(([t, a]) => list(t, a)).join('');
+    return `<div class="card"><div class="eyebrow">前房 · 附帶的徵象 · 對照 BCSC 9</div><div><h2>${g.en}</h2></div><p class="zh">${g.zh}</p><p class="def">${g.def}</p>${body}${v}${srcList(refs(g.def + body))}</div>`;
+  }
+  const def = `前房裡的 cell 是判斷發炎活性很可靠的指標${s('S1')}；flare 是原本清澈的 aqueous 變霧，代表 blood–aqueous barrier 破壞、蛋白質漏進前房${s('S1')}。SUN 把兩者分開分級${s('S2', 'S3')}。`;
+  const body = list('怎麼數 cell', CELLS[0]) + list('SUN 的 cell 分級（1 mm × 1 mm 光束）', CELLS[1]) + list('讀分級要注意', CELLS[2]) + list('SUN 的 flare 分級', CELLS[3]) + list('Flare 的意義', CELLS[4]) + list('別忘了看後段', CELLS[5]);
+  return `<div class="card"><div class="eyebrow">前房 · SUN 分級 · 對照 BCSC 9</div><div><h2>Anterior chamber cells &amp; flare</h2></div><p class="zh">前房細胞與 flare</p><p class="def">${def}</p>${v}${body}${srcList(refs(def + body))}</div>`;
+}
+
+/* ---------- app ---------- */
+const VIEWS = [{ id: 'ac', name: '前房 cells 與 flare', en: 'AC cells & flare' }];
+const $ = q => document.querySelector(q);
+const st = { view: 'ac', labels: true, learnMode: 'learn', quiz: null,
+  ac: { n: 18, seed: 1, fl: 1, dil: false, sign: null, cm: null },   // cell 數、位置的 seed、flare、散瞳、附帶的徵象、自己數模式（n、seed、shown）
+  mk: { key: '', set: new Set() } };   // 點過做記號的 cell
+const store = (() => {
+  const K3 = 'uveitisAtlas.v1';
+  let mem = { wrong: {} };
+  try { const r = localStorage.getItem(K3); if (r) mem = Object.assign(mem, JSON.parse(r)); } catch (e) { }
+  return { get: () => mem, save() { try { localStorage.setItem(K3, JSON.stringify(mem)); } catch (e) { } } };
+})();
+const inQ = () => st.learnMode === 'quiz' && st.quiz && st.quiz.phase === 'q';
+const quizItem = () => inQ() ? st.quiz.items[st.quiz.i] : null;
+function mkSync(key) { if (st.mk.key !== key) st.mk = { key, set: new Set() }; }
+function bState() {   // 放大圖現在畫什麼
+  const it = quizItem(), A = st.ac;
+  if (it) return Object.assign({}, it.T, { key: `Q${st.quiz.i}:${it.key}` });
+  const c = A.cm || A;
+  return { n: c.n, seed: c.seed, fl: A.fl, dil: A.dil, key: `L${A.cm ? 'c' : ''}:${c.n}:${c.seed}` };
+}
+function renderB() { const b = bState(), el = $('#ac-b'); mkSync(b.key); if (el) el.innerHTML = bFig(Object.assign({ marks: st.mk.set }, b)); const m = $('#ac-mk'); if (m) m.textContent = `已標記 ${st.mk.set.size} 個`; }
+
+function renderTabs() {
+  $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方改 cell 數與 flare，或按「自己數」；點放大圖上的 cell 可以做記號'}</span>`;
+}
+function renderTools() { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; }
+const VHA = '裂隙燈鏡下所見：右眼 OD，檢查者面對病人（左＝temporal、右＝nasal）', VHB = '放大：光束穿過前房的這一格（左＝角膜、右＝水晶體）';
+function renderFig() {
+  const it = quizItem(), fig = $('#fig'), A = st.ac, mkBar = `<span class="hint" id="ac-mk"></span><button type="button" class="btn" id="ac-clr">清除記號</button>`;
+  if (it) {
+    const a = `<div class="vh">${VHA}</div>${aFig(Object.assign({ beam: it.type !== 'kp' }, it.T))}`, b = `<div class="vh">${VHB}</div><div id="ac-b"></div><div class="ctbar"><span class="hint">可以點 cell 做記號</span><div class="grp">${mkBar}</div></div>`;
+    fig.innerHTML = it.show === 'a' ? `<div class="solo">${a}</div>` : it.show === 'b' ? `<div class="solo">${b}</div>` : `<div class="duo"><div>${a}</div><div>${b}</div></div>`;
+  } else {
+    const cm = A.cm;
+    fig.innerHTML = `<div class="duo"><div><div class="vh">${VHA}</div>${aFig({ fl: A.fl, dil: A.dil, sign: A.sign, v: 0, beam: true })}</div><div><div class="vh">${VHB}</div><div id="ac-b"></div>`
+      + `<div class="ctbar"><button type="button" class="btn ${cm ? 'on' : ''}" id="ac-cm">自己數</button><div class="grp">${cm ? `<button type="button" class="btn" id="ac-new">換一組</button><button type="button" class="btn primary" id="ac-show" ${cm.shown ? 'disabled' : ''}>對答案</button>` : ''}${mkBar}</div></div></div></div><div class="rd" id="ac-rd">${verdictTxt()}</div>`;
+  }
+  renderB();
+  $('#cap').innerHTML = `<span>右眼 OD，檢查者面對病人：左＝temporal、右＝nasal；光束從 temporal 側斜照。放大圖：左＝角膜切面、右＝水晶體前表面，虛線框＝1 mm × 1 mm，只數框裡白色的 cell。</span><span class="ori">cell 的位置、霧的濃淡、KP 與瞳孔形狀都是示意</span>`;
+  fig.classList.toggle('nolab', !st.labels); fig.classList.toggle('quiz-on', st.learnMode === 'quiz');
+}
+function renderExtra() {
+  if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  const A = st.ac, sg = (k, v, t, on) => `<button type="button" data-${k}="${v}" aria-pressed="${on}">${t}</button>`;
+  $('#extra').innerHTML = (A.cm ? `<p class="hint" style="margin:0 0 8px">自己數：cell 數已藏起來；點 cell 做記號，數完按「對答案」。再按一次「自己數」回到拉條。</p>` : `<div class="rng"><label for="ac-n">光束裡的 cell 數</label><input type="range" id="ac-n" min="0" max="${NMAX}" step="1" value="${A.n}"><span class="v" id="ac-n-v">${A.n} 個 → ${acGrade(A.n)}</span></div>`)
+    + `<div class="rng"><span class="rl">Flare（SUN）</span><div class="seg" role="group" aria-label="flare 分級">${FL.map((g, i) => sg('fl', i, g, A.fl === i)).join('')}</div></div>`
+    + `<div class="rng"><span class="rl">瞳孔</span><div class="seg" role="group" aria-label="散瞳前後">${sg('dil', 0, '散瞳前', !A.dil)}${sg('dil', 1, '散瞳後', A.dil)}</div></div>`;
+}
+function renderIndex() {
+  const ix = $('#index');
+  if (st.learnMode === 'quiz') { ix.hidden = true; return; }
+  ix.hidden = false;
+  ix.innerHTML = `<span class="lbl">附帶的徵象（說明卡換成這個徵象）</span><button type="button" class="chip ${!st.ac.sign ? 'on' : ''}" data-sg="">沒有：看 cell 與 flare</button>` + SGK.map(k => `<button type="button" class="chip ${st.ac.sign === k ? 'on' : ''}" data-sg="${k}">${SG[k].zh}</button>`).join('')
+    + `<span class="lbl">其他頁</span><a class="chip" href="../exam/">裂隙燈照明法 → 檢查技巧圖譜</a><a class="chip" href="../eye-atlas/#angle">前房與 iris 解剖 → 眼解剖圖譜</a><a class="chip" href="../retina/#oct">CMO 的 OCT → 視網膜圖譜</a>`;
+}
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : acCard(); }
+function renderSelbar() {
+  const b = $('#selbar'), A = st.ac, t = st.learnMode !== 'learn' ? '' : `目前：${A.cm ? '自己數' : `cell ${A.n} 個（${acGrade(A.n)}）`} · flare ${FL[A.fl]}${A.sign ? ` · ${SG[A.sign].zh}` : ''}`;
+  b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
+}
+function render() {
+  renderTabs(); renderTools(); renderFig(); renderExtra(); renderIndex(); renderPanel(); renderSelbar();
+  $('#wrong-ct').textContent = Object.keys(store.get().wrong).filter(keyValid).length;
+}
+
+/* ---------- quiz ----------
+   錯題的 key：ac:c:…（數 cell 選分級）、ac:f:…（flare 分級）、ac:k:…（看 KP）；第二段的字母決定題型，之後的分頁用 vh:、co: */
+const QC = { c1: [0, 3], c2: [1, 5], c3: [4, 7], c4: [9, 11], c5: [13, 2], c6: [19, 13], c7: [23, 17], c8: [32, 19], c9: [44, 23], c10: [64, 29], c11: [3, 31, 1], c12: [11, 37, 1] };   // cell 數、seed、1＝散瞳後（有色素顆粒）
+const QF = { f1: [0, 2], f2: [1, 9], f3: [2, 4], f4: [3, 6], f5: [4, 12], f6: [1, 34], f7: [3, 2] };   // flare 分級、cell 數
+const QK = { k1: ['kpf', 0], k2: ['kpm', 0], k3: ['kps', 0], k4: ['kpf', 1], k5: ['kpm', 1], k6: ['kps', 1] };   // KP 種類、位置的變化
+const QFS = 41;   // flare 題的 cell 位置
+const FDESC = ['光束穿過前房時沒有霧', '光束穿過前房時留下很淡的一道霧', '前房裡的光束霧得很清楚，但 iris 與水晶體的細節還看得清楚', '前房的霧很明顯，iris 與水晶體的細節變得模糊', '前房裡有 fibrin，aqueous 像凝膠一樣（plastic aqueous）'];
+const KEYS = [...Object.keys(QC).map(k => 'ac:c:' + k), ...Object.keys(QF).map(k => 'ac:f:' + k), ...Object.keys(QK).map(k => 'ac:k:' + k)];
+const keyValid = k => KEYS.includes(k);
+const keyView = k => k.split(':')[0];
+const QTV = { ac: [['cnt', '數 cell'], ['fl', 'flare'], ['kp', '看 KP']] };
+const QTZ = { c: 'cnt', f: 'fl', k: 'kp' };
+const kType = k => QTZ[k.split(':')[1]];
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+function nearOpts(L, ans, k) {   // 答案和最接近的幾級，照分級順序排
+  const i = L.indexOf(ans);
+  return L.map((x, j) => [x, Math.abs(j - i) + j * 1e-3]).sort((a, b) => a[1] - b[1]).slice(0, k).map(x => x[0]).sort((a, b) => L.indexOf(a) - L.indexOf(b));
+}
+function keyLabel(k) {
+  const [, ty, id] = k.split(':');
+  if (ty === 'c') { const [n, , dil] = QC[id]; return `數 cell：${n} 個${dil ? '（散瞳後）' : ''}`; }
+  if (ty === 'f') return `flare ${FL[QF[id][0]]}：${FLG[QF[id][0]][2]}`;
+  return `看 KP：${KPZ[QK[id][0]]}`;
+}
+function itemOf(key) {
+  const [, ty, id] = key.split(':');
+  if (ty === 'c') {
+    const [n, seed, dil] = QC[id], ans = acGrade(n);
+    return { key, type: 'cnt', show: 'b', T: { n, seed, fl: 0, dil: !!dil, sign: null }, prompt: ['數 cell', `放大的 1 mm × 1 mm 光束${dil ? '（已散瞳）' : ''}：SUN 的 cell 分級是？`], opts: nearOpts(GR, ans, 4), ans,
+      more: `框裡有 ${n} 個 cell；SUN 的 ${ans} 是 ${acRange(ans)} 個${s('S2', 'S3')}。${dil ? `褐色的是散瞳後掉進 aqueous 的色素（示意），不算；所以要在散瞳前數${s('S1')}。` : ''}${n === 1 ? `只要每個視野有 1 個就是 0.5+，不算 inactive${s('S3')}。` : ''}${n === 0 ? `0 級＝< 1 個；報告時這樣才算 inactive${s('S3')}。` : ''}`,
+      go: { n, seed, fl: 0, dil: !!dil, sign: null } };
+  }
+  if (ty === 'f') {
+    const [g, n] = QF[id], ans = FL[g];
+    return { key, type: 'fl', show: 'ab', T: { n, seed: QFS, fl: g, dil: false, sign: null }, prompt: ['flare', `${FDESC[g]}。SUN 的 flare 分級是？`], opts: nearOpts(FL, ans, 4), ans,
+      more: `SUN：${ans}＝${FLG[g][1]}（${FLG[g][2]}）${s('S2', 'S3')}。Flare 和 cell 各自分級：這題框裡有 ${n} 個 cell，是 cell ${acGrade(n)}${s('S3')}。`,
+      go: { n, seed: QFS, fl: g, dil: false, sign: null } };
+  }
+  const [kind, v] = QK[id];
+  const why = { kpf: `細小、集中在下方排成尖端朝上的三角形（Arlt triangle）：Kanski 說這是 non-granulomatous 發炎（典型是 AAU）的樣子${s('S1')}。`, kpm: `又大又像油脂、集中在下方：mutton fat KP，Kanski 歸為 granulomatous 發炎（典型是 chronic）${s('S1')}。`, kps: `小、星狀、散在整個角膜而不是集中在下方：Fuchs uveitis syndrome 的 KP${s('S1')}。` }[kind];
+  return { key, type: 'kp', show: 'a', T: { n: 0, seed: 1, fl: 0, dil: false, sign: kind, v }, prompt: ['看 KP', 'Diffuse 照明下看到這些 KP（示意）。最符合哪一種？'], opts: ['kpf', 'kpm', 'kps'], ans: kind, lab: k => KPZ[k],
+    more: `${why}SUN 2005 對 KP 的描述詞沒有共識${s('S3')}。`, go: { n: st.ac.n, seed: st.ac.seed, fl: 0, dil: false, sign: kind } };
+}
+const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
+function quizHTML() {
+  const q = st.quiz, lab0 = x => x;
+  if (q.phase === 'setup') {
+    const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
+    const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>先數 cell，再看 flare</h2>
+      <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
+      <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
+      <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
+      <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
+      <p style="margin:0;font-size:13px;color:var(--muted)">三種題型：數 1 mm × 1 mm 光束裡的 cell 選 SUN 分級（可以點 cell 做記號；散瞳後的題目有褐色色素顆粒，不算 cell）；看前房的霧與描述選 flare 分級；看 KP 的大小與分布判斷是哪一種。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+  }
+  if (q.phase === 'done') {
+    const wr = q.log.filter(x => !x.ok);
+    return `<div class="qz"><div class="eyebrow">測驗結果</div><div class="score">${q.score}<span style="font-size:22px;color:var(--muted)"> / ${q.items.length}</span></div>
+      ${wr.length ? `<div class="sec"><h3>這次答錯</h3><div class="wl">${wr.map(x => `<button type="button" data-go="${x.key}"><span>${keyLabel(x.key)}</span><span>再看一次</span></button>`).join('')}</div></div>` : '<p style="margin:0">全對。</p>'}
+      <div class="row"><button type="button" class="btn primary" id="q-again">再來一輪</button><button type="button" class="btn" id="q-setup">改設定</button><button type="button" class="btn" id="q-learn">回到學習</button></div></div>`;
+  }
+  const it = q.items[q.i], lab = it.lab || lab0;
+  let h = `<div class="qz"><div class="prog"><span>第 ${q.i + 1} / ${q.items.length} 題</span><span>答對 ${q.score}</span></div><div class="bar"><i style="width:${(q.i / q.items.length) * 100}%"></i></div>`;
+  h += `<div class="prompt"><div class="k">${it.prompt[0]}</div><div class="q">${it.prompt[1]}</div></div><div class="opts">${it.opts.map(o => `<button type="button" class="opt ${q.ans ? (o === it.ans ? 'ok' : (q.ans.pick === o ? 'bad' : '')) : ''}" data-opt="${o}" ${q.ans ? 'disabled' : ''}>${lab(o)}</button>`).join('')}</div>`;
+  if (q.ans) {
+    h += `<div class="fb ${q.ans.ok ? 'ok' : 'bad'}"><b>${q.ans.ok ? '答對。' : '答錯。'}</b>${!q.ans.ok && q.ans.pick ? ` 你選的是 ${lab(q.ans.pick)}；` : ' '}答案是 ${lab(it.ans)}。<br>${it.more}</div>`;
+    h += `<div class="row"><button type="button" class="btn primary" id="q-next">${q.i + 1 < q.items.length ? '下一題' : '看結果'}</button></div>`;
+  } else h += `<div class="row"><button type="button" class="btn" id="q-skip">不知道，看答案</button></div>`;
+  return h + `</div>`;
+}
+function startQuiz(cfg) {
+  const w = store.get().wrong, types = cfg.type === 'mix' ? QTV[st.view].map(x => x[0]) : [cfg.type];
+  let pool = KEYS.filter(k => keyView(k) === st.view && types.includes(kType(k)));
+  if (cfg.scope === 'wrong') pool = pool.filter(k => w[k]);
+  if (!pool.length) { st.quiz = Object.assign({}, cfg, { phase: 'setup' }); renderPanel(); return; }
+  let keys = [];
+  while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
+  keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
+  st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
+  render();
+}
+function answer(a) {
+  const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
+  q.ans = a; if (a.ok) q.score++;
+  q.log.push({ key: it.key, ok: a.ok, type: it.type });
+  const m = store.get();
+  if (!a.ok) m.wrong[it.key] = (m.wrong[it.key] || 0) + 1;
+  else if (q.scope === 'wrong' && m.wrong[it.key]) { m.wrong[it.key]--; if (m.wrong[it.key] <= 0) delete m.wrong[it.key]; }
+  store.save(); renderPanel();
+  $('#wrong-ct').textContent = Object.keys(m.wrong).filter(keyValid).length;
+}
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); }
+function setView(v) {
+  st.view = v;
+  try { history.replaceState(null, '', v === 'ac' ? location.pathname : '#' + v); } catch (e) { }
+  if (st.learnMode === 'quiz') st.quiz = quizDefaults();
+}
+function setMode(m) {
+  st.learnMode = m;
+  $('#m-learn').setAttribute('aria-pressed', m === 'learn'); $('#m-quiz').setAttribute('aria-pressed', m === 'quiz');
+  st.quiz = m === 'quiz' ? quizDefaults() : null;
+  render();
+}
+function goKey(k) { setView('ac'); st.ac = Object.assign({ v: 0 }, itemOf(k).go, { cm: null }); render(); }   // 錯題本「再看一次」：回到學習模式的同一個設定
+function newCount() {   // 自己數：隨機挑一級，再在那一級的範圍裡挑 cell 數
+  const g = ACG[Math.floor(Math.random() * ACG.length)], hi = g[2] === Infinity ? 75 : g[2];
+  return { n: g[1] + Math.floor(Math.random() * (hi - g[1] + 1)), seed: 100 + Math.floor(Math.random() * 99900), shown: false };
+}
+
+/* ---------- wrong book ---------- */
+function openSheet(id) { const sh = $(id); sh.hidden = false; const f = sh.querySelector('button'); if (f) f.focus(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(x => x.hidden = true); }
+function renderWrong() {
+  const w = store.get().wrong, ids = Object.keys(w).filter(keyValid).sort((a, b) => w[b] - w[a]);
+  $('#wrong-body').innerHTML = ids.length ? `<div class="wl" style="padding-top:12px">${ids.map(k => `<button type="button" data-go="${k}"><span>${keyLabel(k)}</span><span>× ${w[k]}</span></button>`).join('')}</div>` : `<p style="color:var(--muted);padding-top:12px">目前沒有錯題。測驗答錯的題目會自動記在這裡（只存在這個瀏覽器）。</p>`;
+  const here = ids.filter(k => keyView(k) === st.view).length;
+  $('#w-practice').disabled = !here;
+  $('#w-practice').textContent = `練習這個分頁的錯題（${here}）`;
+}
+
+/* ---------- events ---------- */
+function afterN() { renderB(); const r = $('#ac-rd'); if (r) r.innerHTML = verdictTxt(); const v = $('#ac-n-v'); if (v) v.textContent = `${st.ac.n} 個 → ${acGrade(st.ac.n)}`; renderPanel(); renderSelbar(); }
+document.addEventListener('click', e => {
+  const t = e.target;
+  const go = t.closest('[data-go]'); if (go) { closeSheets(); if (st.learnMode === 'quiz') setMode('learn'); goKey(go.dataset.go); return; }
+  if (t.closest('[data-close]')) { closeSheets(); return; }
+  if (t.classList && t.classList.contains('sheet')) { closeSheets(); return; }
+  if (t.closest('#to-card')) { try { $('#panel').scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (err) { } return; }
+  const tab = t.closest('[data-view]'); if (tab) { if (inQ()) return; setView(tab.dataset.view); render(); return; }
+  const ci = t.closest('[data-ci]'); if (ci) { const i = +ci.dataset.ci, S = st.mk.set; if (S.has(i)) S.delete(i); else S.add(i); renderB(); if (!inQ()) { const r = $('#ac-rd'); if (r) r.innerHTML = verdictTxt(); renderPanel(); } return; }
+  if (t.closest('#ac-clr')) { st.mk.set.clear(); renderB(); if (!inQ()) { const r = $('#ac-rd'); if (r) r.innerHTML = verdictTxt(); renderPanel(); } return; }
+  if (t.closest('#ac-cm')) { st.ac.cm = st.ac.cm ? null : newCount(); render(); return; }
+  if (t.closest('#ac-new')) { st.ac.cm = newCount(); render(); return; }
+  if (t.closest('#ac-show')) { if (st.ac.cm) st.ac.cm.shown = true; render(); return; }
+  const fl = t.closest('[data-fl]'); if (fl) { st.ac.fl = +fl.dataset.fl; render(); return; }
+  const dl = t.closest('[data-dil]'); if (dl) { st.ac.dil = dl.dataset.dil === '1'; render(); return; }
+  const sg = t.closest('[data-sg]'); if (sg) { st.ac.sign = sg.dataset.sg || null; render(); return; }
+  const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
+  const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
+  if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
+  if (t.closest('#q-setup')) { const q = st.quiz; st.quiz = { phase: 'setup', scope: q.scope, type: q.type, total: q.total }; render(); return; }
+  if (t.closest('#q-learn')) { setMode('learn'); return; }
+  if (t.closest('#q-next')) { nextQ(); return; }
+  if (t.closest('#q-skip')) { answer({ ok: false }); return; }
+});
+document.addEventListener('change', e => { if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); } });
+document.addEventListener('input', e => { if (e.target.id === 'ac-n') { st.ac.n = +e.target.value; afterN(); } });   // 只重畫放大圖、目前設定與說明卡，拉條本身不重畫（才拖得動）
+$('#m-learn').addEventListener('click', () => setMode('learn'));
+$('#m-quiz').addEventListener('click', () => setMode('quiz'));
+$('#b-wrong').addEventListener('click', () => { renderWrong(); openSheet('#sheet-wrong'); });
+$('#w-practice').addEventListener('click', () => { closeSheets(); setMode('quiz'); startQuiz({ scope: 'wrong', type: 'mix', total: 30 }); });
+let clearArm = 0;
+$('#w-clear').addEventListener('click', e => {
+  const b = e.currentTarget;
+  if (Date.now() - clearArm < 4000) { store.get().wrong = {}; store.save(); renderWrong(); $('#wrong-ct').textContent = 0; b.textContent = '清除'; clearArm = 0; }
+  else { clearArm = Date.now(); b.textContent = '再按一次確認清除'; setTimeout(() => { b.textContent = '清除'; }, 4000); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+
+/* ---------- self-check ---------- */
+(() => {
+  const a = (c, m) => console.assert(c, 'uveitis self-check: ' + m), cnt = (h, c) => (h.match(new RegExp(`class="${c}"`, 'g')) || []).length;
+  // SUN cell 分級的邊界與連續
+  [[0, '0'], [1, '0.5+'], [5, '0.5+'], [6, '1+'], [15, '1+'], [16, '2+'], [25, '2+'], [26, '3+'], [50, '3+'], [51, '4+'], [80, '4+']].forEach(([n, g]) => a(acGrade(n) === g, `${n} 個 cell 是 ${g}`));
+  for (let n = 0; n <= 200; n++) a(ACG.filter(g => n >= g[1] && n <= g[2]).length === 1, `${n} 個 cell 只落在一級`);
+  a(acRange('0') === '< 1' && acRange('4+') === '> 50' && acRange('2+') === '16–25', '分級範圍的寫法');
+  // cell 的位置：夠多、在框內、不重疊；畫出的 cell 數＝設定；色素不算 cell、不和 cell 重疊
+  const seeds = [1, QFS, ...Object.values(QC).map(x => x[1]), 101, 5555, 99999];
+  seeds.forEach(sd => {
+    const P = cellSeq(sd);
+    a(P.length === NMAX, `seed ${sd} 產生得出 ${NMAX} 個 cell`);
+    a(P.every(p => p[0] - p[2] >= BOX.x && p[0] + p[2] <= BOX.x + BOX.s && p[1] - p[2] >= BOX.y && p[1] + p[2] <= BOX.y + BOX.s), `seed ${sd} 的 cell 都在框內`);
+    a(P.every((p, i) => P.every((q, j) => i === j || Math.hypot(p[0] - q[0], p[1] - q[1]) >= DMIN - 0.2)), `seed ${sd} 的 cell 不重疊`);
+    [0, 1, 5, 6, 15, 16, 25, 26, 50, 51, 80].forEach(n => [false, true].forEach(dil => {
+      const h = bFig({ n, seed: sd, fl: 0, dil });
+      a(cnt(h, 'b-cell') === n && cnt(h, 'b-pig') === (dil ? NPIG : 0), `seed ${sd}：畫出 ${n} 個 cell${dil ? '、' + NPIG + ' 個色素' : ''}`);
+    }));
+    const pg = pigPts(sd, P);
+    a(pg.length === NPIG && pg.every(q => P.every(p => Math.hypot(p[0] - q[0], p[1] - q[1]) >= DMIN - 2.2)), `seed ${sd} 的色素顆粒不和 cell 重疊`);
+  });
+  // flare：越高越霧；3+ 以上 iris 與水晶體細節模糊；4+ 才有 fibrin
+  FLV.forEach((v, i) => {
+    if (i) a(v.op > FLV[i - 1].op, `flare ${FL[i]} 比 ${FL[i - 1]} 霧`);
+    a((v.bl > 0) === (i >= 3), `flare ${FL[i]} 的細節${i >= 3 ? '模糊' : '清楚'}`);
+    const hb = bFig({ n: 10, seed: 1, fl: i, dil: false }), ha = aFig({ fl: i, dil: false, sign: null, beam: true });
+    a((cnt(hb, 'b-fib') > 0) === (i === 4) && (cnt(ha, 'a-fib') > 0) === (i === 4), `fibrin 只在 flare 4+`);
+    a(hb.includes('filter="url(#b-bl)"') === (i >= 3) && ha.includes('filter="url(#a-bl)"') === (i >= 3), `flare ${FL[i]} 的模糊濾鏡`);
+  });
+  // KP：細小與 mutton fat 在下方的三角形裡，mutton fat 比較大；stellate 散在整個角膜；都在角膜內、上眼瞼以下
+  [0, 1].forEach(v => {
+    const F = kpPts('kpf', v), M = kpPts('kpm', v), S = kpPts('kps', v), inC = p => Math.hypot(p[0], p[1]) + p[2] <= RL - 0.2;
+    a(F.length === 34 && M.length === 8 && S.length === 42, `KP 的數目（變化 ${v}）`);
+    const inT = (p, T) => p[1] >= T[0] && p[1] <= T[1] && Math.abs(p[0]) <= T[2] * (p[1] - T[0]) / (T[1] - T[0]) + 1e-9;
+    a(F.every(p => inC(p) && inT(p, KTF)) && M.every(p => inC(p) && inT(p, KTM)), `細小與 mutton fat KP 在下方的 Arlt triangle 裡（變化 ${v}）`);
+    a(Math.min(...M.map(p => p[2])) > Math.max(...F.map(p => p[2])) * 2, `mutton fat KP 比細小 KP 大（變化 ${v}）`);
+    a(S.every(p => inC(p) && p[1] > UL + 0.4) && [[1, 1], [1, -1], [-1, 1], [-1, -1]].every(([sx, sy]) => S.some(p => p[0] * sx > 1 && p[1] * sy > 1)), `stellate KP 散在四個象限（變化 ${v}）`);
+  });
+  // hypopyon 在瞳孔下方的角膜內；posterior synechiae：散瞳時黏住處張不開
+  a(HYL > RPD && HYL < RL, 'hypopyon 的液面在瞳孔下方');
+  PSA.forEach(t => a(Math.abs(pupilR(t, true, true) - RP * 1.05) < 0.01, `PS ${t}° 散瞳時張不開`));
+  a(Math.abs(pupilR(15, true, true) - RPD) < 0.05 && Math.abs(pupilR(105, true, true) - RPD) < 0.05, 'PS 之間散得開');
+  a([0, 77, 200].every(t => pupilR(t, true, false) === RPD && pupilR(t, false, true) === RP), '沒有 PS 時瞳孔是圓的');
+  // 光束在瞳孔裡、虛線框 1 mm 寬
+  a(Math.abs(BM.b1 - BM.b0 - 1) < 1e-9 && Math.abs(2 * BM.h - 1) < 1e-9 && BM.l1 < RP && Math.abs(BM.c[0][0]) < RP, '光束 1 mm × 1 mm、落在瞳孔裡');
+  // 題目：選項含答案、不重複；數 cell 與 flare 的選項照分級順序；答案和圖一致
+  KEYS.forEach(k => {
+    const it = itemOf(k);
+    a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === (it.type === 'kp' ? 3 : 4), `${k} 的選項`);
+    if (it.type !== 'kp') { const L = it.type === 'cnt' ? GR : FL; a(it.opts.every((o, i) => !i || L.indexOf(o) > L.indexOf(it.opts[i - 1])), `${k} 的選項照順序`); }
+    if (it.type === 'cnt') a(it.ans === acGrade(it.T.n) && cnt(bFig(it.T), 'b-cell') === it.T.n, `${k} 的答案和畫出的 cell 數一致`);
+    if (it.type === 'fl') a(it.ans === FL[it.T.fl], `${k} 的答案`);
+    if (it.type === 'kp') a(it.ans === it.T.sign && cnt(aFig(it.T), { kpf: 'a-kp', kpm: 'a-kpm', kps: 'a-kps' }[it.ans]) > 0 && !aFig(it.T).includes('class="a-box"'), `${k} 的圖有 KP、沒有光束`);
+    refs(it.more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`));
+  });
+  // 說明卡的引用都在來源清單
+  const sv = st.ac;
+  [null, ...SGK].forEach(sign => { st.ac = Object.assign({}, sv, { sign }); refs(acCard()).forEach(r => a(SRC[r], `${sign || '總表'} 的引用 ${r}`)); });
+  st.ac = sv;
+  // 圖在框內
+  a([[10, -6.9], [-10, -6.9], [-10, 7.75]].every(q => X(q[0]) >= 8 && X(q[0]) <= AW - 8 && Y(q[1]) >= 16 && Y(q[1]) <= AH - 6), '裂隙燈圖的標籤在框內');
+  a(Y(LL) < AH && Y(cOf(UL)) > 0 && X(FA) < AW + 30, '眼瞼在圖裡');
+  a(BOX.y + BOX.s + 26 <= BH - 6 && LX + 52 <= BW, '放大圖在框內');
+})();
+
+render();
+</script>
+
+</body>
+</html>
