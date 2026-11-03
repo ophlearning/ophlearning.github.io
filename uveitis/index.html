@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>葡萄膜炎互動圖譜</title>
-<meta name="description" content="互動式葡萄膜炎圖譜：前房 cells 與 flare——在裂隙燈鏡下所見與 1 mm × 1 mm 光束的放大圖上，拉條改 cell 數看 SUN 分級（0、0.5+、1+、2+、3+、4+），或自己點 cell 數完再對答案；改 flare 0–4+ 看 iris 與水晶體的細節從清楚變模糊、4+ 出現 fibrin；切到散瞳後看色素顆粒混進 aqueous；看細小 KP、mutton fat KP、Fuchs 的 stellate KP、hypopyon、posterior synechiae；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式葡萄膜炎圖譜：前房 cells 與 flare——在裂隙燈鏡下所見與 1 mm × 1 mm 光束的放大圖上，拉條改 cell 數看 SUN 分級（0、0.5+、1+、2+、3+、4+），或自己點 cell 數完再對答案；改 flare 0–4+ 看 iris 與水晶體的細節從清楚變模糊、4+ 出現 fibrin；切到散瞳後看色素顆粒混進 aqueous；看細小 KP、mutton fat KP、Fuchs 的 stellate KP、hypopyon、posterior synechiae。玻璃體 haze 與解剖分類——眼底示意圖依 Kanski 的 haze 0 到 +4 變模糊；眼球矢狀切面調前房、玻璃體、視網膜、脈絡膜的發炎程度，依 SUN 分成 anterior、intermediate、posterior、panuveitis 或 anterior and intermediate，看 snowball、snowbank 與 pars planitis 的命名、併發症不改分類；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -20,6 +20,9 @@
   --sl-dark:#0B0910; --sl-light:#FFF1CC; --sl-beam:#E39B12; --sl-beamk:#A86200; --sl-glare:#FFFFFF; --sl-cor:#DCEBF5;
   --sl-cell:#FFFFFF; --sl-pig:#B86A2A; --sl-fib:#F4EEDC; --sl-kp:#F4F0E6; --sl-kpm:#EAD9A6; --sl-hyp:#EFE5C9; --sl-mark:#4FD1A0;
   --sl-lab-ink:#F5F1E8; --sl-lab-halo:#0B0910;
+  --fd-ret:#C8573A; --fd-ret2:#8E3424; --fd-disc:#F2C9A0; --fd-cup:#FBE9D2; --fd-art:#E0513A; --fd-vein:#93232A; --fd-mac:#6E2419; --fd-nfl:#FFE4CC; --fd-haze:#E9E5DD;
+  --sg-scl:#F4F1EC; --sg-cor:#DCEBF5; --sg-cho:#8E3B34; --sg-cb:#7A4A3A; --sg-ret:#E6A396; --sg-vit:#F1F4F7; --sg-aq:#E2EEF7; --sg-lens:#EADFC0; --sg-nerve:#E2BE6A;
+  --sg-cell:#FFFFFF; --sg-inf:#F7F2E2; --sg-yel:#E3BC4E; --sg-haze:#BDB5A6; --sg-nv:#D9442E; --sg-ink:#1E1A2B;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -32,6 +35,8 @@
   --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38);
   --t-sclera:#B9B2BF; --t-iris:#8A5E4A; --t-irtex:#2B1D17; --t-pupil:#15121F; --t-skin:#5E4638;
+  --sg-scl:#3A3542; --sg-cor:#33495A; --sg-cho:#6E2E2A; --sg-cb:#5C3A2E; --sg-ret:#9C6458; --sg-vit:#22202B; --sg-aq:#24323E; --sg-lens:#5A5240; --sg-nerve:#9E8240;
+  --sg-cell:#F3EFE6; --sg-inf:#E9E2CF; --sg-yel:#D9B04A; --sg-haze:#8C8578; --sg-nv:#F06A55; --sg-ink:#ECE9F5;
   --sl-beam:#F2C14E; --sl-beamk:#F7D77E; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
@@ -39,6 +44,8 @@
   --ok:#4CC38A; --ok-soft:rgba(76,195,138,.16); --bad:#F0717A; --bad-soft:rgba(240,113,122,.15);
   --fig-bg:#16131E; --t-stroke:rgba(232,226,248,.38);
   --t-sclera:#B9B2BF; --t-iris:#8A5E4A; --t-irtex:#2B1D17; --t-pupil:#15121F; --t-skin:#5E4638;
+  --sg-scl:#3A3542; --sg-cor:#33495A; --sg-cho:#6E2E2A; --sg-cb:#5C3A2E; --sg-ret:#9C6458; --sg-vit:#22202B; --sg-aq:#24323E; --sg-lens:#5A5240; --sg-nerve:#9E8240;
+  --sg-cell:#F3EFE6; --sg-inf:#E9E2CF; --sg-yel:#D9B04A; --sg-haze:#8C8578; --sg-nv:#F06A55; --sg-ink:#ECE9F5;
   --sl-beam:#F2C14E; --sl-beamk:#F7D77E; color-scheme:dark }
 
 *{box-sizing:border-box}
@@ -141,6 +148,41 @@ a.chip{text-decoration:none;display:inline-block}
 .b-pig{fill:var(--sl-pig)}
 .b-hit{fill:transparent;cursor:pointer}
 .b-mark{fill:none;stroke:var(--sl-mark);stroke-width:2}
+/* 分頁二：眼底示意圖（照片的顏色，淺色與深色模式一樣）與眼球矢狀切面 */
+.fd-bg{fill:var(--sl-dark)}
+.fd-a{fill:none;stroke:var(--fd-art);stroke-width:2.6;stroke-linecap:round}
+.fd-v{fill:none;stroke:var(--fd-vein);stroke-width:3.8;stroke-linecap:round}
+.fd-nfl{fill:none;stroke:var(--fd-nfl);stroke-width:.9;stroke-linecap:round}
+.fd-disc{fill:var(--fd-disc)}
+.fd-cup{fill:var(--fd-cup)}
+.fd-fov{fill:var(--fd-mac)}
+.fd-fog{fill:var(--fd-haze)}
+.fig .eyen{font-family:var(--f-body);font-size:14px;fill:var(--sl-lab-ink)}
+.sg-bg{fill:var(--fig-bg)}
+.sg-scl{fill:var(--sg-scl);stroke:var(--t-stroke);stroke-width:1.2}
+.sg-cor{fill:var(--sg-cor);stroke:var(--t-stroke);stroke-width:1}
+.sg-cho{fill:none;stroke:var(--sg-cho);stroke-width:6}
+.sg-ret{fill:none;stroke:var(--sg-ret);stroke-width:4.6}
+.sg-vit{fill:var(--sg-vit)}
+.sg-aq{fill:var(--sg-aq)}
+.sg-cb{fill:var(--sg-cb)}
+.sg-iris{fill:var(--t-iris)}
+.sg-lens{fill:var(--sg-lens);stroke:var(--t-stroke);stroke-width:1}
+.sg-nerve{fill:var(--sg-nerve);stroke:var(--t-stroke);stroke-width:1}
+.sg-cell{fill:var(--sg-cell);stroke:var(--t-stroke);stroke-width:.7}
+.sg-hz{fill:var(--sg-haze)}
+.sg-rtf{fill:var(--sg-inf);stroke:var(--t-stroke);stroke-width:.8}
+.sg-ch{fill:var(--sg-yel);stroke:var(--t-stroke);stroke-width:.8}
+.sg-sb{fill:var(--sg-inf);stroke:var(--t-stroke);stroke-width:.8}
+.sg-sk{fill:none;stroke:var(--sg-inf);stroke-width:12;stroke-linecap:round}
+.sg-cy{fill:var(--sg-vit);stroke:var(--t-stroke);stroke-width:.8}
+.sg-nv{fill:none;stroke:var(--sg-nv);stroke-width:1.6;stroke-linecap:round}
+.sg-vs{fill:none;stroke:var(--fd-vein);stroke-width:2.2}
+.sg-sh{fill:none;stroke:var(--sg-inf);stroke-width:5;stroke-linecap:round;stroke-dasharray:6 7}
+.fig .sgt{font-family:var(--f-body);font-size:13px;fill:var(--muted)}
+.sgl text{font-family:var(--f-body);font-size:14px;fill:var(--sg-ink);paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
+.sgl line{stroke:var(--sg-ink);stroke-width:1;opacity:.6}
+.nolab .sgl,.quiz-on .sgl{display:none}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -196,6 +238,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
 .rng label,.rng .rl{min-width:8em}
 .rng input[type=range]{flex:1 1 160px;accent-color:var(--accent);min-width:0}
 .rng .v{font-family:var(--f-mono);font-size:12.5px;color:var(--ink);min-width:11em}
+.tgs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .foot{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-width:110ch}
 .foot b{color:var(--ink-2);font-weight:500}
 .foot a{color:var(--ink-2)}
@@ -208,6 +251,8 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .tab{padding:7px 10px 8px;font-size:14px}
   .tab .en{display:none}
   .lab text{font-size:19px;stroke-width:4.5px}
+  .sgl text{font-size:19px;stroke-width:4.5px}
+  .fig .eyen,.fig .sgt{font-size:18px}
   .seg button{padding:5px 10px}
   .rng label,.rng .rl{min-width:0;width:100%}
 }
@@ -251,8 +296,8 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>裂隙燈鏡下所見是右眼 OD、檢查者面對病人看到的樣子（同檢查技巧圖譜：左＝temporal、右＝nasal），用 diffuse 照明畫出整個前段，再加一道從 temporal 側斜照的 1 mm × 1 mm 光束；放大圖是這道光束穿過前房的那一格，左＝角膜切面、右＝水晶體前表面，虛線框＝數 cell 的範圍。Cell 與色素顆粒的位置、flare 的濃淡、KP、hypopyon、瞳孔與眼瞼的形狀都是示意，不是照片。裂隙燈怎麼調光束見<a href="../exam/">檢查技巧圖譜的裂隙燈分頁</a>；前房與 iris 的解剖見<a href="../eye-atlas/#angle">眼解剖圖譜</a>；CMO 的 OCT 見<a href="../retina/#oct">視網膜圖譜的 OCT 分頁</a>。</span>
-    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；分級表依 SUN Working Group 2005 原文與 Kanski 轉載的表格。</span>
+    <span><b>關於圖：</b>裂隙燈鏡下所見是右眼 OD、檢查者面對病人看到的樣子（同檢查技巧圖譜：左＝temporal、右＝nasal），用 diffuse 照明畫出整個前段，再加一道從 temporal 側斜照的 1 mm × 1 mm 光束；放大圖是這道光束穿過前房的那一格，左＝角膜切面、右＝水晶體前表面，虛線框＝數 cell 的範圍。Cell 與色素顆粒的位置、flare 的濃淡、KP、hypopyon、瞳孔與眼瞼的形狀都是示意，不是照片。「玻璃體 haze 與解剖分類」分頁的眼底示意圖是正像，同眼底照片（上＝superior；OD 視盤在右、OS 在左），不是 NEI 的標準照片；眼球矢狀切面上＝superior、左＝anterior，各部位發炎的樣子、數量與大小都是示意。裂隙燈怎麼調光束見<a href="../exam/">檢查技巧圖譜的裂隙燈分頁</a>；前房與 iris 的解剖見<a href="../eye-atlas/#angle">眼解剖圖譜</a>；CMO 的 OCT 見<a href="../retina/#oct">視網膜圖譜的 OCT 分頁</a>。</span>
+    <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；分級表依 SUN Working Group 2005 原文與 Kanski 轉載的表格；玻璃體 haze 用 Kanski Table 12.8 的文字描述。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
   </footer>
@@ -279,7 +324,10 @@ const SRC = {
   S1: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.431 Anterior uveitis › Clinical features：miosis、anterior chamber cells、aqueous flare、hypopyon、keratic precipitates、fibrinous exudate、iris nodules、posterior synechiae', u: null },
   S2: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.432 Table 12.2 SUN grading of anterior chamber cells、Table 12.3 SUN grading of anterior chamber flare、posterior segment examination', u: null },
   S3: { t: 'SUN Working Group（Jabs DA, Nussenblatt RB, Rosenbaum JT）. Standardization of uveitis nomenclature for reporting clinical data. Results of the First International Workshop. Am J Ophthalmol 2005;140:509–516（PMC 全文）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8935739/' },
-  S4: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.439 Treatment：topical steroids（chronic anterior uveitis 的治療目標）、cycloplegic agents', u: null }
+  S4: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.439 Treatment：topical steroids（chronic anterior uveitis 的治療目標）、cycloplegic agents', u: null },
+  S5: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.430 Classification（SUN 解剖分類）、Anterior uveitis › Introduction', u: null },
+  S6: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.435–436 Posterior uveitis：retinitis、choroiditis、vasculitis', u: null },
+  S7: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.449–450 Intermediate uveitis：Introduction、Clinical features、Table 12.8 Grading of vitreous haze', u: null }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
@@ -451,12 +499,189 @@ function acCard() {
   return `<div class="card"><div class="eyebrow">前房 · SUN 分級 · 對照 BCSC 9</div><div><h2>Anterior chamber cells &amp; flare</h2></div><p class="zh">前房細胞與 flare</p><p class="def">${def}</p>${v}${body}${srcList(refs(def + body))}</div>`;
 }
 
+/* ---------- 分頁二：玻璃體 haze（Kanski p.450 Table 12.8） ---------- */
+const HZG = ['0', '+1', '+2', '+3', '+4'];
+const HZD = ['看得清楚神經纖維層（NFL）', '視盤與血管清楚，但 NFL 模糊', '視盤與血管都模糊', '只看得到視盤', '看不到視盤'];
+const HZE = ['Good view of nerve fibre layer (NFL)', 'Clear disc and vessels but hazy NFL', 'Disc and vessels hazy', 'Only disc visible', 'Disc not visible'];
+const HZV = [   // 各級畫什麼（示意）：nfl、ves、disc＝[不透明度, 模糊]；fog＝蓋在上面的霧
+  { nfl: [0.38, 0], ves: [1, 0], disc: [1, 0], fog: 0 },
+  { nfl: [0.2, 2.4], ves: [1, 0], disc: [1, 0], fog: 0.1 },
+  { nfl: [0, 0], ves: [0.7, 2.2], disc: [0.9, 2.2], fog: 0.32 },
+  { nfl: [0, 0], ves: [0.05, 4], disc: [0.6, 3.6], fog: 0.55 },
+  { nfl: [0, 0], ves: [0, 0], disc: [0, 0], fog: 0.82 }
+];
+/* 眼底示意圖（px；正像，同眼底照片：上＝superior，OD 視盤在右；OS 整組左右鏡射） */
+const DW = 420, DH = 320, DC = [210, 160], DR = 148, DD = [282, 160], DDR = 21, MAC = [172, 164];
+const VESA = ['M280 152C258 122 214 108 170 112S104 130 80 156', 'M280 168C258 198 214 212 170 208S104 190 80 164', 'M286 150C304 124 324 106 352 92', 'M286 170C304 196 324 214 352 228', 'M200 108C196 126 190 138 184 148', 'M300 158L356 154'];
+const VESV = ['M282 150C262 116 214 98 168 102S96 124 72 150', 'M282 170C262 204 214 222 168 218S96 196 72 170', 'M288 150C300 118 316 96 340 70', 'M288 170C300 202 316 224 340 250', 'M204 214C198 196 190 184 184 174', 'M302 164L358 170'];
+const NFLP = (() => {   // 神經纖維層的紋路：上下的弧形纖維繞過黃斑、papillomacular bundle、鼻側放射狀
+  const P = [];
+  for (let i = 0; i < 12; i++) { const k = 0.35 + i * 0.08; [-1, 1].forEach(g => P.push(`M${DD[0] - 13} ${fx(160 + g * (9 + i * 0.9))}Q${fx(212 - 10 * k)} ${fx(160 + g * (40 + 62 * k))} ${fx(MAC[0] - 98 * k)} ${160 + g * 3}`)); }
+  for (let i = 0; i < 5; i++) P.push(`M${DD[0] - DDR} ${154 + i * 3}L198 ${fx(158 + i * 1.6)}`);
+  for (let i = 0; i < 9; i++) { const a = (-60 + i * 15) * Math.PI / 180; P.push(`M${fx(DD[0] + 23 * Math.cos(a))} ${fx(DD[1] + 23 * Math.sin(a))}L${fx(DD[0] + 58 * Math.cos(a))} ${fx(DD[1] + 58 * Math.sin(a))}`); }
+  return P;
+})();
+function fdFig(g, eye) {
+  const V = HZV[g], L = eye === 'L', mx = x => L ? DW - x : x, fl = (id, b) => b ? `<filter id="${id}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${b}"/></filter>` : '';
+  const grp = (v, id, inner) => v[0] ? `<g style="opacity:${v[0]}"${v[1] ? ` filter="url(#${id})"` : ''}>${inner}</g>` : '';
+  let h = `<svg viewBox="0 0 ${DW} ${DH}" role="img" aria-label="${L ? '左眼' : '右眼'}眼底示意圖：正像，上＝superior"><defs><clipPath id="fd-cl"><circle cx="${DC[0]}" cy="${DC[1]}" r="${DR}"/></clipPath>`
+    + `<radialGradient id="fd-rg" cx="0.52" cy="0.5" r="0.6"><stop offset="0" style="stop-color:var(--fd-ret)"/><stop offset="1" style="stop-color:var(--fd-ret2)"/></radialGradient><radialGradient id="fd-mg"><stop offset="0" style="stop-color:var(--fd-mac);stop-opacity:.75"/><stop offset="1" style="stop-color:var(--fd-mac);stop-opacity:0"/></radialGradient>${fl('fz-n', V.nfl[1])}${fl('fz-v', V.ves[1])}${fl('fz-d', V.disc[1])}</defs><rect class="fd-bg" width="${DW}" height="${DH}"/>`;
+  h += `<g clip-path="url(#fd-cl)"><g${L ? ` transform="translate(${DW} 0) scale(-1 1)"` : ''}><circle cx="${DC[0]}" cy="${DC[1]}" r="${DR}" fill="url(#fd-rg)"/><circle cx="${MAC[0]}" cy="${MAC[1]}" r="36" fill="url(#fd-mg)"/><circle class="fd-fov" cx="${MAC[0]}" cy="${MAC[1]}" r="3"/>`;
+  h += grp(V.nfl, 'fz-n', NFLP.map(d => `<path class="fd-nfl" d="${d}"/>`).join(''));
+  h += grp(V.disc, 'fz-d', `<circle class="fd-disc" cx="${DD[0]}" cy="${DD[1]}" r="${DDR}"/><circle class="fd-cup" cx="${DD[0] + 3}" cy="${DD[1]}" r="8"/>`);
+  h += grp(V.ves, 'fz-v', VESV.map(d => `<path class="fd-v" d="${d}"/>`).join('') + VESA.map(d => `<path class="fd-a" d="${d}"/>`).join(''));
+  h += `</g>${V.fog ? `<circle class="fd-fog" style="opacity:${V.fog}" cx="${DC[0]}" cy="${DC[1]}" r="${DR}"/>` : ''}</g>`;
+  const ln = (p, q, t, an) => `<line x1="${mx(p[0])}" y1="${p[1]}" x2="${mx(q[0])}" y2="${q[1] + 6}"/><text x="${mx(q[0])}" y="${q[1]}" text-anchor="${L ? { start: 'end', end: 'start' }[an] || an : an}">${t}</text>`;
+  const lab = [];
+  if (V.disc[0]) lab.push(ln([DD[0] + 8, DD[1] - DDR], [402, 30], '視盤', 'end'));
+  lab.push(ln([MAC[0], MAC[1] + 8], [24, 300], '黃斑', 'start'));
+  if (V.nfl[0] && !V.nfl[1]) lab.push(ln([206, 94], [140, 30], '神經纖維層的紋路', 'middle'));
+  return h + `<g class="lab">${lab.join('')}</g><text class="eyen" x="${L ? 14 : DW - 14}" y="${DH - 12}" text-anchor="${L ? 'start' : 'end'}">${L ? '左眼 OS' : '右眼 OD'}</text></svg>`;   // 放在黃斑標籤的對側
+}
+
+/* ---------- 分頁二：眼球矢狀切面（mm；原點＝眼球中心，+x 往後、+y 往下：上＝superior、左＝anterior；11 px/mm） ---------- */
+const SK = 11, SW2 = 460, SH2 = 330, SX0 = 232, SY0 = 165;
+const SX = x => fx(SX0 + x * SK), SY = y => fx(SY0 + y * SK), SP = (x, y) => `${SX(x)} ${SY(y)}`;
+const pl = (r, d, c = [0, 0]) => [c[0] + r * Math.cos(d * Math.PI / 180), c[1] + r * Math.sin(d * Math.PI / 180)];   // 角度 0＝後極，往正＝往下
+const arcC = (r, a0, a1, c = [0, 0], n = 40) => Array.from({ length: n + 1 }, (_, i) => SP(...pl(r, a0 + (a1 - a0) * i / n, c))).join('L');
+const ORA = 118, LIMB = 150.8, CORC = [-5.32, 0];   // ora serrata 與 limbus 的角度、角膜曲率中心（示意）
+function ptsIn(seed, n, box, ok, dmin) { const r = rng(seed), out = []; for (let k = 0; out.length < n && k < 20000; k++) { const p = [box[0] + r() * (box[2] - box[0]), box[1] + r() * (box[3] - box[1])]; if (ok(p, r) && out.every(q => Math.hypot(q[0] - p[0], q[1] - p[1]) >= dmin)) out.push(p); } return out; }
+const ACC = [0, 6, 24], VCC = [0, 14, 50];   // 前房與玻璃體各畫幾個 cell（示意）
+const ACP = ptsIn(11, 24, [-13, -6, -10.3, 6], p => Math.hypot(p[0] - CORC[0], p[1]) < 7.0 && p[0] < -10.4, 0.62);
+const VTP = ptsIn(23, 50, [-5, -10, 10, 10], (p, r) => Math.hypot(...p) < 10.2 && r() >= (p[0] + 5) / 16, 0.8).sort((a, b) => a[0] - b[0]);   // 越前面越多；少量時只取最前面的
+const SNB = [[-2.5, 7.2, 0.7], [-0.8, 8, 0.6], [1.3, 7.1, 0.65], [-3.8, 6.1, 0.55], [0.3, 8.8, 0.6]];   // snowballs：下方玻璃體（示意）
+const RTW = [0, 9, 26], CHN = [[], [[24, 0.75]], [[16, 0.85], [29, 0.95], [42, 0.8]]];   // retinitis 的角度範圍、choroiditis 結節（角度、半徑 mm）
+function sgFig(c) {   // c：L＝[前房, 玻璃體, 視網膜, 脈絡膜] 各 0 沒有、1 少量、2 主要；snb、sbk、cmo、nv、shv
+  const [A, V, R, C] = c.L, cb = g => `M${[pl(11.85, g * 152), pl(11.85, g * 140), pl(11.85, g * 128), pl(11.85, g * ORA), pl(11.1, g * ORA), [-7.6, g * 6.2], [-8.4, g * 5.25], [-9.2, g * 5.9], [-9.9, g * 5.95]].map(p => SP(...p)).join('L')}Z`;
+  let h = `<svg viewBox="0 0 ${SW2} ${SH2}" role="img" aria-label="眼球矢狀切面：上＝superior、左＝anterior"><defs><filter id="sg-bl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.4"/></filter><clipPath id="sg-vc"><circle cx="${SX(0)}" cy="${SY(0)}" r="${fx(10.95 * SK)}"/></clipPath></defs><rect class="sg-bg" width="${SW2}" height="${SH2}"/>`;
+  h += `<path class="sg-nerve" d="M${SP(11.4, -1.7)}H${SX(16.4)}V${SY(1.7)}H${SX(11.4)}Z"/><path class="sg-scl" d="M${arcC(12, -LIMB, LIMB)}L${arcC(7.8, 131.4, 228.6, CORC)}Z"/>`;
+  h += `<circle class="sg-vit" cx="${SX(0)}" cy="${SY(0)}" r="${fx(10.95 * SK)}"/><path class="sg-ret" d="M${arcC(11.15, -(ORA - 2), ORA - 2)}"/><path class="sg-cho" d="M${arcC(11.6, -ORA, ORA)}"/>`;
+  h += `<path class="sg-cb" d="${cb(-1)}"/><path class="sg-cb" d="${cb(1)}"/>`;
+  h += `<path class="sg-aq" d="M${arcC(7.25, 228.6, 131.4, CORC)}L${SP(-9.95, 5.9)}L${SP(-9.95, 1.9)}L${SP(-9.6, 0)}L${SP(-9.95, -1.9)}L${SP(-9.95, -5.9)}Z"/>`;
+  h += `<ellipse class="sg-lens" cx="${SX(-7.6)}" cy="${SY(0)}" rx="${2 * SK}" ry="${fx(4.5 * SK)}"/>` + [-1, 1].map(g => `<path class="sg-iris" d="M${SP(-9.95, g * 5.9)}L${SP(-9.55, g * 5.9)}L${SP(-9.55, g * 1.9)}L${SP(-9.95, g * 1.9)}Z"/>`).join('');
+  h += `<path class="sg-cor" d="M${arcC(7.8, 131.4, 228.6, CORC)}L${arcC(7.25, 228.6, 131.4, CORC)}Z"/>`;
+  // 發炎與併發症
+  if (V === 2) h += `<g clip-path="url(#sg-vc)"><circle class="sg-hz" style="opacity:.3" cx="${SX(0)}" cy="${SY(0)}" r="${fx(10.95 * SK)}"/></g>`;
+  if (R) { const a = -40, w = RTW[R], band = (r0, r1, e) => `M${arcC(r0, a - w / 2 - e, a + w / 2 + e, [0, 0], 16)}L${arcC(r1, a + w / 2 + e, a - w / 2 - e, [0, 0], 16)}Z`; h += `<path class="sg-rtf" style="opacity:.6" filter="url(#sg-bl)" d="${band(11.5, 10.1, 3)}"/><path class="sg-rtf" d="${band(11.4, 10.4, 0)}"/>`; }   // retinitis：白色、增厚、邊界不清（示意）
+  h += CHN[C].map(([a, r]) => { const p = pl(11.55, a); return `<ellipse class="sg-ch" cx="${SX(p[0])}" cy="${SY(p[1])}" rx="${fx(r * SK)}" ry="${fx(r * SK * 0.7)}" transform="rotate(${a + 90} ${SX(p[0])} ${SY(p[1])})"/>`; }).join('');
+  if (c.sbk) h += `<path class="sg-sk" d="M${arcC(10.85, 116, 134, [0, 0], 12)}"/>`;
+  if (c.shv) h += `<path class="sg-vs" d="M${arcC(10.75, 90, 112, [0, 0], 12)}"/><path class="sg-sh" d="M${arcC(10.75, 92, 110, [0, 0], 12)}"/>`;
+  if (c.cmo) h += [-11, -8, -5].map(a => { const p = pl(10.78, a); return `<circle class="sg-cy" cx="${SX(p[0])}" cy="${SY(p[1])}" r="${fx(0.3 * SK)}"/>`; }).join('');
+  if (c.nv) { const p = pl(10.75, 106); h += `<path class="sg-nv" d="M${SP(10.85, -1.9)}l-5 -3l4 -3l-5 -3M${SP(...p)}l4 -4l3 4l4 -4"/>`; }
+  if (c.snb) h += SNB.map(([x, y, r]) => `<circle class="sg-sb" cx="${SX(x)}" cy="${SY(y)}" r="${fx(r * SK)}"/>`).join('');
+  h += ACP.slice(0, ACC[A]).map(p => `<circle class="sg-cell" cx="${SX(p[0])}" cy="${SY(p[1])}" r="3.1"/>`).join('') + VTP.slice(0, VCC[V]).map(p => `<circle class="sg-cell" cx="${SX(p[0])}" cy="${SY(p[1])}" r="3.1"/>`).join('');
+  const ln = (p, q, t, an = 'middle') => `<line x1="${SX(p[0])}" y1="${SY(p[1])}" x2="${SX(q[0])}" y2="${SY(q[1] + (q[1] < p[1] ? 0.4 : -1.2))}"/><text x="${SX(q[0])}" y="${SY(q[1])}" text-anchor="${an}">${t}</text>`;
+  const lab = [ln([-11.3, -3.2], [-12.8, -10.4], '前房'), ln([-7.3, -2.6], [-5.4, -12.4], '水晶體'), ln(pl(11.4, 132), [-13.4, 12.8], '睫狀體'), `<text x="${SX(2.4)}" y="${SY(-0.6)}" text-anchor="middle">玻璃體</text>`,
+    ln(pl(11.15, -75), [6, -13.6], '視網膜'), ln(pl(11.6, 70), [8.6, 13.8], '脈絡膜'), `<text x="${SX(14.2)}" y="${SY(-2.6)}" text-anchor="middle">視神經</text>`];
+  if (R) lab.push(ln(pl(11, -40), [13.4, -9.8], 'retinitis'));
+  if (C) lab.push(ln(pl(11.55, CHN[C][0][0]), [13.4, 9.4], 'choroiditis'));
+  if (c.snb) lab.push(ln([-0.8, 8], [3.4, 4.6], 'snowballs'));
+  if (c.sbk) lab.push(ln(pl(10.85, 125), [-3.4, 13.4], 'snowbank'));
+  if (c.cmo) lab.push(ln(pl(10.6, -8), [6.2, -6.6], 'CMO', 'end'));
+  if (c.nv) lab.push(ln([10.6, -2.6], [7.4, -3.8], '新生血管', 'end'));
+  if (c.shv) lab.push(ln(pl(10.75, 100), [-1, 11.2], '血管周圍 sheathing'));
+  return h + `<g class="sgl">${lab.join('')}</g></svg>`;
+}
+
+/* ---------- SUN 解剖分類（SUN 2005 Table 1 與內文；Kanski p.430） ---------- */
+const SITEZ = ['前房', '玻璃體', '視網膜', '脈絡膜'], LVZ = ['沒有', '少量', '主要'];
+const ANZ = { ant: 'Anterior uveitis', int: 'Intermediate uveitis', post: 'Posterior uveitis', pan: 'Panuveitis', ai: 'Anterior and intermediate uveitis', none: '沒有發炎', unc: '本頁不分類' };
+const ANZH = { ant: '前葡萄膜炎：主要在前房', int: '中間葡萄膜炎：主要在玻璃體', post: '後葡萄膜炎：主要在視網膜或脈絡膜', pan: '全葡萄膜炎：沒有主要部位，三處都發炎', ai: '前房與玻璃體都明顯，不叫 panuveitis', none: '四個部位都沒有發炎', unc: '這組設定不屬於 SUN 寫明的任何一類' };
+function anClass(L) {   // 看主要的發炎部位；併發症（CMO、新生血管、周邊血管 sheathing）不改分類，所以不傳進來
+  const P = Math.max(L[2], L[3]), pr = ['A', 'V', 'P'].filter((k, i) => [L[0], L[1], P][i] === 2);
+  if (!L[0] && !L[1] && !P) return 'none';
+  if (pr.length === 3) return 'pan';
+  if (pr.length === 1) return { A: 'ant', V: 'int', P: 'post' }[pr[0]];
+  if (pr.join() === 'A,V' && !P) return 'ai';
+  return 'unc';
+}
+const ppName = c => anClass(c.L) !== 'int' ? null : (c.snb || c.sbk) && !c.sys ? 'pp' : 'iu';   // pars planitis：intermediate、有 snowball 或 snowbank、找不到相關感染或全身病
+const PPZ = { pp: 'Pars planitis', iu: 'Intermediate uveitis（不叫 pars planitis）' };
+const SYSZ = { sar: 'sarcoidosis', lyme: 'Lyme disease' };
+const VFZ = { snb: 'snowballs', sbk: 'snowbank', cmo: 'CMO', nv: '新生血管', shv: '周邊血管 sheathing' };
+const vhMake = (L, f = '', sys = '') => { const c = { L: L.slice(), snb: 0, sbk: 0, cmo: 0, nv: 0, shv: 0, sys }; f.split(' ').filter(Boolean).forEach(k => { c[k] = 1; }); return c; };
+function uncTxt(L) {
+  const P = Math.max(L[2], L[3]), n2 = [L[0], L[1], P].filter(x => x === 2).length;
+  if (!n2) return '每個部位都只有少量發炎，沒有主要部位；SUN 依主要部位分類，這種情況本頁不分類';
+  if (L[0] === 2 && L[1] === 2) return '前房與玻璃體都明顯、後段只有少量：panuveitis 要後段也明顯發炎、anterior and intermediate 是後段沒有發炎，SUN 沒有寫這種中間的情況';
+  return '兩個部位都設成主要：panuveitis 要前房、玻璃體、視網膜或脈絡膜三處都發炎；只有兩處時，要判斷哪一處才是主要的';
+}
+const ANX = {
+  ant: { zh: 'Anterior uveitis', o: [[2, 1, 0, 0]] },
+  antcmo: { zh: 'Anterior uveitis 併 CMO', o: [[2, 0, 0, 0], 'cmo'] },
+  pp: { zh: 'Pars planitis', o: [[1, 2, 0, 0], 'snb sbk'] },
+  iusar: { zh: 'Intermediate uveitis（sarcoidosis）', o: [[1, 2, 0, 0], 'snb', 'sar'] },
+  ret: { zh: 'Retinitis 加玻璃體發炎', o: [[0, 1, 2, 0]] },
+  cho: { zh: 'Choroiditis', o: [[0, 0, 0, 2]] },
+  ai: { zh: 'Anterior and intermediate', o: [[2, 2, 0, 0]] },
+  pan: { zh: 'Panuveitis', o: [[2, 2, 2, 2]] }
+};
+
+/* ---------- 分頁二的說明卡 ---------- */
+const HZK = [`SUN 採用 NEI 的玻璃體 haze 分級（Nussenblatt 1985 的標準照片），只是把「trace」記成 0.5+${s('S3')}`, `玻璃體 cell 很重要，但 SUN 沒有對它的分級達成共識${s('S3')}`];
+const HZIU = [`Intermediate uveitis 一定有玻璃體 cell，以前段為主；嚴重時才有玻璃體凝縮與 haze${s('S7')}`, `Snowballs：白色、一團團的發炎細胞與滲出物，通常下方玻璃體最多${s('S7')}`];
+const AN_SUN = [`Anterior：主要在前房，包括 iritis、iridocyclitis、anterior cyclitis${s('S3')}`, `Intermediate：主要在玻璃體，包括 pars planitis、posterior cyclitis、hyalitis${s('S3')}`,
+  `Posterior：視網膜或脈絡膜，包括 focal、multifocal 或 diffuse choroiditis、chorioretinitis、retinochoroiditis、retinitis、neuroretinitis${s('S3')}`, `Panuveitis：前房、玻璃體，加上視網膜或脈絡膜${s('S3')}`,
+  `Kanski 照 SUN：anterior＝前房是主要部位；intermediate＝主要是玻璃體，包括 pars planitis；posterior＝視網膜和／或脈絡膜；panuveitis＝所有 uveal 結構都受影響${s('S5')}`];
+const AN_RULE = [`分類看發炎的部位，不看結構性併發症${s('S3')}`, `Intermediate uveitis 有周邊血管 sheathing 或黃斑水腫，也不改分類${s('S3')}`,
+  `Panuveitis 只用在沒有主要部位，前房、玻璃體與視網膜或脈絡膜都發炎時；黃斑水腫、新生血管這類併發症不算${s('S3')}`,
+  `前房和玻璃體都發炎（玻璃體比 iridocyclitis 多、前房比 intermediate 多）叫 anterior and intermediate uveitis，不叫 panuveitis${s('S3')}`,
+  `Anterior uveitis 的 anterior vitreous 也常有 cell${s('S1')}；每個 anterior uveitis 都要看後段，找 CMO 等併發症${s('S2')}`];
+const AN_ANT = [`Anterior uveitis 是 iris 與前段 ciliary body（pars plicata）的發炎，是最常見的 uveitis${s('S5')}`, `Iritis＝主要在 iris，iridocyclitis＝iris 和前段的 ciliary body 都有；臨床上分不出來，所以兩個詞可以互換${s('S5')}`];
+const AN_PP = [`Pars planitis 只用在有 snowbank 或 snowball、而且找不到相關感染或全身病（idiopathic）的 intermediate uveitis；有 Lyme disease 這類感染或 sarcoidosis 這類全身病時，叫 intermediate uveitis${s('S3', 'S7')}`,
+  `Snowball：白色、一團團的發炎細胞與滲出物，通常下方玻璃體最多；snowbank：灰白色的纖維血管或滲出斑塊，可以在任何象限，最常在下方${s('S7')}`,
+  `Intermediate uveitis 至少一半是 idiopathic；佔所有 uveitis 最多 15%、兒童 uveitis 約 20%${s('S7')}`,
+  `典型表現：慢慢變模糊、飛蚊，通常不痛也不紅；以前段為主的玻璃體 cell 是一定有的${s('S7')}`,
+  `周邊 periphlebitis 常見，尤其是 multiple sclerosis；CMO 最多一半的病人會有，是視力下降的主因${s('S7')}`];
+const AN_POST = [`Posterior uveitis 包括 retinitis、choroiditis 與 retinal vasculitis；很多病灶視網膜和脈絡膜都有（retinochoroiditis、chorioretinitis）${s('S6')}`,
+  `Retinitis：活動的病灶是白色的視網膜混濁，周圍水腫讓邊界不清楚；消退時邊界變清楚${s('S6')}`,
+  `Choroiditis：活動時是圓形的黃色結節；沒有合併視網膜受影響時，通常不會引起 vitritis${s('S6')}`,
+  `Vasculitis：靜脈比動脈常見，活動時血管周圍有黃白或灰白的斑塊狀 cuffing，有時合併出血；不活動後留下的血管周圍疤痕不要當成活動${s('S6')}`,
+  `SUN：retinal vasculitis 是描述用語；暫時把血管周圍 sheathing 與螢光血管攝影的滲漏或阻塞當證據，但定義還要再訂，也還分不出它和 intermediate uveitis 的周邊 sheathing${s('S3')}`];
+const AN_FIG = ['白點＝cell，玻璃體變灰＝haze；視網膜的白色斑塊＝retinitis、脈絡膜的黃色結節＝choroiditis（位置與大小都是示意）', '每個部位可以設「沒有、少量、主要」；「少量」代表跟著來的發炎，例如 anterior uveitis 的 anterior vitreous cell'];
+function vhCard() {
+  const V = st.vh;
+  if (V.sub === 'hz') {
+    const def = `透過玻璃體看眼底，依神經纖維層（NFL）、視盤與血管看得多清楚來分級${s('S7')}。`;
+    const body = list('Kanski 的分級（Table 12.8）', HZG.map((g, i) => `<b>${g}</b>：${HZD[i]}（${HZE[i]}）${i ? '' : s('S7')}`)) + list('SUN 2005', HZK) + list('Intermediate uveitis 的玻璃體', HZIU)
+      + list('文獻不一', [`Kanski Table 12.8 用文字描述 0 到 +4${s('S7')}；SUN 用 NEI 的照片分級，trace 記成 0.5+${s('S3')}。測驗只用 Kanski 的五級`])
+      + list('本頁的圖', ['示意圖，不是 NEI 的標準照片（照片有版權）；只畫 Kanski 有文字描述的五級，SUN 的 0.5+（trace）沒有文字描述，所以不畫', '眼底示意圖是正像，同眼底照片：OD 視盤在右、OS 在左']);
+    return `<div class="card"><div class="eyebrow">玻璃體 · haze 分級 · 對照 BCSC 9</div><div><h2>Vitreous haze</h2></div><p class="zh">玻璃體 haze 分級</p><p class="def">${def}</p><div class="verdict"><span>${V.eye === 'R' ? '右眼 OD' : '左眼 OS'} · haze <b>${HZG[V.g]}</b>：${HZD[V.g]}</span></div>${body}${srcList(refs(def + body))}</div>`;
+  }
+  const k = anClass(V.L), pp = ppName(V), cx = ['cmo', 'nv', 'shv'].filter(x => V[x]);
+  const def = `SUN 依「主要的發炎部位」分類，不看結構性併發症${s('S3')}；Kanski 也照 SUN 的分類${s('S5')}。`;
+  const v = `${SITEZ.map((t, i) => `${t}：${LVZ[V.L[i]]}`).join('、')}<br>→ <b>${ANZ[k]}</b>${pp ? `：${PPZ[pp]}` : ''}${k === 'unc' ? `<br>${uncTxt(V.L)}` : ''}${cx.length && !['none', 'unc'].includes(k) ? `<br>${cx.map(x => VFZ[x]).join('、')} 是併發症，不改分類` : ''}`;
+  const first = { ant: ['Anterior uveitis', AN_ANT], int: ['Intermediate uveitis 與 pars planitis', AN_PP], post: ['Posterior uveitis', AN_POST] }[k];
+  const body = (first ? list(first[0], first[1]) : '') + list('SUN 的解剖分類（Table 1）', AN_SUN) + list('分類規則', AN_RULE) + (k !== 'int' ? list('Intermediate uveitis 與 pars planitis', AN_PP) : '') + (k !== 'post' ? list('Posterior uveitis', AN_POST) : '') + list('本頁的圖', AN_FIG);
+  return `<div class="card"><div class="eyebrow">葡萄膜炎 · SUN 解剖分類 · 對照 BCSC 9</div><div><h2>${ANZ[k]}</h2></div><p class="zh">${ANZH[k]}</p><p class="def">${def}</p><div class="verdict"><span>${v}</span></div>${body}${srcList(refs(def + body))}</div>`;
+}
+const VSUB = [['hz', '玻璃體 haze'], ['an', '解剖分類']];
+const VHD = e => `眼底示意圖：${e === 'R' ? '右眼 OD' : '左眼 OS'}，正像（上＝superior）`, VHS = '眼球矢狀切面：上＝superior、左＝anterior';
+function vhRenderFig(it) {
+  const V = st.vh, fig = $('#fig'), hz = it ? it.type === 'haze' : V.sub === 'hz';
+  if (it) fig.innerHTML = hz ? `<div class="vh">${VHD(it.eye)}</div><div class="solo">${fdFig(it.g, it.eye)}</div>` : `<div class="vh">${VHS}</div><div class="solo">${sgFig(it.c)}</div>`;
+  else fig.innerHTML = `<div class="ctbar"><div class="seg" role="group" aria-label="子頁">${VSUB.map(([k, t]) => `<button type="button" data-vsub="${k}" aria-pressed="${V.sub === k}">${t}</button>`).join('')}</div></div>`
+    + (hz ? `<div class="vh">${VHD(V.eye)}</div><div class="solo">${fdFig(V.g, V.eye)}</div>` : `<div class="vh">${VHS}</div><div class="solo">${sgFig(V)}</div>`);
+  $('#cap').innerHTML = hz ? `<span>眼底示意圖：正像，同眼底照片（上＝superior；OD 視盤在右、OS 在左）。越霧看得到的越少：先看不到 NFL 的紋路，再來視盤與血管模糊，接著只剩視盤，最後視盤也看不到。</span><span class="ori">示意圖，不是 NEI 的標準照片</span>`
+    : `<span>眼球矢狀切面：上＝superior、左＝anterior。白點＝cell，灰霧＝玻璃體 haze，白色斑塊＝retinitis，黃色結節＝choroiditis。</span><span class="ori">位置、數量與大小都是示意</span>`;
+}
+function vhExtra() {
+  const V = st.vh;
+  if (V.sub === 'hz') return `<div class="rng"><span class="rl">Haze（Kanski）</span><div class="seg" role="group">${HZG.map((g, i) => `<button type="button" data-vg="${i}" aria-pressed="${V.g === i}">${g}</button>`).join('')}</div></div>`
+    + `<div class="rng"><span class="rl">眼睛</span><div class="seg" role="group"><button type="button" data-ve="R" aria-pressed="${V.eye === 'R'}">右眼 OD</button><button type="button" data-ve="L" aria-pressed="${V.eye === 'L'}">左眼 OS</button></div></div>`;
+  return SITEZ.map((t, i) => `<div class="rng"><span class="rl">${t}</span><div class="seg" role="group">${LVZ.map((z, l) => `<button type="button" data-vl="${i}:${l}" aria-pressed="${V.L[i] === l}">${z}</button>`).join('')}</div></div>`).join('')
+    + `<div class="xh">徵象與併發症</div><div class="tgs">${Object.entries(VFZ).map(([k, t]) => `<label class="tog"><input type="checkbox" data-vt="${k}" ${V[k] ? 'checked' : ''}>${t}</label>`).join('')}</div>`
+    + `<div class="rng"><span class="rl">相關的感染或全身病</span><div class="seg" role="group">${[['', '找不到'], ['sar', 'sarcoidosis'], ['lyme', 'Lyme disease']].map(([k, t]) => `<button type="button" data-vsys="${k}" aria-pressed="${(V.sys || '') === k}">${t}</button>`).join('')}</div></div>`;
+}
+function vhSel() { const V = st.vh; if (V.sub === 'hz') return `目前：${V.eye === 'R' ? 'OD' : 'OS'} · haze ${HZG[V.g]}`; const pp = ppName(V); return `目前：${ANZ[anClass(V.L)]}${pp === 'pp' ? '（pars planitis）' : ''}`; }
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'ac', name: '前房 cells 與 flare', en: 'AC cells & flare' }];
+const VIEWS = [{ id: 'ac', name: '前房 cells 與 flare', en: 'AC cells & flare' }, { id: 'vh', name: '玻璃體 haze 與解剖分類', en: 'Vitreous haze & anatomy' }];
 const $ = q => document.querySelector(q);
 const st = { view: 'ac', labels: true, learnMode: 'learn', quiz: null,
   ac: { n: 18, seed: 1, fl: 1, dil: false, sign: null, cm: null },   // cell 數、位置的 seed、flare、散瞳、附帶的徵象、自己數模式（n、seed、shown）
-  mk: { key: '', set: new Set() } };   // 點過做記號的 cell
+  mk: { key: '', set: new Set() },   // 點過做記號的 cell
+  vh: Object.assign(vhMake(...ANX.ant.o), { sub: 'hz', g: 2, eye: 'R', ex: 'ant' }) };   // 分頁二：子頁、haze 分級、哪一眼；解剖分類的設定（vhMake）與例子
 const store = (() => {
   const K3 = 'uveitisAtlas.v1';
   let mem = { wrong: {} };
@@ -476,11 +701,12 @@ function renderB() { const b = bState(), el = $('#ac-b'); mkSync(b.key); if (el)
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : '下方改 cell 數與 flare，或按「自己數」；點放大圖上的 cell 可以做記號'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'vh' ? '圖上方切換子頁；下方改分級或各部位的發炎程度' : '下方改 cell 數與 flare，或按「自己數」；點放大圖上的 cell 可以做記號'}</span>`;
 }
 function renderTools() { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; }
 const VHA = '裂隙燈鏡下所見：右眼 OD，檢查者面對病人（左＝temporal、右＝nasal）', VHB = '放大：光束穿過前房的這一格（左＝角膜、右＝水晶體）';
 function renderFig() {
+  if (st.view === 'vh') { vhRenderFig(quizItem()); $('#fig').classList.toggle('nolab', !st.labels); $('#fig').classList.toggle('quiz-on', st.learnMode === 'quiz'); return; }
   const it = quizItem(), fig = $('#fig'), A = st.ac, mkBar = `<span class="hint" id="ac-mk"></span><button type="button" class="btn" id="ac-clr">清除記號</button>`;
   if (it) {
     const a = `<div class="vh">${VHA}</div>${aFig(Object.assign({ beam: it.type !== 'kp' }, it.T))}`, b = `<div class="vh">${VHB}</div><div id="ac-b"></div><div class="ctbar"><span class="hint">可以點 cell 做記號</span><div class="grp">${mkBar}</div></div>`;
@@ -496,6 +722,7 @@ function renderFig() {
 }
 function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
+  if (st.view === 'vh') { $('#extra').innerHTML = vhExtra(); return; }
   const A = st.ac, sg = (k, v, t, on) => `<button type="button" data-${k}="${v}" aria-pressed="${on}">${t}</button>`;
   $('#extra').innerHTML = (A.cm ? `<p class="hint" style="margin:0 0 8px">自己數：cell 數已藏起來；點 cell 做記號，數完按「對答案」。再按一次「自己數」回到拉條。</p>` : `<div class="rng"><label for="ac-n">光束裡的 cell 數</label><input type="range" id="ac-n" min="0" max="${NMAX}" step="1" value="${A.n}"><span class="v" id="ac-n-v">${A.n} 個 → ${acGrade(A.n)}</span></div>`)
     + `<div class="rng"><span class="rl">Flare（SUN）</span><div class="seg" role="group" aria-label="flare 分級">${FL.map((g, i) => sg('fl', i, g, A.fl === i)).join('')}</div></div>`
@@ -505,12 +732,18 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'vh') {
+    const V = st.vh;
+    ix.innerHTML = (V.sub === 'an' ? `<span class="lbl">例子（示意）</span>` + Object.keys(ANX).map(k => `<button type="button" class="chip ${V.ex === k ? 'on' : ''}" data-vx="${k}">${ANX[k].zh}</button>`).join('') : '')
+      + `<span class="lbl">其他頁</span><a class="chip" href="../exam/#bio">間接眼底鏡 → 檢查技巧圖譜</a><a class="chip" href="../retina/#oct">CMO 的 OCT → 視網膜圖譜</a><a class="chip" href="../eye-atlas/">眼球構造 → 眼解剖圖譜</a>`;
+    return;
+  }
   ix.innerHTML = `<span class="lbl">附帶的徵象（說明卡換成這個徵象）</span><button type="button" class="chip ${!st.ac.sign ? 'on' : ''}" data-sg="">沒有：看 cell 與 flare</button>` + SGK.map(k => `<button type="button" class="chip ${st.ac.sign === k ? 'on' : ''}" data-sg="${k}">${SG[k].zh}</button>`).join('')
     + `<span class="lbl">其他頁</span><a class="chip" href="../exam/">裂隙燈照明法 → 檢查技巧圖譜</a><a class="chip" href="../eye-atlas/#angle">前房與 iris 解剖 → 眼解剖圖譜</a><a class="chip" href="../retina/#oct">CMO 的 OCT → 視網膜圖譜</a>`;
 }
-function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : acCard(); }
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'vh' ? vhCard() : acCard(); }
 function renderSelbar() {
-  const b = $('#selbar'), A = st.ac, t = st.learnMode !== 'learn' ? '' : `目前：${A.cm ? '自己數' : `cell ${A.n} 個（${acGrade(A.n)}）`} · flare ${FL[A.fl]}${A.sign ? ` · ${SG[A.sign].zh}` : ''}`;
+  const b = $('#selbar'), A = st.ac, t = st.learnMode !== 'learn' ? '' : st.view === 'vh' ? vhSel() : `目前：${A.cm ? '自己數' : `cell ${A.n} 個（${acGrade(A.n)}）`} · flare ${FL[A.fl]}${A.sign ? ` · ${SG[A.sign].zh}` : ''}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -519,17 +752,20 @@ function render() {
 }
 
 /* ---------- quiz ----------
-   錯題的 key：ac:c:…（數 cell 選分級）、ac:f:…（flare 分級）、ac:k:…（看 KP）；第二段的字母決定題型，之後的分頁用 vh:、co: */
+   錯題的 key：ac:c:…（數 cell 選分級）、ac:f:…（flare 分級）、ac:k:…（看 KP）；vh:h:…（haze 分級）、vh:a:…（解剖分類）、vh:p:…（pars planitis）；第二段的字母決定題型，整頁不重複，之後的分頁用 co: */
 const QC = { c1: [0, 3], c2: [1, 5], c3: [4, 7], c4: [9, 11], c5: [13, 2], c6: [19, 13], c7: [23, 17], c8: [32, 19], c9: [44, 23], c10: [64, 29], c11: [3, 31, 1], c12: [11, 37, 1] };   // cell 數、seed、1＝散瞳後（有色素顆粒）
 const QF = { f1: [0, 2], f2: [1, 9], f3: [2, 4], f4: [3, 6], f5: [4, 12], f6: [1, 34], f7: [3, 2] };   // flare 分級、cell 數
 const QK = { k1: ['kpf', 0], k2: ['kpm', 0], k3: ['kps', 0], k4: ['kpf', 1], k5: ['kpm', 1], k6: ['kps', 1] };   // KP 種類、位置的變化
 const QFS = 41;   // flare 題的 cell 位置
 const FDESC = ['光束穿過前房時沒有霧', '光束穿過前房時留下很淡的一道霧', '前房裡的光束霧得很清楚，但 iris 與水晶體的細節還看得清楚', '前房的霧很明顯，iris 與水晶體的細節變得模糊', '前房裡有 fibrin，aqueous 像凝膠一樣（plastic aqueous）'];
-const KEYS = [...Object.keys(QC).map(k => 'ac:c:' + k), ...Object.keys(QF).map(k => 'ac:f:' + k), ...Object.keys(QK).map(k => 'ac:k:' + k)];
+const QH = { h1: [0, 'R'], h2: [1, 'R'], h3: [2, 'R'], h4: [3, 'R'], h5: [4, 'R'], h6: [1, 'L'], h7: [2, 'L'], h8: [3, 'L'] };   // haze 分級、哪一眼
+const QAN = { a1: [[2, 0, 0, 0]], a2: [[2, 0, 0, 0], 'cmo'], a3: [[1, 2, 0, 0], 'snb'], a4: [[0, 2, 0, 0], 'shv cmo'], a5: [[0, 1, 2, 0]], a6: [[0, 0, 0, 2]], a7: [[2, 2, 2, 0]], a8: [[2, 2, 0, 0]], a9: [[2, 2, 0, 2], 'nv'], a10: [[1, 0, 0, 2]], a11: [[2, 1, 0, 0]] };   // [前房, 玻璃體, 視網膜, 脈絡膜]、徵象與併發症；答案由 anClass 算，只出 SUN 寫明的組合（self-check 核對）
+const QPP = { p1: ['sbk', ''], p2: ['snb', 'sar'], p3: ['snb', ''], p4: ['', ''], p5: ['sbk', 'lyme'], p6: ['snb sbk', ''] };   // intermediate uveitis 的 snowball／snowbank 與相關的全身病或感染
+const KEYS = [...Object.keys(QC).map(k => 'ac:c:' + k), ...Object.keys(QF).map(k => 'ac:f:' + k), ...Object.keys(QK).map(k => 'ac:k:' + k), ...Object.keys(QH).map(k => 'vh:h:' + k), ...Object.keys(QAN).map(k => 'vh:a:' + k), ...Object.keys(QPP).map(k => 'vh:p:' + k)];
 const keyValid = k => KEYS.includes(k);
 const keyView = k => k.split(':')[0];
-const QTV = { ac: [['cnt', '數 cell'], ['fl', 'flare'], ['kp', '看 KP']] };
-const QTZ = { c: 'cnt', f: 'fl', k: 'kp' };
+const QTV = { ac: [['cnt', '數 cell'], ['fl', 'flare'], ['kp', '看 KP']], vh: [['haze', 'haze 分級'], ['anat', '解剖分類'], ['pp', 'pars planitis']] };
+const QTZ = { c: 'cnt', f: 'fl', k: 'kp', h: 'haze', a: 'anat', p: 'pp' };
 const kType = k => QTZ[k.split(':')[1]];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 function nearOpts(L, ans, k) {   // 答案和最接近的幾級，照分級順序排
@@ -540,6 +776,9 @@ function keyLabel(k) {
   const [, ty, id] = k.split(':');
   if (ty === 'c') { const [n, , dil] = QC[id]; return `數 cell：${n} 個${dil ? '（散瞳後）' : ''}`; }
   if (ty === 'f') return `flare ${FL[QF[id][0]]}：${FLG[QF[id][0]][2]}`;
+  if (ty === 'h') return `haze ${HZG[QH[id][0]]}（${QH[id][1] === 'R' ? 'OD' : 'OS'}）：${HZD[QH[id][0]]}`;
+  if (ty === 'a') return `解剖分類：${QAN[id][0].map((l, i) => l ? `${SITEZ[i]}${LVZ[l]}` : '').filter(Boolean).join('、')}${QAN[id][1] ? `＋${QAN[id][1].split(' ').map(x => VFZ[x]).join('、')}` : ''}`;
+  if (ty === 'p') return `Pars planitis：${QPP[id][0] ? QPP[id][0].split(' ').map(x => VFZ[x]).join('、') : '沒有 snowball 或 snowbank'}${QPP[id][1] ? `、${SYSZ[QPP[id][1]]}` : ''}`;
   return `看 KP：${KPZ[QK[id][0]]}`;
 }
 function itemOf(key) {
@@ -556,23 +795,46 @@ function itemOf(key) {
       more: `SUN：${ans}＝${FLG[g][1]}（${FLG[g][2]}）${s('S2', 'S3')}。Flare 和 cell 各自分級：這題框裡有 ${n} 個 cell，是 cell ${acGrade(n)}${s('S3')}。`,
       go: { n, seed: QFS, fl: g, dil: false, sign: null } };
   }
+  if (ty === 'h') {
+    const [g, eye] = QH[id], ans = HZG[g];
+    const why = ['NFL 的紋路看得清楚', 'NFL 的紋路看不到了，但視盤與血管還是清楚的', '視盤與血管都看得到，但都模糊', '血管看不到，只剩視盤', '連視盤都看不到'][g];
+    return { key, type: 'haze', g, eye, prompt: ['haze 分級', `${eye === 'R' ? '右眼' : '左眼'}眼底示意圖。依 Kanski 的分級，玻璃體 haze 是幾級？`], opts: nearOpts(HZG, ans, 4), ans, lab: x => `${x}：${HZD[HZG.indexOf(x)]}`,
+      more: `${why}：${ans}（${HZE[g]}）${s('S7')}。SUN 用 NEI 的照片分級，trace 記成 0.5+${s('S3')}。`, go: { sub: 'hz', g, eye } };
+  }
+  if (ty === 'a') {
+    const [L, f] = QAN[id], c = vhMake(L, f), ans = anClass(L), fx2 = (f || '').split(' ').filter(Boolean);
+    const rule = { ant: `前房是主要部位：anterior uveitis${s('S3')}`, int: `玻璃體是主要部位：intermediate uveitis${s('S3')}`, post: `視網膜或脈絡膜是主要部位：posterior uveitis${s('S3')}`,
+      pan: `沒有主要部位，前房、玻璃體與${L[2] === 2 ? '視網膜' : '脈絡膜'}都發炎：panuveitis${s('S3')}`, ai: `前房與玻璃體都明顯、後段沒有發炎：anterior and intermediate uveitis，不叫 panuveitis${s('S3')}` }[ans];
+    return { key, type: 'anat', c, prompt: ['解剖分類', `${SITEZ.map((t, i) => `${t}${LVZ[L[i]]}`).join('、')}${fx2.length ? `；另外有 ${fx2.map(x => VFZ[x]).join('、')}` : ''}（看圖）。依 SUN 屬於哪一類？`], opts: ['ant', 'int', 'post', 'pan', 'ai'], ans, lab: x => ANZ[x],
+      more: rule + '。' + (fx2.some(x => ['cmo', 'nv', 'shv'].includes(x)) ? `${fx2.filter(x => ['cmo', 'nv', 'shv'].includes(x)).map(x => VFZ[x]).join('、')}是結構性併發症，不改分類${s('S3')}。` : '') + (ans === 'ant' && L[1] ? `Anterior uveitis 的 anterior vitreous 也常有 cell${s('S1')}。` : '') + (ans === 'post' && L[3] && !L[1] ? `Choroiditis 沒有合併視網膜受影響時，通常不會引起 vitritis${s('S6')}。` : ''),
+      go: { sub: 'an', c } };
+  }
+  if (ty === 'p') {
+    const [f, sys] = QPP[id], c = vhMake([1, 2, 0, 0], f, sys), ans = ppName(c), fx2 = f.split(' ').filter(Boolean);
+    return { key, type: 'pp', c, prompt: ['Pars planitis', `玻璃體是主要的發炎部位，前房只有少量 cell。${fx2.length ? `看得到 ${fx2.map(x => VFZ[x]).join('、')}` : '沒有 snowball，也沒有 snowbank'}；${sys ? `檢查發現 ${SYSZ[sys]}` : '找不到相關的感染或全身病'}。這該叫什麼？`], opts: ['pp', 'iu'], ans, lab: x => PPZ[x],
+      more: `${ans === 'pp' ? '有 snowball 或 snowbank，而且是 idiopathic：pars planitis' : sys ? `有相關的${sys === 'lyme' ? '感染' : '全身病'}（${SYSZ[sys]}），所以叫 intermediate uveitis` : '沒有 snowball 或 snowbank，所以叫 intermediate uveitis'}。${AN_PP[0]}。`, go: { sub: 'an', c } };
+  }
   const [kind, v] = QK[id];
   const why = { kpf: `細小、集中在下方排成尖端朝上的三角形（Arlt triangle）：Kanski 說這是 non-granulomatous 發炎（典型是 AAU）的樣子${s('S1')}。`, kpm: `又大又像油脂、集中在下方：mutton fat KP，Kanski 歸為 granulomatous 發炎（典型是 chronic）${s('S1')}。`, kps: `小、星狀、散在整個角膜而不是集中在下方：Fuchs uveitis syndrome 的 KP${s('S1')}。` }[kind];
   return { key, type: 'kp', show: 'a', T: { n: 0, seed: 1, fl: 0, dil: false, sign: kind, v }, prompt: ['看 KP', 'Diffuse 照明下看到這些 KP（示意）。最符合哪一種？'], opts: ['kpf', 'kpm', 'kps'], ans: kind, lab: k => KPZ[k],
     more: `${why}SUN 2005 對 KP 的描述詞沒有共識${s('S3')}。`, go: { n: st.ac.n, seed: st.ac.seed, fl: 0, dil: false, sign: kind } };
 }
 const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
+const QHEAD = {
+  ac: ['先數 cell，再看 flare', '三種題型：數 1 mm × 1 mm 光束裡的 cell 選 SUN 分級（可以點 cell 做記號；散瞳後的題目有褐色色素顆粒，不算 cell）；看前房的霧與描述選 flare 分級；看 KP 的大小與分布判斷是哪一種。'],
+  vh: ['先看得到什麼，再看哪裡最發炎', '三種題型：看眼底示意圖選 Kanski 的玻璃體 haze 分級（0 到 +4）；給各部位的發炎程度與併發症，依 SUN 選解剖分類（只出 SUN 寫明的組合）；intermediate uveitis 什麼時候可以叫 pars planitis。']
+};
 function quizHTML() {
   const q = st.quiz, lab0 = x => x;
   if (q.phase === 'setup') {
     const w = Object.keys(store.get().wrong).filter(k => keyValid(k) && keyView(k) === st.view).length;
     const opt = (k, v, t) => `<button type="button" data-qs="${k}" data-qv="${v}" aria-pressed="${String(q[k]) === String(v)}">${t}</button>`;
-    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>先數 cell，再看 flare</h2>
+    return `<div class="qz"><div class="eyebrow">測驗 · ${VIEWS.find(v => v.id === st.view).name}</div><h2>${QHEAD[st.view][0]}</h2>
       <div class="row"><span class="lbl">範圍</span><div class="seg">${opt('scope', 'all', '全部')}${opt('scope', 'wrong', `錯題（${w}）`)}</div></div>
       <div class="row"><span class="lbl">題型</span><div class="seg">${QTV[st.view].map(([k, t]) => opt('type', k, t)).join('')}${opt('type', 'mix', '混合')}</div></div>
       <div class="row"><span class="lbl">題數</span><div class="seg">${opt('total', 10, '10')}${opt('total', 20, '20')}</div></div>
       <div class="row"><button type="button" class="btn primary" id="q-start">開始</button></div>
-      <p style="margin:0;font-size:13px;color:var(--muted)">三種題型：數 1 mm × 1 mm 光束裡的 cell 選 SUN 分級（可以點 cell 做記號；散瞳後的題目有褐色色素顆粒，不算 cell）；看前房的霧與描述選 flare 分級；看 KP 的大小與分布判斷是哪一種。答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
+      <p style="margin:0;font-size:13px;color:var(--muted)">${QHEAD[st.view][1]}答錯的題目會自動記進錯題本；在「錯題」範圍答對一次會減一筆。題數多於題目種類時，同一題會再出一次。</p></div>`;
   }
   if (q.phase === 'done') {
     const wr = q.log.filter(x => !x.ok);
@@ -622,7 +884,11 @@ function setMode(m) {
   st.quiz = m === 'quiz' ? quizDefaults() : null;
   render();
 }
-function goKey(k) { setView('ac'); st.ac = Object.assign({ v: 0 }, itemOf(k).go, { cm: null }); render(); }   // 錯題本「再看一次」：回到學習模式的同一個設定
+function goKey(k) {   // 錯題本「再看一次」：回到學習模式的同一個設定
+  const g = itemOf(k).go;
+  if (keyView(k) === 'vh') { setView('vh'); st.vh = g.sub === 'hz' ? Object.assign(st.vh, { sub: 'hz', g: g.g, eye: g.eye }) : Object.assign(vhMake(g.c.L, '', g.c.sys), g.c, { L: g.c.L.slice(), sub: 'an', g: st.vh.g, eye: st.vh.eye, ex: null }); render(); return; }
+  setView('ac'); st.ac = Object.assign({ v: 0 }, g, { cm: null }); render();
+}
 function newCount() {   // 自己數：隨機挑一級，再在那一級的範圍裡挑 cell 數
   const g = ACG[Math.floor(Math.random() * ACG.length)], hi = g[2] === Infinity ? 75 : g[2];
   return { n: g[1] + Math.floor(Math.random() * (hi - g[1] + 1)), seed: 100 + Math.floor(Math.random() * 99900), shown: false };
@@ -656,6 +922,12 @@ document.addEventListener('click', e => {
   const fl = t.closest('[data-fl]'); if (fl) { st.ac.fl = +fl.dataset.fl; render(); return; }
   const dl = t.closest('[data-dil]'); if (dl) { st.ac.dil = dl.dataset.dil === '1'; render(); return; }
   const sg = t.closest('[data-sg]'); if (sg) { st.ac.sign = sg.dataset.sg || null; render(); return; }
+  const V = st.vh, vs = t.closest('[data-vsub]'); if (vs) { V.sub = vs.dataset.vsub; render(); return; }
+  const vg = t.closest('[data-vg]'); if (vg) { V.g = +vg.dataset.vg; render(); return; }
+  const ve = t.closest('[data-ve]'); if (ve) { V.eye = ve.dataset.ve; render(); return; }
+  const vl = t.closest('[data-vl]'); if (vl) { const [i, l] = vl.dataset.vl.split(':').map(Number); V.L[i] = l; V.ex = null; render(); return; }
+  const vy = t.closest('[data-vsys]'); if (vy) { V.sys = vy.dataset.vsys; V.ex = null; render(); return; }
+  const vx = t.closest('[data-vx]'); if (vx) { st.vh = Object.assign(vhMake(...ANX[vx.dataset.vx].o), { sub: 'an', g: V.g, eye: V.eye, ex: vx.dataset.vx }); render(); return; }
   const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
   if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
@@ -664,7 +936,10 @@ document.addEventListener('click', e => {
   if (t.closest('#q-next')) { nextQ(); return; }
   if (t.closest('#q-skip')) { answer({ ok: false }); return; }
 });
-document.addEventListener('change', e => { if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); } });
+document.addEventListener('change', e => {
+  if (e.target.id === 't-lab') { st.labels = e.target.checked; $('#fig').classList.toggle('nolab', !st.labels); return; }
+  const k = e.target.dataset.vt; if (k) { st.vh[k] = e.target.checked ? 1 : 0; st.vh.ex = null; render(); }
+});
 document.addEventListener('input', e => { if (e.target.id === 'ac-n') { st.ac.n = +e.target.value; afterN(); } });   // 只重畫放大圖、目前設定與說明卡，拉條本身不重畫（才拖得動）
 $('#m-learn').addEventListener('click', () => setMode('learn'));
 $('#m-quiz').addEventListener('click', () => setMode('quiz'));
@@ -724,7 +999,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   // 光束在瞳孔裡、虛線框 1 mm 寬
   a(Math.abs(BM.b1 - BM.b0 - 1) < 1e-9 && Math.abs(2 * BM.h - 1) < 1e-9 && BM.l1 < RP && Math.abs(BM.c[0][0]) < RP, '光束 1 mm × 1 mm、落在瞳孔裡');
   // 題目：選項含答案、不重複；數 cell 與 flare 的選項照分級順序；答案和圖一致
-  KEYS.forEach(k => {
+  KEYS.filter(k => keyView(k) === 'ac').forEach(k => {
     const it = itemOf(k);
     a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === (it.type === 'kp' ? 3 : 4), `${k} 的選項`);
     if (it.type !== 'kp') { const L = it.type === 'cnt' ? GR : FL; a(it.opts.every((o, i) => !i || L.indexOf(o) > L.indexOf(it.opts[i - 1])), `${k} 的選項照順序`); }
@@ -741,8 +1016,57 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   a([[10, -6.9], [-10, -6.9], [-10, 7.75]].every(q => X(q[0]) >= 8 && X(q[0]) <= AW - 8 && Y(q[1]) >= 16 && Y(q[1]) <= AH - 6), '裂隙燈圖的標籤在框內');
   a(Y(LL) < AH && Y(cOf(UL)) > 0 && X(FA) < AW + 30, '眼瞼在圖裡');
   a(BOX.y + BOX.s + 26 <= BH - 6 && LX + 52 <= BW, '放大圖在框內');
+
+  // ---------- 分頁二：玻璃體 haze 與解剖分類 ----------
+  // haze 各級畫什麼：0 才看得清楚 NFL；+1 NFL 模糊但視盤血管清楚；+2 視盤血管都模糊；+3 只剩視盤；+4 看不到視盤；霧越來越濃
+  HZV.forEach((v, g) => {
+    a((v.nfl[0] > 0.3 && !v.nfl[1]) === (g === 0), `haze ${HZG[g]}：只有 0 看得清楚 NFL`);
+    if (g === 1) a((v.nfl[0] < 0.3 || v.nfl[1] > 0) && v.ves[0] >= 0.9 && !v.ves[1] && v.disc[0] >= 0.9 && !v.disc[1], 'haze +1：NFL 模糊、視盤與血管清楚');
+    if (g === 2) a(v.ves[0] >= 0.5 && v.ves[1] > 0 && v.disc[0] >= 0.5 && v.disc[1] > 0, 'haze +2：視盤與血管看得到但模糊');
+    if (g === 3) a(v.ves[0] <= 0.1 && v.disc[0] >= 0.4, 'haze +3：只看得到視盤');
+    if (g === 4) a(v.disc[0] === 0 && v.ves[0] === 0, 'haze +4：看不到視盤');
+    if (g) a(v.fog > HZV[g - 1].fog, `haze ${HZG[g]} 比上一級霧`);
+    ['R', 'L'].forEach(e => { const h = fdFig(g, e); a(h.includes('class="fd-nfl"') === (v.nfl[0] > 0) && h.includes('class="fd-disc"') === (v.disc[0] > 0) && h.includes('class="fd-v"') === (v.ves[0] > 0), `haze ${HZG[g]} ${e}：畫出的結構和設定一致`); });
+  });
+  a(fdFig(0, 'R').includes('scale(-1 1)') === false && fdFig(0, 'L').includes(`translate(${DW} 0) scale(-1 1)`) && DD[0] > DC[0], 'OD 視盤在右、OS 整組鏡射到左');
+  a(NFLP.every(d => /^M[\d. ]+[QL][\d. ]+$/.test(d)), 'NFL 紋路的路徑格式');
+  // 解剖分類：每種組合只有一個答案；單一主要部位、三處都主要、前房加玻璃體的規則
+  for (let m = 0; m < 81; m++) { const L = [0, 1, 2, 3].map(i => Math.floor(m / 3 ** i) % 3), k = anClass(L); a(Object.keys(ANZ).includes(k), `組合 ${L} 有分類`);
+    const P = Math.max(L[2], L[3]), pr = [L[0], L[1], P].filter(x => x === 2).length;
+    if (pr === 1) a(k === (L[0] === 2 ? 'ant' : L[1] === 2 ? 'int' : 'post'), `組合 ${L}：只有一個主要部位`);
+    if (pr === 3) a(k === 'pan', `組合 ${L}：三處都主要＝panuveitis`);
+    if (!L[0] && !L[1] && !P) a(k === 'none', `組合 ${L}：沒有發炎`); }
+  a(anClass([2, 2, 0, 0]) === 'ai' && anClass([2, 2, 1, 0]) === 'unc' && anClass([2, 2, 0, 2]) === 'pan' && anClass([2, 1, 0, 0]) === 'ant' && anClass([1, 2, 0, 0]) === 'int' && anClass([0, 1, 2, 0]) === 'post', '前房加玻璃體、少量不改分類');
+  // pars planitis：intermediate＋snowball 或 snowbank＋找不到相關感染或全身病
+  [['', '', 'iu'], ['snb', '', 'pp'], ['sbk', '', 'pp'], ['snb sbk', '', 'pp'], ['snb', 'sar', 'iu'], ['sbk', 'lyme', 'iu']].forEach(([f, sy, w]) => a(ppName(vhMake([1, 2, 0, 0], f, sy)) === w, `pars planitis：${f || '沒有'} ${sy || ''}`));
+  a(ppName(vhMake([2, 0, 0, 0], 'snb')) === null, '不是 intermediate 就不談 pars planitis');
+  // 矢狀切面：cell 數＝設定、徵象只在打開時畫、cell 在前房或玻璃體裡
+  const cn = (h, c) => (h.match(new RegExp(`class="${c}"`, 'g')) || []).length;
+  [0, 1, 2].forEach(A => [0, 1, 2].forEach(V => a(cn(sgFig(vhMake([A, V, 0, 0])), 'sg-cell') === ACC[A] + VCC[V], `前房 ${A}、玻璃體 ${V}：cell 數`)));
+  a(ACP.length === 24 && VTP.length === 50 && ACP.every(p => p[0] < -10.4 && Math.hypot(p[0] - CORC[0], p[1]) < 7.0) && VTP.every(p => Math.hypot(...p) < 10.2 && p[0] > -5), 'cell 都在前房或玻璃體裡');
+  a(VTP.slice(0, VCC[1]).every(p => p[0] <= VTP[VCC[1]][0]) && VTP.slice(0, VCC[1]).reduce((t, p) => t + p[0], 0) / VCC[1] < VTP.reduce((t, p) => t + p[0], 0) / VTP.length, '少量玻璃體 cell 在前段');
+  [['snb', 'sg-sb'], ['sbk', 'sg-sk'], ['cmo', 'sg-cy'], ['nv', 'sg-nv'], ['shv', 'sg-sh']].forEach(([f, c]) => a(!sgFig(vhMake([0, 0, 0, 0])).includes(`class="${c}"`) && sgFig(vhMake([0, 0, 0, 0], f)).includes(`class="${c}"`), `${f} 只在打開時畫`));
+  a(!sgFig(vhMake([0, 1, 0, 0])).includes('class="sg-hz"') && sgFig(vhMake([0, 2, 0, 0])).includes('class="sg-hz"') && cn(sgFig(vhMake([0, 0, 2, 0])), 'sg-rtf') === 2 && cn(sgFig(vhMake([0, 0, 0, 2])), 'sg-ch') === 3 && cn(sgFig(vhMake([0, 0, 0, 1])), 'sg-ch') === 1, 'haze、retinitis、choroiditis 的畫法');
+  a(SNB.every(([x, y, r]) => Math.hypot(x, y) + r < 10.9 && y > 5), 'snowballs 在下方玻璃體裡');
+  // 題目：答案唯一、選項含答案；解剖分類題避開本頁不分類的組合；haze 選項照分級順序
+  KEYS.filter(k => keyView(k) === 'vh').forEach(k => {
+    const it = itemOf(k);
+    a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && new Set(it.opts.map(it.lab)).size === it.opts.length && it.opts.length === { haze: 4, anat: 5, pp: 2 }[it.type], `${k} 的選項`);
+    if (it.type === 'haze') a(it.opts.every((o, i) => !i || HZG.indexOf(o) > HZG.indexOf(it.opts[i - 1])) && it.ans === HZG[it.g], `${k} 的選項照順序`);
+    if (it.type === 'anat') a(!['unc', 'none'].includes(it.ans), `${k} 是 SUN 寫明的組合`);
+    refs(it.more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`));
+  });
+  a(new Set(Object.keys(QAN).map(id => itemOf('vh:a:' + id).ans)).size === 5 && new Set(Object.keys(QPP).map(id => itemOf('vh:p:' + id).ans)).size === 2, '解剖分類五種、pars planitis 兩種答案都有');
+  // 說明卡的引用都在來源清單（haze 每一級、每種分類、每個例子）
+  const sv2 = st.vh;
+  HZG.forEach((_, g) => { st.vh = Object.assign({}, sv2, { sub: 'hz', g }); refs(vhCard()).forEach(r => a(SRC[r], `haze ${g} 的引用 ${r}`)); });
+  [[2, 0, 0, 0], [1, 2, 0, 0], [0, 1, 2, 0], [2, 2, 2, 2], [2, 2, 0, 0], [0, 0, 0, 0], [1, 1, 0, 0], [2, 2, 1, 0]].forEach(L => { st.vh = Object.assign(vhMake(L, 'cmo'), { sub: 'an', g: 0, eye: 'R', ex: null }); refs(vhCard()).forEach(r => a(SRC[r], `分類 ${L} 的引用 ${r}`)); });
+  Object.keys(ANX).forEach(k => a(anClass(ANX[k].o[0]) !== 'unc', `例子 ${k} 有分類`));
+  a(ppName(vhMake(...ANX.pp.o)) === 'pp' && ppName(vhMake(...ANX.iusar.o)) === 'iu' && anClass(ANX.ai.o[0]) === 'ai' && anClass(ANX.pan.o[0]) === 'pan' && anClass(ANX.antcmo.o[0]) === 'ant', '例子的名字和分類一致');
+  st.vh = sv2;
 })();
 
+if (location.hash === '#vh') st.view = 'vh';
 render();
 </script>
 
