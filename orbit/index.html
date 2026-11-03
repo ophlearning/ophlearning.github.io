@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>眼眶互動圖譜</title>
-<meta name="description" content="互動式眼眶圖譜：眼突與 Hertel——由頭頂往下看兩眼眶，Hertel 的兩腳架在 lateral orbital rim 上，拉條改兩眼眼球的位置，讀角膜頂點對到的刻度；對照 Kanski、EyeWiki 與華人常模的切點判讀 proptosis 與兩眼差；例子包括 TED、肌錐內與肌錐外腫塊（axial proptosis 與 dystopia）、Valsalva 時變大的眼眶靜脈異常，以及四種 pseudoproptosis：眼瞼退縮、對側 enophthalmos、眼球變大、lateral rim 不對稱。TED 的活動度與嚴重度——右眼外眼特寫勾選 CAS 七項（回診再加三項成 10 分版），依 EUGOGO 分 mild、moderate-to-severe、sight-threatening 並列出處置類別，Dalrymple、Kocher、von Graefe 眼瞼徵象動畫；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式眼眶圖譜：眼突與 Hertel——由頭頂往下看兩眼眶，Hertel 的兩腳架在 lateral orbital rim 上，拉條改兩眼眼球的位置，讀角膜頂點對到的刻度；對照 Kanski、EyeWiki 與華人常模的切點判讀 proptosis 與兩眼差；例子包括 TED、肌錐內與肌錐外腫塊（axial proptosis 與 dystopia）、Valsalva 時變大的眼眶靜脈異常，以及四種 pseudoproptosis：眼瞼退縮、對側 enophthalmos、眼球變大、lateral rim 不對稱。TED 的活動度與嚴重度——右眼外眼特寫勾選 CAS 七項（回診再加三項成 10 分版），依 EUGOGO 分 mild、moderate-to-severe、sight-threatening 並列出處置類別，Dalrymple、Kocher、von Graefe 眼瞼徵象動畫。限制性斜視與壓迫性視神經病變——九方向眼位看 IR、MR、SR、LR 纖維化的受限方向，forced duction、differential IOP、saccade 速度分辨限制性與神經性，眼眶後段冠狀切面與上視圖看肌腹腫大擠壓眶尖的視神經，復健手術的順序；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -21,7 +21,7 @@
   --t-bone:#E6DFD0; --t-bone-s:#B3A68C; --t-fat:#F6EBC6; --t-globe:#FFFFFF; --t-cor:rgba(120,170,215,.55); --t-nerve:#E2BE6A;
   --t-inst:#5B6170; --t-inst-f:#E4E6EC; --t-mass:#C97B84; --t-vein:#3F6FB8; --t-sight:#4B3CA0;
   --t-face:#EFD5C4; --t-sclera:#FFFFFF; --t-iris:#7C5342; --t-limb:#4A3028; --t-pupil:#15121F; --t-tick:#1E1A2B;
-  --t-red:rgba(214,70,72,.3); --t-ves:#C9454E; --t-car:#E3A19E; --t-car-s:#CF5A62; --t-chem:rgba(236,230,178,.62); --t-face-2:#E4BFA9; --t-shade:rgba(120,66,46,.5); --t-hl:#FFFFFF;
+  --t-red:rgba(214,70,72,.3); --t-ves:#C9454E; --t-car:#E3A19E; --t-car-s:#CF5A62; --t-chem:rgba(236,230,178,.62); --t-face-2:#E4BFA9; --t-shade:rgba(120,66,46,.5); --t-hl:#FFFFFF; --t-mus:#D79A96;
   --f-display:"Spectral","Noto Serif TC",Georgia,serif;
   --f-title:"Noto Serif TC","Spectral",Georgia,serif;
   --f-body:"IBM Plex Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
@@ -36,7 +36,7 @@
   --t-bone:#3E3A33; --t-bone-s:#6E6555; --t-fat:#5A5032; --t-globe:#D9D4E6; --t-cor:rgba(120,165,215,.45); --t-nerve:#9E8240;
   --t-inst:#AEB3C0; --t-inst-f:#2C2A36; --t-mass:#A0606A; --t-vein:#7EA6E6; --t-sight:#A99DFF;
   --t-face:#5E4638; --t-sclera:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-tick:#ECE9F5;
-  --t-red:rgba(232,92,96,.34); --t-ves:#E0646C; --t-car:#B87473; --t-car-s:#D45A64; --t-chem:rgba(222,214,150,.42); --t-face-2:#6C5040; --t-shade:rgba(18,10,6,.6); --t-hl:rgba(255,255,255,.55); color-scheme:dark }}
+  --t-red:rgba(232,92,96,.34); --t-ves:#E0646C; --t-car:#B87473; --t-car-s:#D45A64; --t-chem:rgba(222,214,150,.42); --t-face-2:#6C5040; --t-shade:rgba(18,10,6,.6); --t-hl:rgba(255,255,255,.55); --t-mus:#9A5E60; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#121019; --surface:#1A1724; --surface-2:#211D2D; --ink:#ECE9F5; --ink-2:#BFB9D1; --muted:#8F89A3;
   --line:#2E2A3B; --line-2:#3E384F; --accent:#A99DFF; --accent-ink:#15121F; --accent-soft:#2A2545;
@@ -45,7 +45,7 @@
   --t-bone:#3E3A33; --t-bone-s:#6E6555; --t-fat:#5A5032; --t-globe:#D9D4E6; --t-cor:rgba(120,165,215,.45); --t-nerve:#9E8240;
   --t-inst:#AEB3C0; --t-inst-f:#2C2A36; --t-mass:#A0606A; --t-vein:#7EA6E6; --t-sight:#A99DFF;
   --t-face:#5E4638; --t-sclera:#D9D4E6; --t-iris:#8A5E4A; --t-limb:#2B1D17; --t-pupil:#15121F; --t-tick:#ECE9F5;
-  --t-red:rgba(232,92,96,.34); --t-ves:#E0646C; --t-car:#B87473; --t-car-s:#D45A64; --t-chem:rgba(222,214,150,.42); --t-face-2:#6C5040; --t-shade:rgba(18,10,6,.6); --t-hl:rgba(255,255,255,.55); color-scheme:dark }
+  --t-red:rgba(232,92,96,.34); --t-ves:#E0646C; --t-car:#B87473; --t-car-s:#D45A64; --t-chem:rgba(222,214,150,.42); --t-face-2:#6C5040; --t-shade:rgba(18,10,6,.6); --t-hl:rgba(255,255,255,.55); --t-mus:#9A5E60; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -161,8 +161,31 @@ a.chip{text-decoration:none;display:inline-block}
 .cs-br{fill:none;stroke:var(--t-sight);stroke-width:1.4}
 .say{padding:8px 14px;font-size:13.5px;color:var(--ink-2);border-top:1px solid var(--line)}
 .tgs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.gz-cell{fill:var(--surface-2);stroke:var(--line);stroke-width:1}
+.gz-lim{fill:none;stroke:var(--bad);stroke-width:1.8}
+.gz-ghost{fill:none;stroke:var(--bad);stroke-width:1.4;stroke-dasharray:3 3}
+.fig .gzt{font-family:var(--f-body);font-size:13px;fill:var(--muted)}
+.fd-jaw{fill:none;stroke:var(--t-inst);stroke-width:3.2;stroke-linecap:round}
+.fig .iopn{font-family:var(--f-mono);font-size:32px;font-weight:500;fill:var(--ink)}
+.ch-ax{fill:none;stroke:var(--t-stroke);stroke-width:1.2}
+.ch-ref{fill:none;stroke:var(--t-stroke);stroke-width:1.8;stroke-dasharray:6 5}
+.ch-cur{fill:none;stroke:var(--t-sight);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.ch-dot{fill:var(--t-sight)}
+.ap-ms{fill:var(--t-mus);stroke:var(--t-stroke);stroke-width:1}
+.ap-nerve{fill:var(--t-nerve);stroke:var(--t-stroke);stroke-width:1}
+.ap-nerve.cmp{stroke:var(--bad);stroke-width:2.4}
+.at-nerve{fill:none;stroke:var(--t-nerve);stroke-width:15;stroke-linecap:round}
+.at-ten{fill:none;stroke:var(--t-mus);stroke-width:5;stroke-linecap:round}
+.or-box{fill:var(--surface);stroke:var(--line-2);stroke-width:1.2;cursor:pointer}
+.or-box.on{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.or-num{fill:var(--accent)}
+.fig .or-numt{font-family:var(--f-body);font-size:16px;font-weight:600;fill:var(--accent-ink)}
+.fig .ort{font-family:var(--f-body);font-size:16px;font-weight:600;fill:var(--ink)}
+.fig .ors{font-family:var(--f-body);font-size:13px;fill:var(--ink-2)}
+.or-arr{fill:none;stroke:var(--t-stroke);stroke-width:1.6}
+[data-ors]{cursor:pointer}
 
-@media (max-width: 560px){ .fig .tnum{font-size:14px} .fig .rdg{font-size:19px} .fig .eyen{font-size:19px} }
+@media (max-width: 560px){ .fig .tnum{font-size:14px} .fig .rdg{font-size:19px} .fig .eyen{font-size:19px} .fig .gzt{font-size:20px} .fig .ort{font-size:19px} .fig .ors{font-size:16px} .fig .or-numt{font-size:19px} }
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -273,7 +296,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>上視圖是由頭頂往下看兩眼眶（同神經眼科圖譜的視路示意圖：上＝anterior、左＝病人左側，所以 OS 在左、OD 在右），Hertel 的兩腳架在 lateral orbital rim 上，虛線＝角膜頂點對到的刻度；放大圖是同一個方位的刻度與角膜頂點，不是鏡子裡實際看到的樣子。外眼正面是檢查者面對病人（同九方向眼位圖：圖左＝病人右眼 OD）；「TED 活動度與嚴重度」分頁的外眼特寫是右眼 OD，同樣是檢查者面對病人（左＝temporal、右＝nasal），眼瞼退縮畫成上眼瞼緣比正常位置（上方 limbus 下 2 mm）高出的量。眼眶骨、眼球、視神經、腫塊的形狀與大小，各例子的讀數、眼瞼與 dystopia 的量，CAS 各項徵象的樣子與眼瞼動畫的幅度都是示意。眼眶骨與眼外肌的解剖見<a href="../eye-atlas/#orbit">眼解剖圖譜的眼眶分頁</a>；對側眼瞼退縮造成的 pseudoptosis 見<a href="../oculoplastics/">眼整形圖譜的 ptosis 分頁</a>；眼外肌麻痺見<a href="../neuro-ophth/#eom">神經眼科圖譜</a>。</span>
+    <span><b>關於圖：</b>上視圖是由頭頂往下看兩眼眶（同神經眼科圖譜的視路示意圖：上＝anterior、左＝病人左側，所以 OS 在左、OD 在右），Hertel 的兩腳架在 lateral orbital rim 上，虛線＝角膜頂點對到的刻度；放大圖是同一個方位的刻度與角膜頂點，不是鏡子裡實際看到的樣子。外眼正面是檢查者面對病人（同九方向眼位圖：圖左＝病人右眼 OD）；「TED 活動度與嚴重度」分頁的外眼特寫是右眼 OD，同樣是檢查者面對病人（左＝temporal、右＝nasal），眼瞼退縮畫成上眼瞼緣比正常位置（上方 limbus 下 2 mm）高出的量。「限制性斜視與視神經」分頁的九方向眼位同神經眼科圖譜（檢查者面對病人，圖左＝OD）；冠狀切面是右眼眼眶後段，由前往後看（左＝lateral、右＝medial）；上視圖是右眼（上＝anterior、左＝medial、右＝lateral）。眼眶骨、眼球、視神經、腫塊的形狀與大小，各例子的讀數、眼瞼與 dystopia 的量，CAS 各項徵象的樣子與眼瞼動畫的幅度，眼球受限的幅度、眼壓、saccade 的時間，肌肉的大小與腫大程度都是示意。眼眶骨與眼外肌的解剖見<a href="../eye-atlas/#orbit">眼解剖圖譜的眼眶分頁</a>；對側眼瞼退縮造成的 pseudoptosis 見<a href="../oculoplastics/">眼整形圖譜的 ptosis 分頁</a>；眼外肌麻痺見<a href="../neuro-ophth/#eom">神經眼科圖譜</a>。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；各來源的正常值與切點不同，說明卡全部並列，測驗只用各來源都同意的讀數。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -306,12 +329,15 @@ const SRC = {
   S6: { t: 'Cheung JJC, et al. Exophthalmometry values in the Hong Kong Chinese adult population from a population-based study. Medicine 2019;98(47):e17993（PMC 全文）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6882604/' },
   S7: { t: 'Wu D, et al. Normal values of Hertel exophthalmometry in a Chinese Han population from Shenyang, Northeast China. Sci Rep 2015;5:8526（PMC 全文）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4336939/' },
   S8: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.119 Thyroid eye disease › Clinical features：病程、EUGOGO classification、soft tissue involvement、lid retraction', u: null },
-  S9: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.121 Thyroid eye disease › Optic neuropathy', u: null },
-  S10: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.122 Thyroid eye disease › Treatment：mild disease、clinical activity score、moderate–severe active disease', u: null },
+  S9: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.121 Thyroid eye disease › Optic neuropathy、Investigation', u: null },
+  S10: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.122 Thyroid eye disease › Treatment：mild disease、clinical activity score、moderate–severe active disease；Fig. 4.14（CT 上的肌肉腫大）', u: null },
   S11: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.123 Thyroid eye disease › Treatment：optic neuropathy、post-inflammatory complications', u: null },
   S12: { t: 'Bartalena L, Kahaly GJ, et al. The 2021 European Group on Graves’ orbitopathy (EUGOGO) clinical practice guidelines for the medical management of Graves’ orbitopathy. Eur J Endocrinol 2021;185:G43–G67：Table 1 建議、Table 2 CAS、Table 3 嚴重度', u: 'https://doi.org/10.1530/EJE-21-0479' },
   S13: { t: 'Bartalena L, et al. The 2016 European Thyroid Association/European Group on Graves’ Orbitopathy guidelines for the management of Graves’ orbitopathy. Eur Thyroid J 2016;5:9–26：Table 2（PMC 全文）', u: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4836120/' },
-  S14: { t: 'EyeWiki：Thyroid Eye Disease（Gandhi R, Durairaj VD, et al.）', u: 'https://eyewiki.org/Thyroid_Eye_Disease' }
+  S14: { t: 'EyeWiki：Thyroid Eye Disease（Gandhi R, Durairaj VD, et al.）', u: 'https://eyewiki.org/Thyroid_Eye_Disease' },
+  S15: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.116 Orbit › Clinical features › Ophthalmoplegia：forced duction、differential IOP、saccade', u: null },
+  S16: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), p.118 Thyroid eye disease › Pathogenesis of ophthalmopathy', u: null },
+  S17: { t: 'Kanski’s Clinical Ophthalmology, 10th ed. (2024), pp.120–121 Thyroid eye disease › Restrictive myopathy', u: null }
 };
 const s = (...k) => k.map(x => `<sup class="s">${x.replace('S', '')}</sup>`).join('');
 const refs = h => [...new Set((h.match(/<sup class="s">\d+<\/sup>/g) || []).map(x => 'S' + x.replace(/<[^>]*>/g, '')))].sort((a, b) => a.slice(1) - b.slice(1));
@@ -521,12 +547,12 @@ function cY(x, y, y0 = FY0) {   // 兩端在內外眥、中央在 y 的眼瞼緣
 function casGeo(c, t) {   // 眼瞼退縮 X mm 畫成上眼瞼緣比正常位置（上方 limbus 下 2 mm）高 X mm（示意）
   const a = c.act, e = t * t * (3 - 2 * t), gd = a === 'd' ? DGZ * e : 0;
   const u = -RL + 2 - c.sv.lr + gd - (a === 'd' ? Math.min(c.lag, DGZ) * e : 0) - (a === 'f' ? c.koc * e : 0);
-  return { gd, u, l: RL + c.ll + (a === 'd' ? DLL * e : 0), top: gd - RL, bot: gd + RL };   // top、bot＝角膜上下緣
+  return { gd, gx: (c.gx || 0) * e, u, l: RL + c.ll + (a === 'd' ? DLL * e : 0), top: gd - RL, bot: gd + RL };   // gx＝角膜往旁邊移幾 mm（forced duction 用）；top、bot＝角膜上下緣
 }
 const VES = [];   // 結膜血管（示意）：集中在 3、9 點鐘，也就是水平直肌附著處
 [-1, 1].forEach(sd => { for (let i = 0; i < 6; i++) { const y = -2.5 + i, x0 = sd > 0 ? FA - 3.9 : -(FA - 0.6 - Math.abs(y) * 0.35), x1 = sd * (RL + 0.5 + (i % 3) * 0.45); VES.push(`M${CP(x0, y * 1.1 + 0.4)}Q${CP((x0 + x1) / 2, y + (i % 2 ? 0.7 : -0.7))} ${CP(x1, y * 0.75)}`); } });
 const CLS = { lidR: 'cs-red', conjR: 'cs-vesR', car: 'cs-carS', lidS: 'cs-sw', chem: 'cs-chem' };   // 每個徵象畫出來的 class（self-check 用）
-function casFig(c, t) {
+function casFig(c, t, over = '') {   // over：疊在最上層的圖（forced duction 的鑷子）
   const G = casGeo(c, t), f = c.f, u = G.u, l = G.l, plx = FA - 3.4;
   const fis = `M${CP(-FA, FY0)}${cvC(-FA, FA, FY0, u)}${cvC(FA, -FA, FY0, l)}Z`;
   let h = `<svg viewBox="0 0 ${CW} ${CH}" role="img" aria-label="右眼外眼特寫，檢查者面對病人：左＝temporal、右＝nasal"><defs><clipPath id="cs-clip"><path d="${fis}"/></clipPath></defs><rect class="fv-face" width="${CW}" height="${CH}"/>`;
@@ -541,10 +567,10 @@ function casFig(c, t) {
   h += `<g clip-path="url(#cs-clip)"><rect class="fv-scl" width="${CW}" height="${CH}"/>${f.conjR ? `<rect class="cs-cjR" width="${CW}" height="${CH}"/>` : ''}${VES.map(d => `<path class="${f.conjR ? 'cs-vesR' : 'cs-ves'}" d="${d}"/>`).join('')}`;
   h += `<path class="${f.car ? 'cs-plicaS' : 'cs-plica'}" d="M${CP(plx + 0.4, -4.2)}Q${CP(plx - 0.9, FY0)} ${CP(plx + 0.4, 4.8)}"/>`;
   if (!f.car) h += `<ellipse class="cs-car" cx="${CXp(FA - 1.6)}" cy="${CYp(FY0 + 0.3)}" rx="${1.3 * CK}" ry="${1.0 * CK}"/>`;
-  h += `<circle class="fv-iris" cx="${CXp(0)}" cy="${CYp(G.gd)}" r="${RL * CK}"/><circle class="fv-pupil" cx="${CXp(0)}" cy="${CYp(G.gd)}" r="${RPU * CK}"/><circle class="fv-limb" cx="${CXp(0)}" cy="${CYp(G.gd)}" r="${RL * CK}"/></g>`;
+  h += `<circle class="fv-iris" cx="${CXp(G.gx)}" cy="${CYp(G.gd)}" r="${RL * CK}"/><circle class="fv-pupil" cx="${CXp(G.gx)}" cy="${CYp(G.gd)}" r="${RPU * CK}"/><circle class="fv-limb" cx="${CXp(G.gx)}" cy="${CYp(G.gd)}" r="${RL * CK}"/></g>`;
   h += `<path class="fv-lid" d="${fis}"/>`;
   if (f.car) h += `<ellipse class="cs-carS" cx="${CXp(FA - 1.9)}" cy="${CYp(FY0 + 0.3)}" rx="${2.3 * CK}" ry="${1.9 * CK}"/>`;
-  const lab = [`<line x1="${CXp(FA - 1.6)}" y1="${CYp(FY0 - 0.6)}" x2="${CXp(15.2)}" y2="${CYp(-5.6)}"/><text x="${CXp(15.5)}" y="${CYp(-6.3)}" text-anchor="middle">caruncle</text>`,
+  const lab = c.noLab ? [] : [`<line x1="${CXp(FA - 1.6)}" y1="${CYp(FY0 - 0.6)}" x2="${CXp(15.2)}" y2="${CYp(-5.6)}"/><text x="${CXp(15.5)}" y="${CYp(-6.3)}" text-anchor="middle">caruncle</text>`,
     `<line x1="${CXp(plx - 0.4)}" y1="${CYp(2.6)}" x2="${CXp(15.2)}" y2="${CYp(7.2)}"/><text x="${CXp(15.5)}" y="${CYp(8.4)}" text-anchor="middle">plica</text>`];
   if (f.chem) {   // 結膜水腫：透明、鼓起來的結膜從顳下方越過下眼瞼緣（示意）
     const x0 = -12.2, x1 = -4.8, N = 14, top = [], bot = [];
@@ -555,8 +581,8 @@ function casFig(c, t) {
   const br = (y0, y1) => { const ym = (y0 + y1) / 2, yt = ym + (ym < G.gd ? -2.6 : 3.6); return `<path class="cs-br" d="M${CP(-0.5, y0)}H${CXp(0.5)}M${CP(0, y0)}V${CYp(y1)}M${CP(-0.5, y1)}H${CXp(0.5)}"/><line x1="${CXp(0.4)}" y1="${CYp(ym)}" x2="${CXp(-6.2)}" y2="${CYp(yt + (yt < ym ? 0.4 : -1))}"/><text x="${CXp(-6.4)}" y="${CYp(yt)}" text-anchor="end">scleral show</text>`; };   // 字放在眼裂外，用引線指到括號
   if (u < G.top - 0.15) lab.push(br(u, G.top));
   if (l > G.bot + 0.15) lab.push(br(G.bot, l));
-  h += `<g class="lab">${lab.join('')}</g><text class="eyen" x="${CXp(-15.5)}" y="${CH - 10}" text-anchor="middle">temporal</text><text class="eyen" x="${CXp(15.5)}" y="${CH - 10}" text-anchor="middle">nasal</text><text class="eyen" x="${CX0}" y="22" text-anchor="middle">右眼 OD · ${ACTZ[c.act]}</text>`;
-  return h + '</svg>';
+  h += `<g class="lab">${lab.join('')}</g><text class="eyen" x="${CXp(-15.5)}" y="${CH - 10}" text-anchor="middle">temporal</text><text class="eyen" x="${CXp(15.5)}" y="${CH - 10}" text-anchor="middle">nasal</text><text class="eyen" x="${CX0}" y="22" text-anchor="middle">右眼 OD · ${c.ttl || ACTZ[c.act]}</text>`;
+  return h + over + '</svg>';
 }
 
 /* ---------- 例子（數值示意）；want＝[預期的嚴重度, 預期 active]，self-check 核對 ---------- */
@@ -656,11 +682,250 @@ function casCard() {
   return `<div class="card"><div class="eyebrow">TED · 活動度與嚴重度 · 對照 BCSC 7</div><div><h2>${X ? X.en : 'Clinical Activity Score'}</h2></div><p class="zh">${X ? X.zh : '活動度分數與嚴重度'}</p><p class="def">${def}</p>${v}${body}${srcList(refs(def + body))}</div>`;
 }
 
+/* ---------- 分頁三：限制性斜視與壓迫性視神經病變 ---------- */
+const MUS = {   // 纖維化的肌肉拉不長，眼球轉不到它作用的反方向；Kanski 依常見程度：IR、MR、SR、LR
+  IR: { lim: '往上看受限', like: 'SR palsy', anta: 'SR' },
+  MR: { lim: '外轉受限', like: 'CN VI palsy', anta: 'LR' },
+  SR: { lim: '往下看受限', like: '', anta: 'IR' },
+  LR: { lim: '內轉受限', like: '', anta: 'MR' }
+};
+const MORD = ['IR', 'MR', 'SR', 'LR'];
+const GL = 0.1;   // 往受限的方向只轉得到正常最大幅度的 10%（示意）
+const dirZh = (h, v) => (h === 0 && v === 0) ? '正前方' : '往' + (h > 0 ? '右' : h < 0 ? '左' : '') + (v > 0 ? '上' : v < 0 ? '下' : '');
+function gzPos(tight, e, h, v) {   // 看 (h, v) 方向時這一眼的位置：x＝往病人右邊、y＝往上（1＝正常最大幅度）
+  const a0 = e === 'R' ? h : -h;   // abduct 的量
+  let a = a0, y = v;
+  if (tight.includes('IR')) y = Math.min(y, GL);
+  if (tight.includes('SR')) y = Math.max(y, -GL);
+  if (tight.includes('MR')) a = Math.min(a, GL);
+  if (tight.includes('LR')) a = Math.max(a, -GL);
+  return { x: e === 'R' ? a : -a, y, lim: a !== a0 || y !== v };
+}
+let GZID = 0;
+function gzEye(cx, cy, p, ghost) {   // 杏仁形的一隻眼（中央高 30 px）：虹膜每單位橫移 17 px、直移 8 px；ghost＝正常應該轉到的位置（虛線）
+  const id = 'gz' + (GZID++), sh = `M${cx - 34} ${cy}Q${cx} ${cy - 30} ${cx + 34} ${cy}Q${cx} ${cy + 30} ${cx - 34} ${cy}Z`, ix = fx(cx - p.x * 17), iy = fx(cy - p.y * 8);
+  return `<clipPath id="${id}"><path d="${sh}"/></clipPath><path class="fv-scl" d="${sh}"/><g clip-path="url(#${id})"><circle class="fv-iris" cx="${ix}" cy="${iy}" r="11.5"/><circle class="fv-pupil" cx="${ix}" cy="${iy}" r="4"/>${ghost ? `<g class="lab"><circle class="gz-ghost" cx="${fx(cx - ghost.x * 17)}" cy="${fx(cy - ghost.y * 8)}" r="11.5"/></g>` : ''}</g><path class="fv-lid" d="${sh}"/>`;
+}
+function gzFig(T) {   // 九方向眼位（同神經眼科圖譜）：檢查者面對病人，圖左＝病人右眼；左欄＝病人往他自己的右邊看
+  const W = 214, H = 120;
+  let h = `<svg viewBox="0 0 660 392" role="img" aria-label="九方向眼位，檢查者面對病人：圖左＝病人右眼">`;
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
+    const hh = 1 - c, v = 1 - r, x0 = 9 + c * W, y0 = 8 + r * (H + 6), mx = x0 + W / 2, P = { R: gzPos(T.R, 'R', hh, v), L: gzPos(T.L, 'L', hh, v) }, lim = ['R', 'L'].filter(e => P[e].lim);
+    h += `<rect class="gz-cell" x="${x0 + 3}" y="${y0}" width="${W - 6}" height="${H}" rx="8"/><text class="gzt" x="${x0 + 14}" y="${y0 + 20}">${dirZh(hh, v)}</text>`;
+    if (lim.length) h += `<g class="lab"><rect class="gz-lim" x="${x0 + 3}" y="${y0}" width="${W - 6}" height="${H}" rx="8"/><text x="${x0 + W - 14}" y="${y0 + 20}" text-anchor="end">${lim.map(e => EO[e]).join('、')} 受限</text></g>`;
+    ['R', 'L'].forEach((e, i) => { h += gzEye(mx - 46 + i * 92, y0 + 64, P[e], P[e].lim ? gzPos([], e, hh, v) : null); });
+    if (!hh && !v) h += ['R', 'L'].map((e, i) => `<text class="gzt" x="${mx - 46 + i * 92}" y="${y0 + 110}" text-anchor="middle">${EO[e]}</text>`).join('');
+  }
+  return h + '</svg>';
+}
+const GZX = {
+  R_IR: { zh: '右眼 IR（最常見）', T: { R: ['IR'], L: [] } },
+  L_MR: { zh: '左眼 MR', T: { R: [], L: ['MR'] } },
+  R_SR: { zh: '右眼 SR', T: { R: ['SR'], L: [] } },
+  L_LR: { zh: '左眼 LR', T: { R: [], L: ['LR'] } },
+  bi: { zh: '雙側 IR、右眼 MR', T: { R: ['IR', 'MR'], L: ['IR'] } },
+  none: { zh: '正常', T: { R: [], L: [] } }
+};
+
+/* 限制性還是神經性：forced duction、differential IOP、saccade（右眼外轉受限：MR 纖維化 vs CN VI palsy） */
+const NTM = { fd: 'Forced duction', iop: 'Differential IOP', sac: 'Saccade 速度' };
+const NTZ = { r: '限制性', n: '神經性' };
+const NTC = { r: '限制性（例如 TED 的 MR 纖維化）', n: '神經性（例如 CN VI palsy）' };
+const IOPV = { r: [15, 23], n: [15, 16] };   // 學習模式的眼壓（mmHg，示意）
+const FDX = { r: -0.8, n: -4.6 };   // forced duction 時眼球被轉過去幾 mm（示意）
+const SL = 0.45;   // 外轉最多到正常幅度的 45%（示意）
+function sacPos(k, q) {   // q＝0–1 的時間（示意）；norm＝正常、r＝限制性（速度正常、突然停住）、n＝神經性（速度變慢）
+  const norm = q < 0.35 ? 1 - (1 - q / 0.35) ** 3 : 1;
+  if (k === 'norm') return norm;
+  if (k === 'r') return Math.min(norm, SL);
+  return SL * (q < 0.85 ? 1 - (1 - q / 0.85) ** 2 : 1);
+}
+function fdOver(c, t) {   // 鑷子夾住 MR 附著處（角膜緣 nasal 側），往 temporal 轉
+  const e = t * t * (3 - 2 * t), x = FDX[c.cz] * e + RL + 0.4;
+  return `<path class="fd-jaw" d="M${CP(x, 0.3)}L${CP(x + 7, -8.2)}M${CP(x, 0.3)}L${CP(x + 7.8, -7.4)}M${CP(x + 7.4, -7.8)}L${CP(x + 10.6, -11.8)}"/>`
+    + `<path class="cs-br" d="M${CP(-1.5, -7.4)}H${CXp(-8.5)}M${CP(-8.5, -7.4)}l10 -6M${CP(-8.5, -7.4)}l10 6"/><text class="eyen" x="${CXp(-5)}" y="${CYp(-8.6)}" text-anchor="middle">往 temporal 轉</text>`
+    + `<g class="lab"><text x="${CX0}" y="${CYp(10.2)}" text-anchor="middle">${t < 1 ? '' : c.cz === 'r' ? '有阻力，眼球轉不過去' : '沒有阻力，眼球轉得過去'}</text></g>`;
+}
+function iopFig(c, t) {
+  const e = t * t * (3 - 2 * t), d = c.b - c.a;
+  let h = `<svg viewBox="0 0 480 260" role="img" aria-label="右眼正前方看與試著往外轉時的眼壓">`;
+  h += `<text class="gzt" x="120" y="30" text-anchor="middle">正前方看</text><text class="gzt" x="360" y="30" text-anchor="middle">試著往外轉</text>`;
+  h += gzEye(120, 88, { x: 0, y: 0 }) + gzEye(360, 88, { x: 0.12 * e, y: 0 });   // 兩種原因都轉不過去，差別在眼壓
+  h += `<text class="iopn" x="120" y="166" text-anchor="middle">${c.a}</text><text class="iopn" x="360" y="166" text-anchor="middle">${Math.round(c.a + d * e)}</text><text class="gzt" x="120" y="188" text-anchor="middle">mmHg</text><text class="gzt" x="360" y="188" text-anchor="middle">mmHg</text>`;
+  h += `<path class="or-arr" d="M190 152H290m-9 -6l9 6l-9 6"/><text class="eyen" x="240" y="224" text-anchor="middle">升高 ${Math.round(d * e)} mmHg</text>`;
+  return h + `<g class="lab"><text x="240" y="250" text-anchor="middle">${t < 1 ? '' : d >= 6 ? '≥ 6 mmHg：Braley sign，限制性' : '< 6 mmHg：沒有限制的證據'}</text></g></svg>`;
+}
+function sacFig(c, t) {
+  const X0 = 64, X1 = 450, Y0 = 206, Y1 = 56, X = q => fx(X0 + (X1 - X0) * q), Y = p => fx(Y0 - (Y0 - Y1) * p);
+  const path = (k, q1) => { const pts = []; for (let i = 0; i <= 90; i++) { const q = q1 * i / 90; pts.push(`${X(q)} ${Y(sacPos(k, q))}`); } return 'M' + pts.join('L'); };
+  const qe = Math.max(0.001, t);
+  let h = `<svg viewBox="0 0 480 260" role="img" aria-label="右眼往外轉的 saccade：眼球位置隨時間的變化">`;
+  h += `<path class="ch-ax" d="M${X0} ${Y1 - 16}V${Y0}H${X1 + 8}"/><text class="gzt" x="${X0 + 6}" y="${Y1 - 22}">眼球往外轉的幅度</text><text class="gzt" x="${X1 + 6}" y="${Y0 + 26}" text-anchor="end">時間（示意）</text>`;
+  h += `<path class="ch-ref" d="${path('norm', 1)}"/><text class="gzt" x="${X1}" y="${Y(1) - 8}" text-anchor="end">正常的 saccade</text>`;
+  h += `<path class="ch-cur" d="${path(c.cz, qe)}"/><circle class="ch-dot" cx="${X(qe)}" cy="${Y(sacPos(c.cz, qe))}" r="5"/><text class="gzt" x="${X1}" y="${Y(SL) - 10}" text-anchor="end">右眼 OD</text>`;
+  if (t >= 1) h += `<g class="lab"><text x="${c.cz === 'r' ? X(0.2) : X(0.45)}" y="${Y(SL) + 32}" text-anchor="start">${c.cz === 'r' ? '速度正常，突然停住' : '速度變慢'}</text></g>`;
+  return h + '</svg>';
+}
+function ntFig(c, t) {
+  if (c.m === 'fd') return casFig(Object.assign(casMake({}), { gx: FDX[c.cz], ttl: 'forced duction', noLab: true }), t, fdOver(c, t));
+  return c.m === 'iop' ? iopFig(c, t) : sacFig(c, t);
+}
+function ntCfg() {   // 現在要畫的檢查：測驗題目的，或學習模式「限制性還是神經性」子頁的
+  const it = quizItem();
+  if (it) return it.nt || null;
+  const R = st.rm;
+  return st.view === 'rm' && R.sub === 'nt' ? { m: R.m, cz: R.cz, a: IOPV[R.cz][0], b: IOPV[R.cz][1] } : null;
+}
+const ntRes = c => c.m === 'fd' ? (c.cz === 'r' ? '轉的時候被擋住' : '沒有阻力，轉得過去') : c.m === 'iop' ? `${c.a} → ${c.b} mmHg，升高 ${c.b - c.a}${c.b - c.a >= 6 ? '：Braley sign' : '，不到 6 mmHg：沒有限制的證據'}` : (c.cz === 'r' ? '速度正常，突然停住' : '速度變慢');
+
+/* 眶尖：眼眶後段冠狀切面（OD，由前往後看：左＝lateral、右＝medial；10 px/mm；原點＝視神經中心） */
+const AMU = {   // o＝貼著眶壁那一側的中點、d＝往內的方向、w＝半寬、t＝厚度（mm，示意）
+  SR: { o: [0, -7.6], d: [0, 1], w: 3.8, t: 2.2 },
+  IR: { o: [0, 8.6], d: [0, -1], w: 3.8, t: 2.4 },
+  MR: { o: [8.6, 0.4], d: [-1, 0], w: 3.6, t: 2.4 },
+  LR: { o: [-8.6, 0], d: [1, 0], w: 3.4, t: 2.2 },
+  SO: { o: [6.2, -6.2], d: [-Math.SQRT1_2, Math.SQRT1_2], w: 1.3, t: 2.0 }
+};
+const AMK = ['SR', 'IR', 'MR', 'LR', 'SO'], RN = 2.1;   // RN＝視神經（含鞘）半徑
+function apGeo(A, sev) {   // A＝腫大的肌肉；sev 0–1＝腫大程度（示意）。肌肉貼著骨頭，只能往內長
+  const G = {};
+  AMK.forEach(k => { const M = AMU[k], r = Math.hypot(...M.o), on = A.includes(k), t = M.t + (on ? sev * (r - M.t - RN + 1.2) : 0); G[k] = { r, t, w: M.w * (1 + (on ? 0.25 * sev : 0)), gap: r - t - RN }; });
+  const rn = Math.max(RN * 0.6, Math.min(RN, ...AMK.map(k => G[k].r - G[k].t)));   // 肌肉碰到的話，視神經被擠小
+  AMK.forEach(k => { G[k].td = Math.min(G[k].t, G[k].r - rn); });
+  return { G, rn, cmp: rn < RN - 1e-9, minGap: Math.min(...AMK.map(k => G[k].gap)) };
+}
+const APK = 10, APC = 150, AX = x => fx(APC + x * APK), AY = y => fx(APC + y * APK);
+const rrect = (hw, hh, r) => { const R = r * APK; return `M${AX(-hw + r)} ${AY(-hh)}H${AX(hw - r)}A${R} ${R} 0 0 1 ${AX(hw)} ${AY(-hh + r)}V${AY(hh - r)}A${R} ${R} 0 0 1 ${AX(hw - r)} ${AY(hh)}H${AX(-hw + r)}A${R} ${R} 0 0 1 ${AX(-hw)} ${AY(hh - r)}V${AY(-hh + r)}A${R} ${R} 0 0 1 ${AX(-hw + r)} ${AY(-hh)}Z`; };
+function apFig(R) {
+  const P = apGeo(R.A, R.sev);
+  let h = `<svg viewBox="0 0 300 300" role="img" aria-label="右眼眼眶後段冠狀切面，由前往後看：左＝lateral、右＝medial"><path class="tv-bone" d="${rrect(12.5, 12.5, 6)}"/><path class="tv-fat" d="${rrect(9.2, 9.4, 4.5)}"/>`;
+  h += `<ellipse class="ap-ms" cx="${AX(0.4)}" cy="${AY(-8.4)}" rx="${3.3 * APK}" ry="${0.5 * APK}"/>`;   // levator（不畫腫大）
+  const lab = [`<text x="${AX(0.4)}" y="${AY(-10.1)}" text-anchor="middle">levator</text>`];
+  AMK.forEach(k => {
+    const M = AMU[k], g = P.G[k], cx = M.o[0] + M.d[0] * g.td / 2, cy = M.o[1] + M.d[1] * g.td / 2, ang = fx(Math.atan2(-M.d[0], M.d[1]) * 180 / Math.PI);
+    h += `<ellipse class="ap-ms" cx="${AX(cx)}" cy="${AY(cy)}" rx="${fx(g.w * APK)}" ry="${fx(g.td / 2 * APK)}" transform="rotate(${ang} ${AX(cx)} ${AY(cy)})"/>`;
+    lab.push(`<text x="${AX(cx)}" y="${fx(AY(cy) + 5)}" text-anchor="middle">${k}</text>`);
+  });
+  h += `<circle class="ap-nerve ${P.cmp ? 'cmp' : ''}" cx="${AX(0)}" cy="${AY(0)}" r="${fx(P.rn * APK)}"/>`;
+  lab.push(`<line x1="${AX(0)}" y1="${AY(P.rn)}" x2="${AX(0)}" y2="${AY(10.2)}"/><text x="${AX(0)}" y="${AY(11.6)}" text-anchor="middle">${P.cmp ? '視神經受壓' : '視神經'}</text>`);   // 字放在眶下緣的骨頭上，用引線指到視神經
+  return h + `<g class="lab">${lab.join('')}</g><text class="eyen" x="${AX(-10.4)}" y="292" text-anchor="middle">lateral</text><text class="eyen" x="${AX(10.4)}" y="292" text-anchor="middle">medial</text><text class="eyen" x="150" y="16" text-anchor="middle">superior</text></svg>`;
+}
+/* 眼眶上視圖（OD：上＝anterior、左＝medial、右＝lateral；5.5 px/mm；原點＝眶尖）：MR、LR 的肌腹與肌腱 */
+const TK = 5.5, UX = x => fx(130 + x * TK), UY = y => fx(284 - y * TK), UP = (x, y) => `${UX(x)} ${UY(y)}`;
+const GC = [8, 33], GR = 11.5;   // 上視圖的眼球中心與半徑（mm，示意）
+const ATM = { MR: { A: [-1.3, 2.2], ins: 160, side: 1 }, LR: { A: [1.3, 2.2], ins: 20, side: -1 } };   // 起點（眶尖）、附著處在眼球上的角度（度，0＝lateral、90＝anterior）、往內是哪一邊
+function tanPt(A, sd) {   // 從 A 畫到眼球的切點；sd＝1 取 medial 那一側
+  const dx = GC[0] - A[0], dy = GC[1] - A[1], d = Math.hypot(dx, dy), b = Math.atan2(dy, dx) + sd * Math.asin(GR / d), L = Math.sqrt(d * d - GR * GR);
+  return [A[0] + L * Math.cos(b), A[1] + L * Math.sin(b)];
+}
+function atWidth(q, on, sev) {   // 從眶尖（q＝0）到附著處（q＝1）往內的厚度（mm，示意）：肌腹腫、靠眼球那段肌腱（q > 0.84）不腫
+  if (q > 0.84) return 0.5;
+  return 0.5 + (1.2 + (on ? 3.2 * sev : 0)) * Math.sin(Math.PI * Math.min(1, Math.max(0, (q - 0.06) / 0.78)));
+}
+function atFig(R) {
+  const cmp = apGeo(R.A, R.sev).cmp;
+  let h = `<svg viewBox="0 0 300 300" role="img" aria-label="右眼眼眶上視圖：上＝anterior、左＝medial、右＝lateral">`;
+  h += `<path class="tv-fat" d="M${[[-1.5, 0], [-9, 45], [24, 40.5], [26, 38], [1.5, 0]].map(p => UP(...p)).join('L')}Z"/>`;
+  h += `<path class="tv-bone" d="M${[[-1.5, 0], [-9, 45], [-12.5, 45], [-4.5, -1]].map(p => UP(...p)).join('L')}Z"/><path class="tv-bone" d="M${[[1.5, 0], [26, 38], [29.5, 36], [4.5, -1]].map(p => UP(...p)).join('L')}Z"/>`;
+  h += `<path class="at-nerve" d="M${UP(8, 21.5)}Q${UP(4, 9)} ${UP(0, 1.5)}"/>`;
+  const ten = [];
+  ['MR', 'LR'].forEach(k => {
+    const M = ATM[k], on = R.A.includes(k), T = tanPt(M.A, M.side), dx = T[0] - M.A[0], dy = T[1] - M.A[1], L = Math.hypot(dx, dy), u = [dx / L, dy / L], n = [M.side * u[1], -M.side * u[0]], out = [], inn = [];
+    const a1 = M.ins, a0 = Math.atan2(T[1] - GC[1], T[0] - GC[0]) * 180 / Math.PI, aa = a0 + 360 * Math.round((a1 - a0) / 360);   // 肌腱沿著眼球從切點包到附著處（走短的那一邊）
+    ten.push(`<path class="at-ten" d="M${Array.from({ length: 13 }, (_, i) => { const g = (aa + (a1 - aa) * i / 12) * Math.PI / 180; return UP(GC[0] + (GR + 0.35) * Math.cos(g), GC[1] + (GR + 0.35) * Math.sin(g)); }).join('L')}"/>`);
+    for (let i = 0; i <= 40; i++) { const q = i / 40, p = [M.A[0] + dx * q, M.A[1] + dy * q], w = atWidth(q, on, R.sev); out.push(UP(p[0] - 0.5 * n[0], p[1] - 0.5 * n[1])); inn.push(UP(p[0] + w * n[0], p[1] + w * n[1])); }
+    h += `<path class="ap-ms" d="M${out.join('L')}L${inn.reverse().join('L')}Z"/>`;
+  });
+  h += `<circle class="tv-globe" cx="${UX(GC[0])}" cy="${UY(GC[1])}" r="${GR * TK}"/><path class="tv-cor" d="M${UP(3.4, 43.3)}Q${UP(8, 47.6)} ${UP(12.6, 43.3)}Z"/>${ten.join('')}`;
+  const lab = [`<text x="${UX(8)}" y="${UY(32)}" text-anchor="middle">眼球</text>`, `<line x1="${UX(4.4)}" y1="${UY(10)}" x2="${UX(13.6)}" y2="${UY(9.6)}"/><text x="${UX(14)}" y="${UY(9)}" text-anchor="start">視神經</text>`,
+    `<line x1="${UX(-3.6)}" y1="${UY(35.5)}" x2="${UX(-6)}" y2="${UY(45.4)}"/><text x="${UX(-7)}" y="${UY(46.4)}" text-anchor="start">MR 肌腱</text>`,
+    `<line x1="${UX(10.2)}" y1="${UY(15.6)}" x2="${UX(17.4)}" y2="${UY(19.6)}"/><text x="${UX(17.8)}" y="${UY(20)}" text-anchor="start">LR 肌腹</text>`];
+  if (cmp) h += `<circle class="gz-ghost" cx="${UX(0.2)}" cy="${UY(3)}" r="${3.4 * TK}"/>`;
+  return h + `<g class="lab">${lab.join('')}</g><text class="eyen" x="${UX(-10)}" y="${UY(2)}" text-anchor="middle">medial</text><text class="eyen" x="${UX(21)}" y="${UY(2)}" text-anchor="middle">lateral</text><text class="eyen" x="${UX(0)}" y="298" text-anchor="middle">眶尖</text></svg>`;
+}
+const APXX = {
+  none: { zh: '正常', A: [], sev: 0 },
+  ir: { zh: 'IR 腫大', A: ['IR'], sev: 0.6 },
+  irmr: { zh: 'IR＋MR 腫大', A: ['IR', 'MR'], sev: 0.7 },
+  ct: { zh: 'MR、SR、IR、SO 腫大（像 Kanski 的 CT）', A: ['SR', 'IR', 'MR', 'SO'], sev: 0.9 }
+};
+
+/* 復健手術的順序 */
+const ORS = [['dec', 'Orbital decompression', '拿掉眶壁、擴大眼眶，眼球退回去'], ['str', '斜視手術', '只做 recession，最常是 IR、MR'], ['lid', '眼瞼手術', '處理眼瞼退縮']];
+const ORDZ = Object.fromEntries(ORS.map(x => [x[0], x[1]])), ORDN = { dec: 0, str: 1, lid: 2 };
+const ORW = ['decompression 會改變眼球運動與眼瞼位置', '眼外肌手術會改變眼瞼位置'];
+function orFig(sel) {
+  let h = `<svg viewBox="0 0 480 350" role="img" aria-label="復健手術的順序"><text class="ors" x="240" y="24" text-anchor="middle">發炎退了（inactive）以後</text>`;
+  ORS.forEach(([k, t, d], i) => {
+    const y = 40 + i * 106;
+    h += `<g data-ors="${k}"><rect class="or-box ${sel === k ? 'on' : ''}" x="24" y="${y}" width="432" height="68" rx="10"/><circle class="or-num" cx="62" cy="${y + 34}" r="17"/><text class="or-numt" x="62" y="${y + 40}" text-anchor="middle">${i + 1}</text><text class="ort" x="96" y="${y + 29}">${t}</text><text class="ors" x="96" y="${y + 52}">${d}</text></g>`;
+    if (i < 2) h += `<path class="or-arr" d="M62 ${y + 72}V${y + 100}m-6 -9l6 9l6 -9"/><text class="ors" x="84" y="${y + 92}">${ORW[i]}</text>`;
+  });
+  return h + '</svg>';
+}
+const ORQ_T = { R: ['IR', 'MR'], L: ['IR'] };   // 手術題旁邊畫的示意病人
+
+/* 分頁三的說明卡 */
+const RM_GZ = [`1. 往上看受限：IR 纖維化攣縮，是最常見的運動障礙，可能像 SR palsy${s('S17')}`, `2. 外轉受限：MR 纖維化，可能像 CN VI palsy${s('S17')}`, `3. 往下看受限：SR 纖維化${s('S17')}`, `4. 內轉受限：LR 纖維化${s('S17')}`];
+const RM_NT = {
+  fd: [`表面麻醉下，用鑷子夾住患眼肌肉的附著處，把眼球往活動受限的方向轉${s('S15')}`, `轉的時候被擋住＝限制性；神經性病灶不會有阻力${s('S15')}`, '圖上夾的是 MR 附著處（角膜緣 nasal 側），往 temporal 轉（示意）'],
+  iop: [`比 forced duction 舒服，而且終點客觀，不靠主觀感覺${s('S15')}`, `先量正前方看的眼壓，再請病人試著往受限的方向看時量；升高 ≥ 6 mmHg 代表肌肉的限制把阻力傳到眼球（Braley sign）${s('S15')}`, 'Kanski 只寫升高 ≥ 6 mmHg 代表限制；沒有升高時，只能說沒有限制的證據'],
+  sac: [`神經性病灶的 saccade 速度變慢；限制性的速度正常，但會突然停住${s('S15')}`, '圖的虛線是正常的 saccade；兩種原因最後都轉不到底，差別在一開始的速度（示意）']
+};
+const RM_AP = [
+  ['怎麼壓到視神經', [`TED 的 optic neuropathy 不算少見（最多 6%）：充血腫大的直肌與腫起來的眼眶組織，在眶尖壓迫視神經或它的血液供應${s('S9')}`, `這種壓迫可能在沒有明顯 proptosis 時就發生${s('S9')}`]],
+  ['肌肉怎麼腫', [`發炎細胞浸潤、glycosaminoglycans 分泌增加讓組織吸水，眼眶內容物體積變大，肌肉可以腫到正常的八倍；眶內壓力可能跟著升高，壓到視神經${s('S16')}`, `影像上 TED 典型的是肌腹腫大、肌腱不腫（tendon sparing）${s('S9')}；Kanski 的 CT：axial 上 MR 呈紡錘狀腫大，coronal 上 MR、SR、IR 與 SO 對稱地腫${s('S10')}`]],
+  ['症狀', [`中央視力變差，同時有其他 TED 的症狀${s('S9')}`, `請病人自己輪流遮一眼，看小字、比較顏色（例如電視）的鮮豔程度，及早發現${s('S9')}`]],
+  ['徵象', [`視力通常下降，但不一定${s('S9')}`, `色覺變淡是敏感的徵象；亮度感也可能變差${s('S9')}`, `出現 RAPD 要高度警覺${s('S9')}`, `視野缺損可以是中央或旁中央，也可以合併神經纖維束型缺損；加上眼壓升高時，可能被誤認成 POAG${s('S9')}`, `視盤可以正常、腫，少數萎縮${s('S9')}`, `不要把不成比例的視力下降歸給輕微的 TED${s('S9')}`]],
+  ['檢查', [`懷疑視神經受影響就做視野；沒有視力問題也可以當 baseline${s('S9')}`, `影像用來評估視神經壓迫，也在眶壁手術前做；有時用 VEP${s('S9')}`, `EUGOGO：懷疑 optic neuropathy 時做眼眶 MRI；decompression 前做眼眶 CT${s('S12')}`]],
+  ['處置（不列劑量）', [`立刻給高劑量靜脈 methylprednisolone；1–2 週內沒有反應或反應差，就要緊急 orbital decompression${s('S12')}`, `Kanski：steroid 無效（約 20% 接受靜脈治療的病人）或不能用時，考慮 orbital wall 與／或 apex decompression；放射治療通常只當輔助${s('S11')}`]],
+  ['圖', ['冠狀切面畫眼眶後段：四條直肌與 SO 貼著骨頭，只能往內長，腫起來就擠向中間的視神經（大小與程度示意）', '上視圖畫 MR 與 LR：腫的是中段的肌腹，靠眼球那段肌腱不腫']]
+];
+const RM_OR = {
+  all: [`Kanski：需要的眼眶手術先做，再做斜視手術，最後才做眼瞼手術${s('S11')}`, `原因：orbital decompression 會改變眼球運動與眼瞼位置，眼外肌手術也會改變眼瞼位置${s('S11')}`, `EUGOGO 2021：發炎退了以後殘留的眼突、眼瞼退縮、斜視等，用 decompression、眼整形與斜視手術一起處理${s('S12')}`],
+  dec: [`發炎退了以後還留下明顯的 proptosis，治療基本上是手術：拿掉眶壁擴大眼眶，可以合併拿掉眼眶脂肪${s('S11')}`, `One-wall（deep lateral）約減少 4–5 mm，可能比較少術後複視；two-wall（medial 加 lateral）效果較大，但明顯有造成複視的風險；three-wall 加上 floor，可減少 6–10 mm，但可能造成 hypoglobus，infraorbital nerve 受損與複視的風險較高${s('S11')}`, `Active 期也可能需要 decompression：嚴重的 exposure keratopathy，以及靜脈 glucocorticoid 無效的 DON${s('S12')}`],
+  str: [`主眼位或看書位置持續複視的病人，大多需要手術；前提是發炎期已經過去，而且偏斜角度穩定至少 6–12 個月${s('S11')}`, `等待期間，可以的話用 prism，有時用 botulinum toxin 減輕複視${s('S11')}`, `目標是在主眼位與看書位置有雙眼單一視；限制性肌病常讓所有方向都無法融合，但融合的範圍可能隨時間變大${s('S11')}`, `最常做 IR 和／或 MR recession；TED 的直肌只做 recession、從不做 resection；通常用可調整縫線，當天或隔天調整${s('S11')}`],
+  lid: [`輕微的眼瞼退縮常會自己改善，不一定要治療；控制甲亢也可能有幫助${s('S11')}`, `等待正式手術時，可以在 levator aponeurosis 與 Müller muscle 打 botulinum toxin 暫時改善${s('S11')}`, `Müllerotomy 對輕微退縮有效；比較嚴重的還要後退或切斷 levator aponeurosis 與上穹窿的 suspensory ligament；下眼瞼退縮 ≥ 2 mm 可以後退 lower lid retractors，必要時加硬顎移植片${s('S11')}`]
+};
+function rmCard() {
+  const R = st.rm;
+  let en, zh, def, v, body;
+  if (R.sub === 'gz') {
+    const tl = ['R', 'L'].flatMap(e => R.T[e].map(m => `${EZ[e]} ${m} 纖維化：${MUS[m].lim}${MUS[m].like ? `（像 ${MUS[m].like}）` : ''}`));
+    [en, zh] = ['Restrictive myopathy', '限制性肌病'];
+    def = `30–50% 的 TED 病人會出現眼肌麻痺，可能是永久的；一開始是發炎水腫限制眼球運動，之後是纖維化${s('S17')}。肌纖維退化後纖維化，把肌肉拴住，造成限制性肌病與複視${s('S16')}：纖維化的肌肉拉不長，眼球就轉不到它作用的反方向。`;
+    v = tl.length ? tl.join('<br>') : '沒有肌肉纖維化：九個方向兩眼都轉得到';
+    body = list('依常見程度', RM_GZ) + list('症狀', [`複視，看某些方向時常會不舒服${s('S17')}`])
+      + list('和神經麻痺怎麼分', [`看起來像 SR palsy 或 CN VI palsy 時，用 forced duction、differential IOP、saccade 速度分辨，見「限制性還是神經性」子頁${s('S15')}`, '神經麻痺的眼位見神經眼科圖譜的眼外肌分頁（下方連結）'])
+      + list('圖', ['受限的那一眼在那個方向只轉到正前方附近（幅度示意）；虛線圓是正常應該轉到的位置，紅框標出有一眼轉不到的方向', '受限的是纖維化肌肉作用的反方向：IR 纖維化看「往上」那一排，MR 纖維化看那一眼往外轉的那一欄']);
+  } else if (R.sub === 'nt') {
+    const c = ntCfg();
+    [en, zh] = ['Restrictive or neurological', '限制性還是神經性'];
+    def = `眼眶疾病常有眼球運動障礙。原因包括眼眶腫塊、限制性肌病（例如 TED、orbital myositis、眼眶骨折後肌肉或組織被卡住），以及海綿竇、眶裂或眼眶後段的病灶侵犯動眼神經（例如 carotid–cavernous fistula、Tolosa–Hunt syndrome、惡性淚腺腫瘤）${s('S15')}。下面三種檢查可以分辨限制性與神經性${s('S15')}。`;
+    v = `${NTM[c.m]}，${NTC[c.cz]}：${ntRes(c)}`;
+    body = ['fd', 'iop', 'sac'].map(m => list(NTM[m] + (m === c.m ? '（圖上這個）' : ''), RM_NT[m])).join('');
+  } else if (R.sub === 'ap') {
+    const P = apGeo(R.A, R.sev);
+    [en, zh] = ['Dysthyroid optic neuropathy', '壓迫性視神經病變（DON）'];
+    def = `TED 的眼外肌與眼眶組織腫起來，在眶尖壓迫視神經；可能沒有明顯 proptosis，延誤治療會嚴重影響視力${s('S9')}。`;
+    v = `腫大：${R.A.length ? R.A.join('、') + `（${Math.round(R.sev * 100)}%）` : '沒有'}<br>${P.cmp ? '肌肉碰到視神經：眶尖擁擠，視神經受壓（示意）' : '肌肉和視神經之間還有脂肪（示意）'}`;
+    body = RM_AP.map(([t, a]) => list(t, a)).join('');
+  } else {
+    [en, zh] = ['Rehabilitative surgery', '復健手術的順序'];
+    def = `發炎退了（inactive）以後，留下的眼突、斜視與眼瞼問題用手術處理，順序是眼眶、斜視、眼瞼${s('S11', 'S12')}。`;
+    v = `1. Orbital decompression → 2. 斜視手術 → 3. 眼瞼手術${R.os ? `<br>現在看：${ORDZ[R.os]}` : ''}`;
+    body = list('順序與原因', RM_OR.all) + (R.os ? ORS.filter(x => x[0] === R.os) : ORS).map(([k, t]) => list(t, RM_OR[k])).join('');
+  }
+  return `<div class="card"><div class="eyebrow">TED · 限制性斜視與視神經 · 對照 BCSC 6、7</div><div><h2>${en}</h2></div><p class="zh">${zh}</p><p class="def">${def}</p><div class="verdict"><span>${v}</span></div>${body}${srcList(refs(def + body))}</div>`;
+}
+const RSUB = [['gz', '九方向眼位'], ['nt', '限制性還是神經性'], ['ap', '眶尖與視神經'], ['or', '手術順序']];
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'hx', name: '眼突與 Hertel', en: 'Proptosis & Hertel' }, { id: 'cas', name: 'TED 活動度與嚴重度', en: 'CAS & EUGOGO' }];
+const VIEWS = [{ id: 'hx', name: '眼突與 Hertel', en: 'Proptosis & Hertel' }, { id: 'cas', name: 'TED 活動度與嚴重度', en: 'CAS & EUGOGO' }, { id: 'rm', name: '限制性斜視與視神經', en: 'Restrictive myopathy & DON' }];
 const $ = q => document.querySelector(q);
 const st = { view: 'hx', labels: true, learnMode: 'learn', quiz: null, hx: { ex: 'norm', ov: {}, vs: false },   // 例子、拉條改的眼球位置、Valsalva
-  cas: Object.assign(casMake({}), { ex: 'norm', mod: false }) };   // 分頁二：casMake 的設定＋例子、有沒有改過
+  cas: Object.assign(casMake({}), { ex: 'norm', mod: false }),   // 分頁二：casMake 的設定＋例子、有沒有改過
+  rm: { sub: 'gz', gx: 'R_IR', T: { R: ['IR'], L: [] }, m: 'fd', cz: 'r', apx: 'irmr', A: ['IR', 'MR'], sev: 0.7, os: null } };   // 分頁三：子頁、九方向的例子與纖維化的肌肉、檢查與原因、眶尖的例子與腫大的肌肉、手術步驟
 const store = (() => {
   const K3 = 'orbitAtlas.v1';
   let mem = { wrong: {} };
@@ -674,15 +939,18 @@ const AN = { raf: 0, t: 1 };
 function animStop() { cancelAnimationFrame(AN.raf); AN.t = 1; }
 const casCfg = () => { const it = quizItem(); return it && it.cfg ? it.cfg : st.cas; };
 function renderCasSVG() { const el = $('#cas-svg'); if (el) el.innerHTML = casFig(casCfg(), AN.t); }
-function casAnim() {   // 往下看、專注盯著看：只重畫 #cas-svg
+function renderNtSVG() { const el = $('#nt-svg'), c = ntCfg(); if (el && c) el.innerHTML = ntFig(c, AN.t); }
+const animSVG = () => st.view === 'cas' ? renderCasSVG() : renderNtSVG();
+function figAnim() {   // 分頁二的往下看、專注盯著看，分頁三的三種檢查：只重畫 #cas-svg 或 #nt-svg
   cancelAnimationFrame(AN.raf);
-  if (st.view !== 'cas' || casCfg().act === 'p' || reduce) { AN.t = 1; renderCasSVG(); return; }
-  const t0 = performance.now(), step = now => { AN.t = Math.min(1, (now - t0) / 1800); renderCasSVG(); if (AN.t < 1) AN.raf = requestAnimationFrame(step); };
-  AN.t = 0; renderCasSVG(); AN.raf = requestAnimationFrame(step);
+  const moving = st.view === 'cas' ? casCfg().act !== 'p' : st.view === 'rm' && !!ntCfg();
+  if (!moving || reduce) { AN.t = 1; animSVG(); return; }
+  const t0 = performance.now(), step = now => { AN.t = Math.min(1, (now - t0) / 1800); animSVG(); if (AN.t < 1) AN.raf = requestAnimationFrame(step); };
+  AN.t = 0; animSVG(); AN.raf = requestAnimationFrame(step);
 }
 function setCasEx(k) { animStop(); st.cas = Object.assign(casMake(CEX[k].o), { ex: k, mod: false }); }
 
-const HINT = { hx: '下方選例子，或拉條改兩眼眼球的位置', cas: '下方選例子，或勾選 CAS 的項目、調嚴重度；圖下的按鈕看眼瞼徵象' };
+const HINT = { hx: '下方選例子，或拉條改兩眼眼球的位置', cas: '下方選例子，或勾選 CAS 的項目、調嚴重度；圖下的按鈕看眼瞼徵象', rm: '圖上方切換子頁；下方選例子或打開開關' };
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
   $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : HINT[st.view]}</span>`;
@@ -715,6 +983,7 @@ function casRenderFig(it) {
 function renderFig() {
   const it = quizItem(), fig = $('#fig'), H = st.hx;
   if (st.view === 'cas') casRenderFig(it);
+  else if (st.view === 'rm') rmRenderFig(it);
   else if (it) {
     if (it.type === 'read') fig.innerHTML = `<div class="vh">${VHZ}：${EO[it.e]}（${EZ[it.e]}）</div><div class="zvw">${zFig(it.e, it.H, it.shift)}</div>`;
     else fig.innerHTML = `<div class="vh">${VHT}</div><div class="tvw">${topFig(it.ex, {}, { vs: false, read: true, mass: it.type !== 'dys' })}</div><div class="vh">${VHF}</div><div class="tvw">${frontFig(it.ex, {}, { vs: false })}</div>`;
@@ -742,9 +1011,50 @@ function casExtra() {
     + `<div class="xh">眼瞼徵象</div><div class="tgs"><label class="tog"><input type="checkbox" id="cas-lag" ${C.lag ? 'checked' : ''}>往下看時上眼瞼跟不上</label><label class="tog"><input type="checkbox" id="cas-koc" ${C.koc ? 'checked' : ''}>盯著看時眼瞼再退縮</label></div>`
     + (C.ex ? `<div class="rng"><button type="button" class="btn" id="cas-reset" ${C.mod ? '' : 'disabled'}>回到例子的數值</button></div>` : '');
 }
+const VHG = '九方向眼位：檢查者面對病人（圖左＝病人右眼 OD；「往右」＝病人往他自己的右邊看）';
+const VHN = { fd: '外眼特寫：右眼 OD，檢查者面對病人（左＝temporal）；表面麻醉下夾住 MR 附著處往外轉', iop: '右眼 OD：正前方看與試著往外轉時的眼壓（示意）', sac: '右眼 OD 往外轉的 saccade：眼球位置隨時間的變化（示意）' };
+const RCAP = {
+  gz: ['九方向眼位：檢查者面對病人，圖左＝OD；虛線圓＝正常應該轉到的位置，紅框＝有一眼轉不到的方向。', '受限的幅度是示意'],
+  nt: ['三種檢查都用右眼外轉受限當例子：限制性＝MR 纖維化，神經性＝CN VI palsy。', '眼壓、轉動幅度與時間都是示意'],
+  ap: ['冠狀切面：右眼眼眶後段，由前往後看（左＝lateral、右＝medial）。上視圖：右眼，上＝anterior、左＝medial、右＝lateral。', '肌肉大小、腫大程度與壓迫都是示意'],
+  or: ['復健手術的順序依 Kanski；點方塊看各步驟的說明。', '只列類別與原則，不列手術細節']
+};
+function rmRenderFig(it) {
+  const R = st.rm, fig = $('#fig');
+  if (it) {
+    if (it.type === 'neu') fig.innerHTML = `<div class="vh">${VHN[it.nt.m]}</div><div class="solo" id="nt-svg">${ntFig(it.nt, AN.t)}</div><div class="ctbar"><span class="hint">${NTM[it.nt.m]}（動畫）</span><div class="grp"><button type="button" class="btn" id="cas-replay">再播一次</button></div></div>`;
+    else fig.innerHTML = `<div class="vh">${VHG}${it.type === 'ord' ? '：示意的 TED 病人' : ''}</div><div class="tvw">${gzFig(it.type === 'gaze' ? it.T : ORQ_T)}</div>`;
+  } else {
+    let h = `<div class="ctbar"><div class="seg" role="group" aria-label="子頁">${RSUB.map(([k, t]) => `<button type="button" data-rsub="${k}" aria-pressed="${R.sub === k}">${t}</button>`).join('')}</div></div>`;
+    if (R.sub === 'gz') h += `<div class="vh">${VHG}</div><div class="tvw">${gzFig(R.T)}</div>`;
+    if (R.sub === 'nt') h += `<div class="vh">${VHN[R.m]}</div><div class="solo" id="nt-svg">${ntFig(ntCfg(), AN.t)}</div><div class="ctbar"><span class="hint">動畫：${NTM[R.m]}</span><div class="grp"><button type="button" class="btn" id="cas-replay">再播一次</button></div></div>`;
+    if (R.sub === 'ap') h += `<div class="duo"><div><div class="vh">冠狀切面：右眼眼眶後段，由前往後看（左＝lateral）</div><div class="zvw">${apFig(R)}</div></div><div><div class="vh">上視圖：右眼（上＝anterior、左＝medial）</div><div class="zvw">${atFig(R)}</div></div></div>`;
+    if (R.sub === 'or') h += `<div class="vh">復健手術的順序（點方塊看說明）</div><div class="solo">${orFig(R.os)}</div>`;
+    fig.innerHTML = h;
+  }
+  const cp = RCAP[it ? (it.type === 'neu' ? 'nt' : 'gz') : R.sub];
+  $('#cap').innerHTML = `<span>${cp[0]}</span><span class="ori">${cp[1]}</span>`;
+}
+function rmExtra() {
+  const R = st.rm;
+  if (R.sub === 'gz') return `<div class="xh">纖維化的肌肉</div><div class="tgs">${['R', 'L'].flatMap(e => MORD.map(m => `<label class="tog"><input type="checkbox" data-tm="${e}:${m}" ${R.T[e].includes(m) ? 'checked' : ''}>${EZ[e]} ${m}</label>`)).join('')}</div>`;
+  const sg = (k, obj) => `<div class="seg" role="group">${Object.entries(obj).map(([v, t]) => `<button type="button" data-${k}="${v}" aria-pressed="${R[k === 'nm' ? 'm' : 'cz'] === v}">${t}</button>`).join('')}</div>`;
+  if (R.sub === 'nt') return `<div class="rng"><span class="rl">檢查</span>${sg('nm', NTM)}</div><div class="rng"><span class="rl">原因</span>${sg('nc', NTC)}</div>`;
+  if (R.sub === 'ap') return `<div class="xh">腫大的肌肉</div><div class="tgs">${AMK.map(k => `<label class="tog"><input type="checkbox" data-am="${k}" ${R.A.includes(k) ? 'checked' : ''}>${k}</label>`).join('')}</div>`
+    + `<div class="rng"><label for="rm-sev">腫大程度（示意）</label><input type="range" id="rm-sev" min="0" max="1" step="0.05" value="${R.sev}"><span class="v" id="rm-sev-v">${Math.round(R.sev * 100)}%</span></div>`;
+  return '';
+}
+function rmSel() {
+  const R = st.rm;
+  if (R.sub === 'gz') { const tl = ['R', 'L'].flatMap(e => R.T[e].map(m => `${EO[e]} ${m}`)); return `目前：${tl.length ? tl.join('、') + ' 纖維化' : '沒有肌肉纖維化'}`; }
+  if (R.sub === 'nt') return `目前：${NTM[R.m]} · ${NTZ[R.cz]}`;
+  if (R.sub === 'ap') return `目前：${R.A.length ? R.A.join('、') + ' 腫大' : '沒有腫大'} · ${apGeo(R.A, R.sev).cmp ? '視神經受壓' : '還有空間'}`;
+  return `目前：復健手術順序${R.os ? ' · ' + ORDZ[R.os] : ''}`;
+}
 function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
   if (st.view === 'cas') { $('#extra').innerHTML = casExtra(); return; }
+  if (st.view === 'rm') { $('#extra').innerHTML = rmExtra(); return; }
   const H = st.hx, ex = EX[H.ex];
   $('#extra').innerHTML = `<div class="xh">眼球的位置（比正常的 rim 線往前幾 mm，示意）</div>` + ['R', 'L'].map(e => { const E = eyeOf(ex, H.ov, e, false); return `<div class="rng"><label for="hx-${e}">${EO[e]}（${EZ[e]}）</label><input type="range" id="hx-${e}" min="8" max="28" step="0.5" value="${E.P}"><span class="v" id="hx-${e}-v">Hertel ${mm(eyeOf(ex, H.ov, e, H.vs).H)} mm</span></div>`; }).join('')
     + `<div class="rng"><button type="button" class="btn" id="hx-reset" ${Object.keys(H.ov).length ? '' : 'disabled'}>回到例子的數值</button></div>`;
@@ -753,16 +1063,20 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
-  const C = st.cas, chips = st.view === 'cas'
+  const C = st.cas, R = st.rm, chips = st.view === 'rm'
+    ? (R.sub === 'gz' ? `<span class="lbl">纖維化的肌肉（示意）</span>` + Object.keys(GZX).map(k => `<button type="button" class="chip ${R.gx === k ? 'on' : ''}" data-rgx="${k}">${GZX[k].zh}</button>`).join('')
+      : R.sub === 'ap' ? `<span class="lbl">腫大的肌肉（示意）</span>` + Object.keys(APXX).map(k => `<button type="button" class="chip ${R.apx === k ? 'on' : ''}" data-rap="${k}">${APXX[k].zh}</button>`).join('') : '')
+    : st.view === 'cas'
     ? CEXG.map(([g, t]) => `<span class="lbl">${t}</span>` + Object.keys(CEX).filter(k => CEX[k].g === g).map(k => `<button type="button" class="chip ${C.ex === k && !C.mod ? 'on' : ''}" data-cex="${k}">${CEX[k].zh}</button>`).join('')).join('')
     : EXG.map(([g, t]) => `<span class="lbl">${t}</span>` + Object.keys(EX).filter(k => EX[k].g === g).map(k => `<button type="button" class="chip ${st.hx.ex === k ? 'on' : ''}" data-ex="${k}">${EX[k].zh}</button>`).join('')).join('');
   ix.innerHTML = chips + `<span class="lbl">其他頁</span><a class="chip" href="../eye-atlas/#orbit">眼眶解剖 → 眼解剖圖譜</a><a class="chip" href="../oculoplastics/">眼瞼退縮造成的 pseudoptosis → 眼整形圖譜</a><a class="chip" href="../neuro-ophth/#eom">眼外肌麻痺 → 神經眼科圖譜</a>`;
 }
-function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'cas' ? casCard() : hxCard(); }
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'rm' ? rmCard() : st.view === 'cas' ? casCard() : hxCard(); }
 function renderSelbar() {
   const b = $('#selbar'), H = st.hx, ex = EX[H.ex];
   let t = '';
-  if (st.learnMode === 'learn' && st.view === 'cas') { const C = st.cas, S = casScore(C); t = `目前：${C.ex && !C.mod ? CEX[C.ex].zh : '自訂的設定'} · CAS ${S.s7}/7${S.s10 != null ? `、${S.s10}/10` : ''} · ${SEVZ[sevEval(C.sv).cat]}`; }
+  if (st.learnMode === 'learn' && st.view === 'rm') t = rmSel();
+  else if (st.learnMode === 'learn' && st.view === 'cas') { const C = st.cas, S = casScore(C); t = `目前：${C.ex && !C.mod ? CEX[C.ex].zh : '自訂的設定'} · CAS ${S.s7}/7${S.s10 != null ? `、${S.s10}/10` : ''} · ${SEVZ[sevEval(C.sv).cat]}`; }
   else if (st.learnMode === 'learn') t = `目前：${ex.zh} · OD ${mm(eyeOf(ex, H.ov, 'R', H.vs).H)}、OS ${mm(eyeOf(ex, H.ov, 'L', H.vs).H)} mm`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
@@ -773,7 +1087,7 @@ function render() {
 
 /* ---------- quiz ----------
    錯題的 key：hx:r:…（讀刻度）、hx:p:…（判讀讀數）、hx:s:…（真的還是假的 proptosis）、hx:d:…（肌錐內或肌錐外）；
-   cas:a:…（算 CAS）、cas:v:…（嚴重度）、cas:l:…（眼瞼徵象）；第二段的字母決定題型，整頁不重複，之後的分頁用 rm: */
+   cas:a:…（算 CAS）、cas:v:…（嚴重度）、cas:l:…（眼瞼徵象）；rm:g:…（看眼位）、rm:n:…（限制性或神經性）、rm:o:…（手術順序與時機）；第二段的字母決定題型，整頁不重複 */
 const QR = { r1: ['R', 17.5, 1], r2: ['L', 14, 2], r3: ['R', 22.5, 0], r4: ['L', 19, 3], r5: ['R', 12.5, 2], r6: ['L', 24, 1], r7: ['R', 20, 3], r8: ['L', 16.5, 0] };   // 哪一眼、讀數、刻度窗往下移幾 mm
 const QP = { p1: [15, 15.5], p2: [23, 22.5], p3: [14, 18], p4: [24, 16], p5: [13, 13], p6: [17.5, 13.5], p7: [16, 22.5] };   // OD、OS 讀數；只用各來源都同意的讀數（self-check 核對）
 const QS = { s1: ['ted1', 0], s2: ['lr', 0], s3: ['eno', 0], s4: ['myo', 0], s5: ['rim', 0], s6: ['ic', 0], s7: ['lr', 1], s8: ['eno', 1] };   // 例子、1＝左右對調
@@ -792,12 +1106,28 @@ const QA = { a1: ['lidR conjR', 'g', null], a2: ['conjR', 's', null], a3: ['lidR
   a7: ['lidR conjR', '', [3, 7, 0]], a8: ['conjR', 's', [1.5, 8, 1]], a9: ['car chem lidS', '', [2, 6, 1]] };   // 看得到的徵象、疼痛（s 自發、g 動眼）、回診 [眼突增加 mm, 活動度少幾 °, 視力掉幾行]
 const QV = { v1: [1, 1, 1, 1, 1, 0], v2: [3, 4, 0, 1, 0, 0], v3: [2, 0.5, 0, 2, 0, 0], v4: [1.5, 2.5, 1, 1, 1, 0], v5: [1, 1, 2, 2, 0, 1], v6: [4, 6, 0, 3, 2, 0], v7: [0.5, 3, 3, 1, 0, 0], v8: [1, 2, 2, 3, 0, 0] };   // [眼瞼退縮, 眼突比正常值多, 複視, 軟組織, 角膜, DON]；只出四項特徵 0 項或 ≥ 2 項的（self-check 核對）
 const QL = { l1: ['p', 3, 0, 0, 1], l2: ['d', 0, 4, 0, 0], l3: ['f', 1, 0, 2.5, 0], l4: ['d', 0, 0, 0, 0], l5: ['p', 0, 0, 0, 0], l6: ['f', 0, 0, 0, 0], l7: ['p', 4, 0, 0, 0] };   // 動作、眼瞼退縮、lid lag、盯著看時再退縮、下眼瞼退縮（mm）
+const QG = { g1: ['R', 'IR'], g2: ['L', 'IR'], g3: ['R', 'MR'], g4: ['L', 'MR'], g5: ['R', 'SR'], g6: ['L', 'SR'], g7: ['R', 'LR'], g8: ['L', 'LR'] };   // 哪一眼、哪一條肌肉纖維化
+const QN = { n1: ['fd', 'r'], n2: ['fd', 'n'], n3: ['iop', 15, 24], n4: ['iop', 16, 17], n5: ['sac', 'r'], n6: ['sac', 'n'], n7: ['iop', 14, 20], n8: ['iop', 17, 21] };   // 檢查與原因；眼壓題寫兩個讀數（mmHg），答案由 ≥ 6 mmHg 算
+const QO = {   // need＝病人需要的手術（答案依 Kanski 的順序排）；其餘是有固定答案 a 與錯誤選項 w 的題目
+  o1: { need: ['lid', 'dec', 'str'] }, o2: { need: ['lid', 'str'] }, o3: { need: ['lid', 'dec'] }, o4: { need: ['str', 'dec'] },
+  o5: { q: 'TED 的斜視手術怎麼做？', a: '只把纖維化的肌肉往後退（recession），不做 resection', w: ['把受限方向那條拮抗肌縮短（resection）', '纖維化的肌肉 recession，再加上拮抗肌 resection'],
+    more: `Kanski：TED 的直肌只做 recession、從不做 resection；最常做 IR 和／或 MR recession，通常用可調整縫線${s('S11')}。` },
+  o6: { q: 'TED 的斜視手術什麼時候做？', a: '發炎期過去，而且偏斜角度穩定至少 6–12 個月', w: ['一出現複視就做', '趁發炎最厲害時做，避免纖維化', '在 orbital decompression 之前先做'],
+    more: `Kanski：主眼位或看書位置持續複視的病人，大多需要手術，前提是發炎期已經過去，而且偏斜角度穩定至少 6–12 個月；斜視手術也要排在需要的眼眶手術之後${s('S11')}。` },
+  o7: { q: '等待斜視手術的期間，複視可以怎麼減輕？', a: '可以的話用 prism，有時用 botulinum toxin', w: ['先做眼瞼手術', '先做拮抗肌 resection', '沒有辦法，只能等'],
+    more: `Kanski：在符合手術條件之前，可以的話用 prism，有時用 botulinum toxin 減輕複視${s('S11')}。` },
+  o8: { q: 'DON 用了高劑量靜脈 methylprednisolone，1–2 週內沒有反應或反應差。下一步是？', a: '緊急 orbital decompression', w: ['等發炎期過去，再做斜視手術', '先做眼瞼手術保護角膜', '改補充 selenium 6 個月'],
+    more: `EUGOGO：DON 立刻給高劑量靜脈 methylprednisolone，1–2 週內沒有反應或反應差，就要緊急 orbital decompression${s('S12')}；Kanski：steroid 無效或不能用時考慮 decompression${s('S11')}。` }
+};
+const orAns = need => need.slice().sort((x, y) => ORDN[x] - ORDN[y]).join('>');
+const perms = a => a.length < 2 ? [a] : a.flatMap((x, i) => perms(a.filter((_, j) => j !== i)).map(p => [x, ...p]));
 const KEYS = [...Object.keys(QR).map(k => 'hx:r:' + k), ...Object.keys(QP).map(k => 'hx:p:' + k), ...Object.keys(QS).map(k => 'hx:s:' + k), ...Object.keys(QD).map(k => 'hx:d:' + k),
-  ...Object.keys(QA).map(k => 'cas:a:' + k), ...Object.keys(QV).map(k => 'cas:v:' + k), ...Object.keys(QL).map(k => 'cas:l:' + k)];
+  ...Object.keys(QA).map(k => 'cas:a:' + k), ...Object.keys(QV).map(k => 'cas:v:' + k), ...Object.keys(QL).map(k => 'cas:l:' + k),
+  ...Object.keys(QG).map(k => 'rm:g:' + k), ...Object.keys(QN).map(k => 'rm:n:' + k), ...Object.keys(QO).map(k => 'rm:o:' + k)];
 const keyValid = k => KEYS.includes(k);
 const keyView = k => k.split(':')[0];
-const QTV = { hx: [['read', '讀刻度'], ['judge', '判讀讀數'], ['pseudo', '真的還是假的'], ['dys', '肌錐內或外']], cas: [['act', '算 CAS'], ['sev', '判斷嚴重度'], ['lid', '認眼瞼徵象']] };
-const QTZ = { r: 'read', p: 'judge', s: 'pseudo', d: 'dys', a: 'act', v: 'sev', l: 'lid' };
+const QTV = { hx: [['read', '讀刻度'], ['judge', '判讀讀數'], ['pseudo', '真的還是假的'], ['dys', '肌錐內或外']], cas: [['act', '算 CAS'], ['sev', '判斷嚴重度'], ['lid', '認眼瞼徵象']], rm: [['gaze', '看眼位'], ['neu', '限制性還是神經性'], ['ord', '手術順序與時機']] };
+const QTZ = { r: 'read', p: 'judge', s: 'pseudo', d: 'dys', a: 'act', v: 'sev', l: 'lid', g: 'gaze', n: 'neu', o: 'ord' };
 const kType = k => QTZ[k.split(':')[1]];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const exOf = (k, m) => m ? mirror(EX[k]) : EX[k];
@@ -809,6 +1139,9 @@ function keyLabel(k) {
   if (ty === 'a') return `算 CAS：${QA[id][0] ? QA[id][0].split(' ').map(k => CIZ[k]).join('、') : '看不到徵象'}${QA[id][2] ? '（回診）' : ''}`;
   if (ty === 'v') return `嚴重度：眼瞼退縮 ${QV[id][0]} mm、眼突多 ${QV[id][1]} mm${QV[id][5] ? '、DON' : ''}${QV[id][4] === 2 ? '、角膜破損' : ''}`;
   if (ty === 'l') return `眼瞼徵象：${ACTZ[QL[id][0]]}（第 ${id.slice(1)} 題）`;
+  if (ty === 'g') return `看眼位：${EZ[QG[id][0]]} ${QG[id][1]}`;
+  if (ty === 'n') return `限制性或神經性：${NTM[QN[id][0]]}${QN[id][0] === 'iop' ? ` ${QN[id][1]} → ${QN[id][2]} mmHg` : `（${NTZ[QN[id][1]]}）`}`;
+  if (ty === 'o') return QO[id].need ? `手術順序：${QO[id].need.map(k => ORDZ[k]).join('、')}` : `手術時機與做法：${QO[id].q}`;
   return `肌錐內或外：${EX[QD[id][0]].zh}${QD[id][1] ? '（左眼）' : ''}`;
 }
 function itemOf(key) {
@@ -851,6 +1184,28 @@ function itemOf(key) {
     return { key, type: 'lid', cfg, prompt: ['認眼瞼徵象', `${{ p: '請病人正前方看遠處。', d: '請病人從正前方慢慢往下看（動畫）。', f: '請病人專注盯著你的筆燈（動畫）。' }[act]}圖上看到的是？`],
       opts: ['dal', 'koc', 'vg', 'norm'], ans, lab: x => LSZ[x], more: LSIGN[ans] + '。', go: o };
   }
+  if (ty === 'g') {
+    const [e, m] = QG[id], oe = e === 'R' ? 'L' : 'R', an = MUS[m].anta, T = { R: [], L: [] };
+    T[e] = [m];
+    return { key, type: 'gaze', T, prompt: ['看眼位', '看九方向眼位（檢查者面對病人：圖左＝病人右眼）。哪一眼的哪一條肌肉纖維化？'],
+      opts: shuffle([e + m, oe + m, e + an, oe + an]), ans: e + m, lab: x => `${EZ[x[0]]} ${x.slice(1)}`,
+      more: `${EZ[e]} ${m} 纖維化、拉不長，所以${MUS[m].lim}${MUS[m].like ? `，看起來像 ${MUS[m].like}` : ''}${s('S17')}。九方向圖裡只有${EZ[e]}在那個方向轉不到，另一眼正常。`, go: { T } };
+  }
+  if (ty === 'n') {
+    const q = QN[id], nt = q[0] === 'iop' ? { m: 'iop', a: q[1], b: q[2], cz: q[2] - q[1] >= 6 ? 'r' : 'n' } : { m: q[0], cz: q[1] };
+    const pr = { fd: '表面麻醉下，用鑷子夾住右眼 MR 附著處，往外轉（活動受限的方向）。看動畫：', iop: `正前方看時眼壓 ${nt.a} mmHg，請病人試著往受限的方向看時 ${nt.b} mmHg。`, sac: '請病人快速往受限的方向看。圖是眼球位置隨時間的變化（虛線＝正常的 saccade）。' }[nt.m];
+    return { key, type: 'neu', nt, prompt: [NTM[nt.m], `右眼外轉受限。${pr}這是限制性還是神經性？`], opts: ['r', 'n'], ans: nt.cz, lab: x => NTC[x],
+      more: `${ntRes(nt)}。` + RM_NT[nt.m].slice(0, 2).join('；') + '。', go: { m: nt.m, cz: nt.cz } };
+  }
+  if (ty === 'o') {
+    const Q = QO[id];
+    if (Q.need) {
+      const ans = orAns(Q.need), others = shuffle(perms(Q.need).map(p => p.join('>')).filter(x => x !== ans)).slice(0, 3);
+      return { key, type: 'ord', prompt: ['手術順序', `病人發炎已經退了（inactive），需要${Q.need.map(k => ORDZ[k]).join('、')}。先後順序是？`], opts: shuffle([ans, ...others]), ans,
+        lab: x => x.split('>').map(k => ORDZ[k]).join(' → '), more: RM_OR.all.slice(0, 2).join('；') + '。', go: {} };
+    }
+    return { key, type: 'ord', prompt: ['手術時機與做法', Q.q], opts: shuffle(['a', ...Q.w.map((_, i) => 'w' + i)]), ans: 'a', lab: x => x === 'a' ? Q.a : Q.w[+x.slice(1)], more: Q.more, go: {} };
+  }
   const [k, m] = QD[id], ex = exOf(k, m), ans = k;
   return { key, type: 'dys', ex, prompt: ['肌錐內或外', `${m ? '左眼' : '右眼'} proptosis。看外眼正面眼球的高度，病灶最可能在哪裡？（圖上不畫腫塊）`], opts: ['ic', 'ec'], ans, lab: x => DZ[x],
     more: `${EX[k].R.dys ? '眼球同時往下移位（dystopia）' : '眼球直直往前、沒有移位（axial proptosis）'}：${EXC[k].def}`, go: { ex: k, ov: {} } };
@@ -858,6 +1213,7 @@ function itemOf(key) {
 const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
 const QHEAD = {
   hx: ['讀得準，才判斷得對', '四種題型：看刻度放大圖讀 Hertel（讀到 0.5 mm）；給兩眼讀數判斷正常、proptosis 或兩眼差太多（只用 Kanski、EyeWiki 與華人常模都同意的讀數）；看上視圖、讀數與外眼正面，判斷是真的 proptosis 還是哪一種 pseudoproptosis；看眼球有沒有移位，判斷病灶在肌錐內或肌錐外。'],
+  rm: ['是被拴住，還是沒力氣', '三種題型：看九方向眼位，判斷哪一眼的哪一條肌肉纖維化；給 forced duction、differential IOP 或 saccade 的結果，判斷右眼外轉受限是限制性還是神經性（眼壓差用 Kanski 的 ≥ 6 mmHg）；復健手術的順序與時機，以及 DON 對 steroid 沒反應時的下一步。'],
   cas: ['先分活動度，再分嚴重度', '三種題型：看外眼特寫與病人說的話算 CAS（第一次看診的 7 分版並判斷 active 或 inactive，或回診時的 10 分版）；給檢查結果，依 EUGOGO 判斷嚴重度（只出 Kanski 與 EUGOGO 結論一樣的題目：四項特徵一項都沒有或有兩項以上，或有 optic neuropathy、角膜破損）；看動作與眼瞼的樣子，認出 Dalrymple、Kocher、von Graefe sign 或正常。']
 };
 function quizHTML() {
@@ -896,7 +1252,7 @@ function startQuiz(cfg) {
   while (keys.length < cfg.total) keys = keys.concat(shuffle(pool.slice()));
   keys = keys.slice(0, cfg.scope === 'wrong' ? Math.min(cfg.total, pool.length) : cfg.total);
   st.quiz = Object.assign({}, cfg, { phase: 'q', items: keys.map(itemOf), i: 0, score: 0, ans: null, log: [] });
-  render(); casAnim();
+  render(); figAnim();
 }
 function answer(a) {
   const q = st.quiz, it = q.items[q.i]; if (q.ans) return;
@@ -908,7 +1264,7 @@ function answer(a) {
   store.save(); renderPanel();
   $('#wrong-ct').textContent = Object.keys(m.wrong).filter(keyValid).length;
 }
-function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); casAnim(); }
+function nextQ() { const q = st.quiz; q.i++; q.ans = null; if (q.i >= q.items.length) q.phase = 'done'; render(); figAnim(); }
 function setView(v) {
   animStop(); st.view = v;
   try { history.replaceState(null, '', v === 'hx' ? location.pathname : '#' + v); } catch (e) { }
@@ -922,7 +1278,14 @@ function setMode(m) {
 }
 function goKey(k) {   // 錯題本「再看一次」：回到學習模式的同一個設定
   const g = itemOf(k).go;
-  if (keyView(k) === 'cas') { setView('cas'); st.cas = Object.assign(casMake(g), { ex: null, mod: false }); render(); casAnim(); return; }
+  if (keyView(k) === 'cas') { setView('cas'); st.cas = Object.assign(casMake(g), { ex: null, mod: false }); render(); figAnim(); return; }
+  if (keyView(k) === 'rm') {
+    const ty = k.split(':')[1], R = st.rm; setView('rm');
+    if (ty === 'g') Object.assign(R, { sub: 'gz', gx: null, T: { R: g.T.R.slice(), L: g.T.L.slice() } });
+    else if (ty === 'n') Object.assign(R, { sub: 'nt', m: g.m, cz: g.cz });
+    else Object.assign(R, { sub: 'or', os: null });
+    render(); figAnim(); return;
+  }
   setView('hx'); st.hx = { ex: g.ex, ov: Object.assign({}, g.ov), vs: false }; render();
 }
 
@@ -954,11 +1317,16 @@ document.addEventListener('click', e => {
   const ex = t.closest('[data-ex]'); if (ex) { st.hx = { ex: ex.dataset.ex, ov: {}, vs: false }; render(); return; }
   if (t.closest('#hx-vs')) { st.hx.vs = !st.hx.vs; render(); return; }
   if (t.closest('#hx-reset')) { st.hx.ov = {}; render(); return; }
-  const cx = t.closest('[data-cex]'); if (cx) { setCasEx(cx.dataset.cex); render(); casAnim(); return; }
+  const cx = t.closest('[data-cex]'); if (cx) { setCasEx(cx.dataset.cex); render(); figAnim(); return; }
   const sv = t.closest('[data-sv]'); if (sv) { st.cas.sv[sv.dataset.sv] = +sv.dataset.v; st.cas.mod = true; render(); return; }
-  const ca = t.closest('[data-cact]'); if (ca) { st.cas.act = ca.dataset.cact; render(); casAnim(); return; }
-  if (t.closest('#cas-reset')) { setCasEx(st.cas.ex); render(); casAnim(); return; }
-  if (t.closest('#cas-replay')) { casAnim(); return; }
+  const ca = t.closest('[data-cact]'); if (ca) { st.cas.act = ca.dataset.cact; render(); figAnim(); return; }
+  if (t.closest('#cas-reset')) { setCasEx(st.cas.ex); render(); figAnim(); return; }
+  if (t.closest('#cas-replay')) { figAnim(); return; }
+  const R = st.rm, rs = t.closest('[data-rsub]'); if (rs) { animStop(); R.sub = rs.dataset.rsub; render(); figAnim(); return; }
+  const rg = t.closest('[data-rgx]'); if (rg) { const X = GZX[rg.dataset.rgx]; Object.assign(R, { gx: rg.dataset.rgx, T: { R: X.T.R.slice(), L: X.T.L.slice() } }); render(); return; }
+  const rp = t.closest('[data-rap]'); if (rp) { const X = APXX[rp.dataset.rap]; Object.assign(R, { apx: rp.dataset.rap, A: X.A.slice(), sev: X.sev }); render(); return; }
+  const nm = t.closest('[data-nm]') || t.closest('[data-nc]'); if (nm) { if (nm.dataset.nm) R.m = nm.dataset.nm; else R.cz = nm.dataset.nc; render(); figAnim(); return; }
+  const os = t.closest('[data-ors]'); if (os) { R.os = R.os === os.dataset.ors ? null : os.dataset.ors; render(); return; }
   const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
   if (t.closest('#q-start') || t.closest('#q-again')) { const q = st.quiz; startQuiz({ scope: q.scope, type: q.type, total: q.total }); return; }
@@ -978,18 +1346,24 @@ document.addEventListener('change', e => {
   const el = e.target, C = st.cas;
   if (el.id === 't-lab') { st.labels = el.checked; $('#fig').classList.toggle('nolab', !st.labels); return; }
   if (el.dataset.cf) { C.f[el.dataset.cf] = el.checked ? 1 : 0; C.mod = true; render(); return; }
+  if (el.dataset.tm) { const [e, m] = el.dataset.tm.split(':'), T = st.rm.T; T[e] = el.checked ? MORD.filter(x => x === m || T[e].includes(x)) : T[e].filter(x => x !== m); st.rm.gx = null; render(); return; }
+  if (el.dataset.am) { const R = st.rm, k = el.dataset.am; R.A = el.checked ? AMK.filter(x => x === k || R.A.includes(x)) : R.A.filter(x => x !== k); R.apx = null; render(); return; }
   if (el.id === 'cas-fu') { C.fu.on = el.checked; C.mod = true; render(); return; }
   if (el.id === 'cas-lag' || el.id === 'cas-koc') {
     const lag = el.id === 'cas-lag';
     C[lag ? 'lag' : 'koc'] = el.checked ? (lag ? 4 : 2.5) : 0; C.mod = true;
     if (el.checked) C.act = lag ? 'd' : 'f';
-    render(); casAnim();
+    render(); figAnim();
   }
 });
 document.addEventListener('input', e => {
   const m = /^hx-([RL])$/.exec(e.target.id); if (m) { st.hx.ov = Object.assign({}, st.hx.ov, { [m[1]]: +e.target.value }); afterSlide(); return; }
   const c = /^cas-(lr|ex|pr|mo|va)$/.exec(e.target.id);
-  if (c) { const k = c[1]; (k === 'lr' || k === 'ex' ? st.cas.sv : st.cas.fu)[k] = +e.target.value; st.cas.mod = true; afterCasSlide(); }
+  if (c) { const k = c[1]; (k === 'lr' || k === 'ex' ? st.cas.sv : st.cas.fu)[k] = +e.target.value; st.cas.mod = true; afterCasSlide(); return; }
+  if (e.target.id === 'rm-sev') {   // 分頁三的拉條：只重畫圖、說明卡與數值
+    st.rm.sev = +e.target.value; st.rm.apx = null; renderFig(); renderPanel(); renderSelbar();
+    $('#rm-sev-v').textContent = Math.round(st.rm.sev * 100) + '%'; document.querySelectorAll('[data-rap]').forEach(b => b.classList.remove('on'));
+  }
 });
 $('#m-learn').addEventListener('click', () => setMode('learn'));
 $('#m-quiz').addEventListener('click', () => setMode('quiz'));
@@ -1040,7 +1414,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   // 題目：選項含答案、不重複；讀刻度的選項相差 0.5 mm
   for (let n = 0; n < 10; n++) KEYS.forEach(k => {
     const it = itemOf(k);
-    a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && it.opts.length === { read: 4, judge: 3, pseudo: 4, dys: 2, act: 4, sev: 3, lid: 4 }[it.type] && new Set(it.opts.map(it.lab)).size === it.opts.length, `${k} 的選項`);
+    a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && (it.type === 'ord' ? it.opts.length >= 2 : it.opts.length === { read: 4, judge: 3, pseudo: 4, dys: 2, act: 4, sev: 3, lid: 4, gaze: 4, neu: 2 }[it.type]) && new Set(it.opts.map(it.lab)).size === it.opts.length, `${k} 的選項`);
     refs(it.more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`));
   });
   Object.entries(QS).forEach(([id, [k, m]]) => { const it = itemOf('hx:s:' + id), E = { R: eyeOf(it.ex, {}, 'R'), L: eyeOf(it.ex, {}, 'L') }, big = m ? 'L' : 'R'; a(E[big].H >= E[m ? 'R' : 'L'].H && (E[big].H > E[m ? 'R' : 'L'].H || E[big].ul > 0), `hx:s:${id}：題目說比較突的那眼讀數比較大或露鞏膜`); });
@@ -1093,9 +1467,53 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   Object.keys(CEX).forEach(k => { st.cas = Object.assign(casMake(CEX[k].o), { ex: k, mod: false }); refs(casCard()).forEach(r => a(SRC[r], `${k} 的引用 ${r}`)); });
   [[0, 0, 0, 0, 0, 0], [2, 3, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0], [0, 0, 0, 0, 2, 1]].forEach(v => ['', 'lidR conjR chem'].forEach(f => { st.cas = Object.assign(casMake({ f, sv: v, fu: [2, 8, 1] }), { ex: null, mod: false }); refs(casCard()).forEach(r => a(SRC[r], `設定的引用 ${r}`)); }));
   st.cas = sc;
+
+  // ---------- 分頁三：限制性斜視與壓迫性視神經病變 ----------
+  // 纖維化的肌肉：只有它作用的反方向受限，另一眼正常
+  const DIRS = []; for (let h = -1; h <= 1; h++) for (let v = -1; v <= 1; v++) DIRS.push([h, v]);
+  const want = { IR: (h, v) => v > 0, SR: (h, v) => v < 0, MR: (h, v, e) => (e === 'R' ? h : -h) > 0, LR: (h, v, e) => (e === 'R' ? h : -h) < 0 };
+  ['R', 'L'].forEach(e => MORD.forEach(m => DIRS.forEach(([h, v]) => {
+    const p = gzPos([m], e, h, v), q = gzPos([], e, h, v), o = gzPos([], e === 'R' ? 'L' : 'R', -h, v);
+    a(p.lim === want[m](h, v, e) && !q.lim && !o.lim, `${e} ${m} 看 (${h}, ${v})：受限的方向`);
+    if (p.lim) a((m === 'IR' && p.y <= GL) || (m === 'SR' && p.y >= -GL) || (['MR', 'LR'].includes(m) && Math.abs(p.x) <= GL + 1e-9), `${e} ${m}：受限時只轉到 ${GL}`);
+  })));
+  a(MORD.join() === 'IR,MR,SR,LR' && MUS.IR.like === 'SR palsy' && MUS.MR.like === 'CN VI palsy', 'Kanski 的常見程度與像哪一種 palsy');
+  // 右眼往右（病人右邊）看＝外轉：圖上虹膜往左移
+  a(gzPos([], 'R', 1, 0).x === 1 && gzEye(100, 50, gzPos([], 'R', 1, 0)).includes(`cx="83"`), '右眼外轉時虹膜往圖左移');
+  // 看眼位的題目：八種單一肌肉的九方向眼位都不一樣，選項裡只有答案和圖一樣
+  const sig = T => DIRS.map(([h, v]) => ['R', 'L'].map(e => { const p = gzPos(T[e], e, h, v); return `${fx(p.x)},${fx(p.y)}`; }).join('/')).join(' ');
+  const sigOf = x => { const T = { R: [], L: [] }; T[x[0]] = [x.slice(1)]; return sig(T); };
+  a(new Set(['R', 'L'].flatMap(e => MORD.map(m => sigOf(e + m)))).size === 8, '八種單一肌肉纖維化的眼位都不同');
+  Object.keys(QG).forEach(id => { const it = itemOf('rm:g:' + id); a(it.opts.filter(x => sigOf(x) === sig(it.T)).length === 1 && sigOf(it.ans) === sig(it.T), `rm:g:${id} 只有答案和圖一樣`); });
+  // 限制性還是神經性：眼壓 ≥ 6 mmHg 的邊界、forced duction 與 saccade 的差別
+  a(itemOf('rm:n:n7').ans === 'r' && itemOf('rm:n:n8').ans === 'n' && (14 + 6 === QN.n7[2]) && QN.n8[2] - QN.n8[1] === 4, '眼壓升高 6 mmHg 算限制性、4 mmHg 不算');
+  a(IOPV.r[1] - IOPV.r[0] >= 6 && IOPV.n[1] - IOPV.n[0] < 6, '學習模式的眼壓和原因一致');
+  a(Math.abs(FDX.r) < 1.5 && Math.abs(FDX.n) > 3, 'forced duction：限制性轉不過去、神經性轉得過去');
+  a(Math.abs(sacPos('r', 0.03) - sacPos('norm', 0.03)) < 1e-9 && sacPos('n', 0.03) < 0.5 * sacPos('norm', 0.03), 'saccade：限制性一開始速度正常、神經性變慢');
+  a(sacPos('r', 0.12) === SL && Math.abs(sacPos('n', 1) - SL) < 1e-9 && sacPos('n', 0.5) < SL, 'saccade：限制性很快就突然停住、神經性慢慢才到同一個幅度');
+  Object.keys(QN).forEach(id => { const it = itemOf('rm:n:' + id); a(['fd', 'sac'].includes(it.nt.m) ? it.ans === QN[id][1] : it.ans === (QN[id][2] - QN[id][1] >= 6 ? 'r' : 'n'), `rm:n:${id} 的答案`); });
+  a(new Set(Object.keys(QN).map(id => QN[id][0])).size === 3 && new Set(Object.keys(QN).map(id => itemOf('rm:n:' + id).ans)).size === 2, '三種檢查、兩種答案都有');
+  // 眶尖：正常不壓迫；只有一條中度腫大不壓迫；Kanski CT 的四條明顯腫大會壓迫；視神經最小不低於 0.6 倍；肌肉不穿過視神經
+  a(!apGeo([], 0).cmp && apGeo([], 0).minGap > 2 && !apGeo(['IR'], 0.6).cmp && !apGeo(['IR', 'MR'], 0.7).cmp && apGeo(APXX.ct.A, APXX.ct.sev).cmp, '眶尖壓迫的例子');
+  [0, 0.5, 1].forEach(sv2 => { const P = apGeo(AMK, sv2); a(P.rn >= RN * 0.6 - 1e-9 && AMK.every(k => P.G[k].r - P.G[k].td >= P.rn - 1e-9 && P.G[k].td > 0), `腫大 ${sv2}：肌肉不穿過視神經`); });
+  Object.entries(APXX).forEach(([k, X]) => a(apGeo(X.A, X.sev).cmp === (k === 'ct'), `例子 ${k} 的壓迫`));
+  // 上視圖：肌腱那段（靠眼球）腫不腫都一樣，肌腹會變粗
+  a([0.86, 0.92, 1].every(q => atWidth(q, true, 1) === atWidth(q, false, 0)) && atWidth(0.45, true, 1) > atWidth(0.45, false, 0) + 3, '肌腹腫大、肌腱不腫');
+  ['MR', 'LR'].forEach(k => { const M = ATM[k], T = tanPt(M.A, M.side), a0 = Math.atan2(T[1] - GC[1], T[0] - GC[0]) * 180 / Math.PI; a(Math.abs(Math.hypot(T[0] - GC[0], T[1] - GC[1]) - GR) < 1e-6 && Math.abs(a0 + 360 * Math.round((M.ins - a0) / 360) - M.ins) < 90 && (k === 'MR' ? T[0] < GC[0] : T[0] > GC[0]), `${k}：從眶尖到眼球的切點在對的一側，肌腱包過去不到 90°`); });
+  // 手術順序：答案依 Kanski、選項不重複；三步的題目有 4 個選項
+  Object.entries(QO).forEach(([id, Q]) => { const it = itemOf('rm:o:' + id); if (Q.need) a(it.ans.split('>').every((k, i, A) => !i || ORDN[A[i - 1]] < ORDN[k]) && it.opts.length === Math.min(4, perms(Q.need).length), `rm:o:${id} 的順序與選項`); });
+  a(orAns(['lid', 'str', 'dec']) === 'dec>str>lid', '先眼眶、再斜視、最後眼瞼');
+  // 說明卡的引用都在來源清單（每個子頁、每種檢查與原因、手術步驟）
+  const sr = JSON.parse(JSON.stringify(st.rm)), sv0 = st.view;
+  st.view = 'rm';
+  [['gz'], ['ap'], ['or'], ...['dec', 'str', 'lid'].map(o => ['or', o]), ...['fd', 'iop', 'sac'].flatMap(m => ['r', 'n'].map(c => ['nt', m, c]))].forEach(([sub, x, y]) => {
+    Object.assign(st.rm, { sub }); if (sub === 'or') st.rm.os = x || null; if (sub === 'nt') Object.assign(st.rm, { m: x, cz: y });
+    refs(rmCard()).forEach(r => a(SRC[r], `${sub} ${x || ''} 的引用 ${r}`));
+  });
+  st.rm = sr; st.view = sv0;
 })();
 
-if (location.hash === '#hx' || location.hash === '#cas') st.view = location.hash.slice(1);
+if (['#hx', '#cas', '#rm'].includes(location.hash)) st.view = location.hash.slice(1);
 render();
 </script>
 
