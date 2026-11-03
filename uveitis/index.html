@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>body{margin:0}</style>
 <title>葡萄膜炎互動圖譜</title>
-<meta name="description" content="互動式葡萄膜炎圖譜：前房 cells 與 flare——在裂隙燈鏡下所見與 1 mm × 1 mm 光束的放大圖上，拉條改 cell 數看 SUN 分級（0、0.5+、1+、2+、3+、4+），或自己點 cell 數完再對答案；改 flare 0–4+ 看 iris 與水晶體的細節從清楚變模糊、4+ 出現 fibrin；切到散瞳後看色素顆粒混進 aqueous；看細小 KP、mutton fat KP、Fuchs 的 stellate KP、hypopyon、posterior synechiae。玻璃體 haze 與解剖分類——眼底示意圖依 Kanski 的 haze 0 到 +4 變模糊；眼球矢狀切面調前房、玻璃體、視網膜、脈絡膜的發炎程度，依 SUN 分成 anterior、intermediate、posterior、panuveitis 或 anterior and intermediate，看 snowball、snowbank 與 pars planitis 的命名、併發症不改分類；附說明卡、測驗與錯題本。">
+<meta name="description" content="互動式葡萄膜炎圖譜：前房 cells 與 flare——在裂隙燈鏡下所見與 1 mm × 1 mm 光束的放大圖上，拉條改 cell 數看 SUN 分級（0、0.5+、1+、2+、3+、4+），或自己點 cell 數完再對答案；改 flare 0–4+ 看 iris 與水晶體的細節從清楚變模糊、4+ 出現 fibrin；切到散瞳後看色素顆粒混進 aqueous；看細小 KP、mutton fat KP、Fuchs 的 stellate KP、hypopyon、posterior synechiae。玻璃體 haze 與解剖分類——眼底示意圖依 Kanski 的 haze 0 到 +4 變模糊；眼球矢狀切面調前房、玻璃體、視網膜、脈絡膜的發炎程度，依 SUN 分成 anterior、intermediate、posterior、panuveitis 或 anterior and intermediate，看 snowball、snowbank 與 pars planitis 的命名、併發症不改分類。病程與活動度——在時間軸上排發炎、用藥、停藥，依 SUN 判斷 onset、duration 與 acute、recurrent、chronic，看什麼時候算 remission；比較兩次回診的前房 cell，判斷 improved、worsening 或 inactive；附說明卡、測驗與錯題本。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&family=Spectral:ital,wght@0,500;0,600;1,400;1,500&display=swap">
@@ -183,6 +183,15 @@ a.chip{text-decoration:none;display:inline-block}
 .sgl text{font-family:var(--f-body);font-size:14px;fill:var(--sg-ink);paint-order:stroke;stroke:var(--fig-bg);stroke-width:3.5px;stroke-linejoin:round}
 .sgl line{stroke:var(--sg-ink);stroke-width:1;opacity:.6}
 .nolab .sgl,.quiz-on .sgl{display:none}
+/* 分頁三：病程時間軸 */
+.tl-cell{fill:var(--surface-2);stroke:var(--line);stroke-width:1}
+.tl-hit{fill:transparent;cursor:pointer}
+.tl-act{fill:var(--bad);opacity:.85}
+.tl-rx{fill:var(--accent);opacity:.8}
+.tl-br{fill:none;stroke:var(--ink-2);stroke-width:1.4}
+.tl-brr{fill:none;stroke:var(--bad);stroke-width:1.8}
+.fig .tlt{font-family:var(--f-body);font-size:13px;fill:var(--ink-2)}
+.fig .tln{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 
 /* side panel */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
@@ -253,6 +262,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   .lab text{font-size:19px;stroke-width:4.5px}
   .sgl text{font-size:19px;stroke-width:4.5px}
   .fig .eyen,.fig .sgt{font-size:18px}
+  .fig .tlt{font-size:17px} .fig .tln{font-size:15px}
   .seg button{padding:5px 10px}
   .rng label,.rng .rl{min-width:0;width:100%}
 }
@@ -296,7 +306,7 @@ sup.s{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);margin-left:
   </main>
 
   <footer class="foot">
-    <span><b>關於圖：</b>裂隙燈鏡下所見是右眼 OD、檢查者面對病人看到的樣子（同檢查技巧圖譜：左＝temporal、右＝nasal），用 diffuse 照明畫出整個前段，再加一道從 temporal 側斜照的 1 mm × 1 mm 光束；放大圖是這道光束穿過前房的那一格，左＝角膜切面、右＝水晶體前表面，虛線框＝數 cell 的範圍。Cell 與色素顆粒的位置、flare 的濃淡、KP、hypopyon、瞳孔與眼瞼的形狀都是示意，不是照片。「玻璃體 haze 與解剖分類」分頁的眼底示意圖是正像，同眼底照片（上＝superior；OD 視盤在右、OS 在左），不是 NEI 的標準照片；眼球矢狀切面上＝superior、左＝anterior，各部位發炎的樣子、數量與大小都是示意。裂隙燈怎麼調光束見<a href="../exam/">檢查技巧圖譜的裂隙燈分頁</a>；前房與 iris 的解剖見<a href="../eye-atlas/#angle">眼解剖圖譜</a>；CMO 的 OCT 見<a href="../retina/#oct">視網膜圖譜的 OCT 分頁</a>。</span>
+    <span><b>關於圖：</b>裂隙燈鏡下所見是右眼 OD、檢查者面對病人看到的樣子（同檢查技巧圖譜：左＝temporal、右＝nasal），用 diffuse 照明畫出整個前段，再加一道從 temporal 側斜照的 1 mm × 1 mm 光束；放大圖是這道光束穿過前房的那一格，左＝角膜切面、右＝水晶體前表面，虛線框＝數 cell 的範圍。Cell 與色素顆粒的位置、flare 的濃淡、KP、hypopyon、瞳孔與眼瞼的形狀都是示意，不是照片。「玻璃體 haze 與解剖分類」分頁的眼底示意圖是正像，同眼底照片（上＝superior；OD 視盤在右、OS 在左），不是 NEI 的標準照片；眼球矢狀切面上＝superior、左＝anterior，各部位發炎的樣子、數量與大小都是示意。「病程與活動度」分頁的時間軸以月為單位，月份與長短都是示意。裂隙燈怎麼調光束見<a href="../exam/">檢查技巧圖譜的裂隙燈分頁</a>；前房與 iris 的解剖見<a href="../eye-atlas/#angle">眼解剖圖譜</a>；CMO 的 OCT 見<a href="../retina/#oct">視網膜圖譜的 OCT 分頁</a>。</span>
     <span><b>來源：</b>每張說明卡最後列出出處；「對照」標的是建議查核的 BCSC 分冊，不代表 BCSC 原文。教科書寫頁碼；分級表依 SUN Working Group 2005 原文與 Kanski 轉載的表格；玻璃體 haze 用 Kanski Table 12.8 的文字描述。</span>
     <span><b>用途：</b>本圖譜僅供學習參考，不能取代臨床判斷。</span>
     <span>© 2026 張博淳 · 以 <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a> 授權：轉載或改作請標示來源，不得用於商業目的。<a href="../">回 ophlearning 首頁</a></span>
@@ -675,13 +685,141 @@ function vhExtra() {
 }
 function vhSel() { const V = st.vh; if (V.sub === 'hz') return `目前：${V.eye === 'R' ? 'OD' : 'OS'} · haze ${HZG[V.g]}`; const pp = ppName(V); return `目前：${ANZ[anClass(V.L)]}${pp === 'pp' ? '（pars planitis）' : ''}`; }
 
+/* ---------- 分頁三：病程（SUN 2005 Table 2；Kanski p.430） ---------- */
+const NM = 24;   // 時間軸幾個月；以月為單位，A[m]＝第 m 個月有發炎、T[m]＝第 m 個月有用藥
+const fromR = R => { const x = Array(NM).fill(0); R.forEach(([a, b]) => { for (let m = a; m < b; m++) x[m] = 1; }); return x; };
+function attacks(A) { const out = []; for (let m = 0; m < NM; m++) if (A[m] && (m === 0 || !A[m - 1])) { let e = m; while (e < NM && A[e]) e++; out.push({ s: m, e, d: e - m }); } return out; }
+function coEval(c) {   // 每次發作的 onset 與 duration、兩次發作之間的停藥不活動期、停藥後多久復發、病程、第 24 個月時算不算 remission
+  const A = c.A, T = c.T, at = attacks(A).map((a, i) => Object.assign(a, { on: c.O[i] || 's', lim: a.d <= 3 }));
+  const gaps = at.slice(1).map((b, i) => {
+    const a = at[i]; let run = 0, best = 0, us = a.e;
+    for (let m = a.e; m < b.s; m++) { if (!T[m]) { run++; if (run > best) { best = run; us = m - run + 1; } } else run = 0; }   // 最長一段「沒用藥也不活動」
+    let m = b.s; while (m > a.s + 1 && !T[m - 1]) m--;
+    const stop = m < b.s && T[m - 1] ? m : -1;   // 最後一次停藥的月份（從這個月起到復發都沒用藥）
+    return { a, b, untr: best, us, stop, k: stop < 0 ? null : b.s - stop };
+  });
+  const chronic = gaps.some(g => g.k !== null && g.k < 3 && !g.a.lim);   // persistent 的發作停藥後不到 3 個月就復發
+  let course;
+  if (!at.length) course = 'quiet';
+  else if (chronic) course = 'chronic';
+  else if (at.length >= 2) course = gaps.every(g => g.untr >= 3) ? 'recurrent' : gaps.every(g => g.untr > 0) ? 'disc' : 'unc';   // SUN 的 recurrent 要 ≥ 3 個月；Kanski 只寫「沒治療也不活動的期間」
+  else course = at[0].on === 's' && at[0].lim ? 'acute' : 'single';
+  let tA = 0, tAT = 0;
+  for (let m = NM - 1; m >= 0 && !A[m]; m--) tA++;
+  for (let m = NM - 1; m >= 0 && !A[m] && !T[m]; m--) tAT++;
+  return { at, gaps, course, remK: at.length > 0 && tA >= 3, remS: at.length > 0 && tAT >= 3, tA, tAT };
+}
+const COZ = { acute: 'Acute', recurrent: 'Recurrent', chronic: 'Chronic', disc: '文獻不一：Kanski 算 recurrent，SUN 不算', unc: '本頁不分類', single: '只有一次發作，還不能定病程', quiet: '沒有發炎' };
+function coWhy(E) {
+  const a = E.at[0], g = E.gaps;
+  return {
+    acute: `只有一次發作，sudden 開始、${a && a.d} 個月（limited ≤ 3 個月）：acute${s('S3', 'S5')}`,
+    recurrent: `每兩次發作之間都有一段沒用藥也不活動 ≥ 3 個月：recurrent${s('S3')}`,
+    chronic: `persistent（> 3 個月）的發作，停藥後不到 3 個月就復發：chronic${s('S3', 'S5')}`,
+    disc: `發作之間有沒用藥、也不活動的期間，但不到 3 個月：Kanski 只寫「被沒治療也不活動的期間隔開」，算 recurrent${s('S5')}；SUN 要 ≥ 3 個月，不算 recurrent${s('S3')}`,
+    unc: g.some(x => x.k !== null && x.k < 3 && x.a.lim) ? `停藥後不到 3 個月就復發，但前一次發作只有 limited；SUN 的 chronic 要 persistent，這種情況本頁不分類${s('S3')}` : `有兩次發作之間一直在用藥（沒有沒治療也不活動的期間）：不符合 recurrent 的定義，本頁不分類${s('S3')}`,
+    single: a ? `只有一次發作；${a.on === 's' ? '' : 'insidious 開始，'}${a.lim ? '' : `${a.d} 個月是 persistent，`}所以不是 acute；之後有沒有復發、多快復發，才能分 recurrent 或 chronic${s('S3')}` : '',
+    quiet: '時間軸上沒有發炎'
+  }[E.course];
+}
+/* 時間軸（px）：上排發炎、下排用藥，16.5 px／月 */
+const TLW = 480, TLH = 206, TL0 = 64, TLK = 16.5, TYA = [26, 58], TYT = [104, 124];
+const TM = m => fx(TL0 + m * TLK);
+function tlFig(c, quiz) {
+  const E = coEval(c), bar = (R, y, cl) => R.map(([a, b]) => `<rect class="${cl}" x="${TM(a)}" y="${y[0]}" width="${fx((b - a) * TLK)}" height="${y[1] - y[0]}"/>`).join('');
+  const runs = X => { const R = []; for (let m = 0; m < NM; m++) if (X[m] && (!m || !X[m - 1])) { let e = m; while (e < NM && X[e]) e++; R.push([m, e]); } return R; };
+  let h = `<svg viewBox="0 0 ${TLW} ${TLH}" role="img" aria-label="病程時間軸：上排發炎、下排用藥，橫軸是月"><rect class="sg-bg" width="${TLW}" height="${TLH}"/>`;
+  h += `<text class="tlt" x="8" y="${TYA[0] + 21}">發炎</text><text class="tlt" x="8" y="${TYT[0] + 15}">用藥</text>`;
+  for (let m = 0; m < NM; m++) h += `<rect class="tl-cell" x="${TM(m)}" y="${TYA[0]}" width="${TLK}" height="${TYA[1] - TYA[0]}"/><rect class="tl-cell" x="${TM(m)}" y="${TYT[0]}" width="${TLK}" height="${TYT[1] - TYT[0]}"/>`;
+  h += E.at.map(a => a.on === 's' ? `<rect class="tl-act" x="${TM(a.s)}" y="${TYA[0]}" width="${fx(a.d * TLK)}" height="${TYA[1] - TYA[0]}"/>` : `<path class="tl-act" d="M${TM(a.s)} ${TYA[1]}L${TM(Math.min(a.s + 1, a.e))} ${TYA[0]}L${TM(a.e)} ${TYA[0]}L${TM(a.e)} ${TYA[1]}Z"/>`).join('');   // 長方形＝sudden、斜坡＝insidious
+  h += bar(runs(c.T), TYT, 'tl-rx');
+  for (let m = 0; m <= NM; m += 3) h += `<text class="tln" x="${TM(m)}" y="${TYT[1] + 20}" text-anchor="middle">${m}</text>`;
+  h += `<text class="tln" x="${TM(NM) + 6}" y="${TYT[1] + 20}">月</text><text class="tln" x="8" y="${TLH - 8}">長方形＝sudden 開始；斜坡＝insidious 開始</text>`;
+  if (!quiz) for (let m = 0; m < NM; m++) h += `<rect class="tl-hit" data-cm="A:${m}" x="${TM(m)}" y="${TYA[0]}" width="${TLK}" height="${TYA[1] - TYA[0]}"/><rect class="tl-hit" data-cm="T:${m}" x="${TM(m)}" y="${TYT[0]}" width="${TLK}" height="${TYT[1] - TYT[0]}"/>`;
+  // 註解（測驗時藏起來）
+  const lab = [], an = x => x > TLW - 90 ? 'end' : x < 100 ? 'start' : 'middle', ax = (a, b) => { const x = (TM(a) + TM(b)) / 2, k = an(x); return [k === 'end' ? TM(b) : k === 'start' ? TM(a) : x, k]; };
+  E.at.forEach(a => lab.push(`<text x="${fx((TM(a.s) + TM(a.e)) / 2 + (a.on === 'i' ? TLK * 0.25 : 0))}" y="${TYA[0] + 21}" text-anchor="middle">${a.d}</text>`));   // 長條裡的數字＝這次發作幾個月
+  E.gaps.forEach(g => {
+    const pr = g.k !== null && g.k < 3, x0 = pr ? g.stop : g.us, x1 = pr ? g.b.s : g.us + g.untr;
+    if (x1 <= x0) return;
+    const [x, k] = ax(x0, x1);
+    lab.push(`<path class="${pr ? 'tl-brr' : 'tl-br'}" d="M${TM(x0)} ${TYA[1] + 10}V${TYA[1] + 16}H${TM(x1)}V${TYA[1] + 10}"/><text x="${x}" y="${TYA[1] + 32}" text-anchor="${k}">${pr ? `${g.k} 個月就復發` : `${g.untr} 個月`}</text>`);
+  });
+  if (E.remK) { const x0 = NM - E.tA; lab.push(`<path class="tl-br" d="M${TM(x0)} ${TYT[1] + 30}V${TYT[1] + 36}H${TM(NM)}V${TYT[1] + 30}"/><text x="${TM(NM)}" y="${TYT[1] + 52}" text-anchor="end">${E.remS ? 'remission（兩者都算）' : 'Kanski 算 remission，SUN 不算'}</text>`); }
+  return h + `<g class="sgl">${lab.join('')}</g></svg>`;
+}
+const COX = {   // 例子（月份示意）：A、T＝[開始, 結束) 的月份；O＝每次發作的 onset（s sudden、i insidious）
+  acute: { zh: 'Acute：一次 sudden、limited 的發作', A: [[2, 4]], T: [[2, 5]], O: 's' },
+  rec: { zh: 'Recurrent：發作之間停藥、不活動 ≥ 3 個月', A: [[1, 3], [9, 11], [17, 19]], T: [[1, 4], [9, 12], [17, 20]], O: 'sss' },
+  chr: { zh: 'Chronic：停藥後 3 個月內復發', A: [[0, 7], [10, 14]], T: [[0, 9], [10, 24]], O: 'ii' },
+  disc: { zh: '停藥、不活動不到 3 個月又發作（文獻不一）', A: [[2, 4], [6, 8]], T: [[2, 4], [6, 9]], O: 'ss' },
+  single: { zh: '一次 insidious、persistent 的發作', A: [[3, 12]], T: [[4, 16]], O: 'i' }
+};
+const coMake = X => ({ A: fromR(X.A), T: fromR(X.T), O: X.O.split('') });
+
+/* ---------- 分頁三：活動度（SUN 2005 Table 5） ---------- */
+const GRN = [0, 3, 10, 20, 38, 60];   // 各級畫幾個 cell（落在 SUN 範圍的中間，示意）
+function actOf(a, b) {   // a、b＝上次、這次的 cell 分級（GR 的位置）；兩級以上才算，加上地板與天花板效應
+  const worse = b - a >= 2 || (a === 4 && b === 5), better = a - b >= 2 || (b === 0 && a > 0);
+  return { r: worse ? 'worse' : better ? 'better' : 'same', inactive: b === 0 };
+}
+const ACZ = { better: 'Improved（改善）', worse: 'Worsening（惡化）', same: '兩個都不算' };
+function visFig(a, b) {
+  const box = (g, sd) => bFig({ n: GRN[g], seed: sd, fl: 0, dil: false }).replace(/ data-ci="\d+"/g, '');
+  return `<div class="duo"><div><div class="vh">上次回診：前房 cell ${GR[a]}</div>${box(a, 201)}</div><div><div class="vh">這次回診：前房 cell ${GR[b]}</div>${box(b, 202)}</div></div>`;
+}
+
+/* ---------- 分頁三的說明卡 ---------- */
+const CO_SUN = [`Onset：sudden 或 insidious${s('S3')}`, `Duration：limited＝≤ 3 個月；persistent＝> 3 個月${s('S3')}`, `Acute：sudden 開始、limited 的發作，例如 HLA-B27 相關的 acute anterior uveitis${s('S3')}`,
+  `Recurrent：反覆發作，中間隔著沒治療也不活動的期間，而且這段期間 ≥ 3 個月${s('S3')}`, `Chronic：persistent 的 uveitis，停藥後不到 3 個月就復發${s('S3')}`,
+  `SUN 的共識：acute、chronic 只用來描述病程，發作的開始用 onset、一次發作多久用 duration，不再混用${s('S3')}`];
+const CO_K = [`Onset：sudden 或 insidious；duration：limited（≤ 3 個月）或 persistent${s('S5')}`, `Acute＝sudden 開始、limited；recurrent＝反覆發作，中間隔著沒治療也不活動的期間；chronic＝persistent，停藥後不到 3 個月就復發${s('S5')}`, `Remission＝不活動（看不到 cell）≥ 3 個月${s('S5')}`];
+const CO_REM = [`SUN：remission 只用在停掉所有眼部治療後，不活動 ≥ 3 個月${s('S3')}`, `理由：chronic uveitis 可能一輩子都要治療，用藥時壓得住、停藥就很快復發，所以「用藥時不活動」不算 remission${s('S3')}`, `Kanski：不活動（看不到 cell）≥ 3 個月就算${s('S5')}`];
+const CO_DIFF = [`Recurrent 中間的停藥不活動期：SUN 要 ≥ 3 個月${s('S3')}；Kanski 沒寫多久${s('S5')}。測驗只出 ≥ 3 個月的`, `Remission：SUN 要停掉所有眼部治療${s('S3')}；Kanski 只寫不活動 ≥ 3 個月${s('S5')}`];
+const ACT_SUN = [`Inactive：前房 cell 0 級（只用在前房）${s('S3')}`, `Worsening：發炎（例如前房 cell、玻璃體 haze）升兩級，或從 3+ 升到 4+${s('S3')}`, `Improved：降兩級，或降到 0${s('S3')}`, `Remission：停掉所有眼部治療後不活動 ≥ 3 個月${s('S3')}`];
+const ACT_WHY = [`分級是半定量的，所以升降兩級比一級可靠${s('S3')}`, `地板與天花板效應：3+ 最多只能再升一級、0.5+ 最多只能再降一級，所以 3+ 升到 4+ 算 worsening、0.5+ 降到 0 算 improved${s('S3')}`];
+const ACT_IN = [`OCT 看到正常人的前房也可能偶爾有一個 cell（裂隙燈每個視野不到 1 個），所以 inactive＝偶爾一個或更少${s('S3')}`, `每個視野都有 1 個 cell 已經是 0.5+，不算 inactive${s('S3')}`, `玻璃體 cell 沒有共識的分級，所以也沒有「玻璃體不活動」的定義${s('S3')}`, `治療的目標是完全壓住發炎（inactive）；短期評估新治療時，才看 improved 或 worsening${s('S3')}`];
+function coCard() {
+  const C = st.co;
+  if (C.sub === 'ac') {
+    const [a, b] = C.g, R = actOf(a, b), def = `SUN 為了報告研究結果，用前房 cell 等分級的變化定義活動度${s('S3')}。`;
+    const body = list('SUN 的定義（Table 5）', ACT_SUN) + list('為什麼要兩級', ACT_WHY) + list('Inactive 的細節', ACT_IN) + list('本頁的圖', ['兩個放大框各是一次回診的 1 mm × 1 mm 光束；cell 數取該級範圍中間的數字（示意）']);
+    return `<div class="card"><div class="eyebrow">葡萄膜炎 · 活動度 · 對照 BCSC 9</div><div><h2>Activity of uveitis</h2></div><p class="zh">活動度：兩次回診比較</p><p class="def">${def}</p><div class="verdict"><span>${GR[a]} → ${GR[b]}：<b>${ACZ[R.r]}</b>${R.inactive ? '；這次是 inactive（0 級）' : ''}</span></div>${body}${srcList(refs(def + body))}</div>`;
+  }
+  const E = coEval(C), def = `SUN 把 acute、chronic 留給病程（course）；發作怎麼開始用 onset，一次發作多久用 duration${s('S3')}。`;
+  const at = E.at.map((x, i) => `第 ${i + 1} 次：第 ${x.s} 月開始，${x.on === 's' ? 'sudden' : 'insidious'}，${x.d} 個月（${x.lim ? 'limited' : 'persistent'}）`);
+  const gp = E.gaps.map((g, i) => `第 ${i + 1}、${i + 2} 次之間：沒用藥也不活動最長 ${g.untr} 個月${g.k !== null ? `；停藥後 ${g.k} 個月復發` : ''}`);
+  const rem = E.at.length ? [`到第 ${NM} 個月：已經 ${E.tA} 個月不活動${E.tAT ? `，其中最後 ${E.tAT} 個月也沒用藥` : '，但還在用藥'} → ${E.remS ? 'SUN 與 Kanski 都算 remission' : E.remK ? 'Kanski 算 remission，SUN 不算（還在用藥或停藥不到 3 個月）' : '還不算 remission'}`] : [];
+  const body = list('這條時間軸', at.concat(gp, rem)) + list('SUN 的描述詞（Table 2）', CO_SUN) + list('Kanski 的寫法', CO_K) + list('Remission', CO_REM) + list('文獻不一', CO_DIFF)
+    + list('本頁的圖', ['以月為單位（示意）；上排紅色＝有發炎的月份、下排紫色＝有用眼部治療的月份', '點格子可以自己排發作、用藥、停藥；第幾次發作的 onset 在下方切換']);
+  return `<div class="card"><div class="eyebrow">葡萄膜炎 · 病程 · 對照 BCSC 9</div><div><h2>${['acute', 'recurrent', 'chronic'].includes(E.course) ? COZ[E.course] + ' uveitis' : 'Course of uveitis'}</h2></div><p class="zh">${['acute', 'recurrent', 'chronic'].includes(E.course) ? { acute: '急性', recurrent: '復發性', chronic: '慢性' }[E.course] + '病程' : COZ[E.course]}</p><p class="def">${def}</p><div class="verdict"><span>${coWhy(E)}</span></div>${body}${srcList(refs(def + body + coWhy(E)))}</div>`;
+}
+const CSUB = [['tl', '病程時間軸'], ['ac', '兩次回診的活動度']];
+function coRenderFig(it) {
+  const C = st.co, fig = $('#fig'), tl = it ? it.type === 'course' : C.sub === 'tl';
+  if (it) fig.innerHTML = tl ? `<div class="vh">病程時間軸：上排發炎、下排用藥（橫軸是月）</div><div class="solo">${tlFig(it.c, true)}</div>` : visFig(it.g[0], it.g[1]);
+  else fig.innerHTML = `<div class="ctbar"><div class="seg" role="group" aria-label="子頁">${CSUB.map(([k, t]) => `<button type="button" data-csub="${k}" aria-pressed="${C.sub === k}">${t}</button>`).join('')}</div></div>`
+    + (tl ? `<div class="vh">病程時間軸：點上排的格子放發炎、下排放用藥（再點一次取消）</div><div class="solo">${tlFig(C, false)}</div>` : visFig(C.g[0], C.g[1]));
+  $('#cap').innerHTML = tl ? `<span>時間軸以月為單位：上排紅色＝有發炎的月份（長方形＝sudden 開始、斜坡＝insidious 開始，長條裡的數字＝這次發作幾個月），下排紫色＝有用眼部治療的月份。中間的括號：黑色＝停藥而且不活動的月數，紅色＝停藥後幾個月就復發；最下面的括號＝到第 24 個月已經不活動多久。</span><span class="ori">月份與長短都是示意</span>`
+    : `<span>兩個放大框各是一次回診的 1 mm × 1 mm 光束（同「前房 cells 與 flare」分頁）；cell 數取該級範圍中間的數字。</span><span class="ori">cell 的位置是示意</span>`;
+}
+function coExtra() {
+  const C = st.co;
+  if (C.sub === 'ac') return ['上次', '這次'].map((t, i) => `<div class="rng"><span class="rl">${t}回診的前房 cell</span><div class="seg" role="group">${GR.map((g, j) => `<button type="button" data-cg="${i}:${j}" aria-pressed="${C.g[i] === j}">${g}</button>`).join('')}</div></div>`).join('');
+  const at = attacks(C.A);
+  return (at.length ? `<div class="xh">每次發作怎麼開始</div>` + at.map((a, i) => `<div class="rng"><span class="rl">第 ${i + 1} 次（第 ${a.s} 月起）</span><div class="seg" role="group"><button type="button" data-con="${i}:s" aria-pressed="${(C.O[i] || 's') === 's'}">sudden</button><button type="button" data-con="${i}:i" aria-pressed="${C.O[i] === 'i'}">insidious</button></div></div>`).join('') : '')
+    + `<div class="rng"><button type="button" class="btn" id="co-clr">清空時間軸</button></div>`;
+}
+function coSel() { const C = st.co; if (C.sub === 'ac') return `目前：${GR[C.g[0]]} → ${GR[C.g[1]]}：${ACZ[actOf(C.g[0], C.g[1]).r]}`; return `目前：${COZ[coEval(C).course]}`; }
+
 /* ---------- app ---------- */
-const VIEWS = [{ id: 'ac', name: '前房 cells 與 flare', en: 'AC cells & flare' }, { id: 'vh', name: '玻璃體 haze 與解剖分類', en: 'Vitreous haze & anatomy' }];
+const VIEWS = [{ id: 'ac', name: '前房 cells 與 flare', en: 'AC cells & flare' }, { id: 'vh', name: '玻璃體 haze 與解剖分類', en: 'Vitreous haze & anatomy' }, { id: 'co', name: '病程與活動度', en: 'Course & activity' }];
 const $ = q => document.querySelector(q);
 const st = { view: 'ac', labels: true, learnMode: 'learn', quiz: null,
   ac: { n: 18, seed: 1, fl: 1, dil: false, sign: null, cm: null },   // cell 數、位置的 seed、flare、散瞳、附帶的徵象、自己數模式（n、seed、shown）
   mk: { key: '', set: new Set() },   // 點過做記號的 cell
-  vh: Object.assign(vhMake(...ANX.ant.o), { sub: 'hz', g: 2, eye: 'R', ex: 'ant' }) };   // 分頁二：子頁、haze 分級、哪一眼；解剖分類的設定（vhMake）與例子
+  vh: Object.assign(vhMake(...ANX.ant.o), { sub: 'hz', g: 2, eye: 'R', ex: 'ant' }),   // 分頁二：子頁、haze 分級、哪一眼；解剖分類的設定（vhMake）與例子
+  co: Object.assign(coMake(COX.acute), { sub: 'tl', ex: 'acute', g: [4, 2] }) };   // 分頁三：子頁、時間軸（A 發炎、T 用藥、O onset）、例子、兩次回診的分級
 const store = (() => {
   const K3 = 'uveitisAtlas.v1';
   let mem = { wrong: {} };
@@ -701,12 +839,12 @@ function renderB() { const b = bState(), el = $('#ac-b'); mkSync(b.key); if (el)
 
 function renderTabs() {
   $('#tabs').innerHTML = VIEWS.map(v => `<button type="button" class="tab" role="tab" data-view="${v.id}" aria-selected="${st.view === v.id}">${v.name}<span class="en">${v.en}</span></button>`).join('');
-  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'vh' ? '圖上方切換子頁；下方改分級或各部位的發炎程度' : '下方改 cell 數與 flare，或按「自己數」；點放大圖上的 cell 可以做記號'}</span>`;
+  $('#hintbar').innerHTML = `<span class="hint">${st.learnMode === 'quiz' ? '測驗中：標籤已隱藏' : st.view === 'vh' ? '圖上方切換子頁；下方改分級或各部位的發炎程度' : st.view === 'co' ? '圖上方切換子頁；點時間軸的格子放發炎與用藥，或選例子' : '下方改 cell 數與 flare，或按「自己數」；點放大圖上的 cell 可以做記號'}</span>`;
 }
 function renderTools() { $('#tools').innerHTML = st.learnMode === 'quiz' ? '' : `<label class="tog"><input type="checkbox" id="t-lab" ${st.labels ? 'checked' : ''}>標籤</label>`; }
 const VHA = '裂隙燈鏡下所見：右眼 OD，檢查者面對病人（左＝temporal、右＝nasal）', VHB = '放大：光束穿過前房的這一格（左＝角膜、右＝水晶體）';
 function renderFig() {
-  if (st.view === 'vh') { vhRenderFig(quizItem()); $('#fig').classList.toggle('nolab', !st.labels); $('#fig').classList.toggle('quiz-on', st.learnMode === 'quiz'); return; }
+  if (st.view === 'vh' || st.view === 'co') { (st.view === 'vh' ? vhRenderFig : coRenderFig)(quizItem()); $('#fig').classList.toggle('nolab', !st.labels); $('#fig').classList.toggle('quiz-on', st.learnMode === 'quiz'); return; }
   const it = quizItem(), fig = $('#fig'), A = st.ac, mkBar = `<span class="hint" id="ac-mk"></span><button type="button" class="btn" id="ac-clr">清除記號</button>`;
   if (it) {
     const a = `<div class="vh">${VHA}</div>${aFig(Object.assign({ beam: it.type !== 'kp' }, it.T))}`, b = `<div class="vh">${VHB}</div><div id="ac-b"></div><div class="ctbar"><span class="hint">可以點 cell 做記號</span><div class="grp">${mkBar}</div></div>`;
@@ -723,6 +861,7 @@ function renderFig() {
 function renderExtra() {
   if (st.learnMode === 'quiz') { $('#extra').innerHTML = ''; return; }
   if (st.view === 'vh') { $('#extra').innerHTML = vhExtra(); return; }
+  if (st.view === 'co') { $('#extra').innerHTML = coExtra(); return; }
   const A = st.ac, sg = (k, v, t, on) => `<button type="button" data-${k}="${v}" aria-pressed="${on}">${t}</button>`;
   $('#extra').innerHTML = (A.cm ? `<p class="hint" style="margin:0 0 8px">自己數：cell 數已藏起來；點 cell 做記號，數完按「對答案」。再按一次「自己數」回到拉條。</p>` : `<div class="rng"><label for="ac-n">光束裡的 cell 數</label><input type="range" id="ac-n" min="0" max="${NMAX}" step="1" value="${A.n}"><span class="v" id="ac-n-v">${A.n} 個 → ${acGrade(A.n)}</span></div>`)
     + `<div class="rng"><span class="rl">Flare（SUN）</span><div class="seg" role="group" aria-label="flare 分級">${FL.map((g, i) => sg('fl', i, g, A.fl === i)).join('')}</div></div>`
@@ -732,6 +871,12 @@ function renderIndex() {
   const ix = $('#index');
   if (st.learnMode === 'quiz') { ix.hidden = true; return; }
   ix.hidden = false;
+  if (st.view === 'co') {
+    const C = st.co;
+    ix.innerHTML = (C.sub === 'tl' ? `<span class="lbl">例子（月份示意）</span>` + Object.keys(COX).map(k => `<button type="button" class="chip ${C.ex === k ? 'on' : ''}" data-cx="${k}">${COX[k].zh}</button>`).join('') : '')
+      + `<span class="lbl">其他頁</span><a class="chip" href="./">前房 cell 怎麼分級 → 這頁的分頁一</a><a class="chip" href="../retina/#oct">CMO 的 OCT → 視網膜圖譜</a>`;
+    return;
+  }
   if (st.view === 'vh') {
     const V = st.vh;
     ix.innerHTML = (V.sub === 'an' ? `<span class="lbl">例子（示意）</span>` + Object.keys(ANX).map(k => `<button type="button" class="chip ${V.ex === k ? 'on' : ''}" data-vx="${k}">${ANX[k].zh}</button>`).join('') : '')
@@ -741,9 +886,9 @@ function renderIndex() {
   ix.innerHTML = `<span class="lbl">附帶的徵象（說明卡換成這個徵象）</span><button type="button" class="chip ${!st.ac.sign ? 'on' : ''}" data-sg="">沒有：看 cell 與 flare</button>` + SGK.map(k => `<button type="button" class="chip ${st.ac.sign === k ? 'on' : ''}" data-sg="${k}">${SG[k].zh}</button>`).join('')
     + `<span class="lbl">其他頁</span><a class="chip" href="../exam/">裂隙燈照明法 → 檢查技巧圖譜</a><a class="chip" href="../eye-atlas/#angle">前房與 iris 解剖 → 眼解剖圖譜</a><a class="chip" href="../retina/#oct">CMO 的 OCT → 視網膜圖譜</a>`;
 }
-function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'vh' ? vhCard() : acCard(); }
+function renderPanel() { $('#panel').innerHTML = st.learnMode === 'quiz' ? quizHTML() : st.view === 'vh' ? vhCard() : st.view === 'co' ? coCard() : acCard(); }
 function renderSelbar() {
-  const b = $('#selbar'), A = st.ac, t = st.learnMode !== 'learn' ? '' : st.view === 'vh' ? vhSel() : `目前：${A.cm ? '自己數' : `cell ${A.n} 個（${acGrade(A.n)}）`} · flare ${FL[A.fl]}${A.sign ? ` · ${SG[A.sign].zh}` : ''}`;
+  const b = $('#selbar'), A = st.ac, t = st.learnMode !== 'learn' ? '' : st.view === 'vh' ? vhSel() : st.view === 'co' ? coSel() : `目前：${A.cm ? '自己數' : `cell ${A.n} 個（${acGrade(A.n)}）`} · flare ${FL[A.fl]}${A.sign ? ` · ${SG[A.sign].zh}` : ''}`;
   b.hidden = !t; if (t) b.innerHTML = `<span>${t}</span><button type="button" class="btn" id="to-card">看說明 ↓</button>`;
 }
 function render() {
@@ -760,12 +905,19 @@ const QFS = 41;   // flare 題的 cell 位置
 const FDESC = ['光束穿過前房時沒有霧', '光束穿過前房時留下很淡的一道霧', '前房裡的光束霧得很清楚，但 iris 與水晶體的細節還看得清楚', '前房的霧很明顯，iris 與水晶體的細節變得模糊', '前房裡有 fibrin，aqueous 像凝膠一樣（plastic aqueous）'];
 const QH = { h1: [0, 'R'], h2: [1, 'R'], h3: [2, 'R'], h4: [3, 'R'], h5: [4, 'R'], h6: [1, 'L'], h7: [2, 'L'], h8: [3, 'L'] };   // haze 分級、哪一眼
 const QAN = { a1: [[2, 0, 0, 0]], a2: [[2, 0, 0, 0], 'cmo'], a3: [[1, 2, 0, 0], 'snb'], a4: [[0, 2, 0, 0], 'shv cmo'], a5: [[0, 1, 2, 0]], a6: [[0, 0, 0, 2]], a7: [[2, 2, 2, 0]], a8: [[2, 2, 0, 0]], a9: [[2, 2, 0, 2], 'nv'], a10: [[1, 0, 0, 2]], a11: [[2, 1, 0, 0]] };   // [前房, 玻璃體, 視網膜, 脈絡膜]、徵象與併發症；答案由 anClass 算，只出 SUN 寫明的組合（self-check 核對）
+const QT = {   // 病程題：A、T＝[開始, 結束) 的月份、每次發作的 onset；答案由 coEval 算，只出 Kanski 與 SUN 結論一樣的（self-check 核對）
+  t1: { A: [[3, 5]], T: [[3, 6]], O: 's' }, t2: { A: [[2, 5]], T: [[2, 6]], O: 's' },
+  t3: { A: [[0, 2], [7, 9], [15, 17]], T: [[0, 3], [7, 10], [15, 18]], O: 'sss' }, t4: { A: [[2, 4], [9, 11]], T: [[2, 6], [9, 12]], O: 'ss' },
+  t5: { A: [[1, 6], [8, 11], [15, 18]], T: [[1, 7], [8, 14], [15, 24]], O: 'iii' }, t6: { A: [[0, 4], [8, 12]], T: [[0, 6], [8, 24]], O: 'ii' },
+  t7: { A: [[1, 3], [14, 16]], T: [[1, 4], [14, 17]], O: 'ss' }
+};
+const QVS = { v1: [4, 2], v2: [3, 2], v3: [1, 0], v4: [2, 4], v5: [4, 5], v6: [0, 1], v7: [5, 4], v8: [2, 0], v9: [1, 3], v10: [3, 3] };   // 上次、這次的前房 cell 分級（GR 的位置）
 const QPP = { p1: ['sbk', ''], p2: ['snb', 'sar'], p3: ['snb', ''], p4: ['', ''], p5: ['sbk', 'lyme'], p6: ['snb sbk', ''] };   // intermediate uveitis 的 snowball／snowbank 與相關的全身病或感染
-const KEYS = [...Object.keys(QC).map(k => 'ac:c:' + k), ...Object.keys(QF).map(k => 'ac:f:' + k), ...Object.keys(QK).map(k => 'ac:k:' + k), ...Object.keys(QH).map(k => 'vh:h:' + k), ...Object.keys(QAN).map(k => 'vh:a:' + k), ...Object.keys(QPP).map(k => 'vh:p:' + k)];
+const KEYS = [...Object.keys(QC).map(k => 'ac:c:' + k), ...Object.keys(QF).map(k => 'ac:f:' + k), ...Object.keys(QK).map(k => 'ac:k:' + k), ...Object.keys(QH).map(k => 'vh:h:' + k), ...Object.keys(QAN).map(k => 'vh:a:' + k), ...Object.keys(QPP).map(k => 'vh:p:' + k), ...Object.keys(QT).map(k => 'co:t:' + k), ...Object.keys(QVS).map(k => 'co:v:' + k)];
 const keyValid = k => KEYS.includes(k);
 const keyView = k => k.split(':')[0];
-const QTV = { ac: [['cnt', '數 cell'], ['fl', 'flare'], ['kp', '看 KP']], vh: [['haze', 'haze 分級'], ['anat', '解剖分類'], ['pp', 'pars planitis']] };
-const QTZ = { c: 'cnt', f: 'fl', k: 'kp', h: 'haze', a: 'anat', p: 'pp' };
+const QTV = { ac: [['cnt', '數 cell'], ['fl', 'flare'], ['kp', '看 KP']], vh: [['haze', 'haze 分級'], ['anat', '解剖分類'], ['pp', 'pars planitis']], co: [['course', '病程'], ['act', '兩次回診']] };
+const QTZ = { c: 'cnt', f: 'fl', k: 'kp', h: 'haze', a: 'anat', p: 'pp', t: 'course', v: 'act' };
 const kType = k => QTZ[k.split(':')[1]];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 function nearOpts(L, ans, k) {   // 答案和最接近的幾級，照分級順序排
@@ -778,6 +930,8 @@ function keyLabel(k) {
   if (ty === 'f') return `flare ${FL[QF[id][0]]}：${FLG[QF[id][0]][2]}`;
   if (ty === 'h') return `haze ${HZG[QH[id][0]]}（${QH[id][1] === 'R' ? 'OD' : 'OS'}）：${HZD[QH[id][0]]}`;
   if (ty === 'a') return `解剖分類：${QAN[id][0].map((l, i) => l ? `${SITEZ[i]}${LVZ[l]}` : '').filter(Boolean).join('、')}${QAN[id][1] ? `＋${QAN[id][1].split(' ').map(x => VFZ[x]).join('、')}` : ''}`;
+  if (ty === 't') return `病程：${QT[id].A.map(([a, b]) => `${a}–${b} 月`).join('、')} 發炎`;
+  if (ty === 'v') return `兩次回診：${GR[QVS[id][0]]} → ${GR[QVS[id][1]]}`;
   if (ty === 'p') return `Pars planitis：${QPP[id][0] ? QPP[id][0].split(' ').map(x => VFZ[x]).join('、') : '沒有 snowball 或 snowbank'}${QPP[id][1] ? `、${SYSZ[QPP[id][1]]}` : ''}`;
   return `看 KP：${KPZ[QK[id][0]]}`;
 }
@@ -809,6 +963,17 @@ function itemOf(key) {
       more: rule + '。' + (fx2.some(x => ['cmo', 'nv', 'shv'].includes(x)) ? `${fx2.filter(x => ['cmo', 'nv', 'shv'].includes(x)).map(x => VFZ[x]).join('、')}是結構性併發症，不改分類${s('S3')}。` : '') + (ans === 'ant' && L[1] ? `Anterior uveitis 的 anterior vitreous 也常有 cell${s('S1')}。` : '') + (ans === 'post' && L[3] && !L[1] ? `Choroiditis 沒有合併視網膜受影響時，通常不會引起 vitritis${s('S6')}。` : ''),
       go: { sub: 'an', c } };
   }
+  if (ty === 't') {
+    const c = coMake(QT[id]), E = coEval(c), ans = E.course;
+    return { key, type: 'course', c, prompt: ['病程', '看時間軸（上排發炎、下排用藥，橫軸是月；長方形＝sudden 開始、斜坡＝insidious 開始）。依 SUN，病程是？'], opts: ['acute', 'recurrent', 'chronic'], ans, lab: x => COZ[x],
+      more: coWhy(E) + '。', go: { sub: 'tl', c } };
+  }
+  if (ty === 'v') {
+    const [a, b] = QVS[id], R = actOf(a, b), d = b - a;
+    const why = R.r === 'worse' ? (a === 4 && b === 5 ? '從 3+ 升到 4+（天花板效應：3+ 最多只能再升一級）' : `升了 ${d} 級`) : R.r === 'better' ? (b === 0 && a - b < 2 ? '降到 0（地板效應：0.5+ 最多只能再降一級）' : `降了 ${-d} 級${b === 0 ? '，而且降到 0' : ''}`) : d ? `只${d > 0 ? '升' : '降'}了一級` : '分級沒有變';
+    return { key, type: 'act', g: [a, b], prompt: ['兩次回診', `上次回診前房 cell ${GR[a]}，這次 ${GR[b]}。依 SUN 算 improved、worsening，還是兩個都不算？`], opts: ['better', 'worse', 'same'], ans: R.r, lab: x => ACZ[x],
+      more: `${why}：${ACZ[R.r]}。SUN：升兩級或 3+ 升到 4+ 是 worsening；降兩級或降到 0 是 improved${s('S3')}。${R.inactive ? `這次 0 級，也就是 inactive${s('S3')}。` : ''}`, go: { sub: 'ac', g: [a, b] } };
+  }
   if (ty === 'p') {
     const [f, sys] = QPP[id], c = vhMake([1, 2, 0, 0], f, sys), ans = ppName(c), fx2 = f.split(' ').filter(Boolean);
     return { key, type: 'pp', c, prompt: ['Pars planitis', `玻璃體是主要的發炎部位，前房只有少量 cell。${fx2.length ? `看得到 ${fx2.map(x => VFZ[x]).join('、')}` : '沒有 snowball，也沒有 snowbank'}；${sys ? `檢查發現 ${SYSZ[sys]}` : '找不到相關的感染或全身病'}。這該叫什麼？`], opts: ['pp', 'iu'], ans, lab: x => PPZ[x],
@@ -822,6 +987,7 @@ function itemOf(key) {
 const quizDefaults = () => ({ phase: 'setup', scope: 'all', type: 'mix', total: 10 });
 const QHEAD = {
   ac: ['先數 cell，再看 flare', '三種題型：數 1 mm × 1 mm 光束裡的 cell 選 SUN 分級（可以點 cell 做記號；散瞳後的題目有褐色色素顆粒，不算 cell）；看前房的霧與描述選 flare 分級；看 KP 的大小與分布判斷是哪一種。'],
+  co: ['先排時間軸，再定名字', '兩種題型：看時間軸（發炎與用藥的月份）選 SUN 的病程：acute、recurrent 或 chronic（只出 Kanski 與 SUN 結論一樣的：recurrent 中間的停藥不活動期都 ≥ 3 個月）；給上次與這次回診的前房 cell 分級，依 SUN 判斷 improved、worsening，或兩個都不算。'],
   vh: ['先看得到什麼，再看哪裡最發炎', '三種題型：看眼底示意圖選 Kanski 的玻璃體 haze 分級（0 到 +4）；給各部位的發炎程度與併發症，依 SUN 選解剖分類（只出 SUN 寫明的組合）；intermediate uveitis 什麼時候可以叫 pars planitis。']
 };
 function quizHTML() {
@@ -886,6 +1052,7 @@ function setMode(m) {
 }
 function goKey(k) {   // 錯題本「再看一次」：回到學習模式的同一個設定
   const g = itemOf(k).go;
+  if (keyView(k) === 'co') { setView('co'); st.co = g.sub === 'tl' ? Object.assign(g.c, { sub: 'tl', ex: null, g: st.co.g }) : Object.assign(st.co, { sub: 'ac', g: g.g.slice() }); render(); return; }
   if (keyView(k) === 'vh') { setView('vh'); st.vh = g.sub === 'hz' ? Object.assign(st.vh, { sub: 'hz', g: g.g, eye: g.eye }) : Object.assign(vhMake(g.c.L, '', g.c.sys), g.c, { L: g.c.L.slice(), sub: 'an', g: st.vh.g, eye: st.vh.eye, ex: null }); render(); return; }
   setView('ac'); st.ac = Object.assign({ v: 0 }, g, { cm: null }); render();
 }
@@ -927,6 +1094,12 @@ document.addEventListener('click', e => {
   const ve = t.closest('[data-ve]'); if (ve) { V.eye = ve.dataset.ve; render(); return; }
   const vl = t.closest('[data-vl]'); if (vl) { const [i, l] = vl.dataset.vl.split(':').map(Number); V.L[i] = l; V.ex = null; render(); return; }
   const vy = t.closest('[data-vsys]'); if (vy) { V.sys = vy.dataset.vsys; V.ex = null; render(); return; }
+  const C = st.co, cs = t.closest('[data-csub]'); if (cs) { C.sub = cs.dataset.csub; render(); return; }
+  const cm = t.closest('[data-cm]'); if (cm) { const [r, m] = cm.dataset.cm.split(':'); C[r][+m] = C[r][+m] ? 0 : 1; C.ex = null; render(); return; }
+  const cn = t.closest('[data-con]'); if (cn) { const [i, o] = cn.dataset.con.split(':'); C.O[+i] = o; C.ex = null; render(); return; }
+  const cg = t.closest('[data-cg]'); if (cg) { const [i, j] = cg.dataset.cg.split(':').map(Number); C.g[i] = j; render(); return; }
+  const cx = t.closest('[data-cx]'); if (cx) { st.co = Object.assign(coMake(COX[cx.dataset.cx]), { sub: 'tl', ex: cx.dataset.cx, g: C.g }); render(); return; }
+  if (t.closest('#co-clr')) { Object.assign(C, { A: Array(NM).fill(0), T: Array(NM).fill(0), O: [], ex: null }); render(); return; }
   const vx = t.closest('[data-vx]'); if (vx) { st.vh = Object.assign(vhMake(...ANX[vx.dataset.vx].o), { sub: 'an', g: V.g, eye: V.eye, ex: vx.dataset.vx }); render(); return; }
   const op = t.closest('[data-opt]'); if (op) { const it = quizItem(); if (it && !st.quiz.ans) answer({ ok: op.dataset.opt === it.ans, pick: op.dataset.opt }); return; }
   const qs = t.closest('[data-qs]'); if (qs) { const k = qs.dataset.qs, v = qs.dataset.qv; st.quiz[k] = k === 'total' ? +v : v; renderPanel(); return; }
@@ -1064,9 +1237,50 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(
   Object.keys(ANX).forEach(k => a(anClass(ANX[k].o[0]) !== 'unc', `例子 ${k} 有分類`));
   a(ppName(vhMake(...ANX.pp.o)) === 'pp' && ppName(vhMake(...ANX.iusar.o)) === 'iu' && anClass(ANX.ai.o[0]) === 'ai' && anClass(ANX.pan.o[0]) === 'pan' && anClass(ANX.antcmo.o[0]) === 'ant', '例子的名字和分類一致');
   st.vh = sv2;
+
+  // ---------- 分頁三：病程與活動度 ----------
+  const mk = (A, T, O) => coMake({ A, T, O });
+  // duration 的邊界：3 個月是 limited、4 個月是 persistent；acute 要 sudden 而且 limited
+  a(coEval(mk([[2, 5]], [], 's')).course === 'acute' && coEval(mk([[2, 6]], [], 's')).course === 'single' && coEval(mk([[2, 4]], [], 'i')).course === 'single', 'acute：sudden 而且 ≤ 3 個月');
+  // recurrent：中間停藥、不活動剛好 3 個月算，2 個月不算（SUN），但 Kanski 算（文獻不一）
+  a(coEval(mk([[0, 2], [5, 7]], [[0, 2]], 'ss')).course === 'recurrent' && coEval(mk([[0, 2], [4, 6]], [[0, 2]], 'ss')).course === 'disc', 'recurrent 的停藥不活動期 3 個月的邊界');
+  a(coEval(mk([[0, 2], [6, 8]], [[0, 6]], 'ss')).course === 'unc', '兩次發作之間一直用藥：不分類');
+  // chronic：persistent 的發作，停藥後 1、2 個月復發算；3 個月不算（變成 recurrent）；前一次只有 limited 的不算 chronic
+  a(coEval(mk([[0, 5], [7, 9]], [[0, 6]], 'ii')).course === 'chronic' && coEval(mk([[0, 5], [8, 10]], [[0, 6]], 'ii')).course === 'chronic' && coEval(mk([[0, 5], [9, 11]], [[0, 6]], 'ii')).course === 'recurrent', 'chronic：停藥後不到 3 個月復發');
+  a(coEval(mk([[0, 3], [5, 7]], [[0, 4]], 'ss')).course !== 'chronic' && coEval(mk([[0, 4], [5, 7]], [[0, 4]], 'ss')).course === 'chronic', 'chronic 要 persistent（> 3 個月）');
+  // remission：SUN 要停藥後不活動 ≥ 3 個月；Kanski 只要不活動 ≥ 3 個月
+  const r1 = coEval(mk([[0, 2]], [[0, 24]], 's')), r2 = coEval(mk([[0, 2]], [[0, 21]], 's')), r3 = coEval(mk([[0, 2]], [[0, 22]], 's'));   // 一直用藥；停藥後剛好 3 個月；停藥後 2 個月
+  a(r1.remK && !r1.remS && r2.remS && r2.remK && !r3.remS && r3.remK, 'remission：SUN 與 Kanski 的差別與 3 個月的邊界');
+  a(!coEval(mk([], [], '')).remK && coEval(mk([], [], '')).course === 'quiet', '沒有發炎就不談 remission');
+  // 例子
+  const want = { acute: 'acute', rec: 'recurrent', chr: 'chronic', disc: 'disc', single: 'single' };
+  Object.keys(COX).forEach(k => a(coEval(coMake(COX[k])).course === want[k], `例子 ${k} 的病程`));
+  a(coEval(coMake(COX.chr)).remK && !coEval(coMake(COX.chr)).remS && coEval(coMake(COX.rec)).remS, '例子的 remission');
+  // 時間軸的圖：發炎與用藥的格子數＝設定；insidious 畫成斜坡；在框內
+  Object.values(COX).concat(Object.values(QT)).forEach((X, i) => {
+    const c = coMake(X), h = tlFig(c, false), E = coEval(c);
+    a((h.match(/class="tl-act"/g) || []).length === E.at.length && (h.match(/data-cm="A:/g) || []).length === NM && !tlFig(c, true).includes('data-cm'), `時間軸 ${i}：發作的數目、格子只在學習模式能點`);
+    a(E.at.every(x => x.on === 's' ? h.includes(`<rect class="tl-act" x="${TM(x.s)}"`) : h.includes(`<path class="tl-act" d="M${TM(x.s)} ${TYA[1]}`)), `時間軸 ${i}：sudden 是長方形、insidious 是斜坡`);
+  });
+  a(TM(NM) <= TLW - 8 && TYT[1] + 20 < TLH - 20, '時間軸在框內');
+  // 病程題：答案是 acute、recurrent 或 chronic，而且 Kanski 與 SUN 一樣（recurrent 的停藥不活動期都 ≥ 3 個月）
+  Object.keys(QT).forEach(id => { const it = itemOf('co:t:' + id), E = coEval(it.c); a(['acute', 'recurrent', 'chronic'].includes(it.ans) && (it.ans !== 'recurrent' || E.gaps.every(g => g.untr >= 3)), `co:t:${id} 的答案（${it.ans}）`); });
+  a(new Set(Object.keys(QT).map(id => itemOf('co:t:' + id).ans)).size === 3, '病程題三種答案都有');
+  // 活動度：每一對分級的規則；兩級、地板、天花板
+  GR.forEach((_, x) => GR.forEach((__, y) => { const R = actOf(x, y), d = y - x; a(R.r === (d >= 2 || (x === 4 && y === 5) ? 'worse' : d <= -2 || (y === 0 && x > 0) ? 'better' : 'same') && R.inactive === (y === 0), `${GR[x]} → ${GR[y]}`); }));
+  a(actOf(1, 0).r === 'better' && actOf(4, 5).r === 'worse' && actOf(5, 4).r === 'same' && actOf(3, 2).r === 'same' && actOf(0, 1).r === 'same', '地板、天花板與一級的變化');
+  a(GRN.every((n, i) => acGrade(n) === GR[i]), '兩次回診的圖：cell 數落在該級的範圍裡');
+  a(new Set(Object.keys(QVS).map(id => itemOf('co:v:' + id).ans)).size === 3, '兩次回診題三種答案都有');
+  // 題目的選項與引用；說明卡的引用
+  KEYS.filter(k => keyView(k) === 'co').forEach(k => { const it = itemOf(k); a(it.opts.includes(it.ans) && new Set(it.opts).size === it.opts.length && new Set(it.opts.map(it.lab)).size === it.opts.length && it.opts.length === 3, `${k} 的選項`); refs(it.more).forEach(r => a(SRC[r], `${k} 的解說引用 ${r}`)); });
+  const sc2 = st.co;
+  Object.keys(COX).forEach(k => { st.co = Object.assign(coMake(COX[k]), { sub: 'tl', ex: k, g: [4, 2] }); refs(coCard()).forEach(r => a(SRC[r], `${k} 的引用 ${r}`)); });
+  [mk([[0, 2], [6, 8]], [[0, 6]], 'ss'), mk([[0, 3], [5, 7]], [[0, 4]], 'ss'), mk([], [], '')].forEach((c, i) => { st.co = Object.assign(c, { sub: 'tl', ex: null, g: [4, 2] }); refs(coCard()).forEach(r => a(SRC[r], `設定 ${i} 的引用 ${r}`)); });
+  st.co = Object.assign({}, sc2, { sub: 'ac' }); refs(coCard()).forEach(r => a(SRC[r], `活動度的引用 ${r}`));
+  st.co = sc2;
 })();
 
-if (location.hash === '#vh') st.view = 'vh';
+if (location.hash === '#vh' || location.hash === '#co') st.view = location.hash.slice(1);
 render();
 </script>
 
