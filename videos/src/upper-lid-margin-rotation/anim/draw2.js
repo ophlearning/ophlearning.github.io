@@ -95,3 +95,25 @@ DRAW2['6-1'] = T => {
   rx += lab('出血較多', 'more bleeding', 14, PH - 20, B.skinBleed, { color: '#a1271b', bold: true, op: T.on(2) });
   return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
 };
+
+DRAW2['6-2'] = T => {
+  const crease = T.p(0, 0.5, 1), flap = T.on(1, 1.2) * (1 - T.on(4, 1.2)), cut = T.p(2, 0.2, 0.9), sut = T.p(3, 0.1, 0.5), fix = T.on(3, 1.5);   // flap laid back during line 4
+  const sv = VIEWS.sag({ curl: lerp(1, 0.25, fix), crease, flap, cut, suture: sut, buried: true, scar: 0.6 }, PW, PH, SAG_WIN, 'sL'), A = sv.A;
+  const cv = VIEWS.cor({ evert: lerp(-1, 0, fix), crease, flap, incision: cut * flap, buried: T.on(3) * flap }, PW, PH, { x: -17.5, y: -13.2, w: 33 }, 'cR'), B = cv.A;
+  const lab = VIEWS.lab2;
+  let ex = '';
+  if (A.creaseCut) ex += lab('lid crease 切口（單眼皮：高度依術者設計，示意）', 'crease', PW - 12, 44, A.creaseCut, { side: 'R', color: COL.red, bold: true, size: 14, op: T.on(0) * (1 - T.on(2)) });
+  ex += lab('皮膚肌肉瓣', 'skin–muscle flap', 14, 120, A.flap, { color: COL.accent, bold: true, op: T.on(1) * (1 - T.on(3)) });
+  if (A.exposedTarsus) ex += lab('露出瞼板', 'tarsus exposed', PW - 12, 300, A.exposedTarsus, { side: 'R', bold: true, op: T.on(1) * (1 - T.on(2)) });
+  if (A.cut) ex += lab('結膜面切穿瞼板（離瞼緣 3 mm）', 'incision', PW - 12, 300, A.cut, { side: 'R', color: COL.red, bold: true, op: T.on(2) * (1 - T.on(3)) });
+  if (A.suture) ex += lab('6-0 Vicryl 埋線', 'buried suture', PW - 12, 300, A.suture, { side: 'R', color: COL.suture, bold: true, op: T.on(3) });
+  let rx = '';
+  if (B.crease) rx += lab('預定雙眼皮線（示意）', 'planned crease', 14, 34, B.crease, { color: COL.red, bold: true, op: T.on(0) * (1 - T.on(2)) });
+  if (B.flapEdge) rx += lab('往下翻的皮膚肌肉瓣', 'flap', 14, PH - 20, B.flapEdge, { color: COL.accent, bold: true, op: T.on(1) * (1 - T.on(4)) });
+  if (B.exposed) rx += lab('露出瞼板', 'tarsus exposed', PW - 12, 34, B.exposed, { side: 'R', bold: true, op: T.on(1) * (1 - T.on(3)) });
+  if (B.buried) rx += lab('埋線：不出皮膚、不必拆線', 'buried', PW - 12, 34, B.buried, { side: 'R', color: COL.suture, bold: true, op: T.on(3) * (1 - T.on(4)) });
+  const o4 = T.on(4) * (1 - T.on(5)), o5 = T.on(5);
+  rx += `<g opacity="${o4}" transform="translate(12 10)"><rect width="330" height="74" rx="8" fill="#fff" stroke="#d3dae1"/>${text(16, 28, '同一個切口還可以順便處理', { size: 15, bold: true, color: COL.accent })}${text(16, 56, 'ptosis、眼瞼退縮、皮膚鬆弛', { size: 15 })}</g>`;
+  rx += `<g opacity="${o5}" transform="translate(12 ${PH - 66})"><rect width="${PW - 24}" height="54" rx="8" fill="#fff4e5" stroke="${COL.amber}"/>${text(16, 34, '60 片眼瞼、平均追蹤 3 個月：1 片內側睫毛碰角膜', { size: 16, bold: true, color: COL.amber })}</g>`;
+  return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
+};

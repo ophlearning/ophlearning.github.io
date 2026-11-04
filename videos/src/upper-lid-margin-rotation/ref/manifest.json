@@ -17,24 +17,24 @@
       "seg": "4-4",
       "at": "0:0.05",
       "ref": "4-4-L0-0.05.jpg",
-      "approved": null,
-      "note": "睫毛線改長在前瞼緣（正面圖），已更新為新畫面，待站長確認（前一版 2026-11-04 已確認，見 git 歷史）"
+      "approved": "2026-11-04",
+      "note": "站長確認（睫毛線改長在前瞼緣後的版本）"
     },
     {
       "page": "../anim/video2.html",
       "seg": "4-4",
       "at": "2:0.6",
       "ref": "4-4-L2-0.6.jpg",
-      "approved": null,
-      "note": "睫毛線改長在前瞼緣（正面圖），已更新為新畫面，待站長確認（前一版 2026-11-04 已確認，見 git 歷史）"
+      "approved": "2026-11-04",
+      "note": "站長確認（睫毛線改長在前瞼緣後的版本）"
     },
     {
       "page": "../anim/video2.html",
       "seg": "4-4",
       "at": "6:0.9",
       "ref": "4-4-L6-0.9.jpg",
-      "approved": null,
-      "note": "睫毛線改長在前瞼緣（正面圖），已更新為新畫面，待站長確認（前一版 2026-11-04 已確認，見 git 歷史）"
+      "approved": "2026-11-04",
+      "note": "站長確認（睫毛線改長在前瞼緣後的版本）"
     },
     {
       "page": "../anim/video2.html",
@@ -65,16 +65,16 @@
       "seg": "4-3",
       "at": "1:0.95",
       "ref": "4-3-L1-0.95.jpg",
-      "approved": null,
-      "note": "睫毛線改長在前瞼緣（正面圖），已更新為新畫面，待站長確認（前一版 2026-11-04 已確認，見 git 歷史）"
+      "approved": "2026-11-04",
+      "note": "站長確認（睫毛線改長在前瞼緣後的版本）"
     },
     {
       "page": "../anim/video2.html",
       "seg": "4-3",
       "at": "4:0.8",
       "ref": "4-3-L4-0.8.jpg",
-      "approved": null,
-      "note": "睫毛線改長在前瞼緣（正面圖），已更新為新畫面，待站長確認（前一版 2026-11-04 已確認，見 git 歷史）"
+      "approved": "2026-11-04",
+      "note": "站長確認（睫毛線改長在前瞼緣後的版本）"
     },
     {
       "page": "../anim/video2.html",
@@ -93,12 +93,36 @@
       "note": "已交截圖，待站長確認"
     },
     {
+      "page": "../anim/video2.html",
+      "seg": "6-2",
+      "at": "1:0.9",
+      "ref": "6-2-L1-0.9.jpg",
+      "approved": null,
+      "note": "已交截圖，待站長確認"
+    },
+    {
+      "page": "../anim/video2.html",
+      "seg": "6-2",
+      "at": "3:0.9",
+      "ref": "6-2-L3-0.9.jpg",
+      "approved": null,
+      "note": "已交截圖，待站長確認"
+    },
+    {
+      "page": "../anim/video2.html",
+      "seg": "6-2",
+      "at": "5:0.6",
+      "ref": "6-2-L5-0.6.jpg",
+      "approved": null,
+      "note": "已交截圖，待站長確認"
+    },
+    {
       "page": "../../../models/eyelid/sample.html",
       "ref": "../../../models/eyelid/sample-asian.jpg",
       "dpr": 2,
       "crop": null,
-      "approved": null,
-      "note": "睫毛線改長在前瞼緣（正面圖），已更新為新畫面，待站長確認（前一版 2026-11-04 已確認，見 git 歷史）"
+      "approved": "2026-11-04",
+      "note": "站長確認（睫毛線改長在前瞼緣後的版本）"
     }
   ]
 }
