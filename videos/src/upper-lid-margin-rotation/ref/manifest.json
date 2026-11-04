@@ -1,5 +1,8 @@
 {
   "about": "參考圖：站長確認過的畫面。改模型或畫面後跑 node videos/tools/ref-check.js 本檔；有差異要交截圖給站長，確認後才用 --update 更新。",
+  "page": "../anim/video2.html",
+  "textBase": "d758d35",
+  "textBaseNote": "影片上線時的版本；check-video.js 以它比對旁白等文字",
   "threshold": 0.001,
   "tol": 48,
   "crop": [

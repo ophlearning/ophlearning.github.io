@@ -52,6 +52,7 @@ function richLines(x, y, html, size, lh, color) { // supports <b>…</b> and \n
   }).join('');
 }
 const PANEL_Y = 64, PANEL_H = 444, CONTENT_Y = 96, CONTENT_H = 410;   // redo: larger animation panels
+const PANELS = { dual: [['L', 24, 608], ['R', 648, 608]], full: [['F', 24, 1232]] };   // [key, x, width]; videos/tools/check-video.js reads this
 function panelFrame(x, w, P) {
   return `<rect x="${x}" y="${PANEL_Y}" width="${w}" height="${PANEL_H}" rx="10" fill="#fff" stroke="#d3dae1"/>` +
     text(x + 16, PANEL_Y + 24, P.title || '', { size: 15, bold: true }) + text(x + w - 16, PANEL_Y + 24, P.orient || '', { size: 13, color: COL.sub, anchor: 'end' });
@@ -145,7 +146,7 @@ function renderAt(t) {
     const NEW = DRAW2[sg.id];
     // two-pass (old drawings): states → panels (anchors) → extras with fresh anchors; new drawings already carry their anchors
     let D = NEW ? NEW(T) : sg.draw(T);
-    const panels = sg.layout === 'dual' ? [['L', 24, 608], ['R', 648, 608]] : [['F', 24, 1232]];
+    const panels = PANELS[sg.layout === 'dual' ? 'dual' : 'full'];
     const built = {};
     for (const [key, x, w] of panels) { const c = D[key]; const r = panelContent(x, w, c, key); built[key] = r;
       if (r.A) { if (c.sag) SEGS_DRAW_CACHE.sagA = r.A; if (c.cor) SEGS_DRAW_CACHE.corA = r.A; } }

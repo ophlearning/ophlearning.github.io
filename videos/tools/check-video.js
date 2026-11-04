@@ -1,4 +1,5 @@
-// Video-level check for a redo page (video2.html style):  node check-video.js <video page.html> --base <git commit>
+// Video-level check for a video page built on the shared layout (PANELS / CONTENT_Y / CONTENT_H / SEGS / DRAW2 / renderAt / TL_EXPORT):
+//   node check-video.js <video page.html> --base <git commit>
 // 1. Text: titles, narration lines, key boxes, sources, chapter names and references in segments.js are identical to the
 //    version in git commit <base> (the redo changes pictures only).
 // 2. For every segment already redrawn (DRAW2), at 60 % of each narration line: no page errors; every visible label
@@ -35,9 +36,10 @@ const fs = require('fs'), path = require('path'), os = require('os'), cp = requi
     for (let i = 0; i < tl.lines.length; i++) {
       const [a, e] = tl.lines[i], t = a + (e - a) * 0.6, t0 = Date.now();
       await p.evaluate(tt => window.renderAt(tt), t); slow = Math.max(slow, Date.now() - t0); nFrames++;
-      const probs = await p.evaluate(() => {
+      const probs = await p.evaluate(id => {
         const op = el => { let o = 1; for (let x = el; x && x.id !== 'stage'; x = x.parentElement) { const v = x.getAttribute('opacity'); if (v !== null) o *= parseFloat(v); } return o; };
-        const panel = x => x < 640 ? { x: 25, y: CONTENT_Y, w: 606, h: CONTENT_H } : { x: 649, y: CONTENT_Y, w: 606, h: CONTENT_H };   // content areas of the two panels (video2.html)
+        const sg = SEGS.find(s => s.id === id), rects = PANELS[sg.layout === 'dual' ? 'dual' : 'full'].map(([, x, w]) => ({ x: x + 1, y: CONTENT_Y, w: w - 2, h: CONTENT_H }));   // panel content areas, read from the page
+        const panel = x => rects.find(r => x >= r.x && x <= r.x + r.w) || rects[0];
         const inside = (r, P) => r.x >= P.x - 1 && r.y >= P.y - 1 && r.x + r.w <= P.x + P.w + 1 && r.y + r.h <= P.y + P.h + 1;
         const L = [...document.querySelectorAll('g.lbl')].filter(g => op(g) > 0.5).map(g => { const t = g.querySelector('text').getBoundingClientRect(), c = g.querySelector('circle');
           return { txt: g.querySelector('text').textContent, r: { x: t.x, y: t.y, w: t.width, h: t.height }, a: c ? (r => [r.x + r.width / 2, r.y + r.height / 2])(c.getBoundingClientRect()) : null }; });
@@ -49,7 +51,7 @@ const fs = require('fs'), path = require('path'), os = require('os'), cp = requi
           const ov = Math.max(0, Math.min(a.x + a.w, c.x + c.w) - Math.max(a.x, c.x)) * Math.max(0, Math.min(a.y + a.h, c.y + c.h) - Math.max(a.y, c.y));
           if (ov > 6) out.push(`labels 「${L[i].txt}」 and 「${L[j].txt}」 overlap`); }
         return out;
-      });
+      }, id);
       for (const m of probs) bad(`${id} line ${i}: ${m}`);
     }
   }

@@ -1,21 +1,27 @@
 <!doctype html>
 <!-- Model inspection page: one or more states of a model side by side, zoomed to a window in mm, with an optional 1 mm grid.
-     Query: m = sag | cor | ev   v = x,y,w (mm window: left, top, width)   st = JSON array of states   grid = 1   variant = asian | caucasian
-     Open through tools/shot-model.js, e.g.  node shot-model.js "m=sag&v=-19,-14,12&grid=1&st=[{\"curl\":1}]" out.png -->
+     Query: model = name in videos/models/registry.js (default eyelid)   m = view name offered by that model (eyelid: sag | cor | ev)
+            v = x,y,w (mm window: left, top, width; default: the view's own)   st = JSON array of states   grid = 1   variant = …
+     Open through tools/shot-model.js, e.g.  node shot-model.js 'model=eyelid&m=sag&v=-19,-14,12&grid=1&st=[{"curl":1}]' out.png -->
 <html><head><meta charset="utf-8"><style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#fff;font-family:sans-serif}</style></head><body>
 <svg id="s" width="1280" height="720"></svg>
-<script src="../models/eyelid/lid.js"></script><script src="../models/eyelid/coronal.js"></script>
+<script src="../models/registry.js"></script>
 <script>
-const q = new URLSearchParams(location.search);
-const m = q.get('m') || 'sag', [x0, y0, w] = (q.get('v') || '-31,-28,37').split(',').map(Number), grid = q.get('grid') === '1', variant = q.get('variant') || 'asian';
-const sts = JSON.parse(q.get('st') || '[{}]'), n = sts.length, pw = 1280 / n, k = pw / w;
-const draw = (st, i) => m === 'sag' ? LID.draw({ variant, state: st, id: 's' + i }).svg
-  : m === 'ev' ? CORONAL.drawEverted({ state: st, id: 'e' + i }).svg : CORONAL.draw({ variant, state: st, id: 'c' + i, section: false }).svg;
-const out = sts.map((st, i) => {
-  const g = [`<g transform="scale(${k}) translate(${-x0} ${-y0})">${draw(st, i)}</g>`];
-  if (grid) { for (let x = Math.ceil(x0); x < x0 + w; x++) g.push(`<line x1="${(x - x0) * k}" y1="0" x2="${(x - x0) * k}" y2="720" stroke="#00f" stroke-width="0.4" opacity="0.4"/><text x="${(x - x0) * k + 2}" y="12" font-size="10" fill="#00f">${x}</text>`);
-    for (let y = Math.ceil(y0); y < y0 + 720 / k; y++) g.push(`<line x1="0" y1="${(y - y0) * k}" x2="${pw}" y2="${(y - y0) * k}" stroke="#00f" stroke-width="0.4" opacity="0.4"/><text x="2" y="${(y - y0) * k - 2}" font-size="10" fill="#00f">${y}</text>`); }
-  return `<svg x="${i * pw}" y="0" width="${pw}" height="720">${g.join('')}<text x="8" y="${grid ? 30 : 18}" font-size="13" fill="#333">${JSON.stringify(st).replace(/</g, '&lt;')}</text></svg>`;
-});
-document.getElementById('s').innerHTML = out.join('');
+const q = new URLSearchParams(location.search), model = q.get('model') || 'eyelid', m = q.get('m') || 'sag';
+const load = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = '../models/' + src; s.onload = ok; s.onerror = () => no(new Error('cannot load ' + src)); document.head.appendChild(s); });
+(async () => {
+  if (!MODEL_REGISTRY[model]) throw new Error('unknown model ' + model + ' (see videos/models/registry.js)');
+  for (const src of MODEL_REGISTRY[model]) await load(src);
+  const view = (MODEL_VIEWS[model] || {})[m];
+  if (!view) throw new Error(`model ${model} has no view ${m}; it offers: ${Object.keys(MODEL_VIEWS[model] || {}).join(', ')}`);
+  const [x0, y0, w] = q.get('v') ? q.get('v').split(',').map(Number) : view.win, grid = q.get('grid') === '1', variant = q.get('variant') || undefined;
+  const sts = JSON.parse(q.get('st') || '[{}]'), n = sts.length, pw = 1280 / n, k = pw / w;
+  document.getElementById('s').innerHTML = sts.map((st, i) => {
+    const g = [`<g transform="scale(${k}) translate(${-x0} ${-y0})">${view.draw(st, 'v' + i, variant)}</g>`];
+    if (grid) { for (let x = Math.ceil(x0); x < x0 + w; x++) g.push(`<line x1="${(x - x0) * k}" y1="0" x2="${(x - x0) * k}" y2="720" stroke="#00f" stroke-width="0.4" opacity="0.4"/><text x="${(x - x0) * k + 2}" y="12" font-size="10" fill="#00f">${x}</text>`);
+      for (let y = Math.ceil(y0); y < y0 + 720 / k; y++) g.push(`<line x1="0" y1="${(y - y0) * k}" x2="${pw}" y2="${(y - y0) * k}" stroke="#00f" stroke-width="0.4" opacity="0.4"/><text x="2" y="${(y - y0) * k - 2}" font-size="10" fill="#00f">${y}</text>`); }
+    return `<svg x="${i * pw}" y="0" width="${pw}" height="720">${g.join('')}<text x="8" y="${grid ? 30 : 18}" font-size="13" fill="#333">${model} · ${view.title || m} · ${JSON.stringify(st).replace(/</g, '&lt;')}</text></svg>`;
+  }).join('');
+  window.READY = true;
+})().catch(e => { window.READY = true; throw e; });
 </script></body></html>
