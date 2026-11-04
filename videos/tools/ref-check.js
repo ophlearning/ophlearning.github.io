@@ -3,7 +3,7 @@
 //   node ref-check.js <manifest.json> --update   write the current renders as the new references (only after the editor approved them)
 //   add --only <segment id | file name> to compare or update just that item (e.g. a newly added one, without touching approved references)
 // manifest.json (paths relative to its folder):
-//   { "threshold": 0.001, "tol": 48, "crop": [x, y, w, h],
+//   { "threshold": 0.0002, "tol": 48, "crop": [x, y, w, h],
 //     "items": [ { "page": "../anim/video2.html", "seg": "4-4", "at": "2:0.6", "ref": "4-4-L2-0.6.jpg", "approved": "2026-11-04", "note": "…" },
 //                { "page": "…/sample.html", "ref": "…/sample-asian.jpg", "dpr": 2, "crop": null } ] }
 // threshold = share of pixels allowed to differ; tol = brightness difference (0–255) below which a pixel counts as the same.
@@ -46,7 +46,7 @@ const fs = require('fs'), path = require('path'), os = require('os');
       x.putImageData(out, 0, 0); return { n, area: cw * ch, diff: n ? c.toDataURL('image/png') : null };
     }, ['data:image/png;base64,' + now, 'data:image/jpeg;base64,' + ref, crop, dpr, M.tol ?? 48]);
     if (r.size) { console.log('FAIL', name, 'size differs', r.size); fails++; continue; }
-    const ratio = r.n / r.area, bad = ratio > (M.threshold ?? 0.001) || p._errs.length;
+    const ratio = r.n / r.area, bad = ratio > (M.threshold ?? 0.0002) || p._errs.length;
     let msg = `${bad ? 'FAIL' : 'PASS'} ${name}: ${(ratio * 100).toFixed(3)}% of pixels differ` + (it.approved ? '' : '  (reference not yet approved by the editor)');
     if (r.diff) { const f = path.join(outDir, name.replace(/[^\w.-]+/g, '_') + '.png'); fs.writeFileSync(f, Buffer.from(r.diff.split(',')[1], 'base64')); msg += `  diff → ${f}`; }
     if (p._errs.length) msg += '  PAGE ERRORS: ' + p._errs.join(' | ');

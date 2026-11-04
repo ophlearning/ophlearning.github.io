@@ -3,7 +3,7 @@
   "page": "../anim/video2.html",
   "textBase": "d758d35",
   "textBaseNote": "影片上線時的版本；check-video.js 以它比對旁白等文字",
-  "threshold": 0.001,
+  "threshold": 0.0002,
   "tol": 48,
   "crop": [
     0,
