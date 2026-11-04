@@ -8,3 +8,4 @@
   3. 用瀏覽器開 `videos/#<id>` 確認沒有 JS 錯誤、影片嵌得進來，再開分支 commit、push、開 draft PR。
 - 若 YouTube 回報的 privacy 不是 unlisted，照樣同步網站，但在回覆裡提醒站長到 YouTube Studio 改成「不公開」。
 - 畫面的解剖用 `videos/models/` 的共用模型，原則與模型清單見 `videos/models/README.md`：以 mm 建模、比例照教科書並附出處；預設亞洲人解剖；標籤一律「中文 English」並列；手術步驟同時顯示兩個同步視角（例如眼瞼＝矢狀切面＋正面）。新模型先交一張樣本圖給站長確認，再做整支影片；改模型或出片前先跑該模型的 `check.js`。
+- 接手教學影片的工作前，先讀 `videos/models/README.md`（含「製作流程與踩過的坑」）和該影片規格書的「進度」。改了模型或畫面，照 `videos/tools/README.md` 跑完三個檢查（模型 `check.js`、`check-video.js`、`ref-check.js`）才 commit；參考圖有變化，先交截圖給站長確認，確認後才更新參考圖。
