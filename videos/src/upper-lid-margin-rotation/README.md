@@ -22,5 +22,5 @@
 3. 旁白：`node tts/export_lines.js && python3 tts/tts.py --check && python3 tts/tts.py && python3 tts/assemble.py`
 4. 出片：`./build.sh`（4 核心約 8 分鐘）
 5. 上傳：`python3 youtube_upload.py out/upper-lid-margin-rotation-PLTR.mp4 --title "上眼瞼 margin rotation（PLTR）教學" --desc-file publish/youtube-description.txt`
-   印出的影片 ID 填進 publish/website-entry-draft.txt 的 yt，再加進 videos/index.html 的 VIDEOS。
+   上傳後直接同步網站（不用再問）：印出的影片 ID 填進 publish/website-entry-draft.txt 的 yt，再加進 videos/index.html 的 VIDEOS；細節見 repo 根目錄 CLAUDE.md。
    若 YouTube 回報 privacy 不是 unlisted（未通過 Google 稽核的 API 專案會被鎖成私人），要到 YouTube Studio 改成「不公開」。
