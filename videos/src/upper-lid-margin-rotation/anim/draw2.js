@@ -82,3 +82,16 @@ DRAW2['4-3'] = T => {
   rx += lab('間距對稱：差 ≤ 2 mm', 'symmetric spacing', 14, PH - 20, B.spacing, { color: COL.accent, bold: true, op: T.on(4) });
   return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
 };
+
+DRAW2['6-1'] = T => {
+  const sv = VIEWS.sag({ curl: 1, bltr: T.p(0, 0.3, 1), scar: 0.6 }, PW, PH, SAG_WIN, 'sL'), A = sv.A;
+  const cv = VIEWS.cor({ evert: -1, skinCut: T.p(0, 0.3, 1), skinBleed: T.on(2) }, PW, PH, { x: -17.5, y: -13.2, w: 33 }, 'cR'), B = cv.A;
+  const lab = VIEWS.lab2;
+  let ex = lab('BLTR：全層切開，皮膚 → 結膜', 'full thickness', PW - 12, 44, A.bltrMid, { side: 'R', color: COL.red, bold: true, op: T.on(0) });
+  ex += lab('PLTR 只切這一段（結膜＋瞼板）', 'PLTR', PW - 12, 300, A.postCut, { side: 'R', color: COL.sub, bold: true, op: T.on(0, 0.6, 0.8) });
+  ex += lab('兩層之間不分離', 'no dissection', 14, 200, A.strip, { color: COL.red, bold: true, op: T.on(1) });
+  ex += lab('睫毛', 'eyelashes', 14, 330, A.lash) + lab('角膜', 'cornea', PW - 12, 392, sv.P([-12.75, -2.2]), { side: 'R' });
+  let rx = lab('皮膚切口：離瞼緣 3 mm', 'skin incision', PW - 12, 34, B.skinCut, { side: 'R', color: COL.red, bold: true, op: T.on(0) });
+  rx += lab('出血較多', 'more bleeding', 14, PH - 20, B.skinBleed, { color: '#a1271b', bold: true, op: T.on(2) });
+  return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
+};
