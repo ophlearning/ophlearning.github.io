@@ -64,5 +64,7 @@ const toGlobe = p => { const ph = Math.atan2(p[1], p[0]); return Math.hypot(p[0]
 { const c = CORONAL.draw({ state: { skinCut: 1, sutures: 1 } }), d = c.lashY(0) - c.skinCutY(0), ex = c.lashY(0.5) - c.A.sutureExit[1];
   ok(Math.abs(d - LID.S_CUT) < 0.3, `skin view: BLTR skin incision ${d.toFixed(2)} mm above the lash line (narration 3 mm)`);
   ok(ex > 0 && ex < 1, `skin view: suture exits ${ex.toFixed(2)} mm above the lash line (just above it)`); }
+{ const c = CORONAL.draw({ state: { evert: -1, skinCut: 1, sutures: 1 } }), root = x => c.lashY(x) + c.rollY(x), d = root(0) - c.skinCutY(0), ex = root(0.5) - c.A.sutureExit[1];
+  ok(Math.abs(d - LID.S_CUT) < 0.3 && ex > 0 && ex < 1, `skin view, inturned margin: incision ${d.toFixed(2)} mm and suture exit ${ex.toFixed(2)} mm above the rolled-in lash line`); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);
