@@ -36,5 +36,17 @@ for (const v of ['asian', 'caucasian']) {
   const s = LID.draw({ variant: v }).svg + CORONAL.draw({ variant: v, windows: [CORONAL.strip(-4.5, 1.5, 4)] }).svg;
   ok(!/NaN|undefined/.test(s), `${v}: no NaN/undefined in the SVG (${(s.length / 1024).toFixed(0)} KB)`);
 }
+// 7. PLTR incision: same height in both views (3 mm from the margin along the lid, projected for the coronal view)
+{ const c = CORONAL.draw({ state: { incision: 1 } }), dm = c.Uy(0) - UF.at(0, 0)[1], ys = UF.at(LID.S_CUT, 0)[1];
+  ok(Math.abs(c.cutY(0) - dm - ys) < 0.3, `incision height: coronal ${(c.cutY(0) - dm).toFixed(2)} vs sagittal ${ys.toFixed(2)}`); }
+// 8. entropion: lashes touch the cornea; after the correction they are clear of it
+const toGlobe = p => { const ph = Math.atan2(p[1], p[0]); return Math.hypot(p[0], p[1]) - Math.hypot(...LID.gp(ph)); };
+{ const pre = LID.draw({ state: { curl: 1 } }).A, post = LID.draw({ state: { curl: 1, cut: 1, plane: 1, suture: 1, k: 1, over: 8, tuck: 1 } }).A;
+  ok(toGlobe(pre.lashTip) < 0.6, `entropion: lash tip ${toGlobe(pre.lashTip).toFixed(2)} mm from the cornea (touching)`);
+  ok(toGlobe(post.lashTip) > 3, `after rotation: lash tip ${toGlobe(post.lashTip).toFixed(2)} mm from the cornea (clear)`); }
+// 9. after tying, the upper tarsal cut edge sits in front of the marginal strip (the wedge)
+{ const r = LID.draw({ state: { curl: 1, cut: 1, plane: 1, suture: 1, k: 1, over: 8, tuck: 1 } }), edge = r.DP.at(LID.S_CUT + 0.05, 0.16), front = r.DP.at(2.6, LID.U_TAR), n = r.DP.nrm(2.6);
+  const d = (edge[0] - front[0]) * n[0] + (edge[1] - front[1]) * n[1];
+  ok(d > 0, `tuck: upper tarsal edge lies ${d.toFixed(2)} mm in front of the marginal strip`); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);
