@@ -6,6 +6,8 @@
 const PW = 606, PH = 410;
 const SAG_T = { title: '矢狀切面（中央）sagittal', orient: '左＝前　上＝上' };
 const COR_T = { title: '正面　右眼 OD　coronal', orient: '檢查者面對病人：左＝temporal　右＝nasal' };
+const EV_T = { title: '翻開上眼瞼　右眼 OD　everted', orient: '瞼緣翻到上方　左＝temporal　右＝nasal' };
+const SAG_WIN = { x: -20.2, y: -12.3, w: 16.4 }, EV_WIN = { x: -17.5, y: -15.9, w: 33 };
 const DRAW2 = {};
 // text with a white halo, readable over the drawing
 const htext = (x, y, s, o = {}) => text(x, y, s, o).replace('<text ', '<text stroke="#fff" stroke-width="4" paint-order="stroke" stroke-linejoin="round" ');
@@ -34,4 +36,32 @@ DRAW2['4-4'] = T => {
     ${text(16, 62, '中央矯正不足', { size: 14.5 })}<rect x="120" y="50" width="${120 * b1}" height="16" rx="3" fill="#d9645f"/>${text(290, 64, '36.4%', { size: 14.5, bold: true, anchor: 'end', op: b1 })}
     ${text(16, 98, '矯正足夠', { size: 14.5 })}<rect x="120" y="86" width="${41 * b2}" height="16" rx="3" fill="${COL.accent}"/>${text(290, 100, '12.5%', { size: 14.5, bold: true, anchor: 'end', op: b2 })}</g>`;
   return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
+};
+
+DRAW2['4-1'] = T => {
+  const cut = T.p(0, 0.4, 1) * 0.5 + T.p(1, 0, 0.8) * 0.5;
+  const sv = VIEWS.sag({ curl: 1, cut, scar: 0.6 }, PW, PH, SAG_WIN, 'sL'), A = sv.A;
+  const evv = VIEWS.ev({ scar: 0.35, incision: cut, ends: T.on(3) * (1 - T.on(4)), lenArrow: T.on(4) }, PW, PH, EV_WIN, 'eR'), B = evv.A;
+  const lab = VIEWS.lab2;
+  let ex = lab('切口：離瞼緣 3 mm，只切後層', 'incision', PW - 12, 44, A.cut, { side: 'R', color: COL.red, bold: true, op: T.on(0) });
+  ex += lab('瞼板', 'tarsus', PW - 12, 300, A.strip, { side: 'R', bold: true });
+  ex += lab('睫毛', 'eyelashes', 14, 330, A.lash) + lab('角膜', 'cornea', PW - 12, 392, sv.P([-12.75, -2.2]), { side: 'R' });
+  let rx = lab('瞼緣', 'lid margin', 14, 34, B.evMargin, { bold: true });
+  rx += lab('瞼板結膜', 'tarsal conjunctiva', 14, 250, B.evConj);
+  rx += lab('切口：離瞼緣 3 mm，平行', 'incision', PW - 12, 34, B.evIncTip || B.evEndL, { side: 'R', color: COL.red, bold: true, op: T.on(0) * (1 - T.on(3)) });
+  rx += lab('內外兩端用剪刀補完', 'scissors', PW - 12, 34, B.evEndR, { side: 'R', color: COL.amber, bold: true, op: T.on(3) * (1 - T.on(4)) });
+  rx += lab('總長 ≥ 20 mm（建議）', 'length', PW - 12, PH - 20, B.evLen, { side: 'R', color: COL.accent, bold: true, op: T.on(4) });
+  return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: evv.svg, extra: rx, P: EV_T } };
+};
+
+DRAW2['4-2'] = T => {
+  const sv = VIEWS.sag({ curl: 1, cut: 1, plane: T.p(0, 0.3, 1), scar: 0.6 }, PW, PH, SAG_WIN, 'sL'), A = sv.A;
+  const evv = VIEWS.ev({ scar: 0.35, incision: 1, ends: T.on(2) }, PW, PH, EV_WIN, 'eR'), B = evv.A;
+  const lab = VIEWS.lab2;
+  let ex = lab('分離出的空間', 'dissection plane', 14, 56, A.plane, { color: COL.accent, bold: true, op: T.on(0, 0.6, 1.5) });
+  ex += lab('上方那片瞼板', 'upper tarsus', PW - 12, 44, A.upper, { side: 'R', bold: true }) + lab('瞼緣側那片瞼板', 'marginal strip', PW - 12, 300, A.strip, { side: 'R', bold: true });
+  ex += lab('前層', 'anterior lamella', 14, 110, sv.P(LID.draw({ state: { curl: 1, cut: 1 } }).DA.at(2.6, 1.8)), { op: T.on(0, 0.6, 1.5) });
+  let rx = lab('周邊做到位', 'periphery', 14, 34, B.evEndL, { color: COL.amber, bold: true, op: T.on(2) }) + lab('周邊做到位', 'periphery', PW - 12, 34, B.evEndR, { side: 'R', color: COL.amber, bold: true, op: T.on(2) });
+  rx += lab('切口', 'incision', PW - 12, PH - 20, B.evCentre, { side: 'R', color: COL.red, bold: true });
+  return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: evv.svg, extra: rx, P: EV_T } };
 };

@@ -20,6 +20,11 @@ const VIEWS = (() => {
     const c = cam(win, W, H), r = CORONAL.draw({ variant: 'asian', state, id, windows: opt.windows || [], section: opt.section ?? false });
     return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A: mapA(r.A, c.P), k: c.k, P: c.P };
   }
+  // everted upper lid (surgeon's view)
+  function ev(state, W, H, win, id) {
+    const c = cam(win, W, H), r = CORONAL.drawEverted({ state, id });
+    return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A: mapA(r.A, c.P), k: c.k, P: c.P };
+  }
   // bilingual label with a leader line to anchor a (panel px). o: side 'R', bold, color, lc, op, size
   function lab2(zh, en, tx, ty, a, o = {}) {
     const z = o.size || 15, right = o.side === 'R', w = measure(zh, z, o.bold) + (en ? 6 + measure(en, z, false) : 0);
@@ -27,5 +32,5 @@ const VIEWS = (() => {
     const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3.2" opacity="0.8"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.2"/><circle cx="${a[0]}" cy="${a[1]}" r="2.8" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
     return `<g opacity="${o.op ?? 1}" class="lbl">${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.6" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="6">${esc(en)}</tspan>` : ''}</text></g>`;
   }
-  return { cam, sag, cor, lab2 };
+  return { cam, sag, cor, ev, lab2 };
 })();
