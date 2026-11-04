@@ -336,6 +336,11 @@ const LID = (() => {
     // 13 surgical overlays: dissection plane, incision, suture
     if (st.plane) { const P0 = [], P1 = []; for (let q = 0.7; q <= S_CUT; q += 0.05) { P0.push(DP.at(q, U_TAR)); P1.push(DA.at(q, U_TAR + 0.02)); }
       o.push(`<path d="${poly([...P0, ...P1.reverse()])}" fill="#0e7c6b" opacity="${(0.42 * st.plane).toFixed(2)}"/>`); A.plane = DP.at(2.0, U_TAR + 0.06); }
+    // BLTR: full-thickness incision from the skin (3 mm from the margin) through to the conjunctiva; ghostCut = where PLTR would cut (posterior lamella only)
+    if (st.bltr) { const sk0 = DA.at(S_CUT, uSkin(V, S_CUT)), cj = DP.at(S_CUT, 0), e = lerpP(sk0, cj, Math.min(1, st.bltr));
+      o.push(`<path d="M${F(sk0)}L${F(e)}" stroke="#d23c3c" stroke-width="2.8" stroke-linecap="round" ${NS}/>`); A.bltrSkin = sk0; A.bltrMid = lerpP(sk0, cj, 0.5); }
+    if (st.ghostCut) o.push(`<path d="M${F(DP.at(S_CUT, 0))}L${F(DP.at(S_CUT, U_TAR))}" stroke="#d23c3c" stroke-width="2" stroke-dasharray="3 3" opacity="${st.ghostCut}" ${NS}/>`);
+    if (st.ghostCut || st.bltr) A.postCut = DP.at(S_CUT, U_TAR * 0.5);
     if (st.cut) { const c0 = DP.at(S_CUT - (cutDone ? 0.02 : 0), 0), c1 = DP.at(S_CUT - (cutDone ? 0.02 : 0), U_TAR), e = lerpP(c0, c1, Math.min(1, st.cut));
       o.push(`<path d="M${F(c0)}L${F(e)}" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`);
       if (cutDone) o.push(`<path d="M${F(DP.at(S_CUT + 0.02, 0))}L${F(DP.at(S_CUT + 0.02, U_TAR))}" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`);

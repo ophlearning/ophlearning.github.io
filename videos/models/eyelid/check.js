@@ -56,5 +56,13 @@ const toGlobe = p => { const ph = Math.atan2(p[1], p[0]); return Math.hypot(p[0]
 // 11. suture spacing (narration: 中央到內側、中央到外側的距離差在 2 mm 以內)
 { const X = CORONAL.draw({ state: { sutures: 1 } }).SX, d = Math.abs((X[1] - X[0]) - (X[2] - X[1]));
   ok(d <= 2, `sutures: central–temporal ${(X[1] - X[0]).toFixed(1)} mm vs central–nasal ${(X[2] - X[1]).toFixed(1)} mm, difference ${d.toFixed(1)} ≤ 2 mm`); }
+// 12. BLTR skin incision: the same height in both views (the skin point 3 mm from the margin, projected)
+{ const c = CORONAL.draw({ state: { skinCut: 1 } }), dm = c.Uy(0) - UF.at(0, 0)[1], ys = UF.at(LID.S_CUT, LID.uSkin(LID.VARIANTS.asian, LID.S_CUT))[1];
+  ok(Math.abs(c.skinCutY(0) - dm - ys) < 0.3, `BLTR skin incision height: coronal ${(c.skinCutY(0) - dm).toFixed(2)} vs sagittal ${ys.toFixed(2)}`);
+  ok(!/NaN|undefined/.test(LID.draw({ state: { curl: 1, bltr: 1, ghostCut: 1 } }).svg + CORONAL.draw({ state: { skinCut: 1, skinBleed: 1 } }).svg), 'BLTR states: no NaN/undefined in the SVG'); }
+// 13. what the viewer measures on the skin-side view: from the lash line (narration: 「從皮膚面離瞼緣 3 mm」「從睫毛線正上方的皮膚穿出」)
+{ const c = CORONAL.draw({ state: { skinCut: 1, sutures: 1 } }), d = c.lashY(0) - c.skinCutY(0), ex = c.lashY(0.5) - c.A.sutureExit[1];
+  ok(Math.abs(d - LID.S_CUT) < 0.3, `skin view: BLTR skin incision ${d.toFixed(2)} mm above the lash line (narration 3 mm)`);
+  ok(ex > 0 && ex < 1, `skin view: suture exits ${ex.toFixed(2)} mm above the lash line (just above it)`); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);

@@ -36,6 +36,8 @@ const CORONAL = (() => {
   function draw(opt = {}) {
     const H = heights(opt.variant || 'asian'), o = [], A = {}, id = opt.id || 'cor', st = opt.state || {};
     const ev = st.evert || 0, inv = Math.max(0, -ev), out = Math.max(0, ev);
+    // lashes grow from the ANTERIOR lid margin, which projects ≈ 1 mm above the posterior edge (where the lid meets the globe and MRD1 is read)
+    const dAnt = LID.UF.at(0, LID.U_SKIN)[1] - LID.UF.at(0, 0)[1], lashY = x => Uy(x) + dAnt * prof(x, LC[0], MC[0], 0.6);
     const dT = H.tarTop - H.margin, dF = H.fus - H.margin;
     // ---------------- geometry of each structure (mm)
     const tarTopY = x => above(x, dT, -13.6, 10.6, 0.35);   // crescent: flat top, tapering ends
@@ -120,11 +122,12 @@ const CORONAL = (() => {
 
     // ---------------- layer 6: skin (Asian single eyelid: no crease), epicanthal fold, lashes, brow
     let s6 = `<path d="${face}" fill="url(#${id}_skin)" fill-rule="evenodd"/>`;
-    s6 += `<path d="${poly(xs(-13.5, 11).map(x => [x, Uy(x) - 0.75 - 0.3 * prof(x, -13.5, 11)]), false)}" fill="none" stroke="${C.skinS}" stroke-width="1.2" opacity="0.45" ${NS}/>`;
+    s6 += `<path d="${poly([...FX.map(x => [x, lashY(x)]), ...FX.slice().reverse().map(x => [x, Uy(x)])])}" fill="#dfa892" opacity="${(0.9 * (1 - inv)).toFixed(2)}"/>`;   // intermarginal strip
+    s6 += `<path d="${poly(xs(-13.5, 11).map(x => [x, lashY(x) - 0.6 - 0.3 * prof(x, -13.5, 11)]), false)}" fill="none" stroke="${C.skinS}" stroke-width="1.2" opacity="0.45" ${NS}/>`;
     // lashes: upper (up and outward), lower (down)
     if (out > 0) s6 += `<path d="${poly([...FX.map(x => [x, Uy(x) - 0.05]), ...FX.slice().reverse().map(x => [x, Uy(x) + 0.75 * out * prof(x, LC[0], MC[0], 0.6)])])}" fill="#d98a8f"/>`;
     if (inv > 0) s6 += `<path d="${poly([...FX.map(x => [x, Uy(x) - 0.05]), ...FX.slice().reverse().map(x => [x, Uy(x) + 0.45 * inv * prof(x, LC[0], MC[0], 0.6)])])}" fill="${C.skin2}"/>`;
-    for (let x = LC[0] + 1.6, k = 0; x < MC[0] - 3.4; x += 0.3, k++) { const y = Uy(x) + 0.45 * inv * prof(x, LC[0], MC[0], 0.6), lean = x / 14, l0 = 2.2 + 1.4 * prof(x, LC[0], MC[0], 0.8) * (0.8 + 0.4 * hash(k, 1));
+    for (let x = LC[0] + 1.6, k = 0; x < MC[0] - 3.4; x += 0.3, k++) { const y = lashY(x) + (0.45 - dAnt) * inv * prof(x, LC[0], MC[0], 0.6), lean = x / 14, l0 = 2.2 + 1.4 * prof(x, LC[0], MC[0], 0.8) * (0.8 + 0.4 * hash(k, 1));
       const dy = lerp(-1, 0.75, inv) - 0.12 * out, l = l0 * (1 - 0.25 * inv);
       s6 += `<path d="M${F([x, y + 0.1])}Q${F([x + lean * 0.4, y + dy * l * 0.55])} ${F([x + lean * (1.2 + 0.5 * out), y + dy * l])}" fill="none" stroke="${C.lash}" stroke-width="0.07" stroke-linecap="round"/>`; }
     for (let x = LC[0] + 2.5, k = 0; x < MC[0] - 4; x += 0.55, k++) { const y = Ly(x), lean = x / 14, l = 1.1 + 0.8 * prof(x, LC[0], MC[0]) * (0.7 + 0.5 * hash(k, 2));
@@ -143,6 +146,14 @@ const CORONAL = (() => {
     // ---------------- PLTR overlays (skin-side view)
     const dCut = LID.UF.at(LID.S_CUT, 0)[1] - LID.UF.at(0, 0)[1];               // incision height above the margin, from the sagittal model
     const cutY = x => Uy(x) + dCut * prof(x, -13.6, 10.6, 0.35);
+    // BLTR: skin incision 3 mm from the margin (projected height of the sagittal skin point), solid because it is on the skin side
+    const dSkin = LID.UF.at(LID.S_CUT, LID.uSkin(LID.VARIANTS[opt.variant || 'asian'], LID.S_CUT))[1] - LID.UF.at(0, 0)[1];
+    const skinCutY = x => Uy(x) + dSkin * prof(x, -13.6, 10.6, 0.35);
+    if (st.skinCut) { const xsI = xs(-12.4, 9.8, 0.2), n = Math.max(2, Math.round(xsI.length * Math.min(1, st.skinCut)));
+      o.push(`<path d="${poly(xsI.slice(0, n).map(x => [x, skinCutY(x)]), false)}" fill="none" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`);
+      A.skinCut = [xsI[n - 1], skinCutY(xsI[n - 1])]; }
+    if (st.skinBleed) for (const [x, r] of [[-9, 0.45], [-5.5, 0.6], [-2, 0.4], [1.5, 0.55], [5, 0.45], [8, 0.35]]) o.push(`<circle cx="${x}" cy="${(skinCutY(x) + 0.35).toFixed(2)}" r="${r}" fill="#b3122b" opacity="${(0.8 * st.skinBleed).toFixed(2)}"/>`);
+    A.skinBleed = [-5.5, skinCutY(-5.5) + 0.35];
     if (st.incision) { const xsI = xs(-12.4, 9.8, 0.2), n = Math.max(2, Math.round(xsI.length * Math.min(1, st.incision)));
       o.push(`<path d="${poly(xsI.slice(0, n).map(x => [x, cutY(x)]), false)}" fill="none" stroke="#d23c3c" stroke-width="2" stroke-dasharray="7 5" ${NS} opacity="0.85"/>`); }
     A.incision = [6.5, cutY(6.5)];
@@ -150,15 +161,15 @@ const CORONAL = (() => {
     if (st.tarsus) { const TX = xs(-13.6, 10.6, 0.25), tp = [...TX.map(x => [x, Uy(x) - 0.15]), ...TX.slice().reverse().map(x => [x, Math.min(Uy(x) - 0.15, tarTopY(x))])];
       o.push(`<path d="${poly(tp)}" fill="${C.tar}" fill-opacity="${(0.25 * st.tarsus).toFixed(2)}" stroke="#8a7a52" stroke-width="1.4" stroke-dasharray="5 4" opacity="${st.tarsus}" ${NS}/>`);
       A.tarsusOutline = [5.5, (tarTopY(5.5) + Uy(5.5)) / 2 - 0.6]; }
-    if (st.marks) for (const x of SX) o.push(`<circle cx="${x}" cy="${(Uy(x) - 1.0).toFixed(2)}" r="0.32" fill="#5b3fa0" opacity="${st.marks}"/>`);
+    if (st.marks) for (const x of SX) o.push(`<circle cx="${x}" cy="${(lashY(x) - 0.7).toFixed(2)}" r="0.32" fill="#5b3fa0" opacity="${st.marks}"/>`);
     if (st.spacing) { const y = Uy(0.5) - 4.2; o.push(`<g opacity="${st.spacing}" stroke="#0e7c6b" fill="none"><path d="M${SX[0]} ${y}H${SX[2]}" stroke-width="1.8" ${NS}/>${SX.map(x => `<path d="M${x} ${y - 0.5}v1" stroke-width="1.8" ${NS}/>`).join('')}</g>`); A.spacing = [SX[1], Uy(0.5) - 4.2]; }
     if (st.sutures) { const t = st.tight || 0, op = Math.min(1, st.sutures);
-      for (const x of SX) { const E = [x, Uy(x) - 0.75 + 0.25 * t], w = lerp(0.95, 0.38, t);
+      for (const x of SX) { const E = [x, lashY(x) - 0.6 + 0.25 * t], w = lerp(0.95, 0.38, t);   // exit just above the lash line
         for (const sg of [-1, 1]) o.push(`<path d="M${F([x + sg * w, cutY(x) - 0.35])}L${F([x + sg * w * 0.45, E[1]])}" stroke="#2463eb" stroke-width="1.6" stroke-dasharray="4 3" ${NS} opacity="${op}"/>`);
         o.push(`<path d="M${F([x - w * 0.45, E[1]])}L${F([x + w * 0.45, E[1]])}" stroke="#2463eb" stroke-width="2.4" stroke-linecap="round" ${NS} opacity="${op}"/><circle cx="${x}" cy="${E[1].toFixed(2)}" r="${(0.2 + 0.12 * t).toFixed(2)}" fill="#2463eb" opacity="${op}"/>`);
         if (t > 0.5) for (const sg of [-1, 1]) o.push(`<path d="M${F(E)}l${(sg * 0.5).toFixed(2)} ${(-0.7).toFixed(2)}" stroke="#2463eb" stroke-width="1.8" stroke-linecap="round" ${NS} opacity="${(op * ss(0.5, 0.9, t)).toFixed(2)}"/>`); }
-      A.suture = [SX[0], Uy(SX[0]) - 1.2]; }
-    A.margin = [-4, Uy(-4)]; A.lashes = [-10.5, Uy(-10.5) - 1.6];
+      A.suture = [SX[0], lashY(SX[0]) - 1.0]; A.sutureExit = [SX[1], lashY(SX[1]) - 0.6 + 0.25 * t]; }
+    A.margin = [-4, Uy(-4)]; A.lashes = [-10.5, lashY(-10.5) - 1.6];
 
     // ---------------- cut edges of the windows
     for (const w of wins) o.push(`<path d="${poly(w.poly)}" fill="none" stroke="${C.cut}" stroke-width="1.1" ${NS} opacity="0.7"/>`);
@@ -167,7 +178,7 @@ const CORONAL = (() => {
     A.section = [0, H.arc - 4.6];
     const defs = `<defs><radialGradient id="${id}_iris" cx="0.5" cy="0.5" r="0.5"><stop offset="0.3" stop-color="#2a170d"/><stop offset="0.75" stop-color="#4a2a17"/><stop offset="1" stop-color="#2a170d"/></radialGradient>
       <radialGradient id="${id}_skin" gradientUnits="userSpaceOnUse" cx="-1" cy="-6" r="26"><stop offset="0" stop-color="#f3d8c2"/><stop offset="0.7" stop-color="${C.skin}"/><stop offset="1" stop-color="#e2b597"/></radialGradient></defs>`;
-    return { svg: defs + o.join(''), A, Uy, fusY, tarTopY, whitY, arcusY, cutY, SX };
+    return { svg: defs + o.join(''), A, Uy, lashY, fusY, tarTopY, whitY, arcusY, cutY, skinCutY, SX };
   }
   // ---------------------------------------------------------------- everted upper lid (the surgeon's view in PLTR)
   // The lid is flipped: tarsal conjunctiva faces the viewer, the lid margin with its lashes is on top, the fold (superior tarsal
