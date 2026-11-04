@@ -1,0 +1,15 @@
+{
+  "about": "參考圖：站長確認過的畫面。改模型或畫面後跑 node videos/tools/ref-check.js 本檔；有差異要交截圖給站長，確認後才用 --update 更新。",
+  "threshold": 0.001,
+  "tol": 48,
+  "crop": [0, 64, 1280, 656],
+  "items": [
+    { "page": "../anim/video2.html", "seg": "4-4", "at": "0:0.05", "ref": "4-4-L0-0.05.jpg", "approved": "2026-11-04", "note": "站長確認 4-4 畫法；之後分離空間加大 0.35 mm，此圖為加大後版本" },
+    { "page": "../anim/video2.html", "seg": "4-4", "at": "2:0.6", "ref": "4-4-L2-0.6.jpg", "approved": "2026-11-04", "note": "同上" },
+    { "page": "../anim/video2.html", "seg": "4-4", "at": "6:0.9", "ref": "4-4-L6-0.9.jpg", "approved": "2026-11-04", "note": "同上" },
+    { "page": "../anim/video2.html", "seg": "4-1", "at": "0:0.7", "ref": "4-1-L0-0.7.jpg", "approved": null, "note": "已交截圖，待站長確認" },
+    { "page": "../anim/video2.html", "seg": "4-1", "at": "4:0.9", "ref": "4-1-L4-0.9.jpg", "approved": null, "note": "已交截圖，待站長確認" },
+    { "page": "../anim/video2.html", "seg": "4-2", "at": "1:0.5", "ref": "4-2-L1-0.5.jpg", "approved": null, "note": "已交截圖，待站長確認" },
+    { "page": "../../../models/eyelid/sample.html", "ref": "../../../models/eyelid/sample-asian.jpg", "dpr": 2, "crop": null, "approved": "2026-11-04", "note": "站長確認亞洲人單眼皮樣本；之後腱膜止點移到瞼緣上方 3.3 mm，此圖為移動後版本" }
+  ]
+}
