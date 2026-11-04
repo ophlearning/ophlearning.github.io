@@ -48,5 +48,10 @@ const toGlobe = p => { const ph = Math.atan2(p[1], p[0]); return Math.hypot(p[0]
 { const r = LID.draw({ state: { curl: 1, cut: 1, plane: 1, suture: 1, k: 1, over: 8, tuck: 1 } }), edge = r.DP.at(LID.S_CUT + 0.05, 0.16), front = r.DP.at(2.6, LID.U_TAR), n = r.DP.nrm(2.6);
   const d = (edge[0] - front[0]) * n[0] + (edge[1] - front[1]) * n[1];
   ok(d > 0, `tuck: upper tarsal edge lies ${d.toFixed(2)} mm in front of the marginal strip`); }
+// 10. everted view: incision sits at S_CUT / S_TAR of the tarsal height from the margin, and runs ≥ 20 mm (narration: 「切口總長至少 20 mm」)
+{ const e = CORONAL.drawEverted({ state: { incision: 1 } }), r = (e.incY(0) - e.tarEdge(0)) / (e.foldY(0) - e.tarEdge(0)), len = e.XI[e.XI.length - 1] - e.XI[0];
+  ok(Math.abs(r - LID.S_CUT / LID.S_TAR) < 0.02, `everted: incision at ${(r * 100).toFixed(1)}% of the tarsal height from the margin (sagittal ${(LID.S_CUT / LID.S_TAR * 100).toFixed(0)}%)`);
+  ok(len >= 20, `everted: incision length ${len.toFixed(1)} mm ≥ 20 mm`);
+  ok(!/NaN|undefined/.test(CORONAL.drawEverted({ state: { scar: 1, incision: 1, ends: 1, lenArrow: 1, bleed: 1, notch: 1, nasalShort: 1, incWavy: 1, incShort: 1 } }).svg), 'everted: no NaN/undefined in the SVG'); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);

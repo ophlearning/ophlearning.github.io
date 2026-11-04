@@ -166,8 +166,67 @@ const CORONAL = (() => {
       <radialGradient id="${id}_skin" gradientUnits="userSpaceOnUse" cx="-1" cy="-6" r="26"><stop offset="0" stop-color="#f3d8c2"/><stop offset="0.7" stop-color="${C.skin}"/><stop offset="1" stop-color="#e2b597"/></radialGradient></defs>`;
     return { svg: defs + o.join(''), A, Uy, fusY, tarTopY, whitY, arcusY, cutY };
   }
+  // ---------------------------------------------------------------- everted upper lid (the surgeon's view in PLTR)
+  // The lid is flipped: tarsal conjunctiva faces the viewer, the lid margin with its lashes is on top, the fold (superior tarsal
+  // border) at the bottom. Tarsal height and the incision distance come from the sagittal model (S_TAR, S_CUT along the lid),
+  // shown at EV_TILT because the everted plate leans back a little.
+  // state: scar 0–1, incision 0–1 (drawn temporal → nasal), incWavy, incShort, ends, lenArrow, bleed, notch, nasalShort
+  const EV_TILT = 0.92;
+  function drawEverted(opt = {}) {
+    const o = [], A = {}, id = opt.id || 'ev', st = opt.state || {};
+    const foldY = x => Uy(Math.max(LC[0], Math.min(MC[0], x))) + 1.3 * prof(x, LC[0], MC[0], 0.8);
+    const tH = x => LID.S_TAR * EV_TILT * prof(x, -13.6, 10.6, 0.35) * (1 - 0.25 * (st.nasalShort || 0) * ss(2, 12, x));
+    const lidH = x => Math.max(tH(x), 2.4 * prof(x, LC[0] + 0.6, MC[0] - 1.2, 0.5));
+    const edgeY = x => foldY(x) - lidH(x);                              // everted lid margin (posterior edge)
+    const tarEdge = x => foldY(x) - tH(x);
+    const incY = x => tarEdge(x) + LID.S_CUT * EV_TILT;                 // 3 mm from the margin, parallel to it
+    const LX = xs(LC[0] + 0.6, MC[0] - 1.2, 0.2), TX = xs(-13.6, 10.6, 0.2);
+    // face + eye looking down below the fold
+    const fis = [...FX.map(x => [x, foldY(x)]), ...FX.slice().reverse().map(x => [x, Ly(x)])];
+    o.push(`<rect x="-40" y="-40" width="80" height="70" fill="url(#${id}_skin)"/>`);
+    o.push(`<clipPath id="${id}_fis"><path d="${poly(fis)}"/></clipPath><g clip-path="url(#${id}_fis)"><rect x="-20" y="-8" width="40" height="16" fill="${C.sclera}"/>
+      <circle cx="0" cy="1.6" r="5.6" fill="url(#${id}_iris)"/><circle cx="0" cy="1.6" r="2.0" fill="#0c0908"/><ellipse cx="-0.9" cy="0.5" rx="0.5" ry="0.4" fill="#fff" opacity="0.8"/>
+      <path d="${poly([...FX.map(x => [x, foldY(x)]), ...FX.slice().reverse().map(x => [x, foldY(x) + 1.3])])}" fill="#000" opacity="0.15"/><ellipse cx="11.6" cy="0.8" rx="1.2" ry="0.95" fill="#e48f95"/></g>`);
+    o.push(`<path d="${poly(fis)}" fill="none" stroke="#9b6450" stroke-width="1.1" ${NS}/>`);
+    for (let x = LC[0] + 2.5, k = 0; x < MC[0] - 4; x += 0.55, k++) { const y = Ly(x), lean = x / 14, l = 1.1 + 0.8 * prof(x, LC[0], MC[0]) * (0.7 + 0.5 * hash(k, 2));
+      o.push(`<path d="M${F([x, y - 0.1])}Q${F([x + lean * 0.2, y + l * 0.6])} ${F([x + lean * 0.7, y + l])}" fill="none" stroke="${C.lash}" stroke-width="0.055" stroke-linecap="round"/>`); }
+    // everted lid: conjunctiva, tarsus seen through it, meibomian glands, scars
+    const lid = [...LX.map(x => [x, foldY(x)]), ...LX.slice().reverse().map(x => [x, edgeY(x)])];
+    o.push(`<path d="${poly(lid)}" fill="#e3989c" stroke="#b9666c" stroke-width="1.2" ${NS}/>`);
+    o.push(`<path d="${poly([...TX.map(x => [x, foldY(x) - 0.35]), ...TX.slice().reverse().map(x => [x, tarEdge(x)])])}" fill="#ecc0a8" opacity="0.55"/>`);
+    for (let x = -12.4; x < 9.8; x += 0.75) { const top = tarEdge(x) + 0.25, bot = foldY(x) - 0.9; if (bot - top < 1) continue;
+      o.push(`<path d="M${F([x, top])}L${F([x, bot])}" stroke="#f0cf73" stroke-width="2.6" stroke-linecap="round" opacity="0.5" ${NS}/>`); }
+    for (let x = -11, k = 0; x < 9; x += 1.6, k++) { const y = lerp(tarEdge(x), foldY(x), 0.35 + 0.4 * hash(k, 11)); o.push(`<path d="M${F([x, y])}q0.6 ${(hash(k, 12) - 0.5).toFixed(2)} 1.3 ${(hash(k, 13) - 0.3).toFixed(2)}" stroke="#c75a64" stroke-width="0.7" fill="none" opacity="0.6" ${NS}/>`); }
+    const sc = st.scar ?? 0.3;
+    for (let i = 0; i < 10; i++) { const x0 = -11 + i * 2.2, y0 = lerp(tarEdge(x0), foldY(x0), 0.3 + 0.4 * hash(i, 31)), opk = ss(i / 10 * 0.9, i / 10 * 0.9 + 0.1, sc);
+      o.push(`<path d="M${F([x0 - 1.2, y0])}q1.2 ${(-0.4 + (i % 3) * 0.3).toFixed(2)} 2.6 ${(i % 2 ? 0.25 : -0.2).toFixed(2)}" stroke="#fff" stroke-width="${(1.4 + 1.8 * sc).toFixed(2)}" opacity="${(0.3 + 0.6 * opk).toFixed(2)}" fill="none" stroke-linecap="round" ${NS}/>`); }
+    if (sc > 0.6) o.push(`<path d="${poly(lid)}" fill="#fff" opacity="${(0.3 * ss(0.6, 1, sc)).toFixed(2)}"/>`);
+    // lid margin band on top, lashes pointing up
+    o.push(`<path d="${poly([...LX.map(x => [x, edgeY(x)]), ...LX.slice().reverse().map(x => [x, edgeY(x) - 0.8 * prof(x, LC[0], MC[0], 0.4)])])}" fill="#d9a48e" stroke="#9b6450" stroke-width="1" ${NS}/>`);
+    for (let x = LC[0] + 1.8, k = 0; x < MC[0] - 3.6; x += 0.3, k++) { const y = edgeY(x) - 0.8 * prof(x, LC[0], MC[0], 0.4), lean = x / 14, l = 2.0 + 1.0 * prof(x, LC[0], MC[0], 0.8) * (0.8 + 0.4 * hash(k, 1));
+      o.push(`<path d="M${F([x, y])}q${(lean * 0.3).toFixed(2)} ${(-l * 0.5).toFixed(2)} ${(lean * 0.9).toFixed(2)} ${(-l).toFixed(2)}" fill="none" stroke="${C.lash}" stroke-width="0.07" stroke-linecap="round"/>`); }
+    o.push(`<path d="${poly(LX.map(x => [x, foldY(x)]), false)}" fill="none" stroke="#9b4f55" stroke-width="1.6" ${NS}/>`);
+    // incision
+    const XI = TX.filter(x => tH(x) > 3.6 * EV_TILT), xc = (XI[0] + XI[XI.length - 1]) / 2;
+    if (st.incision) { const n = Math.max(2, Math.round(XI.length * Math.min(1, st.incision))), wav = st.incWavy || 0, short = st.incShort || 0;
+      const pts = XI.slice(0, n).filter(x => Math.abs(x - xc) < lerp(99, 5, short)).map(x => [x, incY(x) + wav * 0.45 * Math.sin(x * 1.7) * (Math.abs(x - xc) < 6 ? 1 : 0)]);
+      if (pts.length > 1) o.push(`<path d="${poly(pts, false)}" fill="none" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`);
+      if (pts.length > 1) A.evIncTip = pts[pts.length - 1];
+      if (short > 0) for (const x2 of [XI[0], XI[XI.length - 1]]) { const x1 = xc + Math.sign(x2 - xc) * 5; o.push(`<path d="${poly(xs(Math.min(x1, x2), Math.max(x1, x2), 0.2).map(x => [x, incY(x)]), false)}" fill="none" stroke="#7d8a97" stroke-width="1.8" stroke-dasharray="4 4" opacity="${short}" ${NS}/>`); } }
+    if (st.ends) for (const x of [XI[0], XI[XI.length - 1]]) o.push(`<circle cx="${x.toFixed(2)}" cy="${incY(x).toFixed(2)}" r="1.3" fill="none" stroke="#b86e00" stroke-width="2" stroke-dasharray="5 4" opacity="${st.ends}" ${NS}/>`);
+    const yA = foldY(xc) + 2.2;
+    if (st.lenArrow) o.push(`<g opacity="${st.lenArrow}" stroke="#0e7c6b" stroke-width="2" ${NS}><path d="M${XI[0]} ${yA}H${XI[XI.length - 1]}" ${NS}/><path d="M${XI[0]} ${yA - 0.5}v1M${XI[XI.length - 1]} ${yA - 0.5}v1" ${NS}/></g>`);
+    if (st.bleed) for (const [x, r] of [[-3, 0.55], [-1, 0.45], [1.6, 0.6], [4.2, 0.4], [0.3, 0.35]]) o.push(`<circle cx="${x}" cy="${(incY(x) + 0.4).toFixed(2)}" r="${r}" fill="#b3122b" opacity="${(0.8 * st.bleed).toFixed(2)}"/>`);
+    if (st.notch) { const x = -8; o.push(`<path d="M${F([x, edgeY(x)])}L${F([x, incY(x)])}" stroke="#b3122b" stroke-width="3" ${NS} opacity="${st.notch}"/><circle cx="${x}" cy="${edgeY(x).toFixed(2)}" r="1.3" fill="none" stroke="#b86e00" stroke-width="2" stroke-dasharray="5 4" opacity="${st.notch}" ${NS}/>`); }
+    if (st.nasalShort) { const x = 8.6; o.push(`<g opacity="${st.nasalShort}" stroke="#b86e00" stroke-width="2" ${NS}><path d="M${F([x, foldY(x)])}L${F([x, tarEdge(x)])}" ${NS}/><path d="M${x - 0.5} ${foldY(x).toFixed(2)}h1M${x - 0.5} ${tarEdge(x).toFixed(2)}h1" ${NS}/></g>`); }
+    Object.assign(A, { evMargin: [-5, edgeY(-5) - 0.4], evConj: [3, lerp(tarEdge(3), foldY(3), 0.55)], evInc: [5, incY(5)], evFold: [-9, foldY(-9)], evEndL: [XI[0], incY(XI[0])], evEndR: [XI[XI.length - 1], incY(XI[XI.length - 1])],
+      evLen: [xc, yA], evBleed: [1.6, incY(1.6) + 0.4], evNotch: [-8, edgeY(-8)], evNasal: [8.6, lerp(foldY(8.6), tarEdge(8.6), 0.5)], evCentre: [xc, incY(xc)] });
+    const defs = `<defs><radialGradient id="${id}_iris" cx="0.5" cy="0.5" r="0.5"><stop offset="0.3" stop-color="#2a170d"/><stop offset="0.75" stop-color="#4a2a17"/><stop offset="1" stop-color="#2a170d"/></radialGradient>
+      <radialGradient id="${id}_skin" gradientUnits="userSpaceOnUse" cx="-1" cy="-6" r="26"><stop offset="0" stop-color="#f3d8c2"/><stop offset="0.7" stop-color="${C.skin}"/><stop offset="1" stop-color="#e2b597"/></radialGradient></defs>`;
+    return { svg: defs + o.join(''), A, foldY, tarEdge, incY, XI };
+  }
   // vertical strip windows across the upper lid, from the rim down to just above the lash line
   function strip(x0, x1, depth, top = -21.4) { const p = []; for (let x = x0; x <= x1 + 1e-9; x += 0.25) p.push([x, top]); for (let x = x1; x >= x0 - 1e-9; x -= 0.25) p.push([x, Uy(Math.max(LC[0], Math.min(MC[0], x))) - 0.75]); return { poly: p, depth }; }
-  return { draw, strip, Uy, Ly, LC, MC };
+  return { draw, drawEverted, EV_TILT, strip, Uy, Ly, LC, MC };
 })();
 if (typeof module !== 'undefined') module.exports = CORONAL;

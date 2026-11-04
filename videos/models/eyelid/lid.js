@@ -142,7 +142,7 @@ const LID = (() => {
   function makeDeform(st) {
     const curl = st.curl || 0, k = st.k || 0, cutDone = (st.cut || 0) >= 1 || k > 0;
     const a = -TH_E * curl * (1 - k) + (st.over || 0) * D2R;           // net rotation of the distal lid (− = inward)
-    const tuck = st.tuck ?? 0.7 * k;
+    const tuck = st.tuck ?? 0.7 * k; const plane = st.plane || 0;
     const M0 = UF.at(0, 0), PT = UF.at(S_CUT, 0), t3 = UF.tan(S_CUT), n3 = UF.nrm(S_CUT);
     const wA = s => 1 - ss(1.0, 5.5, s);                                  // anterior lamella bends smoothly
     const wP = s => cutDone ? (s <= S_CUT + 1e-9 ? 1 : wA(s) * (1 - k)) : wA(s);   // posterior lamella: rigid strip once cut
@@ -154,6 +154,7 @@ const LID = (() => {
         if (kind === 'post' && cutDone && s > S_CUT) { const g = tuck * (1 - ss(S_CUT, 6.0, s)); q = add(add(q, t3, -1.15 * g), n3, 1.08 * g); }
         if (kind === 'ant') q = add(q, UF.nrm(Math.max(s, 0)), tuck * 1.08 * ss(1.2, 2.4, s) * (1 - ss(3.6, 5.2, s)));
       }
+      if (kind === 'ant' && plane > 0) q = add(q, UF.nrm(Math.max(s, 0)), plane * 0.35 * ss(0.5, 1.3, s) * (1 - ss(3.0, 4.6, s)));   // the dissected space opens up
       return q;
     };
     f.cutDone = cutDone;
@@ -333,7 +334,7 @@ const LID = (() => {
     });
 
     // 13 surgical overlays: dissection plane, incision, suture
-    if (st.plane) { const P0 = [], P1 = []; for (let q = 0.9; q <= S_CUT; q += 0.05) { P0.push(DP.at(q, U_TAR)); P1.push(DA.at(q, U_TAR + 0.16)); }
+    if (st.plane) { const P0 = [], P1 = []; for (let q = 0.7; q <= S_CUT; q += 0.05) { P0.push(DP.at(q, U_TAR)); P1.push(DA.at(q, U_TAR + 0.02)); }
       o.push(`<path d="${poly([...P0, ...P1.reverse()])}" fill="#0e7c6b" opacity="${(0.42 * st.plane).toFixed(2)}"/>`); A.plane = DP.at(2.0, U_TAR + 0.06); }
     if (st.cut) { const c0 = DP.at(S_CUT - (cutDone ? 0.02 : 0), 0), c1 = DP.at(S_CUT - (cutDone ? 0.02 : 0), U_TAR), e = lerpP(c0, c1, Math.min(1, st.cut));
       o.push(`<path d="M${F(c0)}L${F(e)}" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`);
@@ -357,6 +358,6 @@ const LID = (() => {
     A.rim = [-12.6, -22.5];
     return { svg: o.join(''), A, DP, DA };
   }
-  return { draw, makeDeform, gp, S_CUT, U_TAR, U_SKIN, uSkin, UF, LEV, geom, VARIANTS, sLv, S_J, ARCUS, hash, spline, track, poly, F, add, sub, unit, hyp, lerp, ss, NS, C };
+  return { draw, makeDeform, gp, S_CUT, S_TAR, U_TAR, U_SKIN, uSkin, UF, LEV, geom, VARIANTS, sLv, S_J, ARCUS, hash, spline, track, poly, F, add, sub, unit, hyp, lerp, ss, NS, C };
 })();
 if (typeof module !== 'undefined') module.exports = LID;
