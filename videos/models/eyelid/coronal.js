@@ -146,7 +146,10 @@ const CORONAL = (() => {
     if (st.incision) { const xsI = xs(-12.4, 9.8, 0.2), n = Math.max(2, Math.round(xsI.length * Math.min(1, st.incision)));
       o.push(`<path d="${poly(xsI.slice(0, n).map(x => [x, cutY(x)]), false)}" fill="none" stroke="#d23c3c" stroke-width="2" stroke-dasharray="7 5" ${NS} opacity="0.85"/>`); }
     A.incision = [6.5, cutY(6.5)];
-    const SX = [-8.0, 0.5, 9.0];
+    const SX = [-8.0, 0.5, 9.0];                                                // three everting sutures: temporal, central, nasal
+    if (st.tarsus) { const TX = xs(-13.6, 10.6, 0.25), tp = [...TX.map(x => [x, Uy(x) - 0.15]), ...TX.slice().reverse().map(x => [x, Math.min(Uy(x) - 0.15, tarTopY(x))])];
+      o.push(`<path d="${poly(tp)}" fill="${C.tar}" fill-opacity="${(0.25 * st.tarsus).toFixed(2)}" stroke="#8a7a52" stroke-width="1.4" stroke-dasharray="5 4" opacity="${st.tarsus}" ${NS}/>`);
+      A.tarsusOutline = [5.5, (tarTopY(5.5) + Uy(5.5)) / 2 - 0.6]; }
     if (st.marks) for (const x of SX) o.push(`<circle cx="${x}" cy="${(Uy(x) - 1.0).toFixed(2)}" r="0.32" fill="#5b3fa0" opacity="${st.marks}"/>`);
     if (st.spacing) { const y = Uy(0.5) - 4.2; o.push(`<g opacity="${st.spacing}" stroke="#0e7c6b" fill="none"><path d="M${SX[0]} ${y}H${SX[2]}" stroke-width="1.8" ${NS}/>${SX.map(x => `<path d="M${x} ${y - 0.5}v1" stroke-width="1.8" ${NS}/>`).join('')}</g>`); A.spacing = [SX[1], Uy(0.5) - 4.2]; }
     if (st.sutures) { const t = st.tight || 0, op = Math.min(1, st.sutures);
@@ -164,7 +167,7 @@ const CORONAL = (() => {
     A.section = [0, H.arc - 4.6];
     const defs = `<defs><radialGradient id="${id}_iris" cx="0.5" cy="0.5" r="0.5"><stop offset="0.3" stop-color="#2a170d"/><stop offset="0.75" stop-color="#4a2a17"/><stop offset="1" stop-color="#2a170d"/></radialGradient>
       <radialGradient id="${id}_skin" gradientUnits="userSpaceOnUse" cx="-1" cy="-6" r="26"><stop offset="0" stop-color="#f3d8c2"/><stop offset="0.7" stop-color="${C.skin}"/><stop offset="1" stop-color="#e2b597"/></radialGradient></defs>`;
-    return { svg: defs + o.join(''), A, Uy, fusY, tarTopY, whitY, arcusY, cutY };
+    return { svg: defs + o.join(''), A, Uy, fusY, tarTopY, whitY, arcusY, cutY, SX };
   }
   // ---------------------------------------------------------------- everted upper lid (the surgeon's view in PLTR)
   // The lid is flipped: tarsal conjunctiva faces the viewer, the lid margin with its lashes is on top, the fold (superior tarsal

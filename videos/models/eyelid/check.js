@@ -53,5 +53,8 @@ const toGlobe = p => { const ph = Math.atan2(p[1], p[0]); return Math.hypot(p[0]
   ok(Math.abs(r - LID.S_CUT / LID.S_TAR) < 0.02, `everted: incision at ${(r * 100).toFixed(1)}% of the tarsal height from the margin (sagittal ${(LID.S_CUT / LID.S_TAR * 100).toFixed(0)}%)`);
   ok(len >= 20, `everted: incision length ${len.toFixed(1)} mm ≥ 20 mm`);
   ok(!/NaN|undefined/.test(CORONAL.drawEverted({ state: { scar: 1, incision: 1, ends: 1, lenArrow: 1, bleed: 1, notch: 1, nasalShort: 1, incWavy: 1, incShort: 1 } }).svg), 'everted: no NaN/undefined in the SVG'); }
+// 11. suture spacing (narration: 中央到內側、中央到外側的距離差在 2 mm 以內)
+{ const X = CORONAL.draw({ state: { sutures: 1 } }).SX, d = Math.abs((X[1] - X[0]) - (X[2] - X[1]));
+  ok(d <= 2, `sutures: central–temporal ${(X[1] - X[0]).toFixed(1)} mm vs central–nasal ${(X[2] - X[1]).toFixed(1)} mm, difference ${d.toFixed(1)} ≤ 2 mm`); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);
