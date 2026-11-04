@@ -65,3 +65,20 @@ DRAW2['4-2'] = T => {
   rx += lab('切口', 'incision', PW - 12, PH - 20, B.evCentre, { side: 'R', color: COL.red, bold: true });
   return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: evv.svg, extra: rx, P: EV_T } };
 };
+
+DRAW2['4-3'] = T => {
+  const sp = T.p(1, 0.1, 0.9);
+  const sv = VIEWS.sag({ curl: 1, cut: 1, plane: 1, suture: sp, scar: 0.6 }, PW, PH, SAG_WIN, 'sL'), A = sv.A;
+  const cv = VIEWS.cor({ evert: -1, tarsus: 1, incision: 1, sutures: T.on(1, 0.8, 0.4), spacing: T.on(4) }, PW, PH, { x: -17.5, y: -13.2, w: 33 }, 'cR'), B = cv.A;
+  const lab = VIEWS.lab2;
+  let ex = lab('上方那片瞼板（切緣進針）', 'upper tarsus', PW - 12, 44, A.upper, { side: 'R', bold: true });
+  ex += lab('瞼緣側那片瞼板', 'marginal strip', PW - 12, 300, A.strip, { side: 'R', bold: true });
+  if (A.suture) ex += lab('縫線', 'suture', 14, 200, A.suture, { color: COL.suture, bold: true, op: T.on(1) });
+  if (A.sutureExit) ex += lab('睫毛線正上方出針', 'exit', 14, 250, A.sutureExit, { color: COL.suture, op: ss(T.en(1) - 0.6, T.en(1), T.u) });
+  ex += htext(PW - 12, PH - 34, '縫線中段走法為示意', { size: 13, color: COL.sub, anchor: 'end', op: T.on(1) }) + htext(PW - 12, PH - 16, '（文獻只寫起點與出口）', { size: 13, color: COL.sub, anchor: 'end', op: T.on(1) });
+  let rx = lab('三組縫線', 'sutures', 14, 34, B.suture, { color: COL.suture, bold: true, op: T.on(1) });
+  rx += lab('切口（結膜面）', 'incision', PW - 12, 34, B.incision, { side: 'R', color: COL.red, bold: true });
+  rx += lab('瞼板範圍', 'tarsus', PW - 12, 72, B.tarsusOutline, { side: 'R', op: 1 - T.on(4) });
+  rx += lab('間距對稱：差 ≤ 2 mm', 'symmetric spacing', 14, PH - 20, B.spacing, { color: COL.accent, bold: true, op: T.on(4) });
+  return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
+};
