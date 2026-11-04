@@ -1,0 +1,13 @@
+  {
+    id:'upper-lid-margin-rotation', type:'youtube', yt:'[YouTube 影片 ID]', cat:'surgery',
+    zh:'上眼瞼 margin rotation（PLTR）教學', en:'Upper eyelid margin rotation: posterior lamellar tarsal rotation',
+    dur:669,
+    short:'上眼瞼 cicatricial entropion 的 margin rotation：從判斷要不要開、PLTR 的切開、分離、縫線與綁線，到術中狀況和術後追蹤。',
+    sum:'這支影片照手術順序，走一遍上眼瞼 cicatricial entropion 的 posterior lamellar tarsal rotation（PLTR）：先分清楚睫毛碰眼的三種機轉與處置階梯，再看 PLTR 和 BLTR 的證據，接著是術前標記、翻瞼切開 posterior lamella、分離、三組 everting sutures 與綁線時瞼緣怎麼轉出來；BLTR 與從 lid crease 進去的做法只講差異。',
+    note:'畫面為右眼的示意動畫（上眼瞼矢狀切面＋正面觀），不是手術錄影，比例不精確。PLTR 與 BLTR 的比較研究都是 trachoma 病人；各院做法不同的地方，影片中標「依院內常規」。',
+    tags:['眼整形'],
+    chapters:[
+      {g:'', items:[[0,'片頭'], [14,'1　臨床決策'], [226,'2　為什麼選 PLTR'], [283,'3　術前準備'], [325,'4　手術步驟'], [446,'5　術中狀況'], [492,'6　只講差異'], [553,'7　術後'], [595,'8　跟刀清單'], [633,'參考文獻']]},
+    ],
+    refs:[ /* 22 篇，見 script-draft.md 文末清單 */ ],
+  },

@@ -1,0 +1,13 @@
+# 下載的字型與語音模型、產生的中間檔與影片，不進 git（重做步驟見 README.md）
+anim/fonts/
+anim/check*/
+anim/timeline.js
+tts/vits-melo-tts-zh_en/
+tts/wav/
+tts/lexicon_custom.txt
+tts/lines.json
+tts/lines_tts.json
+tts/segs.json
+out/
+*.mp4
+*.wav
