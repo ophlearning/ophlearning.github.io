@@ -104,8 +104,8 @@ const LID = (() => {
   // subcutaneous / suborbicularis fat, aponeurotic insertion into orbicularis/skin closer to the margin → no crease.
   // caucasian = fusion above the tarsus, crease ≈ 8 mm with a skin fold.
   const VARIANTS = {
-    asian: { S_FUS: 6.5, sept: [ARCUS, [-12.75, -16.5], [-12.85, -14.6], [-12.15, -12.6], [-10.9, -11.3], [-9.75, -10.6]], crease: false },
-    caucasian: { S_FUS: 12, sept: [ARCUS, [-12.75, -16.6], [-12.95, -15.0], [-12.25, -13.75], [-10.4, -13.4], [-7.4, -13.3], [-5.2, -13.25]], crease: true },
+    asian: { S_FUS: 6.5, creaseH: 6.0, sept: [ARCUS, [-12.75, -16.5], [-12.85, -14.6], [-12.15, -12.6], [-10.9, -11.3], [-9.75, -10.6]], crease: false },
+    caucasian: { S_FUS: 12, creaseH: null, sept: [ARCUS, [-12.75, -16.6], [-12.95, -15.0], [-12.25, -13.75], [-10.4, -13.4], [-7.4, -13.3], [-5.2, -13.25]], crease: true },
   };
   const uSkin = (v, s) => v.crease ? U_SKIN : U_SKIN + 0.45 * ss(0.8, 3.0, s);
   function geom(name) {
@@ -113,6 +113,14 @@ const LID = (() => {
     const SEPT = track(spline([...v.sept, LEV.off(S_F, -0.07)], 0.05));
     return { v, S_F, SEPT, sk: skinPath(v, UF) };
   }
+  // crease incision on the skin: surgeons mark it on the skin, measured up from the lash line. Asian single eyelid has no crease,
+  // so the planned line is used (creaseH mm along the skin from the lash line; schematic); a lid with a crease uses the crease.
+  function creaseOnSkin(sk, Fr, v) {
+    const T = track(sk.pts), qLash = T.near(Fr.at(marginS(1.83), 1.83)), q = v.creaseH != null ? qLash + v.creaseH : T.near(sk.crease);
+    const p = T.off(q, 0); let bs = 1, bd = 1e9; for (let s1 = 1; s1 <= S_TAR; s1 += 0.05) { const d = hyp(sub(Fr.at(s1, U_APO + 0.07), p)); if (d < bd) { bd = d; bs = s1; } }
+    return { q, p, sT: bs };                                   // sT: lid level of the tarsus point the incision reaches
+  }
+  const creasePointUF = name => creaseOnSkin(skinPath(VARIANTS[name], UF), UF, VARIANTS[name]).p;
   function skinPath(v, Fr) {
     if (!v.crease) { // single eyelid: fuller lid, no crease, smooth to the brow
       const c = [];
@@ -301,13 +309,31 @@ const LID = (() => {
       A.skin = SK.off(sR - 6.5, 0); A.orb = SK.off(sR - 5.0, 0.13 + subq(sR - 5) + 0.3); A.subq = SK.off(sR - 3.2, 0.13 + 0.1);
     }
     const SKT = 0.13;
-    if (!V.crease) o.push(`<path d="${SK.band(0, Ltot, SKT - 0.01, q => SKT + subq(q))}" fill="${C.sfat}" stroke="${C.sfatS}" stroke-width="0.5" ${NS}/>`);
-    o.push(`<path d="${SK.band(0, Ltot, q => SKT + subq(q) - 0.01, q => SKT + subq(q) + orbW(q))}" fill="${C.orb}"/>`);
+    // lid-crease approach: incision at the (planned) crease through skin + orbicularis; the pretarsal skin–muscle flap below it
+    // swings forward, hinged near the lash line, exposing the tarsus
+    const CR = creaseOnSkin(sk, DA, V), qC = CR.q, qH = SK.near(DA.at(0.7, uSkin(V, 0.7)));
+    const open = (st.crease || 0) >= 1 || (st.flap || 0) > 0, H = SK.off(qH, 0), fAng = -(st.flap || 0) * 24 * D2R;
+    const ft = (p, q) => (st.flap && q > qH && q <= qC) ? rot(p, H, fAng * ss(qH, qH + 0.3 * (qC - qH), q)) : p;
+    const pieces = open ? [[0, qC - 0.02], [qC + 0.02, Ltot]] : [[0, Ltot]];
+    const bandF = (o0, o1) => pieces.map(([a, b]) => { const g = (v, q) => typeof v === 'function' ? v(q) : v, P = [], Q = [];
+      for (let q = a; q < b; q += 0.05) { P.push(ft(SK.off(q, g(o0, q)), q)); Q.push(ft(SK.off(q, g(o1, q)), q)); } P.push(ft(SK.off(b, g(o0, b)), b)); Q.push(ft(SK.off(b, g(o1, b)), b));
+      return poly([...P, ...Q.reverse()]); }).join('');
+    const tarFrontAt = q => DP.at(q, U_APO + 0.07);
+    if (st.flap) { const inner = [], back = []; for (let q = qH; q <= qC; q += 0.05) inner.push(ft(SK.off(q, SKT + subq(q) + orbW(q)), q));
+      for (let q = CR.sT; q >= 0.8; q -= 0.1) back.push(tarFrontAt(q));
+      o.push(`<path d="${poly([...inner, ...back])}" fill="#fbf1e6"/>`);
+      A.exposedTarsus = DP.at((CR.sT + 1.0) / 2, U_APO); }
+    if (!V.crease) o.push(`<path d="${bandF(SKT - 0.01, q => SKT + subq(q))}" fill="${C.sfat}" stroke="${C.sfatS}" stroke-width="0.5" ${NS}/>`);
+    o.push(`<path d="${bandF(q => SKT + subq(q) - 0.01, q => SKT + subq(q) + orbW(q))}" fill="${C.orb}"/>`);
     const dots = []; let di = 0;
-    for (let q = sAnt + 0.25; q < Ltot - 0.2; q += 0.28, di++) { const w = orbW(q); if (w < 0.28) continue;
-      for (let d = SKT + subq(q) + 0.15, dj = 0; d < SKT + subq(q) + w - 0.08; d += 0.25, dj++) { const c = SK.off(q + (hash(di, dj) - 0.5) * 0.12, d); dots.push(`<ellipse cx="${c[0].toFixed(3)}" cy="${c[1].toFixed(3)}" rx="0.085" ry="0.07" fill="${C.orbB}" opacity="0.5"/>`); } }
+    for (let q = sAnt + 0.25; q < Ltot - 0.2; q += 0.28, di++) { const w = orbW(q); if (w < 0.28 || (open && Math.abs(q - qC) < 0.2)) continue;
+      for (let d = SKT + subq(q) + 0.15, dj = 0; d < SKT + subq(q) + w - 0.08; d += 0.25, dj++) { const qq = q + (hash(di, dj) - 0.5) * 0.12, c = ft(SK.off(qq, d), qq); dots.push(`<ellipse cx="${c[0].toFixed(3)}" cy="${c[1].toFixed(3)}" rx="0.085" ry="0.07" fill="${C.orbB}" opacity="0.5"/>`); } }
     o.push(dots.join(''));
-    o.push(`<path d="${SK.band(0, Ltot, 0, SKT)}" fill="${C.skin}"/><path d="${poly(sk.pts, false)}" fill="none" stroke="${C.skinS}" stroke-width="1.1" ${NS}/>`);
+    o.push(`<path d="${bandF(0, SKT)}" fill="${C.skin}"/>`);
+    for (const [a, b] of pieces) { const L = SK.line(a, b, 0).map((p, i, arr) => ft(p, a + (b - a) * i / Math.max(1, arr.length - 1))); o.push(`<path d="${poly(L, false)}" fill="none" stroke="${C.skinS}" stroke-width="1.1" ${NS}/>`); }
+    if (st.crease) { const sk0 = SK.off(qC, 0), tf = tarFrontAt(CR.sT), e = lerpP(sk0, tf, Math.min(1, st.crease));
+      o.push(`<path d="M${F(sk0)}L${F(e)}" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`); A.creaseCut = lerpP(sk0, tf, 0.35); A.creaseSkin = sk0; }
+    A.flap = ft(SK.off((qH + qC) / 2, SKT + 0.35), (qH + qC) / 2);
     A.pretarsalFat = DA.at(4.6, 1.5);
     // muscle of Riolan (the grey line)
     o.push(`<path d="${DA.band(0.02, 1.7, U_TAR, q => U_TAR + 0.32 * (1 - ss(1.2, 1.7, q)))}" fill="${C.riolan}"/>`);
@@ -345,10 +371,12 @@ const LID = (() => {
       o.push(`<path d="M${F(c0)}L${F(e)}" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`);
       if (cutDone) o.push(`<path d="M${F(DP.at(S_CUT + 0.02, 0))}L${F(DP.at(S_CUT + 0.02, U_TAR))}" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`);
       A.cut = lerpP(c0, c1, 0.5); }
-    if (st.suture) { const P1 = DP.at(3.45, 0.55), P2 = lerpP(DP.at(1.9, U_TAR), DA.at(1.9, U_TAR + 0.25), 0.5), P3 = DA.at(0.85, uSkin(V, 0.85) + 0.02);
+    if (st.suture) { const qB = qH + 0.5, P1 = DP.at(3.45, 0.55), P3 = st.buried ? ft(SK.off(qB, SKT + subq(qB) + orbW(qB) * 0.55), qB) : DA.at(0.85, uSkin(V, 0.85) + 0.02);
+      const P2 = st.buried ? lerpP(P1, P3, 0.5) : lerpP(DP.at(1.9, U_TAR), DA.at(1.9, U_TAR + 0.25), 0.5);
       const N = 40, pts = []; for (let i = 0; i <= N * Math.min(1, st.suture); i++) { const t = i / N; pts.push([0, 1].map(j => (1 - t) ** 2 * P1[j] + 2 * (1 - t) * t * (2 * P2[j] - (P1[j] + P3[j]) / 2) + t * t * P3[j])); }
       if (pts.length > 1) o.push(`<path d="M${pts.map(F).join('L')}" fill="none" stroke="#2463eb" stroke-width="2.4" stroke-linecap="round" ${NS}/>`);
-      if (st.suture >= 1) { const nk = DA.nrm(0.85), tk = DA.tan(0.85);
+      if (st.suture >= 1 && st.buried) o.push(`<circle cx="${P3[0].toFixed(3)}" cy="${P3[1].toFixed(3)}" r="0.12" fill="#2463eb"/>`);
+      if (st.suture >= 1 && !st.buried) { const nk = DA.nrm(0.85), tk = DA.tan(0.85);
         o.push(`<circle cx="${P3[0].toFixed(3)}" cy="${P3[1].toFixed(3)}" r="0.13" fill="#2463eb"/>`);
         for (const sg of [-1, 1]) o.push(`<path d="M${F(P3)}l${(nk[0] * 0.7 + tk[0] * 0.3 * sg).toFixed(3)} ${(nk[1] * 0.7 + tk[1] * 0.3 * sg).toFixed(3)}" stroke="#2463eb" stroke-width="2.2" stroke-linecap="round" ${NS}/>`); }
       A.suture = P2; A.sutureExit = P3; }
@@ -361,8 +389,8 @@ const LID = (() => {
     let bj = 0; for (let y = -31.5; y < -17.5; y += 0.62, bj++) for (let x = -14.2 + (bj % 2) * 0.35, bi = 0; x < -8; x += 0.7, bi++) o.push(`<circle cx="${(x + (hash(bi, bj) - 0.5) * 0.3).toFixed(2)}" cy="${y.toFixed(2)}" r="${(0.1 + 0.1 * hash(bj, bi)).toFixed(2)}" fill="${C.boneD}"/>`);
     o.push(`</g>`);
     A.rim = [-12.6, -22.5];
-    return { svg: o.join(''), A, DP, DA };
+    return { svg: o.join(''), A, DP, DA, skinAt: (q, d) => ft(SK.off(q, d), q), qOf: p => SK.near(p) };
   }
-  return { draw, makeDeform, gp, S_CUT, S_TAR, U_TAR, U_SKIN, uSkin, UF, LEV, geom, VARIANTS, sLv, S_J, ARCUS, hash, spline, track, poly, F, add, sub, unit, hyp, lerp, ss, NS, C };
+  return { draw, creasePointUF, makeDeform, gp, S_CUT, S_TAR, U_TAR, U_SKIN, uSkin, UF, LEV, geom, VARIANTS, sLv, S_J, ARCUS, hash, spline, track, poly, F, add, sub, unit, hyp, lerp, ss, NS, C };
 })();
 if (typeof module !== 'undefined') module.exports = LID;

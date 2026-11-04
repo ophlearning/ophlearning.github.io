@@ -66,5 +66,11 @@ const toGlobe = p => { const ph = Math.atan2(p[1], p[0]); return Math.hypot(p[0]
   ok(ex > 0 && ex < 1, `skin view: suture exits ${ex.toFixed(2)} mm above the lash line (just above it)`); }
 { const c = CORONAL.draw({ state: { evert: -1, skinCut: 1, sutures: 1 } }), root = x => c.lashY(x) + c.rollY(x), d = root(0) - c.skinCutY(0), ex = root(0.5) - c.A.sutureExit[1];
   ok(Math.abs(d - LID.S_CUT) < 0.3 && ex > 0 && ex < 1, `skin view, inturned margin: incision ${d.toFixed(2)} mm and suture exit ${ex.toFixed(2)} mm above the rolled-in lash line`); }
+// 14. lid-crease approach: crease incision at the same height in both views; the buried suture ends inside the lid, not on the skin
+{ const c = CORONAL.draw({ state: { crease: 1, flap: 1, buried: 1 } }), dm = c.Uy(0) - UF.at(0, 0)[1], ys = LID.creasePointUF('asian')[1];
+  ok(Math.abs(c.creaseY(0) - dm - ys) < 0.3, `crease incision height: coronal ${(c.creaseY(0) - dm).toFixed(2)} vs sagittal ${ys.toFixed(2)}`);
+  const r = LID.draw({ state: { curl: 0.25, crease: 1, flap: 1, cut: 1, suture: 1, buried: true } }), P3 = r.A.sutureExit, skin = r.skinAt(r.qOf(P3), 0), depth = Math.hypot(P3[0] - skin[0], P3[1] - skin[1]);
+  ok(depth > 0.2, `buried suture ends ${depth.toFixed(2)} mm under the skin (not on the skin)`);
+  ok(!/NaN|undefined/.test(r.svg + c.svg), 'lid-crease states: no NaN/undefined in the SVG'); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);

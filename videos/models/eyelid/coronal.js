@@ -58,7 +58,10 @@ const CORONAL = (() => {
     const face = 'M-40 -40H40V30H-40Z' + poly(fissure());
 
     // ---------------- windows → per-layer masks
-    const wins = opt.windows || [];
+    // lid-crease approach: incision on the (planned) crease; flap lifted → a window exposes the aponeurosis / tarsus below it
+    const dCrease = LID.creasePointUF(opt.variant || 'asian')[1] - LID.UF.at(0, 0)[1], creaseY = x => Uy(x) + dCrease * prof(x, -13.6, 10.6, 0.35);
+    const wins = [...(opt.windows || [])], FXW = xs(-12.4, 9.8, 0.25);
+    if ((st.flap || 0) > 0.05) wins.push({ poly: [...FXW.map(x => [x, creaseY(x)]), ...FXW.slice().reverse().map(x => [x, lashY(x) + rollY(x) - 0.35])], depth: 1 });   // narration: the whole tarsus is exposed down to the lash roots
     const masks = [];
     for (let L = 1; L <= 6; L++) { const cut = wins.filter(w => w.depth < L).map(w => poly(w.poly)).join('');
       masks.push(`<mask id="${id}_m${L}" maskUnits="userSpaceOnUse" x="-40" y="-40" width="80" height="70"><rect x="-40" y="-40" width="80" height="70" fill="#fff"/>${cut ? `<path d="${cut}" fill="#000"/>` : ''}</mask>`); }
@@ -172,6 +175,16 @@ const CORONAL = (() => {
       A.suture = [SX[0], lashY(SX[0]) - 1.0]; A.sutureExit = [SX[1], lashY(SX[1]) + rollY(SX[1]) - 0.6 + 0.25 * t]; }
     A.margin = [-4, Uy(-4)]; A.lashes = [-10.5, lashY(-10.5) - 1.6];
 
+    // lid-crease approach overlays
+    if (st.crease) { const n = Math.max(2, Math.round(FXW.length * Math.min(1, st.crease)));
+      o.push(`<path d="${poly(FXW.slice(0, n).map(x => [x, creaseY(x)]), false)}" fill="none" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`); A.crease = [FXW[n - 1], creaseY(FXW[n - 1])]; }
+    if (st.buried) A.buried = [SX[1], (cutY(SX[1]) + lashY(SX[1]) + rollY(SX[1])) / 2 - 0.3];
+    if (st.buried) for (const x of SX) o.push(`<path d="M${F([x, cutY(x) - 0.3])}L${F([x, lashY(x) + rollY(x) - 0.6])}" stroke="#2463eb" stroke-width="1.8" stroke-dasharray="3 3" opacity="${Math.min(1, st.buried)}" ${NS}/>`);
+    if ((st.flap || 0) > 0.05) { const f = st.flap, top = x => lashY(x) + rollY(x) - 0.35, bot = x => top(x) + 1.5 * f * prof(x, -12.4, 9.8, 0.4);
+      o.push(`<path d="${poly([...FXW.map(x => [x, top(x)]), ...FXW.slice().reverse().map(x => [x, bot(x)])])}" fill="${C.skin2}" stroke="${C.skinS}" stroke-width="1" ${NS}/>`);
+      o.push(`<path d="${poly(FXW.map(x => [x, top(x) + 0.12]), false)}" fill="none" stroke="${C.orb}" stroke-width="2.4" ${NS}/>`);
+      A.flapEdge = [-6, bot(-6) - 0.3]; A.exposed = [-2, (creaseY(-2) + top(-2)) / 2]; }
+
     // ---------------- cut edges of the windows
     for (const w of wins) o.push(`<path d="${poly(w.poly)}" fill="none" stroke="${C.cut}" stroke-width="1.1" ${NS} opacity="0.7"/>`);
     // sagittal plane marker
@@ -179,7 +192,7 @@ const CORONAL = (() => {
     A.section = [0, H.arc - 4.6];
     const defs = `<defs><radialGradient id="${id}_iris" cx="0.5" cy="0.5" r="0.5"><stop offset="0.3" stop-color="#2a170d"/><stop offset="0.75" stop-color="#4a2a17"/><stop offset="1" stop-color="#2a170d"/></radialGradient>
       <radialGradient id="${id}_skin" gradientUnits="userSpaceOnUse" cx="-1" cy="-6" r="26"><stop offset="0" stop-color="#f3d8c2"/><stop offset="0.7" stop-color="${C.skin}"/><stop offset="1" stop-color="#e2b597"/></radialGradient></defs>`;
-    return { svg: defs + o.join(''), A, Uy, lashY, rollY, fusY, tarTopY, whitY, arcusY, cutY, skinCutY, SX };
+    return { svg: defs + o.join(''), A, Uy, lashY, rollY, creaseY, fusY, tarTopY, whitY, arcusY, cutY, skinCutY, SX };
   }
   // ---------------------------------------------------------------- everted upper lid (the surgeon's view in PLTR)
   // The lid is flipped: tarsal conjunctiva faces the viewer, the lid margin with its lashes is on top, the fold (superior tarsal
