@@ -12,6 +12,7 @@
 3. 參考圖比對：`node videos/tools/ref-check.js videos/src/upper-lid-margin-rotation/ref/manifest.json`
    參考圖是站長確認過的畫面。這個檢查會重畫同一時刻，比較每個像素的亮度。有差異時會印出差異圖的位置（紅色＝變了的地方）。
    - 差異是預期中的（例如這次本來就要改那一段）：把新截圖交給站長，確認後才執行 `--update` 更新參考圖，並在 `manifest.json` 寫上確認日期。
+   - 新增段落的參考圖：先在 `manifest.json` 加一筆（`approved` 填 null），再用 `--update --only <段落>` 只產生這一段，不會動到已確認的圖。
    - 差異不在預期中：代表改 A 壞了 B，先修好。
 
 ## 看清楚用的工具

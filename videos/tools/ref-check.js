@@ -1,6 +1,7 @@
 // Reference-image check: re-render every approved moment and compare it with its reference image, pixel by pixel.
 //   node ref-check.js <manifest.json>            compare; exit 1 if any item differs more than the threshold
 //   node ref-check.js <manifest.json> --update   write the current renders as the new references (only after the editor approved them)
+//   add --only <segment id> to compare or update just that segment (e.g. a newly added one, without touching approved references)
 // manifest.json (paths relative to its folder):
 //   { "threshold": 0.001, "tol": 48, "crop": [x, y, w, h],
 //     "items": [ { "page": "../anim/video2.html", "seg": "4-4", "at": "2:0.6", "ref": "4-4-L2-0.6.jpg", "approved": "2026-11-04", "note": "…" },
@@ -10,14 +11,15 @@
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), os = require('os');
 (async () => {
-  const args = process.argv.slice(2), update = args.includes('--update'), mpath = path.resolve(args.find(a => !a.startsWith('--')) || '');
+  const args = process.argv.slice(2), update = args.includes('--update'), oi = args.indexOf('--only'), only = oi >= 0 ? args.splice(oi, 2)[1] : null;
+  const mpath = path.resolve(args.find(a => !a.startsWith('--')) || '');
   if (!fs.existsSync(mpath)) { console.error('usage: node ref-check.js <manifest.json> [--update]'); process.exit(2); }
   const M = JSON.parse(fs.readFileSync(mpath, 'utf8')), dir = path.dirname(mpath), outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ref-diff-'));
   const b = await chromium.launch();
   const cmp = await b.newPage();
   let fails = 0;
   const pages = {};
-  for (const it of M.items) {
+  for (const it of M.items.filter(x => !only || x.seg === only)) {
     const dpr = it.dpr || 1, crop = it.crop === undefined ? M.crop : it.crop, key = it.page + '@' + dpr;
     if (!pages[key]) { const p = await b.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: dpr }); p._errs = []; p.on('pageerror', e => p._errs.push(String(e)));
       await p.goto('file://' + path.resolve(dir, it.page)); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300); pages[key] = p; }
