@@ -202,8 +202,13 @@ const LID = (() => {
     const DEF = makeDeform(st), DP = dframe(DEF, 'post'), DA = dframe(DEF, 'ant'), cutDone = DEF.cutDone;
     const sk = skinPath(V, DA), LV = levTrack(DP), sLvD = q => LV.near(DP.at(q, 0.9)), S_JD = LV.near([1.0, -17.15]);
     const split = (s0, s1, fn) => cutDone && s0 < S_CUT && s1 > S_CUT ? [fn(s0, S_CUT - 0.02), fn(S_CUT + 0.02, s1)] : [fn(s0, s1)];
+    // posterior lid margin rounding (long-standing entropion): radius 0.3 mm (schematic, < MCJ depth); the corner of every
+    // posterior-lamella layer follows this arc, so nothing behind it shows through as a notch
+    const rnd = 0.3 * (st.round || 0), rclip = rnd > 0.01 ? `${pid}Rnd` : null;
+    const arcSU = r => { const a = []; for (let d = 270; d >= 180; d -= 6) a.push([rnd + r * Math.cos(d * D2R), rnd + r * Math.sin(d * D2R)]); return a; };   // (s,u): posterior surface → margin
+    const corner = rclip ? arcSU(rnd).map(([q, u]) => DP.at(q, u)) : [DP.at(0, 0)];
     // 1 orbital soft tissue (everything behind the skin)
-    const base = [...sk.pts, [45, -32], [45, 6], [0, 0], DP.at(0, 0)];
+    const base = [...sk.pts, [45, -32], [45, 6], [0, 0], ...corner];
     o.push(`<path d="${poly(base)}" fill="${C.ofat}"/>`);
     lobules(o, pid + 'OF', poly(base), -12, 45, -21, 2, 0.45, 0.75, 'none', C.ofatS, 0.7);
     // 2 anterior lid / brow tissue between skin, bone, septum, aponeurosis and the tarsus front
@@ -251,7 +256,12 @@ const LID = (() => {
       o.push(`<path d="${poly(l, false)}" fill="none" stroke="${C.musF}" stroke-width="1" ${NS}/>`); }
     A.sr = add(gp(272 * D2R), unit(gp(272 * D2R)), 0.8);
 
+    // conjunctiva and tarsus are clipped to the rounded corner
+    if (rclip) { const edge = (u, a, b) => { const r = []; for (let q = a; a < b ? q <= b : q >= b; q += a < b ? 0.1 : -0.1) r.push(DP.at(q, u)); return r; };   // follow the curved lid, not a straight chord
+      o.push(`<clipPath id="${rclip}"><path d="${poly([...edge(3, 16, 0), ...corner.slice().reverse(), ...edge(-3, rnd, 16)])}"/></clipPath>`); }
+    const gOpen = () => rclip ? `<g clip-path="url(#${rclip})">` : '<g>';
     // 6 conjunctiva: margin (posterior edge → MCJ) + palpebral → fornix → bulbar; palpebral splits at the incision
+    o.push(gOpen());
     const palLine = (s0, s1) => { const r = []; for (let q = s0; q < s1; q += 0.05) r.push(DP.at(q, U_CONJ / 2)); r.push(DP.at(s1, U_CONJ / 2)); return r; };
     const bul = [], phF = UF.phiAt(S_FORNIX);
     for (let a = phF; a >= PHI_LU - 0.5 * D2R; a -= 0.003) { const p = gp(a); bul.push(add(p, unit(p), srTh(a) + 0.06)); }
@@ -259,7 +269,8 @@ const LID = (() => {
     const cap = []; for (let k = 1; k < 14; k++) { const a = Math.PI * k / 14; cap.push(add(add(mid, dd, rr * Math.cos(a)), tdir, rr * Math.sin(a) * 1.6)); }
     const palParts = split(0, S_FORNIX, (a0, a1) => palLine(a0, a1)); palParts[palParts.length - 1].push(...cap, ...bul);
     for (const pp of palParts) { const CJ = track(pp); o.push(`<path d="${CJ.band(0, CJ.L, -0.075, 0.075)}" fill="${C.conj}" stroke="${C.conjS}" stroke-width="0.6" ${NS}/>`); }
-    o.push(`<path d="${DP.band(0, 0.06, 0, U_MCJ)}" fill="${C.conj}" stroke="${C.conjS}" stroke-width="0.6" ${NS}/>`);
+    const uMcj = lerp(U_MCJ, 0.95, st.mcjShift || 0);                           // scarring drags the MCJ forward, past the meibomian orifices
+    o.push('</g>');
     A.conj = DP.at(5.5, U_CONJ / 2); A.fornix = add(mid, tdir, rr * 1.6);
     if (st.scar) for (const q of [1.4, 2.3, 4.0, 5.2, 6.5, 7.6]) { const p0 = DP.at(q, 0.02), p1 = DP.at(q + 0.45, 0.1);
       o.push(`<path d="M${F(p0)}L${F(p1)}" stroke="#fff" stroke-width="${(1.6 + 1.6 * st.scar).toFixed(2)}" stroke-linecap="round" opacity="${(0.5 + 0.5 * st.scar).toFixed(2)}" ${NS}/>`); }
@@ -271,6 +282,7 @@ const LID = (() => {
     A.muller = LV.off(sLvD(12.4), 0.42);
 
     // 8 tarsus + meibomian gland — two pieces once the incision is through
+    o.push(gOpen());
     for (const t of split(0, S_TAR, (a0, a1) => DP.band(a0, a1, U_CONJ, q => U_CONJ + (U_TAR - U_CONJ) * tarTop(q))))
       o.push(`<path d="${t}" fill="${C.tar}" stroke="${C.tarS}" stroke-width="0.9" ${NS}/>`);
     const gl = []; let gi = 0;
@@ -279,6 +291,10 @@ const LID = (() => {
       gl.push(`<circle cx="${c[0].toFixed(3)}" cy="${c[1].toFixed(3)}" r="${(0.095 + 0.03 * hash(gi, 5)).toFixed(3)}" fill="${C.gland}" stroke="${C.glandS}" stroke-width="0.6" ${NS}/>`); }
     o.push(gl.join(''));
     for (const d of split(0, 8.95, (a0, a1) => DP.band(a0, a1, U_ORIF - 0.055, U_ORIF + 0.055))) o.push(`<path d="${d}" fill="${C.duct}"/>`);
+    o.push('</g>');
+    // margin conjunctiva (posterior edge → MCJ), drawn over the tarsal edge; wraps the corner when the margin is rounded
+    const mOut = rclip ? [...arcSU(rnd), [0, U_MCJ]] : [[0, 0], [0, U_MCJ]], mIn = rclip ? [...arcSU(rnd - 0.06), [0.06, U_MCJ]] : [[0.06, 0], [0.06, U_MCJ]];
+    o.push(`<path d="${poly([...mOut, ...mIn.reverse()].map(([q, u]) => DP.at(q, u)))}" fill="${C.conj}" stroke="${C.conjS}" stroke-width="0.6" ${NS}/>`);
     A.tarsus = DP.at(6.2, 0.95); A.gland = DP.at(4.0, U_ORIF + 0.18); A.tarsusZ = DP.at(1.5, 1.0); A.glandZ = DP.at(2.4, U_ORIF + 0.17); A.orifice = DP.at(0, U_ORIF);
     A.strip = DP.at(1.6, 0.64); A.upper = DP.at(4.6, 0.64); A.wedge = DP.at(3.55, 0.64);
 
@@ -331,6 +347,7 @@ const LID = (() => {
     o.push(dots.join(''));
     o.push(`<path d="${bandF(0, SKT)}" fill="${C.skin}"/>`);
     for (const [a, b] of pieces) { const L = SK.line(a, b, 0).map((p, i, arr) => ft(p, a + (b - a) * i / Math.max(1, arr.length - 1))); o.push(`<path d="${poly(L, false)}" fill="none" stroke="${C.skinS}" stroke-width="1.1" ${NS}/>`); }
+    if (uMcj > U_MCJ + 0.005) o.push(`<path d="${DP.band(0, SKT, U_MCJ, uMcj)}" fill="${C.conj}" stroke="${C.conjS}" stroke-width="0.6" ${NS}/>`);   // shifted MCJ: conjunctiva now covers this part of the margin
     if (st.crease) { const sk0 = SK.off(qC, 0), tf = tarFrontAt(CR.sT), e = lerpP(sk0, tf, Math.min(1, st.crease));
       o.push(`<path d="M${F(sk0)}L${F(e)}" stroke="#d23c3c" stroke-width="2.6" stroke-linecap="round" ${NS}/>`); A.creaseCut = lerpP(sk0, tf, 0.35); A.creaseSkin = sk0; }
     A.flap = ft(SK.off((qH + qC) / 2, SKT + 0.35), (qH + qC) / 2);
@@ -338,7 +355,7 @@ const LID = (() => {
     // muscle of Riolan (the grey line)
     o.push(`<path d="${DA.band(0.02, 1.7, U_TAR, q => U_TAR + 0.32 * (1 - ss(1.2, 1.7, q)))}" fill="${C.riolan}"/>`);
     for (let q = 0.2; q < 1.5; q += 0.28) { const c = DA.at(q, U_TAR + 0.16); o.push(`<ellipse cx="${c[0].toFixed(3)}" cy="${c[1].toFixed(3)}" rx="0.06" ry="0.05" fill="#7e2a36" opacity="0.6"/>`); }
-    A.grey = DA.at(0, U_GREY); A.mcj = DP.at(0, U_MCJ); A.postMargin = DP.at(0, 0.02);
+    A.grey = DA.at(0, U_GREY); A.mcj = DP.at(0, uMcj); A.postMargin = DP.at(rnd * 0.3, rnd * 0.3 + 0.02);
     // arterial arcades
     const ma = DA.at(2.45, U_TAR + 0.13), pa = LV.off(sLvD(11.0), 0.12);
     o.push(`<circle cx="${ma[0]}" cy="${ma[1]}" r="0.12" fill="${C.art}"/><circle cx="${pa[0]}" cy="${pa[1]}" r="0.13" fill="${C.art}"/>`);
@@ -358,6 +375,20 @@ const LID = (() => {
       const bez = t => [0, 1].map(j => (1 - t) ** 3 * E[j] + 3 * (1 - t) ** 2 * t * c1[j] + 3 * (1 - t) * t * t * c2[j] + t ** 3 * tip[j]);
       if (k === 1) { A.follicle = lerpP(E, B, 0.62); A.lash = bez(0.22); A.lashTip = tip; }
     });
+
+    // 12b examination overlays: MCJ marker and meibomian orifice, conjunctival contraction, misdirected / metaplastic lashes
+    if (st.mcj) { const m0 = DP.at(0, uMcj), m1 = add(m0, DP.tan(0), -0.35), oo = DP.at(0, U_ORIF);
+      o.push(`<g opacity="${st.mcj}"><path d="M${F(m0)}L${F(m1)}" stroke="#0e7c6b" stroke-width="3" stroke-linecap="round" ${NS}/><circle cx="${oo[0].toFixed(3)}" cy="${oo[1].toFixed(3)}" r="0.07" fill="#e9c35e" stroke="#9c7a20" stroke-width="1" ${NS}/></g>`); }
+    if (st.contract) { const arrow = (a, b) => { const d = unit(sub(b, a)), nn = [-d[1], d[0]], h = add(b, d, -0.3);
+        return `<path d="M${F(a)}L${F(h)}" stroke="#d23c3c" stroke-width="2.6" ${NS}/><path d="${poly([b, add(h, nn, 0.18), add(h, nn, -0.18)])}" fill="#d23c3c"/>`; };
+      o.push(`<g opacity="${st.contract}">${arrow(DP.at(7.0, -0.5), DP.at(5.2, -0.5))}${arrow(DP.at(1.4, -0.5), DP.at(3.2, -0.5))}</g>`); A.contract = DP.at(4.2, -0.5); }
+    if (st.misdirected || st.metaplastic) {
+      const amber = (pts, op) => `<path d="M${F(pts[0])}C${F(pts[1])} ${F(pts[2])} ${F(pts[3])}" fill="none" stroke="#b86e00" stroke-width="0.08" stroke-linecap="round" opacity="${op}"/>`;
+      if (st.misdirected) { const E = DA.at(marginS(1.75), 1.75), t = DA.tan(0.2), P = [E, add(E, t, -1.0), onCornea(E[1] + 2.0, 0.12), onCornea(E[1] + 4.2, 0.16)];
+        o.push(amber(P, st.misdirected)); A.misLash = onCornea(E[1] + 2.6, 0.14); }
+      if (st.metaplastic) { const E = DP.at(0, U_ORIF), t = DP.tan(0.2), P = [E, add(E, t, -0.6), onCornea(E[1] + 1.4, 0.1), onCornea(E[1] + 3.4, 0.14)];
+        o.push(`<circle cx="${E[0].toFixed(3)}" cy="${E[1].toFixed(3)}" r="0.06" fill="#b86e00" opacity="${st.metaplastic}"/>` + amber(P, st.metaplastic)); A.metaLash = onCornea(E[1] + 2.2, 0.12); }
+    }
 
     // 13 surgical overlays: dissection plane, incision, suture
     if (st.plane) { const P0 = [], P1 = []; for (let q = 0.7; q <= S_CUT; q += 0.05) { P0.push(DP.at(q, U_TAR)); P1.push(DA.at(q, U_TAR + 0.02)); }

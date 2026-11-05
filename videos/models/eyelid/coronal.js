@@ -133,6 +133,7 @@ const CORONAL = (() => {
     if (inv > 0) s6 += `<path d="${poly([...FX.map(x => [x, Uy(x) - 0.05]), ...FX.slice().reverse().map(x => [x, Uy(x) + 0.45 * inv * prof(x, LC[0], MC[0], 0.6)])])}" fill="${C.skin2}"/>`;
     for (let x = LC[0] + 1.6, k = 0; x < MC[0] - 3.4; x += 0.3, k++) { const y = lashY(x) + rollY(x), lean = x / 14, l0 = 2.2 + 1.4 * prof(x, LC[0], MC[0], 0.8) * (0.8 + 0.4 * hash(k, 1));
       const dy = lerp(-1, 0.75, inv) - 0.12 * out, l = l0 * (1 - 0.25 * inv);
+      if (!A.lashMid && x > -5) A.lashMid = [x + lean * 0.6, y + dy * l * 0.6];   // a point on a central lash (follows entropion)
       s6 += `<path d="M${F([x, y + 0.1])}Q${F([x + lean * 0.4, y + dy * l * 0.55])} ${F([x + lean * (1.2 + 0.5 * out), y + dy * l])}" fill="none" stroke="${C.lash}" stroke-width="0.07" stroke-linecap="round"/>`; }
     for (let x = LC[0] + 2.5, k = 0; x < MC[0] - 4; x += 0.55, k++) { const y = Ly(x), lean = x / 14, l = 1.1 + 0.8 * prof(x, LC[0], MC[0]) * (0.7 + 0.5 * hash(k, 2));
       s6 += `<path d="M${F([x, y - 0.1])}Q${F([x + lean * 0.2, y + l * 0.6])} ${F([x + lean * 0.7, y + l])}" fill="none" stroke="${C.lash}" stroke-width="0.055" stroke-linecap="round"/>`; }
@@ -146,6 +147,16 @@ const CORONAL = (() => {
       s6 += `<path d="M${F([x, yb])}l${(-Math.cos(ang) * len).toFixed(2)} ${(Math.sin(ang) * len).toFixed(2)}" stroke="${C.brow}" stroke-width="0.045" opacity="${(0.4 + 0.35 * w).toFixed(2)}" stroke-linecap="round"/>`; }
     layer(6, s6);
     A.epi = [12.6, 0.4]; A.skin = [-13.0, -9.0]; A.lc = LC;
+
+    // ---------------- examination overlays: misdirected lashes (normal lash line, wrong direction) and metaplastic lashes
+    // (growing from the posterior margin, behind the lash line); amber, both reach the cornea. Positions are schematic.
+    const amber = (P, op) => `<path d="M${F(P[0])}Q${F(P[1])} ${F(P[2])}" fill="none" stroke="#b86e00" stroke-width="0.11" stroke-linecap="round" opacity="${op}"/>`;
+    if (st.misdirected) { for (const [x, l, b] of [[-3.2, 3.0, -0.5], [-2.3, 3.4, 0.2], [-1.2, 2.8, 0.6]]) { const y = lashY(x) + rollY(x);
+        o.push(amber([[x, y + 0.1], [x + b * 0.3, y + l * 0.5], [x + b, y + l]], st.misdirected)); }
+      A.misLash = [-2.3 + 0.1, lashY(-2.3) + rollY(-2.3) + 1.9]; }
+    if (st.metaplastic) { for (const [x, l, b] of [[2.6, 2.6, -0.4], [3.5, 3.0, 0.3]]) { const y = Uy(x);
+        o.push(`<circle cx="${x}" cy="${(y - 0.05).toFixed(3)}" r="0.09" fill="#b86e00" opacity="${st.metaplastic}"/>` + amber([[x, y - 0.05], [x + b * 0.3, y + l * 0.5], [x + b, y + l]], st.metaplastic)); }
+      A.metaLash = [3.5 + 0.1, Uy(3.5) + 1.7]; }
 
     // ---------------- PLTR overlays (skin-side view)
     const dCut = LID.UF.at(LID.S_CUT, 0)[1] - LID.UF.at(0, 0)[1];               // incision height above the margin, from the sagittal model

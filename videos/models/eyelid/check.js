@@ -72,5 +72,15 @@ const toGlobe = p => { const ph = Math.atan2(p[1], p[0]); return Math.hypot(p[0]
   const r = LID.draw({ state: { curl: 0.25, crease: 1, flap: 1, cut: 1, suture: 1, buried: true } }), P3 = r.A.sutureExit, skin = r.skinAt(r.qOf(P3), 0), depth = Math.hypot(P3[0] - skin[0], P3[1] - skin[1]);
   ok(depth > 0.2, `buried suture ends ${depth.toFixed(2)} mm under the skin (not on the skin)`);
   ok(!/NaN|undefined/.test(r.svg + c.svg), 'lid-crease states: no NaN/undefined in the SVG'); }
+// 15. examination (narration of 1-2): the MCJ lies behind the meibomian orifices; scarring drags it in front of them.
+//     Measured from the posterior lid edge, so "behind" = closer to the globe side of the margin.
+{ const n = LID.draw({ state: { mcj: 1 } }), sh = LID.draw({ state: { curl: 1, round: 1, mcj: 1, mcjShift: 1 } }), e = r => r.DP.at(0, 0), d = (r, k) => Math.hypot(r.A[k][0] - e(r)[0], r.A[k][1] - e(r)[1]);
+  ok(d(n, 'mcj') < d(n, 'orifice'), `normal: MCJ ${d(n, 'mcj').toFixed(2)} mm from the posterior edge, behind the orifice (${d(n, 'orifice').toFixed(2)} mm)`);
+  ok(d(sh, 'mcj') > d(sh, 'orifice'), `scarred: MCJ ${d(sh, 'mcj').toFixed(2)} mm from the posterior edge, in front of the orifice (${d(sh, 'orifice').toFixed(2)} mm)`);
+// 16. misdirected and metaplastic lashes reach the cornea (narration of 1-1: lashes touching the eye)
+  const m = LID.draw({ state: { misdirected: 1, metaplastic: 1 } }).A;
+  ok(toGlobe(m.misLash) < 0.4 && toGlobe(m.metaLash) < 0.4, `misdirected / metaplastic lashes ${toGlobe(m.misLash).toFixed(2)} / ${toGlobe(m.metaLash).toFixed(2)} mm from the cornea (touching)`);
+  const c = CORONAL.draw({ state: { misdirected: 1, metaplastic: 1 } });
+  ok(!/NaN|undefined/.test(sh.svg + c.svg) && c.A.misLash && c.A.metaLash, 'examination states: no NaN/undefined in the SVG, anchors present'); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);
