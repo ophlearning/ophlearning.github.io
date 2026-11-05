@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="fonts/package/400.css">
+<link rel="stylesheet" href="fonts/package/500.css">
+<link rel="stylesheet" href="fonts/package/700.css">
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #eceff2; }
+  svg text { font-family: 'Noto Sans TC', sans-serif; }
+  #preload { position: absolute; left: 0; top: 0; opacity: 0; white-space: nowrap; pointer-events: none; font-family: 'Noto Sans TC'; }
+</style>
+</head>
+<body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<div id="preload"></div>
+<script src="engine.js"></script>
+<script src="../../../models/eyelid/lid.js"></script>
+<script src="../../../models/eyelid/coronal.js"></script>
+<script src="views.js"></script>
+<script src="segments.js"></script>
+<script src="draw2.js"></script>
+<script src="timeline.js"></script>
+<script>
+// ===================== timeline =====================
+const LEAD = 0.6, GAP = 0.35, TAIL = 1.0, CARD = 2.8;
+function capLen(s) { const t = s.replace(/\n/g, '');
+  return (t.match(/[　-鿿＀-￯]/g) || []).length + (t.match(/[A-Za-z]+/g) || []).length * 1.7 + (t.match(/[0-9.]+%?/g) || []).length * 2.2; }
+const TL = (() => {
+  const ext = window.TIMELINE; let t = 0; const out = [];
+  for (const sg of SEGS) {
+    if (ext && ext.segs[sg.id]) { const e = ext.segs[sg.id]; out.push({ sg, t0: e.t0, t1: e.t1, lines: e.lines }); t = e.t1; continue; }
+    const t0 = t; let tt = t0 + (sg.chapterCard ? 0 : (sg.lead ?? LEAD)); const lines = [];
+    for (const l of (sg.lines || [])) { const d = Math.max(1.6, capLen(l) / 4.2); lines.push([tt, tt + d]); tt += d + GAP; }
+    const t1 = sg.chapterCard ? t0 + CARD : sg.dur ? t0 + sg.dur : tt - GAP + (sg.tail ?? TAIL);
+    out.push({ sg, t0, t1, lines }); t = t1;
+  }
+  return out;
+})();
+const DURATION = TL[TL.length - 1].t1;
+window.SCENE_DURATION = DURATION;
+window.TL_EXPORT = TL.map(x => ({ id: x.sg.id, t0: x.t0, t1: x.t1, ch: x.sg.ch ?? x.sg.chapterCard, lines: x.lines, text: x.sg.lines || [] }));
+const CH_SPAN = CHAPTERS.map((_, i) => { const xs = TL.filter(x => (x.sg.ch ?? x.sg.chapterCard) === i); return [xs[0].t0, xs[xs.length - 1].t1]; });
+document.getElementById('preload').textContent = SEGS.map(s => (s.lines || []).join('') + (s.title || '') + JSON.stringify(s.keys || '') + JSON.stringify(s.src || '')).join('') + CHAPTERS.join('') + REFS.join('') +
+  '矢狀切面中央正面觀右眼翻開上眼瞼瞼緣翻到上方左前上檢查者面對病人第章重點來源製作基隆長庚張博淳示意動畫不是手術錄影比例不精確各院做法不同處依院內常規0123456789';
+
+// ===================== drawing helpers =====================
+function richLines(x, y, html, size, lh, color) { // supports <b>…</b> and \n
+  return html.split('\n').map((ln, i) => {
+    const parts = ln.split(/(<b>.*?<\/b>)/).filter(Boolean).map(p => p.startsWith('<b>') ? `<tspan fill="${COL.accent}" font-weight="700">${esc(p.slice(3, -4))}</tspan>` : `<tspan>${esc(p)}</tspan>`);
+    return `<text x="${x}" y="${y + i * lh}" font-size="${size}" fill="${color}">${parts.join('')}</text>`;
+  }).join('');
+}
+const PANEL_Y = 64, PANEL_H = 444, CONTENT_Y = 96, CONTENT_H = 410;   // redo: larger animation panels
+const PANELS = { dual: [['L', 24, 608], ['R', 648, 608]], full: [['F', 24, 1232]] };   // [key, x, width]; videos/tools/check-video.js reads this
+function panelFrame(x, w, P) {
+  return `<rect x="${x}" y="${PANEL_Y}" width="${w}" height="${PANEL_H}" rx="10" fill="#fff" stroke="#d3dae1"/>` +
+    text(x + 16, PANEL_Y + 24, P.title || '', { size: 15, bold: true }) + text(x + w - 16, PANEL_Y + 24, P.orient || '', { size: 13, color: COL.sub, anchor: 'end' });
+}
+function panelContent(x, w, content, pid) {
+  if (!content) return { svg: '', A: null };
+  let body = '', labels = '', A = null;
+  if (content.sag) { const r = SAG.draw(content.sag, w, CONTENT_H); body = r.svg; labels = r.labels; A = r.A; }
+  else if (content.cor) { const r = COR.draw(content.cor, w, CONTENT_H); body = r.svg; labels = r.labels; A = r.A; }
+  else if (content.svg) body = content.svg;
+  if (content.svg && !content.sag && !content.cor) return { pre: `<clipPath id="clip_${pid}"><rect x="0" y="0" width="${w - 2}" height="${CONTENT_H}" rx="8"/></clipPath><g transform="translate(${x + 1} ${CONTENT_Y})"><g clip-path="url(#clip_${pid})">${body}</g>`, A: null };
+  body = body.replace(/id="(blk|fissC)"/g, `id="$1_${pid}"`).replace(/url\(#(blk|fissC)\)/g, `url(#$1_${pid})`);
+  return { pre: `<clipPath id="clip_${pid}"><rect x="0" y="0" width="${w - 2}" height="${CONTENT_H}" rx="8"/></clipPath><g transform="translate(${x + 1} ${CONTENT_Y})"><g clip-path="url(#clip_${pid})">${body}</g>${labels}`, A };
+}
+const DEFS = `<defs>
+  <radialGradient id="globeS" gradientUnits="userSpaceOnUse" cx="790" cy="130" r="700"><stop offset="0.80" stop-color="#dfe6ec" stop-opacity="0"/><stop offset="0.96" stop-color="#d7e1e9" stop-opacity="0.6"/><stop offset="1" stop-color="#c9d6e1"/></radialGradient>
+  <radialGradient id="irisG" cx="0.5" cy="0.5" r="0.5"><stop offset="0.35" stop-color="#3b2416"/><stop offset="0.8" stop-color="#6b4429"/><stop offset="1" stop-color="#3a2416"/></radialGradient>
+  <linearGradient id="skinC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1d6c2"/><stop offset="1" stop-color="#ecc9ae"/></linearGradient>
+  <marker id="arrR" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="${COL.red}"/></marker></defs>`;
+
+function header(tl, t) {
+  const sg = tl.sg, ch = sg.ch ?? sg.chapterCard;
+  let s = '';
+  if (ch > 0) s += `<rect x="24" y="22" width="${measure(`第 ${ch} 章　${CHAPTERS[ch]}`, 14, true) + 20}" height="28" rx="5" fill="rgba(14,124,107,0.10)"/>` + text(34, 41, `第 ${ch} 章　${CHAPTERS[ch]}`, { size: 14, bold: true, color: COL.accent });
+  const tx = ch > 0 ? 34 + measure(`第 ${ch} 章　${CHAPTERS[ch]}`, 14, true) + 30 : 24;
+  s += text(tx, 45, sg.title || (ch === 0 ? 'Upper lid margin rotation' : CHAPTERS[ch]), { size: 24, bold: true });
+  // chapter progress
+  const x0 = 820, x1 = 1256, total = DURATION; let x = x0;
+  CH_SPAN.forEach(([a, b], i) => { const w = (b - a) / total * (x1 - x0 - 9 * 4); const k = clamp01((t - a) / (b - a));
+    s += `<rect x="${x}" y="33" width="${w}" height="6" rx="3" fill="#cfd6dd"/><rect x="${x}" y="33" width="${w * k}" height="6" rx="3" fill="${COL.accent}"/>`; x += w + 4; });
+  return s;
+}
+function keyBox(tl, T, op) {
+  const sg = tl.sg; if (!sg.keys) return '';
+  let html = '', ks = 0; for (const [i, h] of sg.keys) if (T.u >= T.st(i) - 0.25) { html = h; ks = T.st(i) - 0.25; }
+  let src = ''; for (const [i, s2] of (sg.src || [])) if (T.u >= T.st(i) - 0.25) src = s2;
+  const kop = ss(ks, ks + 0.45, T.u) * op;
+  const nl = html.split('\n').length, y0 = nl > 1 ? 547 : 561;
+  return `<rect x="24" y="516" width="1232" height="80" rx="10" fill="#fff" stroke="#d3dae1"/><rect x="24" y="516" width="6" height="80" rx="3" fill="${COL.accent}"/>` +
+    text(46, 561, '重點', { size: 14, bold: true, color: COL.accent }) + `<g opacity="${kop}">${richLines(94, y0, html, 17, 28, COL.ink)}</g>` +
+    (src ? text(1240, 588, '來源｜' + src, { size: 12.5, color: COL.sub, anchor: 'end', op }) : '');
+}
+function caption(tl, t) {
+  let cap = '', op = 0;
+  tl.lines.forEach(([a, b], i) => { if (t >= a - 0.15 && t <= b + GAP * 0.9) { cap = tl.sg.lines[i]; op = Math.min(ss(a - 0.15, a + 0.1, t), 1 - ss(b + 0.1, b + GAP * 0.9, t)); } });
+  if (!cap) return '';
+  const ls = cap.split('\n');
+  return `<g opacity="${op}">${ls.map((l, i) => text(640, 656 - (ls.length - 1) * 19 + i * 40, l, { size: 28, w: 500, color: '#fff', anchor: 'middle' })).join('')}</g>`;
+}
+
+// ===================== frame =====================
+function renderAt(t) {
+  t = Math.min(Math.max(t, 0), DURATION - 1e-6);
+  const tl = TL.find(x => t >= x.t0 && t < x.t1) || TL[TL.length - 1];
+  const sg = tl.sg, u = t - tl.t0, dur = tl.t1 - tl.t0;
+  const st = i => tl.lines[i] ? tl.lines[i][0] - tl.t0 : dur, en = i => tl.lines[i] ? tl.lines[i][1] - tl.t0 : dur;
+  const T = { u, st, en, on: (i, d = 0.6, off = 0) => ss(st(i) + off, st(i) + off + d, u), p: (i, a = 0, b = 1) => ss(lerp(st(i), en(i), a), lerp(st(i), en(i), b), u) };
+  const op = ss(0, 0.35, u) * (1 - ss(dur - 0.3, dur, u) * (sg.chapterCard || sg.layout === 'refs' ? 0 : 1));
+  const o = [DEFS];
+  o.push(`<rect width="1280" height="720" fill="#eceff2"/>`);
+
+  if (sg.chapterCard) {
+    const ch = sg.chapterCard, k = ss(0, 0.6, u), k2 = ss(0.2, 1.0, u);
+    o.push(`<g opacity="${k * (1 - ss(dur - 0.35, dur, u))}">${text(640, 300, `第 ${ch} 章`, { size: 30, bold: true, color: COL.accent, anchor: 'middle' })}
+      ${text(640, 380, CHAPTERS[ch], { size: 62, bold: true, anchor: 'middle' })}<rect x="${640 - 160 * k2}" y="414" width="${320 * k2}" height="4" rx="2" fill="${COL.accent}"/></g>`);
+    o.push(header(tl, t).replace(/<text[^]*?<\/text>/, '')); // progress only
+    document.getElementById('stage').innerHTML = o.join(''); return;
+  }
+  if (sg.layout === 'title') {
+    const r = COR.draw({ evert: 0.05, tarsus: 0.6, section: 0 }, 606, CONTENT_H);
+    o.push(`<g opacity="${op}">`);
+    o.push(panelFrame(648, 608, { title: '右眼 OD　正面觀', orient: '左＝temporal　右＝nasal' }));
+    o.push(`<clipPath id="clip_t"><rect x="0" y="0" width="606" height="${CONTENT_H}" rx="8"/></clipPath><g transform="translate(649 ${CONTENT_Y})"><g clip-path="url(#clip_t)">${r.svg.replace(/fissC/g, 'fissC_t')}</g>${r.labels}</g>`);
+    o.push(text(40, 170, 'Upper lid', { size: 50, bold: true }) + text(40, 232, 'margin rotation', { size: 50, bold: true }));
+    o.push(text(40, 286, 'Posterior lamellar tarsal rotation（PLTR）', { size: 22, w: 500, color: COL.accent }));
+    o.push(text(40, 322, '上眼瞼 cicatricial entropion 的手術', { size: 19, color: COL.ink }));
+    o.push(tblock(40, 392, ['右眼示意動畫，不是手術錄影；比例不精確。', '各院做法不同的地方，依院內常規。'], { size: 15.5, color: COL.sub }));
+    o.push(`</g>`);
+  } else if (sg.layout === 'refs') {
+    o.push(header(tl, t));
+    o.push(`<rect x="24" y="70" width="1232" height="638" rx="10" fill="#fff" stroke="#d3dae1"/>`);
+    o.push(`<clipPath id="clip_r"><rect x="25" y="80" width="1230" height="620"/></clipPath><g clip-path="url(#clip_r)">`);
+    const lh = 50, totalH = REFS.length * lh + 160, scroll = Math.max(0, ss(2.5, dur - 6, u) * (totalH - 560));
+    REFS.forEach((r, i) => { const y = 120 + i * lh - scroll; if (y > 40 && y < 760) { const words = r.length > 150 ? [r.slice(0, r.lastIndexOf(' ', 150)), r.slice(r.lastIndexOf(' ', 150) + 1)] : [r];
+      o.push(text(48, y, `${i + 1}.`, { size: 14.5, bold: true, color: COL.accent }) + words.map((w, j) => text(80, y + j * 19, w, { size: 14.5 })).join('')); } });
+    const yEnd = 120 + REFS.length * lh - scroll + 40;
+    o.push(text(640, yEnd + 30, '製作　基隆長庚　張博淳', { size: 22, bold: true, anchor: 'middle' }));
+    o.push(`</g>`);
+    document.getElementById('stage').innerHTML = o.join(''); return;
+  } else {
+    const NEW = DRAW2[sg.id];
+    // two-pass (old drawings): states → panels (anchors) → extras with fresh anchors; new drawings already carry their anchors
+    let D = NEW ? NEW(T) : sg.draw(T);
+    const panels = PANELS[sg.layout === 'dual' ? 'dual' : 'full'];
+    const built = {};
+    for (const [key, x, w] of panels) { const c = D[key]; const r = panelContent(x, w, c, key); built[key] = r;
+      if (r.A) { if (c.sag) SEGS_DRAW_CACHE.sagA = r.A; if (c.cor) SEGS_DRAW_CACHE.corA = r.A; } }
+    if (!NEW) D = sg.draw(T);
+    o.push(header(tl, t));
+    o.push(`<g opacity="${op}">`);
+    panels.forEach(([key, x, w], i) => {
+      const P = (D[key] && D[key].P) || (sg.P && sg.P[i]) || {};
+      o.push(panelFrame(x, w, P));
+      const r = built[key]; o.push((r.pre || '') + ((D[key] && D[key].extra) || '') + (r.pre ? '</g>' : ''));
+    });
+    o.push(keyBox(tl, T, op));
+    o.push(`</g>`);
+  }
+  // caption bar
+  o.push(`<rect x="24" y="604" width="1232" height="104" rx="10" fill="#1d2733"/>`);
+  o.push(caption(tl, t));
+  document.getElementById('stage').innerHTML = o.join('');
+}
+window.renderAt = renderAt;
+renderAt(0);
+</script>
+</body>
+</html>
