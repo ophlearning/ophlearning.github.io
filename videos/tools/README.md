@@ -17,7 +17,7 @@
    - 差異是預期中的（例如這次本來就要改那一段）：自己放大看新截圖，確認正確後執行 `node videos/tools/ref-check.js <manifest> --update --only <段落>`，並在 `manifest.json` 的 `approved` 填日期、`note` 寫「Claude 自檢」。
    - 新增段落的參考圖：先在 `manifest.json` 加一筆（`approved` 填 null），再用 `--update --only <段落>` 只產生這一段，不會動到已確認的圖。
    - `--only` 也可以填參考圖或頁面的檔名（例如 `sample.html`）。
-   - 畫面還沒自檢完、但要先 commit 保存時：更新參考圖，並把 `approved` 改成 null、`note` 寫明改了什麼；舊圖留在 git 歷史裡可以還原。站長確認後再填日期。
+   - 畫面還沒自檢完、但要先 commit 保存時：更新參考圖，並把 `approved` 改成 null、`note` 寫明改了什麼；舊圖留在 git 歷史裡可以還原。自檢完再填日期。
    - 差異不在預期中：代表改 A 壞了 B，先修好。
 
 ## 看清楚用的工具
