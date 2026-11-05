@@ -117,3 +117,88 @@ DRAW2['6-2'] = T => {
   rx += `<g opacity="${o5}" transform="translate(12 ${PH - 66})"><rect width="${PW - 24}" height="54" rx="8" fill="#fff4e5" stroke="${COL.amber}"/>${text(16, 34, '60 片眼瞼、平均追蹤 3 個月：1 片內側睫毛碰角膜', { size: 16, bold: true, color: COL.amber })}</g>`;
   return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
 };
+
+// ---------------------------------------------------------------- chapter 1 (clinical decision)
+const COR_WIN = { x: -17.5, y: -13.2, w: 33 };
+// margin close-ups (5 mm wide): entropion lid and normal lid; centres from the model (lash base → posterior corner)
+const EZ_WIN = { x: -15.3, y: -6.0, w: 5 }, NZ_WIN = { x: -15.3, y: -6.3, w: 5 };
+// camera between two windows: width zooms geometrically, centre moves linearly
+const zwin = (a, b, z) => { const r = PH / PW, w = Math.exp(lerp(Math.log(a.w), Math.log(b.w), z)), cx = lerp(a.x + a.w / 2, b.x + b.w / 2, z), cy = lerp(a.y + a.w * r / 2, b.y + b.w * r / 2, z);
+  return { x: cx - w / 2, y: cy - w * r / 2, w }; };
+// dashed box showing where the close-up is, drawn through the current camera (it grows into the panel as the camera zooms)
+const zbox = (sv, b, op) => { const p = sv.P([b.x, b.y]), q = sv.P([b.x + b.w, b.y + b.w * PH / PW]);
+  return `<rect x="${p[0].toFixed(1)}" y="${p[1].toFixed(1)}" width="${(q[0] - p[0]).toFixed(1)}" height="${(q[1] - p[1]).toFixed(1)}" fill="none" stroke="${COL.accent}" stroke-width="2.4" stroke-dasharray="7 5" opacity="${op}"/>`; };
+// 1 mm scale bar (bottom left)
+const sbar = (k, op) => `<g opacity="${op}"><rect x="14" y="${PH - 46}" width="${(k + 12).toFixed(1)}" height="34" rx="5" fill="#fff" opacity="0.85"/><path d="M20 ${PH - 20}h${k.toFixed(1)}" stroke="${COL.ink}" stroke-width="3"/>${text(20 + k / 2, PH - 27, '1 mm', { size: 13, bold: true, anchor: 'middle' })}</g>`;
+const amberTag = (s, op, col = COL.amber) => htext(PW / 2, 34, s, { size: 18, bold: true, color: col, anchor: 'middle', op });
+
+DRAW2['1-1'] = T => {
+  const ent = T.on(1) * (1 - T.on(2)) + T.on(4) * (1 - T.on(5));
+  const mis = T.on(2) * (1 - T.on(3)) + T.on(5), meta = T.on(3) * (1 - T.on(4));
+  const sv = VIEWS.sag({ curl: ent, misdirected: mis, metaplastic: meta }, PW, PH, SAG_WIN, 'sL'), A = sv.A;
+  const cv = VIEWS.cor({ evert: -ent, misdirected: mis, metaplastic: meta }, PW, PH, COR_WIN, 'cR'), B = cv.A;
+  const lab = VIEWS.lab2;
+  let ex = amberTag('睫毛碰到眼睛：三種機轉', 1 - T.on(1), COL.accent);
+  ex += amberTag('① 瞼內翻 entropion：整個瞼緣往內轉', T.on(1) * (1 - T.on(2)));
+  ex += amberTag('② 方向歪的睫毛 misdirected lashes', T.on(2) * (1 - T.on(3)));
+  ex += amberTag('③ 化生睫毛 metaplastic lashes', T.on(3) * (1 - T.on(4)));
+  ex += amberTag('margin rotation 只處理 ① entropion', T.on(4) * (1 - T.on(5)), COL.accent);
+  ex += amberTag('瞼緣正常、幾根歪睫毛 → 破壞毛囊', T.on(5), COL.accent);
+  ex += lab('睫毛', 'eyelashes', 14, 330, A.lash, { op: Math.max(0, 1 - mis - meta) });
+  ex += lab('角膜', 'cornea', PW - 12, 392, sv.P([-12.75, -2.2]), { side: 'R' });
+  if (A.misLash) ex += lab('睫毛線正常、方向往後', 'misdirected', 14, 250, A.misLash, { color: COL.amber, bold: true, op: mis });
+  if (A.metaLash) ex += lab('從瞼板腺開口長出', 'metaplastic', 14, 250, A.metaLash, { color: COL.amber, bold: true, op: meta });
+  let rx = lab('睫毛被帶進去、碰到角膜', 'entropion', 14, 34, B.lashMid, { color: COL.amber, bold: true, op: ent });
+  if (B.misLash) rx += lab('方向歪的睫毛', 'misdirected', 14, 34, B.misLash, { color: COL.amber, bold: true, op: mis });
+  if (B.metaLash) rx += lab('化生睫毛：從後瞼緣長出', 'metaplastic', PW - 12, 34, B.metaLash, { side: 'R', color: COL.amber, bold: true, op: meta });
+  return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: cv.svg, extra: rx, P: COR_T } };
+};
+
+DRAW2['1-2'] = T => {
+  const zoom = T.on(1, 1.0, 0.6) * (1 - T.on(7, 1.0));
+  const round = T.on(1, 1.0, 1.6), scar = lerp(0.15, 1, T.p(3, 0.3, 0.9));
+  const sv = VIEWS.sag({ curl: 1, round, scar, mcj: T.on(4), mcjShift: T.on(6, 1.2) }, PW, PH, zwin(SAG_WIN, EZ_WIN, zoom), 'sL'), A = sv.A;
+  const lab = VIEWS.lab2, zin = ss(0.85, 1, zoom), zout = 1 - zin;
+  let ex = zbox(sv, EZ_WIN, (1 - ss(0.75, 1, zoom)) * (T.on(1, 0.4) * (1 - T.on(2)) + T.on(7, 0.3) * (1 - T.on(7, 0.5, 1.6))));
+  ex += sbar(sv.k, ss(0.6, 1, zoom));
+  ex += lab('瞼緣內轉', 'entropion', 14, 330, A.lash, { color: COL.amber, bold: true, op: zout * (1 - T.on(1)) });
+  ex += lab('角膜', 'cornea', PW - 12, 392, sv.P([-12.75, -2.2]), { side: 'R', op: zout * (1 - T.on(1)) });
+  ex += lab('後瞼緣邊角變圓', 'rounded posterior margin', PW - 12, 60, A.postMargin, { side: 'R', color: COL.amber, bold: true, op: zin * T.on(1, 0.6, 1.8) * (1 - T.on(2, 0.4)) });
+  const scarP = sv.P(LID.draw({ state: { curl: 1 } }).DP.at(1.42, 0.03));
+  ex += lab('結膜疤痕', 'conjunctival scar', PW - 12, 60, scarP, { side: 'R', color: COL.red, bold: true, op: zin * T.on(2) * (1 - T.on(4)) });
+  ex += lab('皮膚結膜交界', 'MCJ', PW - 12, 60, A.mcj, { side: 'R', color: COL.accent, bold: true, op: zin * T.on(4) });
+  ex += lab('瞼板腺開口', 'meibomian orifice', PW - 12, PH - 64, A.orifice, { side: 'R', color: '#9c7a20', bold: true, op: zin * T.on(5) });
+  ex += amberTag('交界線被拉到開口前面', zin * T.on(6, 0.6, 1.2), COL.accent);
+  ex += lab('瞼緣內轉', 'entropion', 14, 330, A.lash, { color: COL.amber, bold: true, op: zout * T.on(7) });
+  ex += lab('邊角變圓', 'rounding', PW - 12, 300, A.postMargin, { side: 'R', color: COL.amber, bold: true, op: zout * T.on(8) });   // recap of the three checks
+  ex += lab('交界線前移', 'MCJ shift', PW - 12, 340, A.mcj, { side: 'R', color: COL.accent, bold: true, op: zout * T.on(8) });
+  // right: skin side → everted lid (scar) → normal margin close-up for comparison → skin side
+  const ev = T.on(2, 0.8) * (1 - T.on(4, 0.8)), nz = T.on(4, 0.8) * (1 - T.on(7, 0.8)), co = Math.max(0, 1 - ev - nz);
+  let rsvg = '', rx = '';
+  if (co > 0.01) { const cv = VIEWS.cor({ evert: -1 }, PW, PH, COR_WIN, 'cR'), B = cv.A; rsvg += `<g opacity="${co}">${cv.svg}</g>`;
+    rx += lab('睫毛碰到角膜', 'lashes on cornea', 14, 34, B.lashMid, { color: COL.amber, bold: true, op: co * (1 - T.on(7)) });
+    rx += lab('常被當成單純倒睫', 'trichiasis', 14, 34, B.lashMid, { color: COL.amber, bold: true, op: co * T.on(7) }); }
+  if (ev > 0.01) { const evv = VIEWS.ev({ scar }, PW, PH, EV_WIN, 'eR'), B = evv.A; rsvg += `<g opacity="${ev}">${evv.svg}</g>`;
+    rx += lab('瞼緣', 'lid margin', 14, 34, B.evMargin, { op: ev }) + lab('瞼板結膜的疤痕', 'tarsal conjunctival scar', PW - 12, 300, B.evConj, { side: 'R', color: COL.red, bold: true, op: ev }); }
+  if (nz > 0.01) { const nv = VIEWS.sag({ mcj: 1 }, PW, PH, NZ_WIN, 'nR'), B = nv.A; rsvg += `<g opacity="${nz}">${nv.svg}</g>`;
+    rx += lab('皮膚結膜交界', 'MCJ', PW - 12, 60, B.mcj, { side: 'R', color: COL.accent, bold: true, op: nz });
+    rx += lab('瞼板腺開口', 'meibomian orifice', 14, PH - 64, B.orifice, { color: '#9c7a20', bold: true, op: nz * T.on(5) }) + sbar(nv.k, nz); }
+  const RP = nz > 0.5 ? { title: '對照：正常瞼緣（放大）normal', orient: '左＝前　上＝上' } : ev > 0.5 ? EV_T : COR_T;
+  const LP = zoom > 0.5 ? { title: '矢狀切面　放大：瞼緣 sagittal', orient: '左＝前　上＝上' } : SAG_T;
+  return { L: { svg: sv.svg, extra: ex, P: LP }, R: { svg: rsvg, extra: rx, P: RP } };
+};
+
+DRAW2['1-3'] = T => {
+  const c01 = T.on(0) * (1 - T.on(2)), curl = lerp(0.15, 1, T.p(0, 0.2, 1) * 0.5 + T.p(1, 0, 0.9) * 0.5);
+  const sv = VIEWS.sag({ curl, contract: c01, scar: 0.3 + 0.5 * c01 }, PW, PH, SAG_WIN, 'sL'), A = sv.A;
+  const lab = VIEWS.lab2;
+  let ex = lab('結膜＋瞼板結疤收縮', 'cicatricial contraction', PW - 12, 120, A.contract, { side: 'R', color: COL.red, bold: true, op: c01 });
+  ex += lab('瞼緣被拉向眼球', 'pulled in', 14, 330, A.lash, { color: COL.amber, bold: true, op: T.on(1) * (1 - T.on(2)) });
+  ex += lab('睫毛', 'eyelashes', 14, 330, A.lash, { op: T.on(2) });
+  // right: skin side in sync with the left while the mechanism is told, then the causes card (same text as the published version)
+  const co = 1 - T.on(2, 0.8), cv = co > 0.01 ? VIEWS.cor({ evert: -curl }, PW, PH, COR_WIN, 'cR') : null;
+  const old = SEGS.find(s => s.id === '1-3').draw(T);
+  const rsvg = (cv ? `<g opacity="${co}">${cv.svg}</g>` : '') + old.R.svg;
+  const rx = cv ? lab('瞼緣往內轉', 'entropion', 14, 34, cv.A.lashMid, { color: COL.amber, bold: true, op: co * T.on(1) }) : '';
+  return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: rsvg, extra: rx, P: co > 0.5 ? COR_T : { title: '病因 causes', orient: '' } } };
+};
