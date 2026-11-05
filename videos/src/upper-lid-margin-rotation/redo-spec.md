@@ -57,7 +57,7 @@
 - [ ] 旁白、字幕、重點框、來源的文字和重做前逐字相同（`node videos/tools/check-video.js …/anim/video2.html --base d758d35`；d758d35 是影片上線時的版本）。
 - [ ] 每個面板至少 600×440。
 - [ ] 逐段截圖沒有 JavaScript 錯誤；標籤沒有超出面板，也沒有互相重疊（同上 `check-video.js` 自動檢查）。
-- [ ] 參考圖比對（`node videos/tools/ref-check.js …/ref/manifest.json`）沒有未經站長確認的變化；每一章都至少有一張站長確認過的參考圖。
+- [ ] 參考圖比對（`node videos/tools/ref-check.js …/ref/manifest.json`）沒有未經檢查的變化；每一章都至少有一張參考圖（Claude 放大自檢或站長確認）。
 - [ ] 4 個平行程序全片出片在 40 分鐘內完成；超過就先把脂肪顆粒這類大量重複的圖形改成重複圖樣再出片。
 - [ ] `publish/chapters.txt`、`publish/captions.srt`、`publish/website-entry-draft.txt` 與網站條目的片長和章節秒數，都以新片實測為準。
 - [ ] 新影片為不公開；用瀏覽器開 `videos/#upper-lid-margin-rotation` 沒有 JavaScript 錯誤，影片嵌得進來。
@@ -73,5 +73,5 @@
 - 縫線中段的路徑：舊腳本已註明是假設（`script-draft.md` 開頭「畫面上的假設」），沿用並在畫面標示依院內常規；WHO 手冊讀到後再核對。
 
 ## 進度
-- 目前位置：第 1 章（1-1、1-2、1-3）、第 4 章、第 6 章已換成新模型；1-4、1-5 是資訊卡，不用換。第 1 章、6-1、6-2 的參考圖還沒經站長確認（第 1 章已由 Claude 放大自檢），出片前一起交總覽。
+- 目前位置：第 1 章（1-1、1-2、1-3）、第 4 章、第 6 章已換成新模型；1-4、1-5 是資訊卡，不用換。第 1 章、6-1、6-2 的參考圖由 Claude 自檢；出片前交總覽。
 - 下一步：3-1 與 3-2 → 第 5 章 → 片頭；每換完一段跑 `node videos/tools/check-all.js videos/src/upper-lid-margin-rotation`。全部換完後重新合成語音、出片前交總覽。

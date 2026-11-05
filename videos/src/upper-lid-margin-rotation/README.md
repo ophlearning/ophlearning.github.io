@@ -15,7 +15,7 @@
 - youtube_upload.py：以「不公開」上傳 YouTube；授權只從環境變數讀（YOUTUBE_CLIENT_ID、YOUTUBE_CLIENT_SECRET、YOUTUBE_REFRESH_TOKEN）
 - publish/：YouTube 說明欄文字、章節表、字幕檔、網站影片條目草稿
 - redo-spec.md：換成新眼瞼模型（`videos/models/eyelid/`）的重做規格與驗收項目
-- ref/：站長確認過的參考圖與清單（`manifest.json`），用 `videos/tools/ref-check.js` 比對，確認後才更新
+- ref/：檢查過的參考圖與清單（`manifest.json`），用 `videos/tools/ref-check.js` 比對，確認後才更新
 - anim/video2.html、anim/views.js、anim/draw2.js：重做中的新版面。已換成新模型的段落寫在 draw2.js，其餘段落暫時沿用舊畫法；全部換完後取代 video.html。截圖：`node render.js video2.html <輸出檔名前綴> --stills <秒數>`
 
 ## 重做步驟（在這個資料夾執行）

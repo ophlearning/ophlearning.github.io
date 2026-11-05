@@ -1,5 +1,5 @@
 {
-  "about": "參考圖：站長確認過的畫面。改模型或畫面後跑 node videos/tools/ref-check.js 本檔；有差異要交截圖給站長，確認後才用 --update 更新。",
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/ref-check.js 本檔；有差異先放大自檢，確認是預期中的變化才用 --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video2.html",
   "textBase": "d758d35",
   "textBaseNote": "影片上線時的版本；check-video.js 以它比對旁白等文字",
@@ -81,40 +81,40 @@
       "seg": "6-1",
       "at": "0:0.9",
       "ref": "6-1-L0-0.9.jpg",
-      "approved": null,
-      "note": "已交截圖，待站長確認"
+      "approved": "2026-11-05",
+      "note": "已交截圖、站長未提異議；Claude 自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "6-1",
       "at": "2:0.8",
       "ref": "6-1-L2-0.8.jpg",
-      "approved": null,
-      "note": "已交截圖，待站長確認"
+      "approved": "2026-11-05",
+      "note": "已交截圖、站長未提異議；Claude 自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "6-2",
       "at": "1:0.9",
       "ref": "6-2-L1-0.9.jpg",
-      "approved": null,
-      "note": "已交截圖，待站長確認"
+      "approved": "2026-11-05",
+      "note": "已交截圖、站長未提異議；Claude 自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "6-2",
       "at": "3:0.9",
       "ref": "6-2-L3-0.9.jpg",
-      "approved": null,
-      "note": "已交截圖，待站長確認"
+      "approved": "2026-11-05",
+      "note": "已交截圖、站長未提異議；Claude 自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "6-2",
       "at": "5:0.6",
       "ref": "6-2-L5-0.6.jpg",
-      "approved": null,
-      "note": "已交截圖，待站長確認"
+      "approved": "2026-11-05",
+      "note": "已交截圖、站長未提異議；Claude 自檢"
     },
     {
       "page": "../../../models/eyelid/sample.html",
@@ -129,64 +129,64 @@
       "seg": "1-1",
       "at": "2:0.7",
       "ref": "1-1-L2-0.7.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "1-1",
       "at": "3:0.7",
       "ref": "1-1-L3-0.7.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "1-2",
       "at": "1:0.9",
       "ref": "1-2-L1-0.9.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "1-2",
       "at": "3:0.8",
       "ref": "1-2-L3-0.8.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "1-2",
       "at": "6:0.9",
       "ref": "1-2-L6-0.9.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "1-2",
       "at": "8:0.8",
       "ref": "1-2-L8-0.8.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "1-3",
       "at": "1:0.8",
       "ref": "1-3-L1-0.8.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     },
     {
       "page": "../anim/video2.html",
       "seg": "1-3",
       "at": "5:0.9",
       "ref": "1-3-L5-0.9.jpg",
-      "approved": null,
-      "note": "Claude 自檢（2026-11-05）；待站長看總覽"
+      "approved": "2026-11-05",
+      "note": "Claude 放大自檢"
     }
   ]
 }
