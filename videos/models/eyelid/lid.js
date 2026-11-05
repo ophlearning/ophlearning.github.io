@@ -208,7 +208,19 @@ const LID = (() => {
     const arcSU = r => { const a = []; for (let d = 270; d >= 180; d -= 6) a.push([rnd + r * Math.cos(d * D2R), rnd + r * Math.sin(d * D2R)]); return a; };   // (s,u): posterior surface → margin
     const corner = rclip ? arcSU(rnd).map(([q, u]) => DP.at(q, u)) : [DP.at(0, 0)];
     // 1 orbital soft tissue (everything behind the skin)
-    const base = [...sk.pts, [45, -32], [45, 6], [0, 0], ...corner];
+    // When the lid curls (entropion), hug the globe surface and the deformed posterior lamella
+    // so the conjunctival sac (potential space) stays clear of orbital-tissue colour
+    const curl = st.curl || 0;
+    let baseMid;
+    if (curl > 0.01) {
+      baseMid = [];
+      const phF = UF.phiAt(S_FORNIX);
+      for (let a = 80 * D2R; a < phF; a += 2 * D2R) baseMid.push(gp(a));
+      for (let s = S_FORNIX; s > 0.1; s -= 0.2) baseMid.push(DP.at(s, 0));
+    } else {
+      baseMid = [[0, 0]];
+    }
+    const base = [...sk.pts, [45, -32], [45, 6], ...baseMid, ...corner];
     o.push(`<path d="${poly(base)}" fill="${C.ofat}"/>`);
     lobules(o, pid + 'OF', poly(base), -12, 45, -21, 2, 0.45, 0.75, 'none', C.ofatS, 0.7);
     // 2 anterior lid / brow tissue between skin, bone, septum, aponeurosis and the tarsus front
