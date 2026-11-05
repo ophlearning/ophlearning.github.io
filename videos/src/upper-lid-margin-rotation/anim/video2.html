@@ -122,10 +122,10 @@ function renderAt(t) {
     document.getElementById('stage').innerHTML = o.join(''); return;
   }
   if (sg.layout === 'title') {
-    const r = COR.draw({ evert: 0.05, tarsus: 0.6, section: 0 }, 606, CONTENT_H);
+    const cv = VIEWS.cor({ evert: 0.05, tarsus: 0.6 }, 606, CONTENT_H, COR_WIN, 'cT');
     o.push(`<g opacity="${op}">`);
-    o.push(panelFrame(648, 608, { title: '右眼 OD　正面觀', orient: '左＝temporal　右＝nasal' }));
-    o.push(`<clipPath id="clip_t"><rect x="0" y="0" width="606" height="${CONTENT_H}" rx="8"/></clipPath><g transform="translate(649 ${CONTENT_Y})"><g clip-path="url(#clip_t)">${r.svg.replace(/fissC/g, 'fissC_t')}</g>${r.labels}</g>`);
+    o.push(panelFrame(648, 608, COR_T));
+    o.push(`<clipPath id="clip_t"><rect x="0" y="0" width="606" height="${CONTENT_H}" rx="8"/></clipPath><g transform="translate(649 ${CONTENT_Y})"><g clip-path="url(#clip_t)">${cv.svg}</g></g>`);
     o.push(text(40, 170, 'Upper lid', { size: 50, bold: true }) + text(40, 232, 'margin rotation', { size: 50, bold: true }));
     o.push(text(40, 286, 'Posterior lamellar tarsal rotation（PLTR）', { size: 22, w: 500, color: COL.accent }));
     o.push(text(40, 322, '上眼瞼 cicatricial entropion 的手術', { size: 19, color: COL.ink }));

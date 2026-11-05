@@ -6,7 +6,8 @@
 // 4 septum (+ pretarsal fat) · 5 orbicularis · 6 skin (+ subcutaneous fat, lashes, brow).
 // Windows {poly, depth}: inside a window every layer shallower than `depth` is removed (layer-by-layer dissection / incisions).
 // opt.state (skin-side view during PLTR): evert (−1 inturned … 0 normal … >0 everted), incision (0–1, dashed: it is on the
-// conjunctival side), marks, spacing, sutures (0–1), tight (0–1). The incision height comes from the sagittal model (s = 3 mm).
+// conjunctival side), marks, spacing, inject (0–1, subcutaneous wheal), sutures (0–1), tight (0–1).
+// The incision height comes from the sagittal model (s = 3 mm).
 // ============================================================================
 const CORONAL = (() => {
   const { add, sub, unit, hyp, lerp, ss, hash, poly, F, NS } = LID;
@@ -176,8 +177,11 @@ const CORONAL = (() => {
     if (st.tarsus) { const TX = xs(-13.6, 10.6, 0.25), tp = [...TX.map(x => [x, Uy(x) - 0.15]), ...TX.slice().reverse().map(x => [x, Math.min(Uy(x) - 0.15, tarTopY(x))])];
       o.push(`<path d="${poly(tp)}" fill="${C.tar}" fill-opacity="${(0.25 * st.tarsus).toFixed(2)}" stroke="#8a7a52" stroke-width="1.4" stroke-dasharray="5 4" opacity="${st.tarsus}" ${NS}/>`);
       A.tarsusOutline = [5.5, (tarTopY(5.5) + Uy(5.5)) / 2 - 0.6]; }
-    if (st.marks) for (const x of SX) o.push(`<circle cx="${x}" cy="${(lashY(x) + rollY(x) - 0.7).toFixed(2)}" r="0.32" fill="#5b3fa0" opacity="${st.marks}"/>`);
+    if (st.marks) { for (const x of SX) o.push(`<circle cx="${x}" cy="${(lashY(x) + rollY(x) - 0.7).toFixed(2)}" r="0.32" fill="#5b3fa0" opacity="${st.marks}"/>`); A.mark = [SX[1], lashY(SX[1]) + rollY(SX[1]) - 0.7]; }
     if (st.spacing) { const y = Uy(0.5) - 4.2; o.push(`<g opacity="${st.spacing}" stroke="#0e7c6b" fill="none"><path d="M${SX[0]} ${y}H${SX[2]}" stroke-width="1.8" ${NS}/>${SX.map(x => `<path d="M${x} ${y - 0.5}v1" stroke-width="1.8" ${NS}/>`).join('')}</g>`); A.spacing = [SX[1], Uy(0.5) - 4.2]; }
+    if (st.inject) { const inX = xs(-12, 10, 0.3), fy = x => lashY(x) + rollY(x);
+      o.push(`<path d="${poly([...inX.map(x => [x, fy(x) - 0.3]), ...inX.slice().reverse().map(x => [x, fy(x) - 4.5 * prof(x, -13, 11, 0.6)])])}" fill="#a8d8ea" opacity="${(0.35 * st.inject).toFixed(2)}"/>`);
+      A.skinLid = [0, fy(0) - 2.2]; }
     if (st.sutures) { const t = st.tight || 0, op = Math.min(1, st.sutures);
       for (const x of SX) { const E = [x, lashY(x) + rollY(x) - 0.6 + 0.25 * t], w = lerp(0.95, 0.38, t);   // exit just above the lash line
         for (const sg of [-1, 1]) o.push(`<path d="M${F([x + sg * w, cutY(x) - 0.35])}L${F([x + sg * w * 0.45, E[1]])}" stroke="#2463eb" stroke-width="1.6" stroke-dasharray="4 3" ${NS} opacity="${op}"/>`);

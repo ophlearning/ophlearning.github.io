@@ -8,7 +8,7 @@ W=4; STEP=$(( (N + W - 1) / W ))
 echo "frames $N, $W workers × $STEP"
 for i in $(seq 0 $((W-1))); do
   A=$(( i * STEP )); B=$(( (i+1) * STEP )); [ $B -gt $N ] && B=$N
-  node render.js video.html "$ROOT/out/part$i.mp4" $FPS --from $A --to $B > "$ROOT/out/part$i.log" 2>&1 &
+  node render.js video2.html "$ROOT/out/part$i.mp4" $FPS --from $A --to $B > "$ROOT/out/part$i.log" 2>&1 &
 done
 wait
 cat "$ROOT"/out/part*.log
