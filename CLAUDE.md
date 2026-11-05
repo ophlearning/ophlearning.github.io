@@ -8,5 +8,5 @@
   2. 條目加到 `videos/index.html` 的 `VIDEOS` 最前面；章節秒數以 `publish/chapters.txt` 為準，`dur` 用 ffprobe 實測秒數四捨五入。
   3. 用瀏覽器開 `videos/#<id>` 確認沒有 JS 錯誤、影片嵌得進來，再開分支 commit、push、開 draft PR。
 - 若 YouTube 回報的 privacy 不是 unlisted，照樣同步網站，但在回覆裡提醒站長到 YouTube Studio 改成「不公開」。
-- 畫面的解剖用 `videos/models/` 的共用模型，遵守 `videos/models/README.md` 的「通用原則」（適用所有手術）：以 mm 建模並附出處；族群差異有文獻證實才用亞洲人數值；標籤一律「中文 English」並列；手術步驟同時顯示「機轉切面＋術者視角」兩個同步視角；座標用手術的語言；術者視角寫明方位；旁白的數值寫成檢查。每一類手術的特殊處寫在該模型的模型卡（`CARD.md`）；開始做新類別前，先照 `videos/models/MODEL-CARD-TEMPLATE.md` 寫模型卡，並交一張樣本圖給站長確認，再做影片。
-- 接手教學影片的工作前，先讀 `videos/models/README.md`、要用到的模型卡，以及該影片規格書的「進度」。改了模型或畫面，跑 `node videos/tools/check-all.js videos/src/<影片>`，全部通過才 commit；只有兩種事先問站長：新類別的模型樣本圖，以及沒有出處卻要當成事實講的醫學內容。其他畫面問題自己放大檢查、修好，參考圖註記「Claude 自檢」；出片前交總覽（每章一張）。
+- 畫面的解剖用 `videos/models/` 的共用模型，遵守 `videos/models/README.md` 的「通用原則」（適用所有手術）：以 mm 建模並附出處；族群差異有文獻證實才用亞洲人數值；標籤一律「中文 English」並列；手術步驟同時顯示「機轉切面＋術者視角」兩個同步視角；座標用手術的語言；術者視角寫明方位；旁白的數值寫成檢查。每一類手術的特殊處寫在該模型的模型卡（`CARD.md`）；開始做新類別前，先照 `videos/models/MODEL-CARD-TEMPLATE.md` 寫模型卡、做樣本圖並自己放大檢查，再做影片。
+- 接手教學影片的工作前，先讀 `videos/models/README.md`、要用到的模型卡，以及該影片規格書的「進度」。改了模型或畫面，跑 `node videos/tools/check-all.js videos/src/<影片>`，全部通過才 commit；畫面問題自己放大檢查、修好，參考圖註記「Claude 自檢」。過程中不問站長；唯一交給站長看的是出片前的總覽（每章一張）。新類別的模型樣本圖自己放大檢查；沒有出處的醫學內容不當成事實講（標「示意」或拿掉），並列在總覽裡。
