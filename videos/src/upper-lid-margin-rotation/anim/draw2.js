@@ -202,3 +202,54 @@ DRAW2['1-3'] = T => {
   const rx = cv ? lab('瞼緣往內轉', 'entropion', 14, 34, cv.A.lashMid, { color: COL.amber, bold: true, op: co * T.on(1) }) : '';
   return { L: { svg: sv.svg, extra: ex, P: SAG_T }, R: { svg: rsvg, extra: rx, P: co > 0.5 ? COR_T : { title: '病因 causes', orient: '' } } };
 };
+
+// ---------------------------------------------------------------- chapter 3 (preop)
+DRAW2['3-1'] = T => {
+  const C = { evert: -1, marks: T.on(0, 0.6, 0.6), spacing: T.on(1), tarsus: 0.5 };
+  const cv = VIEWS.cor(C, PW, PH, COR_WIN, 'cL'), A = cv.A;
+  const lab = VIEWS.lab2;
+  let ex = '';
+  if (A.mark) ex += lab('三個標記：外側、中央、內側', 'marks', 14, 34, A.mark, { color: '#5b3fa0', bold: true, op: T.on(0, 0.6, 0.6) });
+  let svg = ''; const b1 = ss(T.st(2), T.st(2) + 1.2, T.u), op = T.on(1);
+  svg += tblock(30, 40, ['眼瞼輪廓異常比例'], { size: 17, bold: true, op });
+  for (const [i, lbl, v, c] of [[0, '間距差 > 2 mm', 52.2, COL.red], [1, '間距對稱', 23.1, COL.accent]]) {
+    const y = 80 + i * 90; svg += text(30, y + 22, lbl, { size: 16, op }) + `<rect x="170" y="${y}" width="340" height="34" rx="6" fill="#e6ebef" opacity="${op}"/><rect x="170" y="${y}" width="${340 * v / 100 * b1}" height="34" rx="6" fill="${c}" opacity="${op}"/>` +
+      text(520, y + 24, v + '%', { size: 18, bold: true, op: op * b1 }); }
+  const o3 = T.on(3); svg += card(30, 268, 546, 60, { op: o3, hl: o3 }) + text(50, 304, '打麻藥前先標記 → 縫線位置不容易跑掉', { size: 17, bold: true, color: COL.accent, op: o3 });
+  return { L: { svg: cv.svg, extra: ex, P: COR_T }, R: { svg, P: { title: '縫線間距與眼瞼輪廓異常', orient: 'Habtamu 2017（PLTR）' } } };
+};
+
+DRAW2['3-2'] = T => {
+  const C = { evert: -1, marks: 1, inject: T.on(0) * (1 - T.on(2)), tarsus: 0.4 };
+  const cv = VIEWS.cor(C, PW, PH, COR_WIN, 'cL'), A = cv.A;
+  const lab = VIEWS.lab2;
+  let ex = '';
+  if (A.skinLid) ex += lab('上眼瞼皮下', 'subcutaneous', 14, 34, A.skinLid, { color: '#2a7fb8', bold: true, op: T.on(0) * (1 - T.on(2)) });
+  let svg = ''; const o1 = T.on(0), o2 = T.on(1), o3 = T.on(2);
+  svg += card(24, 22, 558, 132, { op: o1, hl: o1 * (1 - o3) }) + text(44, 56, '局部麻醉', { size: 18, bold: true, color: COL.accent, op: o1 }) +
+    tblock(44, 90, ['lidocaine with adrenaline，上眼瞼皮下 2–3 mL'], { size: 17, op: o1 }) + tblock(44, 124, ['濃度：trial 用過 1% 與 2%，依院內常規'], { size: 16, color: COL.sub, op: o2 });
+  svg += card(24, 176, 558, 150, { op: o3, hl: o3 }) + text(44, 210, 'Trabut plate', { size: 18, bold: true, color: COL.accent, op: o3 }) +
+    tblock(44, 244, ['PLTR 的特殊器械，trial 裡每一台都用', '（放法以 WHO 手冊為準，本片不圖示）'], { size: 16.5, op: o3 });
+  return { L: { svg: cv.svg, extra: ex, P: COR_T }, R: { svg, P: { title: '準備', orient: '' } } };
+};
+
+// ---------------------------------------------------------------- chapter 5 (intraop complications)
+DRAW2['5'] = T => {
+  const E = { scar: 0.35, incision: 1, bleed: T.on(1) * (1 - T.on(2)), notch: T.on(2) * (1 - T.on(3)), incWavy: T.on(3) * (1 - T.on(5)),
+    nasalShort: T.on(6) * (1 - T.on(7)), incShort: T.on(7, 0.8), ends: T.on(5) * (1 - T.on(6)) };
+  const evv = VIEWS.ev(E, PW, PH, EV_WIN, 'eL'), A = evv.A;
+  const lab = VIEWS.lab2;
+  let ex = '';
+  if (A.evBleed) ex += lab('出血：壓住', 'bleeding', PW - 12, 300, A.evBleed, { side: 'R', color: '#b3122b', bold: true, op: E.bleed });
+  if (A.evNotch) ex += lab('切斷瞼緣', 'margin notch', 14, 34, A.evNotch, { color: COL.amber, bold: true, op: E.notch });
+  if (A.evCentre) ex += lab('中央切口不規則', 'irregular incision', PW - 12, 300, A.evCentre, { side: 'R', color: COL.red, bold: true, op: E.incWavy });
+  if (A.evEndL) ex += lab('周邊睫毛', 'peripheral lashes', 14, 34, A.evEndL, { color: COL.amber, bold: true, op: E.ends });
+  if (A.evNasal) ex += lab('鼻側 tarsus 較短', 'nasal tarsus shorter', PW - 12, 34, A.evNasal, { side: 'R', color: COL.amber, bold: true, op: E.nasalShort });
+  if (A.evEndR) ex += lab('切口太短：周邊轉不出來', 'too short', PW - 12, 300, A.evEndR, { side: 'R', color: '#5b6878', bold: true, op: E.incShort });
+  const items = [['出血', '用力壓住眼瞼幾分鐘', 1], ['切斷瞼緣', '一針 4-0 silk 修補', 2], ['中央切口不規則', 'granuloma OR 6.72', 3], ['周邊睫毛／鼻側', '倒睫 36.4% vs 10%', 5], ['切口太短', '周邊轉不出來', 7]];
+  let cur = -1; items.forEach((it, i) => { if (T.u >= T.st(it[2]) - 0.2) cur = i; });
+  let svg = '';
+  items.forEach(([h, d, li], i) => { const y = 14 + i * 64, op = T.on(li, 0.4) * 0.6 + 0.4 * T.on(0), hl = cur === i ? 1 : 0;
+    svg += card(20, y, 566, 56, { op, hl }) + text(40, y + 34, `${i + 1}`, { size: 22, bold: true, color: hl ? COL.accent : '#9aa7b4', op }) + text(76, y + 25, h, { size: 17, bold: true, op, color: hl ? COL.accent : COL.ink }) + text(76, y + 47, d, { size: 14.5, color: COL.sub, op }); });
+  return { L: { svg: evv.svg, extra: ex, P: EV_T }, R: { svg, P: { title: '五個狀況', orient: '' } } };
+};
