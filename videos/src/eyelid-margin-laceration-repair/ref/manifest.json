@@ -1,7 +1,7 @@
 {
   "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/eyelid-margin-laceration-repair；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "textBase": null,
+  "textBase": "ef9bf49",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
