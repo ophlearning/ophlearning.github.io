@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="lid.js"></script><script src="coronal.js"></script>
+<script>
+// Sample for videos/src/levator-resection-brow-fixation: the brow region and the moment of internal brow fixation (4-5), both views in sync.
+// State: lid already lifted (levator advanced and sutured to the tarsus), dissection up to the brow, fixation suture placed (not yet tied).
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 13, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 5 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 6 : tx + w + 6, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.5" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="5">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const ST = { mrd1: 3.5, excRemove: 1, septOpen: 1, fatUp: 1, dis: 1, resect: 1, advance: 1, tarSut: 1, browPlane: 1, browSut: 1 };
+const o = [];
+o.push(`<text x="24" y="38" font-size="21" font-weight="700" fill="#1d2733">眉毛區模型樣本：internal brow fixation（4-5）兩圖同步</text>`);
+o.push(`<text x="1256" y="38" font-size="13" fill="#5b6878" text-anchor="end">右眼　亞洲人單眼皮　mm 建模，示意圖</text>`);
+
+// ================= sagittal panel
+const PX = 16, PY = 56, PW = 588, PH = 650, K1 = 19.5, X0 = -31.6, Y0 = -28.6;
+const c1 = cam(PX, PY, K1, X0, Y0), P = c1.P;
+const sag = LID.draw({ variant: 'asian', state: ST, id: 'sg' }), A = sag.A;
+o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="10" fill="#fff" stroke="#d3dae1"/>`);
+o.push(`<clipPath id="p1"><rect x="${PX + 1}" y="${PY + 1}" width="${PW - 2}" height="${PH - 64}" rx="9"/></clipPath><g clip-path="url(#p1)"><g transform="${c1.tf}">${sag.svg}</g></g>`);
+o.push(`<text x="${PX + 16}" y="${PY + 26}" font-size="15" font-weight="700" fill="#1d2733">矢狀切面 sagittal（經瞳孔中央）</text><text x="${PX + PW - 14}" y="${PY + 26}" font-size="12.5" fill="#5b6878" text-anchor="end">左＝前　上＝上</text>`);
+const L = [], lx = PX + 14, rx = PX + PW - 12;
+L.push(lab('額肌', 'frontalis', lx, 118, P(A.frontalis)));
+L.push(lab('眉毛', 'eyebrow', lx, 214, P(A.brow)));
+L.push(lab('眼輪匝肌', 'orbicularis oculi', lx, 300, P(A.orbBrow)));
+L.push(lab('傷口', 'wound', lx, 452, P(A.wound)));
+L.push(lab('瞼板', 'tarsus', lx, 560, P(A.tarsus), { bold: true }));
+L.push(lab('骨膜', 'periosteum', rx, 104, P(A.periosteum), { side: 'R' }));
+L.push(lab('眉毛固定縫線', 'brow fixation suture', rx, 140, P(A.browSutP), { side: 'R', bold: true, color: '#2463eb', lc: '#2463eb' }));
+L.push(lab('剝離平面', 'dissection plane', rx, 186, P(A.browPlane), { side: 'R', bold: true, color: '#0e7c6b', lc: '#0e7c6b' }));
+L.push(lab('眉下脂肪', 'ROOF', rx, 232, P(A.roof), { side: 'R', bold: true, color: '#9a5b12', lc: '#9a5b12' }));
+L.push(lab('眶上緣', 'superior orbital rim', rx, 278, P([-12.4, -18.3]), { side: 'R' }));
+L.push(lab('腱膜前脂肪（往上拉開）', 'preaponeurotic fat', rx, 352, P(A.fatUp), { side: 'R' }));
+L.push(lab('前徙的提上瞼肌', 'advanced levator', rx, 408, P(sag.LV.off(1.6, -0.05)), { side: 'R', bold: true }));
+L.push(lab('瞼板固定縫線', 'tarsal suture', rx, 452, P(A.tarSut), { side: 'R', color: '#2463eb', lc: '#2463eb' }));
+o.push(L.join(''));
+o.push(`<line x1="${PX + 1}" y1="${PY + PH - 63}" x2="${PX + PW - 1}" y2="${PY + PH - 63}" stroke="#e1e6eb"/>`);
+o.push(`<text x="${PX + 16}" y="${PY + PH - 38}" font-size="13" fill="#1f2a36">在眉下脂肪 ROOF 的深面往上剝到眶上緣上方，把 ROOF 縫到骨膜。</text>`);
+o.push(`<text x="${PX + 16}" y="${PY + PH - 17}" font-size="13" fill="#1f2a36">ROOF 厚度：Manta 2025（MRI）；剝離平面、固定點高度與縫線位置為示意，待刀後確認。</text>`);
+
+// ================= coronal panel
+const QX = 616, QY = 56, QW = 648, QH = 650, K2 = 15.2, ZX0 = -21.6, ZY0 = -30.2;
+const c2 = cam(QX, QY, K2, ZX0, ZY0), Q = c2.P;
+const W = [{ poly: [[5.6, -27], [12.4, -27], [12.4, -16.0], [5.6, -16.0]], depth: 1 }, { poly: [[-19.2, -16.0], [-10.8, -16.0], [-10.8, -11.4], [-19.2, -11.4]], depth: 3 }];
+const cor = CORONAL.draw({ variant: 'asian', state: { ...ST, notch: 1 }, windows: W, id: 'cz' }), B = cor.A;
+o.push(`<rect x="${QX}" y="${QY}" width="${QW}" height="${QH}" rx="10" fill="#fff" stroke="#d3dae1"/>`);
+o.push(`<clipPath id="p2"><rect x="${QX + 1}" y="${QY + 1}" width="${QW - 2}" height="${QH - 64}" rx="9"/></clipPath><g clip-path="url(#p2)"><g transform="${c2.tf}">${cor.svg}</g></g>`);
+o.push(`<text x="${QX + 16}" y="${QY + 26}" font-size="15" font-weight="700" fill="#1d2733">正面 coronal（術者視角）</text><text x="${QX + QW - 14}" y="${QY + 26}" font-size="12.5" fill="#5b6878" text-anchor="end">檢查者面對病人：左＝temporal　右＝nasal</text>`);
+const M = [], mx = QX + 12, mr = QX + QW - 12;
+M.push(lab('剝離範圍', 'dissection pocket', mx, 96, Q([-8.6, -24.0]), { color: '#0e7c6b', lc: '#0e7c6b', bold: true }));
+M.push(lab('眉毛', 'eyebrow', mx, 150, Q([-17.0, CORONAL.browLoY(-17.0) - 2.6])));
+M.push(lab('淚腺（眶部）', 'lacrimal gland', mx, 236, Q(B.lacrimal)));
+M.push(lab('切除皮膚後的傷口', 'wound', mx, 420, Q([-10.4, cor.excLoY(-10.4) - 1.2])));
+M.push(lab('眶上神經', 'supraorbital nerve', mr, 112, Q([B.notchX - 1.3, -24.0]), { side: 'R', bold: true }));
+M.push(lab('眶上切跡', 'supraorbital notch', mr, 158, Q(B.notch), { side: 'R', bold: true }));
+M.push(lab('眉毛固定點', 'fixation point', mr, 204, Q(B.browFix), { side: 'R', bold: true, color: '#2463eb', lc: '#2463eb' }));
+M.push(lab('前徙的提上瞼肌', 'advanced levator', mr, 300, Q(B.advLev), { side: 'R', bold: true }));
+M.push(lab('瞼板固定縫線 ×3', 'tarsal sutures', mr, 340, Q([CORONAL.LIMB, cor.fixY(CORONAL.LIMB)]), { side: 'R', color: '#2463eb', lc: '#2463eb' }));
+o.push(M.join(''));
+o.push(`<line x1="${QX + 1}" y1="${QY + QH - 63}" x2="${QX + QW - 1}" y2="${QY + QH - 63}" stroke="#e1e6eb"/>`);
+o.push(`<text x="${QX + 16}" y="${QY + QH - 38}" font-size="13" fill="#1f2a36">眶上切跡距中線 23 mm（Pruksapong 2022）＝瞳孔中央內側 8.9 mm；固定點在它外側。</text>`);
+o.push(`<text x="${QX + 16}" y="${QY + QH - 17}" font-size="13" fill="#1f2a36">眉毛下緣：Gao 2025；兩個開窗只為顯示深層（神經、淚腺），手術時看不到。</text>`);
+document.getElementById('stage').innerHTML = o.join('');
+</script></body></html>
