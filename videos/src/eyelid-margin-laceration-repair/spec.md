@@ -100,8 +100,9 @@
 
 ### 還沒有出處的內容（旁白不能當成事實講）
 - 已解決：外翻（Graff 圖譜、Allen 影片）；兩側同深同距離（Allen 影片，沒有深度的數字，所以畫面深度標示意）；拍照（Clark 2015）；不能配合的病人要鎮靜（EyeWiki）；組織幾乎不會缺損（Clark 2015）。
-- 還沒有：懷疑 open globe 時「不量 IOP、不壓眼、戴 shield」；probe 露出或螢光水流出的判讀；要等時傷口的暫時處置；局麻前先記錄 levator function（腳本第 1 版已拿掉）。
-- 改成推論、列進總覽：gray line 那一針等 tarsus 綁完才綁（EyeWiki 的順序＋Divine 1982 的張力原則）；第一次縫要有 senior 在旁（EyeWiki、Clark 2015 的紅旗＋Schafer 2026 的併發症）。
+- 2026-11-06 再解決：open globe 的徵象與處置（EyeWiki「Ruptured Globe」，2026-01-29 審閱、狀態 Update Pending：不量眼壓、不壓、不硬撐眼瞼、硬 shield、不用壓迫眼罩）；canalicular laceration 的確認方式與「先修眼球再修眼瞼」（EyeWiki「Canalicular trauma」）。
+- 拿掉：要等時傷口的暫時處置、局麻前先記錄 levator function（都找不到出處）。
+- 改成推論、列進總覽：gray line 那一針等 tarsus 綁完才綁（EyeWiki 的順序＋Divine 1982 的張力原則）；第一次縫要有 senior 在旁（EyeWiki、Clark 2015 的紅旗＋Schafer 2026 的併發症）；canalicular repair 不是第一次自己縫的範圍（EyeWiki「Canalicular trauma」說有經驗的人可在床邊做）。
 - StatPearls（NBK470367）有防機器人驗證，curl 讀不到；之後若要用，改用瀏覽器工具讀。
 
 ## 驗收項目
@@ -119,4 +120,5 @@
 - 2026-11-06：站長確認病例情境（以上眼瞼為主、最後一章講下眼瞼）；規格書與第一批文獻（8 篇）完成。
 - 2026-11-06：縫合技術與處置的出處查證（上面 9–18）。最重要的發現：EyeWiki 建議 full-thickness 與傷到 margin 的裂傷在 OR 縫，所以第 2 章要先講指引、再講在治療室縫的條件與風險（Schafer 2026）。站長核准在雲端環境的網路白名單加上 www.ncbi.nlm.nih.gov、eyewiki.org、eyerounds.org。
 - 2026-11-06：`script-draft.md` 第 1 版完成（8 章、20 段，18 筆參考文獻）。主線照 EyeWiki（gray line 6-0 silk），EyeRounds 的 Vicryl vertical mattress 放在 4-7 對照；EyeRounds 的三個來源補上外翻、tarsus 只咬前表面、術前評估與準備。文末列出還沒解決的 [待核對出處]、[推論] 與 [示意]。
-- 下一步：在新對話接手。先把「還沒有出處」剩下的幾項查完或拿掉（腳本第 2 版前） → 模型卡與模型（裂傷、縫線、瞼緣俯視）→ 樣本圖自檢 → 影片。依 `videos/models/README.md`，一個對話只做一章（或 3–4 段），做完寫進這裡再換新對話。
+- 2026-11-06：腳本的 [待核對出處] 全部處理完（加 EyeWiki 的 Ruptured Globe 與 Canalicular trauma 兩個條目，共 20 筆參考文獻）。站長要求在同一個對話直接繼續做模型。
+- 下一步：模型卡與模型（裂傷、縫線、瞼緣俯視）→ 樣本圖自檢 → 影片。

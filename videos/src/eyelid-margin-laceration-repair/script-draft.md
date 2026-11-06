@@ -23,9 +23,9 @@
 
 **畫面：** 左：矢狀切面，眼瞼裂傷的深度示意，後方是眼球。右：正面，裂傷旁邊標出「先看眼球」的提示框。
 
-**旁白：** 第一步永遠是先查眼球，再看眼瞼 [Clark 2015]。眼瞼受傷常合併角膜擦傷、淚道受傷、異物、open globe 或眼眶骨折，而且有些嚴重的眼球傷第一眼看不出來 [EyeWiki]。一個多中心的研究收了 1570 位 open globe，合併眼瞼裂傷的病人比較常是 Zone III 的傷口，也就是傷口往後延伸到角膜緣後方 5 mm 以外 [Anant 2025]。所以修眼瞼之前，要先排除眼球、眼眶軟組織、視神經與顱內的傷 [EyeWiki]。懷疑 open globe 時的處理 [待核對出處：不量 IOP、不壓眼、戴 shield、先修眼球]。
+**旁白：** 第一步永遠是先查眼球，再看眼瞼 [Clark 2015]。眼瞼受傷常合併角膜擦傷、淚道受傷、異物、open globe 或眼眶骨折，而且有些嚴重的眼球傷第一眼看不出來 [EyeWiki]。一個多中心的研究收了 1570 位 open globe，合併眼瞼裂傷的病人比較常是 Zone III 的傷口，也就是傷口往後延伸到角膜緣後方 5 mm 以外 [Anant 2025]。所以修眼瞼之前，要先排除眼球、眼眶軟組織、視神經與顱內的傷 [EyeWiki]。要懷疑眼球破裂的徵象有：視力明顯下降、瞳孔變尖或不規則、前房深度異常、眼球輪廓變形、濃密或一整圈的 subconjunctival hemorrhage，以及眼內組織脫出 [EyeWiki Ruptured Globe]。明顯或高度懷疑時，就停止進一步檢查：不量眼壓、不壓眼球，也不要硬把眼瞼撐開；戴上靠在眶骨上、不碰到眼球的硬 shield，不要用壓迫性的眼罩，並緊急找眼科 [EyeWiki Ruptured Globe]。破裂的眼球是急症，要先修眼球，再處理眼瞼 [EyeWiki 淚道外傷]。
 
-**重點框：** 先查眼球，再看眼瞼｜眼瞼裂傷合併 open globe 時，常是 Zone III（Anant 2025）
+**重點框：** 先查眼球，再看眼瞼｜懷疑破裂：不量眼壓、不壓、不硬撐眼瞼，戴硬 shield｜先修眼球，再修眼瞼
 
 ### 1-2　問病史、決定要不要照 CT
 
@@ -51,7 +51,7 @@
 
 **畫面：** 左：正面，上下 punctum 的位置 [示意]，punctum 內側的區域標成「要探查」；裂傷若在這一區，畫出 Bowman probe 從 punctum 進去、從傷口露出來。右：探查用的器材清單。
 
-**旁白：** 傷口在 punctum 內側，或 punctum 被拉歪了，就要先排除 canalicular laceration：擴張 punctum、用 probe 探，必要時沖水 [EyeWiki]。需要的東西有：4% 的表面 lidocaine、棉棒、punctal dilator、00 或 0 號的 Bowman probe，以及接在 3 cc 針筒上的 23G 彎頭淚道針，裡面裝加了 fluorescein 的生理食鹽水 [Clark 2015]。Probe 從傷口露出來，或有螢光水從傷口流出來，就是 canaliculus 斷了 [待核對出處：判讀方式]。狗咬傷特別要小心：狗咬傷的眼瞼裂傷有 66% 傷到 canaliculus，其他原因是 37% [Savar 2008]；兒童的研究裡，傷到瞼緣、傷在下眼瞼、被鉤子勾到，都是 canaliculus 受傷的危險因子 [Huang 2022]。Canalicular laceration 要放 stent 修補，不在治療室做。
+**旁白：** 傷口在 punctum 內側，或 punctum 被拉歪了，就要先排除 canalicular laceration：擴張 punctum、用 probe 探，必要時沖水 [EyeWiki]。需要的東西有：4% 的表面 lidocaine、棉棒、punctal dilator、00 或 0 號的 Bowman probe，以及接在 3 cc 針筒上的 23G 彎頭淚道針，裡面裝加了 fluorescein 的生理食鹽水 [Clark 2015]。直接看到 punctum 內側的裂傷，或用 Bowman probe、沖水針探查，就能確認 canalicular laceration；年紀小的孩子可能要在麻醉下檢查 [EyeWiki 淚道外傷]。狗咬傷特別要小心：狗咬傷的眼瞼裂傷有 66% 傷到 canaliculus，其他原因是 37% [Savar 2008]；兒童的研究裡，傷到瞼緣、傷在下眼瞼、被鉤子勾到，都是 canaliculus 受傷的危險因子 [Huang 2022]。Canalicular laceration 要放 stent 修補；有經驗的醫師可以在床邊做 [EyeWiki 淚道外傷]，但這不是第一次自己縫的範圍，要找 oculoplastic [推論]。
 
 **重點框：** Punctum 內側或 punctum 移位：dilation＋probing＋irrigation｜狗咬傷 66% 傷到 canaliculus（Savar 2008）
 
@@ -67,7 +67,7 @@
 
 **畫面：** 時間軸：受傷 → 12–24 小時（一期修補）→ 48 小時（canalicular repair 的研究分界）。
 
-**旁白：** EyeWiki 建議在受傷後 12 到 24 小時內做一期修補 [EyeWiki]。不過研究顯示，稍微延後通常不會變差：兒童眼瞼裂傷的併發症和延後修補無關 [Huang 2022]；兒童狗咬傷裡，受傷到修補超過 12 小時也不是感染的預測因子 [Truong 2025]。Canalicular laceration 方面，一個 334 位病人的研究，48 小時內修補的失敗率是 7.6%，超過 48 小時是 9.1%，沒有差別 [Chu 2017]；另一個系列認為有經驗的團隊可以延到 11 天內 [Wu 2010]；但也有小型研究發現超過 24 小時修補的結果較差 [Raj 2020]。所以結論是：能當天縫就當天縫，真的要等，先把傷口沖乾淨、塗藥膏蓋好 [推論：傷口暫時處置的細節待核對出處]。
+**旁白：** EyeWiki 建議在受傷後 12 到 24 小時內做一期修補 [EyeWiki]。不過研究顯示，稍微延後通常不會變差：兒童眼瞼裂傷的併發症和延後修補無關 [Huang 2022]；兒童狗咬傷裡，受傷到修補超過 12 小時也不是感染的預測因子 [Truong 2025]。Canalicular laceration 方面，一個 334 位病人的研究，48 小時內修補的失敗率是 7.6%，超過 48 小時是 9.1%，沒有差別 [Chu 2017]；另一個系列認為有經驗的團隊可以延到 11 天內 [Wu 2010]；但也有小型研究發現超過 24 小時修補的結果較差 [Raj 2020]。所以結論是：照 EyeWiki，能在 12 到 24 小時內縫就不要拖；但為了等有經驗的人或開刀房而延後一點，研究上通常不會變差。
 
 **重點框：** 一期修補：12–24 小時內（EyeWiki）｜canalicular：48 小時內外失敗率 7.6% 對 9.1%（Chu 2017）
 
@@ -87,7 +87,7 @@
 
 **畫面：** 左：正面，先點表面麻醉、放上保護角膜的 scleral shell，再沿傷口邊緣打局麻。右：矢狀切面，scleral shell 蓋在眼球前面 [示意]。
 
-**旁白：** 雙眼先點表面麻醉，患眼放一個保護用的 scleral shell，另一眼也蓋起來 [EyeWiki]。局麻只打需要的最少量 [EyeWiki]。接著探查傷口的深度：用棉棒或有齒鑷把眼瞼翻開，必要時沖洗穹窿 [EyeWiki]。再用大量生理食鹽水沖洗，清掉看得到的異物，也清掉傷口邊緣的 fibrin 血塊 [EyeWiki；Clark 2015]。最後用 5% Betadine 消毒、鋪無菌單 [Clark 2015]。
+**旁白：** 雙眼先點表面麻醉，患眼放一個保護用的 scleral shell，另一眼也蓋起來 [EyeWiki]。局麻只打需要的最少量 [EyeWiki]。接著探查傷口的深度：用棉棒或有齒鑷把眼瞼翻開，必要時沖洗穹窿 [EyeWiki]；前提是已經排除眼球破裂，懷疑破裂時不能硬撐眼瞼（1-1）[EyeWiki Ruptured Globe]。再用大量生理食鹽水沖洗，清掉看得到的異物，也清掉傷口邊緣的 fibrin 血塊 [EyeWiki；Clark 2015]。最後用 5% Betadine 消毒、鋪無菌單 [Clark 2015]。
 
 **重點框：** 表面麻醉＋scleral shell｜最少量局麻｜翻開看深度｜大量沖洗，清異物與 fibrin
 
@@ -213,10 +213,12 @@
 16. Zhao J, et al. BMC Med Educ 2021;21(1):170. doi:10.1186/s12909-021-02600-3
 17. Tyers AG, Mokete B, Self J. Comparison of standard eyelid margin closure using silk with a modified repair using 7/0 vicryl and a buried knot. Orbit 2005;24(2):103-8. doi:10.1080/01676830590926701 —（非隨機；回溯 123 位：Vicryl 71、silk 52，另有前瞻 24 位）
 18. Lim WK, et al. 2004（下瞼板高度；書目見 `videos/models/eyelid/CARD.md`）. doi:10.1097/01.iop.0000129013.86760.92
+19. EyeWiki（American Academy of Ophthalmology）. Ruptured Globe. 2026-01-29 審閱（狀態：Update Pending）. https://eyewiki.org/Ruptured_Globe
+20. EyeWiki（American Academy of Ophthalmology）. Canalicular trauma. https://eyewiki.org/Canalicular_trauma
 
 ## 還沒解決的地方（寫腳本第 2 版前處理）
-- [待核對出處]：懷疑 open globe 時「不量 IOP、不壓眼、戴 shield」；probe 露出或螢光水流出的判讀；要等的時候傷口怎麼暫時處置。
-- [推論]，要列進出片前的總覽：2-1「第一次縫要有 senior 在旁」；4-1「gray line 對上，tarsus 才對齊」；4-2「gray line 這一針等 tarsus 綁完才綁」。
+- [待核對出處]：已全部處理（2026-11-06）。open globe 的處置改用 EyeWiki Ruptured Globe；淚道的確認方式改用 EyeWiki 淚道外傷；「要等時傷口怎麼暫時處置」找不到出處，已拿掉。
+- [推論]，要列進出片前的總覽：2-1「第一次縫要有 senior 在旁」；2-2「canalicular repair 不是第一次自己縫的範圍」；4-1「gray line 對上，tarsus 才對齊」；4-2「gray line 這一針等 tarsus 綁完才綁」。
 - [示意]：punctum 的位置、margin 縫線的深度、tarsal suture 咬的高度、外翻的程度、scleral shell 的畫法。
 - Clark 2015 的狗咬傷段落有一句「建議讓狗安樂死」，和眼科處置無關，不放進影片。
 - Devoto 1997（PubMed 沒有摘要，是 Letter）、Kamboj 2024 只讀到摘錄，目前沒用；之後要用要先讀期刊原文。
