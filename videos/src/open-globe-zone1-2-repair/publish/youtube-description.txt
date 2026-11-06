@@ -1,0 +1,32 @@
+Open globe zone I–II 的修補：一條右眼 10 點、從角膜跨過角膜緣、停在角膜緣後 4 mm 的角鞏膜裂傷，角膜緣處虹膜脫出。依序示範：看懂 zone 與傷口、器械與左右手的拿法（握筆式持針、手靠穩、夾針位置、反手與換手）、先回納虹膜（paracentesis、OVD、cyclodialysis spatula）、第一針對齊角膜緣（9-0 nylon）、角膜縫合（10-0 nylon、深度 70–90%、周邊長淺中央短深、打結與埋結）、360° 剪開結膜探查與鞏膜由前往後縫合（8-0 nylon）、收尾，最後是模擬練習清單。
+
+示意動畫，不是手術錄影；器械型號、縫線與術後用藥依院內常規。畫面為右眼（經傷口的切面＋術者坐 12 點的顯微鏡俯視），比例不精確。
+
+章節
+0:00 片頭
+0:13 1 看懂這個傷口
+1:13 2 器械與雙手
+2:30 3 先回納虹膜
+3:21 4 第一針：角膜緣
+3:56 5 角膜
+4:52 6 Zone II：鞏膜
+5:24 7 收尾
+5:40 8 模擬練習清單
+6:20 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Pieramici 1997. Am J Ophthalmol 123:820-31
+2. Liu 2014. Retina 34:2300-5
+3. Kim 2024. Strabismus 32:85-90
+4. Murali 2021. J Am Coll Emerg Physicians Open 2:e12372
+5. Zhou 2022. Clin Ophthalmol 16:2545-2559
+6. Jones 2023. Community Eye Health 36:8-10
+7. Li 2021. Hum Factors 63:1169-1181
+8. Kil 2024. J Surg Educ 81:983-993
+9. Newton 2023. Community Eye Health 36:15
+10. Wong 2025. Taiwan J Ophthalmol 15:225-235
+11. Li 2015. J Emerg Trauma Shock 8:216-23
+12. Nagra 2003. Cornea 22:184-6
+13. Zheng 2026. Sci Rep 16
+14. Hammond 1996. Br J Ophthalmol 80:164-7
+15. Hamill 2002. Ophthalmol Clin North Am 15:185-94
