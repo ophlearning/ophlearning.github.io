@@ -11,6 +11,7 @@ const VIDEO = {
   subtitle: 'Marginal rotation 一年後又內翻：多處理哪一個機轉',
   line: '老年性下眼瞼內翻的再次手術',
   note: ['右眼示意動畫，不是手術錄影；比例不精確。', '各院做法不同的地方，依院內常規。'],
+  credit: '製作　張博淳',   // the kit's default credit names the hospital; videos do not name it
 };
 const CHAPTERS = ['片頭', '為什麼會復發', '這次怎麼選', '術前準備', '手術步驟', '術中狀況', '術後', '跟刀清單', '參考文獻'];
 
