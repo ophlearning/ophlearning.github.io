@@ -7,8 +7,8 @@
     type: 'steps', title: '手術步驟圖', sub: '左＝矢狀切面（機轉）　右＝術者視角（正面），同一個狀態',
     sources: ['Cruz 2015a'], grid: [3, 3],
     legend: { rows: ['inc', 'cut', 'sut', 'fix', 'nerve'], orient: [
-      '<b>左圖 矢狀切面</b>（瞳孔中央；第 <span data-struct="step">7</span> 步為瞼緣放大）：左＝前　上＝上', '<b>右圖 術者視角</b>（正面）：檢查者面對病人，左＝temporal　右＝nasal',
-      '縫線位置、針數、內翻程度、睫毛根數：示意'] },
+      '<b>左 矢狀切面</b>（瞳孔中央；第 <span data-struct="step">7</span> 步＝瞼緣放大）：左＝前　上＝上', '<b>右 術者視角</b>：面對病人，左＝temporal　右＝nasal',
+      '切口高度、切除寬、縫線與針數：依院內常規', '縫線位置、內翻程度、睫毛根數：示意'] },
     steps: [
       { hd: '術前：每根碰角膜的睫毛是哪一種機轉', views: [                                                       // 1-1
         { kind: 'sag', state: { ...PRE, curl: MRP.entr, misdirected: 1 }, win: WIN.lidSag, red: 'none',

@@ -11,7 +11,7 @@ PRINT.sheet({
     { act: '<b>瞼板全層切開</b>（位置依院內常規）→ 縫線把遠端瞼板拉過瞼緣段，<b>瞼緣往外轉</b>（針數、縫線依院內常規）',
       note: 'Contour 異常是 margin rotation 最常見的併發症之一：縫線要分散（Cruz 2015a）' },
     { sec: '術中②　Levator resection', act: '轉正之後再做 levator：切除 <b>5 mm</b> 寬的皮膚肌肉 → 開眶隔 → <b>Putterman clamp</b> 切除（依院內常規）' },
-    { act: '<b>4-0 vicryl ×3</b> 固定瞼板；請病人睜眼看<b>高度</b>、<b>contour</b>，以及瞼緣有沒有<b>又往內翻</b>',
+    { act: '<b>4-0 vicryl ×3</b> 固定瞼板（依院內常規）；請病人睜眼看<b>高度</b>、<b>contour</b>，以及瞼緣有沒有<b>又往內翻</b>',
       note: 'Ptosis 手術後的 entropion：瞼板摺起來的位置 70% 在上三分之一（Cruz 2023）' },
     { sec: '術中③　Internal brow fixation', act: '往上剝到眉下，避開 <b>supraorbital nerve</b>；眉下組織縫到骨膜 <b>4-0 vicryl ×1</b>；再量 <b>MRD1 約 2.5 mm</b>（依院內常規）' },
     { sec: '電解與收尾', act: '轉正後<b>還碰到角膜</b>的睫毛：細針<b>沿睫毛幹</b>進到毛囊電解（機器、能量、根數依院內常規）',
