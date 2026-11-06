@@ -4,7 +4,8 @@
 
 ## 準備（每台機器做一次，字型不進 git）
 - 模型樣本頁的字型：`cd videos/models && mkdir -p fonts && cd fonts && npm pack @fontsource/noto-sans-tc@5.1.1 && tar xzf fontsource-noto-sans-tc-5.1.1.tgz && cd ../../..`
-- 影片頁的字型：見該影片 README 的「重做步驟」第 1 步（放在 `videos/src/<影片>/anim/fonts/`）。
+- 影片頁的字型：用共用影片套件（`video-kit/`）做的影片直接用上面那一份（頁面連到 `../../../models/fonts/package/*.css`），不必另外下載；PLTR 的舊版面見該影片 README 的「重做步驟」第 1 步（放在 `videos/src/<影片>/anim/fonts/`）。
+- 語音模型（一份共用）：`mkdir -p ~/.cache/ophtts && cd ~/.cache/ophtts`，下載並解壓 https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-melo-tts-zh_en.tar.bz2 ；`pip install sherpa-onnx opencc-python-reimplemented`。每支影片在 `tts/` 放一個連結：`ln -s ~/.cache/ophtts/vits-melo-tts-zh_en videos/src/<影片>/tts/`（不進 git）。
 
 ## 每次改了模型或畫面：一條指令跑完所有檢查
 `node videos/tools/check-all.js videos/src/<影片>`
@@ -12,6 +13,7 @@
 
 最後一段 summary 全部是 PASS 才能 commit。它依序跑三道檢查：
 1. **每個模型的自我檢查**（`videos/models/*/check.js`，新模型自動納入）：解剖關係、兩個視角一致、方位與物理、旁白講到的數字。
+   - 影片資料夾裡有 `check.js` 的話也會跑（在影片資料夾執行）：這支影片旁白講到的數字與空間關係在模型上的檢查，以及數字帳本（見下面「共用影片套件」）。
 2. **影片層級檢查**（`check-video.js`）：旁白、重點框、來源、章節、參考文獻和上線版逐字相同；已換新畫法的段落，每句旁白時看得見的標籤都在面板內、引線指在面板內、標籤互不重疊；沒有程式錯誤。比對的頁面和文字基準版本，寫在該影片 `ref/manifest.json` 的 `page`、`textBase`。
 3. **參考圖比對**（`ref-check.js`）：參考圖是檢查過、認定正確的畫面（Claude 放大自檢；站長只看出片前的總覽）。這道檢查會重畫同一時刻、比較每個像素的亮度，超過門檻（`manifest.json` 的 `threshold`，目前 0.02% 的像素）就判定不同，並印出差異圖的位置（紅色＝變了的地方）。門檻不要放寬：0.1% 時曾漏掉縫線位置 1.5 mm 的變化。
    - 差異是預期中的（例如這次本來就要改那一段）：自己放大看新截圖，確認正確後執行 `node videos/tools/ref-check.js <manifest> --update --only <段落>`，並在 `manifest.json` 的 `approved` 填日期、`note` 寫「Claude 自檢」。
@@ -31,7 +33,39 @@
 - **新模型**：照 `videos/models/README.md` 的製作流程。寫 `views.js` 報到，並在 `videos/models/registry.js` 加一行；寫 `check.js`。之後 `shot-model.js` 和 `check-all.js` 都會自動認得它。
 - **新影片**：在 `videos/src/<影片>/ref/manifest.json` 寫好 `page`（影片頁）、`textBase`（文字比對的基準 commit）和參考圖清單。還在模型階段、沒有影片頁時，`page` 填 null：影片層級檢查顯示 SKIP（不是 PASS），模型自我檢查與參考圖照跑。影片頁要用共用版面（提供 `PANELS`、`CONTENT_Y`、`CONTENT_H`、`SEGS`、`DRAW2`、`renderAt`、`TL_EXPORT`），影片層級檢查才能運作。
 
+## 共用影片套件（`video-kit/`）
+新影片只寫「文字＋每段畫面」，版面、時間軸、視角、標籤、渲染、語音、出片、上傳都共用。第一支用它的是 `videos/src/levator-resection-brow-fixation/`（照著它做最快）。
+
+### 一支影片要提供的檔案（`videos/src/<影片>/`）
+- `anim/segments.js`：`VIDEO`（片頭標題 `title`［幾行］、`subtitle`、`line`、`note`、header 用的 `name`）、`CHAPTERS`（最後一個是「參考文獻」，不編號）、`REFS`、`SEGS`。每段：`id`、`ch`、`title`、`layout`（`dual` 左右兩圖／`full` 一張寬圖／`title` 片頭／`refs` 參考文獻）、`lines`（旁白＝字幕，`\n` 換行）、`keys`（`[第幾句起, '重點，<b>強調</b>']`）、`src`（`[第幾句起, '作者 年份；…']`，`''` 表示清掉）；章節卡是 `{ id: 'c1', chapterCard: 1 }`。檔尾 `module.exports = { VIDEO, SEGS, CHAPTERS, REFS }`。
+- `anim/draw.js`：`const DRAW2 = {}`，每個非章節卡的段落（含 `title`，不含 `refs`）一個函式 `DRAW2[id] = T => ({ L, R })`（`dual`）或 `({ F })`（`full`）、片頭是 `({ R })`。每個面板是 `{ svg, extra, P: { title, orient } }`：`svg` 會被裁在面板內，`extra` 放標籤。
+- `anim/video.html`：照第一部影片的那一份，依序載入字型 css、`../../../tools/video-kit/kit.js`、模型、`segments.js`、（參數檔）、`draw.js`、`timeline.js`，最後 `KIT.start()`。
+- `tts/lexicon-extra.json`（選用）：這支影片的英文發音與念之前的文字替換。
+- `check.js`（選用，建議）：數字帳本與旁白↔模型檢查；`check-all.js` 會自動跑。
+- `ref/manifest.json`：`page` 填 `../anim/video.html`、`textBase` 填旁白定稿的 commit。
+
+### kit.js 提供的東西
+- 時間：`T.u`（段落內秒數）、`T.st(i)`／`T.en(i)`（第 i 句開始／結束）、`T.on(i, d, off)`（第 i 句開始後 d 秒內 0→1）、`T.p(i, a, b)`（第 i 句的 a～b 比例內 0→1）；`ss`、`lerp`、`clamp01`。
+- 視角：`VIEWS.sag(state, PW, PH, win, id)`（矢狀切面，`LID.draw`）、`VIEWS.cor(state, PW, PH, win, id, { windows })`（正面，`CORONAL.draw`）、`VIEWS.ev(...)`（翻瞼）。`win = { x, y, w }`（mm，左上角與寬度），回傳 `svg`、面板座標的定位點 `A`、原始 mm 定位點 `M`、換算函式 `P([x, y])`、比例 `k` 與模型的完整回傳 `r`。同一畫面兩個視角的 `id` 要不同。`VIEWS.zwin(a, b, z)` 在兩個視窗之間平移縮放，`VIEWS.dim(a, b)` 畫尺寸線，`VIEWS.sbar(k, op)` 比例尺。
+- 標籤：`VIEWS.lab2('中文', 'English', 文字 x, 文字 y, 定位點, { side: 'R', bold, color, op, size })` 輸出 `<g class="lbl">`（`check-video.js` 檢查它們在面板內、不重疊）。左邊的標籤 x 用 14，右邊用 `PW - 12` 加 `side: 'R'`；上下相鄰的標籤至少差 34 px。
+- 其他：`text`、`htext`（白邊文字）、`tblock`、`card`、`COL`、`measure`；面板尺寸 `PW`×`PH`（dual）、`FW`×`PH`（full）；標準面板標題 `SAG_T`、`COR_T`、`EV_T`。
+- 檢查工具讀的全域變數：`PANELS`、`CONTENT_Y`、`CONTENT_H`、`SEGS`、`DRAW2`、`renderAt`、`TL_EXPORT`。字型子集會在第一格前全部載入（含 `draw.js` 裡的字串）。
+- 沒有 `timeline.js` 時，時間軸用字數估計（和 `tts/assemble.py` 同一組間隔常數），可以先做畫面再做語音。
+
+### 從文字到 mp4（在 repo 根目錄執行；`V=videos/src/<影片>`）
+1. 匯出旁白：`node videos/tools/video-kit/tts/export_lines.js $V`
+2. 發音檢查：`python3 videos/tools/video-kit/tts/tts.py $V --check`，`MISSING` 不是空的就補 `tts/lexicon-extra.json`，重跑到空為止。
+3. 合成：`python3 videos/tools/video-kit/tts/tts.py $V`，再 `python3 videos/tools/video-kit/tts/assemble.py $V`（產生 `anim/timeline.js`；`out/` 下的 `narration.wav`、`captions.srt`、`chapters.txt`）。`timeline.js` 進 git，參考圖與檢查才和影片同一條時間軸；改了旁白要重跑 1–3 並更新參考圖。
+4. 檢查：`node videos/tools/check-all.js $V`。
+5. 出片：`videos/tools/video-kit/build.sh $V <輸出檔名>`（4 個 worker；10 分鐘的影片約 15–25 分鐘），輸出 `$V/out/<輸出檔名>.mp4`。
+6. 上傳（不公開）：`python3 videos/tools/video-kit/youtube_upload.py $V/out/<輸出檔名>.mp4 --title "…" --desc-file $V/publish/youtube-description.txt`；之後照 repo 根目錄 `CLAUDE.md` 同步網站。
+- 單張截圖：`node videos/tools/video-kit/render.js $V/anim/video.html 輸出前綴 --stills 秒數,秒數`，或照句子用 `seg-stills.js`。
+
+### 數字帳本（影片的 `check.js`）
+把每段畫面在每一句的 60 % 與 98 % 畫出來，收集畫面上所有文字，加上旁白、重點和標題，抽出每個數字：每個數字都要在該段的帳本裡登記來源（文獻要出現在該段的「來源」，或是「院內常規」「結構」「示意」）；畫面上出現的「作者 年份」都要在 `REFS` 裡；帳本裡登記了卻沒用到的數字也會報錯。這樣新加一個數字卻沒有出處，檢查一定會擋下來。
+
 ## 已知限制
 - 參考圖比對只比亮度，不比顏色。原因是參考圖存成 JPEG，JPEG 會降低顏色解析度，比顏色的話，細的彩色線條每次都會被誤報。所以只改顏色、亮度不變的修改抓不到。
 - 標籤檢查只看標籤文字和引線端點，不檢查標籤有沒有指對組織。指對與否靠模型裡的定位點，以及放大截圖自檢。
-- 影片層級檢查目前只適用共用版面的影片頁（例如 `video2.html`）；之後抽出共用引擎時一起整理。
+- 影片層級檢查適用共用版面的影片頁：PLTR 的 `video2.html`，以及所有用 `video-kit/` 的影片頁。
+- `check-video.js` 只在每句的 60 % 檢查標籤；動畫中途的重疊靠截圖自檢。

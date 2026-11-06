@@ -25,6 +25,8 @@
   9. Conjunctivoplasty：範本沒有，完全以實際 OP note 為準。
 
 ## 待刀後補（站長回傳後填入，未填之前畫面不做這些步驟）
+> **2026-11-06 站長決定：不等 OP note，依專業判斷先做影片。** 影片已依上面的院內範本（旁白一律說「依院內常規」）與文獻做好；範本的解讀與示意的地方列在 `overview-notes.md`。下列各項在刀後仍要和實際 OP note 對照，不同處改 `anim/params.js`（數值）與 `anim/segments.js`（旁白），再跑 `check-all.js`、重新出片。
+
 - [ ] 切口三點高度、切除的皮膚寬度。
 - [ ] Levator 切除量怎麼決定（術前算好，還是術中請病人睜眼調整）、clamp 夾的位置、實際切除幾 mm。
 - [ ] 3 針固定點在瞼板上的高度與內外位置；打結後怎麼檢查 contour；目標 MRD1。
@@ -33,7 +35,7 @@
 - [ ] Conjunctival prolapse 什麼時候出現、脫出範圍、處理方式（fornix suture 從哪裡穿出、或直接切除）、用什麼縫線。
 - [ ] 術中有沒有檢查 lagophthalmos。
 
-## 章節大綱（草稿；旁白寫進 `script-draft.md` 時逐句附出處）
+## 章節大綱（定稿的逐句旁白與出處見 `script-draft.md` 第 2 版）
 | 章 | 內容 | 主要出處 |
 |---|---|---|
 | 片頭 | 三個術式，一個切口 | — |
@@ -41,8 +43,8 @@
 | 2 證據 | Internal browpexy 的效果：主要是防止下降，上提有限；與 external browpexy 比較；不適合的人 | McCord 1990；Baker 2016；Mokhtarzadeh 2017；Kaderli 2020；Huang 2023；Nemet 2019；Zandi 2017；Menderes 2024 |
 | 3 術前準備 | 畫線（三點高度）、麻醉 | 實際 OP note |
 | 4 手術步驟 | 4-1 切皮與切除皮膚肌肉；4-2 開眶隔、以 preaponeurotic fat 為地標找 aponeurosis；4-3 levator 分離與 Putterman clamp 切除；4-4 固定瞼板與調高度、contour；4-5 往上剝到眉下、brow fixation；4-6 conjunctivoplasty；4-7 雙眼皮線與縫皮 | 實際 OP note＋文獻 |
-| 5 術中狀況 | 高度或 contour 不對、結膜脫出、外側的 lacrimal gland 不要當成脂肪切掉 | [待查證] |
-| 6 術後 | 追蹤的重點：高度、閉眼、眉毛位置、結膜 | [待查證] |
+| 5 術中狀況 | 高度或 contour 不對、結膜脫出、外側的 lacrimal gland 不要當成脂肪切掉 | Takagi 2022；Eshraghi 2024；Pupić-Bakrač 2024；Lee 2024 |
+| 6 術後 | 追蹤的重點：高度、閉眼、眉毛位置、結膜 | Tucker 1999；Chen 2016；Lee 2024 |
 | 7 跟刀清單 | 每一步主治需要的器械與住院醫師要做的事 | 實際 OP note |
 | 參考文獻 | — | — |
 
@@ -83,12 +85,12 @@
 （卷期年份以 PubMed 為準；寫進網站 `refs` 前再核對一次。）
 
 ## 驗收項目
-- [ ] 步驟章節和刀後的實際 OP note 一致；範本與實際不同的地方以實際為準，並在規格書記下差異。
-- [ ] 所有解剖畫面都來自 `videos/models/eyelid/`；亞洲人單眼皮與 ROOF 往下延伸（Manta 2025）；`eyelid/check.js` 全部通過。
-- [ ] 每段手術步驟同時顯示矢狀切面與正面，兩圖的切口、固定點高度差小於 0.3 mm。
-- [ ] 旁白與重點框的每個數值都有出處，並寫成檢查；沒有出處的標「示意」或拿掉，列在出片前的總覽。
-- [ ] 標籤一律「中文 English」並列，不超出面板、不互相重疊（`check-video.js`）。
-- [ ] `node videos/tools/check-all.js videos/src/levator-resection-brow-fixation` 全部通過；每章至少一張參考圖（Claude 自檢）。
+- [ ] 步驟章節和刀後的實際 OP note 一致（2026-11-06 站長決定先依範本出片，刀後再對照）；範本與實際不同的地方以實際為準，並在規格書記下差異。
+- [x] 所有解剖畫面都來自 `videos/models/eyelid/`；亞洲人單眼皮與 ROOF 往下延伸（Manta 2025）；`eyelid/check.js` 全部通過。
+- [x] 每段手術步驟同時顯示矢狀切面與正面，兩圖的切口、固定點高度差小於 0.3 mm。
+- [x] 旁白與重點框的每個數值都有出處，並寫成檢查；沒有出處的標「示意」或拿掉，列在出片前的總覽。
+- [x] 標籤一律「中文 English」並列，不超出面板、不互相重疊（`check-video.js`）。
+- [x] `node videos/tools/check-all.js videos/src/levator-resection-brow-fixation` 全部通過；每章至少一張參考圖（Claude 自檢）。
 - [ ] 出片前交總覽（每章一張）；上傳為不公開，同步網站 `videos/index.html`，`videos/#levator-resection-brow-fixation` 沒有 JS 錯誤。
 
 ## 進度
@@ -102,3 +104,12 @@
   - 還沒做：縫皮後皮膚閉合的變形；正面的 clamp 被皮膚蓋住的部分畫虛線（實際上提上瞼肌常被往下拉出傷口再夾，刀後依 OP note 決定要不要改成往下拉）。
   - 沒有出處、畫成示意的：皮下脂肪與肌肉在眶上緣以上的比例、額頭軟組織、眉毛寬度與形狀、眶上神經分支、淚腺大小、剝離平面寬度、眉毛固定點高度與上提量、結膜脫出的長度與厚度。
 - 下一步：(1) 站長回傳實際 OP note 後，把 `script-draft.md` 的 `[待刀後確認]` 定稿，並改模型參數（`incH`、`excW`、`resectMm`、`fixS`、`browFixH`、`browLift`、剝離層次、結膜脫出的處理方式）；不等 OP note 也能先做的：補 `[待核對出處]`；(2) 照 `videos/models/README.md` 製作流程，一章一個對話做影片頁（建好後在 `ref/manifest.json` 填 `page` 與 `textBase`）。
+- 2026-11-06：站長決定不等 OP note、依專業判斷先做影片（步驟章節依院內範本，旁白說「依院內常規」）。影片完成到出片（未上傳）：
+  - 共用影片套件 `videos/tools/video-kit/`（版面、時間軸、雙視角、標籤、渲染、語音、出片、上傳；用法見 `videos/tools/README.md`）；這支影片只提供 `anim/segments.js`（文字）、`anim/draw.js`（每段畫面）、`anim/params.js`（手術參數）。
+  - 旁白定稿：`script-draft.md` 第 2 版（由 `segments.js` 產生，移除所有 `[待刀後確認]`）；逐句對照 PubMed 摘要；新增文獻 Carraway 1986、Jeong 1999、Lam 2003、Tucker 1999（PubMed 已查證），共 23 篇。
+  - 檢查：`check.js`（數字帳本：畫面與旁白的每個數字都要有來源；13 項旁白↔模型檢查；`--selftest` 每項故意改錯一次都會報錯），`check-all.js` 會自動跑；兩支影片的 `check-all.js` 全部通過。
+  - 眼瞼正面模型新增 `incX`（三點高度落在指定位置；不給時畫面不變，PLTR 與樣本參考圖不變）。
+  - 語音：共用 MeloTTS（`tts/vits-melo-tts-zh_en` 連到 `~/.cache/ophtts/`），本片發音補在 `tts/lexicon-extra.json`；`anim/timeline.js` 進 git。
+  - 參考圖：每章至少一張，共 19 張（Claude 自檢）；出片前總覽在 `ref/overview/`（每章一張）與 `overview-notes.md`（示意與沒有直接出處的內容）。
+  - 出片：`out/levator-resection-brow-fixation.mp4`（不進 git）；`publish/` 有 YouTube 說明欄、字幕、章節與網站條目草稿（`yt: 'TBD'`）。
+- 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」，不同處改 `params.js`／`segments.js` 後重新出片。
