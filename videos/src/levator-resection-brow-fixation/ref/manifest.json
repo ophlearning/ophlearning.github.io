@@ -1,0 +1,26 @@
+{
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/levator-resection-brow-fixation；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": null,
+  "pageNote": "還在模型階段，影片頁還沒做；做好後填入 page 與 textBase（影片層級檢查才會啟動）",
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": null,
+  "items": [
+    {
+      "page": "../../../models/eyelid/sample-levator.html",
+      "ref": "../../../models/eyelid/sample-levator.jpg",
+      "dpr": 2,
+      "crop": null,
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（眉毛區 ROOF、骨膜、眉毛、眶上切跡與神經、淚腺；4-5 眉毛固定那一刻兩圖同步）"
+    },
+    {
+      "page": "../../../models/eyelid/sample-levator-steps.html",
+      "ref": "../../../models/eyelid/sample-levator-steps.jpg",
+      "dpr": 2,
+      "crop": null,
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（levator resection 八個步驟的矢狀切面狀態）"
+    }
+  ]
+}

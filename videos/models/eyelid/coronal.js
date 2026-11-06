@@ -12,15 +12,20 @@
 const CORONAL = (() => {
   const { add, sub, unit, hyp, lerp, ss, hash, poly, F, NS } = LID;
   const psin = a => Math.max(0, Math.sin(a));
-  function heights(variant) {               // central heights from the sagittal model (y of the projected point)
-    const G = LID.geom(variant), UF = LID.UF;
-    return { margin: UF.at(0, 0)[1], tarTop: UF.at(10, 0.6)[1], fus: LID.LEV.off(G.S_F, -0.07)[1], whit: LID.LEV.off(LID.S_J, 0)[1], arc: LID.ARCUS[1] };
+  function heights(variant, st = {}) {       // central heights from the sagittal model (y of the projected point); the lid part follows mrd1
+    const G = LID.geom(variant), UF = LID.UF, sl = LID.slideAngle(st.mrd1) ? (p, s) => LID.slide(p, s, st) : p => p;
+    return { margin: sl(UF.at(0, 0), 0)[1], tarTop: sl(UF.at(10, 0.6), 10)[1], fus: sl(LID.LEV.off(G.S_F, -0.07), G.v.S_FUS)[1], whit: LID.LEV.off(LID.S_J, 0)[1], arc: LID.ARCUS[1] };
   }
   // palpebral fissure (Asian adult, schematic): lateral canthus higher than medial
   const LC = [-15.0, -1.3], MC = [13.0, 0.9];
   const tq = x => (x - LC[0]) / (MC[0] - LC[0]);
   const baseY = x => lerp(LC[1], MC[1], tq(x));
-  const Uy = x => baseY(x) - 3.885 * Math.pow(psin(Math.PI * tq(x)), 0.85) * (1 + 0.12 * (tq(x) - 0.5));   // U(0) = −4 (MRD1)
+  // upper lid margin. AMP sets MRD1 (state mrd1, default 4: U(0) = −4); draw() sets it for the duration of one drawing
+  let AMP = 3.885;
+  const lidShape = x => Math.pow(psin(Math.PI * tq(x)), 0.85) * (1 + 0.12 * (tq(x) - 0.5));
+  const Uy = x => baseY(x) - AMP * lidShape(x);
+  const U4 = x => baseY(x) - 3.885 * lidShape(x);                        // the margin at MRD1 = 4 (reference for the brow, which is fixed to the face)
+  const ampFor = m => 3.885 * (m + baseY(0)) / (4 + baseY(0));
   const Ly = x => baseY(x) + 5.18 * Math.pow(psin(Math.PI * tq(x)), 1.1) * (1 - 0.15 * (tq(x) - 0.5));    // L(0) = +5 (MRD2)
   const xs = (a, b, st = 0.25) => { const r = []; for (let x = a; x < b; x += st) r.push(x); r.push(b); return r; };
   const FX = xs(LC[0], MC[0]);
@@ -30,12 +35,38 @@ const CORONAL = (() => {
   const above = (x, d, x0, x1, p) => Uy(Math.max(LC[0], Math.min(MC[0], x))) + d * prof(x, x0, x1, p);
   const arcY = (h, x) => h + 0.016 * (x + 1) ** 2;                      // orbital rim / Whitnall: broad arch
 
+  // brow, fixed to the face (it does not follow the lid). Lower edge from Gao 2025 (3D photos of young Chinese adults, mean of men and women),
+  // measured up from the upper lid margin (here at MRD1 = 4): above the medial canthus 18.99 mm, midway to the medial limbus 14.88, medial
+  // limbus 11.33, pupil centre 10.66, lateral limbus 10.33, midway to the lateral canthus 11.02, lateral canthus 14.38. The tail beyond the
+  // lateral canthus, the head medial to the canthus and the brow's vertical extent are schematic.
+  const LIMB = 11.5 / 2;                                                   // limbus ± 5.75 mm (Gao 2025 iris diameter 11.55 / 11.44)
+  const BROW_LO_PTS = [[-20.2, LC[1] - 13.2], [LC[0], LC[1] - 14.38], [(LC[0] - LIMB) / 2, U4((LC[0] - LIMB) / 2) - 11.02], [-LIMB, U4(-LIMB) - 10.33], [0, U4(0) - 10.66],
+    [LIMB, U4(LIMB) - 11.33], [(MC[0] + LIMB) / 2, U4((MC[0] + LIMB) / 2) - 14.88], [MC[0], MC[1] - 18.99], [15.6, MC[1] - 19.6]];
+  const BROW_LO_LINE = LID.spline(BROW_LO_PTS, 0.1);
+  const browLoY = x => { const P = BROW_LO_LINE; if (x <= P[0][0]) return P[0][1]; for (let i = 1; i < P.length; i++) if (P[i][0] >= x) return lerp(P[i - 1][1], P[i][1], (x - P[i - 1][0]) / ((P[i][0] - P[i - 1][0]) || 1)); return P[P.length - 1][1]; };
+  const BROW_TH = [[-20.2, 2.0], [-15.0, 4.0], [-10.4, 5.4], [0, 7.0], [LIMB, 7.4], [9.4, 7.4], [15.6, 6.2]];   // vertical extent (schematic); 7 mm at mid-pupil = LID.BROW_H
+  const browTh = x => { const T = BROW_TH; if (x <= T[0][0]) return T[0][1]; for (let i = 1; i < T.length; i++) if (T[i][0] >= x) return lerp(T[i - 1][1], T[i][1], (x - T[i - 1][0]) / (T[i][0] - T[i - 1][0])); return T[T.length - 1][1]; };
+  // supraorbital notch: 22.96 mm from the facial midline (Pruksapong 2022, Thai cadavers: men 22.34, women 23.58; East Asians shorter than other
+  // groups), midline = half the interpupillary distance (Gao 2025: men 65.34, women 62.03 → 31.84); notch width 3.97 mm (Pruksapong 2022)
+  const NOTCH_X = 31.84 - 22.96, NOTCH_W = 3.97;
   const C = { skin: '#efcfb6', skin2: '#e7bfa2', skinS: '#c99476', orb: '#c6646f', orbF: '#9b3a47', sept: '#ffffff', septS: '#b7ad99', fat: '#f6d778', fatL: '#f9e4a0',
     fatS: '#d6ad47', mfat: '#f7efd2', mfatS: '#d9cc9f', apo: '#f5f0e2', apoS: '#bfb08a', whit: '#ece4cf', mul: '#dda6aa', mulF: '#c27b84', mus: '#b9525f', musF: '#d9838e',
-    tar: '#f5eacb', tarS: '#c3ad7c', gland: '#ecd28a', bone: '#eee3cb', boneS: '#b9a477', deep: '#9b6b5f', sclera: '#f7f4ef', lash: '#2b2019', brow: '#3a2b20', cut: '#7a4f45' };
+    tar: '#f5eacb', tarS: '#c3ad7c', gland: '#ecd28a', bone: '#eee3cb', boneS: '#b9a477', deep: '#9b6b5f', sclera: '#f7f4ef', lash: '#2b2019', brow: '#3a2b20', cut: '#7a4f45',
+    roof: '#efca8c', roofL: '#f5dba9', roofS: '#cf9d55', lac: '#e6b9a3', lacL: '#efcdbb', lacS: '#b8826c', nerve: '#f1d04b', nerveS: '#a8861a', art: '#c0392b', wound: '#fbf1e6', steel: '#5d6b78', steelS: '#2f3a44', blue: '#2463eb' };
 
   function draw(opt = {}) {
-    const H = heights(opt.variant || 'asian'), o = [], A = {}, id = opt.id || 'cor', st = opt.state || {};
+    const amp = ampFor((opt.state || {}).mrd1 ?? 4), withAmp = f => (...a) => { const a0 = AMP; AMP = amp; try { return f(...a); } finally { AMP = a0; } };
+    const r = withAmp(drawBody)(opt);
+    for (const k of Object.keys(r)) if (typeof r[k] === 'function') r[k] = withAmp(r[k]);   // functions handed back keep this drawing's lid height
+    return r;
+  }
+  // levator resection states (see LID.draw): mrd1, excMark, excCut, excRemove, septOpen, fatUp, dis, clamp, resect, advance, tarSut, creaseFix,
+  // browPlane, browSut, browTie, browY, prolapse; overlays: notch (supraorbital notch and nerve projected on the skin). Heights come from LID.keyPoints.
+  const LR_KEYS = ['excMark', 'excCut', 'excRemove', 'septOpen', 'fatUp', 'dis', 'clamp', 'resect', 'advance', 'tarSut', 'creaseFix', 'browPlane', 'browSut', 'browTie', 'prolapse'];
+  function drawBody(opt = {}) {
+    const st = opt.state || {}, H = heights(opt.variant || 'asian', st), o = [], A = {}, id = opt.id || 'cor';
+    const lr = LR_KEYS.some(k => st[k]), K = lr ? LID.keyPoints(st, opt.variant || 'asian') : null;
+    const browY = (st.browY || 0) + (st.browLift ?? 1.0) * (st.browTie || 0);
     const ev = st.evert || 0, inv = Math.max(0, -ev), out = Math.max(0, ev);
     // lashes grow from the ANTERIOR lid margin, which projects ≈ 1 mm above the posterior edge (where the lid meets the globe and MRD1 is read)
     const dAnt = LID.UF.at(0, LID.U_SKIN)[1] - LID.UF.at(0, 0)[1], lashY = x => Uy(x) + dAnt * prof(x, LC[0], MC[0], 0.6);
@@ -62,6 +93,13 @@ const CORONAL = (() => {
     // lid-crease approach: incision on the (planned) crease; flap lifted → a window exposes the aponeurosis / tarsus below it
     const dCrease = LID.creasePointUF(opt.variant || 'asian')[1] - LID.UF.at(0, 0)[1], creaseY = x => Uy(x) + dCrease * prof(x, -13.6, 10.6, 0.35);
     const wins = [...(opt.windows || [])], FXW = xs(-12.4, 9.8, 0.25);
+    // levator resection incisions, projected from the sagittal skin points (central heights); medial / lateral heights scale with incH
+    const incH = st.incH || [2.5, 4, 4], ratio = x => (x >= 0 ? lerp(1, incH[0] / incH[1], Math.min(1, x / 7)) : lerp(1, incH[2] / incH[1], Math.min(1, -x / 7))) * prof(x, -12.4, 9.8, 0.35);
+    const dLo = K ? K.incLo[1] - K.lash[1] : 0, dHi = K ? K.incHi[1] - K.lash[1] : 0;
+    const excLoY = x => lashY(x) + dLo * ratio(x), excHiY = x => excLoY(x) + (dHi - dLo) * prof(x, -12.4, 9.8, 0.5);
+    const woundPoly = [...FXW.map(x => [x, excLoY(x)]), ...FXW.slice().reverse().map(x => [x, excHiY(x)])];
+    const wDepth = (st.dis || 0) >= 0.5 ? 1 : (st.fatUp || 0) >= 0.5 ? 2 : (st.septOpen || 0) >= 1 ? 3 : 4;
+    if (K && (st.excRemove || 0) >= 0.5) wins.push({ poly: woundPoly, depth: wDepth });
     if ((st.flap || 0) > 0.05) wins.push({ poly: [...FXW.map(x => [x, creaseY(x)]), ...FXW.slice().reverse().map(x => [x, lashY(x) + rollY(x) - 0.35])], depth: 1 });   // narration: the whole tarsus is exposed down to the lash roots
     const masks = [];
     for (let L = 1; L <= 6; L++) { const cut = wins.filter(w => w.depth < L).map(w => poly(w.poly)).join('');
@@ -81,6 +119,13 @@ const CORONAL = (() => {
       <path d="${poly([...FX.map(x => [x, Uy(x)]), ...FX.slice().reverse().map(x => [x, Uy(x) + 1.1])])}" fill="#000" opacity="0.13"/>
       <ellipse cx="11.6" cy="0.55" rx="1.25" ry="0.95" fill="#e48f95"/><path d="M10.25 -1.1 Q9.7 0.5 10.3 2.0" fill="none" stroke="#e7a3a6" stroke-width="1.6" ${NS}/></g>`;
     s0 += `<path d="${poly(fissure())}" fill="none" stroke="#9b6450" stroke-width="1.2" ${NS}/>`;
+    // supraorbital notch in the rim and the supraorbital nerve and artery running up over the frontal bone (branching pattern schematic)
+    const nY = arcusY(NOTCH_X), nR = NOTCH_W / 2, notchP = []; for (let a = 180; a <= 360; a += 10) notchP.push([NOTCH_X + nR * Math.cos(a * Math.PI / 180), nY + 1.25 * nR * Math.sin(a * Math.PI / 180)]);
+    s0 += `<path d="${poly(notchP)}" fill="${C.deep}" stroke="${C.boneS}" stroke-width="1.2" ${NS}/>`;
+    const nerve = [[NOTCH_X, nY + 0.6], [NOTCH_X - 0.2, nY - 2.5], [NOTCH_X - 0.9, nY - 6], [NOTCH_X - 2.2, nY - 11]], nerveM = [[NOTCH_X - 0.3, nY - 3.2], [NOTCH_X + 0.9, nY - 7], [NOTCH_X + 1.6, nY - 11]];
+    s0 += `<path d="${poly(LID.spline(nerve, 0.1), false)}" fill="none" stroke="${C.art}" stroke-width="1.0" ${NS} transform="translate(0.45 0)"/>`;
+    for (const P of [nerve, nerveM]) s0 += `<path d="${poly(LID.spline(P, 0.1), false)}" fill="none" stroke="${C.nerveS}" stroke-width="3.4" stroke-linecap="round" ${NS}/><path d="${poly(LID.spline(P, 0.1), false)}" fill="none" stroke="${C.nerve}" stroke-width="2.2" stroke-linecap="round" ${NS}/>`;
+    A.notch = [NOTCH_X, nY - 0.6]; A.son = [NOTCH_X - 0.6, nY - 6]; A.notchX = NOTCH_X;
     o.push(s0); // layer 0 is never removed
 
     // ---------------- layer 1: tarsus (meibomian glands seen through), Müller, levator
@@ -90,7 +135,11 @@ const CORONAL = (() => {
     for (let x = -9.2; x < 8.8; x += 0.7) s1 += `<path d="M${F([x, tarTopY(x) - 0.2])}L${F([x * 0.97, whitY(x) + 0.6])}" stroke="${C.mulF}" stroke-width="0.7" ${NS}/>`;
     s1 += `<path d="${poly(tarsus)}" fill="${C.tar}" stroke="${C.tarS}" stroke-width="1" ${NS}/>`;
     for (let x = -12.6; x < 10; x += 0.85) { const t = tarTopY(x), u = Uy(x) - 0.2; if (u - t < 0.8) continue; s1 += `<path d="M${F([x, u])}L${F([x, t + 0.35])}" stroke="${C.gland}" stroke-width="2.2" stroke-linecap="round" ${NS} opacity="0.7"/>`; }
-    layer(1, s1);
+    const lacClip = `<clipPath id="${id}_lacC"><path d="${poly([...xs(-21, -6).map(x => [x, arcusY(x) + 0.1]), [-6, 4], [-21, 4]])}"/></clipPath>`;   // behind the rim: only the part inside the orbital opening shows
+    const lacLobe = (cx, cy, rx, ry, seed) => { let g = `<ellipse cx="${cx}" cy="${cy.toFixed(2)}" rx="${rx}" ry="${ry}" fill="${C.lac}" stroke="${C.lacS}" stroke-width="0.8" ${NS}/>`;
+      for (let k = 0; k < 26; k++) { const a = hash(k, seed) * Math.PI * 2, r = Math.sqrt(hash(seed, k)) * 0.85; g += `<circle cx="${(cx + Math.cos(a) * r * rx).toFixed(2)}" cy="${(cy + Math.sin(a) * r * ry).toFixed(2)}" r="${(0.28 + 0.2 * hash(k, seed + 1)).toFixed(2)}" fill="${C.lacL}" stroke="${C.lacS}" stroke-width="0.4" ${NS}/>`; } return g; };
+    layer(1, s1 + lacClip + `<g clip-path="url(#${id}_lacC)">${lacLobe(-12.6, arcusY(-12.6) + 3.4, 2.6, 1.2, 51)}</g>`);
+    A.lacPalp = [-12.6, arcusY(-12.6) + 3.4];
     A.tarsus = [7.6, (tarTopY(7.6) + Uy(7.6)) / 2]; A.muller = [7.2, (tarTopY(7.2) + whitY(7.2)) / 2];
 
     // ---------------- layer 2: levator aponeurosis (fan, horns) + Whitnall ligament
@@ -104,8 +153,9 @@ const CORONAL = (() => {
     let s3 = `<path d="${poly(cfat)}" fill="${C.fat}"/><clipPath id="${id}_cf"><path d="${poly(cfat)}"/></clipPath><g clip-path="url(#${id}_cf)">`;
     let j = 0; for (let y = -18; y < -3; y += 0.78, j++) for (let x = -11.5 + (j % 2) * 0.45, i = 0; x < 7.6; x += 0.9, i++) s3 += `<ellipse cx="${(x + (hash(i, j) - 0.5) * 0.3).toFixed(2)}" cy="${y.toFixed(2)}" rx="${(0.32 + 0.14 * hash(j, i)).toFixed(2)}" ry="0.3" fill="${C.fatL}" stroke="${C.fatS}" stroke-width="0.6" ${NS}/>`;
     s3 += `</g><path d="${poly(mfat)}" fill="${C.mfat}" stroke="${C.mfatS}" stroke-width="0.6" ${NS}/>`;
+    s3 += `<g clip-path="url(#${id}_lacC)">${lacLobe(-13.4, arcusY(-13.4) + 0.9, 4.2, 2.0, 61)}</g>`;   // orbital lobe in the lacrimal fossa (size and position schematic)
     layer(3, s3);
-    A.fat = [-1.8, (whitY(-1.8) + fusY(-1.8)) / 2];
+    A.fat = [-1.8, (whitY(-1.8) + fusY(-1.8)) / 2]; A.lacrimal = [-14.2, arcusY(-14.2) + 1.0];
 
     // ---------------- layer 4: orbital septum (thin, translucent) + pretarsal fat below the fusion line
     let s4 = `<path d="${poly(septum)}" fill="${C.sept}" fill-opacity="0.42" stroke="${C.septS}" stroke-width="0.8" ${NS}/>`;
@@ -114,6 +164,13 @@ const CORONAL = (() => {
     s4 += `<path d="${poly(ptfat)}" fill="#f6e4bf"/><clipPath id="${id}_pt"><path d="${poly(ptfat)}"/></clipPath><g clip-path="url(#${id}_pt)">`;
     j = 0; for (let y = -12; y < -2; y += 0.5, j++) for (let x = -12.6 + (j % 2) * 0.3, i = 0; x < 10.2; x += 0.6, i++) s4 += `<ellipse cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="0.24" ry="0.2" fill="#f9ecd0" stroke="#e2c58c" stroke-width="0.5" ${NS}/>`;
     s4 += `</g><path d="${poly(xs(-16.5, 13.5).map(x => [x, fusY(x)]), false)}" fill="none" stroke="#0e7c6b" stroke-width="1.6" stroke-dasharray="4 3" ${NS}/>`;
+    { const lo = (opt.variant || 'asian') === 'caucasian' ? 2.5 : 5.5, top = x => arcusY(x) - 9.5 - browY, bot = x => arcusY(x) + lo - (opt.variant === 'caucasian' ? 0 : 0),
+        RX = xs(-22, 8.2, 0.25), roofP = [...RX.map(x => [x, top(x) + 1.5 * (1 - prof(x, -22.6, 8.8, 0.35))]), ...RX.slice().reverse().map(x => [x, bot(x)])], y0 = H.arc - 9.5 - browY, y1 = H.arc + lo;
+      s4 += `<linearGradient id="${id}_rg" gradientUnits="userSpaceOnUse" x1="0" y1="${y0}" x2="0" y2="${y1}"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.18" stop-color="#fff"/><stop offset="${(1 - 2.2 / (y1 - y0)).toFixed(3)}" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`
+        + `<mask id="${id}_rm" maskUnits="userSpaceOnUse" x="-40" y="-40" width="80" height="70"><rect x="-40" y="-40" width="80" height="70" fill="url(#${id}_rg)"/></mask><clipPath id="${id}_rc"><path d="${poly(roofP)}"/></clipPath>`
+        + `<g mask="url(#${id}_rm)"><path d="${poly(roofP)}" fill="${C.roof}"/><g clip-path="url(#${id}_rc)">`;
+      let j2 = 0; for (let y = y0; y < y1; y += 0.85, j2++) for (let x = -22 + (j2 % 2) * 0.5, i = 0; x < 8.4; x += 1.0, i++) s4 += `<ellipse cx="${(x + (hash(i, j2 + 40) - 0.5) * 0.35).toFixed(2)}" cy="${y.toFixed(2)}" rx="${(0.38 + 0.16 * hash(j2, i + 40)).toFixed(2)}" ry="0.34" fill="${C.roofL}" stroke="${C.roofS}" stroke-width="0.5" ${NS}/>`;
+      s4 += `</g></g>`; A.roof = [-8, arcusY(-8) - 1.5]; }
     layer(4, s4);
     A.septum = [-2.4, arcusY(-2.4) + 1.6]; A.fusion = [-1.0, fusY(-1.0)]; A.ptfat = [-2.2, (fusY(-2.2) + Uy(-2.2) - 1.1) / 2]; A.rim = [2.0, rimTop(2) + 1.6];
 
@@ -142,10 +199,11 @@ const CORONAL = (() => {
     const epi = [[8.3, -3.6], [10.6, -2.6], [12.0, -1.0], [12.45, 0.9], [11.8, 2.7], [10.8, 3.6], [11.9, 3.8], [13.4, 2.4], [13.9, 0.4], [13.3, -1.8], [11.6, -3.6], [9.4, -4.5]];
     const epiP = LID.spline(epi, 0.08);
     s6 += `<path d="${poly(epiP)}" fill="${C.skin2}"/><path d="${poly(LID.spline(epi.slice(0, 6), 0.08), false)}" fill="none" stroke="${C.skinS}" stroke-width="1.3" ${NS}/>`;
-    // brow
-    for (let k = 0; k < 260; k++) { const x = lerp(-18, 11.5, hash(k, 9)), w = 0.5 + 0.5 * prof(x, -19, 12.5, 0.5), yb = H.arc - 5.0 + 0.006 * (x + 2) ** 2 + (hash(k, 4) - 0.5) * 1.6 * w;
-      const ang = x > 7 ? -1.35 : x > 2 ? -0.75 : -0.22 - 0.1 * hash(k, 6), len = 0.9 + 0.6 * hash(k, 7);
-      s6 += `<path d="M${F([x, yb])}l${(-Math.cos(ang) * len).toFixed(2)} ${(Math.sin(ang) * len).toFixed(2)}" stroke="${C.brow}" stroke-width="0.045" opacity="${(0.4 + 0.35 * w).toFixed(2)}" stroke-linecap="round"/>`; }
+    // brow: hairs between the lower edge (Gao 2025) and the upper edge (schematic); medial hairs point up, central up-and-out, lateral outward
+    for (let k = 0; k < 900; k++) { const x = lerp(-20.0, 15.4, hash(k, 9)), th = browTh(x), f = hash(k, 4), yb = browLoY(x) - browY - 0.25 - f * (th - 0.6), w = Math.sin(Math.PI * (0.15 + 0.7 * f)) * (0.55 + 0.45 * prof(x, -21, 16, 0.6));
+      const ang = x > 10 ? -1.15 - 0.15 * hash(k, 6) : x > 3 ? -0.8 : x > -10 ? -0.42 - 0.12 * hash(k, 6) : -0.18 + 0.12 * hash(k, 6), len = 1.1 + 0.8 * hash(k, 7);
+      s6 += `<path d="M${F([x, yb])}l${(-Math.cos(ang) * len).toFixed(2)} ${(Math.sin(ang) * len).toFixed(2)}" stroke="${C.brow}" stroke-width="0.05" opacity="${(0.35 + 0.5 * w).toFixed(2)}" stroke-linecap="round"/>`; }
+    A.brow = [-4, browLoY(-4) - browY - 3.2]; A.browLo = [0, browLoY(0) - browY];
     layer(6, s6);
     A.epi = [12.6, 0.4]; A.skin = [-13.0, -9.0]; A.lc = LC;
 
@@ -200,6 +258,44 @@ const CORONAL = (() => {
       o.push(`<path d="${poly(FXW.map(x => [x, top(x) + 0.12]), false)}" fill="none" stroke="${C.orb}" stroke-width="2.4" ${NS}/>`);
       A.flapEdge = [-6, bot(-6) - 0.3]; A.exposed = [-2, (creaseY(-2) + top(-2)) / 2]; }
 
+    // ---------------- levator resection overlays; every height comes from the sagittal model (LID.keyPoints), projected to this view
+    let fixY = null, clampY = null, prolY = null;
+    if (K) {
+      const XS = xs(-12.4, 9.8, 0.2), line = (f, frac) => poly(XS.slice(0, Math.max(2, Math.round(XS.length * Math.min(1, frac)))).map(x => [x, f(x)]), false), rem = st.excRemove || 0;
+      if (st.excMark && !st.excCut) for (const f of [excLoY, excHiY]) o.push(`<path d="${line(f, 1)}" fill="none" stroke="#5b3fa0" stroke-width="1.6" stroke-dasharray="4 3" opacity="${st.excMark}" ${NS}/>`);
+      if (st.excCut && rem < 1) for (const f of [excLoY, excHiY]) o.push(`<path d="${line(f, st.excCut)}" fill="none" stroke="#d23c3c" stroke-width="2.4" stroke-linecap="round" opacity="${(1 - rem).toFixed(2)}" ${NS}/>`);
+      A.excLo = [-6, excLoY(-6)]; A.excHi = [-6, excHiY(-6)]; A.wound = [-2, (excLoY(-2) + excHiY(-2)) / 2];
+      fixY = x => Uy(x) + (K.fix[1] - K.margin[1]) * prof(x, -13.6, 10.6, 0.35);
+      clampY = x => Uy(x) + (K.clamp[1] - K.margin[1]) * prof(x, -13.6, 10.6, 0.35);
+      const WX = xs(-9.5, 8.5, 0.25); let wdOut = false; const inWoundF = () => wdOut ? '' : (wdOut = true, `<clipPath id="${id}_wd"><path d="${poly(woundPoly)}"/></clipPath>`);
+      if ((st.fatUp || 0) > 0 && rem >= 0.5) { const fy = x => excHiY(x) + 1.6 * st.fatUp * prof(x, -10.5, 8.5, 0.6);   // fat retracted to the upper wound edge
+        let g = `${inWoundF()}<g clip-path="url(#${id}_wd)"><path d="${poly([...WX.map(x => [x, excHiY(x) - 0.2]), ...WX.slice().reverse().map(x => [x, fy(x)])])}" fill="${C.fat}" stroke="${C.fatS}" stroke-width="1" ${NS}/>`;
+        for (let x = -9, k = 0; x < 8.2; x += 0.8, k++) g += `<ellipse cx="${x.toFixed(2)}" cy="${(lerp(excHiY(x), fy(x), 0.5)).toFixed(2)}" rx="0.38" ry="${(0.3 + 0.1 * hash(k, 3)).toFixed(2)}" fill="${C.fatL}" stroke="${C.fatS}" stroke-width="0.5" ${NS}/>`;
+        o.push(g + `</g>`); A.fatUp = [-2, lerp(excHiY(-2), fy(-2), 0.5)]; }
+      if (st.advance && rem >= 0.5) { const AX = xs(-9.0, 8.0, 0.25);   // advanced levator: from the tarsal fixation line up under the upper wound edge
+        let g = `${inWoundF()}<g clip-path="url(#${id}_wd)" opacity="${Math.min(1, st.advance)}"><path d="${poly([...AX.map(x => [x, fixY(x)]), ...AX.slice().reverse().map(x => [x, excHiY(x) - 1])])}" fill="${C.apo}" stroke="${C.apoS}" stroke-width="1" ${NS}/>`;
+        for (let x = -8.4; x < 7.6; x += 0.8) g += `<path d="M${F([x, fixY(x) - 0.2])}L${F([x * 0.97, excHiY(x) - 0.6])}" stroke="${C.apoS}" stroke-width="0.6" opacity="0.7" ${NS}/>`;
+        o.push(g + `<path d="${poly(AX.map(x => [x, fixY(x)]), false)}" fill="none" stroke="#d23c3c" stroke-width="1.6" ${NS}/></g>`); A.advLev = [-4, lerp(fixY(-4), excHiY(-4), 0.55)]; }
+      if (st.clamp) { const CX = xs(-10.5, 9.5, 0.25), bar = poly([...CX.map(x => [x, clampY(x) - 0.55]), ...CX.slice().reverse().map(x => [x, clampY(x) + 0.55])]);
+        // the clamp sits on the levator deep to the upper skin edge: solid where the wound is open, dashed outline where skin covers it
+        o.push(`<g opacity="${st.clamp}">${rem >= 0.5 ? inWoundF() + `<path d="${bar}" fill="${C.steel}" stroke="${C.steelS}" stroke-width="1" clip-path="url(#${id}_wd)" ${NS}/>` : ''}`
+          + `<path d="${bar}" fill="none" stroke="${C.steelS}" stroke-width="1.4" stroke-dasharray="4 3" ${NS}/></g>`); A.clamp = [-6, clampY(-6)]; }
+      if (st.tarSut) for (const x of [-LIMB, 0, LIMB]) { const y = fixY(x), op = Math.min(1, st.tarSut);
+        o.push(`<g opacity="${op}"><path d="M${F([x - 0.6, y])}L${F([x + 0.6, y])}" stroke="${C.blue}" stroke-width="2.4" stroke-linecap="round" ${NS}/><circle cx="${x}" cy="${y.toFixed(2)}" r="0.22" fill="${C.blue}"/></g>`); A.tarSutC = [0, fixY(0)]; A.tarSutX = [-LIMB, 0, LIMB]; }
+      if (st.creaseFix) { const CXs = [-8.5, -3.0, 2.5, 7.5], op = Math.min(1, st.creaseFix);
+        for (const x of CXs) o.push(`<path d="M${F([x, excLoY(x) + 0.5])}L${F([x, excLoY(x) - 0.9])}" stroke="${C.blue}" stroke-width="1.8" stroke-linecap="round" opacity="${op}" ${NS}/>`);
+        if (st.creaseFix >= 1) o.push(`<path d="${line(excLoY, 1)}" fill="none" stroke="${C.skinS}" stroke-width="1.8" opacity="0.8" ${NS}/>`); A.creaseFix = [CXs[1], excLoY(CXs[1]) - 0.2]; }
+      const fixH = st.browFixH ?? 3, yP = LID.RIM_Y - fixH;
+      if (st.browPlane) { const PX = xs(-9.5, 3.5, 0.25), top = x => yP - 3 - 1.5 * (1 - prof(x, -10, 4, 0.5));
+        o.push(`<path d="${poly([...PX.map(x => [x, excHiY(x)]), ...PX.slice().reverse().map(x => [x, top(x)])])}" fill="#0e7c6b" fill-opacity="${(0.05 * st.browPlane).toFixed(2)}" stroke="#0e7c6b" stroke-width="1.6" stroke-dasharray="5 4" opacity="${Math.min(1, st.browPlane)}" ${NS}/>`); A.browPlane = [-5, lerp(excHiY(-5), top(-5), 0.5)]; }
+      if (st.browSut) { o.push(`<circle cx="0" cy="${yP.toFixed(2)}" r="0.45" fill="${C.blue}" opacity="${Math.min(1, st.browSut)}"/><circle cx="0" cy="${yP.toFixed(2)}" r="1.1" fill="none" stroke="${C.blue}" stroke-width="1.4" stroke-dasharray="3 2" opacity="${Math.min(1, st.browSut)}" ${NS}/>`); A.browFix = [0, yP]; }
+      if (st.prolapse && K.prolapseLow != null) { const dPr = K.prolapseLow - K.margin[1], PRX = xs(-7.5, 7.5, 0.2); prolY = x => Uy(x) + dPr * prof(x, -7.5, 7.5, 0.9);
+        o.push(`<path d="${poly([...PRX.map(x => [x, Uy(x) - 0.3]), ...PRX.slice().reverse().map(x => [x, prolY(x)])])}" fill="#ef9aa3" fill-opacity="0.92" stroke="#bf6a74" stroke-width="1.2" ${NS}/>`
+          + `<ellipse cx="-1.5" cy="${(Uy(-1.5) + dPr * 0.45).toFixed(2)}" rx="3.2" ry="${(0.25 * dPr).toFixed(2)}" fill="#fff" opacity="0.35"/>`); A.prolapse = [2.5, Uy(2.5) + dPr * 0.55]; }
+    }
+    if (st.notch) { const nY = arcusY(NOTCH_X), op = Math.min(1, st.notch);    // projected on the skin: dashed
+      o.push(`<g opacity="${op}"><path d="M${F([NOTCH_X - NOTCH_W / 2, nY])}A${NOTCH_W / 2} ${NOTCH_W / 2 * 1.25} 0 0 1 ${F([NOTCH_X + NOTCH_W / 2, nY])}" fill="none" stroke="#b86e00" stroke-width="1.8" stroke-dasharray="4 3" ${NS}/>`
+        + `<path d="${poly(LID.spline([[NOTCH_X, nY], [NOTCH_X - 0.2, nY - 2.5], [NOTCH_X - 0.9, nY - 6], [NOTCH_X - 2.2, nY - 11]], 0.1), false)}" fill="none" stroke="#b86e00" stroke-width="1.6" stroke-dasharray="5 4" ${NS}/></g>`); }
     // ---------------- cut edges of the windows
     for (const w of wins) o.push(`<path d="${poly(w.poly)}" fill="none" stroke="${C.cut}" stroke-width="1.1" ${NS} opacity="0.7"/>`);
     // sagittal plane marker
@@ -207,7 +303,7 @@ const CORONAL = (() => {
     A.section = [0, H.arc - 4.6];
     const defs = `<defs><radialGradient id="${id}_iris" cx="0.5" cy="0.5" r="0.5"><stop offset="0.3" stop-color="#2a170d"/><stop offset="0.75" stop-color="#4a2a17"/><stop offset="1" stop-color="#2a170d"/></radialGradient>
       <radialGradient id="${id}_skin" gradientUnits="userSpaceOnUse" cx="-1" cy="-6" r="26"><stop offset="0" stop-color="#f3d8c2"/><stop offset="0.7" stop-color="${C.skin}"/><stop offset="1" stop-color="#e2b597"/></radialGradient></defs>`;
-    return { svg: defs + o.join(''), A, Uy, lashY, rollY, creaseY, fusY, tarTopY, whitY, arcusY, cutY, skinCutY, SX };
+    return { svg: defs + o.join(''), A, Uy, lashY, rollY, creaseY, fusY, tarTopY, whitY, arcusY, cutY, skinCutY, SX, excLoY, excHiY, fixY, clampY, prolY, browLoY: x => browLoY(x) - browY, NOTCH_X };
   }
   // ---------------------------------------------------------------- everted upper lid (the surgeon's view in PLTR)
   // The lid is flipped: tarsal conjunctiva faces the viewer, the lid margin with its lashes is on top, the fold (superior tarsal
@@ -270,6 +366,6 @@ const CORONAL = (() => {
   }
   // vertical strip windows across the upper lid, from the rim down to just above the lash line
   function strip(x0, x1, depth, top = -21.4) { const p = []; for (let x = x0; x <= x1 + 1e-9; x += 0.25) p.push([x, top]); for (let x = x1; x >= x0 - 1e-9; x -= 0.25) p.push([x, Uy(Math.max(LC[0], Math.min(MC[0], x))) - 0.75]); return { poly: p, depth }; }
-  return { draw, drawEverted, EV_TILT, strip, Uy, Ly, LC, MC };
+  return { draw, drawEverted, EV_TILT, strip, Uy, Ly, LC, MC, NOTCH_X, NOTCH_W, browLoY, U4, LIMB };
 })();
 if (typeof module !== 'undefined') module.exports = CORONAL;

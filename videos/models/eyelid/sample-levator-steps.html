@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="lid.js"></script>
+<script>
+// The levator-resection states of the sagittal model, one panel per step (videos/src/levator-resection-brow-fixation, chapter 4).
+// Heights, widths and suture positions follow the department template and are to be confirmed from the OP note (schematic).
+const pre = { mrd1: 1.5 }, exc = { ...pre, excCut: 1, excRemove: 1 }, sep = { ...exc, septOpen: 1, fatUp: 1 }, dis = { ...sep, dis: 1, clamp: 1 };
+const res = { ...dis, resect: 1 }, adv = { ...res, mrd1: 3.5, clamp: 0, advance: 1, tarSut: 1 }, brow = { ...adv, browPlane: 1, browSut: 1, browTie: 1 }, pro = { ...adv, prolapse: 1, fornixSut: 1 };
+const STEPS = [
+  ['上眼瞼下垂（MRD1 1.5，示意）', 'ptosis', pre], ['切皮，切除皮膚與眼輪匝肌', 'skin–muscle excision', exc],
+  ['打開眶隔，脂肪往上拉', 'septum opened, fat retracted', sep], ['分離提上瞼肌，上夾子', 'levator freed, clamp', dis],
+  ['切除夾子下方的提上瞼肌', 'levator resected', res], ['斷端固定到瞼板，眼瞼上提', 'advanced onto the tarsus', adv],
+  ['眉下剝離，ROOF 縫到骨膜', 'internal brow fixation', brow], ['結膜脫出，穹窿縫線', 'conjunctival prolapse', pro]];
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const o = [`<text x="24" y="38" font-size="21" font-weight="700" fill="#1d2733">Levator resection 的矢狀切面狀態（右眼，亞洲人單眼皮）</text>`,
+  `<text x="1256" y="38" font-size="13" fill="#5b6878" text-anchor="end">示意；切口高度、切除量、固定點依院內範本，待刀後確認</text>`];
+const PW = 304, PH = 318, K = 13.4, X0 = -23.6, Y0 = -23.0;
+STEPS.forEach(([zh, en, st], i) => {
+  const px = 16 + (i % 4) * (PW + 8), py = 56 + Math.floor(i / 4) * (PH + 8), id = 'p' + i, r = LID.draw({ variant: 'asian', state: st, id });
+  o.push(`<rect x="${px}" y="${py}" width="${PW}" height="${PH}" rx="9" fill="#fff" stroke="#d3dae1"/>`);
+  o.push(`<clipPath id="${id}C"><rect x="${px + 1}" y="${py + 1}" width="${PW - 2}" height="${PH - 2}" rx="8"/></clipPath><g clip-path="url(#${id}C)"><g transform="translate(${px} ${py}) scale(${K}) translate(${-X0} ${-Y0})">${r.svg}</g></g>`);
+  o.push(`<circle cx="${px + 20}" cy="${py + 20}" r="12" fill="#1d2733"/><text x="${px + 20}" y="${py + 25}" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">${i + 1}</text>`);
+  o.push(`<text x="${px + 38}" y="${py + 25}" font-size="13.5" stroke="#fff" stroke-width="3.4" paint-order="stroke"><tspan font-weight="700" fill="#1f2a36">${esc(zh)}</tspan></text>`);
+  o.push(`<text x="${px + 38}" y="${py + 43}" font-size="12" fill="#5b6878" stroke="#fff" stroke-width="3" paint-order="stroke">${esc(en)}</text>`);
+});
+document.getElementById('stage').innerHTML = o.join('');
+</script></body></html>
