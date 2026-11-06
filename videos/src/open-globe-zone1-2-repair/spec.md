@@ -81,7 +81,7 @@
 - 下一步，依序做：
   1. 手與器械：握筆式持針器、有齒鑷、綁線鑷、針；手部全景視角；先做樣本並自檢。
   2. 360° peritomy、paracentesis 與 OVD、前房重建的模型狀態。
-  3. 寫 `anim/segments.js`（旁白）與 `draw.js`（每段畫面），然後做 TTS 語音、出片。每個對話做一章。
+  3. 寫 `anim/segments.js`（旁白）與 `draw.js`（每段畫面），然後做 TTS 語音、出片。每章派一個小助手做（主對話依序派工，不請站長開新對話）。
 
 ## 參考文獻
 1. Pieramici DJ, et al. A system for classifying mechanical injuries of the eye (globe). Am J Ophthalmol 1997;123:820-31. doi:10.1016/s0002-9394(14)71132-8

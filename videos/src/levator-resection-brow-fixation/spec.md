@@ -103,7 +103,7 @@
   - 樣本圖（Claude 自檢）：`eyelid/sample-levator.jpg`（4-5 那一刻兩圖同步）、`eyelid/sample-levator-steps.jpg`（八個步驟）；參考圖登記在 `ref/manifest.json`（`page` 還是 null）。
   - 還沒做：縫皮後皮膚閉合的變形；正面的 clamp 被皮膚蓋住的部分畫虛線（實際上提上瞼肌常被往下拉出傷口再夾，刀後依 OP note 決定要不要改成往下拉）。
   - 沒有出處、畫成示意的：皮下脂肪與肌肉在眶上緣以上的比例、額頭軟組織、眉毛寬度與形狀、眶上神經分支、淚腺大小、剝離平面寬度、眉毛固定點高度與上提量、結膜脫出的長度與厚度。
-- 下一步：(1) 站長回傳實際 OP note 後，把 `script-draft.md` 的 `[待刀後確認]` 定稿，並改模型參數（`incH`、`excW`、`resectMm`、`fixS`、`browFixH`、`browLift`、剝離層次、結膜脫出的處理方式）；不等 OP note 也能先做的：補 `[待核對出處]`；(2) 照 `videos/models/README.md` 製作流程，一章一個對話做影片頁（建好後在 `ref/manifest.json` 填 `page` 與 `textBase`）。
+- 下一步：(1) 站長回傳實際 OP note 後，把 `script-draft.md` 的 `[待刀後確認]` 定稿，並改模型參數（`incH`、`excW`、`resectMm`、`fixS`、`browFixH`、`browLift`、剝離層次、結膜脫出的處理方式）；不等 OP note 也能先做的：補 `[待核對出處]`；(2) 照 `videos/models/README.md` 製作流程，一章派一個小助手做影片頁（建好後在 `ref/manifest.json` 填 `page` 與 `textBase`）。
 - 2026-11-06：站長決定不等 OP note、依專業判斷先做影片（步驟章節依院內範本，旁白說「依院內常規」）。影片完成到出片（未上傳）：
   - 共用影片套件 `videos/tools/video-kit/`（版面、時間軸、雙視角、標籤、渲染、語音、出片、上傳；用法見 `videos/tools/README.md`）；這支影片只提供 `anim/segments.js`（文字）、`anim/draw.js`（每段畫面）、`anim/params.js`（手術參數）。
   - 旁白定稿：`script-draft.md` 第 2 版（由 `segments.js` 產生，移除所有 `[待刀後確認]`）；逐句對照 PubMed 摘要；新增文獻 Carraway 1986、Jeong 1999、Lam 2003、Tucker 1999（PubMed 已查證），共 23 篇。
