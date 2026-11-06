@@ -10,8 +10,8 @@ const lab = VIEWS.lab2;
 const tag = (s, op, col = COL.accent, y = 34) => htext(PW / 2, y, s, { size: 17, bold: true, color: col, anchor: 'middle', op });
 const note = (s, op, y = PH - 14) => htext(PW - 12, y, s, { size: 13, color: COL.sub, anchor: 'end', op });
 // model windows (mm): left, top, width
-const SAG_LID = { x: -24, y: -21, w: 30 }, SAG_BROW = { x: -28.5, y: -31, w: 44 }, SAG_FX = { x: -20.5, y: -17.5, w: 26 };
-const COR_LID = { x: -17.5, y: -15, w: 33 }, COR_EYE = { x: -17.5, y: -11, w: 33 }, COR_BROW = { x: -23.5, y: -29, w: 47 };
+const SAG_LID = { x: -24, y: -21, w: 30 }, SAG_BROW = { x: -28.5, y: -31, w: 44 }, SAG_FX = { x: -19.5, y: -15.5, w: 25 };
+const COR_LID = { x: -17.5, y: -15, w: 33 }, COR_EYE = { x: -17.5, y: -11, w: 33 }, COR_BROW = { x: -23.5, y: -29, w: 47 }, COR_FACE = { x: -26, y: -27.5, w: 52 }, COR_LAT = { x: -22.5, y: -18.5, w: 33 };
 const SAG_P = { title: '矢狀切面（瞳孔中央）sagittal', orient: '左＝前　上＝上' };
 const COR_P = { title: '正面　右眼 OD　術者視角', orient: '面對病人：左＝temporal　右＝nasal' };
 // surgical states (cumulative); INC = incision heights and strip width (院內常規)
@@ -20,7 +20,7 @@ const EXC = { ...PRE, ...INC, excCut: 1, excRemove: 1 };
 const OPEN = { ...EXC, septOpen: 1, fatUp: 1 };
 const RES = { ...OPEN, dis: 1, resect: 1 };
 const ADV = { ...RES, advance: 1, tarSut: 1, mrd1: LRP.mrdPost };
-const BROWFIX = { ...ADV, browPlane: 1, browSut: 1, browTie: 1 };
+const BROWFIX = { ...ADV, browSut: 1, browTie: 1 };   // after the fixation (the dissection plane is no longer highlighted)
 const LAC_WIN = { poly: [[-19.2, -16.0], [-10.8, -16.0], [-10.8, -11.4], [-19.2, -11.4]], depth: 3 };   // lateral window: lacrimal gland (示意)
 const NERVE_WIN = { poly: [[5.6, -27], [12.4, -27], [12.4, -16.0], [5.6, -16.0]], depth: 1 };          // nasal window: supraorbital notch and nerve (示意)
 const pts = (P, f, x0, x1, st = 0.25) => { const r = []; for (let x = x0; x <= x1 + 1e-9; x += st) r.push(P([x, f(x)])); return r; };
@@ -44,7 +44,7 @@ function infoCard(x, y, w, rows, op, o = {}) {
 
 // ---------------------------------------------------------------- 片頭
 DRAW2['title'] = T => {
-  const cv = VIEWS.cor({ ...PRE, browY: LRP.browRaise }, PW, PH, COR_BROW, 'tR'), B = cv.A;
+  const cv = VIEWS.cor({ ...PRE, browY: LRP.browRaise }, PW, PH, COR_FACE, 'tR'), B = cv.A;
   let ex = lab('眉毛靠 frontalis 撐高', 'brow raised', 14, 60, B.brow, { color: COL.amber, bold: true });
   ex += lab('上眼瞼下垂', 'ptosis', PW - 12, PH - 24, cv.P([3, cv.r.Uy(3)]), { side: 'R', color: COL.amber, bold: true });
   ex += note('術前高度為示意', 1, PH - 52);
@@ -88,14 +88,15 @@ DRAW2['1-1'] = T => {
 
 DRAW2['1-2'] = T => {
   const k = T.p(1, 0.05, 0.95), st = { mrd1: lerp(LRP.mrdPre, LRP.mrdPost, k), browY: lerp(LRP.browRaise, 0, k) };
-  const sv = VIEWS.sag(st, PW, PH, SAG_BROW, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, COR_BROW, 'cR'), B = cv.A;
+  const sv = VIEWS.sag(st, PW, PH, SAG_BROW, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, COR_FACE, 'cR'), B = cv.A;
   const pre = LID.draw({ state: { ...PRE, browY: LRP.browRaise } }).A.browLo, ghost = T.on(1, 0.4) * (1 - T.on(5, 0.6));
   const preC = CORONAL.draw({ state: { ...PRE, browY: LRP.browRaise } }).browLoY;
   let ex = lab('額肌', 'frontalis', 14, 64, A.frontalis, { bold: true });
   ex += lab('眉毛', 'eyebrow', 14, 150, A.brow, { bold: true });
   ex += lab('上瞼緣', 'lid margin', 14, PH - 40, sv.P(sv.r.DP.at(0, 0)));
-  ex += `<g opacity="${T.on(0) * (1 - T.on(1))}">${arrow(sv.P([-21.5, -24.5]), sv.P([-21.5, -28.0]), COL.amber, 1, 'arrM', 3)}${arrow(sv.P([-20.2, -21.0]), sv.P([-20.4, -24.4]), COL.amber, 1, 'arrM', 3)}</g>`;
-  ex += lab('frontalis 收縮，撐高眉毛', 'compensation', PW - 12, 64, sv.P([-20.2, -23]), { side: 'R', color: COL.amber, bold: true, op: T.on(0) * (1 - T.on(1)) });
+  { const f = sv.M.frontalis, o = T.on(0) * (1 - T.on(1));   // frontalis contracts and lifts the brow (compensation)
+    ex += `<g opacity="${o}">${arrow(sv.P([f[0] + 0.3, f[1] + 2.4]), sv.P([f[0] + 0.3, f[1] - 1.6]), COL.amber, 1, 'arrM', 3)}${arrow(sv.P([f[0] + 1.6, f[1] + 5.6]), sv.P([f[0] + 1.6, f[1] + 2.2]), COL.amber, 1, 'arrM', 3)}</g>`;
+    ex += lab('frontalis 收縮，撐高眉毛', 'compensation', PW - 12, 106, sv.P([f[0] + 1.6, f[1] + 3.6]), { side: 'R', color: COL.amber, bold: true, op: o }); }
   const gp = sv.P(pre), cp = A.browLo;
   ex += `<g opacity="${ghost}"><path d="M${(gp[0] - 46).toFixed(1)} ${gp[1].toFixed(1)}H${(gp[0] + 30).toFixed(1)}" stroke="${COL.sub}" stroke-width="1.6" stroke-dasharray="5 4"/>${arrow([gp[0] - 34, gp[1] + 2], [gp[0] - 34, Math.max(gp[1] + 4, cp[1] - 2)], COL.red, 1, 'arrR', 2.6)}</g>`;
   ex += lab('眉毛下降 平均 2.5–2.9 mm', 'brow descent', PW - 12, 150, [gp[0] - 34, (gp[1] + cp[1]) / 2], { side: 'R', color: COL.red, bold: true, op: T.on(2) * (1 - T.on(4)) });
@@ -176,8 +177,8 @@ DRAW2['3-1'] = T => {
   rx += lab(`外側 ${H[0]} mm`, 'lateral', 14, 64, cv.P([X[0], cv.r.excLoY(X[0])]), { color: COL.purple, bold: true, op: o1 });
   rx += lab(`中央 ${H[1]} mm`, 'central', PW / 2 - 60, 64, cv.P([X[1], cv.r.excLoY(X[1])]), { color: COL.purple, bold: true, op: o1 });
   rx += lab(`內側 ${H[2]} mm`, 'medial', PW - 12, 64, cv.P([X[2], cv.r.excLoY(X[2])]), { side: 'R', color: COL.purple, bold: true, op: o1 });
-  { const a = cv.P([-2.5, cv.r.excLoY(-2.5)]), b = cv.P([-2.5, cv.r.excHiY(-2.5)]); rx += `<g opacity="${o2}">${VIEWS.dim(a, b, COL.red)}</g>`;
-    rx += lab(`切除寬 ${LRP.excW} mm（中央）`, 'skin strip', 14, PH - 24, [a[0], (a[1] + b[1]) / 2], { color: COL.red, bold: true, op: o2 }); }
+  { const a = cv.P([2.5, cv.r.excLoY(2.5)]), b = cv.P([2.5, cv.r.excHiY(2.5)]); rx += `<g opacity="${o2}">${VIEWS.dim(a, b, COL.red)}</g>`;
+    rx += lab(`切除寬 ${LRP.excW} mm（中央）`, 'skin strip', PW - 12, 126, [a[0], (a[1] + b[1]) / 2], { side: 'R', color: COL.red, bold: true, op: o2 }); }
   rx += note('內外兩點的位置為示意', o1, PH - 52);
   return { L: { svg: sv.svg, extra: ex, P: SAG_P }, R: { svg: cv.svg, extra: rx, P: COR_P } };
 };
@@ -186,8 +187,8 @@ DRAW2['3-2'] = T => {
   const inj = T.on(0, 0.8, 0.6);
   const st = { ...PRE, ...INC, excMark: 1, inject: inj };
   const sv = VIEWS.sag(st, PW, PH, SAG_LID, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, COR_LID, 'cR'), B = cv.A;
-  const tip = A.subq || A.incLo, nd = [tip[0] - 150, tip[1] - 60];
-  let ex = `<g opacity="${T.on(0) * (1 - T.on(1, 0.6, 0.8))}"><path d="M${nd[0]} ${nd[1]}L${tip[0].toFixed(1)} ${tip[1].toFixed(1)}" stroke="#7d8a97" stroke-width="3" stroke-linecap="round"/><rect x="${nd[0] - 70}" y="${nd[1] - 16}" width="76" height="22" rx="4" fill="#cfd8e0" stroke="#7d8a97" transform="rotate(${(Math.atan2(tip[1] - nd[1], tip[0] - nd[0]) * 180 / Math.PI).toFixed(1)} ${nd[0]} ${nd[1]})"/></g>`;
+  const tip = A.subq || A.incLo, nd = [Math.max(110, tip[0] - 120), tip[1] - 64];
+  let ex = `<g opacity="${T.on(0) * (1 - T.on(1, 0.6, 0.8))}"><path d="M${nd[0]} ${nd[1]}L${tip[0].toFixed(1)} ${tip[1].toFixed(1)}" stroke="#7d8a97" stroke-width="3" stroke-linecap="round"/><rect x="${nd[0] - 66}" y="${nd[1] - 9}" width="68" height="18" rx="4" fill="#cfd8e0" stroke="#7d8a97" transform="rotate(${(Math.atan2(tip[1] - nd[1], tip[0] - nd[0]) * 180 / Math.PI).toFixed(1)} ${nd[0]} ${nd[1]})"/></g>`;
   ex += lab('皮下局部麻醉（依院內常規）', 'local anaesthesia', 14, 236, tip, { color: '#2a7fb8', bold: true, op: T.on(0) });
   ex += lab('上瞼緣', 'lid margin', 14, PH - 40, sv.P(sv.r.DP.at(0, 0)));
   ex += note('針的位置為示意', T.on(0));
@@ -216,7 +217,7 @@ DRAW2['4-1'] = T => {
 DRAW2['4-2'] = T => {
   const so = T.on(0, 0.8, 0.4), fu = T.p(1, 0.05, 0.7), anat = T.on(2, 0.8) * (1 - T.on(4, 0.8)), lac = T.on(4, 0.8);
   const st = { ...EXC, septOpen: so, fatUp: so >= 1 ? fu : 0 };
-  const sv = VIEWS.sag(st, PW, PH, SAG_LID, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, COR_LID, 'cR', { windows: lac > 0.01 ? [LAC_WIN] : [] }), B = cv.A;
+  const sv = VIEWS.sag(st, PW, PH, SAG_LID, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, VIEWS.zwin(COR_LID, COR_LAT, lac), 'cR', { windows: lac > 0.01 ? [LAC_WIN] : [] }), B = cv.A;
   // lines 2–3: the native Asian single-eyelid anatomy beside it (septum fuses below the superior tarsal border, fat hangs in front of the tarsus)
   let svg = sv.svg, ex = '';
   if (anat > 0.01) { const nv = VIEWS.sag({}, PW, PH, SAG_LID, 'nL'), N = nv.A, tt = nv.P(nv.r.DP.at(10, 0.6));
@@ -227,7 +228,7 @@ DRAW2['4-2'] = T => {
     ex += lab('眶隔', 'orbital septum', 14, 106, N.septum, { op: anat }); }
   const op = 1 - anat;
   ex += lab('眶隔切開處', 'septum opened', 14, 150, A.septCut, { color: COL.red, bold: true, op: op * T.on(0) * (1 - T.on(1)) });
-  ex += lab('腱膜前脂肪（往上撥開）', 'preaponeurotic fat', PW - 12, 106, A.fatUp || A.fat, { side: 'R', color: '#9c7a20', bold: true, op: op * T.on(0, 0.6, 0.8) });
+  ex += lab(fu > 0.3 ? '腱膜前脂肪（往上撥開）' : '腱膜前脂肪', 'preaponeurotic fat', PW - 12, 106, A.fatUp || A.fat, { side: 'R', color: '#9c7a20', bold: true, op: op * T.on(0, 0.6, 0.8) });
   ex += lab('腱膜', 'aponeurosis', PW - 12, 236, A.apo, { side: 'R', bold: true, op: op * T.on(1, 0.6, 0.8) });
   let rx = lab('腱膜前脂肪', 'preaponeurotic fat', PW - 12, 64, B.fatUp || B.fat, { side: 'R', color: '#9c7a20', bold: true, op: T.on(0, 0.6, 0.8) * (1 - lac) });
   rx += lab('窗內：腱膜', 'aponeurosis', PW - 12, 106, B.wound, { side: 'R', bold: true, op: T.on(1, 0.6, 0.8) * (1 - lac) });
@@ -243,7 +244,7 @@ DRAW2['4-3'] = T => {
   const sv = VIEWS.sag(st, PW, PH, SAG_LID, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, COR_LID, 'cR'), B = cv.A;
   const L = sv.M.lid, cutP = sv.P(sv.r.LVd.off(L.sClamp, 0.3));
   let ex = lab('提上瞼肌', 'levator', PW - 12, 64, levAt(sv, 1), { side: 'R', bold: true });
-  if (A.disSpace) ex += lab('從瞼板、結膜分開', 'disinserted', PW - 12, 290, A.disSpace, { side: 'R', color: COL.accent, bold: true, op: T.on(0, 0.6, 0.6) * (1 - T.on(1)) });
+  if (A.disSpace) ex += lab('從瞼板分開、往上分離', 'disinserted', PW - 12, 290, A.disSpace, { side: 'R', color: COL.accent, bold: true, op: T.on(0, 0.6, 0.6) * (1 - T.on(1)) });
   if (A.clamp) ex += lab('Putterman clamp', '', 14, 106, A.clamp, { color: '#2f3a44', bold: true, op: clamp });
   ex += lab('切除線', 'resection line', 14, 196, cutP, { color: COL.red, bold: true, op: T.on(2, 0.6, 0.4) });
   ex += lab('結膜', 'conjunctiva', PW - 12, 340, A.conj, { side: 'R', op: 1 - T.on(1) });
@@ -255,19 +256,19 @@ DRAW2['4-3'] = T => {
 };
 
 DRAW2['4-4'] = T => {
-  const adv = T.p(0, 0.05, 0.55), ts = T.p(0, 0.5, 1), lift = T.p(2, 0.0, 0.7);
+  const adv = T.p(0, 0.05, 0.55), ts = T.p(0, 0.5, 1), lift = T.p(1, 0.0, 0.7);
   const st = { ...RES, clamp: 1 - T.on(0, 0.6), advance: adv, tarSut: ts, mrd1: lerp(LRP.mrdPre, LRP.mrdPost, lift) };
   const sv = VIEWS.sag(st, PW, PH, SAG_LID, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, COR_LID, 'cR'), B = cv.A;
   let ex = lab('前徙的提上瞼肌', 'advanced levator', PW - 12, 106, sv.P(sv.r.LV.off(1.6, -0.05)), { side: 'R', bold: true, op: T.on(0, 0.6, 0.8) });
   if (A.tarSut) ex += lab('固定到瞼板前面（4-0 vicryl）', 'tarsal suture', PW - 12, 290, A.tarSut, { side: 'R', color: COL.suture, bold: true, op: ss(0.6, 1, ts) });
   ex += lab('瞼板', 'tarsus', 14, 290, A.tarsus);
-  ex += tag('綁好：請病人睜眼，看高度和 contour', T.on(2) * (1 - T.on(3)));
-  ex += tag('術後高度和術中高度相關（r = 0.55）', T.on(3));
+  ex += tag('綁好：請病人睜眼，看高度和 contour', T.on(1) * (1 - T.on(2)));
+  ex += tag('術後高度和術中高度相關（r = 0.55）', T.on(2));
   let rx = '';
-  if (B.tarSutC) { rx += lab('三針：外、中、內', 'tarsal sutures ×3', 14, 64, B.tarSutC, { color: COL.suture, bold: true, op: ss(0.6, 1, ts) });
-    for (const x of [-CORONAL.LIMB, CORONAL.LIMB]) rx += dot(cv.P([x, cv.r.fixY(x)]), COL.suture, 3.5, ss(0.6, 1, ts) * T.on(1)); }
-  if (B.advLev) rx += lab('前徙的提上瞼肌', 'advanced levator', PW - 12, 64, B.advLev, { side: 'R', bold: true, op: T.on(0, 0.6, 0.8) * (1 - T.on(2)) });
-  rx += contour(cv, T.on(2, 0.6, 0.6)) + lab('contour：瞼緣弧度', 'contour', PW - 12, PH - 24, cv.P([6, cv.r.Uy(6)]), { side: 'R', color: '#b58a00', bold: true, op: T.on(2, 0.6, 0.6) });
+  if (B.tarSutC) { rx += lab('三針（位置示意）', 'tarsal sutures ×3', 14, 64, B.tarSutC, { color: COL.suture, bold: true, op: ss(0.6, 1, ts) });
+    for (const x of [-CORONAL.LIMB, CORONAL.LIMB]) rx += dot(cv.P([x, cv.r.fixY(x)]), COL.suture, 3.5, ss(0.6, 1, ts)); }
+  if (B.advLev) rx += lab('前徙的提上瞼肌', 'advanced levator', PW - 12, 64, B.advLev, { side: 'R', bold: true, op: T.on(0, 0.6, 0.8) * (1 - T.on(1)) });
+  rx += contour(cv, T.on(1, 0.6, 0.6)) + lab('contour：瞼緣弧度', 'contour', PW - 12, PH - 24, cv.P([6, cv.r.Uy(6)]), { side: 'R', color: '#b58a00', bold: true, op: T.on(1, 0.6, 0.6) });
   return { L: { svg: sv.svg, extra: ex, P: SAG_P }, R: { svg: cv.svg, extra: rx, P: COR_P } };
 };
 
@@ -275,7 +276,7 @@ DRAW2['4-5'] = T => {
   const pl = T.p(0, 0.05, 0.5), su = T.p(0, 0.5, 1), tie = T.on(1, 1.2), nv = T.on(4, 0.8);
   const st = { ...ADV, browPlane: pl, browSut: su, browTie: tie };
   const sv = VIEWS.sag(st, PW, PH, SAG_BROW, 'sL'), A = sv.A;
-  const cv = VIEWS.cor({ ...st, notch: nv }, PW, PH, COR_BROW, 'cR', { windows: nv > 0.01 ? [NERVE_WIN] : [] }), B = cv.A;
+  const cv = VIEWS.cor({ ...st, notch: nv }, PW, PH, COR_FACE, 'cR', { windows: nv > 0.01 ? [NERVE_WIN] : [] }), B = cv.A;
   let ex = '';
   if (A.browPlane) ex += lab('剝離平面', 'dissection plane', PW - 12, 150, A.browPlane, { side: 'R', color: COL.accent, bold: true, op: ss(0.3, 0.8, pl) * (1 - T.on(2)) });
   if (A.browSutP) ex += lab('縫到骨膜（4-0 vicryl ×1）', 'brow fixation', PW - 12, 64, A.browSutP, { side: 'R', color: COL.suture, bold: true, op: ss(0.6, 1, su) });
@@ -322,7 +323,7 @@ DRAW2['4-7'] = T => {
   const st = { ...BROWFIX, creaseFix: cf };
   const sv = VIEWS.sag(st, PW, PH, SAG_LID, 'sL'), A = sv.A, cv = VIEWS.cor(st, PW, PH, COR_LID, 'cR'), B = cv.A;
   let ex = '';
-  if (A.creaseFix) ex += lab('orbicularis → levator（6-0 Prolene）', 'crease fixation', 14, 150, A.creaseFix, { color: COL.suture, bold: true, size: 14, op: ss(0.5, 1, cf) });
+  if (A.creaseFix) ex += lab('levator → orbicularis（6-0 Prolene）', 'crease fixation', 14, 150, A.creaseFix, { color: COL.suture, bold: true, size: 14, op: ss(0.5, 1, cf) });
   ex += tag('單眼皮：levator 往皮膚的止點靠近瞼緣', T.on(1) * (1 - T.on(2)), COL.sub);
   ex += tag('切開法：aponeurosis 固定到下方切口 → 雙眼皮線', T.on(2) * (1 - T.on(3)));
   { // skin closure (schematic: the pull of the closure on the tissues is not modelled): skin bridge over the wound + one stitch
@@ -331,7 +332,7 @@ DRAW2['4-7'] = T => {
     ex += `<g opacity="${close}"><path d="M${q.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L')}Z" fill="#eec7a8" stroke="#c58c6c" stroke-width="1.2"/><ellipse cx="${m1[0].toFixed(1)}" cy="${m1[1].toFixed(1)}" rx="7" ry="${(L * sv.k * 0.45).toFixed(1)}" fill="none" stroke="${COL.suture}" stroke-width="2" transform="rotate(${(Math.atan2(d[1], d[0]) * 180 / Math.PI - 90).toFixed(1)} ${m1[0].toFixed(1)} ${m1[1].toFixed(1)})"/></g>`;
     ex += lab('縫皮 7-0 ethilone（拉攏為示意）', 'skin closure', 14, 236, sv.P(lo), { color: COL.suture, bold: true, size: 14, op: close }); }
   let rx = '';
-  if (B.creaseFix) rx += lab('4 針固定 → 雙眼皮線', 'lid crease', 14, 64, B.creaseFix, { color: COL.suture, bold: true, op: ss(0.5, 1, cf) * (1 - close) });
+  if (B.creaseFix) rx += lab('4 針固定（雙眼皮線）', 'lid crease', 14, 64, B.creaseFix, { color: COL.suture, bold: true, op: ss(0.5, 1, cf) * (1 - close) });
   { const XS = []; for (let x = -12.4; x <= 9.8; x += 0.25) XS.push(x); const lo = XS.map(x => cv.P([x, cv.r.excLoY(x)])), hi = XS.map(x => cv.P([x, cv.r.excHiY(x)]));
     let s = `<path d="${pathOf([...lo, ...hi.reverse()])}Z" fill="#efcfb6" stroke="#c99476" stroke-width="1.2"/>`;
     for (let x = -10; x <= 8; x += 2) { const a = cv.P([x, cv.r.excLoY(x) + 0.5]), b = cv.P([x, cv.r.excLoY(x) - 0.6]); s += `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="${COL.suture}" stroke-width="1.8" stroke-linecap="round"/>`; }
@@ -346,7 +347,7 @@ DRAW2['4-7'] = T => {
 DRAW2['5'] = T => {
   const lac = T.on(2, 0.8) * (1 - T.on(4, 0.6)), pro = T.on(4, 0.8);
   const st = { ...ADV, prolapse: pro };
-  const cv = VIEWS.cor(st, PW, PH, COR_LID, 'cR', { windows: lac > 0.01 ? [LAC_WIN] : [] }), B = cv.A;
+  const cv = VIEWS.cor(st, PW, PH, VIEWS.zwin(COR_LID, COR_LAT, lac), 'cR', { windows: lac > 0.01 ? [LAC_WIN] : [] }), B = cv.A;
   const items = [['高度或 contour 不對', '當下調整（怎麼調依院內常規）', 1], ['外側鼓起：lacrimal gland', '不要切掉 → dacryoadenopexy（復發 1.2%）', 2], ['結膜脫出', '縫回穹窿或切除（見 4-6）', 4]];
   let cur = -1; items.forEach((it, i) => { if (T.u >= T.st(it[2]) - 0.2) cur = i; });
   let svg = '';
@@ -369,12 +370,12 @@ DRAW2['6'] = T => {
   const ax0 = 60, ax1 = 1170, y = 120, X = d => ax0 + (ax1 - ax0) * d / 49;
   const oa = T.on(2, 0.5);
   s += `<g opacity="${oa}"><path d="M${ax0} ${y}H${ax1}" stroke="#aab6c2" stroke-width="3"/>${text(ax0, y - 14, '手術', { size: 15, bold: true, anchor: 'middle' })}<circle cx="${ax0}" cy="${y}" r="8" fill="${COL.ink}"/></g>`;
-  const pts6 = [[7, '1 週', ['只有 40% 到最終高度', '52% 再升高，平均 1.1 mm'], 2], [14, '2 週', ['單側術後另一眼往下掉：', '先等約 2 週再評估'], 5], [42, '6 週', ['最高的高度', '幾乎都在 6 週內出現'], 3]];
-  pts6.forEach(([d, h, ls, li]) => { const xx = X(d), op = T.on(li, 0.5);
-    s += `<g opacity="${op}"><circle cx="${xx}" cy="${y}" r="10" fill="${COL.accent}"/>${text(xx, y - 18, h, { size: 18, bold: true, anchor: 'middle' })}</g>` + card(xx - 150, y + 26, 300, 78, { op }) + tblock(xx - 136, y + 56, ls, { size: 15.5, op, lh: 26 }); });
-  s += infoCard(24, 250, 760, [['1 週時腫得不嚴重，以下情況可考慮早期修正（Tucker 1999）', { bold: true, color: COL.amber }], ['contour 異常', {}], ['高度比目標高 ≥ 0.5 mm，或低 > 1 mm', {}]], T.on(4), { h: 110, stroke: COL.amber });
-  s += infoCard(810, 250, 400, [['拆線時間、用藥', { bold: true }], ['依院內常規', { color: COL.accent, bold: true }]], T.on(6), { h: 84 });
-  return { F: { svg: s, P: { title: '術後追蹤', orient: '時間軸非等比例處依實際週數畫' } } };
+  const pts6 = [[7, '1 週', ['只有 40% 到最終高度', '52% 再升高，平均 1.1 mm'], 2, 56, 146], [14, '2 週', ['單側術後另一眼往下掉：', '先等約 2 週再評估'], 5, 300, 250], [42, '6 週', ['最高的高度', '幾乎都在 6 週內出現'], 3, 870, 146]];
+  pts6.forEach(([d, h, ls, li, cx, cy]) => { const xx = X(d), op = T.on(li, 0.5);
+    s += `<g opacity="${op}"><circle cx="${xx}" cy="${y}" r="10" fill="${COL.accent}"/>${text(xx, y - 18, h, { size: 18, bold: true, anchor: 'middle' })}<path d="M${xx} ${y + 12}V${cy}" stroke="${COL.accent}" stroke-width="1.4" stroke-dasharray="4 3"/></g>` + card(cx, cy, 300, 78, { op }) + tblock(cx + 14, cy + 30, ls, { size: 15.5, op, lh: 26 }); });
+  s += infoCard(650, 250, 560, [['1 週時腫得不嚴重，以下情況可考慮早期修正（Tucker 1999）', { bold: true, color: COL.amber }], ['contour 異常', {}], ['高度比目標高 ≥ 0.5 mm，或低 > 1 mm', {}]], T.on(4), { h: 110, stroke: COL.amber });
+  s += infoCard(24, 250, 256, [['拆線時間、用藥', { bold: true }], ['依院內常規', { color: COL.accent, bold: true }]], T.on(6), { h: 84 });
+  return { F: { svg: s, P: { title: '術後追蹤', orient: '時間軸依週數等比例' } } };
 };
 
 // ---------------------------------------------------------------- 7 跟刀清單 (full panel)
