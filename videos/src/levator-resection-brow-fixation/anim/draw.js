@@ -277,16 +277,19 @@ DRAW2['4-5'] = T => {
   const st = { ...ADV, browPlane: pl, browSut: su, browTie: tie };
   const sv = VIEWS.sag(st, PW, PH, SAG_BROW, 'sL'), A = sv.A;
   const cv = VIEWS.cor({ ...st, notch: nv }, PW, PH, COR_FACE, 'cR', { windows: nv > 0.01 ? [NERVE_WIN] : [] }), B = cv.A;
-  let ex = '';
-  if (A.browPlane) ex += lab('剝離平面', 'dissection plane', PW - 12, 150, A.browPlane, { side: 'R', color: COL.accent, bold: true, op: ss(0.3, 0.8, pl) * (1 - T.on(2)) });
-  if (A.browSutP) ex += lab('縫到骨膜（4-0 vicryl ×1）', 'brow fixation', PW - 12, 64, A.browSutP, { side: 'R', color: COL.suture, bold: true, op: ss(0.6, 1, su) });
+  const nat = T.on(2, 0.8) * (1 - T.on(4, 0.8)), op0 = 1 - nat;
+  let ex = '', svg = sv.svg;
+  if (A.browPlane) ex += lab('剝離平面', 'dissection plane', PW - 12, 150, A.browPlane, { side: 'R', color: COL.accent, bold: true, op: ss(0.3, 0.8, pl) * (1 - T.on(2)) * op0 });
+  if (A.browSutP) ex += lab('縫到骨膜（4-0 vicryl ×1）', 'brow fixation', PW - 12, 64, A.browSutP, { side: 'R', color: COL.suture, bold: true, op: ss(0.6, 1, su) * op0 });
   ex += lab('骨膜', 'periosteum', PW - 12, 106, A.periosteum, { side: 'R', op: T.on(0, 0.6, 1.2) });
-  ex += lab('眉下脂肪', 'ROOF', 14, 150, A.roof, { color: COL.roof, bold: true, op: T.on(1) });
+  ex += lab('眉下脂肪', 'ROOF', 14, 150, A.roof, { color: COL.roof, bold: true, op: T.on(1) * (1 - T.on(4)) });
   ex += lab('眶上緣', 'superior orbital rim', PW - 12, 196, sv.P([-12.4, -18.3]), { side: 'R' });
   ex += lab('眉毛', 'eyebrow', 14, 64, A.brow, { bold: true });
-  { // ROOF thickness 5 mm below the rim (Manta 2025), measured horizontally as in the paper
-    const y = LID.RIM_Y + LRP.roofBelow, xm = sv.r.crossX(sv.r.probe.musB, y), xb = sv.r.crossX(sv.r.probe.pb, y), a = sv.P([xm, y]), b = sv.P([xb, y]), o = T.on(2, 0.6, 0.8) * (1 - T.on(4));
-    ex += `<g opacity="${o}">${VIEWS.dim(a, b, COL.roof)}</g>` + lab('眶上緣下 5 mm：ROOF 約 1.8 mm', 'East Asian', 14, 290, [(a[0] + b[0]) / 2, a[1]], { color: COL.roof, bold: true, op: o }); }
+  // lines 2–3: Manta 2025 measured the native lid, so the section cross-fades to the unoperated East Asian anatomy and the ROOF is measured
+  // horizontally 5 mm below the rim, as in the paper
+  if (nat > 0.01) { const nv = VIEWS.sag({}, PW, PH, SAG_BROW, 'nL'), y = LID.RIM_Y + LRP.roofBelow, xm = nv.r.crossX(nv.r.probe.musB, y), xb = nv.r.crossX(nv.r.probe.pb, y), a = nv.P([xm, y]), b = nv.P([xb, y]);
+    svg = `<g opacity="${1 - nat}">${sv.svg}</g><g opacity="${nat}">${nv.svg}</g>`;
+    ex += `<g opacity="${nat}">${VIEWS.dim(a, b, COL.roof)}</g>` + lab('眶上緣下 5 mm：ROOF 約 1.8 mm', 'East Asian', 14, 290, [(a[0] + b[0]) / 2, a[1]], { color: COL.roof, bold: true, op: nat }); }
   ex += tag('白人：13 人中 12 人在這裡量不到 ROOF', T.on(3) * (1 - T.on(4)), COL.sub, PH - 18);
   let rx = '';
   if (B.browPlane) rx += lab('剝離範圍', 'dissection pocket', 14, 64, B.browPlane, { color: COL.accent, bold: true, op: ss(0.3, 0.8, pl) * (1 - nv) });
@@ -296,7 +299,7 @@ DRAW2['4-5'] = T => {
   rx += tag('距中線約 22–24 mm（泰國屍體研究）', T.on(5) * (1 - T.on(6)), COL.ink, PH - 18);
   const m = T.on(6, 0.8);
   rx += mrdArrow(cv, m) + lab(`MRD1 約 ${LRP.mrdPost} mm`, 'check', PW - 12, PH - 50, cv.P([0, cv.r.Uy(0) * 0.5]), { side: 'R', color: '#b58a00', bold: true, op: m });
-  return { L: { svg: sv.svg, extra: ex, P: SAG_P }, R: { svg: cv.svg, extra: rx, P: COR_P } };
+  return { L: { svg, extra: ex, P: nat > 0.5 ? { title: '對照：未手術的東亞人眼瞼 sagittal', orient: '左＝前　上＝上' } : SAG_P }, R: { svg: cv.svg, extra: rx, P: COR_P } };
 };
 
 DRAW2['4-6'] = T => {
@@ -326,15 +329,16 @@ DRAW2['4-7'] = T => {
   if (A.creaseFix) ex += lab('levator → orbicularis（6-0 Prolene）', 'crease fixation', 14, 150, A.creaseFix, { color: COL.suture, bold: true, size: 14, op: ss(0.5, 1, cf) });
   ex += tag('單眼皮：levator 往皮膚的止點靠近瞼緣', T.on(1) * (1 - T.on(2)), COL.sub);
   ex += tag('切開法：aponeurosis 固定到下方切口 → 雙眼皮線', T.on(2) * (1 - T.on(3)));
-  { // skin closure (schematic: the pull of the closure on the tissues is not modelled): skin bridge over the wound + one stitch
-    const lo = sv.M.incLo, hi = sv.M.incHi, d = [hi[0] - lo[0], hi[1] - lo[1]], L = Math.hypot(...d), n = [d[1] / L, -d[0] / L], nn = n[0] < 0 ? [-n[0], -n[1]] : n;
-    const q = [lo, hi, [hi[0] + nn[0] * 0.5, hi[1] + nn[1] * 0.5], [lo[0] + nn[0] * 0.5, lo[1] + nn[1] * 0.5]].map(sv.P), m1 = sv.P([(lo[0] + hi[0]) / 2 - nn[0] * 0.25, (lo[1] + hi[1]) / 2 - nn[1] * 0.25]);
-    ex += `<g opacity="${close}"><path d="M${q.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L')}Z" fill="#eec7a8" stroke="#c58c6c" stroke-width="1.2"/><ellipse cx="${m1[0].toFixed(1)}" cy="${m1[1].toFixed(1)}" rx="7" ry="${(L * sv.k * 0.45).toFixed(1)}" fill="none" stroke="${COL.suture}" stroke-width="2" transform="rotate(${(Math.atan2(d[1], d[0]) * 180 / Math.PI - 90).toFixed(1)} ${m1[0].toFixed(1)} ${m1[1].toFixed(1)})"/></g>`;
-    ex += lab('縫皮 7-0 ethilone（拉攏為示意）', 'skin closure', 14, 236, sv.P(lo), { color: COL.suture, bold: true, size: 14, op: close }); }
+  { // skin closure (schematic: the model does not deform the skin, so the stitch joining the two skin edges is drawn instead)
+    const lo = sv.M.incLo, hi = sv.M.incHi, d = [hi[0] - lo[0], hi[1] - lo[1]], L = Math.hypot(...d), n = [-d[1] / L, d[0] / L], out = n[0] < 0 ? n : [-n[0], -n[1]];
+    const p0 = sv.P([lo[0] - out[0] * 0.35, lo[1] - out[1] * 0.35]), p1 = sv.P([hi[0] - out[0] * 0.35, hi[1] - out[1] * 0.35]), c = sv.P([(lo[0] + hi[0]) / 2 + out[0] * 1.6, (lo[1] + hi[1]) / 2 + out[1] * 1.6]);
+    ex += `<g opacity="${close}"><path d="M${p0[0].toFixed(1)} ${p0[1].toFixed(1)}Q${c[0].toFixed(1)} ${c[1].toFixed(1)} ${p1[0].toFixed(1)} ${p1[1].toFixed(1)}" fill="none" stroke="${COL.suture}" stroke-width="2.4" stroke-linecap="round"/>${dot(sv.P(lo), COL.suture, 3)}${dot(sv.P(hi), COL.suture, 3)}</g>`;
+    const ap = [(p0[0] + 2 * c[0] + p1[0]) / 4, (p0[1] + 2 * c[1] + p1[1]) / 4];   // apex of the stitch
+    ex += lab('縫皮 7-0 ethilone：上下皮緣對合（示意）', 'skin closure', PW - 12, 380, ap, { side: 'R', color: COL.suture, bold: true, size: 14, op: close }); }
   let rx = '';
   if (B.creaseFix) rx += lab('4 針固定（雙眼皮線）', 'lid crease', 14, 64, B.creaseFix, { color: COL.suture, bold: true, op: ss(0.5, 1, cf) * (1 - close) });
-  { const XS = []; for (let x = -12.4; x <= 9.8; x += 0.25) XS.push(x); const lo = XS.map(x => cv.P([x, cv.r.excLoY(x)])), hi = XS.map(x => cv.P([x, cv.r.excHiY(x)]));
-    let s = `<path d="${pathOf([...lo, ...hi.reverse()])}Z" fill="#efcfb6" stroke="#c99476" stroke-width="1.2"/>`;
+  { const XS = []; for (let x = -12.4; x <= 9.8; x += 0.25) XS.push(x); const lo = XS.map(x => cv.P([x, cv.r.excLoY(x)])), hi = XS.map(x => cv.P([x, cv.r.excHiY(x) - 0.25]));
+    let s = `<path d="${pathOf([...lo, ...hi.reverse()])}Z" fill="#efcfb6"/>`;
     for (let x = -10; x <= 8; x += 2) { const a = cv.P([x, cv.r.excLoY(x) + 0.5]), b = cv.P([x, cv.r.excLoY(x) - 0.6]); s += `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="${COL.suture}" stroke-width="1.8" stroke-linecap="round"/>`; }
     s += curve(lo, '#9b6450', 1.6, 1);
     rx += `<g opacity="${close}">${s}</g>` + lab('縫合線＝雙眼皮線', 'closure / crease', 14, 64, cv.P([-6, cv.r.excLoY(-6)]), { color: COL.suture, bold: true, op: close });
