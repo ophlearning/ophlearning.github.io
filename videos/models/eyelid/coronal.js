@@ -49,6 +49,11 @@ const CORONAL = (() => {
   // supraorbital notch: 22.96 mm from the facial midline (Pruksapong 2022, Thai cadavers: men 22.34, women 23.58; East Asians shorter than other
   // groups), midline = half the interpupillary distance (Gao 2025: men 65.34, women 62.03 → 31.84); notch width 3.97 mm (Pruksapong 2022)
   const NOTCH_X = 31.84 - 22.96, NOTCH_W = 3.97;
+  // optional state incX = [x of the medial mark, x of the lateral mark] (mm, medial > 0): the lower incision then passes exactly through
+  // incH[0] (medial), incH[1] (centre) and incH[2] (lateral) — in proportion to the central height, which comes from the sagittal model —
+  // and tapers from the outer marks to the incision ends. Without incX the original profile is used (unchanged drawings).
+  const incRatioX = ([xM, xL], incH) => { const e = LID.ss, pr = x => prof(x, -12.4, 9.8, 0.35), rM = incH[0] / incH[1], rL = incH[2] / incH[1];
+    return x => x >= xM ? rM * pr(x) / pr(xM) : x <= xL ? rL * pr(x) / pr(xL) : x >= 0 ? lerp(1, rM, e(0, xM, x)) : lerp(1, rL, e(0, xL, x)); };
   const C = { skin: '#efcfb6', skin2: '#e7bfa2', skinS: '#c99476', orb: '#c6646f', orbF: '#9b3a47', sept: '#ffffff', septS: '#b7ad99', fat: '#f6d778', fatL: '#f9e4a0',
     fatS: '#d6ad47', mfat: '#f7efd2', mfatS: '#d9cc9f', apo: '#f5f0e2', apoS: '#bfb08a', whit: '#ece4cf', mul: '#dda6aa', mulF: '#c27b84', mus: '#b9525f', musF: '#d9838e',
     tar: '#f5eacb', tarS: '#c3ad7c', gland: '#ecd28a', bone: '#eee3cb', boneS: '#b9a477', deep: '#9b6b5f', sclera: '#f7f4ef', lash: '#2b2019', brow: '#3a2b20', cut: '#7a4f45',
@@ -94,7 +99,7 @@ const CORONAL = (() => {
     const dCrease = LID.creasePointUF(opt.variant || 'asian')[1] - LID.UF.at(0, 0)[1], creaseY = x => Uy(x) + dCrease * prof(x, -13.6, 10.6, 0.35);
     const wins = [...(opt.windows || [])], FXW = xs(-12.4, 9.8, 0.25);
     // levator resection incisions, projected from the sagittal skin points (central heights); medial / lateral heights scale with incH
-    const incH = st.incH || [2.5, 4, 4], ratio = x => (x >= 0 ? lerp(1, incH[0] / incH[1], Math.min(1, x / 7)) : lerp(1, incH[2] / incH[1], Math.min(1, -x / 7))) * prof(x, -12.4, 9.8, 0.35);
+    const incH = st.incH || [2.5, 4, 4], ratio = st.incX ? incRatioX(st.incX, incH) : x => (x >= 0 ? lerp(1, incH[0] / incH[1], Math.min(1, x / 7)) : lerp(1, incH[2] / incH[1], Math.min(1, -x / 7))) * prof(x, -12.4, 9.8, 0.35);
     const dLo = K ? K.incLo[1] - K.lash[1] : 0, dHi = K ? K.incHi[1] - K.lash[1] : 0;
     const excLoY = x => lashY(x) + dLo * ratio(x), excHiY = x => excLoY(x) + (dHi - dLo) * prof(x, -12.4, 9.8, 0.5);
     const woundPoly = [...FXW.map(x => [x, excLoY(x)]), ...FXW.slice().reverse().map(x => [x, excHiY(x)])];
