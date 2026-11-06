@@ -23,7 +23,7 @@
 ## 看清楚用的工具
 - `shot-model.js`＋`model-view.html`：把任一個已報到的模型放大到指定範圍（mm），可以並排幾個手術狀態，並加 1 mm 格線。
   例：`node videos/tools/shot-model.js 'model=eyelid&m=sag&v=-19,-14,12&grid=1&st=[{"curl":1},{"curl":1,"cut":1,"k":1,"tuck":1}]' out.png`
-  `model` 是 `videos/models/registry.js` 裡的模型名稱；`m` 是該模型的視角（眼瞼有 `sag`、`cor`、`ev`）；`v` 是左上角的 x、y 和寬度（mm），不給就用視角預設；`st` 是狀態清單。給錯視角名稱時，會列出這個模型有哪些視角。
+  `model` 是 `videos/models/registry.js` 裡的模型名稱；`m` 是該模型的視角（眼瞼有 `sag`、`cor`、`ev`；下眼瞼另有 `lsag`、`both`、`lzoom`、`lcor`、`lcanth`、`axial`，下眼瞼的狀態直接寫在 `st`，上眼瞼的狀態放在 `st` 的 `upper` 裡）；`v` 是左上角的 x、y 和寬度（mm），不給就用視角預設；`st` 是狀態清單。給錯視角名稱時，會列出這個模型有哪些視角。
 - `seg-stills.js`：截某一段在指定時刻的畫面。時刻用「第幾句旁白的幾成」表示，所以語音重新合成後依然有效。
   例：`node videos/tools/seg-stills.js videos/src/upper-lid-margin-rotation/anim/video2.html 4-4 /tmp/s 0:0.05 2:0.6 6:0.9`
 

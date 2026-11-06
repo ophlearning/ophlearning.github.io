@@ -30,7 +30,7 @@
 
 | 模型 | 機轉切面＋術者視角（規劃） | 涵蓋的手術 | 模型卡 | 進度 |
 |---|---|---|---|---|
-| 眼瞼（上、下瞼） | 矢狀切面＋正面皮膚面或翻瞼 | entropion／ectropion、ptosis、雙眼皮、lateral tarsal strip、眼瞼腫瘤重建、PLTR、internal brow fixation | `eyelid/CARD.md` | 上眼瞼解剖、PLTR 的手術狀態與翻瞼視角已做；2026-11-06 補好眉毛區（ROOF、骨膜、眉毛、眶上切跡與神經、淚腺）與 levator resection／眉毛固定／結膜脫出的手術狀態（第一部組合刀）。下一步：刀後依 OP note 定參數；下眼瞼（第二、三部），規格見 `videos/src/` 下三份 `spec.md` |
+| 眼瞼（上、下瞼） | 矢狀切面＋正面皮膚面或翻瞼 | entropion／ectropion、ptosis、雙眼皮、lateral tarsal strip、眼瞼腫瘤重建、PLTR、internal brow fixation | `eyelid/CARD.md` | 上眼瞼解剖、PLTR 的手術狀態與翻瞼視角已做；2026-11-06 補好眉毛區（ROOF、骨膜、眉毛、眶上切跡與神經、淚腺）與 levator resection／眉毛固定／結膜脫出的手術狀態（第一部組合刀）；2026-11-06 補好下眼瞼（選用式，舊畫面逐字不變）：下眼瞼矢狀切面、正面逐層開窗、外眥水平切面（從下往上看，同 CT）、瞼緣放大，以及 involutional entropion、院內範本的 marginal rotation、Hotz、LTS／canthopexy、電解睫毛的狀態（第二、三部）。下一步：刀後依 OP note 定參數；上下眼瞼一起閉眼的動作還沒做 |
 | 眼眶與淚道 | 冠狀或軸向切面＋正面 | 眶骨骨折、眼眶減壓、DCR、眼球摘除 | 尚未建立 | 未開始 |
 | 前段 | 前段矢狀切面＋手術顯微鏡俯視 | 白內障、PK／DALK／DSAEK／DMEK、翼狀胬肉、trabeculectomy、tube、MIGS | 尚未建立 | 未開始 |
 | 前段放大 | 角膜分層；隅角＋前房角鏡視角 | 屈光雷射、CXL、SLT、LPI | 尚未建立 | 未開始 |
@@ -82,6 +82,7 @@
 - 2026-11-04　下一步：用眼瞼模型重做 PLTR 影片，規格見 `videos/src/upper-lid-margin-rotation/redo-spec.md`。
 - 2026-11-06　站長要做三部組合刀影片：(1) levator resection＋internal brow fixation＋conjunctivoplasty（conjunctival prolapse）；(2) OD 下眼瞼 marginal rotation 一年後復發的 revision；(3) 上眼瞼 levator resection＋internal brow fixation、下眼瞼 marginal rotation＋electric epilation。術式以主治範本為參考、刀後的實際 OP note 為準；主治範本不進 git，影片與網站不寫主治代號與醫院名稱。製作順序 1 → 2 → 3（第二、三部都要下眼瞼模型）。規格見 `videos/src/` 下三個資料夾的 `spec.md`。
 - 2026-11-06　眉毛區依 Manta 2025（MRI）把眶上緣附近與上眼瞼上半部的軟組織加厚（舊模型約薄一半）；這會改到 PLTR 畫面左上角，自檢後更新了 PLTR 參考圖。還沒有影片頁的影片，`manifest.json` 的 `page` 填 null，`check-all.js` 會把影片層級檢查標成 SKIP。
+- 2026-11-06　下眼瞼不等 OP note，先照規格書記下的院內範本（marginal rotation、加 LTS 的版本、Hotz）加文獻建模；範本特有的數值做成參數，在模型卡標「依院內常規／待刀後確認」。下眼瞼做成選用式（新檔＋`CORONAL.draw` 的 `opt.lower`），舊影片的畫面逐字不變。LTS 的機轉切面定為外眥高度的水平切面、從下往上看（和 axial CT 相同：上＝前、右眼 temporal 在左），和正面圖共用 x。數值、出處與待核對項目見 `eyelid/CARD.md`。
 - 2026-11-05　為了省 token：長對話換新對話接手（靠文件延續品質）；自檢截圖改成半解析度、每段挑最難的一刻看 1 張，可疑處看局部放大。
 - 2026-11-05　改成過程中不問站長，只在出片前交總覽；新類別樣本圖改成自檢，沒有出處的醫學內容標「示意」或拿掉並列在總覽。
 - 2026-11-05　站長表示只訂目標與驗收結果（讓住院醫師簡單且正確地學習），過程交給 Claude 依專業規劃。改成：只有新類別的樣本圖、沒有出處的醫學內容要先問；其他畫面自檢，出片前交總覽。

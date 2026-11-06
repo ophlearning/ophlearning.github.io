@@ -56,7 +56,7 @@
 注意：主治範本的 marginal rotation 有剝開 retractor 與 tarsal fracture，不等於研究裡單純的 everting sutures（Quickert）；旁白引用時要講清楚這個差別。
 
 ## 驗收項目
-- [ ] 下眼瞼模型卡、樣本圖完成並自己放大檢查；`eyelid/check.js` 加上下眼瞼的檢查並全部通過。
+- [x] 下眼瞼模型卡、樣本圖完成並自己放大檢查；`eyelid/check.js` 加上下眼瞼的檢查並全部通過（2026-11-06）。
 - [ ] 步驟章節和實際 OP note 一致；復發原因只講主治的判斷與有出處的內容，不臆測前次手術細節。
 - [ ] 每段手術步驟同時顯示兩個視角，同一結構兩圖高度差小於 0.3 mm。
 - [ ] 旁白每個數值都有出處並寫成檢查；沒有出處的標「示意」或拿掉，列在出片前的總覽。
@@ -66,4 +66,11 @@
 ## 進度
 - 2026-11-06：規格書與第一批文獻完成。
 - 2026-11-06：`script-draft.md` 草稿第 1 版完成（10 篇文獻；retractors 兩層與 horn 寬度沒有族群差異，模型用標準解剖）。
-- 下一步：第一部做完後開始。先查下眼瞼解剖數值與亞洲人差異 → 寫下眼瞼模型卡 → 樣本圖自檢 → 拿到實際 OP note 後寫腳本。
+- 2026-11-06：下眼瞼模型完成（站長決定不等 OP note，先照院內範本＋文獻做；範本特有的數值是參數，標「依院內常規／待刀後確認」）。
+  - 解剖（亞洲人值有文獻才用）：下瞼板 4.12 × 1.36 mm（Lim 2004）、下瞼板肌在瞼板下 1.44 mm 開始、眶隔在瞼板下 2.38 mm 與囊瞼筋膜融合（Kakizaki 2006；但多數亞洲人屍體看不到明確融合，畫虛線）、下穹窿 10.9 mm、眶下緣與脂肪墊前後位置（Kato 2025 東亞人）、外側眶緣（Tsai 2006 台灣人 Hertel）、Whitnall 結節眶緣內 1.5 mm、外眥韌帶。數值與 DOI 見 `videos/models/eyelid/CARD.md`。
+  - 視角：下眼瞼矢狀切面（`lsag`）＋正面（`lcor`）；LTS／canthopexy 用外眥高度的水平切面（`axial`，從下往上看，同 CT）＋正面外眥（`lcanth`），兩圖共用 x。
+  - 狀態：involutional entropion（retractor 鬆脫、眼輪匝肌上跨、horizontal laxity 與 distraction test）、前次疤痕、睫毛下切口、剝開眶隔與 retractor、tarsal fracture、mattress suture、綁緊、縫皮、Hotz、LTS（外眥切開、下支切斷、瞼板條、固定在眶緣內）、canthopexy。
+  - 檢查：`eyelid/check.js` 新增 42 項（全部通過，每項故意改錯過）；樣本圖 `sample-lower.jpg`、`sample-lower-steps.jpg`、`sample-lower-lts.jpg` 自檢後登記在 `ref/manifest.json`（`page` 還是 null）。
+  - 查文獻時順便找到腳本 1-2 的 [待核對出處]：distraction 超過 6–8 mm 算明顯、往下看時下眼瞼正常移動 3–4 mm（Pushker 2025，doi:10.4103/IJO.IJO_630_24）；內翻病人 distraction 7.5–11 mm、下穹窿脂肪脫出是 retractor 鬆脫的徵象（Beigi 2008，doi:10.1016/j.ophtha.2008.02.014）。還沒寫進腳本。
+  - 模型卡列為示意或 [待核對出處]、出片前要列進總覽的：眶下緣高度、下斜肌在切面上的位置、脂肪墊大小、內翻角度與睫毛被擋住的門檻、retractor 退縮量、正常眼瞼的 distraction 3 mm 與 LTS 預設剪掉的長度、tarsal fracture 的位置與切的面、出針點、MRD2 5 mm。
+- 下一步：拿到實際 OP note 後改參數（切口、fracture、縫線位置、有沒有 LTS）、寫腳本，再做影片頁。
