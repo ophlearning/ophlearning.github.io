@@ -461,7 +461,9 @@ const LID = (() => {
     const deepAt = q => skT(q) + subq(q) + orbW(q);
     // lid-crease approach: incision at the (planned) crease through skin + orbicularis; the pretarsal skin–muscle flap below it
     // swings forward, hinged near the lash line, exposing the tarsus
-    const CR = creaseOnSkin(sk, DA, V), qC = CR.q, qH = SK.near(DA.at(0.7, uSkin(V, 0.7)));
+    // optional state creaseH (mm along the skin from the lash line; 2026-11-06, third video): put the crease incision on another line, e.g. the
+    // levator-resection lower incision (incH[1]) so the margin rotation goes through the same incision. Absent → unchanged drawings.
+    const CR = creaseOnSkin(sk, DA, st.creaseH != null ? { ...V, creaseH: st.creaseH } : V), qC = CR.q, qH = SK.near(DA.at(0.7, uSkin(V, 0.7)));
     const open = (st.crease || 0) >= 1 || (st.flap || 0) > 0, H = SK.off(qH, 0), fAng = -(st.flap || 0) * 24 * D2R;
     const ft = (p, q) => (st.flap && q > qH && q <= qC) ? rot(p, H, fAng * ss(qH, qH + 0.3 * (qC - qH), q)) : p;
     // levator-resection skin incisions: lower line qLo, upper line qHi; excRemove takes the strip of skin, subcutaneous tissue and orbicularis
