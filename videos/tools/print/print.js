@@ -6,8 +6,7 @@
 // Checks per sheet (all must pass, exit 1 otherwise):
 //   · no page errors; the PDF is one page of exactly A4 landscape;
 //   · numbers: numcheck.js (every number registered in the video ledger or the sheet's print ledger, cited in the footer);
-//   · layout: nothing in the top-centre 70 × 32 mm tape zone, nothing above 28 mm or within 10 mm of the other edges, no text
-//     overflowing its box, labels inside their figure and not overlapping each other;
+//   · layout: nothing within the 10 mm margins, no box overflowing, labels inside their figure and not overlapping each other;
 //   · type sizes: title 22–26 pt, checklist items ≥ 14 pt, figure text ≥ 9 pt, footer 7–8 pt.
 // One browser, one page at a time (keeps Playwright light when another job is rendering video).
 const path = require('path'), fs = require('fs'), { execFileSync } = require('child_process');
@@ -45,10 +44,9 @@ async function measure(page) {
 
 function layoutChecks(m, R) {
   const ok = (c, s) => R.push([!!c, s]);
-  const tape = { x0: 113.5, y0: 0, x1: 183.5, y1: 32 }, hit = (a, b) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0;
-  const inTape = m.boxes.filter(b => hit(b, tape)), outM = m.boxes.filter(b => b.y0 < 28 - 0.05 || b.x0 < 10 - 0.05 || b.x1 > 287 + 0.05 || b.y1 > 200 + 0.05);
-  ok(!inTape.length, `tape zone (top centre 70 × 32 mm) empty${inTape.length ? ': ' + inTape.slice(0, 3).map(b => b.t).join(' | ') : ''}`);
-  ok(!outM.length, `margins (top 28, others 10 mm) clear${outM.length ? ': ' + outM.slice(0, 3).map(b => `${b.t} (${b.x0.toFixed(1)},${b.y0.toFixed(1)})–(${b.x1.toFixed(1)},${b.y1.toFixed(1)})`).join(' | ') : ''}`);
+  const hit = (a, b) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0;
+  const outM = m.boxes.filter(b => b.y0 < 10 - 0.05 || b.x0 < 10 - 0.05 || b.x1 > 287 + 0.05 || b.y1 > 200 + 0.05);
+  ok(!outM.length, `margins (10 mm all round) clear${outM.length ? ': ' + outM.slice(0, 3).map(b => `${b.t} (${b.x0.toFixed(1)},${b.y0.toFixed(1)})–(${b.x1.toFixed(1)},${b.y1.toFixed(1)})`).join(' | ') : ''}`);
   ok(!m.overflow.length, `no box overflows${m.overflow.length ? ': ' + m.overflow.join(' | ') : ''}`);
   const outL = m.labels.filter(l => !l.in); ok(!outL.length, `labels inside their figure${outL.length ? ': ' + outL.map(l => l.t).join(' | ') : ''}`);
   const ov = []; for (let i = 0; i < m.labels.length; i++) for (let j = i + 1; j < m.labels.length; j++) { const a = m.labels[i], b = m.labels[j];
@@ -78,18 +76,24 @@ function layoutChecks(m, R) {
       for (const r of NC.check(dir, m.texts, meta)) R.push(r);
       layoutChecks(m, R);
       const pdf = path.join(odir, name + '.pdf');
-      await page.pdf({ path: pdf, format: 'A4', landscape: true, printBackground: true });
+      await page.pdf({ path: pdf, width: '297mm', height: '210mm', printBackground: true, preferCSSPageSize: true });
+      // Chrome rounds the page box (841.92 × 594.96 pt); set it to A4 exactly (same byte length, padded with spaces, so offsets stay valid)
+      { const buf = fs.readFileSync(pdf), s = buf.toString('latin1'), A4 = '0 0 841.89 595.28';
+        const out = s.replace(/\/MediaBox \[([^\]]*)\]/g, (m0, inner) => { const v = inner.trim().split(/\s+/).map(Number);
+          if (v.length !== 4 || Math.abs(v[2] - 841.89) > 1.2 || Math.abs(v[3] - 595.28) > 1.2 || A4.length > inner.length) return m0;
+          return '/MediaBox [' + A4 + ' '.repeat(inner.length - A4.length) + ']'; });
+        if (out.length === s.length) fs.writeFileSync(pdf, Buffer.from(out, 'latin1')); }
       const info = execFileSync('pdfinfo', [pdf]).toString(), pg = +(/Pages:\s+(\d+)/.exec(info) || [])[1], sz = /Page size:\s+([\d.]+) x ([\d.]+) pts/.exec(info);
       R.push([pg === 1 && sz && Math.abs(sz[1] - 841.89) < 0.6 && Math.abs(sz[2] - 595.28) < 0.6, `PDF: ${pg} page, ${sz ? sz[1] + ' × ' + sz[2] : '?'} pt (A4 landscape 841.89 × 595.28)`]);
       if (!noPng) { const png = path.join(odir, name + '.png');
-        execFileSync('pdftoppm', ['-r', '300', '-png', '-singlefile', pdf, png.replace(/\.png$/, '')]);
+        execFileSync('pdftoppm', ['-r', '300', '-scale-to-x', '3508', '-scale-to-y', '2480', '-png', '-singlefile', pdf, png.replace(/\.png$/, '')]);
         const dims = execFileSync('identify', ['-format', '%w×%h', png]).toString();
         R.push([dims === '3508×2480', `PNG ${dims} (300 dpi A4 = 3508×2480)`]);
         if (gray) execFileSync('convert', [png, '-colorspace', 'Gray', png.replace(/\.png$/, '-gray.png')]); }
     }
     const nf = R.filter(r => !r[0]).length; fail += nf;
     console.log(`\n== ${name} ${nf ? `FAIL (${nf})` : 'PASS'}`);
-    for (const [c, s] of R) if (!c || /^(PDF|PNG|WARN|tape|margins|type)/.test(s) || process.argv.includes('-v')) console.log(`${c ? (s.startsWith('WARN') ? '' : 'PASS ') : 'FAIL '}${s}`);
+    for (const [c, s] of R) if (!c || /^(PDF|PNG|WARN|margins|type)/.test(s) || process.argv.includes('-v')) console.log(`${c ? (s.startsWith('WARN') ? '' : 'PASS ') : 'FAIL '}${s}`);
     console.log(`(${R.length} checks; numbers on the sheet: ${R.filter(r => /^[\d.\-]+: /.test(r[1])).map(r => r[1].split(':')[0]).join(' ')})`);
   }
   await b.close();

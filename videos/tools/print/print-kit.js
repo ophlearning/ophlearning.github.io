@@ -119,7 +119,6 @@ const PRINT = (() => {
       const M = def.meta, url = `https://ophlearning.github.io/videos/#${M.id}`, body = typeof def.body === 'function' ? def.body() : def.body;
       document.title = def.title + '｜' + M.short;
       document.body.innerHTML = `<div class="sheet" data-sheet="${esc(def.name)}">
-      <div class="tape-zone"></div>
       <div class="hd-left"><div class="hd-title">${esc(def.title)}</div><div class="hd-sub">${def.sub || ''}</div></div>
       <div class="hd-right"><b>${M.surgery}</b><br>${M.eye || ''}</div>
       <div class="body">${body}</div>
@@ -132,6 +131,20 @@ const PRINT = (() => {
     build();
     window.SHEET_META = { name: def.name, video: def.meta.id, sources: def.sources, ledger: def.ledger || {}, steps: def.steps || 0 };
   }
+  // labels of one figure, one row each (rows ordered by anchor height, so labels never overlap and leaders do not cross); each label
+  // sits at the edge nearer its anchor when the text fits between that edge and the anchor, else at the other edge. items: [zh, en, anchor, o]
+  function labels(items, W, H, o = {}) {
+    const its = items.filter(it => it && it[2]).map(it => ({ it, ay: it[2][1] })).sort((a, b) => a.ay - b.ay), n = its.length;
+    if (!n) return '';
+    const pt = o.pt || 9.5, z = pt * PT, g = o.gap || z * 1.45, m = o.inset ?? 1.3, lo = (o.y0 ?? 0.6) + z, hi = (o.y1 ?? H - 0.6) - 0.35;
+    const ty = its.map(t => Math.min(hi, Math.max(lo, t.ay + z * 0.36)));
+    for (let i = 1; i < n; i++) ty[i] = Math.max(ty[i], ty[i - 1] + g);
+    if (ty[n - 1] > hi) { ty[n - 1] = hi; for (let i = n - 2; i >= 0; i--) ty[i] = Math.min(ty[i], ty[i + 1] - g); }
+    return its.map((t, i) => { const [zh, en, a, lo2 = {}] = t.it, w = width(zh, pt, lo2.bold ?? true) + (en ? 1.2 + width(en, pt, false) : 0);
+      const canL = a[0] > m + w + 1.5, canR = a[0] < W - m - w - 1.5;
+      const left = lo2.side ? lo2.side === 'L' : canL && canR ? a[0] < W / 2 : canL ? true : canR ? false : a[0] > W / 2;
+      return lab(zh, en, left ? m : W - m, ty[i], a, { pt, side: left ? 'L' : 'R', ...lo2 }); }).join('');
+  }
   // labels in a column on one side of a figure, ordered by anchor height so leader lines do not cross. items: [zh, en, anchor, o]
   // side 'L' (text starts at x) or 'R' (text ends at x); y0 / y1 = top and bottom limits (figure mm); gap = min. baseline spacing
   function column(items, side, x, y0, y1, o = {}) {
@@ -143,5 +156,5 @@ const PRINT = (() => {
     if (ty[n - 1] > hi) { ty[n - 1] = hi; for (let i = n - 2; i >= 0; i--) ty[i] = Math.min(ty[i], ty[i + 1] - g); }
     return its.map((t, i) => lab(t.it[0], t.it[1], x, ty[i], t.it[2], { pt, side: side === 'R' ? 'R' : 'L', ...(t.it[3] || {}) })).join('');
   }
-  return { PT, render, column, view, cam, inc, cut, sut, num, fix, dot, dim, arrow, lab, txt, sbar, legend, width, esc, pth };
+  return { PT, render, labels, column, view, cam, inc, cut, sut, num, fix, dot, dim, arrow, lab, txt, sbar, legend, width, esc, pth };
 })();

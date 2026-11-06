@@ -4,7 +4,7 @@
 //   · in the video's number ledger (LEDGER in <video>/check.js, any segment) with a source that is not 結構 (a list number of the video
 //     does not vouch for the same digit on paper) and that the sheet's footer cites (院內常規 / 示意 need no footer entry).
 // Step numbers and scale bars are marked data-struct: step numbers must be integers 1 … def.steps; scale bars must read "<n> mm".
-// Every citation shown on a sheet (footer included) must be one of the video's REFS; every print-ledger entry must be used.
+// A ledger entry with two sources (「A；B」) counts each one. Every citation shown on a sheet (footer included) must be one of the video's REFS; every print-ledger entry must be used.
 const fs = require('fs'), path = require('path');
 const CITE = /([A-Z][A-Za-zÀ-ž'\-]+(?: Glass)?) (\d{4})([a-z])?/g;
 const cites = s => [...s.matchAll(CITE)].map(m => ({ who: m[1], year: m[2], all: m[0] }));
@@ -42,7 +42,7 @@ function check(dir, texts, meta) {
       ok(good, `${n}: print ledger → ${pl}${good ? '' : ' (must be 院內常規 / 示意 / 結構, or a REFS citation listed in the footer)'} 「${where}」`);
       if (c.length) usedSrc.add(pl); continue; }
     const cand = [];
-    for (const [seg, nums] of Object.entries(L)) if (nums[n] && nums[n] !== '結構') cand.push([seg, nums[n]]);
+    for (const [seg, nums] of Object.entries(L)) if (nums[n]) for (const s of String(nums[n]).split('；').map(x => x.trim())) if (s && s !== '結構') cand.push([seg, s]);
     const hit = cand.find(([, s]) => s === '院內常規' || s === '示意' || foot.includes(s));
     if (hit) usedSrc.add(hit[1]);
     ok(hit, `${n}: ${hit ? `video ledger ${hit[0]} → ${hit[1]}` : cand.length ? `in the video ledger (${cand.map(c => c.join(' → ')).join(', ')}) but no such source in the footer` : 'not in the video ledger nor the print ledger'} 「${where}」`);
