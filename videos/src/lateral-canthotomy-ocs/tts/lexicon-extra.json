@@ -1,0 +1,19 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py",
+ "replace": {
+  "mmHg": "毫米汞柱",
+  "°": "度",
+  "2 例": "兩例",
+  "2 眼": "兩眼",
+  "2 小時": "兩小時"
+ },
+ "words": {
+  "aponeurosis": "AE2 P OW0 N UH0 R OW1 S IH0 S",
+  "cantholysis": "K AE0 N TH AA1 L AH0 S IH0 S",
+  "canthotomy": "K AE0 N TH AA1 T AH0 M IY0",
+  "hemostat": "HH IY1 M AH0 S T AE2 T",
+  "levator": "L AH0 V EY1 T ER0",
+  "retrobulbar": "R EH2 T R OW0 B AH1 L B ER0",
+  "whitnall": "W IH1 T N AO0 L"
+ }
+}

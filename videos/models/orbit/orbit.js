@@ -218,7 +218,7 @@ const ORBIT = (() => {
     }
     A.supCut = lerpP(supO, J, 0.62); A.infCut = lerpP(infO, J, 0.62); A.J = J; A.supO = supO; A.infO = infO; A.tubercle = TUBF; A.lc = LC;
     // scissors guides for the video: inferior crus — tips pointed down toward the chin; superior — pointed up (directions in mm space, y down)
-    A.scInf = { tip: A.infCut, dir: unit([-0.25, 1]) }; A.scSup = { tip: A.supCut, dir: unit([-0.25, -1]) };
+    A.scInf = { tip: A.infCut, dir: unit([0.3, 1]) }; A.scSup = { tip: A.supCut, dir: unit([0.3, -1]) };   // bodies come in from the temporal side
     // skin-level overlays: hemostat crush line, canthotomy cut, cantholysis cut marks
     const ov = [], skinOp = 1 - win;   // the clamp mark and the canthotomy line are on the skin: hidden where the window is open
     if (st.clamp && skinOp > 0) ov.push(`<path d="M${F(LC)}L${F([LAT_RIM_X + 0.3, lcY])}" stroke="#6f6a72" stroke-width="7" stroke-linecap="round" opacity="${(0.42 * c01(st.clamp) * skinOp).toFixed(3)}" ${NS}/>`);
