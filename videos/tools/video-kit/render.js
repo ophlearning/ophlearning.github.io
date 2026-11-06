@@ -3,6 +3,10 @@
 //   node render.js <page.html> <out-prefix> --stills t1,t2,…           jpg stills at the given seconds
 //   node render.js <page.html> <out-prefix> --seg-stills               two stills per segment (35 % and 90 %)
 // Rendered at deviceScaleFactor 1.5 (1920×1080 frames from the 1280×720 page).
+// Speed (2026-11-06): a frame whose markup equals the previous frame's (kit.js sets window.FRAME_CHANGED = false) reuses the
+// previous image, and frames are captured through a CDP session with the same device metrics — byte-identical to
+// page.screenshot (checked with --verify), without Playwright's per-shot overhead.
+//   node render.js <page.html> - --verify --from F --to F    compares the fast path with page.screenshot on every frame F..F
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const path = require('path');
@@ -16,6 +20,20 @@ const path = require('path');
   await page.goto('file://' + path.resolve(page_));
   await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(400);
   const dur = await page.evaluate(() => window.SCENE_DURATION), src = await page.evaluate(() => window.TIMELINE_SOURCE);
+  const T0 = Date.now(), cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1.5, mobile: false });   // CDP emulation is per session
+  const grab = async () => Buffer.from((await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 93 })).data, 'base64');
+  if (args.includes('--verify')) {   // fast path (reuse + CDP) against a fresh page.screenshot of every frame
+    const from = Number(opt('--from') ?? 0), to = Number(opt('--to') ?? from + 300); let last = null, bad = 0, reused = 0, fresh = 0;
+    for (let i = from; i < to; i++) {
+      const changed = await page.evaluate(tt => { window.renderAt(tt); return window.FRAME_CHANGED !== false; }, i / 30);
+      if (changed || !last || fresh < 2) { last = await grab(); fresh = changed ? 1 : fresh + 1; } else reused++;
+      await page.evaluate(tt => { window.KIT_NO_REUSE = true; window.renderAt(tt); window.KIT_NO_REUSE = false; }, i / 30);   // the old path: markup set afresh
+      const ref = await page.screenshot({ type: 'jpeg', quality: 93 });
+      if (!ref.equals(last)) { bad++; if (bad <= 3) { console.log('DIFF at frame', i, changed ? '(captured)' : '(reused)'); if (opt('--dump')) { require('fs').writeFileSync(`${opt('--dump')}/f${i}-fast.jpg`, last); require('fs').writeFileSync(`${opt('--dump')}/f${i}-ref.jpg`, ref); } } }
+    }
+    console.log(`verify frames ${from}-${to}: ${to - from - bad} identical, ${bad} different, ${reused} reused`); await browser.close(); process.exit(bad ? 1 : 0);
+  }
   const shot = async (t, file) => { await page.evaluate(tt => window.renderAt(tt), t); return page.screenshot(file ? { path: file, type: 'jpeg', quality: 88 } : { type: 'jpeg', quality: 93 }); };
   if (args.includes('--seg-stills') || opt('--stills')) {
     let ts = opt('--stills') ? opt('--stills').split(',').map(Number) : [];
@@ -28,8 +46,15 @@ const path = require('path');
   const n = Math.ceil(dur * fps), from = Number(opt('--from') ?? 0), to = Math.min(n, Number(opt('--to') ?? n));
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', String(fps), '-i', '-',
     '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', '-r', String(fps), out], { stdio: ['pipe', 'inherit', 'inherit'] });
-  for (let i = from; i < to; i++) { const buf = await shot(i / fps); if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r)); }
+  // fresh: frames since the last capture. The first unchanged frame after a change is captured again before anything is reused,
+  // so a capture that raced the paint can never be copied across a whole still stretch.
+  let last = null, reused = 0, fresh = 0;
+  for (let i = from; i < to; i++) {
+    const changed = await page.evaluate(tt => { window.renderAt(tt); return window.FRAME_CHANGED !== false; }, i / fps);
+    if (changed || !last || fresh < 2) { last = await grab(); fresh = changed ? 1 : fresh + 1; } else reused++;
+    if (!ff.stdin.write(last)) await new Promise(r => ff.stdin.once('drain', r));
+  }
   ff.stdin.end(); await new Promise(r => ff.on('close', r)); await browser.close();
-  console.log(`frames ${from}-${to} of ${n} → ${out}`, errs.length ? 'ERRORS: ' + errs.slice(0, 3).join(' | ') : '');
+  console.log(`frames ${from}-${to} of ${n} → ${out} (${reused} reused, ${((Date.now() - T0) / 1000).toFixed(0)} s)`, errs.length ? 'ERRORS: ' + errs.slice(0, 3).join(' | ') : '');
   if (errs.length) process.exit(1);
 })();

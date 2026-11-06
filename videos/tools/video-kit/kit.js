@@ -85,7 +85,7 @@ const VIEWS = (() => {
 // ---------------------------------------------------------------- the kit: timeline, layout, frame
 const KIT = (() => {
   const LEAD = 0.7, GAP = 0.45, TAIL = 1.2, CARD = 2.8;   // same values as video-kit/tts/assemble.py
-  const CREDIT = '製作　基隆長庚　張博淳';
+  const CREDIT = '製作　張博淳';   // no hospital name: the videos follow a department template (CLAUDE.md)
   let TL = null, DURATION = 0, CH_SPAN = [];
   // fallback when there is no timeline.js yet: estimate each narration line from its length
   function capLen(s) { const t = s.replace(/\n/g, '');
@@ -148,6 +148,13 @@ const KIT = (() => {
     // T.on(i, d, off): 0 → 1 over d seconds from the start of line i (+off); T.p(i, a, b): 0 → 1 between fractions a and b of line i
     return { u, dur, st, en, on: (i, d = 0.6, off = 0) => ss(st(i) + off, st(i) + off + d, u), p: (i, a = 0, b = 1) => ss(lerp(st(i), en(i), a), lerp(st(i), en(i), b), u) };
   }
+  // A frame whose markup is the same as the previous frame's is not put on the page again: the page keeps its pixels, and
+  // window.FRAME_CHANGED = false tells render.js to reuse the previous frame's image (identical bytes, no layout or paint).
+  let lastHTML = null;
+  function setStage(stage, html) {
+    window.FRAME_CHANGED = !!window.KIT_NO_REUSE || html !== lastHTML || stage.childElementCount === 0;
+    if (window.FRAME_CHANGED) { stage.innerHTML = html; lastHTML = html; }
+  }
   function renderAt(t) {
     t = Math.min(Math.max(t, 0), DURATION - 1e-6);
     const tl = TL.find(x => t >= x.t0 && t < x.t1) || TL[TL.length - 1], sg = tl.sg, T = timing(tl, t), u = T.u, dur = T.dur;
@@ -158,7 +165,7 @@ const KIT = (() => {
       const ch = sg.chapterCard, k = ss(0, 0.6, u), k2 = ss(0.2, 1.0, u);
       o.push(`<g opacity="${k * (1 - ss(dur - 0.35, dur, u))}">${ch < CHAPTERS.length - 1 ? text(640, 300, `第 ${ch} 章`, { size: 30, bold: true, color: COL.accent, anchor: 'middle' }) : ''}
         ${text(640, 380, CHAPTERS[ch], { size: 62, bold: true, anchor: 'middle' })}<rect x="${640 - 160 * k2}" y="414" width="${320 * k2}" height="4" rx="2" fill="${COL.accent}"/></g>`);
-      o.push(header(tl, t, true)); stage.innerHTML = o.join(''); return;
+      o.push(header(tl, t, true)); return setStage(stage, o.join(''));
     }
     if (sg.layout === 'refs') {
       o.push(header(tl, t), `<rect x="24" y="70" width="1232" height="638" rx="10" fill="#fff" stroke="#d3dae1"/><clipPath id="clip_r"><rect x="25" y="80" width="1230" height="620"/></clipPath><g clip-path="url(#clip_r)">`);
@@ -166,7 +173,7 @@ const KIT = (() => {
       REFS.forEach((r, i) => { const y = 120 + i * lh - scroll; if (y > 40 && y < 760) { const cut = r.length > 150 ? r.lastIndexOf(' ', 150) : -1, words = cut > 0 ? [r.slice(0, cut), r.slice(cut + 1)] : [r];
         o.push(text(48, y, `${i + 1}.`, { size: 14.5, bold: true, color: COL.accent, cls: 'ref' }) + words.map((w, j) => text(80, y + j * 19, w, { size: 14.5, cls: 'ref' })).join('')); } });
       o.push(text(640, 120 + REFS.length * lh - scroll + 70, VIDEO.credit || CREDIT, { size: 22, bold: true, anchor: 'middle' }), `</g>`);
-      stage.innerHTML = o.join(''); return;
+      return setStage(stage, o.join(''));
     }
     if (sg.layout === 'title') {
       const D = DRAW2.title ? DRAW2.title(T) : {}, V = VIDEO.titleLayout || {};
@@ -184,7 +191,7 @@ const KIT = (() => {
       o.push(keyBox(tl, T, op), `</g>`);
     }
     o.push(`<rect x="24" y="604" width="1232" height="104" rx="10" fill="#1d2733"/>`, caption(tl, t));
-    stage.innerHTML = o.join('');
+    return setStage(stage, o.join(''));
   }
   function start() {
     TL = buildTimeline(); DURATION = TL[TL.length - 1].t1;
@@ -196,7 +203,7 @@ const KIT = (() => {
     const pre = document.getElementById('preload') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'preload' }));
     pre.style.cssText = 'position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none;font-family:"Noto Sans TC"';
     const all = SEGS.map(s => (s.lines || []).join('') + (s.title || '') + JSON.stringify(s.keys || '') + JSON.stringify(s.src || '')).join('') + CHAPTERS.join('') + REFS.join('') + JSON.stringify(VIDEO) +
-      Object.values(DRAW2).map(f => f.toString()).join('') + JSON.stringify([SAG_T, COR_T, EV_T]) + (window.PRELOAD_EXTRA || '') + '第章重點來源製作基隆長庚張博淳示意動畫不是手術錄影比例不精確各院做法不同處依院內常規0123456789';
+      Object.values(DRAW2).map(f => f.toString()).join('') + JSON.stringify([SAG_T, COR_T, EV_T]) + (window.PRELOAD_EXTRA || '') + '第章重點來源製作張博淳示意動畫不是手術錄影比例不精確各院做法不同處依院內常規0123456789';
     pre.innerHTML = ['400', '500', '700'].map(w => `<span style="font-weight:${w}">${esc(all.replace(/[\x00-\x1f]/g, ''))}</span>`).join('');
     window.renderAt = renderAt;
     renderAt(0);

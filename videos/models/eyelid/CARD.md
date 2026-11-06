@@ -9,6 +9,14 @@
 - 第一部還沒做：縫皮後皮膚閉合（切除的皮膚兩邊拉攏）的變形——影片（2026-11-06）先在畫面層畫示意：正面用皮膚色蓋住傷口、矢狀切面畫上下皮緣對合的縫線；刀後依 OP note 改參數（見「手術狀態」裡標「待刀後確認」的值；第一部影片的值集中在 `videos/src/levator-resection-brow-fixation/anim/params.js`）。
 - 第一部影片（2026-11-06 出片）用到的狀態與參數，旁白講到的數字另外在 `videos/src/levator-resection-brow-fixation/check.js` 檢查（切口三點高度、切除寬、眉毛下降量、MRD1、三針與四針、骨膜一針、ROOF、眶上切跡、淚腺在外側、融合點、clamp 與切除線、穹窿縫線）。
 - 已做（2026-11-06，第二、三部要用的下眼瞼，選用式：不給就和以前完全一樣）：下眼瞼解剖（下瞼板、retractors 兩層、眶隔與囊瞼筋膜融合、下穹窿、下直肌、下斜肌、中央脂肪墊、瞼板前與眶隔前眼輪匝肌、眶下緣與上頜竇、外側眶緣、外眥韌帶與 Whitnall 結節、下睫毛與毛囊）；involutional entropion（retractor 鬆脫、眼輪匝肌上跨、horizontal laxity 與 distraction test）、前次手術的疤痕、院內範本的 marginal rotation（睫毛下切口、剝開眶隔與 retractor 到結膜、tarsal fracture、mattress suture、綁緊、縫皮）、Hotz、LTS（外眥切開、下支切斷、瞼板條、固定在眶緣內）、canthopexy、方向歪與化生的下睫毛、電解針與處理後的毛囊。樣本：`sample-lower.html`、`sample-lower-steps.html`、`sample-lower-lts.html`。
+- 第二部（2026-11-06 出片）的參數在 `videos/src/lower-lid-entropion-revision/anim/params.js`（`LS`：PRE→CLOSED，逐步累加）；第三部（同日出片）用到下眼瞼的 `entr`、`misdirected`、`metaplastic`、`tie`、`subcil`、`plane`、`septOpen`、`retrOpen`、`frac`、`mattress`、`skinClose`、`needle`、`treated`、`pluck`、`follicleDepth`。兩部旁白講到的數字都在各自的 `check.js` 檢查。
+- 下眼瞼用起來要注意（第二、三部發現的）：
+  - 內翻要用 `entr` ≥ 0.95：0.85（68°）時睫毛離角膜還有 1.07 mm，碰不到；0.95 時 0.26 mm（< 0.6 mm 才算碰到）。旁白說「綁緊後睫毛離開角膜」的段落，綁之前要真的碰到。
+  - `stripL` 在 `canthus.js` 是原位的瞼板條長度，在正面圖是拉出眼瞼末端的長度；第二部 4-2 用 `stripFix` < 1 讓兩圖一致。之後可考慮在 `canthus.js` 加選用的 `stripPull`。預設剪掉 8.45 mm 比 5 mm 的瞼板條還長，`shortMark` 會落在瞼板條外，第二部沒用。外眥建議視窗：x −24.6、寬 16（水平切面 y −7.2，正面 y −6.6）。
+  - 預設 `lzoom` 視窗 [-14.6, 4.2, 4.5] 是給沒轉的眼瞼；`tie` 之後毛囊掉到下緣，視窗要跟著 `lashRootL`／`bulbL` 走（例如 x −15.3、y 5.3、寬 5）。
+  - `tie` 時後瞼緣 `marginL` 移動超過 0.3 mm，但正面的 `Ly(0)` 不變；兩圖對照用睫毛線（`keyPoints.lash` 對 `lashLY`）。
+  - 正面的電解針固定在 x = 1.0（正常睫毛）；要畫在方向歪的睫毛，用 x −2.6、−1.7 並和模型核對。矢狀切面的方向歪睫毛根部離第 2 根只有 0.06 mm，用 `pluck: 1` 讓毛囊看起來是它自己的。
+  - `A.follicleDir` 是向量，`mapA` 卻當成點換算；要讀 `M.follicleDir`（mm）。
 - 下眼瞼還沒做：上下眼瞼一起閉眼的動作（第三部 1-2，旁白內容還在 [待核對出處]）；刀後依 OP note 改參數（下面標「依院內常規／待刀後確認」的值）。
 
 ## 兩個同步視角與方位慣例

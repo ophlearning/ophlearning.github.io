@@ -57,9 +57,27 @@
 2. 發音檢查：`python3 videos/tools/video-kit/tts/tts.py $V --check`，`MISSING` 不是空的就補 `tts/lexicon-extra.json`，重跑到空為止。
 3. 合成：`python3 videos/tools/video-kit/tts/tts.py $V`，再 `python3 videos/tools/video-kit/tts/assemble.py $V`（產生 `anim/timeline.js`；`out/` 下的 `narration.wav`、`captions.srt`、`chapters.txt`）。`timeline.js` 進 git，參考圖與檢查才和影片同一條時間軸；改了旁白要重跑 1–3 並更新參考圖。
 4. 檢查：`node videos/tools/check-all.js $V`。
-5. 出片：`videos/tools/video-kit/build.sh $V <輸出檔名>`（4 個 worker；10 分鐘的影片約 15–25 分鐘），輸出 `$V/out/<輸出檔名>.mp4`。
+   - 有手術日期時，這一步一過就先做術前速讀包：`node videos/tools/video-kit/brief.js $V`（約 1 分鐘，`out/brief/` 下的 `旁白.md`＋每段一張圖，不需要 TTS），先傳給站長，再出片（規則見 repo 根目錄 `CLAUDE.md`）。
+5. 出片：`videos/tools/video-kit/build.sh $V <輸出檔名>`，輸出 `$V/out/<輸出檔名>.mp4`。實測見下面「出片速度」。
 6. 上傳（不公開）：`python3 videos/tools/video-kit/youtube_upload.py $V/out/<輸出檔名>.mp4 --title "…" --desc-file $V/publish/youtube-description.txt`；之後照 repo 根目錄 `CLAUDE.md` 同步網站。
 - 單張截圖：`node videos/tools/video-kit/render.js $V/anim/video.html 輸出前綴 --stills 秒數,秒數`，或照句子用 `seg-stills.js`。
+
+### 出片速度（2026-11-06 實測與改法）
+- 一格的時間：`renderAt` 產生畫面約 0.15 秒；把新畫面排版、點陣化、截圖約 0.4–0.6 秒，這才是大頭。九分鐘的影片約 16,000 格，有 57% 的格子跟前一格完全一樣（旁白在講、畫面不動）。
+- 改法（都不改畫面）：
+  - `kit.js`：畫面標記跟上一格相同就不重設，設 `window.FRAME_CHANGED = false`。
+  - `render.js`：沿用上一格的 JPEG。畫面一變，下一格會再截一次確認，才開始沿用，避免沿用到還沒畫完的那一格。截圖改走 CDP（同樣的裝置比例），位元組和 `page.screenshot` 相同。
+  - `build.sh`：切成 4 × worker 段，讓 4 核一起收尾；同一台機器一次只出一部（鎖檔 `/tmp/ophlearning-video-build.lock`）。
+- 驗證：`node videos/tools/video-kit/render.js $V/anim/video.html - --verify --from F --to F` 逐格比對快速路徑和舊路徑（每格重設畫面＋`page.screenshot`），要全部相同。
+- 第一部（9:54）實測：舊流程與第三部同時跑，約 [待實測補上]；新流程單獨跑 [待實測補上]。
+
+### 共用套件還沒收進來、各影片自己帶的東西
+- 下眼瞼視角：第二部 `anim/views-lower.js`（`VL.lsag`、`VL.lcor`、`VL.axial`）、第三部 `anim/views-lower.js`（`VL.lsag`、`VL.lcor`、`VL.upper`），回傳格式和 `VIEWS.sag` 相同；下一部用到時收進 `kit.js`。
+- `draw.js` 最外層常數裡的中文（例如面板標題）不會被字型預載抓到，放進 `window.PRELOAD_EXTRA`。
+- `VIDEO.credit` 可以覆寫片尾製作者；預設是「製作　張博淳」，影片不寫醫院名稱。
+- TTS：「mm」後面直接接中文（例如被移掉的 `\n` 後面）不會轉成「毫米」，`--check` 會列 MISSING；在後面加空白或標點。
+- 新開的 worktree 沒有不進 git 的字型資料夾：從主目錄複製 `videos/models/fonts`，PLTR 還要 `videos/src/upper-lid-margin-rotation/anim/fonts`。
+- 平行的 agent 共用 scratchpad，log 檔名要各自不同。
 
 ### 數字帳本（影片的 `check.js`）
 把每段畫面在每一句的 60 % 與 98 % 畫出來，收集畫面上所有文字，加上旁白、重點和標題，抽出每個數字：每個數字都要在該段的帳本裡登記來源（文獻要出現在該段的「來源」，或是「院內常規」「結構」「示意」）；畫面上出現的「作者 年份」都要在 `REFS` 裡；帳本裡登記了卻沒用到的數字也會報錯。這樣新加一個數字卻沒有出處，檢查一定會擋下來。
