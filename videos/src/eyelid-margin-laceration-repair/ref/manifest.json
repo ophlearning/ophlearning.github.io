@@ -1,10 +1,15 @@
 {
-  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/eyelid-margin-laceration-repair；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。影片頁還沒做，page 是 null。",
-  "page": null,
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/eyelid-margin-laceration-repair；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": "../anim/video.html",
   "textBase": null,
   "threshold": 0.0002,
   "tol": 48,
-  "crop": [0, 64, 1280, 656],
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
   "items": [
     {
       "page": "../../../models/eyelid/sample-laceration.html",
@@ -13,6 +18,111 @@
       "crop": null,
       "approved": "2026-11-06",
       "note": "Claude 自檢（裂開、gray line 第一針、tarsus 3 針、縫好外翻與線尾；上排瞼緣面或傷口面，下排正面，同一針兩圖同 x）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "title",
+      "at": "3:0.6",
+      "ref": "title-L3-0.6.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-1",
+      "at": "4:0.9",
+      "ref": "1-1-L4-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-2",
+      "at": "5:0.9",
+      "ref": "2-2-L5-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "3-2",
+      "at": "4:0.9",
+      "ref": "3-2-L4-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-2",
+      "at": "1:0.9",
+      "ref": "4-2-L1-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-3",
+      "at": "3:0.95",
+      "ref": "4-3-L3-0.95.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-4",
+      "at": "3:0.9",
+      "ref": "4-4-L3-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-6",
+      "at": "1:0.6",
+      "ref": "4-6-L1-0.6.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-7",
+      "at": "3:0.95",
+      "ref": "4-7-L3-0.95.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "5",
+      "at": "6:0.9",
+      "ref": "5-L6-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "6",
+      "at": "6:0.9",
+      "ref": "6-L6-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "7",
+      "at": "8:0.9",
+      "ref": "7-L8-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "8",
+      "at": "3:0.9",
+      "ref": "8-L3-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處重畫再看；標籤與數字由 check-video.js、check.js 檢查）；估計時間軸，合成語音後要自檢並重新產生"
     }
-  ]
+  ],
+  "textBaseNote": "旁白、重點、來源、章節與參考文獻定稿後 commit，再把那個 commit 填進 textBase（check-video.js 以它比對文字）；還沒填之前 check-all 的影片層級檢查會報 manifest 缺 textBase。參考圖目前用估計的時間軸（還沒有 anim/timeline.js），合成語音後要自檢並重新產生"
 }
