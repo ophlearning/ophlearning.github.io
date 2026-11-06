@@ -114,7 +114,7 @@
 - [x] 旁白每個數值都有出處並寫成檢查（本片 `check.js`：293 項數字帳本＋32 項旁白對模型，`--selftest` 23 種改錯全部抓到）；示意與推論列在 `overview-notes.md`。
 - [x] 下眼瞼那一章完成（下眼瞼矢狀切面＋正面內側；兩針 tarsal suture 的高度標示意，沒有畫下眼瞼裂開）。
 - [x] `node videos/tools/check-all.js videos/src/eyelid-margin-laceration-repair` 六項全部通過；參考圖 13 張（每章至少一張，Claude 自檢）。
-- [ ] 出片前總覽（`ref/overview/` 每章一張）已備好；mp4 出片中（`build.sh`）。上傳為不公開並同步網站：站長這次只要求做到出片，還沒做。
+- [ ] 出片前總覽（`ref/overview/` 每章一張）已備好；mp4 已出片。上傳為不公開並同步網站：站長這次只要求做到出片，還沒做。
 
 ## 進度
 - 2026-11-06：站長確認病例情境（以上眼瞼為主、最後一章講下眼瞼）；規格書與第一批文獻（8 篇）完成。
@@ -128,7 +128,7 @@
   - 檢查：同一針在瞼緣面與正面差 0.000 mm；tarsal suture 在正面與傷口面高度差 0.109 mm。
   - 樣本圖 `videos/models/eyelid/sample-laceration.jpg` 登記在本片 `ref/manifest.json`（`page` 還是 null）。
   - 這台機器補裝了字型（`videos/models/fonts/`、PLTR 的 `anim/fonts/`，都不進 git）。
-- 2026-11-06：影片頁完成，出片中（站長要求直接做到影片產出）。
+- 2026-11-06：影片頁完成並出片（站長要求直接做到影片產出）：`out/eyelid-margin-laceration-repair.mp4`（不進 git；ffprobe 773.07 秒＝12:53，1920×1080、30 fps、23192 格，AAC 48 kHz 立體聲，旁白 −16.6 LUFS，60 MB）；從成品抽 6 格自檢，畫面與字幕正常。
   - 影片頁（`anim/`）、本片 `check.js`、發音表與參考圖由小助手依腳本做，Claude 檢查後修正：1-1 的 zone 5 mm 出處改成 EyeWiki Ruptured Globe（原本誤登記為 Anant 2025）；4-4 拿掉沒有出處的「癒合時傷口往內收、外翻正好抵掉」，改用 EyeRounds 圖譜原文；「00 或 0 號」念成「雙零或零號」。
   - 模型小改：傷口兩側 2.5 mm 內整塊平移，打開時 gray line 縫線離邊緣也是 2 mm（原本約 1.76 mm）。
   - 語音：136 句，影片約 12 分 30 秒；`anim/timeline.js` 進 git。`textBase` 填影片頁的 commit（ef9bf49），PR squash 合併後要改成 main 上的合併 commit。

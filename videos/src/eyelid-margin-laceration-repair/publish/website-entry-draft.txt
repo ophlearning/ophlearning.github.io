@@ -1,7 +1,7 @@
   {
     id:'eyelid-margin-laceration-repair', type:'youtube', yt:'TBD', cat:'surgery',
     zh:'外傷性瞼緣裂傷（marginal eyelid laceration）的一期縫合', en:'Primary repair of a traumatic full-thickness eyelid margin laceration',
-    dur:0,   // 出片後用 ffprobe 實測秒數四捨五入填入
+    dur:773,
     short:'值班時在治療室縫上眼瞼 full-thickness margin laceration：先排除 open globe、哪些情況要轉 OR、gray line 第一針、partial-thickness tarsal sutures、瞼緣外翻、線尾埋進皮膚縫線，以及術後與值班清單。',
     sum:'值班時在治療室縫上眼瞼 full-thickness margin laceration：先排除 open globe 與穿入傷、哪些情況不在治療室縫（指引建議 full-thickness 與傷到瞼緣的裂傷在 OR 縫；punctum 內側先探查淚道；看到脂肪、levator 或 canthal tendon 受傷、組織缺損、不能配合就轉），以及術前準備；縫合步驟用「瞼緣面＋正面」與「傷口面＋正面」兩個同步視角：gray line 6-0 silk 離傷口邊緣 2 mm、partial-thickness tarsal sutures 承擔張力、睫毛線、瞼緣微微外翻、silk 線尾埋進皮膚縫線，並對照 EyeRounds 的 Vicryl vertical mattress；最後是常見的錯、下眼瞼的差別、術後照顧與值班清單。',
     note:'畫面為右眼的示意動畫（瞼緣面從下方看，上＝前；傷口面＝經傷口的矢狀切面；正面左＝temporal），不是手術錄影，比例不精確。縫線粗細、針數與拆線天數依出處，各院做法不同；藥物、劑量與器械依院內常規。',
