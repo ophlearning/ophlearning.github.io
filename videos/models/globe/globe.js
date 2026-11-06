@@ -117,7 +117,9 @@ const GLOBE = (() => {
   //   dep = depth as a fraction of the wall, pass 0→1 needle through, tie 0→1 knot tied (closes the gap there), bury 0→1 knot rotated into the track
   // st.prolapse 0→1 iris knuckle out of the limbal part of the wound; st.reposit 0→1 swept back; st.peritomy 0→1 conjunctiva opened over the scleral part
   // st.ac 0→1 anterior chamber depth (1 = normal; open globes often shallow); st.heme 0→1 subconjunctival haemorrhage over the scleral part
-  const DEF = { wound: null, sutures: [], prolapse: 0, reposit: 0, peritomy: 0, ac: 1, heme: 0 };
+  // st.peri360 0→1 conjunctiva opened all around the limbus (exploration, Zhou 2022); st.para [{ h, open }] paracenteses in clear cornea;
+  // st.ovd 0→1 viscoelastic filling the anterior chamber (tinted, 示意)
+  const DEF = { wound: null, sutures: [], prolapse: 0, reposit: 0, peritomy: 0, peri360: 0, para: [], ovd: 0, ac: 1, heme: 0 };
   const S = st => Object.assign({}, DEF, st || {});
   const proEff = st => (st.prolapse || 0) * (1 - (st.reposit || 0));
   // gap of the wound at s, after the tied sutures have pulled it together; tips taper to 0
@@ -180,7 +182,8 @@ const GLOBE = (() => {
       woundFace: W => w && W.s >= w.s0 - 0.05 && W.s <= w.s1 + 0.05 && Math.abs(W.c) < 1.2 ? Math.max(wallG(W), inWound(W) > 0 ? 0.01 : -1e-3) : 1,
       conj: W => {
         let g = Math.max(-W.d - N.conj, W.d, 0.25 - W.s);                  // inserts ~0.25 mm behind the visible limbus (示意)
-        if (st.peritomy > 0 && w) { const half = 2.6 * st.peritomy, back = lerp(0.25, 7.2, st.peritomy); if (Math.abs(W.c) < half * W.rhoF / surfAt(0).rho && W.s < back) g = Math.max(g, 0.01); }
+        if (st.peri360 > 0 && W.s < lerp(0.25, 7.2, st.peri360)) g = Math.max(g, 0.01);
+        else if (st.peritomy > 0 && w) { const half = 2.6 * st.peritomy, back = lerp(0.25, 7.2, st.peritomy); if (Math.abs(W.c) < half * W.rhoF / surfAt(0).rho && W.s < back) g = Math.max(g, 0.01); }
         else if (w && W.s > 0.25 && W.s < w.s1 + 0.4) g = Math.max(g, -(Math.abs(W.c) - 0.12 - gapAt(st, Math.min(W.s, w.s1 - 0.01)) * 0.5));   // torn over the scleral wound
         return g; },
       ciliary: W => { const x = W.s - N.spur, th = W.s < N.spur ? -1 : x < N.plicata ? lerp(0.35, 1.05, ss(0, 0.6, x)) * (1 - ss(N.plicata - 0.6, N.plicata + 0.4, x) * 0.7) + 0.06 * Math.sin(x * 9) * ss(0.4, 0.8, x) * (1 - ss(N.plicata - 0.4, N.plicata, x)) : lerp(0.32, 0.22, ss(N.plicata, N.ora - N.spur, x));
@@ -269,15 +272,16 @@ const GLOBE = (() => {
     sclera: '#f8f6f2', scleraS: '#9aaab7', limb: '#e3edf2', cornea: '#d8edf8', corneaS: '#7fb3d3', aq: '#eef7fc',
     iris: '#6a4128', irisS: '#4a2b19', cil: '#8a5a41', cilS: '#6b432f', chor: '#a46f5a', ret: '#e9b3aa', lens: '#edf1f7', lensS: '#aebdcd',
     vit: '#fbfcfd', conj: '#f2c9c9', conjS: '#cf8f93', face: '#eadfd6', faceS: '#bfa999', pro: '#5a3523', proS: '#3a2114',
-    suture: '#1f2a44', heme: '#a3262b',
+    suture: '#1f2a44', heme: '#a3262b', ovd: '#b9d6f2', needle: '#5b6470',
   };
 
+  const mixC = (a, b, k) => { const h = x => [1, 3, 5].map(i => parseInt(x.slice(i, i + 2), 16)), A = h(a), B = h(b); return '#' + A.map((v, i) => Math.round(lerp(v, B[i], k)).toString(16).padStart(2, '0')).join(''); };
   // ---------------------------------------------------------------- section drawing
   // opt: plane, win {x, y, w, h} in screen mm, step (grid, mm), id (unique per panel), st
   // The tissue drawing only depends on the plane, the window and the state that changes tissue (not on needle progress or knot burying),
   // so it is cached: a needle moving through a still section does not recompute the tissues.
   const SEC_CACHE = new Map();
-  const tissueKey = (st, pl, win, step) => JSON.stringify([pl.O, pl.U, pl.V, pl.kind, win, step, st.wound, st.prolapse, st.reposit, st.peritomy, st.ac, st.heme,
+  const tissueKey = (st, pl, win, step) => JSON.stringify([pl.O, pl.U, pl.V, pl.kind, win, step, st.wound, st.prolapse, st.reposit, st.peritomy, st.peri360, st.ovd, st.ac, st.heme,
     (st.sutures || []).map(su => [su.s, su.tie || 0])]);
   function section(opt) {
     const st = S(opt.st), pl = opt.plane, win = opt.win, step = opt.step || 0.025, key = tissueKey(st, pl, win, step);
@@ -290,6 +294,7 @@ const GLOBE = (() => {
       if (pl.kind === 'across' && Math.abs(su.s - pl.s) < 0.05) {
         const pts = path.track.map(p => toPlane(pl, p)), n = Math.max(2, Math.round(pts.length * clamp(su.pass ?? 1, 0, 1)));
         o.push(`<path d="M${pts.slice(0, n).map(F).join('L')}" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" ${NS}/><path d="M${pts.slice(0, n).map(F).join('L')}" fill="none" stroke="${C.suture}" stroke-width="1.6" stroke-linecap="round" ${NS}/>`);
+        if (su.needle) { const nd = needleIn(pts, n, su.needle); o.push(`<path d="M${nd.map(F).join('L')}" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" ${NS}/><path d="M${nd.map(F).join('L')}" fill="none" stroke="${C.needle}" stroke-width="3.4" stroke-linecap="round" ${NS}/>`); A['needle' + i] = nd[0]; }
         if ((su.tie || 0) > 0.5) { const kp = toPlane(pl, path.knot); o.push(`<circle cx="${kp[0].toFixed(3)}" cy="${kp[1].toFixed(3)}" r="0.07" fill="${C.suture}" stroke="#fff" stroke-width="0.8" ${NS}/>`); A['knot' + i] = kp; }
         A['in' + i] = pts[0]; A['out' + i] = pts[pts.length - 1]; A['deep' + i] = pts[20];
       } else if (pl.kind === 'meridian' && (su.pass ?? 1) > 0.5) {
@@ -297,6 +302,17 @@ const GLOBE = (() => {
       }
     }
     return { svg: o.join(''), A, field: tis.field };
+  }
+  // needle in a cross-section: its tip at the current end of the track; the body runs back along the track to the entry and on out of the
+  // tissue as an arc continuing the track's curvature (radius ~ the track's; needle size 示意). L = needle length in mm.
+  function needleIn(pts, n, L) {
+    const out = [], tip = pts[n - 1]; let left = L;
+    for (let k = n - 1; k > 0 && left > 0; k--) { out.push(pts[k]); left -= Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]); }
+    out.push(pts[0]);
+    const t0 = [pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]], l0 = Math.hypot(...t0) || 1; let d = [t0[0] / l0, t0[1] / l0];
+    const turn = (pts[0][0] > tip[0] ? 1 : -1) * 0.055;   // keep curving the same way as the track, away from the wound
+    let p = pts[0]; for (let s = 0; s < left; s += 0.05) { const c = Math.cos(turn), sn = Math.sin(turn); d = [d[0] * c - d[1] * sn, d[0] * sn + d[1] * c]; p = [p[0] + d[0] * 0.05, p[1] + d[1] * 0.05]; out.push(p); }
+    return out;
   }
   function sectionTissue(st, pl, win, step) {
     const fd = makeField(st);
@@ -310,7 +326,7 @@ const GLOBE = (() => {
       return `<path d="${loops2path(contour(vals, nx, ny, win.x, win.y, step))}" fill="${fill}" fill-rule="evenodd" ${stroke ? `stroke="${stroke}" stroke-width="${sw}" ${NS}` : ''} ${extra}/>`; };
     const o = [`<rect x="${win.x}" y="${win.y}" width="${win.w}" height="${win.h}" fill="#f4f7f9"/>`];
     o.push(layer('interior', C.vit));
-    o.push(layer('aqueous', C.aq));
+    o.push(layer('aqueous', st.ovd > 0 ? mixC(C.aq, C.ovd, st.ovd) : C.aq));
     o.push(layer('lens', C.lens, C.lensS));
     o.push(layer('retina', C.ret), layer('choroid', C.chor), layer('ciliary', C.cil, C.cilS, 0.6));
     o.push(layer('iris', C.iris, C.irisS, 0.6));
@@ -365,6 +381,10 @@ const GLOBE = (() => {
       const roll = []; for (let k = 0; k <= 20; k++) roll.push(Pf(hw(lerp(-half, half, k / 20)), back + 0.25));
       o.push(`<path d="M${roll.map(F).join('L')}" fill="none" stroke="#e8aeb1" stroke-width="5" stroke-linecap="round" ${NS}/><path d="M${roll.map(F).join('L')}" fill="none" stroke="#cf8f93" stroke-width="1" ${NS}/>`);
       A.peritomy = Pf(w.h, back); }
+    if (st.peri360 > 0) { const back = lerp(0.25, 7.2, st.peri360);
+      o.push(`<path d="${ring(surfAt(back).rho)}${ring(surfAt(0.15).rho)}" fill="#f7f4ee" fill-rule="evenodd" stroke="#d9c9c0" stroke-width="0.8" ${NS}/>`);
+      o.push(`<path d="${ring(surfAt(back + 0.25).rho)}" fill="none" stroke="#e8aeb1" stroke-width="5" ${NS}/><path d="${ring(surfAt(back + 0.25).rho)}" fill="none" stroke="#cf8f93" stroke-width="1" ${NS}/>`);
+      A.peri360 = surfAt(back).rho; }
     // iris (seen through the cornea) and pupil; the pupil peaks toward a prolapse
     o.push(`<path d="${ring(rhoL - 0.05)}" fill="url(#${id}_ir)"/>`);
     for (let k = 0; k < 90; k++) { const h = k * 12 / 90 + 0.05 * hash(k, 5), r0 = N.pupil + 0.25, r1 = rhoL - 0.5 - 0.6 * hash(k, 6), a = M([r0 * clockDir(h)[0], r0 * clockDir(h)[1], 0]), b = M([r1 * clockDir(h + 0.06)[0], r1 * clockDir(h + 0.06)[1], 0]);
@@ -380,6 +400,10 @@ const GLOBE = (() => {
     o.push(`<path d="${ring(rhoL + 0.02)}${ring(rhoL - 0.45)}" fill="#c9d3d9" fill-rule="evenodd" opacity="0.55"/>`, `<path d="${ring(rS)}${ring(rhoL)}" fill="#eef2f4" fill-rule="evenodd" opacity="0.8"/>`);
     o.push(`<path d="${ring(rhoL)}" fill="none" stroke="#9fb1bd" stroke-width="1" ${NS}/>`);
     A.limbusCircle = rhoL;
+    for (const [i, pa] of (st.para || []).entries()) { const c = Pf(pa.h, -0.55), half = 0.5 / (surfAt(-0.55).rho * 30 * D2R), a = Pf(pa.h - half, -0.55), b = Pf(pa.h + half, -0.55);   // 1 mm slit in clear cornea (示意)
+      o.push(`<path d="M${F(a)}L${F(b)}" stroke="#eef3f6" stroke-width="3.2" stroke-linecap="round" opacity="${pa.open ?? 1}" ${NS}/><path d="M${F(a)}L${F(b)}" stroke="#7e8f9c" stroke-width="1.1" stroke-linecap="round" opacity="${pa.open ?? 1}" ${NS}/>`);
+      A['para' + i] = c; }
+    if (st.ovd > 0) o.push(`<path d="${ring(rhoL - 0.1)}" fill="${C.ovd}" opacity="${(0.22 * st.ovd).toFixed(2)}"/>`);
     // light reflexes on the cornea (microscope coaxial light, 示意)
     o.push(`<ellipse cx="${ctr[0] - 0.9}" cy="${ctr[1] - 0.7}" rx="0.32" ry="0.22" fill="#fff" opacity="0.85"/><ellipse cx="${ctr[0] + 0.9}" cy="${ctr[1] - 0.7}" rx="0.32" ry="0.22" fill="#fff" opacity="0.85"/>`);
     // the wound: two edges gaping by gapAt(s); the scleral part is hidden under intact conjunctiva unless peritomy or a conjunctival tear shows it
@@ -412,7 +436,7 @@ const GLOBE = (() => {
   // ---------------------------------------------------------------- key numbers for checks and narration
   const keyPoints = st => { st = S(st); const I = inner(st); return { rhoL: surfAt(0).rho, sApex: S_APEX, apexZ: PZ[0], lensZ: I.za, root: I.root, pm: I.pm, acd: PZ[0] - I.za }; };
 
-  return { N, C, T, S_R3, surfAt, wallOf, P3, N3, Ts3, mer, clockDir, clockOf, planes, onPlane, toPlane, makeField, section, enface, enfaceMap, suturePath, gapAt, inner, keyPoints, contour,
+  return { needleIn, N, C, T, S_R3, surfAt, wallOf, P3, N3, Ts3, mer, clockDir, clockOf, planes, onPlane, toPlane, makeField, section, enface, enfaceMap, suturePath, gapAt, inner, keyPoints, contour,
     PRO, PHI_L, S_APEX, D2R, F, NS, ss, lerp, clamp, add, sub, dot, len, unit, cross, hash, prof, surfR };
 })();
 if (typeof module !== 'undefined') module.exports = GLOBE;

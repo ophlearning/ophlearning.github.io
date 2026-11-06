@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="hands.js"></script>
+<script>
+// Hands-and-instruments sample: pen grip from the thumb side (left) and the field from above, surgeon at 12 (right). Sizes 示意 (CARD.md).
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 13}" fill="${o.color || '#1d2733'}" font-weight="${o.bold ? 700 : 400}" text-anchor="${o.anchor || 'start'}" stroke="#fff" stroke-width="3.4" paint-order="stroke">${esc(s)}</text>`;
+const lab = (s, x, y, a, o = {}) => `<line x1="${x + (o.R ? -4 : 4)}" y1="${y - 5}" x2="${a[0]}" y2="${a[1]}" stroke="#5f6d7b" stroke-width="1.1"/><circle cx="${a[0]}" cy="${a[1]}" r="2.6" fill="#5f6d7b"/>` + T(x, y, s, { bold: true, anchor: o.R ? 'end' : 'start' });
+const cam = (px, py, k, x0, y0) => ({ tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] });
+const o = [T(24, 38, '手與器械模型樣本：握筆式持針（左）與手術野俯視（右）', { size: 21, bold: true }), T(1256, 38, '大小為示意；俯視圖與顯微鏡圖共用同一組器械方向', { color: '#5b6878', anchor: 'end' })];
+{ const PX = 16, PY = 56, W = 616, Hh = 650, k = W / 290, c = cam(PX, PY + 30, k, -130, -100), g = HANDS.gripSide(), P = c.P;
+  o.push(`<rect x="${PX}" y="${PY}" width="${W}" height="${Hh}" rx="10" fill="#fff" stroke="#d3dae1"/><clipPath id="a"><rect x="${PX + 1}" y="${PY + 30}" width="${W - 2}" height="${Hh - 31}" rx="9"/></clipPath><g clip-path="url(#a)"><g transform="${c.tf}">${g.svg}</g></g>`);
+  o.push(T(PX + 14, PY + 22, '握筆式持針（右手，從拇指側看）', { size: 15, bold: true }));
+  o.push(lab('食指：壓在上面', PX + 20, PY + 70, P(g.A.index)), lab('拇指：從旁邊夾', PX + 20, PY + 110, P(g.A.thumb)), lab('中指：從下面撐', PX + W - 20, PY + 70, P(g.A.middle), { R: 1 }),
+    lab('手靠在額頭（或腕托）', PX + 20, PY + 560, P(g.A.rest)), lab('眼睛', PX + W - 20, PY + 560, P(g.A.eye), { R: 1 })); }
+{ const PX = 648, PY = 56, W = 616, Hh = 650, k = W / 360, c = cam(PX, PY + 30, k, -180, -90), P = c.P;
+  const R = { kind: 'holder', tip: [4.5, 3.2], dir: HANDS.unit([0.86, 0.5]) }, L = { kind: 'forceps', tip: [5.4, 3.4], dir: HANDS.unit([-0.62, 0.78]) }, fv = HANDS.overview({ R, L });
+  o.push(`<rect x="${PX}" y="${PY}" width="${W}" height="${Hh}" rx="10" fill="#fff" stroke="#d3dae1"/><clipPath id="b"><rect x="${PX + 1}" y="${PY + 30}" width="${W - 2}" height="${Hh - 31}" rx="9"/></clipPath><g clip-path="url(#b)"><g transform="${c.tf}">${fv.svg}</g></g>`);
+  o.push(T(PX + 14, PY + 22, '手術野俯視（顯微鏡外），術者坐 12 點：下＝病人額頭', { size: 15, bold: true }));
+  o.push(lab('右手：持針器', PX + W - 20, PY + 70, P(fv.A.R.grip), { R: 1 }), lab('左手：有齒鑷', PX + 20, PY + 70, P(fv.A.L.grip)), lab('眼睛（開瞼器內）', PX + 20, PY + 120, P([0, -10]))); }
+document.getElementById('stage').innerHTML = o.join(''); window.READY = true;
+</script></body></html>
