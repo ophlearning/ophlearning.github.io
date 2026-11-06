@@ -90,7 +90,7 @@
     - Wong 的綜論是 2025 年（印刷年），內容是兒童 open globe。
     - 顫抖研究 Li 的印刷年是 2021。
 - 2026-11-06：出片（6:53，1080p30）；`check-all.js` 全部通過（含手與器械模型）；從 mp4 抽 6 格和參考圖一致；上傳 YouTube 不公開（`LTcdHLzDRkY`），同步網站。
-- 下一步：合併進 main 後，`ref/manifest.json` 的 `textBase` 改成 main 上的合併 commit。
+- 2026-11-06：合併進 main（#16，`06f8f94`）；`ref/manifest.json` 的 `textBase` 改成 `06f8f94`（main 上的 `segments.js` 和原基準 `86b0e5b` 逐位元相同，`check-video.js` 通過）。
 
 ## 參考文獻
 見 `script-draft.md` 文末（15 篇，PubMed 逐篇查證，附 DOI 或 PMCID）。解剖數值的出處見 `videos/models/globe/CARD.md`。
