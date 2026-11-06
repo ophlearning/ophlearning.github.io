@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="lid.js"></script><script src="coronal.js"></script><script src="lower.js"></script><script src="lower-coronal.js"></script><script src="canthus.js"></script>
+<script>
+// Left: lateral tarsal strip — axial section at the canthal level (seen from below, like CT) + the lateral canthus from the front, same x.
+// Right: electric epilation — lower lid margin, sagittal zoom + front view of the lash line. Right eye. Sources: CARD.md 「下眼瞼」.
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 12.5, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 5 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 6 : tx + w + 6, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.5" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="5">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const panel = (x, y, w, h, svg, tf, id, title, sub) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="#fff" stroke="#d3dae1"/><clipPath id="${id}"><rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="9"/></clipPath><g clip-path="url(#${id})"><g transform="${tf}">${svg}</g></g>`
+  + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="30" rx="9" fill="#fff" opacity="0.9"/><text x="${x + 12}" y="${y + 21}" font-size="14" font-weight="700" fill="#1d2733">${esc(title)}</text><text x="${x + w - 12}" y="${y + 21}" font-size="11.5" fill="#5b6878" text-anchor="end">${esc(sub)}</text>`;
+const o = [];
+o.push(`<text x="24" y="36" font-size="21" font-weight="700" fill="#1d2733">外眥（lateral tarsal strip）與電解睫毛的視角樣本</text>`);
+o.push(`<text x="1256" y="36" font-size="13" fill="#5b6878" text-anchor="end">右眼　mm 建模，示意圖　同一欄上下兩圖共用 x（temporal 在左）</text>`);
+// ---------------- LTS: axial (top) + coronal lateral canthus (bottom), the strip fixed inside the rim
+const st = { lax: 1, canthotomy: 1, cantholysis: 1, strip: 1, stripFix: 1 };
+const W1 = 620, X1 = 16, AX = { k: 17.5, x0: -30.2, y0: -11.6 }, ca = cam(X1, 50, AX.k, AX.x0, AX.y0), ax = CANTHUS.draw({ state: st, id: 'ax' });
+o.push(panel(X1, 50, W1, 330, ax.svg, ca.tf, 'pA', '水平切面（外眥高度，從下往上看，同 CT）axial', '上＝前　左＝temporal'));
+const P1 = ca.P, a = ax.A, L1 = [], lx = X1 + 12, rx = X1 + W1 - 12;
+L1.push(lab('外側眶緣', 'lateral orbital rim', lx, 200, P1(a.rim)));
+L1.push(lab('Whitnall 結節（眶緣內 1.5 mm）', 'lateral orbital tubercle', lx, 320, P1(a.tubercle), { bold: true, color: '#0e7c6b', lc: '#0e7c6b' }));
+L1.push(lab('瞼板條固定在骨膜', 'strip on periosteum', lx, 356, P1(a.stripBand), { bold: true }));
+L1.push(lab('外眥切開、下支切斷', 'canthotomy, cantholysis', lx, 110, P1(a.canthotomy)));
+L1.push(lab('下眼瞼（投影）', 'lower lid, projected', rx, 110, P1(a.lidLat), { side: 'R' }));
+L1.push(lab('眼球', 'globe', rx, 250, P1([-2, 1]), { side: 'R' }));
+L1.push(lab('外直肌', 'lateral rectus', rx, 356, P1([-12.6, 4.8]), { side: 'R' }));
+o.push(L1.join(''));
+const cc = cam(X1, 390, AX.k, AX.x0, -8.6), cor = CORONAL.draw({ lower: { canthotomy: 1, cantholysis: 1, strip: 1, stripFix: 1, mattress: 1, lts: 1, tie: 1 }, id: 'cc', section: false });
+o.push(panel(X1, 390, W1, 314, cor.svg, cc.tf, 'pB', '正面：外眥（術者視角）coronal', '檢查者面對病人：左＝temporal'));
+const P2 = cc.P, b = cor.A, L2 = [];
+L2.push(lab('外側眶緣（皮膚下）', 'lateral orbital rim', lx, 470, P2([LOWERC.LAT_RIM_X + 0.1, 6.0])));
+L2.push(lab('瞼板條', 'tarsal strip', lx, 640, P2(b.strip), { bold: true }));
+L2.push(lab('固定點（眶緣內）', 'fixation inside the rim', lx, 680, P2(b.stripFix), { bold: true, color: '#2463eb', lc: '#2463eb' }));
+L2.push(lab('Mattress ×3（示意）', 'everting sutures', rx, 690, P2([b.mattressX[0], cor.exitLY(b.mattressX[0])]), { side: 'R', color: '#2463eb', lc: '#2463eb' }));
+o.push(L2.join(''));
+// ---------------- epilation: sagittal margin zoom (top) + front view of the lash line (bottom)
+const X2 = 644, W2 = 620, SZ = { k: 104, x0: -15.75, y0: 4.25 }, cs = cam(X2, 50, SZ.k, SZ.x0, SZ.y0);
+const sg = LOWER.draw({ state: { needle: 1, treated: 1, misdirected: 1 }, id: 'ez' });
+o.push(panel(X2, 50, W2, 330, sg.svg, cs.tf, 'pC', '下瞼緣矢狀切面放大 lower lid margin', '左＝前　上＝上'));
+const P3 = cs.P, c = sg.A, L3 = [], ex = X2 + 12, er = X2 + W2 - 12;
+L3.push(lab('電解針（沿睫毛幹）', 'electrolysis needle', ex, 90, P3(c.needleBack), { bold: true }));
+L3.push(lab('毛囊 0.9 mm', 'follicle (Elder 1997)', ex, 300, P3(lerpMid(c.lashRootL, c.bulbL)), { bold: true, color: '#7a4a2a', lc: '#7a4a2a' }));
+L3.push(lab('凝固範圍（示意）', 'treated bulb', ex, 340, P3(c.bulbL)));
+L3.push(lab('方向歪的睫毛', 'misdirected lash', er, 90, P3(cubic(c.misLashPts, 0.55)), { side: 'R', color: '#b86e00', lc: '#b86e00' }));
+L3.push(lab('瞼板與瞼板腺', 'tarsus, meibomian gland', er, 260, P3(c.glandL), { side: 'R', bold: true }));
+L3.push(lab('瞼板腺開口', 'meibomian orifice', er, 300, P3(c.orificeL), { side: 'R' }));
+L3.push(lab('角膜', 'cornea', er, 340, P3([-11.1, 4.8]), { side: 'R' }));
+o.push(L3.join(''));
+// 1 mm scale bar
+{ const x = X2 + W2 - 160, y = 372; o.push(`<path d="M${x} ${y}h${SZ.k}" stroke="#1d2733" stroke-width="2.5"/><path d="M${x} ${y - 5}v10M${x + SZ.k} ${y - 5}v10" stroke="#1d2733" stroke-width="2"/><text x="${x + SZ.k / 2}" y="${y - 8}" font-size="12" text-anchor="middle" fill="#1d2733">1 mm</text>`); }
+const CZ = { k: 70, x0: -3.6, y0: 2.4 }, cz = cam(X2, 390, CZ.k, CZ.x0, CZ.y0), cm = CORONAL.draw({ lower: { needle: 1, treated: 1, misdirected: 1, metaplastic: 1 }, id: 'cm', section: false });
+o.push(panel(X2, 390, W2, 314, cm.svg, cz.tf, 'pD', '正面：下瞼緣 coronal', '哪幾根睫毛、針從哪裡進'));
+const P4 = cz.P, d = cm.A, L4 = [];
+L4.push(lab('電解針（從睫毛根部進）', 'needle at the lash root', ex, 450, P4(d.needleL), { bold: true }));
+L4.push(lab('方向歪的睫毛', 'misdirected lashes', ex, 650, P4(d.misLashL), { color: '#b86e00', lc: '#b86e00' }));
+L4.push(lab('化生睫毛（後瞼緣）', 'metaplastic lashes', er, 450, P4(d.metaLashL), { side: 'R', color: '#b86e00', lc: '#b86e00' }));
+L4.push(lab('睫毛線', 'lash line', er, 680, P4([5.0, cm.lashLY(5.0)]), { side: 'R' }));
+o.push(L4.join(''));
+function cubic(P, t) { return [0, 1].map(i => (1 - t) ** 3 * P[0][i] + 3 * (1 - t) ** 2 * t * P[1][i] + 3 * (1 - t) * t * t * P[2][i] + t ** 3 * P[3][i]); }
+function lerpMid(p, q) { return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2]; }
+document.getElementById('stage').innerHTML = o.join('');
+</script></body></html>

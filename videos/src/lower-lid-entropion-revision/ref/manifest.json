@@ -1,0 +1,34 @@
+{
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/lower-lid-entropion-revision；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": null,
+  "pageNote": "還在模型階段，影片頁還沒做；做好後填入 page 與 textBase（影片層級檢查才會啟動）",
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": null,
+  "items": [
+    {
+      "page": "../../../models/eyelid/sample-lower.html",
+      "ref": "../../../models/eyelid/sample-lower.jpg",
+      "dpr": 2,
+      "crop": null,
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（下眼瞼解剖：矢狀切面＋正面逐層開窗，retractors 兩層、眶隔融合、脂肪墊與下斜肌、眶下緣）"
+    },
+    {
+      "page": "../../../models/eyelid/sample-lower-steps.html",
+      "ref": "../../../models/eyelid/sample-lower-steps.jpg",
+      "dpr": 2,
+      "crop": null,
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（involutional entropion、前次疤痕、marginal rotation 各步驟、綁緊後睫毛離開角膜、Hotz 的矢狀切面狀態）"
+    },
+    {
+      "page": "../../../models/eyelid/sample-lower-lts.html",
+      "ref": "../../../models/eyelid/sample-lower-lts.jpg",
+      "dpr": 2,
+      "crop": null,
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（lateral tarsal strip：外眥水平切面＋正面共用 x；電解睫毛：瞼緣矢狀放大＋正面瞼緣）"
+    }
+  ]
+}
