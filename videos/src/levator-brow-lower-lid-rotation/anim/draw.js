@@ -249,7 +249,7 @@ DRAW2['3-4'] = T => {
   const ma = T.p(0, 0.3, 0.95), tie = T.p(2, 0.05, 0.7), sc = T.p(3, 0.1, 0.7);
   const low = { ...L_FR, mattress: ma, exitH: LLP.exitH, tie, skinClose: sc };
   const sv = VL.lsag(low, UP_DONE, PW, PH, LS_WIN, 'sL'), A = sv.A, cv = VL.lcor(UP_DONE, low, PW, PH, LC_WIN, 'cR'), B = cv.A;
-  const om = T.on(0, 0.6, 0.8) * (1 - T.on(3));
+  const om = ss(0.45, 0.9, ma) * (1 - T.on(3));   // labels appear with the sutures, not before
   let ex = '';
   if (A.mattress) ex += lab('mattress suture（4-0 vicryl，路徑示意）', 'everting suture', PW - 12, PH - 30, A.mattress, { side: 'R', color: COL.suture, bold: true, size: 14, op: om });
   if (A.mattressIn) ex += lab('進針：下穹窿附近的結膜面', 'in', PW - 12, 236, A.mattressIn, { side: 'R', color: COL.suture, op: T.on(1, 0.6) * (1 - T.on(2)) });

@@ -76,5 +76,6 @@
   - 檢查：`check.js`（數字帳本 255 項；旁白↔模型 23 項；10 段手術步驟的兩個視角都寫明方位；`--selftest` 32 個故意改錯全部抓到）；`check-all.js` 全部通過。
   - 語音：共用 MeloTTS，本片發音補在 `tts/lexicon-extra.json`；`anim/timeline.js` 進 git；全長 8:32。
   - 參考圖 17 張（每段至少一張，Claude 自檢）；出片前總覽 `ref/overview/`（每章一張）與 `overview-notes.md`。
-  - 出片：`out/levator-brow-lower-lid-rotation.mp4`（不進 git）；`publish/` 有 YouTube 說明欄、章節、字幕與網站條目草稿（`yt: 'TBD'`）。
+  - 出片：`out/levator-brow-lower-lid-rotation.mp4`（不進 git；ffprobe 512.07 秒＝8:32，1920×1080、30 fps、AAC 48 kHz 立體聲，旁白 −16 LUFS，約 47 MB）；`publish/` 有 YouTube 說明欄、章節、字幕與網站條目草稿（`yt: 'TBD'`、`dur: 512`）。
+  - 片尾製作者一行用 `VIDEO.credit = '製作　張博淳'`：kit 預設那一行有醫院名稱，和「影片不寫醫院名稱」衝突（第一部片尾也有，待站長決定）。
 - 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」，不同處改 `anim/params.js`／`anim/segments.js` 後重新出片。

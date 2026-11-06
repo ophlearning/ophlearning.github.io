@@ -1,7 +1,7 @@
   {
     id:'levator-brow-lower-lid-rotation', type:'youtube', yt:'TBD', cat:'surgery',
     zh:'上下眼瞼一起開：levator resection＋brow fixation、marginal rotation＋electric epilation', en:'Combined upper lid levator resection with brow fixation and lower lid marginal rotation with electric epilation',
-    dur:DUR,
+    dur:512,
     short:'同一個病人上下眼瞼一起開：上眼瞼 levator resection＋internal brow fixation 快速重述，重點放在下眼瞼 marginal rotation、電解還碰到角膜的睫毛，以及上下一起開時閉眼要上下一起看。',
     sum:'這支影片是三部組合刀的第三部。先講睫毛碰到眼睛的三種機轉（entropion、misdirected、metaplastic），為什麼 marginal rotation 之後還要電解剩下的睫毛，以及 ptosis 修復後的閉不緊和下方鞏膜露出的關係；上眼瞼的 levator resection 與 internal brow fixation 用約一分鐘重述（細節見第一部）；接著是下眼瞼的層次（下瞼板、retractors 兩層、眶隔）、睫毛下切口、剝開眶隔與 retractors、tarsal fracture、mattress suture 把瞼緣轉出來、縫皮；電解的部分講毛囊有多深、針怎麼順著睫毛進到毛囊、為什麼不一定一次就好；最後是順序、術中狀況、術後追蹤與跟刀清單。',
     note:'畫面為右眼、亞洲人的示意動畫（矢狀切面＋正面兩圖同步），不是手術錄影，比例不精確。各院做法不同的地方，影片中標「依院內常規」。',
