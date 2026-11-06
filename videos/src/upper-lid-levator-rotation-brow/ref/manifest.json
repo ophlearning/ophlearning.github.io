@@ -1,0 +1,136 @@
+{
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/upper-lid-levator-rotation-brow；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": "../anim/video.html",
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
+  "items": [
+    {
+      "page": "../anim/video.html",
+      "seg": "title",
+      "at": "1:0.6",
+      "ref": "title-L1-0.6.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-1",
+      "at": "5:0.9",
+      "ref": "1-1-L5-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-2",
+      "at": "4:0.9",
+      "ref": "1-2-L4-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-1",
+      "at": "2:0.95",
+      "ref": "2-1-L2-0.95.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-2",
+      "at": "1:0.9",
+      "ref": "2-2-L1-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-3",
+      "at": "2:0.95",
+      "ref": "2-3-L2-0.95.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "3-1",
+      "at": "4:0.9",
+      "ref": "3-1-L4-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "3-2",
+      "at": "2:0.9",
+      "ref": "3-2-L2-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-1",
+      "at": "2:0.9",
+      "ref": "4-1-L2-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-2",
+      "at": "1:0.9",
+      "ref": "4-2-L1-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-3",
+      "at": "5:0.9",
+      "ref": "4-3-L5-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "5-1",
+      "at": "1:0.6",
+      "ref": "5-1-L1-0.6.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "5-2",
+      "at": "2:0.9",
+      "ref": "5-2-L2-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "6",
+      "at": "4:0.9",
+      "ref": "6-L4-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "7",
+      "at": "8:0.9",
+      "ref": "7-L8-0.9.jpg",
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
+    }
+  ],
+  "textBase": "862e621",
+  "textBaseNote": "旁白、重點、來源、章節與參考文獻定稿的版本（2026-11-06 站長更正病例後重做）；check-video.js 以它比對文字。anim/timeline.js 進 git，參考圖用真實語音時間軸"
+}

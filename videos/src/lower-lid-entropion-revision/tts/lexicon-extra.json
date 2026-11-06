@@ -1,0 +1,17 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）；共用的發音在 videos/tools/video-kit/tts/tts.py",
+ "replace": { "各 2 個": "各兩個", "2 位輕度": "兩位輕度" },
+ "words": {
+  "aponeurosis": "AE2 P OW0 N UH0 R OW1 S IH0 S",
+  "cantholysis": "K AE0 N TH AA1 L AH0 S IH0 S",
+  "canthotomy": "K AE0 N TH AA1 T AH0 M IY0",
+  "capsulopalpebral": "K AE2 P S Y AH0 L OW0 P AE1 L P AH0 B R AH0 L",
+  "ectropion": "EH0 K T R OW1 P IY0 AA0 N",
+  "ethilone": "EH1 TH IH0 L OW2 N",
+  "fascia": "F AE1 SH AH0",
+  "preseptal": "P R IY0 S EH1 P T AH0 L",
+  "retractor": "R IH0 T R AE1 K T ER0",
+  "retractors": "R IH0 T R AE1 K T ER0 Z",
+  "whitnall": "W IH1 T N AO0 L"
+ }
+}

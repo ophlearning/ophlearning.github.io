@@ -147,5 +147,105 @@ for (const incH of [[2.5, 4, 4], [2.5, 3, 4]]) { const st = { incH, excCut: 1, e
 { const all = { mrd1: 3.5, excMark: 1, excCut: 1, excRemove: 1, septOpen: 1, fatUp: 1, dis: 1, clamp: 1, resect: 1, advance: 1, tarSut: 1, creaseFix: 1, browPlane: 1, browSut: 1, browTie: 1, browY: 1, prolapse: 1, fornixSut: 1, notch: 1 };
   for (const v of ['asian', 'caucasian']) for (const st of [all, { ...all, advance: 0.5, resect: 0.5 }, { mrd1: 1.5, excCut: 0.5, septOpen: 0.5 }])
     ok(!/NaN|undefined/.test(LID.draw({ variant: v, state: st }).svg + CORONAL.draw({ variant: v, state: st }).svg), `${v}: levator resection states ${Object.keys(st).length} keys — no NaN/undefined`); }
+
+// ============================ lower lid (videos/src/lower-lid-entropion-revision, levator-brow-lower-lid-rotation) ============================
+// The lower lid is opt-in (lower.js, lower-coronal.js, canthus.js): the checks above run without it, so they show the old drawings did not change.
+global.CORONAL = CORONAL;
+const LOWER = global.LOWER = require('./lower.js');
+const LOWERC = global.LOWERC = require('./lower-coronal.js');
+const CANTHUS = require('./canthus.js');
+const LF = LOWER.LF, tg = LOWER.toGlobe, dist = hyp, sub = (a, b) => [a[0] - b[0], a[1] - b[1]], unit = a => { const l = Math.hypot(a[0], a[1]) || 1; return [a[0] / l, a[1] / l]; };
+const arcL = (fr, s0, s1, u = 0) => { let L = 0, p = fr(s0, u); for (let s = s0 + 0.01; s <= s1 + 1e-9; s += 0.01) { const q = fr(s, u); L += dist(p, q); p = q; } return L; };
+// lid coordinates (s, u) of a point in the undeformed lower-lid frame: s where the point lies on the frame normal, u its depth
+const lidSU = p => { let bs = 0, bd = 1e9; for (let s = 0; s <= 14; s += 0.02) { const o = LF.at(s, 0), n = LF.nrm(s), v = [p[0] - o[0], p[1] - o[1]], e = Math.abs(-v[0] * n[1] + v[1] * n[0]); if (e < bd) { bd = e; bs = s; } }
+  const o = LF.at(bs, 0), n = LF.nrm(bs); return [bs, (p[0] - o[0]) * n[0] + (p[1] - o[1]) * n[1]]; };
+const L0 = LOWER.draw({ state: {} });
+// L1. lower margin 5 mm below the light reflex (MRD2): the coronal Ly(0) and the sagittal margin agree
+ok(near(L0.A.marginL[1], 5.0, 0.1) && near(CORONAL.Ly(0), L0.A.marginL[1], 0.3), `lower margin: sagittal ${f2(L0.A.marginL[1])} / coronal Ly(0) ${f2(CORONAL.Ly(0))} mm below the light reflex (MRD2 5)`);
+// L2. lower tarsus 4.12 mm along the posterior lid surface, 1.36 mm thick (Lim 2004, Asian cadavers)
+{ const h = arcL((s, u) => L0.DP.at(s, u), 0, LOWER.S_TARL), th = dist(L0.DP.at(2, LOWER.U_CONJ), L0.DP.at(2, LOWER.U_TARL));
+  ok(near(h, 4.12, 0.3) && near(th, 1.36, 0.05), `lower tarsus: height ${f2(h)} mm along the lid (Lim 2004: 4.12), thickness ${f2(th)} mm (1.36)`); }
+// L3. retractors: CPF inserts on the inferior tarsal border; inferior tarsal muscle starts 1.44 mm below it (Lim 2004); septum joins the CPF
+//     2.38 mm below the tarsus (Kakizaki 2006, Asian); lower fornix 10.9 mm from the margin (Jutley 2016)
+{ const [sC] = lidSU(L0.A.cpfEnd), itm = arcL((s, u) => L0.DP.at(s, u), LOWER.S_TARL, LOWER.S_ITM), fus = arcL((s, u) => L0.DP.at(s, u), LOWER.S_TARL, LOWER.S_FUSL, LOWER.U_CPF);
+  const [sF, uF] = lidSU(L0.A.fusionL), fx = arcL((s, u) => L0.DP.at(s, u), 0, LOWER.S_FORNIXL);
+  ok(near(sC, LOWER.S_TARL, 0.1) && near(itm, 1.44, 0.15), `retractors: CPF starts at s ${f2(sC)} (tarsal border ${LOWER.S_TARL}); inferior tarsal muscle starts ${f2(itm)} mm below it (Lim 2004: 1.44)`);
+  ok(near(fus, 2.38, 0.25) && near(sF, LOWER.S_FUSL, 0.15) && near(uF, LOWER.U_CPF, 0.1), `septum–CPF fusion ${f2(fus)} mm below the tarsus, on the CPF (u ${f2(uF)}) (Kakizaki 2006: 2.38)`);
+  ok(near(fx, 10.9, 0.4), `lower fornix ${f2(fx)} mm from the margin along the lid (Jutley 2016: 10.9)`); }
+// L4. orbicularis thickness: pretarsal 0.68, preseptal 0.89 mm (Vasanthapuram 2020)
+{ const qP = L0.SK.near(L0.DA.at(2.0, LOWER.U_SKINL)), qS = L0.SK.near(L0.SEPT.off(L0.SEPT.L * 0.35, 1.2));
+  ok(near(L0.orbW(qP), 0.68, 0.03) && near(L0.orbW(qS), 0.89, 0.06), `orbicularis: pretarsal ${f2(L0.orbW(qP))} mm, preseptal ${f2(L0.orbW(qS))} mm (Vasanthapuram 2020: 0.68 / 0.89)`); }
+// L5. inferior orbital rim 7.8 mm, fat pad front 2.4 mm behind the corneal apex, cheek 1.4 mm in front of it (Kato 2025, East Asians 60–79 y)
+{ const ax = LOWER.APEX_X, rim = Math.min(...LOWER.boneOut.filter(p => Math.abs(p[1] - LOWER.Y_RIM) < 3).map(p => p[0])), fat = Math.min(...L0.SEPT.pts.map(p => p[0])) + 0.075, ch = Math.min(...L0.probe.skin.filter(p => p[1] > LOWER.Y_RIM + 3).map(p => p[0]));
+  ok(near(rim - ax, 7.8, 0.1) && near(fat - ax, 2.4, 0.2) && near(ax - ch, 1.4, 0.2), `profile: rim ${f2(rim - ax)} mm, fat pad ${f2(fat - ax)} mm behind the corneal apex, cheek ${f2(ax - ch)} mm in front (Kato 2025: 7.8 / 2.4 / 1.4)`);
+  ok(Math.min(...L0.SEPT.pts.map(tg)) > 0, `septum outside the globe (closest ${f2(Math.min(...L0.SEPT.pts.map(tg)))} mm)`); }
+// L6. inferior rectus inserts 5.72 mm behind the limbus (Kim 2024)
+ok(near((LOWER.PHI_LL - LOWER.PHI_IR) * 12, 5.72, 0.01), `inferior rectus insertion ${f2((LOWER.PHI_LL - LOWER.PHI_IR) * 12)} mm behind the limbus (Kim 2024: 5.72)`);
+// L7. lash follicles: 0.9 mm along the follicle (Elder 1997), at 75° to the margin surface (Singh 2024), bulb close to but outside the tarsus;
+//     with Singh's 1.8 mm the bulb still lies outside the tarsus
+for (const fd of [0.9, 1.8]) { const r = LOWER.draw({ state: { follicleDepth: fd } }).A, d = dist(r.bulbL, r.lashRootL), [, uB] = lidSU(r.bulbL), t = LF.tan(0.15), c = Math.abs(r.follicleDir[0] * t[0] + r.follicleDir[1] * t[1]);
+  const ang = 90 - Math.acos(Math.min(1, c)) * 180 / Math.PI;   // angle to the margin surface, which is perpendicular to the lid axis
+  ok(near(d, fd, 0.01) && near(ang, 75, 3) && uB > LOWER.U_TARL - 0.02 && uB - LOWER.U_TARL < 0.5, `follicle depth ${f2(d)} mm (${fd === 0.9 ? 'Elder 1997' : 'Singh 2024'}), ${ang.toFixed(0)}° to the margin surface (Singh 2024: 75°), bulb ${f2(uB - LOWER.U_TARL)} mm in front of the tarsus`); }
+// L8. electrolysis needle: along the lash shaft, tip at the follicle depth (0.9 mm, Elder 1997; 1.8 mm, Singh 2024)
+for (const fd of [0.9, 1.8]) { const A = LOWER.draw({ state: { needle: 1, treated: 1, follicleDepth: fd } }).A, v = unit(sub(A.needleTip, A.needleBack)), c = v[0] * A.follicleDir[0] + v[1] * A.follicleDir[1];
+  ok(dist(A.needleTip, A.bulbL) < 0.05 && c > Math.cos(2 * Math.PI / 180) && near(dist(A.needleTip, A.needleIn), fd, 0.02), `needle tip ${f2(dist(A.needleTip, A.bulbL))} mm from the bulb, ${f2(dist(A.needleTip, A.needleIn))} mm in along the shaft (follicle depth ${fd})`); }
+{ const c = CORONAL.draw({ lower: { needle: 1, treated: 1 } }); ok(c.A.needleL && near(c.A.needleL[1], c.lashLY(1.0), 0.01), 'coronal: the needle enters at the lash line'); }
+// L9. entropion: lashes lie on the cornea, nothing enters the globe; after the everting sutures are tied the lashes are clear of the cornea
+const lidPts = r => { const P = []; for (let s = 0; s <= 10; s += 0.25) for (const u of [0, 0.8, LOWER.U_TARL, LOWER.U_SKINL]) P.push(r.DP.at(s, u)); return P; };
+{ const e = LOWER.draw({ state: { entr: 1, dehis: 1, override: 1 } }), m = Math.min(...e.A.lashPtsL.map(tg));
+  ok(m < 0.6 && Math.min(...lidPts(e).map(tg)) >= 0, `entropion: lash ${f2(m)} mm from the cornea (touching); lid never inside the globe (closest ${f2(Math.min(...lidPts(e).map(tg)))} mm)`);
+  const st = { entr: 1, dehis: 1, override: 1, subcil: 1, plane: 1, septOpen: 1, retrOpen: 1, frac: 1, mattress: 1, tie: 1 }, t = LOWER.draw({ state: st }), mt = Math.min(...t.A.lashPtsL.map(tg));
+  ok(mt > 2 && tg(t.A.lashTipL) > 3 && Math.min(...lidPts(t).map(tg)) >= 0, `after tying: lash ${f2(mt)} mm (tip ${f2(tg(t.A.lashTipL))} mm) from the cornea (clear); lid outside the globe`);
+  const cE = s => LOWER.draw({ state: s }).A.cpfEnd, [sD] = lidSU(cE({ dehis: 1 })), [sT] = lidSU(cE({ dehis: 1, mattress: 1, tie: 1, over: 0 }));
+  ok(sD - LOWER.S_TARL > 1.5 && near(sT, LOWER.S_TARL, 0.1), `retractor disinsertion: CPF edge ${f2(sD - LOWER.S_TARL)} mm off the tarsus; after the sutures are tied ${f2(sT - LOWER.S_TARL)} mm`); }
+// L10. subciliary incision 2.5 mm below the lashes along the skin (template); tarsal fracture to half the tarsal thickness from the front
+{ const r = LOWER.draw({ state: { subcil: 1, frac: 1 } }), E = r.A.lower;
+  ok(near(E.qInc - E.qLash, 2.5, 0.01) && dist(r.A.incL, r.SK.off(E.qInc, 0)) < 1e-6, `subciliary incision ${f2(E.qInc - E.qLash)} mm below the lash line along the skin (template 2.5)`);
+  const [a, b] = r.A.fracPts, [, ua] = lidSU(a), [, ub] = lidSU(b);
+  ok(near(ua, LOWER.U_TARL, 0.02) && near(ua - ub, LOWER.TAR_TH * 0.5, 0.02) && ub > LOWER.U_CONJ + 0.3, `tarsal fracture from the anterior surface ${f2(ua - ub)} mm deep (half of ${LOWER.TAR_TH}), ${f2(ub - LOWER.U_CONJ)} mm short of the conjunctiva`); }
+// L11. everting mattress suture: enters the conjunctiva near the fornix, passes through the retractors, runs in front of the tarsus (never through
+//      it), exits through the skin between the lash line and the incision; never inside the globe
+{ const r = LOWER.draw({ state: { subcil: 1, mattress: 1 } }), P = r.A.mattressPts, SU = P.map(lidSU), E = r.A.lower;
+  const [s0, u0] = SU[0], thrRetr = SU.some(([s, u]) => s > LOWER.S_TARL + 0.5 && s < LOWER.S_FORNIXL - 1 && u > LOWER.U_ITM && u < LOWER.U_CPF);
+  const inTarsus = SU.some(([s, u]) => s < LOWER.S_TARL - 0.2 && u > LOWER.U_CONJ && u < LOWER.U_TARL - 0.02), ex = P[P.length - 1], qEx = r.SK.near(ex);
+  ok(Math.abs(u0) < 0.02 && LOWER.S_FORNIXL - s0 > 0.5 && LOWER.S_FORNIXL - s0 < 1.5, `mattress enters the conjunctiva ${f2(LOWER.S_FORNIXL - s0)} mm from the fornix`);
+  ok(thrRetr && !inTarsus, 'mattress passes through the retractors and stays in front of the tarsus');
+  ok(dist(ex, r.SK.off(qEx, 0)) < 0.05 && qEx - E.qLash > 0.5 && qEx < E.qInc, `mattress exits the skin ${f2(qEx - E.qLash)} mm below the lash line, above the incision (${f2(E.qInc - E.qLash)} mm)`);
+  ok(Math.min(...P.map(tg)) > 0, 'mattress suture never inside the globe'); }
+// L12. Hotz: orbicularis fixed to the retractor aponeurosis (CPF), 5 sutures (template)
+{ const r = LOWER.draw({ state: { hotzExc: 1, septOpen: 1, hotzFat: 1, hotzFix: 1 } }), [, u2] = lidSU(r.A.hotzFixEnds[1]), c = CORONAL.draw({ lower: { hotzExc: 1, hotzFix: 1 } });
+  ok(u2 > LOWER.U_ITM && u2 < LOWER.U_CPF && c.A.hotzX.length === 5, `Hotz suture ends in the CPF (u ${f2(u2)}), ${c.A.hotzX.length} sutures in the skin view`); }
+// L13. two views agree (< 0.3 mm at x = 0): lash line, inferior tarsal border, fusion, fornix, incision, suture exit, fracture, Hotz lines
+for (const st of [{}, { entr: 1, dehis: 1, override: 1 }, { subcil: 1, plane: 1, septOpen: 1, retrOpen: 1, frac: 1, mattress: 1, tie: 1 }, { hotzExc: 1, hotzFix: 1 }]) {
+  const K = LOWER.keyPoints(st), c = CORONAL.draw({ lower: st });
+  const pairs = [['lash line', c.lashLY(0), K.lash], ['tarsal border', c.tarBotLY(0), K.tarBot], ['fusion', c.fusLY(0), K.fusion], ['fornix', c.fornixLY(0), K.fornix], ['incision', c.incLY(0), K.inc],
+    ['suture exit', c.exitLY(0), K.exit], ['fracture', c.fracLY(0), K.frac], ['Hotz lower', c.hotzLoY(0), K.hotzLo], ['Hotz upper', c.hotzHiY(0), K.hotzHi]];
+  const bad = pairs.filter(([, y, p]) => Math.abs((y - CORONAL.Ly(0)) - (p[1] - K.margin[1])) >= 0.3);
+  ok(!bad.length, `coronal = sagittal below the margin (${Object.keys(st).length ? Object.keys(st).join('+') : 'normal'}): ${bad.length ? 'MISMATCH ' + bad.map(b => b[0]).join(', ') : pairs.length + ' heights within 0.3 mm'}`); }
+// L14. lateral canthus: Hertel 13.91 mm, rim 21.07 mm temporal (Tsai 2006; Gao 2025); tubercle 1.5 mm inside the rim (Gioia 1987);
+//      commissure to insertion 7.52 mm (Rosenstein 2000); axial and coronal share x
+{ const X = CANTHUS, c = CORONAL.draw({ lower: { canthotomy: 1, strip: 1, stripFix: 1 } });
+  ok(near(X.RIM_E[1] - LOWER.APEX_X, 13.91, 0.01) && near(-X.RIM_E[0], 21.07, 0.01), `lateral rim ${f2(X.RIM_E[1] - LOWER.APEX_X)} mm behind the corneal apex (Tsai 2006: 13.91), ${f2(-X.RIM_E[0])} mm temporal to the pupil`);
+  ok(near(dist(X.TUB, X.RIM_E), 1.5, 0.01) && near(dist(X.LC_A, X.TUB), 7.52, 0.01), `tubercle ${f2(dist(X.TUB, X.RIM_E))} mm inside the rim (Gioia 1987: 1.5); commissure–insertion ${f2(dist(X.LC_A, X.TUB))} mm (Rosenstein 2000: 7.52)`);
+  ok(near(X.LC_A[0], CORONAL.LC[0], 0.01) && near(c.latRimX, X.RIM_E[0], 0.01) && near(c.tubercle[0], X.TUB[0], 0.3) && near(c.A.stripFix[0], X.TUB[0], 0.3), `axial = coronal: commissure x ${f2(X.LC_A[0])} / ${f2(CORONAL.LC[0])}, tubercle and strip fixation x ${f2(X.TUB[0])} / ${f2(c.tubercle[0])}`);
+  const rl = Math.min(...c.rimLine.filter(p => Math.abs(p[1] - CORONAL.LC[1]) < 1).map(p => p[0]));
+  ok(near(rl, X.RIM_E[0], 0.3), `coronal lateral rim at the canthal level x ${f2(rl)} (axial ${f2(X.RIM_E[0])})`); }
+// L15. LTS: the strip end is fixed on the periosteum inside the lateral rim; canthopexy likewise; distraction 9 mm with laxity (Beigi 2008: 7.5–11),
+//      ≤ 6 mm after the strip is shortened and fixed (Pushker 2025: > 6–8 mm is significant)
+{ const X = CANTHUS, inner = X.draw({ state: {} }).inner, onWall = p => Math.min(...inner.map(q => dist(p, q)));
+  for (const [n, st] of [['strip', { lax: 1, canthotomy: 1, cantholysis: 1, strip: 1, stripFix: 1 }], ['canthopexy', { canthopexy: 1 }]]) { const A = X.draw({ state: st }).A, P = A.stripFix || A.canthopexy;
+    ok(onWall(P) < LID.PERI + 0.3 && P[1] > X.RIM_E[1] + 0.8 && P[0] > X.RIM_E[0], `${n}: fixed ${f2(onWall(P))} mm from the orbital wall, ${f2(P[1] - X.RIM_E[1])} mm behind the rim edge (inside the rim)`); }
+  const Dn = X.state({}).D, Dl = X.state({ lax: 1 }).D, Df = X.state({ lax: 1, stripFix: 1 }).D;
+  ok(Dn < 6 && Dl >= 7.5 && Dl <= 11 && Df <= 6, `distraction: normal ${f2(Dn)}, lax ${f2(Dl)} (Beigi 2008: 7.5–11), after LTS ${f2(Df)} mm (≤ 6, Pushker 2025)`);
+  const T = X.draw({ state: { lax: 1, distract: 1 } }); ok(T.lidPts.every(p => tg([p[1], p[0]]) >= -0.05), 'distracted lid never inside the globe (axial)'); }
+// L16. misdirected and metaplastic lower lashes reach the cornea
+{ const A = LOWER.draw({ state: { misdirected: 1, metaplastic: 1 } }).A, endM = A.misLashPts[3];
+  ok(tg(endM) < 0.4 && tg(A.metaLashL) < 0.4, `misdirected / metaplastic lower lashes end ${f2(tg(endM))} / ${f2(tg(A.metaLashL))} mm from the cornea`); }
+// L17. the combined view starts with the unchanged upper-lid drawing; no NaN / undefined in any new state, all views
+{ const all = { entr: 1, dehis: 1, override: 1, scar: 1, subcil: 1, plane: 1, septOpen: 1, retrOpen: 1, frac: 1, mattress: 1, tie: 1, skinClose: 1, hotzExc: 1, hotzFat: 1, hotzFix: 1, misdirected: 1, metaplastic: 1, needle: 1, treated: 1, pluck: 1,
+    canthotomy: 1, cantholysis: 1, strip: 1, stripFix: 1, canthopexy: 1, lts: 1, lstrips: [[-5, 1, 3]] };
+  ok(LOWER.draw({ state: {}, upper: { curl: 1 } }).svg.startsWith(LID.draw({ state: { curl: 1 }, id: 'lowu' }).svg), 'combined view starts with the unchanged upper-lid drawing');
+  for (const st of [all, { ...all, tie: 0.5, entr: 0.5, mattress: 0.4 }, { entr: 0.3, subcil: 0.5, frac: 0.5, hotzExc: 0.4 }, { follicleDepth: 1.8, needle: 0.5 }])
+    ok(!/NaN|undefined/.test(LOWER.draw({ state: st }).svg + CORONAL.draw({ lower: st }).svg + CANTHUS.draw({ state: { ...st, lax: 1, distract: 0.6 } }).svg), `lower-lid states (${Object.keys(st).length} keys): no NaN/undefined in sagittal, coronal, axial`); }
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);
