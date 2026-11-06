@@ -6,7 +6,8 @@
 - 已做：PLTR（上眼瞼 margin rotation，Trabut 型）；BLTR 只做到全層切口（對照用）；從 lid crease 進去的做法（Cruz 2015）：皺褶切口、皮膚肌肉瓣、埋線。
 - 之後可用：ectropion、ptosis、雙眼皮、眼瞼腫瘤重建。
 - 已做（2026-11-06，第一部組合刀）：眉毛區（皮膚、皮下脂肪、眼輪匝肌／額肌、眉下脂肪 ROOF、眶上緣骨膜、眉毛、正面的眶上切跡與神經、淚腺）；levator resection（切除皮膚肌肉、開眶隔、脂肪上拉、分離提上瞼肌、Putterman clamp、切除、前徙固定到瞼板）、雙眼皮線固定縫線、internal brow fixation、上穹窿結膜脫出與穹窿縫線；MRD1 與眉毛高度可調。樣本：`sample-levator.html`、`sample-levator-steps.html`。
-- 第一部還沒做：縫皮後皮膚閉合（切除的皮膚兩邊拉攏）的變形；刀後依 OP note 改參數（見「手術狀態」裡標「待刀後確認」的值）。
+- 第一部還沒做：縫皮後皮膚閉合（切除的皮膚兩邊拉攏）的變形——影片（2026-11-06）先在畫面層畫示意：正面用皮膚色蓋住傷口、矢狀切面畫上下皮緣對合的縫線；刀後依 OP note 改參數（見「手術狀態」裡標「待刀後確認」的值；第一部影片的值集中在 `videos/src/levator-resection-brow-fixation/anim/params.js`）。
+- 第一部影片（2026-11-06 出片）用到的狀態與參數，旁白講到的數字另外在 `videos/src/levator-resection-brow-fixation/check.js` 檢查（切口三點高度、切除寬、眉毛下降量、MRD1、三針與四針、骨膜一針、ROOF、眶上切跡、淚腺在外側、融合點、clamp 與切除線、穹窿縫線）。
 - 已做（2026-11-06，第二、三部要用的下眼瞼，選用式：不給就和以前完全一樣）：下眼瞼解剖（下瞼板、retractors 兩層、眶隔與囊瞼筋膜融合、下穹窿、下直肌、下斜肌、中央脂肪墊、瞼板前與眶隔前眼輪匝肌、眶下緣與上頜竇、外側眶緣、外眥韌帶與 Whitnall 結節、下睫毛與毛囊）；involutional entropion（retractor 鬆脫、眼輪匝肌上跨、horizontal laxity 與 distraction test）、前次手術的疤痕、院內範本的 marginal rotation（睫毛下切口、剝開眶隔與 retractor 到結膜、tarsal fracture、mattress suture、綁緊、縫皮）、Hotz、LTS（外眥切開、下支切斷、瞼板條、固定在眶緣內）、canthopexy、方向歪與化生的下睫毛、電解針與處理後的毛囊。樣本：`sample-lower.html`、`sample-lower-steps.html`、`sample-lower-lts.html`。
 - 下眼瞼還沒做：上下眼瞼一起閉眼的動作（第三部 1-2，旁白內容還在 [待核對出處]）；刀後依 OP note 改參數（下面標「依院內常規／待刀後確認」的值）。
 
@@ -69,6 +70,7 @@
 - Levator resection（矢狀切面與正面同名，正面的高度由 `LID.keyPoints` 換算）：
   - `mrd1`（mm，預設 4）：眼瞼高度。術前下垂、固定後上提都用它；實際數值待刀後確認。
   - `excMark`（正面）／`excCut` 切皮畫線與切開、`excRemove` 切除皮膚＋皮下＋眼輪匝肌那一條。參數 `incH` = [內、中、外] 距睫毛線（沿皮膚量，mm；範本 2.5、4、4，待刀後確認）、`excW` 切除寬度（範本 5 mm，待刀後確認）。
+  - `incX` = [內側那一點的 x, 外側那一點的 x]（正面，mm，鼻側為正；2026-11-06 加，選用）：下切口剛好通過內側 `incH[0]`、中央 `incH[1]`、外側 `incH[2]`（以中央高度換算比例），從這兩點往內外眥漸細。不給時用原本的曲線（畫面不變）；原本的曲線在內側只在 x≈5 才到 2.5、外側到不了 4，所以影片要講三點高度時用 `incX`。第一部影片放在角膜緣上方 ±5.75 mm（位置示意）。
   - `septOpen` 在融合處上方 2 mm 切開眶隔（`septCutY`，示意）、`fatUp` 腱膜前脂肪往上拉開（拉開 2.6 mm，示意）。
   - `dis` 提上瞼肌（腱膜＋穆勒氏肌）從瞼板和結膜分開（分開的空間畫 0.42 mm 寬，示意）、`clamp` Putterman clamp、`resect` 切掉 clamp 下方那段、`advance` 斷端前徙到瞼板。參數 `resectMm`（瞼板上緣往上量的切除量，預設 6 mm 示意，待刀後確認）、`fixS`（固定點距瞼緣，預設 7.5 mm 示意，待刀後確認）。
   - `tarSut` 瞼板固定縫線（矢狀切面：部分厚度，咬在瞼板中間、不穿到結膜；正面：內、中、外三針在角膜緣 ±5.75 mm 與中央，位置示意）。
