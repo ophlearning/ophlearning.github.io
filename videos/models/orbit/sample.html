@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="../eyelid/lid.js"></script><script src="../eyelid/coronal.js"></script><script src="../eyelid/lower.js"></script><script src="../eyelid/lower-coronal.js"></script><script src="../eyelid/canthus.js"></script><script src="orbit.js"></script>
+<script>
+// Orbit model sample (right eye): axial section through the canthus and the optic nerve (seen from below, like CT) at rest, with a retrobulbar
+// haematoma (OCS), and after canthotomy + inferior cantholysis; right: the lateral canthus from the front with the tendon window. Sources: CARD.md.
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 12.5, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 5 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 6 : tx + w + 6, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.5" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="5">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const panel = (x, y, w, h, svg, tf, id, title, sub) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="#fff" stroke="#d3dae1"/><clipPath id="${id}"><rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="9"/></clipPath><g clip-path="url(#${id})"><g transform="${tf}">${svg}</g></g>`
+  + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="30" rx="9" fill="#fff" opacity="0.9"/><text x="${x + 12}" y="${y + 21}" font-size="14" font-weight="700" fill="#1d2733">${esc(title)}</text><text x="${x + w - 12}" y="${y + 21}" font-size="11.5" fill="#5b6878" text-anchor="end">${esc(sub)}</text>`;
+const o = [];
+o.push(`<text x="24" y="34" font-size="21" font-weight="700" fill="#1d2733">眼窩模型樣本：OCS 與 lateral canthotomy／cantholysis</text>`);
+o.push(`<text x="1256" y="34" font-size="13" fill="#5b6878" text-anchor="end">右眼　mm 建模，示意圖　水平切面與正面共用 x（temporal 在左）</text>`);
+const AX = { k: 6.3, x0: -24.2, y0: -31 }, W = 296, H = 654, Y = 48, lab2 = (zh, en, x, y, a, opt) => lab(zh, en, x, y, a, Object.assign({ size: 11.5 }, opt));
+const bar = (x, y, k, mm, t) => `<path d="M${x} ${y}h${k * mm}" stroke="#1d2733" stroke-width="2.5"/><path d="M${x} ${y - 4}v8M${x + k * mm} ${y - 4}v8" stroke="#1d2733" stroke-width="2"/><text x="${x + k * mm / 2}" y="${y - 7}" font-size="11" text-anchor="middle" fill="#1d2733">${t}</text>`;
+const axPanel = (X, st, id, title, sub, labels) => { const c = cam(X, Y, AX.k, AX.x0, AX.y0), r = ORBIT.axial({ state: st, id }); o.push(panel(X, Y, W, H, r.svg, c.tf, id + 'p', title, sub)); o.push(labels(c.P, r.A, r, X + 10, X + W - 10).join('')); o.push(bar(X + W - 86, Y + H - 16, AX.k, 10, '10 mm')); return r; };
+axPanel(16, {}, 'a1', '正常 normal', '水平切面，從下往上看（同 CT）', (P, A, r, l, R) => [
+  lab2('眼瞼（投影）', 'lids', R, 104, P(A.lid), { side: 'R' }),
+  lab2('外眥韌帶', 'lat. canthal tendon', l, 205, P(A.tendon), { bold: true }),
+  lab2('外直肌', 'LR', l, 330, P(A.lr)), lab2('內直肌', 'MR', R, 330, P(A.mr), { side: 'R' }),
+  lab2('視神經（有餘裕）', 'optic nerve, slack', R, 440, P(A.on), { side: 'R', bold: true }),
+  lab2('眶尖', 'apex', l, 560, P(A.apex)), lab2('篩竇', 'ethmoid', R, 210, P(A.ethmoid), { side: 'R' }),
+  lab2('眼球', 'globe', l, 250, P(A.globe))]);
+axPanel(322, { heme: 1, tentShow: 1 }, 'a2', 'OCS：球後血腫', '前凸 4.5 mm', (P, A, r, l, R) => [
+  lab2('眼瞼被撐緊', 'lids stretched', R, 104, P(A.tension), { side: 'R', bold: true, color: '#b3261e', lc: '#b3261e' }),
+  lab2('外眥韌帶拉住', 'tendon holds', l, 205, P(A.tendon), { bold: true }),
+  lab2('球後血腫', 'retrobulbar haemorrhage', l, 420, P(A.heme), { bold: true, color: '#8e2433', lc: '#8e2433' }),
+  lab2(`globe tenting ${r.N.angle.toFixed(0)}°`, '(< 120°)', R, 250, P(A.tentArm), { side: 'R', bold: true, color: '#0e7c6b', lc: '#0e7c6b' }),
+  lab2('視神經被拉直', 'nerve taut', R, 470, P(A.on), { side: 'R' })]);
+axPanel(628, { heme: 1, clamp: 0, canthotomy: 1, infLysis: 1, pull: 1 }, 'a3', '切開＋下支切斷後', '下眼瞼可拉離眼球', (P, A, r, l, R) => [
+  lab2('外眥切開', 'canthotomy', l, 150, P(A.canthotomy), { bold: true, color: '#b3261e', lc: '#b3261e' }),
+  lab2('下支切斷', 'inferior cantholysis', l, 205, P(A.cantholysis), { bold: true, color: '#b3261e', lc: '#b3261e' }),
+  lab2('上支在平面上方', 'superior crus', l, 262, P(A.tendon)),
+  lab2('拉離 4 mm（示意）', 'lid pulled off', R, 104, P(A.pull), { side: 'R', bold: true, color: '#0e7c6b', lc: '#0e7c6b' }),
+  lab2('壓力下降（屍體研究）', 'IOP falls (cadaver)', R, 420, P(A.heme), { side: 'R' })]);
+// front view, tendon window: intact (top) and after canthotomy + both cantholyses (bottom); x shared with the axial panels
+const FX = 934, FW = 330, FH = 320, FK = 19.5, frontPanel = (Yp, st, id, title, sub, labels) => { const c = cam(FX, Yp, FK, -24.6, -7.6), r = ORBIT.front({ state: st, lower: {}, id }); o.push(panel(FX, Yp, FW, FH, r.svg, c.tf, id + 'p', title, sub)); o.push(labels(c.P, r.A, r).join('')); o.push(bar(FX + FW - 70, Yp + FH - 14, FK, 2, '2 mm')); return c; };
+frontPanel(48, { window: 1 }, 'f1', '正面：外眥韌帶（開窗）', '術者面對病人：左＝temporal', (P, A) => [
+  lab2('上支', 'superior crus', FX + 10, 110, P(A.supCrus), { bold: true }), lab2('下支', 'inferior crus', FX + 10, 300, P(A.infCrus), { bold: true }),
+  lab2('Whitnall 結節', 'tubercle', FX + 10, 205, P(A.tubercle), { color: '#0e7c6b', lc: '#0e7c6b' }),
+  lab2('瞼板', 'tarsus', FX + FW - 10, 110, P(A.tarsusU), { side: 'R' }), lab2('外側眶緣', 'rim', FX + 10, 350, P(A.rimEdge))]);
+const c2 = frontPanel(382, { window: 1, canthotomy: 1, infLysis: 1, supLysis: 1 }, 'f2', '剪刀方向', '下支朝下、上支朝上', (P, A) => {
+  const arr = (s, col) => { const t = P([s.tip[0] + s.dir[0] * 0.9, s.tip[1] + s.dir[1] * 0.9]), e = P([s.tip[0] + s.dir[0] * 2.6, s.tip[1] + s.dir[1] * 2.6]); return `<path d="M${t[0]} ${t[1]}L${e[0]} ${e[1]}" stroke="${col}" stroke-width="3" marker-end="url(#ah)"/>`; };
+  return [`<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto-start-reverse"><path d="M8 0L0 4L8 8Z" fill="#1d2733"/></marker></defs>`, arr(A.scInf, '#1d2733'), arr(A.scSup, '#1d2733'),
+    lab2('下支切斷', 'inferior cantholysis', FX + 10, 650, P(A.infCut), { bold: true, color: '#b3261e', lc: '#b3261e' }), lab2('上支切斷', 'superior cantholysis', FX + 10, 440, P(A.supCut), { bold: true, color: '#b3261e', lc: '#b3261e' })]; });
+document.getElementById('stage').innerHTML = o.join('');
+</script></body></html>
