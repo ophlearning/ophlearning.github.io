@@ -1,10 +1,9 @@
 // ============================================================================
-// Print kit (videos/tools/print): helpers for one-page A4 landscape sheets taped on the OR wall.
-// A sheet page loads, in order: fonts css · print.css · the model scripts it draws · the video's segments.js / params.js · this file
-// · the video's print/sheets.js (SHEETS) · <script>PRINT.render(SHEETS.<name>)</script>. print.js renders it to PDF + PNG and checks it.
+// Print kit (videos/tools/print): drawing primitives for one-page A4 landscape sheets taped on the OR wall. sheet.html loads it, then
+// layout.js (the three sheet layouts), then the video's print/ data files (README.md in this folder). print.js renders and checks.
 //
-// What this file gives a sheet:
-//   PRINT.render(def)   page frame: title block (left: sheet title; right: surgery), tape zone, body (def.body: html), footer
+// What this file gives the layouts (and a data file's draw functions):
+//   PRINT.render(def)   page frame: title block (left: sheet title; right: surgery), body (def.body: html), footer
 //                       (示意 line, video title + URL, def.sources = short source list for the numbers on the sheet, credit).
 //   PRINT.view(o)       one figure of a shared model in two layers: the tissue drawn light (group opacity, stays vector) and the model's
 //                       own overlays promoted on top in black (CSS in print.css: red → cut solid or incision dashed, purple → dashed

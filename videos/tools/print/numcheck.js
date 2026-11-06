@@ -51,4 +51,29 @@ function check(dir, texts, meta) {
   for (const s of foot) if (!usedSrc.has(s)) R.push([true, `WARN footer source 「${s}」 backs no number on this sheet (it backs a statement)`]);
   return R;
 }
-module.exports = { check, numbers, cites, videoLedger };
+// Each rule broken once on purpose (print.js --selftest): every case must give the expected verdict. Inputs come from the video's own
+// ledger, so the test runs on any video.
+function selftest(dir) {
+  const L = videoLedger(dir), REFS = videoRefs(dir), all = Object.values(L).flatMap(o => Object.entries(o));
+  const split = s => String(s).split('；').map(x => x.trim());
+  const free = n => all.some(([m, s]) => m === n && split(s).some(x => x === '院內常規' || x === '示意'));
+  const cited = all.find(([n, s]) => split(s).some(x => cites(x).length) && !free(n)), local = all.find(([n, s]) => split(s).includes('院內常規'));
+  const structOnly = all.map(([n]) => n).find(n => all.filter(([m]) => m === n).every(([, s]) => split(s).every(x => x === '結構')));
+  const unknown = ['3.7', '13.13', '987'].find(n => !all.some(([m]) => m === n));
+  const src = cited && split(cited[1]).find(x => cites(x).length), ref = REFS[0].match(/^([^\s,]+)/)[1];
+  const meta = (o = {}) => ({ sources: [], ledger: {}, steps: 8, ...o }), T = (t, struct = null) => ({ t, struct });
+  const cases = [
+    ['院內常規 number passes', true, [T(`${local[0]} mm`)], meta()],
+    ['cited number with its source in the footer passes', true, [T(`${cited[0]} mm`)], meta({ sources: [src] })],
+    ['number not in the ledger fails', false, [T(`${unknown} mm`)], meta()],
+    ['cited number without its source in the footer fails', false, [T(`${cited[0]} mm`)], meta()],
+    ['citation not in REFS fails', false, [T('Smith 1901')], meta()],
+    ['footer source not in REFS fails', false, [], meta({ sources: ['Smith 1901'] })],
+    ['step marker outside 1–steps fails', false, [T('9', 'step')], meta()],
+    ['unused print-ledger entry fails', false, [], meta({ ledger: { '42': '示意' } })],
+    ['print-ledger source that is not a reference fails', false, [T('42 mm')], meta({ ledger: { '42': `${ref} 1901` } })],
+  ];
+  if (structOnly) cases.push(['a number the ledger knows only as 結構 fails', false, [T(`${structOnly} mm`)], meta()]);
+  return cases.map(([name, pass, texts, m]) => { const r = check(dir, texts, m), ok = r.every(x => x[0]) === pass; return [ok, `selftest: ${name} → ${r.every(x => x[0]) ? 'passes' : 'fails'}`]; });
+}
+module.exports = { check, selftest, numbers, cites, videoLedger };

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>跟刀單</title>
+<!-- One page for every sheet of every video: sheet.html?video=<absolute path of videos/src/<video>>&sheet=<checklist | steps | anatomy | …>
+     It loads print/video.js of that video, then the model files and video scripts it names, runs its setup(), then print/<sheet>.js
+     (PRINT.sheet). print.js opens this page for each data file and writes the PDF / PNG. -->
+<link rel="stylesheet" href="../../models/fonts/package/400.css">
+<link rel="stylesheet" href="../../models/fonts/package/500.css">
+<link rel="stylesheet" href="../../models/fonts/package/700.css">
+<link rel="stylesheet" href="print.css">
+</head>
+<body>
+<script src="print-kit.js"></script>
+<script src="layout.js"></script>
+<script>
+(async () => {
+  const q = new URLSearchParams(location.search), dir = q.get('video').replace(/\/$/, ''), sheet = q.get('sheet');
+  const load = src => new Promise((ok, bad) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => bad(new Error('cannot load ' + src)); document.body.appendChild(s); });
+  const file = p => 'file://' + p.split('/').map(encodeURIComponent).join('/');
+  try {
+    window.PRINT_SHEET_NAME = sheet;
+    await load(file(dir + '/print/video.js'));
+    const V = PRINT.videoConfig(); if (!V) throw new Error('print/video.js did not call PRINT.video');
+    for (const m of V.models || []) await load('../../models/' + m);
+    for (const s of V.scripts || []) await load(file(dir + '/' + s));
+    if (V.setup) Object.assign(window, V.setup());
+    await load(file(dir + '/print/' + sheet + '.js'));
+  } catch (e) { window.SHEET_FAIL = String(e && e.stack || e); throw e; }
+})();
+window.addEventListener('error', e => { window.SHEET_FAIL = window.SHEET_FAIL || String(e.message); });
+window.addEventListener('unhandledrejection', e => { window.SHEET_FAIL = window.SHEET_FAIL || String(e.reason && e.reason.stack || e.reason); });
+</script>
+</body>
+</html>

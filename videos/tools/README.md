@@ -83,20 +83,9 @@
 把每段畫面在每一句的 60 % 與 98 % 畫出來，收集畫面上所有文字，加上旁白、重點和標題，抽出每個數字：每個數字都要在該段的帳本裡登記來源（文獻要出現在該段的「來源」，或是「院內常規」「結構」「示意」）；畫面上出現的「作者 年份」都要在 `REFS` 裡；帳本裡登記了卻沒用到的數字也會報錯。這樣新加一個數字卻沒有出處，檢查一定會擋下來。
 
 ## 列印用的跟刀單（`print/`）
-貼在開刀房牆上的 A4 橫式單張（黑白印表機也看得清楚、1–1.5 m 外讀得到）。每支影片三張：跟刀清單、手術步驟圖（每一步矢狀切面＋術者視角並排、同一個狀態）、關鍵解剖與數字速查。第一支做的是 `videos/src/upper-lid-levator-rotation-brow/print/`（照著它做最快）。
-
-- 指令：`node videos/tools/print/print.js videos/src/<影片> [--only <名稱>] [--gray]`，把 `print/*.html` 每一張輸出成 `out/print/<名稱>.pdf`（向量、A4 297 × 210 mm）與 `.png`（300 dpi，3508 × 2480，由 PDF 點陣化）；`--gray` 另存 `-gray.png` 給黑白自檢。一次只開一個瀏覽器、一張一張畫（別的 agent 在出片時也不會搶太多資源）。
-- 同時跑的檢查（全部 PASS 才算完成）：
-  - **數字**（`numcheck.js`）：畫出來的每個數字都要在該影片 `check.js` 的 `LEDGER`（任一段、來源不是「結構」）或這張單子的 `ledger` 裡登記，而且文獻來源要列在頁尾的「數字出處」（院內常規、示意不必列）；頁面上出現的「作者 年份」都要在 `REFS`。步驟號碼與比例尺標 `data-struct="step"`／`"scale"`，另外檢查（步驟號碼只能是 1–N）。
-  - **版面**：四邊 10 mm 內沒有東西、沒有框溢出、標籤在自己的圖內且互不重疊。
-  - **字級**：標題 22–26 pt、清單 ≥ 14 pt、圖上文字 ≥ 9 pt、頁尾 7–8 pt。
-  - **PDF 一頁、正好 A4；PNG 3508 × 2480。**
-- 新影片要做的：
-  1. 在 `videos/src/<影片>/print/` 放 `sheets.js` 與三個 html（照第一支複製，html 只改要載入的模型檔與 `SHEETS.<名稱>`）。
-  2. `sheets.js` 定義 `META`（`id`＝網站的 `#id`、影片標題、術式）、每一步的狀態（**從該影片 `anim/draw.js` 複製同名的狀態**，畫面和影片一致）與 `SHEETS = { checklist, steps, anatomy }`；每張有 `title`、`body()`、`sources`（頁尾的數字出處）、`steps`（清單的件數）、選用的 `ledger`（影片帳本沒有的數字：`{ '數字': '出處' }`，出處要在 `REFS` 並列在頁尾，或是「院內常規」「示意」「結構」）。
-  3. 內容只能用影片已經查證的：`anim/segments.js` 的跟刀清單與重點、`check.js` 的帳本、`anim/params.js`、`overview-notes.md` 標的示意／依院內常規照樣標。清單的號碼＝步驟圖的號碼；「注意」只放影片裡有出處的陷阱。
-  4. 跑 `print.js … --gray`，放大看彩色與灰階（標籤、黑色疊圖、號碼有沒有被蓋住），全部 PASS 後 commit（`out/` 不進 git）。
-- `print-kit.js` 提供：`PRINT.render`（頁框、標題、頁尾：示意聲明、影片標題與網址、數字出處、「製作　張博淳」；不寫醫院名稱）、`PRINT.view`（共用模型畫成兩層：組織淡色＋模型自己的紅／藍／紫疊圖轉成黑色：紅＝切開實線或 `red: 'inc'` 切口虛線、紫＝畫線虛線、藍＝縫線點線，`amber: true` 把眶上神經投影轉成細點劃線；`red: 'none'` 時自己畫）、`inc`／`cut`／`sut`／`fix`／`num`（黑白安全的疊圖與步驟圈號）、`labels`（「中文 English」標籤，依定位點高度排成一列一個，不重疊）、`column`、`dim`、`sbar`、`legend`（圖例與兩種視角的方位，一張寫一次）。共用模型與 `video-kit/` 都沒改。
+貼在開刀房牆上的 A4 橫式單張（黑白印表機也看得清楚、1–1.5 m 外讀得到）：跟刀清單、手術步驟圖（每一步矢狀切面＋術者視角並排）、關鍵解剖與數字速查。一支影片只要在 `videos/src/<影片>/print/` 放四個小資料檔（`video.js`、`checklist.js`、`steps.js`、`anatomy.js`），版面、黑白疊圖、標籤排版、頁尾、PDF／PNG 與數字檢查都由 `videos/tools/print/` 做。
+- 指令：`node videos/tools/print/print.js videos/src/<影片> --gray`（輸出在 `out/print/`，不進 git）。
+- **怎麼加一支新影片、資料檔格式、設計規則與最小字級、黑白自檢：見 [`print/README.md`](print/README.md)。** 第一個範例：`videos/src/upper-lid-levator-rotation-brow/print/`。
 
 ## 已知限制
 - 參考圖比對只比亮度，不比顏色。原因是參考圖存成 JPEG，JPEG 會降低顏色解析度，比顏色的話，細的彩色線條每次都會被誤報。所以只改顏色、亮度不變的修改抓不到。

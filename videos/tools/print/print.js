@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // Render the printable OR-wall sheets of one video and check them.
-//   node videos/tools/print/print.js videos/src/<video> [--only <name>] [--no-png] [--gray]
-// For every videos/src/<video>/print/*.html (one A4 landscape sheet each): vector PDF → out/print/<name>.pdf, 300 dpi PNG (3508 × 2480,
-// rasterised from that PDF with pdftoppm) → out/print/<name>.png (--gray also writes <name>-gray.png for the B/W self-check).
+//   node videos/tools/print/print.js videos/src/<video> [--only <name>] [--no-png] [--gray] [--selftest]
+// The video's print/ folder holds data only: video.js (which video, model files, states) and one data file per sheet (checklist.js,
+// steps.js, anatomy.js, …). For each data file the shared page sheet.html (this folder) is opened with ?video=…&sheet=<name>; it lays the
+// sheet out (layout.js, print-kit.js, print.css). Output: vector PDF → out/print/<name>.pdf, 300 dpi PNG (3508 × 2480, rasterised from
+// that PDF with pdftoppm) → out/print/<name>.png (--gray also writes <name>-gray.png for the B/W self-check). README.md: how to add a video.
 // Checks per sheet (all must pass, exit 1 otherwise):
 //   · no page errors; the PDF is one page of exactly A4 landscape;
 //   · numbers: numcheck.js (every number registered in the video ledger or the sheet's print ledger, cited in the footer);
@@ -58,19 +60,22 @@ function layoutChecks(m, R) {
 
 (async () => {
   const pdir = path.join(dir, 'print'), odir = path.join(dir, 'out', 'print');
-  const pages = fs.readdirSync(pdir).filter(f => f.endsWith('.html') && (!only || f === only || f === only + '.html')).sort();
-  if (!pages.length) throw new Error('no sheets in ' + pdir);
+  if (!fs.existsSync(path.join(pdir, 'video.js'))) throw new Error('no print/video.js in ' + dir + ' (see videos/tools/print/README.md)');
+  const pages = fs.readdirSync(pdir).filter(f => f.endsWith('.js') && f !== 'video.js' && (!only || f === only || f === only + '.js')).sort();
+  if (!pages.length) throw new Error('no sheet data files in ' + pdir);
   fs.mkdirSync(odir, { recursive: true });
   const b = await chromium.launch(), page = await b.newPage({ viewport: { width: 1123, height: 794 } });
+  await page.addInitScript(l => { window.VIDEO_LEDGER = l; }, NC.videoLedger(dir));   // ledger keys of the anatomy tables (layout.js)
   let fail = 0;
   for (const f of pages) {
-    const name = f.replace(/\.html$/, ''), errs = [], R = [];
+    const name = f.replace(/\.js$/, ''), errs = [], R = [];
     page.removeAllListeners('pageerror'); page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('file://' + path.join(pdir, f));
-    await page.waitForFunction(() => window.SHEET_META, null, { timeout: 30000 }).catch(() => {}); await page.evaluate(() => document.fonts.ready);
-    R.push([!errs.length, `no page errors${errs.length ? ': ' + errs.join(' | ') : ''}`]);
+    await page.goto(`file://${path.join(__dirname, 'sheet.html')}?video=${encodeURIComponent(dir)}&sheet=${encodeURIComponent(name)}`);
+    await page.waitForFunction(() => window.SHEET_META || window.SHEET_FAIL, null, { timeout: 60000 }).catch(() => {}); await page.evaluate(() => document.fonts.ready);
+    const fail0 = await page.evaluate(() => window.SHEET_FAIL || null);
+    R.push([!errs.length && !fail0, `no page errors${errs.length || fail0 ? ': ' + [...errs, fail0].filter(Boolean).join(' | ') : ''}`]);
     const meta = await page.evaluate(() => window.SHEET_META || null);
-    if (!meta) { R.push([false, 'the sheet did not call PRINT.render']); }
+    if (!meta) { R.push([false, `print/${f} did not finish PRINT.sheet`]); }
     else {
       const m = await measure(page);
       for (const r of NC.check(dir, m.texts, meta)) R.push(r);
@@ -97,6 +102,8 @@ function layoutChecks(m, R) {
     console.log(`(${R.length} checks; numbers on the sheet: ${R.filter(r => /^[\d.\-]+: /.test(r[1])).map(r => r[1].split(':')[0]).join(' ')})`);
   }
   await b.close();
+  if (process.argv.includes('--selftest')) { console.log('\n== number check selftest');
+    for (const [c, s] of NC.selftest(dir)) { console.log(`${c ? 'PASS' : 'FAIL'} ${s}`); if (!c) fail++; } }
   console.log(fail ? `\n${fail} check(s) failed` : `\nall ${pages.length} sheet(s) passed → ${path.relative(process.cwd(), odir)}`);
   process.exit(fail ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
