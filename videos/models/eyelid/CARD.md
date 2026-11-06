@@ -18,6 +18,8 @@
   - 正面的電解針固定在 x = 1.0（正常睫毛）；要畫在方向歪的睫毛，用 x −2.6、−1.7 並和模型核對。矢狀切面的方向歪睫毛根部離第 2 根只有 0.06 mm，用 `pluck: 1` 讓毛囊看起來是它自己的。
   - `A.follicleDir` 是向量，`mapA` 卻當成點換算；要讀 `M.follicleDir`（mm）。
 - 下眼瞼還沒做：上下眼瞼一起閉眼的動作（第三部 1-2，旁白內容還在 [待核對出處]）；刀後依 OP note 改參數（下面標「依院內常規／待刀後確認」的值）。
+- 已做（2026-11-06，第五部 marginal laceration repair，選用式：不給 `lac*` 參數就和以前逐字相同）：上眼瞼中央、垂直的全層裂傷（正面圖）；新視角「瞼緣面」；gray line 6-0 silk、partial-thickness tarsal sutures、睫毛線 silk、皮膚縫線、線尾埋進皮膚縫線、EyeRounds 的 Vicryl vertical mattress；外翻、凹口、兩側錯位。程式在 `laceration.js`（`LAC`），正面圖的裂傷在 `coronal.js` 的 `lacWarp`。樣本：`sample-laceration.html`。出處見 `videos/src/eyelid-margin-laceration-repair/spec.md`。
+- 裂傷還沒做：下眼瞼的裂傷（第五部第 6 章先用矢狀切面＋縫好的正面圖，不畫下眼瞼裂開）；淚道（canaliculus、punctum）的模型。
 
 ## 兩個同步視角與方位慣例
 - **機轉切面**：矢狀切面，右眼，經瞳孔中央；左＝前、上＝上。
@@ -33,6 +35,10 @@
 - 正面圖可以「開窗」逐層打開：每個窗有一個深度，窗內比這個深度淺的組織全部拿掉，用來表示切口與分層。
 - 正面圖的層次（深到淺）：0 骨頭、眶上切跡與神經、眼球 · 1 瞼板、穆勒氏肌、提上瞼肌、淚腺瞼部 · 2 腱膜、Whitnall · 3 腱膜前脂肪、淚腺眶部 · 4 眶隔、瞼板前脂肪、ROOF · 5 眼輪匝肌 · 6 皮膚、睫毛、眉毛。
 - Levator resection 的正面圖畫的是術者從病人前方看到的皮膚面；切口、傷口開窗、縫線、clamp 的高度全部由矢狀切面（`LID.keyPoints`）換算。Clamp 夾在上方皮膚邊緣深處的提上瞼肌上，傷口外的部分畫成虛線（被皮膚蓋住）。
+
+- **瞼緣裂傷**（`laceration.js`）：縫瞼緣的段落用「瞼緣面」（視角 `mar`）＋正面（`laccor`）；縫 tarsus 的段落用「傷口面」（`lacsag`，經傷口的矢狀切面：傷口在中央、垂直於瞼緣，傷口的切面本身就是矢狀面）＋正面開窗到瞼板層（`laccor` 的 `lacWin`）。
+  - 瞼緣面＝從下方看上瞼緣，把瞼緣表面攤平：x 和正面圖共用（右眼左＝temporal），y＝−u（u＝離後瞼緣的深度，沿用 `lid.js` 的 `U_MCJ`、`U_ORIF`、`U_GREY`、`U_SKIN`），所以**上＝前（皮膚、睫毛）、下＝後（結膜）**。面板標題要寫明。
+  - 兩個視角同一針的 x 由同一個位移函式算出，檢查差 < 0.3 mm（實測 0.000 mm）。
 
 ## 座標（手術的語言）
 - 矢狀切面以眼球中心為原點，單位 mm，左＝前、上＝上。眼瞼裡的每個組織用兩個數字定位：沿著眼球表面、距瞼緣幾 mm（s），以及離眼瞼後表面多深（u）。瞼緣內轉、瞼板切開後轉出，所有組織都在同一套座標上一起變形；「切口離瞼緣 3 mm」就直接是 s＝3。
@@ -104,6 +110,11 @@
   - 睫毛：`misdirected`（從睫毛線長出、往上碰角膜）、`metaplastic`（從瞼板腺開口長出）、`needle` 電解針（0–1 = 插入深度的比例）、`treated` 處理後的毛囊、`pluck` 拔掉睫毛（待刀後確認）、參數 `follicleDepth`（mm，預設 0.9）。
 - 下眼瞼正面另外有：`lstrips: [[x0, x1, depth], ...]` 逐層開窗的縱條（像 `CORONAL.strip`）；`canthotomy`、`cantholysis`、`strip`（參數 `stripL` 5 mm、`shortMm`，示意）、`stripFix`、`canthopexy`、`lts`（mattress 變三針）、`rimShow`（皮膚下的外側眶緣虛線）。
 - 水平切面（`CANTHUS.draw({ state })`）：`lax` horizontal laxity、`distract` distraction test（0–1，拉開到該眼瞼可拉開的距離）、`canthotomy`、`cantholysis`、`strip`、`stripL`、`shortMm`、`stripFix`、`canthopexy`、`shortMark`。
+- 瞼緣裂傷（正面 `CORONAL.draw` 的 state；瞼緣面、傷口面、正面縫線用 `LAC.margin`／`LAC.sag`／`LAC.cor`，同一個 state）：
+  - `lac`（0–1）傷口分開的程度：瞼緣處分開 `lacGap`（預設 2.4 mm，示意），往上到尖端線性變窄；尖端在 `lacS`（預設 6 mm，沿瞼板從瞼緣量，示意，用 `LID.UF` 投影到正面）；`lacX` 傷口位置（預設 0＝中央）。位移往兩側在 `LAC_FADE` 7 mm 內遞減（示意）。
+  - `lacPout`（mm）＋＝瞼緣在傷口處外翻、−＝凹口（notch）；`lacStep`（mm）鼻側瞼緣抬高＝上下錯位；`lacAP`（mm，只在瞼緣面）鼻側往前＝gray line 前後錯位。
+  - 縫線：`lacGrey`／`lacGreyTie`（gray line 6-0 silk，離傷口邊緣 `GREY_D` 2 mm：EyeWiki）、`lacTar`（tarsal sutures，上眼瞼 3 針、下眼瞼 2 針：EyeWiki；只咬 tarsus 前半部：EyeRounds；高度示意）、`lacLash`／`lacLashTie`（睫毛線 6-0 silk：EyeWiki；距離示意）、`lacSkin`（皮膚縫線，位置示意）、`lacTails`（silk 線尾埋進最下面那針皮膚縫線、朝上：EyeWiki）、`lacVM`／`lacVMTie`（EyeRounds：7-0 Vicryl vertical mattress 在 meibomian 開口，far–far 再 near–near；距離示意）。傷口打開時縫線畫成虛線（在組織裡）；傷口合起來後 tarsal sutures 變淡（在皮膚底下），除非用 `lacWin` 開窗。
+  - 參數名一律 `lac` 開頭：曾經用 `tarSut`，和 levator resection 的瞼板固定縫線同名，正面圖多畫出三針 levator 縫線（見已知的坑）。
 - 腱膜止點從瞼緣上方 3.3 mm 開始，避開 PLTR 的切口。
 - 內翻 55°、過度矯正角度、塞入距離都是示意值。
 
@@ -161,7 +172,12 @@
 | 範本：睫毛下切口 2.5 mm、mattress 4-0 vicryl ×2（LTS ×3）、7-0 縫皮、Hotz 6-0 Prolene ×5、LTS／canthopexy 4-0 vicryl ×1 | 參數 | 依院內常規／待刀後確認 |
 | 內翻角度、睫毛被擋住的門檻、retractor 退縮 3 mm、眼輪匝肌上跨高度、Hotz 切除寬度、瞼板條長度與剪掉的長度、出針點、tarsal fracture 位置、凝固範圍 | 示意 | 待刀後確認 |
 
-## 必寫的檢查（`check.js`，目前 117 項：上眼瞼 75＋下眼瞼 42）
+| 瞼緣裂傷：gray line 縫線離傷口邊緣 | 2 mm（6-0 silk，線尾留長） | EyeWiki「Eyelid Laceration」（2026-09-14 審閱） |
+| 瞼緣裂傷：tarsal sutures 針數 | 上眼瞼 3、下眼瞼 2（5-0 或 6-0 Vicryl） | EyeWiki（EyeRounds 影片上眼瞼 2 針） |
+| 瞼緣裂傷：tarsal suture 的深度 | 只咬 tarsus 前表面、partial-thickness（模型 u 0.8：離結膜 0.64、離前表面 0.32 mm） | EyeRounds（Allen 2015 影片）；u 值示意 |
+| 瞼緣裂傷：缺口寬度、傷口長度、位移範圍、縫線高度、睫毛排數、外翻量 | 2.4 mm、6 mm、7 mm、示意 | 示意 |
+
+## 必寫的檢查（`check.js`，目前 144 項：上眼瞼 75＋下眼瞼 42＋瞼緣裂傷 27）
 - 解剖：MRD1 約 4 mm、瞼板沿眼瞼後表面 10 mm、亞洲人融合點在瞼板上緣下方而白人在上方、亞洲人眶隔一律在皮膚後方 ≥ 0.8 mm。
 - 兩個視角一致：正面的瞼板上緣、融合點、Whitnall 高度和矢狀切面一致；PLTR 切口、BLTR 皮膚切口、皺褶切口的高度在正面和矢狀切面一致；翻瞼視角的切口位置比例和矢狀切面一致。
 - 手術：內翻時睫毛碰到角膜、矯正後睫毛離開角膜 > 3 mm、上方瞼板切緣在瞼緣側瞼板前方、埋線終點在皮膚下（不在皮膚上）。
@@ -185,6 +201,9 @@
   - 外眥：外側眶緣 13.91 mm、21.07 mm（Tsai 2006）；Whitnall 結節在眶緣內 1.5 mm（Gioia 1987）；外眥到附著處 7.52 mm（Rosenstein 2000）；水平切面與正面的外眥、結節、瞼板條固定點、外側眶緣同 x；瞼板條和 canthopexy 都固定在眶緣後方的骨膜上；distraction 正常 < 6、內翻 7.5–11（Beigi 2008）、LTS 後 ≤ 6 mm（Pushker 2025）；拉開的眼瞼不進眼球。
   - 方向歪與化生的下睫毛碰到角膜；上下眼瞼合併圖的上半部和 `LID.draw` 逐字相同；所有新狀態三個視角都沒有 NaN／undefined。
 - 既有畫面不變：`node videos/tools/check-all.js videos/src/upper-lid-margin-rotation` 與 `…/levator-resection-brow-fixation` 不更新參考圖即通過（0.000%）；另外用 SVG 雜湊比對了 PLTR 影片整條時間軸、三張舊樣本頁與 Node 的狀態掃描（447 項逐字相同）。
+
+- 瞼緣裂傷（LAC1–LAC11，2026-11-06 用 12 種改錯全部抓到）：`lac` 0 和沒給參數逐字相同、沒裂傷時畫面沒有任何裂傷元素；缺口 2.4 mm、合起來為 0、尖端閉合；gray line 縫線離傷口邊緣 2 mm、在 gray line 深度；瞼緣面與正面同一針的 x 一致（開、半開、合）；tarsal sutures 上 3 下 2、都在傷口內、部分厚度在前半部；外翻、凹口、錯位的位移等於參數；線尾埋起來後朝上、離瞼緣 > 1 mm；瞼緣面層次順序；所有新狀態沒有 NaN；正面與傷口面的 tarsal suture 高度差 < 0.3 mm。
+- 舊畫面不變：改動前後對 96 組正面圖狀態做 SVG 雜湊比對，逐字相同；五部舊影片的參考圖全部 0 差異（2026-11-06）。
 
 ## 已知的坑（眼瞼專屬；通用的坑見 `videos/models/README.md`）
 - **內翻的轉軸**：要以後瞼緣角為軸，讓瞼緣貼著眼球往內滾。以瞼板上緣為軸，瞼緣會穿進眼球；如果再加一個往前推的位移，眼瞼會變成往前翹的鉤子。
@@ -211,6 +230,12 @@
 - **水平切面的底色**：外眥前方是體外，底色要白；眶脂肪只填在眼瞼與外眥韌帶後面、眶外側壁內側，否則瞼板（米色）和脂肪分不出來。
 - **標籤的錨點要在視窗裡**：同一個錨點換了視窗（例如瞼板中段在瞼緣放大圖外面），引線就會拉到面板外；換視窗時錨點要跟著換。
 
+- **裂傷用位移畫，不用兩塊剪下來移開**：在完整的眼瞼上畫一條零寬度的縫，再把縫兩側的每個點往外推（`poly`、`F` 經過位移函式），縫自然張成楔形，所有層次一起移動。圓和橢圓不經過 `poly`，不會跟著移；它們都在皮膚下（脂肪、肌肉紋理），開窗時傷口旁約 1 mm 內會有一點錯開。
+- **缺口高度要從睫毛線量，不是從後瞼緣量**：正面圖的瞼緣面在後瞼緣與睫毛線之間（約 1 mm 高），整個瞼緣面在傷口最寬處；起初從後瞼緣量，前緣的缺口被算窄，兩個視角同一針差 0.13 mm。
+- **定位點不要位移兩次**：`draw` 結束時已經把定位點換成畫面位置；檢查「尖端閉合」時拿畫面位置再位移一次，故意改錯也量不出來。要從組織位置算。
+- **縫隙上不能有瞼緣線**：眼裂的描邊在第 0 層、不受開窗影響，會橫越缺口；有裂傷時這條描邊也套上開窗的遮罩。
+- **參數名撞名**：裂傷的 tarsal suture 起初叫 `tarSut`，和 levator resection 的參數同名，正面圖因此多畫出 levator 的三針瞼板固定縫線（樣本圖自檢時發現）；裂傷參數一律 `lac` 開頭。
+
 ## 檔案
 - `lid.js`：矢狀切面。畫出眶上緣與 roof（含骨膜）、眉毛、額肌、ROOF、眶隔、腱膜前脂肪、levator 與 aponeurosis、Müller、瞼板與 meibomian gland、上穹窿、superior rectus、眼輪匝肌、睫毛與毛囊、gray line、MCJ、marginal 與 peripheral arcade、眼球（角膜、虹膜、水晶體、睫狀體）。
 - `coronal.js`：正面（可開窗）與翻瞼視角。
@@ -228,3 +253,5 @@
 - 這三張的參考圖登記在 `videos/src/lower-lid-entropion-revision/ref/manifest.json`。
 - `check.js`：自我檢查。
 - 輸出樣本圖（在 `videos/models/` 執行）：`node shot.js eyelid/sample.html eyelid/sample-asian.jpg 2`
+- `laceration.js`：瞼緣裂傷（`LAC`）：瞼緣面視角（`LAC.margin`）、傷口面（矢狀）的縫線（`LAC.sag`）、正面的縫線（`LAC.cor`）。正面的裂傷本身在 `coronal.js` 的 `lacWarp`。
+- `sample-laceration.html`、`sample-laceration.jpg`：裂開、gray line 第一針、tarsus 3 針、縫好外翻與線尾，每一步上排機轉切面、下排正面；參考圖登記在 `videos/src/eyelid-margin-laceration-repair/ref/manifest.json`。

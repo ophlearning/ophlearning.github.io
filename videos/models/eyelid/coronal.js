@@ -10,7 +10,11 @@
 // The incision height comes from the sagittal model (s = 3 mm).
 // ============================================================================
 const CORONAL = (() => {
-  const { add, sub, unit, hyp, lerp, ss, hash, poly, F, NS } = LID;
+  const { add, sub, unit, hyp, lerp, ss, hash, poly: poly0, F: F0, NS } = LID;
+  // laceration (opt-in, state.lac): every path point goes through WARP while one drawing is made; WARP is null otherwise,
+  // so poly / F are exactly LID.poly / LID.F and drawings without a laceration are unchanged byte for byte.
+  let WARP = null;
+  const F = p => F0(WARP ? WARP(p) : p), poly = (pts, close = true) => poly0(WARP ? pts.map(WARP) : pts, close);
   const psin = a => Math.max(0, Math.sin(a));
   function heights(variant, st = {}) {       // central heights from the sagittal model (y of the projected point); the lid part follows mrd1
     const G = LID.geom(variant), UF = LID.UF, sl = LID.slideAngle(st.mrd1) ? (p, s) => LID.slide(p, s, st) : p => p;
@@ -68,7 +72,31 @@ const CORONAL = (() => {
   // levator resection states (see LID.draw): mrd1, excMark, excCut, excRemove, septOpen, fatUp, dis, clamp, resect, advance, tarSut, creaseFix,
   // browPlane, browSut, browTie, browY, prolapse; overlays: notch (supraorbital notch and nerve projected on the skin). Heights come from LID.keyPoints.
   const LR_KEYS = ['excMark', 'excCut', 'excRemove', 'septOpen', 'fatUp', 'dis', 'clamp', 'resect', 'advance', 'tarSut', 'creaseFix', 'browPlane', 'browSut', 'browTie', 'prolapse'];
+  // Full-thickness vertical laceration of the upper lid (state.lac 0–1 = how far the edges are pulled apart). It is drawn by warping the
+  // intact lid: points on either side of the wound line x = lacX move apart (lacGap mm at the margin, schematic), the gap narrows linearly to
+  // the apex lacS mm up the tarsus (sagittal distance from the margin, projected with LID.UF so both views agree) and the shift fades over
+  // LAC_FADE mm sideways (schematic). lacPout (mm, + = everted / pouting margin, − = notch) and lacStep (mm, nasal side raised = misaligned
+  // margin) act on the margin around the wound. Returns the warp (tissue point → drawn point) or null.
+  const LAC_FADE = 7;
+  function lacWarp(st) {
+    const open = st.lac || 0, pout = st.lacPout || 0, step = st.lacStep || 0;
+    if (!open && !pout && !step) return null;
+    const x0 = st.lacX || 0, G = (st.lacGap ?? 2.4) * open, dL = LID.UF.at(0, 0)[1] - LID.UF.at(st.lacS ?? 6, 0)[1];
+    // heights are measured from the lash line (anterior margin edge): the whole margin surface, posterior edge to lash line, is at s = 0 and opens fully
+    const dAnt = LID.UF.at(0, LID.U_SKIN)[1] - LID.UF.at(0, 0)[1], pr = x => prof(x, LC[0], MC[0], 0.6), dLa = dL + dAnt * pr(x0);
+    const fA = a => a <= 0 ? (a >= -3 ? 1 : Math.max(0, a + 4)) : Math.max(0, 1 - a / dLa);    // a = height above the lash line
+    const mA = a => a <= 0 ? (a >= -3 ? 1 : Math.max(0, a + 4)) : Math.max(0, 1 - a / 1.2);    // pout / step: the margin edge only
+    return ([x, y]) => { const xc = Math.max(LC[0], Math.min(MC[0], x)), d = x - x0, side = d >= 0 ? 1 : -1, a = Uy(xc) + dAnt * pr(xc) - y, h = 1 - ss(0, LAC_FADE, Math.abs(d));
+      return [x + side * G / 2 * fA(a) * h, y + (pout * Math.exp(-((d / 0.9) ** 2)) - (side > 0 ? step : 0) * h) * mA(a)]; };
+  }
   function drawBody(opt = {}) {
+    const W = lacWarp(opt.state || {});
+    if (!W) return drawLid(opt);
+    WARP = W;
+    try { const r = drawLid(opt); for (const k of Object.keys(r.A)) { const p = r.A[k]; if (Array.isArray(p) && p.length === 2 && typeof p[0] === 'number') r.A[k] = W(p); } r.lacW = W; return r; }
+    finally { WARP = null; }
+  }
+  function drawLid(opt = {}) {
     const st = opt.state || {}, H = heights(opt.variant || 'asian', st), o = [], A = {}, id = opt.id || 'cor';
     const lr = LR_KEYS.some(k => st[k]), K = lr ? LID.keyPoints(st, opt.variant || 'asian') : null;
     const browY = (st.browY || 0) + (st.browLift ?? 1.0) * (st.browTie || 0);
@@ -101,6 +129,13 @@ const CORONAL = (() => {
     // lower lid (opt-in, lower-coronal.js): only when opt.lower is given; without it every line below draws exactly as before
     const LO = opt.lower ? LOWERC.build(opt, { Uy, Ly, xs, prof, arcusY, id, C, LC, MC, face, fissure }) : null;
     if (LO) wins.push(...LO.windows);
+    // laceration (state.lac): a zero-width slit along the wound line, from just below the margin to the apex; the warp opens it into the
+    // wedge-shaped gap. Inside it every lid layer is removed and the globe shows. Its outline is drawn as two wound edges (below), not as a window cut.
+    const lacX = st.lacX || 0, lacApexA = LID.UF.at(0, 0)[1] - LID.UF.at(st.lacS ?? 6, 0)[1];
+    const lacSide = sg => [-1.2, -0.6, 0, 0.25, 0.5, 0.75, 1].map((t, i) => [lacX + sg * 0.004, Uy(lacX) - (i < 2 ? t : t * lacApexA)]);
+    const lacSlit = (st.lac || 0) > 0.001 ? [...lacSide(-1), ...lacSide(1).reverse()] : null;
+    if (lacSlit) wins.push({ poly: lacSlit, depth: 0, noEdge: true });
+    if (st.lac || st.lacPout || st.lacStep) { A.lacEdgeT = [lacX - 0.004, Uy(lacX)]; A.lacEdgeN = [lacX + 0.004, Uy(lacX)]; A.lacApex = [lacX, Uy(lacX) - lacApexA]; A.lacLash = [lacX + 0.004, lashY(lacX)]; }
     // levator resection incisions, projected from the sagittal skin points (central heights); medial / lateral heights scale with incH
     const incH = st.incH || [2.5, 4, 4], ratio = st.incX ? incRatioX(st.incX, incH) : x => (x >= 0 ? lerp(1, incH[0] / incH[1], Math.min(1, x / 7)) : lerp(1, incH[2] / incH[1], Math.min(1, -x / 7))) * prof(x, -12.4, 9.8, 0.35);
     const dLo = K ? K.incLo[1] - K.lash[1] : 0, dHi = K ? K.incHi[1] - K.lash[1] : 0;
@@ -121,12 +156,12 @@ const CORONAL = (() => {
     s0 += `<path d="${poly(xs(-19.5, 17.5).map(x => [x, arcusY(x)]), false)}" fill="none" stroke="${C.boneS}" stroke-width="1.6" ${NS}/>`;
     for (let k = 0; k < 90; k++) { const x = lerp(-19, 17, hash(k, 21)), y = arcusY(x) - 0.4 - 4 * hash(21, k); s0 += `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${(0.08 + 0.1 * hash(k, 3)).toFixed(2)}" fill="#ddcfaa"/>`; }
     // globe in the fissure
-    s0 += `<clipPath id="${id}_fis"><path d="${poly(fissure())}"/></clipPath><g clip-path="url(#${id}_fis)"><rect x="-20" y="-8" width="40" height="16" fill="${C.sclera}"/>
+    s0 += `<clipPath id="${id}_fis"><path d="${poly(fissure())}"/>${lacSlit ? `<path d="${poly(lacSlit)}"/>` : ''}</clipPath><g clip-path="url(#${id}_fis)"><rect x="-20" ${lacSlit ? 'y="-15" width="40" height="23"' : 'y="-8" width="40" height="16"'} fill="${C.sclera}"/>
       <circle cx="0" cy="0" r="5.6" fill="url(#${id}_iris)"/><circle cx="0" cy="0" r="5.6" fill="none" stroke="#24150d" stroke-width="1.6" ${NS}/><circle cx="0" cy="0" r="2.0" fill="#0c0908"/>
       <ellipse cx="-0.9" cy="-1.2" rx="0.55" ry="0.45" fill="#fff" opacity="0.85"/>
       <path d="${poly([...FX.map(x => [x, Uy(x)]), ...FX.slice().reverse().map(x => [x, Uy(x) + 1.1])])}" fill="#000" opacity="0.13"/>
       <ellipse cx="11.6" cy="0.55" rx="1.25" ry="0.95" fill="#e48f95"/><path d="M10.25 -1.1 Q9.7 0.5 10.3 2.0" fill="none" stroke="#e7a3a6" stroke-width="1.6" ${NS}/></g>`;
-    s0 += `<path d="${poly(fissure())}" fill="none" stroke="#9b6450" stroke-width="1.2" ${NS}/>`;
+    s0 += `<path d="${poly(fissure())}" fill="none" stroke="#9b6450" stroke-width="1.2" ${NS}${lacSlit ? ` mask="url(#${id}_m1)"` : ''}/>`;   // laceration: no margin line across the gap
     // supraorbital notch in the rim and the supraorbital nerve and artery running up over the frontal bone (branching pattern schematic)
     const nY = arcusY(NOTCH_X), nR = NOTCH_W / 2, notchP = []; for (let a = 180; a <= 360; a += 10) notchP.push([NOTCH_X + nR * Math.cos(a * Math.PI / 180), nY + 1.25 * nR * Math.sin(a * Math.PI / 180)]);
     s0 += `<path d="${poly(notchP)}" fill="${C.deep}" stroke="${C.boneS}" stroke-width="1.2" ${NS}/>`;
@@ -308,7 +343,8 @@ const CORONAL = (() => {
         + `<path d="${poly(LID.spline([[NOTCH_X, nY], [NOTCH_X - 0.2, nY - 2.5], [NOTCH_X - 0.9, nY - 6], [NOTCH_X - 2.2, nY - 11]], 0.1), false)}" fill="none" stroke="#b86e00" stroke-width="1.6" stroke-dasharray="5 4" ${NS}/></g>`); }
     if (LO) { o.push(LO.over); Object.assign(A, LO.A); }
     // ---------------- cut edges of the windows
-    for (const w of wins) o.push(`<path d="${poly(w.poly)}" fill="none" stroke="${C.cut}" stroke-width="1.1" ${NS} opacity="0.7"/>`);
+    for (const w of wins) if (!w.noEdge) o.push(`<path d="${poly(w.poly)}" fill="none" stroke="${C.cut}" stroke-width="1.1" ${NS} opacity="0.7"/>`);
+    if (lacSlit) for (const sg of [-1, 1]) o.push(`<path d="${poly(lacSide(sg).slice(2), false)}" fill="none" stroke="#a5474a" stroke-width="1.5" stroke-linecap="round" ${NS}/>`);   // wound edges (cut tissue)
     // sagittal plane marker
     if (opt.section !== false) o.push(`<path d="M0 ${(H.arc - 5).toFixed(2)}V${LO ? 19 : 7}" stroke="#0e7c6b" stroke-width="1.4" stroke-dasharray="6 4" ${NS}/>`);
     A.section = [0, H.arc - 4.6];
@@ -377,6 +413,6 @@ const CORONAL = (() => {
   }
   // vertical strip windows across the upper lid, from the rim down to just above the lash line
   function strip(x0, x1, depth, top = -21.4) { const p = []; for (let x = x0; x <= x1 + 1e-9; x += 0.25) p.push([x, top]); for (let x = x1; x >= x0 - 1e-9; x -= 0.25) p.push([x, Uy(Math.max(LC[0], Math.min(MC[0], x))) - 0.75]); return { poly: p, depth }; }
-  return { draw, drawEverted, EV_TILT, strip, Uy, Ly, LC, MC, NOTCH_X, NOTCH_W, browLoY, U4, LIMB };
+  return { draw, drawEverted, EV_TILT, strip, Uy, Ly, LC, MC, NOTCH_X, NOTCH_W, browLoY, U4, LIMB, lacWarp, LAC_FADE };
 })();
 if (typeof module !== 'undefined') module.exports = CORONAL;

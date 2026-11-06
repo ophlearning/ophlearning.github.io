@@ -39,14 +39,14 @@
 
 ## 兩個同步視角（寫進模型卡時定案）
 - 縫 margin 的段落（4-2、4-4）：
-  - 機轉切面：**瞼緣俯視**（新視角，從上方看上瞼緣的表面）。由前到後排出皮膚、睫毛線、gray line、meibomian 開口、MCJ、結膜，兩側傷口邊緣對不齊時看得到錯位。左右方向和正面圖共用 x，前後方向和矢狀切面共用（瞼緣上各結構的深度沿用 `lid.js` 的 `U_MCJ`、`U_ORIF`、`U_GREY`、`U_SKIN`）。
+  - 機轉切面：**瞼緣面**（新視角，從下方看上瞼緣、把表面攤平：上＝前、下＝後）。由前到後排出皮膚、睫毛線、gray line、meibomian 開口、MCJ、結膜，兩側傷口邊緣對不齊時看得到錯位。左右方向和正面圖共用 x，前後方向和矢狀切面共用（瞼緣上各結構的深度沿用 `lid.js` 的 `U_MCJ`、`U_ORIF`、`U_GREY`、`U_SKIN`）。
   - 術者視角：正面皮膚面，畫出垂直的全層裂傷與兩邊分開的缺口（新狀態）。
 - 縫 tarsus 的段落（4-3）：
   - 機轉切面：經傷口的矢狀切面。傷口在中央、垂直於瞼緣，所以傷口的切面本身就是矢狀面；在這個面上畫每一針咬在哪個高度、不穿到結膜。用現有的 `LID.draw`。
   - 術者視角：正面開窗到瞼板層（現有的 `CORONAL.strip`），看得到每一針的高度。
 - 皮膚與線尾（4-5、4-6）：矢狀切面＋正面。
 - 下眼瞼那一章：同樣的視角，換成 `lower.js`、`lower-coronal.js`。
-- 術者在治療室坐在病人頭側：瞼緣俯視和術者實際看到的方向接近，面板標題要寫明「從上方看」與哪邊是 nasal。
+- 上瞼緣的表面朝下，要從下方往上看才看得到；面板標題寫明「從下方看」與哪邊是 temporal。（2026-11-06 做模型時更正：原本寫「從上方看、和術者坐在頭側看到的方向接近」是錯的。）
 
 ## 模型要補的部分（先寫進 `videos/models/eyelid/CARD.md`，數值逐項找出處）
 - 選用式加進去（新檔加上只有給參數才執行的接點），舊影片的畫面逐字不變，和下眼瞼的做法相同。
@@ -58,7 +58,7 @@
   - 4-7 的另一種做法：7-0 Vicryl vertical mattress 在 meibomian 開口與睫毛毛囊兩個高度，far–far 再 near–near，綁緊後外翻（EyeRounds 影片）。
   - Lash line 第二針、orbicularis、皮膚縫線、silk 線尾綁進皮膚縫線。
   - 錯誤示範：tarsal suture 穿到結膜面、打平沒外翻後癒合成 notching（示意）。
-- 新視角：瞼緣俯視（新檔，例如 `margin.js`），向 `views.js` 報到。
+- 新視角：瞼緣面（`laceration.js` 的 `LAC.margin`，視角 `mar`），已向 `views.js` 報到。
 - 淚道：現有模型沒有。第 2 章的 punctum 位置先查出處；查不到就只畫正面的示意點並標「示意」，不做 canaliculus 的立體模型。
 - 檢查（`check.js`）：進出針離傷口的距離與深度等於旁白的數字；tarsal suture 離結膜面與前表面都 ≥ 0.3 mm；兩個視角同一針的 x 與高度差 < 0.3 mm；打結後兩側 gray line 對齊、瞼緣外翻；線尾的方向離開角膜；所有新狀態沒有 NaN／undefined；舊畫面逐字不變。
 
@@ -107,8 +107,8 @@
 
 ## 驗收項目
 - [x] 站長確認的病例摘要原樣寫進「病例情境」並註明日期（2026-11-06）。
-- [ ] 模型卡加上裂傷、縫線與瞼緣俯視的段落與出處；樣本圖自己放大檢查；`eyelid/check.js` 的新檢查全部通過，每一項都故意改錯過一次。
-- [ ] 舊影片畫面不變：前四部與 PLTR 的 `check-all.js` 不更新參考圖即通過。
+- [x] 模型卡加上裂傷、縫線與瞼緣面的段落與出處；樣本圖自己放大檢查（`sample-laceration.jpg`，Claude 自檢）；`eyelid/check.js` 新增 27 項全部通過，12 種故意改錯全部抓到（2026-11-06）。下眼瞼的裂傷與淚道沒有建模（第 6 章用矢狀切面＋縫好的正面圖）。
+- [x] 舊影片畫面不變：五部舊影片的參考圖不更新即全部 0 差異；另外對 96 組正面圖狀態做 SVG 雜湊比對，逐字相同（2026-11-06）。影片層級檢查在 4 部影片失敗，原因是 `ref/manifest.json` 的 `textBase` 指向已合併、刪除的 PR 分支上的 commit，新抓的 repo 裡沒有；這是原本就有的問題，和這次改動無關，沒有修。
 - [ ] 每段縫合步驟同時顯示兩個視角，同一針在兩圖的位置差 < 0.3 mm。
 - [ ] 第 2 章每一個「轉 OR」條件都有出處；沒有出處的標示意或拿掉。
 - [ ] 旁白每個數值都有出處並寫成檢查（數字帳本）；沒有出處的標「示意」或拿掉，列在出片前的總覽（`overview-notes.md`）。
@@ -121,4 +121,11 @@
 - 2026-11-06：縫合技術與處置的出處查證（上面 9–18）。最重要的發現：EyeWiki 建議 full-thickness 與傷到 margin 的裂傷在 OR 縫，所以第 2 章要先講指引、再講在治療室縫的條件與風險（Schafer 2026）。站長核准在雲端環境的網路白名單加上 www.ncbi.nlm.nih.gov、eyewiki.org、eyerounds.org。
 - 2026-11-06：`script-draft.md` 第 1 版完成（8 章、20 段，18 筆參考文獻）。主線照 EyeWiki（gray line 6-0 silk），EyeRounds 的 Vicryl vertical mattress 放在 4-7 對照；EyeRounds 的三個來源補上外翻、tarsus 只咬前表面、術前評估與準備。文末列出還沒解決的 [待核對出處]、[推論] 與 [示意]。
 - 2026-11-06：腳本的 [待核對出處] 全部處理完（加 EyeWiki 的 Ruptured Globe 與 Canalicular trauma 兩個條目，共 20 筆參考文獻）。站長要求在同一個對話直接繼續做模型。
-- 下一步：模型卡與模型（裂傷、縫線、瞼緣俯視）→ 樣本圖自檢 → 影片。
+- 2026-11-06：模型完成（上眼瞼）。
+  - 正面圖：`coronal.js` 加選用的 `lacWarp`，在完整眼瞼上畫零寬度的縫再往兩側推開，所有層次一起移動，缺口露出眼球；`lacPout` 外翻或凹口、`lacStep` 上下錯位。
+  - 新檔 `laceration.js`：瞼緣面視角（從下方看上瞼緣，上＝前）、傷口面（矢狀）與正面的縫線。參數一律 `lac` 開頭（`tarSut` 曾和 levator resection 撞名）。
+  - 三個新視角向 `views.js` 報到（`mar`、`lacsag`、`laccor`），`registry.js` 加上 `laceration.js`；`lid.js` 多匯出 `U_CONJ`、`U_MCJ`、`U_ORIF`、`U_GREY`（畫面不變）。
+  - 檢查：同一針在瞼緣面與正面差 0.000 mm；tarsal suture 在正面與傷口面高度差 0.109 mm。
+  - 樣本圖 `videos/models/eyelid/sample-laceration.jpg` 登記在本片 `ref/manifest.json`（`page` 還是 null）。
+  - 這台機器補裝了字型（`videos/models/fonts/`、PLTR 的 `anim/fonts/`，都不進 git）。
+- 下一步：影片頁（`anim/segments.js`、`anim/draw.js`、`anim/video.html`，照第一部組合刀影片的寫法）→ 每段兩個視角 → 本片 `check.js`（數字帳本＋旁白↔模型）→ 參考圖 → 出片前總覽。
