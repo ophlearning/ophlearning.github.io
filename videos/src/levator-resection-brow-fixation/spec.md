@@ -111,5 +111,5 @@
   - 眼瞼正面模型新增 `incX`（三點高度落在指定位置；不給時畫面不變，PLTR 與樣本參考圖不變）。
   - 語音：共用 MeloTTS（`tts/vits-melo-tts-zh_en` 連到 `~/.cache/ophtts/`），本片發音補在 `tts/lexicon-extra.json`；`anim/timeline.js` 進 git。
   - 參考圖：每章至少一張，共 19 張（Claude 自檢）；出片前總覽在 `ref/overview/`（每章一張）與 `overview-notes.md`（示意與沒有直接出處的內容）。
-  - 出片：`out/levator-resection-brow-fixation.mp4`（不進 git）；`publish/` 有 YouTube 說明欄、字幕、章節與網站條目草稿（`yt: 'TBD'`）。
+  - 出片：`out/levator-resection-brow-fixation.mp4`（不進 git；ffprobe 593.77 秒＝9:54，1920×1080、30 fps、AAC 48 kHz 立體聲，旁白 −16 LUFS，57 MB）；`publish/` 有 YouTube 說明欄、字幕、章節與網站條目草稿（`yt: 'TBD'`）。
 - 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」，不同處改 `params.js`／`segments.js` 後重新出片。
