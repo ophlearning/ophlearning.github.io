@@ -111,7 +111,7 @@
 - 下眼瞼正面另外有：`lstrips: [[x0, x1, depth], ...]` 逐層開窗的縱條（像 `CORONAL.strip`）；`canthotomy`、`cantholysis`、`strip`（參數 `stripL` 5 mm、`shortMm`，示意）、`stripFix`、`canthopexy`、`lts`（mattress 變三針）、`rimShow`（皮膚下的外側眶緣虛線）。
 - 水平切面（`CANTHUS.draw({ state })`）：`lax` horizontal laxity、`distract` distraction test（0–1，拉開到該眼瞼可拉開的距離）、`canthotomy`、`cantholysis`、`strip`、`stripL`、`shortMm`、`stripFix`、`canthopexy`、`shortMark`。
 - 瞼緣裂傷（正面 `CORONAL.draw` 的 state；瞼緣面、傷口面、正面縫線用 `LAC.margin`／`LAC.sag`／`LAC.cor`，同一個 state）：
-  - `lac`（0–1）傷口分開的程度：瞼緣處分開 `lacGap`（預設 2.4 mm，示意），往上到尖端線性變窄；尖端在 `lacS`（預設 6 mm，沿瞼板從瞼緣量，示意，用 `LID.UF` 投影到正面）；`lacX` 傷口位置（預設 0＝中央）。位移往兩側在 `LAC_FADE` 7 mm 內遞減（示意）。
+  - `lac`（0–1）傷口分開的程度：瞼緣處分開 `lacGap`（預設 2.4 mm，示意），往上到尖端線性變窄；尖端在 `lacS`（預設 6 mm，沿瞼板從瞼緣量，示意，用 `LID.UF` 投影到正面）；`lacX` 傷口位置（預設 0＝中央）。傷口兩側 `LAC_RIGID` 2.5 mm 內整塊平移（離邊緣 2 mm 的縫線在打開時距離不變），之後到 `LAC_FADE` 7 mm 遞減為 0（示意）。
   - `lacPout`（mm）＋＝瞼緣在傷口處外翻、−＝凹口（notch）；`lacStep`（mm）鼻側瞼緣抬高＝上下錯位；`lacAP`（mm，只在瞼緣面）鼻側往前＝gray line 前後錯位。
   - 縫線：`lacGrey`／`lacGreyTie`（gray line 6-0 silk，離傷口邊緣 `GREY_D` 2 mm：EyeWiki）、`lacTar`（tarsal sutures，上眼瞼 3 針、下眼瞼 2 針：EyeWiki；只咬 tarsus 前半部：EyeRounds；高度示意）、`lacLash`／`lacLashTie`（睫毛線 6-0 silk：EyeWiki；距離示意）、`lacSkin`（皮膚縫線，位置示意）、`lacTails`（silk 線尾埋進最下面那針皮膚縫線、朝上：EyeWiki）、`lacVM`／`lacVMTie`（EyeRounds：7-0 Vicryl vertical mattress 在 meibomian 開口，far–far 再 near–near；距離示意）。傷口打開時縫線畫成虛線（在組織裡）；傷口合起來後 tarsal sutures 變淡（在皮膚底下），除非用 `lacWin` 開窗。
   - 參數名一律 `lac` 開頭：曾經用 `tarSut`，和 levator resection 的瞼板固定縫線同名，正面圖多畫出三針 levator 縫線（見已知的坑）。
