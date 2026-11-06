@@ -189,12 +189,12 @@ DRAW2['3-1'] = T => {
   const c0 = VL.lcor(UP_DONE, strips, PW, PH, LC_WIN, 'cR'), c1 = VL.lcor(UP_DONE, { ...L_PRE, subcil: inc, incH: LLP.incH }, PW, PH, LC_WIN, 'cS');
   const A = s0.A, A1 = s1.A, B = c0.A, B1 = c1.A, oa = 1 - x3;
   // tarsal height (Lim 2004) as a dimension along the anterior tarsal surface
-  const DP = s0.r.DP, ta = s0.P(DP.at(0.05, LOWER.U_TARL + 0.25)), tb = s0.P(DP.at(LOWER.S_TARL, LOWER.U_TARL + 0.25)), od = T.on(0, 0.6, 1.0) * (1 - T.on(1));
+  const DP = s0.r.DP, ta = s0.P(DP.at(0.05, LOWER.U_CONJ + 0.3)), tb = s0.P(DP.at(LOWER.S_TARL, LOWER.U_CONJ + 0.3)), od = T.on(0, 0.6, 1.0) * (1 - T.on(1));
   let ex = `<g opacity="${od * oa}">${VIEWS.dim(ta, tb, COL.accent)}</g>` + lab(`下瞼板 約 ${LLP.tarHSay} mm`, 'lower tarsus', 14, 150, mixP(ta, tb, 0.5), { color: COL.accent, bold: true, op: od * oa });
   ex += lab('瞼板', 'tarsus', PW - 12, 64, A.tarsusL, { side: 'R', bold: true, op: oa * (1 - od) });
   ex += lab('囊瞼筋膜', 'capsulopalpebral fascia', PW - 12, 236, A.cpf, { side: 'R', bold: true, color: '#7b6a3a', op: oa * T.on(1, 0.6) });
   ex += lab('下瞼板肌', 'inferior tarsal muscle', PW - 12, 290, A.itm, { side: 'R', bold: true, color: '#9b4a55', op: oa * T.on(1, 0.6, 0.8) });
-  ex += lab('眶隔', 'orbital septum', 14, 236, A.septumL, { bold: true, op: oa * T.on(2, 0.6) });
+  ex += lab('眶隔', 'orbital septum', 14, 236, s0.P(s0.r.SEPT.off(s0.r.SEPT.L * 0.2, 0)), { bold: true, op: oa * T.on(2, 0.6) });
   ex += lab('融合處（常不明確）', 'fusion, often absent', 14, 290, A.fusionL, { color: COL.accent, op: oa * T.on(2, 0.6, 0.8) });
   ex += lab('睫毛下切口', 'subciliary incision', 14, 236, A1.incL, { color: COL.red, bold: true, op: x3 });
   ex += lab('睫毛線', 'lash line', 14, 52, A1.lashSkinL, { op: x3 });
@@ -204,7 +204,7 @@ DRAW2['3-1'] = T => {
   rx += lab('瞼板', 'tarsus', PW - 12, 200, c0.P([3, (CORONAL.Ly(3) + c0.r.tarBotLY(3)) / 2 + 0.2]), { side: 'R', bold: true, op: oa });
   rx += lab('下瞼板肌', 'inferior tarsal muscle', PW - 12, 300, c0.P([4.5, c0.r.fornixLY(4.5) - 0.7]), { side: 'R', bold: true, color: '#9b4a55', op: oa * T.on(1, 0.6, 0.8) });
   const ie = c1.P([-9, c1.r.incLY(-9)]), xi = -1;
-  rx += `<g opacity="${x3}">${VIEWS.dim(c1.P([xi, c1.r.lashLY(xi)]), c1.P([xi, c1.r.incLY(xi)]), COL.red)}</g>` + lab(`睫毛下 ${LLP.incH} mm`, 'below the lashes', PW - 12, PH - 30, c1.P([xi + 0.2, (c1.r.lashLY(xi) + c1.r.incLY(xi)) / 2]), { side: 'R', color: COL.red, bold: true, op: x3 * ss(0.5, 1, inc) });
+  rx += `<g opacity="${x3 * ss(0.5, 1, inc)}">${VIEWS.dim(c1.P([xi, c1.r.lashLY(xi)]), c1.P([xi, c1.r.incLY(xi)]), COL.red)}</g>` + lab(`睫毛下 ${LLP.incH} mm`, 'below the lashes', PW - 12, PH - 30, c1.P([xi + 0.2, (c1.r.lashLY(xi) + c1.r.incLY(xi)) / 2]), { side: 'R', color: COL.red, bold: true, op: x3 * ss(0.5, 1, inc) });
   rx += lab('切口沿著睫毛線', 'incision', 14, PH - 30, ie, { color: COL.red, bold: true, op: x3 * ss(0.35, 0.6, inc) });
   rx += note('正常解剖；逐層開窗', oa * T.on(0), 26);
   return { L: { svg: xfade(s0.svg, s1.svg, x3), extra: ex, P: LSAG_P }, R: { svg: xfade(c0.svg, c1.svg, x3), extra: rx, P: COR_P } };
@@ -324,7 +324,7 @@ DRAW2['4-2'] = T => {
   if (B.misLashL) rx += lab('方向歪的睫毛', 'misdirected lashes', 14, 52, B.misLashL, { color: COL.amber, bold: true, op: (1 - T.on(1)) * (1 - pl) });
   rx += lab('針從睫毛根部進', 'needle at the root', PW - 12, 52, cv.P([MIS_X[1], cv.r.lashLY(MIS_X[1])]), { side: 'R', bold: true, op: T.on(1, 0.6) * (1 - T.on(2)) });
   rx += lab('處理過的毛囊（示意）', 'treated follicles', 14, PH - 30, cv.P([MIS_X[0], cv.r.lashLY(MIS_X[0]) + 0.35]), { color: '#7a4a2a', bold: true, op: ss(0.3, 0.8, tr) });
-  rx += tag('機器、能量、時間、根數：依院內常規', T.on(3), COL.accent, PH - 70);
+  rx += tag('機器、能量、時間、根數：依院內常規', T.on(3), COL.accent, 34);
   return { L: { svg: sv.svg, extra: ex, P: LZ_P }, R: { svg: cv.svg, extra: rx, P: CZ_P } };
 };
 
