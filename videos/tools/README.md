@@ -69,7 +69,7 @@
   - `render.js`：沿用上一格的 JPEG。畫面一變，下一格會再截一次確認，才開始沿用，避免沿用到還沒畫完的那一格。截圖改走 CDP（同樣的裝置比例），位元組和 `page.screenshot` 相同。
   - `build.sh`：切成 4 × worker 段，讓 4 核一起收尾；同一台機器一次只出一部（鎖檔 `/tmp/ophlearning-video-build.lock`）。
 - 驗證：`node videos/tools/video-kit/render.js $V/anim/video.html - --verify --from F --to F` 逐格比對快速路徑和舊路徑（每格重設畫面＋`page.screenshot`），要全部相同。
-- 第一部（9:54）實測：舊流程與第三部同時跑，約 [待實測補上]；新流程單獨跑 [待實測補上]。
+- 實測：舊流程出第二部（8:49）時和第三部同時跑，53 分鐘；新流程單獨出第一部（9:54，17,813 格，其中 6,686 格沿用），20 分鐘（同時有一個 agent 在寫另一部的腳本）。剩下的大頭是每一格都要呼叫 `renderAt`（約 0.15 秒），連沿用的格子也一樣。
 
 ### 共用套件還沒收進來、各影片自己帶的東西
 - 下眼瞼視角：第二部 `anim/views-lower.js`（`VL.lsag`、`VL.lcor`、`VL.axial`）、第三部 `anim/views-lower.js`（`VL.lsag`、`VL.lcor`、`VL.upper`），回傳格式和 `VIEWS.sag` 相同；下一部用到時收進 `kit.js`。
