@@ -114,7 +114,7 @@
 - [x] 旁白每個數值都有出處並寫成檢查（本片 `check.js`：293 項數字帳本＋32 項旁白對模型，`--selftest` 23 種改錯全部抓到）；示意與推論列在 `overview-notes.md`。
 - [x] 下眼瞼那一章完成（下眼瞼矢狀切面＋正面內側；兩針 tarsal suture 的高度標示意，沒有畫下眼瞼裂開）。
 - [x] `node videos/tools/check-all.js videos/src/eyelid-margin-laceration-repair` 六項全部通過；參考圖 13 張（每章至少一張，Claude 自檢）。
-- [ ] 出片前總覽（`ref/overview/` 每章一張）已備好；mp4 已出片。上傳為不公開並同步網站：站長這次只要求做到出片，還沒做。
+- [x] 出片前總覽（`ref/overview/` 每章一張）已備好；mp4 已出片；2026-11-06 上傳 YouTube（不公開，ID `JXGYQOkhiGk`，YouTube 回報 privacy: unlisted）並同步網站 `videos/index.html`（瀏覽器開 `videos/#eyelid-margin-laceration-repair`：沒有 JS 錯誤、嵌入網址正確）。
 
 ## 進度
 - 2026-11-06：站長確認病例情境（以上眼瞼為主、最後一章講下眼瞼）；規格書與第一批文獻（8 篇）完成。
@@ -133,4 +133,5 @@
   - 模型小改：傷口兩側 2.5 mm 內整塊平移，打開時 gray line 縫線離邊緣也是 2 mm（原本約 1.76 mm）。
   - 語音：136 句，影片約 12 分 30 秒；`anim/timeline.js` 進 git。`textBase` 填影片頁的 commit（ef9bf49），PR squash 合併後要改成 main 上的合併 commit。
   - `publish/`：章節、字幕、YouTube 說明欄、網站條目草稿（`yt: 'TBD'`）。
-- 下一步：上傳 YouTube（不公開）並同步網站（站長說要再做）；PR 合併後把 `textBase` 改成 main 上的合併 commit。
+- 2026-11-06：上傳 YouTube（不公開，`JXGYQOkhiGk`）並同步網站；條目加在 `VIDEOS` 最前面，章節照 `publish/chapters.txt`、`dur` 773（ffprobe 773.07 秒）。
+- 下一步：無（刀後或站長提供院內 SOP 時再依規格書「術式依據」校正）。PR 用合併 commit（不 squash）合併，`textBase`（ef9bf49）在 main 上仍找得到。

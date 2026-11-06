@@ -1,5 +1,5 @@
   {
-    id:'eyelid-margin-laceration-repair', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'eyelid-margin-laceration-repair', type:'youtube', yt:'JXGYQOkhiGk', cat:'surgery',
     zh:'外傷性瞼緣裂傷（marginal eyelid laceration）的一期縫合', en:'Primary repair of a traumatic full-thickness eyelid margin laceration',
     dur:773,
     short:'值班時在治療室縫上眼瞼 full-thickness margin laceration：先排除 open globe、哪些情況要轉 OR、gray line 第一針、partial-thickness tarsal sutures、瞼緣外翻、線尾埋進皮膚縫線，以及術後與值班清單。',
