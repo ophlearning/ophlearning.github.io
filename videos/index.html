@@ -160,6 +160,35 @@ const CATS = [
    dur 是片長（秒）；chapters 的時間以秒為單位；refs 的 doi 或 url 擇一 */
 const VIDEOS = [
   {
+    id:'open-globe-zone1-2-repair', type:'youtube', yt:'LTcdHLzDRkY', cat:'surgery',
+    zh:'Open globe zone I–II 修補：雙手持針、器械與縫合順序', en:'Open globe zone I–II repair: two-handed suturing, instruments and order of closure',
+    dur:413,
+    short:'右眼 10 點、跨過角膜緣到 zone II 的角鞏膜裂傷：看懂 zone、器械與左右手的拿法、先回納虹膜、第一針對齊角膜緣、角膜縫合與埋結、360° 探查與鞏膜由前往後縫合，以及模擬練習清單。',
+    sum:'這支影片用一條右眼 10 點的角鞏膜裂傷（從角膜跨過角膜緣，停在角膜緣後 4 mm，角膜緣處虹膜脫出）示範 zone I 到 zone II 的修補。先用經傷口的子午切面說明 zone 的分法、zone II 底下是睫狀體、直肌附著在它後面；顯微鏡下看 peaked pupil、脫出的虹膜與蓋住鞏膜段的結膜下出血，整個過程不壓眼球。接著是器械與雙手：持針器像握筆一樣拿、手靠穩、夾針身稍靠針尾、垂直進出針，左手有齒鑷夾邊緣，角度不順就反手或換手。然後從傷口對側的 paracentesis 打 OVD、用 cyclodialysis spatula 回納虹膜；第一針用 9-0 nylon 對齊角膜緣；角膜用 10-0 nylon，深度 70–90%、垂直對稱、周邊長而淺中央短而深、避開視軸，打結後剪短埋進針道；最後 360° 剪開結膜探查、鞏膜由前往後以 8-0 nylon 縫合，重建前房、確認不漏水、結膜蓋回。',
+    note:'畫面為右眼的示意動畫（經傷口的切面＋術者坐 12 點的顯微鏡俯視，另有雙手的俯視與側面），不是手術錄影，比例不精確。器械型號、縫線與術後用藥依院內常規。',
+    tags:['外傷'],
+    chapters:[
+      {g:'', items:[[0,'片頭'], [13,'1　看懂這個傷口'], [73,'2　器械與雙手'], [150,'3　先回納虹膜'], [201,'4　第一針：角膜緣'], [236,'5　角膜'], [292,'6　Zone II：鞏膜'], [324,'7　收尾'], [340,'8　模擬練習清單'], [380,'參考文獻']]},
+    ],
+    refs:[
+      {c:'Pieramici DJ, Sternberg P, Aaberg TM, et al. A system for classifying mechanical injuries of the eye (globe). The Ocular Trauma Classification Group. Am J Ophthalmol 1997;123(6):820-31.', doi:'10.1016/s0002-9394(14)71132-8'},
+      {c:'Liu T, Zhang M, Xu B, et al. Evaluation of the safety of sclerotomy incision in patients with choroidal colobomas with/without associated microcornea. Retina 2014;34(11):2300-5.', doi:'10.1097/IAE.0000000000000227'},
+      {c:'Kim EJ, Rana VK, Barton A, et al. The Spiral of Tillaux: dead on accurate; a cadaveric study. Strabismus 2024;32(2):85-90.', doi:'10.1080/09273972.2024.2346548'},
+      {c:'Murali S, Davis C, McCrea MJ, et al. Orbital compartment syndrome: Pearls and pitfalls for the emergency physician. J Am Coll Emerg Physicians Open 2021;2(2):e12372.', doi:'10.1002/emp2.12372'},
+      {c:'Zhou Y, DiSclafani M, Jeang L, et al. Open Globe Injuries: Review of Evaluation, Management, and Surgical Pearls. Clin Ophthalmol 2022;16:2545-2559.', doi:'10.2147/OPTH.S372011'},
+      {c:'Jones R, Dean W. Basic microsurgical skills: suturing. Community Eye Health 2023;36(120):8-10.', url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10762710/'},
+      {c:'Li Y, Wolf MD, Kulkarni AD, et al. In Situ Tremor in Vitreoretinal Surgery. Hum Factors 2021;63(7):1169-1181.', doi:'10.1177/0018720820916629'},
+      {c:'Kil I, Eidt JF, Singapogu RB, et al. Assessment of Open Surgery Suturing Skill: Image-based Metrics Using Computer Vision. J Surg Educ 2024;81(7):983-993.', doi:'10.1016/j.jsurg.2024.03.020'},
+      {c:'Newton J, Jones R. Passing sutures. Community Eye Health 2023;36(120):15.', url:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10762700/'},
+      {c:'Wong JCY, Yonekawa Y. Pediatric open-globe injury: Current perspectives, surgical principles, and literature review. Taiwan J Ophthalmol 2025;15(2):225-235.', doi:'10.4103/tjo.TJO-D-24-00061'},
+      {c:'Li X, Zarbin MA, Bhagat N. Pediatric open globe injury: A review of the literature. J Emerg Trauma Shock 2015;8(4):216-23.', doi:'10.4103/0974-2700.166663'},
+      {c:'Nagra PK, Raber IM. Epithelial ingrowth in a phakic corneal transplant patient after traumatic wound dehiscence. Cornea 2003;22(2):184-6.', doi:'10.1097/00003226-200303000-00023'},
+      {c:'Zheng J, Lu H, Chen Y, et al. AI-guided surgical decision support system for corneal laceration repair: a prospective, non-randomized controlled feasibility study. Sci Rep 2026;16(1).', doi:'10.1038/s41598-026-42805-4'},
+      {c:'Hammond CJ, Chan WY, Liu CS. Scanning electron microscopic study of monofilament suture knots. Br J Ophthalmol 1996;80(2):164-7.', doi:'10.1136/bjo.80.2.164'},
+      {c:'Hamill MB. Corneal and scleral trauma. Ophthalmol Clin North Am 2002;15(2):185-94.', doi:'10.1016/s0896-1549(02)00018-4'},
+    ],
+  },
+  {
     id:'lateral-canthotomy-ocs', type:'youtube', yt:'_9jyyTjJnNI', cat:'surgery',
     zh:'Orbital compartment syndrome 的 lateral canthotomy＋cantholysis', en:'Lateral canthotomy and cantholysis for orbital compartment syndrome',
     dur:420,

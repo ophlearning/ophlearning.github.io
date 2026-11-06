@@ -1,0 +1,23 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py。替換依序套用（zone III 要在 zone II、zone I 之前）",
+ "replace": {
+  "Zone III": "zone three",
+  "zone III": "zone three",
+  "Zone II": "zone two",
+  "zone II": "zone two",
+  "Zone I": "zone one",
+  "zone I": "zone one",
+  "10-0": "十零",
+  "9-0": "九零",
+  "8-0": "八零",
+  "360°": "三百六十度",
+  "70 到 90%": "百分之七十到九十",
+  "3-1-1": "三一一",
+  "2-1-1": "二一一"
+ },
+ "words": {
+  "cyclodialysis": "S AY2 K L OW0 D AY0 AE1 L AH0 S IH0 S",
+  "paracentesis": "P EH2 R AH0 S EH0 N T IY1 S IH0 S",
+  "serrata": "S EH0 R AA1 T AH0"
+ }
+}
