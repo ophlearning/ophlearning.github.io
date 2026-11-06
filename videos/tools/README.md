@@ -85,7 +85,7 @@
 把每段畫面在每一句的 60 % 與 98 % 畫出來，收集畫面上所有文字，加上旁白、重點和標題，抽出每個數字：每個數字都要在該段的帳本裡登記來源（文獻要出現在該段的「來源」，或是「院內常規」「結構」「示意」）；畫面上出現的「作者 年份」都要在 `REFS` 裡；帳本裡登記了卻沒用到的數字也會報錯。這樣新加一個數字卻沒有出處，檢查一定會擋下來。
 
 ## 列印用的跟刀單（`print/`）
-貼在開刀房牆上的 A4 橫式單張（黑白印表機也看得清楚、1–1.5 m 外讀得到）：跟刀清單、手術步驟圖（每一步矢狀切面＋術者視角並排）、關鍵解剖與數字速查。一支影片只要在 `videos/src/<影片>/print/` 放四個小資料檔（`video.js`、`checklist.js`、`steps.js`、`anatomy.js`），版面、黑白疊圖、標籤排版、頁尾、PDF／PNG 與數字檢查都由 `videos/tools/print/` 做。
+貼在開刀房牆上的橫式單張（預設院內兩孔紙 LSs 210 × 270 mm，也可出 A4／Letter）（黑白印表機也看得清楚、1–1.5 m 外讀得到）：跟刀清單、手術步驟圖（每一步矢狀切面＋術者視角並排）、關鍵解剖與數字速查。一支影片只要在 `videos/src/<影片>/print/` 放四個小資料檔（`video.js`、`checklist.js`、`steps.js`、`anatomy.js`），版面、黑白疊圖、標籤排版、頁尾、PDF／PNG 與數字檢查都由 `videos/tools/print/` 做。
 - 指令：`node videos/tools/print/print.js videos/src/<影片> --gray`（輸出在 `out/print/`，不進 git）。
 - **怎麼加一支新影片、資料檔格式、設計規則與最小字級、黑白自檢：見 [`print/README.md`](print/README.md)。** 第一個範例：`videos/src/upper-lid-levator-rotation-brow/print/`。
 

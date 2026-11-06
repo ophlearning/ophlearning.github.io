@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 // Render the printable OR-wall sheets of one video and check them.
-//   node videos/tools/print/print.js videos/src/<video> [--only <name>] [--no-png] [--gray] [--selftest]
+//   node videos/tools/print/print.js videos/src/<video> [--paper lss|a4|letter|all] [--only <name>] [--no-png] [--gray] [--selftest]
+// Paper (landscape): lss (default) = 270 × 210 mm, the pre-punched two-hole 「LSs」 copy paper the hospital uses for everything
+// (2026-11-06: A4 sheets printed on it lost 27 mm on the left); a4 = 297 × 210 mm; letter = 279.4 × 215.9 mm; all = every paper.
 // The video's print/ folder holds data only: video.js (which video, model files, states) and one data file per sheet (checklist.js,
 // steps.js, anatomy.js, …). For each data file the shared page sheet.html (this folder) is opened with ?video=…&sheet=<name>; it lays the
-// sheet out (layout.js, print-kit.js, print.css). Output: vector PDF → out/print/<name>.pdf, 300 dpi PNG (3508 × 2480, rasterised from
-// that PDF with pdftoppm) → out/print/<name>.png (--gray also writes <name>-gray.png for the B/W self-check). README.md: how to add a video.
+// sheet out (layout.js, print-kit.js, print.css). Output: vector PDF → out/print/<name>-<paper>.pdf, 300 dpi PNG (rasterised from that
+// PDF with pdftoppm) → out/print/<name>-<paper>.png (--gray also writes <name>-<paper>-gray.png for the B/W self-check). README.md: how to add a video.
 // Checks per sheet (all must pass, exit 1 otherwise):
-//   · no page errors; the PDF is one page of exactly A4 landscape;
+//   · no page errors; the PDF is one page of exactly the paper size (landscape);
 //   · numbers: numcheck.js (every number registered in the video ledger or the sheet's print ledger, cited in the footer);
-//   · layout: nothing within the 10 mm margins, no box overflowing, labels inside their figure and not overlapping each other;
+//   · layout: nothing within the 10 mm margins or the two punched holes (ISO 838: 80 mm apart, centred on the top edge, 12 mm in,
+//     ø 6 mm; kept 1.5 mm clear), no box overflowing, labels inside their figure and not overlapping each other;
 //   · type sizes: title 22–26 pt, checklist items ≥ 14 pt, figure text ≥ 9 pt, footer 7–8 pt.
 // One browser, one page at a time (keeps Playwright light when another job is rendering video).
 const path = require('path'), fs = require('fs'), { execFileSync } = require('child_process');
@@ -17,6 +20,11 @@ const NC = require('./numcheck.js');
 const dir = path.resolve(process.argv[2] || '.'), only = (process.argv.indexOf('--only') > 0) ? process.argv[process.argv.indexOf('--only') + 1] : null;
 const noPng = process.argv.includes('--no-png'), gray = process.argv.includes('--gray');
 const MM = 96 / 25.4;   // CSS px per mm
+const PAPERS = { lss: { w: 270, h: 210, pt: [765.35, 595.28], px: [3189, 2480] }, a4: { w: 297, h: 210, pt: [841.89, 595.28], px: [3508, 2480] },
+  letter: { w: 279.4, h: 215.9, pt: [792, 612], px: [3300, 2550] } };
+const paperArg = process.argv.indexOf('--paper') > 0 ? process.argv[process.argv.indexOf('--paper') + 1] : 'lss';
+const paperList = paperArg === 'all' ? Object.keys(PAPERS) : [paperArg];
+for (const k of paperList) if (!PAPERS[k]) { console.error('unknown --paper ' + k + ' (lss | a4 | letter | all)'); process.exit(2); }
 
 async function measure(page) {
   return page.evaluate(({ MM }) => {
@@ -44,10 +52,14 @@ async function measure(page) {
   }, { MM });
 }
 
-function layoutChecks(m, R) {
+function layoutChecks(m, R, PP) {
   const ok = (c, s) => R.push([!!c, s]);
   const hit = (a, b) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0;
-  const outM = m.boxes.filter(b => b.y0 < 10 - 0.05 || b.x0 < 10 - 0.05 || b.x1 > 287 + 0.05 || b.y1 > 200 + 0.05);
+  const outM = m.boxes.filter(b => b.y0 < 10 - 0.05 || b.x0 < 10 - 0.05 || b.x1 > PP.w - 10 + 0.05 || b.y1 > PP.h - 10 + 0.05);
+  const holes = [[PP.w / 2 - 40, 12], [PP.w / 2 + 40, 12]], R0 = 3 + 1.5;
+  const inHole = b => holes.some(([cx, cy]) => Math.hypot(cx - Math.max(b.x0, Math.min(cx, b.x1)), cy - Math.max(b.y0, Math.min(cy, b.y1))) < R0);
+  const hitH = m.boxes.filter(inHole);
+  ok(!hitH.length, `punched holes clear${hitH.length ? ': ' + hitH.slice(0, 3).map(b => `${b.t} (${b.x0.toFixed(1)},${b.y0.toFixed(1)})`).join(' | ') : ''}`);
   ok(!outM.length, `margins (10 mm all round) clear${outM.length ? ': ' + outM.slice(0, 3).map(b => `${b.t} (${b.x0.toFixed(1)},${b.y0.toFixed(1)})–(${b.x1.toFixed(1)},${b.y1.toFixed(1)})`).join(' | ') : ''}`);
   ok(!m.overflow.length, `no box overflows${m.overflow.length ? ': ' + m.overflow.join(' | ') : ''}`);
   const outL = m.labels.filter(l => !l.in); ok(!outL.length, `labels inside their figure${outL.length ? ': ' + outL.map(l => l.t).join(' | ') : ''}`);
@@ -64,13 +76,13 @@ function layoutChecks(m, R) {
   const pages = fs.readdirSync(pdir).filter(f => f.endsWith('.js') && f !== 'video.js' && (!only || f === only || f === only + '.js')).sort();
   if (!pages.length) throw new Error('no sheet data files in ' + pdir);
   fs.mkdirSync(odir, { recursive: true });
-  const b = await chromium.launch(), page = await b.newPage({ viewport: { width: 1123, height: 794 } });
+  const b = await chromium.launch(), page = await b.newPage({ viewport: { width: 1123, height: 816 } });
   await page.addInitScript(l => { window.VIDEO_LEDGER = l; }, NC.videoLedger(dir));   // ledger keys of the anatomy tables (layout.js)
   let fail = 0;
-  for (const f of pages) {
-    const name = f.replace(/\.js$/, ''), errs = [], R = [];
+  for (const paper of paperList) for (const f of pages) {
+    const PP = PAPERS[paper], base = f.replace(/\.js$/, ''), name = base + '-' + paper, errs = [], R = [];
     page.removeAllListeners('pageerror'); page.on('pageerror', e => errs.push(String(e)));
-    await page.goto(`file://${path.join(__dirname, 'sheet.html')}?video=${encodeURIComponent(dir)}&sheet=${encodeURIComponent(name)}`);
+    await page.goto(`file://${path.join(__dirname, 'sheet.html')}?video=${encodeURIComponent(dir)}&sheet=${encodeURIComponent(base)}&paper=${paper}`);
     await page.waitForFunction(() => window.SHEET_META || window.SHEET_FAIL, null, { timeout: 60000 }).catch(() => {}); await page.evaluate(() => document.fonts.ready);
     const fail0 = await page.evaluate(() => window.SHEET_FAIL || null);
     R.push([!errs.length && !fail0, `no page errors${errs.length || fail0 ? ': ' + [...errs, fail0].filter(Boolean).join(' | ') : ''}`]);
@@ -79,26 +91,26 @@ function layoutChecks(m, R) {
     else {
       const m = await measure(page);
       for (const r of NC.check(dir, m.texts, meta)) R.push(r);
-      layoutChecks(m, R);
+      layoutChecks(m, R, PP);
       const pdf = path.join(odir, name + '.pdf');
-      await page.pdf({ path: pdf, width: '297mm', height: '210mm', printBackground: true, preferCSSPageSize: true });
-      // Chrome rounds the page box (841.92 × 594.96 pt); set it to A4 exactly (same byte length, padded with spaces, so offsets stay valid)
-      { const buf = fs.readFileSync(pdf), s = buf.toString('latin1'), A4 = '0 0 841.89 595.28';
+      await page.pdf({ path: pdf, width: PP.w + 'mm', height: PP.h + 'mm', printBackground: true, preferCSSPageSize: true });
+      // Chrome rounds the page box (e.g. 841.92 × 594.96 pt); set it to the paper exactly (same byte length, padded with spaces, so offsets stay valid)
+      { const buf = fs.readFileSync(pdf), s = buf.toString('latin1'), A4 = `0 0 ${PP.pt[0]} ${PP.pt[1]}`;
         const out = s.replace(/\/MediaBox \[([^\]]*)\]/g, (m0, inner) => { const v = inner.trim().split(/\s+/).map(Number);
-          if (v.length !== 4 || Math.abs(v[2] - 841.89) > 1.2 || Math.abs(v[3] - 595.28) > 1.2 || A4.length > inner.length) return m0;
+          if (v.length !== 4 || Math.abs(v[2] - PP.pt[0]) > 1.2 || Math.abs(v[3] - PP.pt[1]) > 1.2 || A4.length > inner.length) return m0;
           return '/MediaBox [' + A4 + ' '.repeat(inner.length - A4.length) + ']'; });
         if (out.length === s.length) fs.writeFileSync(pdf, Buffer.from(out, 'latin1')); }
       const info = execFileSync('pdfinfo', [pdf]).toString(), pg = +(/Pages:\s+(\d+)/.exec(info) || [])[1], sz = /Page size:\s+([\d.]+) x ([\d.]+) pts/.exec(info);
-      R.push([pg === 1 && sz && Math.abs(sz[1] - 841.89) < 0.6 && Math.abs(sz[2] - 595.28) < 0.6, `PDF: ${pg} page, ${sz ? sz[1] + ' × ' + sz[2] : '?'} pt (A4 landscape 841.89 × 595.28)`]);
+      R.push([pg === 1 && sz && Math.abs(sz[1] - PP.pt[0]) < 0.6 && Math.abs(sz[2] - PP.pt[1]) < 0.6, `PDF: ${pg} page, ${sz ? sz[1] + ' × ' + sz[2] : '?'} pt (${paper} landscape ${PP.pt[0]} × ${PP.pt[1]})`]);
       if (!noPng) { const png = path.join(odir, name + '.png');
-        execFileSync('pdftoppm', ['-r', '300', '-scale-to-x', '3508', '-scale-to-y', '2480', '-png', '-singlefile', pdf, png.replace(/\.png$/, '')]);
+        execFileSync('pdftoppm', ['-r', '300', '-scale-to-x', String(PP.px[0]), '-scale-to-y', String(PP.px[1]), '-png', '-singlefile', pdf, png.replace(/\.png$/, '')]);
         const dims = execFileSync('identify', ['-format', '%w×%h', png]).toString();
-        R.push([dims === '3508×2480', `PNG ${dims} (300 dpi A4 = 3508×2480)`]);
+        R.push([dims === `${PP.px[0]}×${PP.px[1]}`, `PNG ${dims} (300 dpi ${paper} = ${PP.px[0]}×${PP.px[1]})`]);
         if (gray) execFileSync('convert', [png, '-colorspace', 'Gray', png.replace(/\.png$/, '-gray.png')]); }
     }
     const nf = R.filter(r => !r[0]).length; fail += nf;
     console.log(`\n== ${name} ${nf ? `FAIL (${nf})` : 'PASS'}`);
-    for (const [c, s] of R) if (!c || /^(PDF|PNG|WARN|margins|type)/.test(s) || process.argv.includes('-v')) console.log(`${c ? (s.startsWith('WARN') ? '' : 'PASS ') : 'FAIL '}${s}`);
+    for (const [c, s] of R) if (!c || /^(PDF|PNG|WARN|margins|punched|type)/.test(s) || process.argv.includes('-v')) console.log(`${c ? (s.startsWith('WARN') ? '' : 'PASS ') : 'FAIL '}${s}`);
     console.log(`(${R.length} checks; numbers on the sheet: ${R.filter(r => /^[\d.\-]+: /.test(r[1])).map(r => r[1].split(':')[0]).join(' ')})`);
   }
   await b.close();

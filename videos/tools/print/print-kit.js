@@ -90,7 +90,7 @@ const PRINT = (() => {
   function sbar(V, n = 5, o = {}) {
     const L = n * V.k, x1 = o.x ?? V.w - 2, x0 = x1 - L, y = o.y ?? V.h - 2;
     return `<g><path d="M${f1(x0)} ${f1(y)}H${f1(x1)}" stroke="#000" stroke-width="0.6"/><path d="M${f1(x0)} ${f1(y - 0.8)}v1.6M${f1(x1)} ${f1(y - 0.8)}v1.6" stroke="#000" stroke-width="0.35"/>` +
-      txt((x0 + x1) / 2, y - 1.2, `${n} mm`, { pt: 9, anchor: 'middle', struct: 'scale' }) + `</g>`;
+      txt(Math.min((x0 + x1) / 2, V.w - width(`${n} mm`, 9) / 2 - 0.6), y - 1.2, `${n} mm`, { pt: 9, anchor: 'middle', struct: 'scale' }) + `</g>`;   // label kept inside the figure
   }
 
   // ---------------------------------------------------------------- legend: overlays and orientation (once per sheet)
@@ -121,14 +121,33 @@ const PRINT = (() => {
       <div class="hd-left"><div class="hd-title">${esc(def.title)}</div><div class="hd-sub">${def.sub || ''}</div></div>
       <div class="hd-right"><b>${M.surgery}</b><br>${M.eye || ''}</div>
       <div class="body">${body}</div>
-      <div class="footer"><div>示意圖，非手術錄影；各院做法不同處依院內常規。　影片：${esc(M.videoTitle)}　${url}</div><div class="credit">製作　張博淳</div>
+      <div class="footer"><div>示意圖，非手術錄影；各院做法不同處依院內常規。　教學影片：${url}</div><div class="credit">製作　張博淳</div>
       <div class="src">數字出處：${def.sources.map(esc).join('；')}</div></div></div>`; };
     build();
     const all = document.body.textContent + document.title;
     await Promise.all(['400', '500', '700'].map(w => document.fonts.load(`${w} 16px "Noto Sans TC"`, all)));
     await document.fonts.ready;
     build();
+    fit();
     window.SHEET_META = { name: def.name, video: def.meta.id, sources: def.sources, ledger: def.ledger || {}, steps: def.steps || 0 };
+  }
+  // Narrower paper (LSs 270 mm) gets the same content: the title shrinks (not below 22 pt) until it ends before the left punched hole,
+  // step headers (not below 9 pt) shrink until they fit on one line, and checklist items (not below 14 pt) and table text (not below
+  // 9.5 pt) shrink in 0.5 pt steps until nothing overflows.
+  // print.js still checks every box, so anything that cannot fit fails loudly instead of being cut.
+  function fit() {
+    const MMPX = 96 / 25.4, W = (window.PAPER || { w: 297 }).w;
+    const t = document.querySelector('.hd-title');
+    if (t) { const tw = () => { const r = document.createRange(); r.selectNodeContents(t); return r.getBoundingClientRect().width; };
+      for (let pt = 25; tw() > (W / 2 - 40 - 4.5 - 1 - 10) * MMPX && pt > 22; ) { pt -= 0.5; t.style.fontSize = pt + 'pt'; } }
+    const body = document.querySelector('.body'); if (!body) return;
+    const over = () => body.scrollHeight > body.clientHeight + 1 || [...body.querySelectorAll('.ck-col')].some(c => c.scrollHeight > c.clientHeight + 1);
+    // a header wraps when its text has line boxes at more than one height (the cell is a flex column, so its height alone does not show it)
+    const lines = el => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].map(q => Math.round(q.top))).size; };
+    body.querySelectorAll('.cell-hd').forEach(h => { const t = h.lastElementChild;
+      for (let pt = 11; lines(t) > 1 && pt > 9; ) { pt -= 0.5; h.style.fontSize = pt + 'pt'; h.querySelectorAll('.no').forEach(n => n.style.fontSize = '11pt'); } });
+    for (let pt = 16; over() && pt > 14 && body.querySelector('.ck-item'); ) { pt -= 0.5; body.querySelectorAll('.ck-item').forEach(e => e.style.fontSize = pt + 'pt'); }
+    for (let pt = 10.5; over() && pt > 9.5 && body.querySelector('.tbl'); ) { pt -= 0.5; body.querySelectorAll('.tbl').forEach(e => e.style.fontSize = pt + 'pt'); }
   }
   // labels of one figure, one row each (rows ordered by anchor height, so labels never overlap and leaders do not cross); each label
   // sits at the edge nearer its anchor when the text fits between that edge and the anchor, else at the other edge. items: [zh, en, anchor, o]
