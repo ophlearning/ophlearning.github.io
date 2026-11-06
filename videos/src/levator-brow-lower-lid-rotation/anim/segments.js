@@ -10,6 +10,7 @@ const VIDEO = {
   subtitle: '上：levator resection＋internal brow fixation',
   line: '下：marginal rotation＋electric epilation',
   note: ['右眼示意動畫，不是手術錄影；比例不精確。', '各院做法不同的地方，依院內常規。', '上眼瞼的細節見第一部（levator resection＋internal brow fixation）。'],
+  credit: '製作　張博淳',   // 片尾製作者；影片不寫醫院名稱（院內範本的保密規則），所以不用 kit 預設那一行
 };
 const CHAPTERS = ['片頭', '臨床決策', '上眼瞼：快速重述', '下眼瞼 marginal rotation', 'Electric epilation', '順序與術中狀況', '術後', '跟刀清單', '參考文獻'];
 

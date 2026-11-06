@@ -193,7 +193,7 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...viewChecks(
       ['narration number without a source', c => { c.segs.find(s => s.id === '3-2').lines[1] += '3.3 mm'; }],
       ['on-screen number without a source', c => { c.screen['4-2'].push('凝固 0.5 mm'); }],
       ['ledger entry not used', c => { c.ledger['3-3']['99'] = '院內常規'; }],
-      ['ledger source not cited in the segment', c => { c.ledger['4-3']['55'] = 'Sakarya 2010'; }],
+      ['ledger source not cited in the segment', c => { c.ledger['4-3']['55'] = 'Elder 1997'; }],
       ['one of two ledger sources not cited', c => { c.ledger['4-1']['1.8'] = 'Elder 1997；Kapantais 2022'; }],
       ['citation not in REFS', c => { c.screen['6'].push('Smith 2020'); }],
       ['source not a reference', c => { c.segs.find(s => s.id === '1-2').src[0][1] = 'Tucker 1999'; }],
