@@ -1,8 +1,8 @@
 {
   "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/lateral-canthotomy-ocs；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "textBase": "aa0e730",
-  "textBaseNote": "旁白、重點、來源、章節與參考文獻定稿的版本；check-video.js 以它比對文字。anim/timeline.js 進 git，參考圖用真實語音時間軸",
+  "textBase": "0ac610b",
+  "textBaseNote": "旁白、重點、來源、章節與參考文獻定稿的版本；check-video.js 以它比對文字。用 squash merge 進 main 的 commit（PR 分支的 commit 在分支刪掉後會找不到）；它的 segments.js 和原本的基準 aa0e730 逐位元相同。anim/timeline.js 進 git，參考圖用真實語音時間軸",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
