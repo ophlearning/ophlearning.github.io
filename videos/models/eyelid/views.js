@@ -12,4 +12,11 @@ MODEL_VIEWS.eyelid = {
   lcanth: { title: '外眥正面 lateral canthus', win: [-25, -7, 16], draw: (state, id, variant) => CORONAL.draw({ variant, state: state.upper || {}, lower: state, id, section: false }).svg },
   // horizontal section at the canthal level, seen from below like an axial CT (anterior up, temporal left); x shared with the coronal view
   axial: { title: '外眥水平切面 axial (canthal level)', win: [-30, -20, 44], draw: (state, id) => CANTHUS.draw({ state, id }).svg },
+  // margin laceration repair (opt-in, laceration.js): the margin face seen from below (anterior up, x shared with the coronal view), the wound
+  // face (sagittal section through the wound, with the suture crossings) and the coronal view with the laceration and sutures.
+  // laccor: state.lacWin = [x0, x1] opens a window down to the tarsus (CORONAL.strip, depth 1).
+  mar: { title: '瞼緣面（從下方看上瞼緣）margin face', win: [-6, -4.2, 12], draw: (state, id) => LAC.margin({ state, id }).svg },
+  lacsag: { title: '傷口面（矢狀）wound face', win: [-13, -11, 9], draw: (state, id, variant) => LID.draw({ variant, state: {}, id }).svg + LAC.sag({ state, id }).svg },
+  laccor: { title: '正面（裂傷）coronal, laceration', win: [-8, -11, 16], draw: (state, id, variant) => { const r = CORONAL.draw({ variant, state, id, section: false,
+    windows: state.lacWin ? [CORONAL.strip(state.lacWin[0], state.lacWin[1], 1)] : [] }); return r.svg + LAC.cor(r, { state }).svg; } },
 };
