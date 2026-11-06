@@ -54,7 +54,8 @@
   - 裂傷：中央、垂直、全層，從瞼緣往上延伸的長度與兩邊分開的寬度（示意，旁白不講數字就不需要出處）。
   - 錯位：兩側 gray line 對不齊（教「第一針要對準」用）。
   - Margin 縫線：gray line 的 6-0 silk 離傷口邊緣 2 mm（EyeWiki）、深度示意；另一種做法 vertical mattress 對齊 meibomian 開口（Devoto 1997）。打結後外翻與「先不打結」在有出處之前只做成畫面、不寫進旁白。
-  - Tarsal sutures：部分厚度，上眼瞼 3 針、下眼瞼 2 針（EyeWiki），咬的高度示意。
+  - Tarsal sutures：部分厚度、只咬前表面（EyeRounds 影片），上眼瞼 3 針（EyeWiki；EyeRounds 是 2 針）、下眼瞼 2 針，咬的高度示意。
+  - 4-7 的另一種做法：7-0 Vicryl vertical mattress 在 meibomian 開口與睫毛毛囊兩個高度，far–far 再 near–near，綁緊後外翻（EyeRounds 影片）。
   - Lash line 第二針、orbicularis、皮膚縫線、silk 線尾綁進皮膚縫線。
   - 錯誤示範：tarsal suture 穿到結膜面、打平沒外翻後癒合成 notching（示意）。
 - 新視角：瞼緣俯視（新檔，例如 `margin.js`），向 `views.js` 報到。
@@ -92,13 +93,16 @@
 17. Subramanian N 2011, Indian J Plast Surg, doi:10.4103/0970-0358.81437（全文）— 上眼瞼缺損年輕人 25%、年長者 40% 以內可以直接縫合（第 2 章「組織缺損」的門檻）。
 18. 其他找到但目前不打算用的：Kamboj 2024（摘錄，replanted wedge 的縫合順序）、Custer 2006（7-0 chromic）、Burroughs 2003（埋結 vertical mattress，notch 5.5%）、Willey 2013（不縫 margin 的斜向 tarsal suture）、Chiang 2017（摘錄的數字前後不一致，不用）。
 
+19. Clark TJE, Shriver EM. Emergent Evaluation of Eyelid Lacerations: A guide for ophthalmology residents. EyeRounds.org, 2015-12-17（PDF 全文，Claude 讀）— 一律先清查眼球；病史（年齡、機轉、多久、最後進食、tetanus）；縫前拍照、取得同意；要找 oculoplastic 的紅旗：看得到 orbital fat、傷到瞼緣、傷到淚道；探查器材（4% lidocaine、punctal dilator、Bowman probe 00 或 0、23G 淚道針接 fluorescein 生理食鹽水）；lidocaine 1–2% with epi 1:100,000、27–30G；5% Betadine；組織幾乎不會真的缺損；不要縫 orbital septum；下眼瞼疤痕往下拉、縫時往上提；erythromycin 藥膏 TID、10 天內回診、Vicryl 或 nylon 6–10 天拆。
+20. Allen R. Repair of full-thickness upper／lower eyelid laceration（影片逐字稿）. EyeRounds.org, University of Iowa, 2015-04-27（Claude 讀）— 5-0 Vicryl partial-thickness 只咬 tarsus 前表面，上眼瞼不能穿到後表面；先縫 tarsus 卸掉瞼緣的張力（上眼瞼 2 針；下眼瞼 2 針、第一針先不綁）；瞼緣 7-0 Vicryl vertical mattress 在 meibomian 開口，far–far 再 near–near，兩側同深同距離，綁緊後外翻；睫毛毛囊再一針；吸收線不用拆；挑出壓在線下的睫毛；藥膏、一週回診。
+21. Graff JM, Fraterrigo LE. Lid Margin laceration. EyeRounds Ophthalmic Atlas（Claude 讀）— lamellar tarsal sutures 恢復 tarsus；瞼緣 vertical mattress 讓傷口稍微外翻，避免癒合時形成 notch。
+- 書目已照 PubMed 補齊（`script-draft.md` 文末）。Schafer 2026 的併發症比例：急診的分母是 81 位、整體（含 OR）是 153 位；Tyers 2005 是非隨機、結果「相當」；Butterfield 2025 是寫給非眼科第一線人員的指引。
+
 ### 還沒有出處的內容（旁白不能當成事實講）
-- Margin 縫線的**深度**（EyeWiki 只給離傷口邊緣 2 mm）。
-- **打結後 margin 微微外翻（pouting）**以及「傷口收縮會讓它變平」的理由。
-- Margin 第一針「先不打結、拉起來檢查對齊」。
-- 「清創要少、眼瞼血流好」這個原則（EyeWiki 只寫沖洗、清掉異物與 fibrin 血塊）。
-- 局麻前先記錄 levator function、縫前拍照、小孩要在 OR 縫的具體門檻。
-- 處理方式：繼續查 StatPearls「Eyelid Laceration」（NBK470367，網址已開放，但頁面有防機器人驗證，curl 讀不到）、EyeRounds、BCSC；查不到就標「示意」或拿掉，並列在出片前的總覽。
+- 已解決：外翻（Graff 圖譜、Allen 影片）；兩側同深同距離（Allen 影片，沒有深度的數字，所以畫面深度標示意）；拍照（Clark 2015）；不能配合的病人要鎮靜（EyeWiki）；組織幾乎不會缺損（Clark 2015）。
+- 還沒有：懷疑 open globe 時「不量 IOP、不壓眼、戴 shield」；probe 露出或螢光水流出的判讀；要等時傷口的暫時處置；局麻前先記錄 levator function（腳本第 1 版已拿掉）。
+- 改成推論、列進總覽：gray line 那一針等 tarsus 綁完才綁（EyeWiki 的順序＋Divine 1982 的張力原則）；第一次縫要有 senior 在旁（EyeWiki、Clark 2015 的紅旗＋Schafer 2026 的併發症）。
+- StatPearls（NBK470367）有防機器人驗證，curl 讀不到；之後若要用，改用瀏覽器工具讀。
 
 ## 驗收項目
 - [x] 站長確認的病例摘要原樣寫進「病例情境」並註明日期（2026-11-06）。
@@ -114,4 +118,5 @@
 ## 進度
 - 2026-11-06：站長確認病例情境（以上眼瞼為主、最後一章講下眼瞼）；規格書與第一批文獻（8 篇）完成。
 - 2026-11-06：縫合技術與處置的出處查證（上面 9–18）。最重要的發現：EyeWiki 建議 full-thickness 與傷到 margin 的裂傷在 OR 縫，所以第 2 章要先講指引、再講在治療室縫的條件與風險（Schafer 2026）。站長核准在雲端環境的網路白名單加上 www.ncbi.nlm.nih.gov、eyewiki.org、eyerounds.org。
-- 下一步：補「還沒有出處的內容」→ 寫 `script-draft.md` 第 1 版 → 模型卡與模型（裂傷、縫線、瞼緣俯視）→ 樣本圖自檢 → 影片。依 `videos/models/README.md`，一個對話只做一章（或 3–4 段），做完寫進這裡再換新對話。
+- 2026-11-06：`script-draft.md` 第 1 版完成（8 章、20 段，18 筆參考文獻）。主線照 EyeWiki（gray line 6-0 silk），EyeRounds 的 Vicryl vertical mattress 放在 4-7 對照；EyeRounds 的三個來源補上外翻、tarsus 只咬前表面、術前評估與準備。文末列出還沒解決的 [待核對出處]、[推論] 與 [示意]。
+- 下一步：在新對話接手。先把「還沒有出處」剩下的幾項查完或拿掉（腳本第 2 版前） → 模型卡與模型（裂傷、縫線、瞼緣俯視）→ 樣本圖自檢 → 影片。依 `videos/models/README.md`，一個對話只做一章（或 3–4 段），做完寫進這裡再換新對話。
