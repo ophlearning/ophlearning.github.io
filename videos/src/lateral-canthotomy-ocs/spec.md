@@ -60,7 +60,7 @@
 - [x] 旁白每個數值都有出處並寫成檢查（`check.js` 數字帳本，14 種故意改錯都會報錯）；沒有出處的標「示意」或拿掉，列在 `overview-notes.md`。
 - [x] 旁白不說「單做 canthotomy 沒有用」：屍體研究是「部分下降」（Haubner 2015）。
 - [x] `node videos/tools/check-all.js videos/src/lateral-canthotomy-ocs` 全部通過；每章至少一張參考圖（16 張＋模型樣本）。
-- [ ] 出片前交總覽（每章一張）；上傳為不公開並同步網站。
+- [x] 出片前交總覽（每章一張，2026-11-06 傳給站長，不等回覆）；上傳為不公開（YouTube `_9jyyTjJnNI`，privacy unlisted）並同步網站（`videos/index.html` 最前面）。
 
 ## 進度
 - 2026-11-06：病例摘要經站長確認；規格書與第一批 16 篇文獻完成。
@@ -73,3 +73,4 @@
 - 2026-11-06：影片完成（站長要求一路做完、不再中途確認）。
   - 步驟細節的出處：環境連不到 NCBI Bookshelf（StatPearls），改用 PubMed Central 全文的 Murali 2021（急診醫學的 pearls and pitfalls 回顧）：局麻、直 hemostat 夾 1 分鐘、iris scissors、器械朝外側眶緣、鑷子把下眼瞼往內往前提、剪刀朝下撥弦、下眼瞼要整片鬆開、上支要往上往後且不深、open globe 是唯一的相對禁忌症、IOP > 30 緊急找眼科、> 40 立刻減壓。另加 Weightman 2024、Gioia 1987；共 14 篇。
   - 旁白定稿在 commit aa0e730（`ref/manifest.json` 的 `textBase`）；語音約 7 分鐘；參考圖 16 張與總覽 8 張自檢。
+- 2026-11-06：出片（7 分 0 秒，1080p，30 fps），上傳 YouTube 不公開（`_9jyyTjJnNI`），網站 `videos/#lateral-canthotomy-ocs` 用瀏覽器確認沒有 JS 錯誤、嵌入網址正確（這台機器連不到 YouTube，播放器本身沒有載入）。

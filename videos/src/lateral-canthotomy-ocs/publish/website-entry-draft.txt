@@ -1,7 +1,7 @@
   {
-    id:'lateral-canthotomy-ocs', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'lateral-canthotomy-ocs', type:'youtube', yt:'_9jyyTjJnNI', cat:'surgery',
     zh:'Orbital compartment syndrome 的 lateral canthotomy＋cantholysis', en:'Lateral canthotomy and cantholysis for orbital compartment syndrome',
-    dur:TBD,
+    dur:420,
     short:'外傷後 retrobulbar hemorrhage 造成 OCS：床邊怎麼判斷、先排除 open globe、局麻與 hemostat、canthotomy、剪刀朝下找到並剪斷外眥韌帶下支、IOP 仍高剪上支、減壓後重測與 CT，以及值班清單。',
     sum:'這支影片從一個右眼外傷後 retrobulbar hemorrhage 的情境出發：先用眼窩水平切面說明眼窩是一個前面有門的硬盒子，血塊把眼球往前推、外眥與內眥韌帶把門拉住，壓力就一路往上；接著是床邊判斷（病史、前凸、眼瞼繃緊、RAPD、IOP 門檻、視力是晚期徵象）、先排除 open globe（唯一的相對禁忌症）與時間有多緊；然後是外眥局麻、直 hemostat 夾 1 分鐘、iris scissors 水平剪到外側眶緣、外眥韌帶上下支與 Whitnall 結節的解剖、鑷子提起下眼瞼、剪刀朝下像撥弦一樣找到下支並剪斷，直到下眼瞼整片離開眼球；重測後 IOP 仍高就剪上支（朝上、往後、不要深），再不行就升級到開刀房；最後是減壓後的反覆重測、CT 上的 globe tenting 與值班清單。',
     note:'畫面為右眼的示意動畫（眼窩水平切面從下往上看，同 CT＋術者視角的外眥正面，兩圖共用 x），不是手術錄影，比例不精確。藥物、劑量與器械依院內常規。',
