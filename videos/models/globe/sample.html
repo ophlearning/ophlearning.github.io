@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="globe.js"></script>
+<script>
+// Globe model sample: the zone I–II corneoscleral laceration of the first video, before repair (left, top right) and one corneal suture (bottom right).
+// Right eye; the three panels are sections / projections of the same 3D eye (sources: CARD.md).
+const G = GLOBE, esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 13, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 5 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 6 : tx + w + 6, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.5" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="5">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 13}" fill="${o.color || '#1d2733'}" font-weight="${o.bold ? 700 : 400}" text-anchor="${o.anchor || 'start'}">${esc(s)}</text>`;
+const WOUND = { h: 10, s0: -3.5, s1: 4.0 }, PRE = { wound: WOUND, prolapse: 1, ac: 0.7, heme: 0.7 };
+const o = [];
+o.push(T(24, 38, '眼球前段模型樣本：zone I–II 角鞏膜裂傷（右眼，修補前）', { size: 21, bold: true }));
+o.push(T(1256, 38, 'mm 建模，示意圖　三個畫面是同一顆 3D 眼球的切面與投影', { size: 13, color: '#5b6878', anchor: 'end' }));
+
+// ================= left: meridional section through the wound (10 o'clock), anterior up
+{ const PX = 16, PY = 56, PW = 616, PH = 650, k = 47, x0 = 1.2, y0 = -15.2, c = cam(PX, PY + 36, k, x0, y0), P = c.P;
+  const pl = G.planes.meridian(10), win = { x: x0, y: y0, w: (PW - 2) / k, h: (PH - 100) / k };
+  const sec = G.section({ plane: pl, win, st: PRE, id: 'm', step: 0.03 });
+  const Q = p3 => P(G.toPlane(pl, p3));
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="10" fill="#fff" stroke="#d3dae1"/>`);
+  o.push(`<clipPath id="cm"><rect x="${PX + 1}" y="${PY + 36}" width="${PW - 2}" height="${PH - 100}"/></clipPath><g clip-path="url(#cm)"><g transform="${c.tf}">${sec.svg}</g></g>`);
+  o.push(T(PX + 16, PY + 24, '經傷口的子午切面　meridional section（10 點）', { size: 15, bold: true }), T(PX + PW - 14, PY + 24, '上＝前　右＝往 10 點周邊', { size: 12.5, color: '#5b6878', anchor: 'end' }));
+  // zone ruler along the outer surface, 1.1 mm outside it
+  const tick = (s, txt) => { const a = Q(G.P3(10, s, -0.75)), b = Q(G.P3(10, s, -1.45)); return `<path d="M${a[0]} ${a[1]}L${b[0]} ${b[1]}" stroke="#0e7c6b" stroke-width="2"/>`; };
+  const arc = []; for (let s = -5.2; s <= 8.0; s += 0.1) arc.push(Q(G.P3(10, s, -1.1)));
+  o.push(`<path d="M${arc.map(p => p.join(' ')).join('L')}" fill="none" stroke="#0e7c6b" stroke-width="1.6"/>`, tick(0), tick(5));
+  const zl = (s, t) => { const p = Q(G.P3(10, s, -1.75)); return T(p[0], p[1], t, { size: 14, bold: true, color: '#0e7c6b', anchor: 'middle' }); };
+  o.push(zl(-2.4, 'Zone I'), zl(2.5, 'Zone II'), zl(7.0, 'Zone III'));
+  const l5 = Q(G.P3(10, 5, -1.45)); o.push(T(l5[0] + 8, l5[1] + 4, '5 mm', { size: 12.5, bold: true, color: '#0e7c6b' }));
+  const L = [];
+  L.push(lab('角膜', 'cornea', PX + 14, PY + 120, Q(G.P3(10, -4.4, 0.3)), { bold: true }));
+  L.push(lab('前房', 'anterior chamber', PX + 14, PY + 230, P([2.6, -11.9])));
+  L.push(lab('水晶體', 'lens', PX + 14, PY + 400, P([2.4, -8.6])));
+  L.push(lab('虹膜', 'iris', PX + 14, PY + 300, Q([...(() => { const kp = G.keyPoints(PRE), m = [(kp.pm[0] + kp.root[0]) / 2 + 0.25, 3.6]; const [cx, cy] = G.clockDir(10); return [m[1] * cx, m[1] * cy, m[0]]; })()])));
+  L.push(lab('脫出的虹膜', 'prolapsed iris', PX + 14, PY + 175, Q(G.P3(10, G.PRO.s, -0.45)), { bold: true, color: '#8a3b12', lc: '#8a3b12' }));
+  L.push(lab('角膜緣', 'limbus', PX + 300, PY + 120, Q(G.P3(10, 0, -1.1)), { bold: true, color: '#0e7c6b', lc: '#0e7c6b' }));
+  L.push(lab('傷口面（切面就在傷口裡）', 'wound face', PX + 14, PY + 470, Q(G.P3(10, 3.2, 0.25))));
+  L.push(lab('睫狀體', 'ciliary body', PX + 14, PY + 540, Q(G.P3(10, 2.0, G.T(2.0) + 0.5)), { bold: true }));
+  L.push(lab('鞏膜', 'sclera', PX + 14, PY + 580, Q(G.P3(10, 6.5, 0.2))));
+  L.push(lab('結膜', 'conjunctiva', PX + PW - 14, PY + 572, Q(G.P3(10, 7.4, -0.12)), { side: 'R' }));
+  o.push(L.join(''));
+  o.push(`<line x1="${PX + 1}" y1="${PY + PH - 63}" x2="${PX + PW - 1}" y2="${PY + PH - 63}" stroke="#e1e6eb"/>`);
+  o.push(T(PX + 16, PY + PH - 38, 'Zone II＝角膜緣後 5 mm 內的鞏膜（Pieramici 1997），底下是睫狀體；外直肌 6.4 mm、', { size: 13 }));
+  o.push(T(PX + 16, PY + PH - 17, '上直肌 6.8 mm 才附著（Kim 2024），所以 zone II 不必動肌肉。ora 在角膜緣後 6.2 mm（Liu 2014）。', { size: 13 }));
+}
+
+// ================= right top: microscope view, surgeon at 12
+{ const PX = 644, PY = 56, PW = 620, PH = 380, k = 30, x0 = -10.4, y0 = -4.6, c = cam(PX, PY + 36, k, x0, y0), P = c.P;
+  const ef = G.enface({ st: PRE, id: 'e', surgeon: 12 }), A = ef.A;
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="10" fill="#fff" stroke="#d3dae1"/>`);
+  o.push(`<clipPath id="ce"><rect x="${PX + 1}" y="${PY + 36}" width="${PW - 2}" height="${PH - 37}" rx="8"/></clipPath><g clip-path="url(#ce)"><g transform="${c.tf}">${ef.svg}</g></g>`);
+  o.push(T(PX + 16, PY + 24, '顯微鏡俯視　右眼 OD', { size: 15, bold: true }), T(PX + PW - 14, PY + 24, '術者坐 12 點（病人頭側）：下＝12 點　右＝temporal', { size: 12.5, color: '#5b6878', anchor: 'end' }));
+  const L = [];
+  L.push(lab('瞳孔被拉向傷口', 'peaked pupil', PX + 14, PY + 70, P(A.pupilPeak), { bold: true }));
+  L.push(lab('角膜段傷口', 'zone I', PX + 14, PY + 330, P(G.enfaceMap(12)(G.P3(10, -2.0))), { bold: true, color: '#b3262c', lc: '#b3262c' }));
+  L.push(lab('脫出的虹膜', 'prolapsed iris', PX + PW - 14, PY + 70, P(A.prolapse), { side: 'R', bold: true, color: '#8a3b12', lc: '#8a3b12' }));
+  L.push(lab('結膜下出血蓋住 zone II', 'subconj. heme', PX + PW - 14, PY + 330, P(G.enfaceMap(12)(G.P3(10, 3.0))), { side: 'R', color: '#b3262c', lc: '#b3262c' }));
+  L.push(lab('角膜緣', 'limbus', PX + PW - 14, PY + 200, P(G.enfaceMap(12)(G.P3(8.2, 0))), { side: 'R' }));
+  o.push(L.join(''));
+  const b12 = P(G.enfaceMap(12)(G.P3(12, 1.2))); o.push(T(b12[0], Math.min(b12[1], PY + PH - 10), '12 點', { size: 13, bold: true, anchor: 'middle' }));
+}
+
+// ================= right bottom: cross-section through a corneal suture (perpendicular to the wound)
+{ const PX = 644, PY = 448, PW = 620, PH = 258, k = 130, x0 = -2.25, y0 = -0.45, c = cam(PX, PY + 36, k, x0, y0), P = c.P;
+  const su = { s: -2.1, b: 0.85, dep: 0.8, pass: 1, tie: 0 }, st = { wound: WOUND, sutures: [su] }, pl = G.planes.across(10, su.s);
+  const sec = G.section({ plane: pl, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - 37) / k }, st, id: 'x', step: 0.008 }), A = sec.A;
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="10" fill="#fff" stroke="#d3dae1"/>`);
+  o.push(`<clipPath id="cx"><rect x="${PX + 1}" y="${PY + 36}" width="${PW - 2}" height="${PH - 37}" rx="8"/></clipPath><g clip-path="url(#cx)"><g transform="${c.tf}">${sec.svg}</g></g>`);
+  o.push(T(PX + 16, PY + 24, '垂直傷口的切面　角膜縫一針（10-0 nylon）', { size: 15, bold: true }), T(PX + PW - 14, PY + 24, '從角膜中心沿傷口往外看　上＝表面', { size: 12.5, color: '#5b6878', anchor: 'end' }));
+  const a = P(A.in0), b = P(A.out0), d = P(A.deep0), top = P([0, -0.02]);
+  o.push(`<path d="M${a[0]} ${a[1] - 16}L${a[0]} ${a[1] - 26}L${b[0]} ${b[1] - 26}L${b[0]} ${b[1] - 16}" fill="none" stroke="#0e7c6b" stroke-width="1.6"/>`);
+  o.push(T((a[0] + b[0]) / 2, a[1] - 32, `兩邊各 ${su.b} mm（示意）`, { size: 12.5, bold: true, color: '#0e7c6b', anchor: 'middle' }));
+  const L = [];
+  L.push(lab('深度 80%（70–90%，Zhou 2022）', '', PX + 14, PY + 215, d, { bold: true, color: '#1f2a44', lc: '#1f2a44' }));
+  L.push(lab('垂直進針', 'perpendicular entry', PX + PW - 14, PY + 215, [a[0], a[1] + 6], { side: 'R' }));
+  L.push(lab('傷口', 'wound', PX + 150, PY + 80, [top[0], top[1] + 4], { bold: true, color: '#b3262c', lc: '#b3262c' }));
+  o.push(L.join(''));
+  // 1 mm scale bar
+  o.push(`<rect x="${PX + 12}" y="${PY + PH - 42}" width="${k + 14}" height="32" rx="5" fill="#fff" opacity="0.85"/><path d="M${PX + 19} ${PY + PH - 18}h${k}" stroke="#1d2733" stroke-width="3"/>${T(PX + 19 + k / 2, PY + PH - 25, '1 mm', { size: 12, bold: true, anchor: 'middle' })}`);
+}
+document.getElementById('stage').innerHTML = o.join('');
+window.READY = true;
+</script></body></html>

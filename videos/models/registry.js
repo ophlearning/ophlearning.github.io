@@ -3,6 +3,7 @@
 // A new model is usable by the tools once it adds one line here.
 const MODEL_REGISTRY = {
   eyelid: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'eyelid/views.js'],
+  globe: ['globe/globe.js', 'globe/views.js'],
 };
 const MODEL_VIEWS = {};
 if (typeof module !== 'undefined') module.exports = { MODEL_REGISTRY, MODEL_VIEWS };
