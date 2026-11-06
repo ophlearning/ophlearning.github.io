@@ -1,0 +1,41 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py",
+ "replace": {
+  "Müller": "Mueller",
+  "ROOF": "roof",
+  "Hering's": "Hering"
+ },
+ "words": {
+  "aponeurosis": "AE2 P OW0 N UH0 R OW1 S IH0 S",
+  "aponeurotic": "AE2 P OW0 N UH0 R AA1 T IH0 K",
+  "preaponeurotic": "P R IY2 AE2 P OW0 N UH0 R AA1 T IH0 K",
+  "blepharoplasty": "B L EH1 F ER0 OW0 P L AE2 S T IY0",
+  "blepharoptosis": "B L EH2 F ER0 AA0 P T OW1 S IH0 S",
+  "browpexy": "B R AW1 P EH2 K S IY0",
+  "chemosis": "K IH0 M OW1 S IH0 S",
+  "conjunctival": "K AA2 N JH AH0 NG K T AY1 V AH0 L",
+  "conjunctivoplasty": "K AA2 N JH AH0 NG K T AY1 V OW0 P L AE2 S T IY0",
+  "dacryoadenopexy": "D AE2 K R IY0 OW0 AE1 D AH0 N OW0 P EH2 K S IY0",
+  "ethilone": "EH1 TH IH0 L OW2 N",
+  "frontalis": "F R AH0 N T AE1 L IH0 S",
+  "involutional": "IH2 N V AH0 L UW1 SH AH0 N AH0 L",
+  "keratopathy": "K EH2 R AH0 T AA1 P AH0 TH IY0",
+  "lacrimal": "L AE1 K R AH0 M AH0 L",
+  "levator": "L AH0 V EY1 T ER0",
+  "mueller": "M UH1 L ER0",
+  "phenylephrine": "F EH2 N AH0 L EH1 F R IY0 N",
+  "preseptal": "P R IY0 S EH1 P T AH0 L",
+  "prolapse": "P R OW1 L AE2 P S",
+  "prolene": "P R OW1 L IY2 N",
+  "resection": "R IH0 S EH1 K SH AH0 N",
+  "supraorbital": "S UW2 P R AH0 AO1 R B IH0 T AH0 L",
+  "putterman": "P AH1 T ER0 M AH0 N",
+  "capsulopalpebral": "K AE2 P S Y UW0 L OW0 P AE1 L P IH0 B R AH0 L",
+  "ectropion": "EH0 K T R OW1 P IY0 AA0 N",
+  "epilation": "EH2 P AH0 L EY1 SH AH0 N",
+  "fascia": "F AE1 SH AH0",
+  "radiofrequency": "R EY2 D IY0 OW0 F R IY1 K W AH0 N S IY0",
+  "retractor": "R IH0 T R AE1 K T ER0",
+  "retractors": "R IH0 T R AE1 K T ER0 Z"
+ }
+}
