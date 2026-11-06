@@ -57,11 +57,11 @@
 
 ## 驗收項目
 - [x] 下眼瞼模型卡、樣本圖完成並自己放大檢查；`eyelid/check.js` 加上下眼瞼的檢查並全部通過（2026-11-06）。
-- [ ] 步驟章節和實際 OP note 一致；復發原因只講主治的判斷與有出處的內容，不臆測前次手術細節。
-- [ ] 每段手術步驟同時顯示兩個視角，同一結構兩圖高度差小於 0.3 mm。
-- [ ] 旁白每個數值都有出處並寫成檢查；沒有出處的標「示意」或拿掉，列在出片前的總覽。
-- [ ] `node videos/tools/check-all.js videos/src/lower-lid-entropion-revision` 全部通過；每章至少一張參考圖。
-- [ ] 出片前交總覽；上傳為不公開並同步網站。
+- [ ] 步驟章節和實際 OP note 一致（2026-11-06 先依院內範本的「marginal rotation＋lateral tarsal strip」版本做，刀後對照）；復發原因只講主治的判斷與有出處的內容，不臆測前次手術細節（已做到：旁白明說不臆測）。
+- [x] 每段手術步驟同時顯示兩個視角，同一結構兩圖高度差小於 0.3 mm（`check.js`：切口兩圖差 0.01 mm；外眥固定點水平切面與正面 x 差 0.11 mm）。
+- [x] 旁白每個數值都有出處並寫成檢查；沒有出處的標「示意」或拿掉，列在出片前的總覽（`overview-notes.md`）。
+- [x] `node videos/tools/check-all.js videos/src/lower-lid-entropion-revision` 全部通過；每章至少一張參考圖（21 張）。
+- [ ] 出片前交總覽（`ref/overview/`、`overview-notes.md` 已備好）；上傳為不公開並同步網站（還沒做）。
 
 ## 進度
 - 2026-11-06：規格書與第一批文獻完成。
@@ -74,3 +74,11 @@
   - 查文獻時順便找到腳本 1-2 的 [待核對出處]：distraction 超過 6–8 mm 算明顯、往下看時下眼瞼正常移動 3–4 mm（Pushker 2025，doi:10.4103/IJO.IJO_630_24）；內翻病人 distraction 7.5–11 mm、下穹窿脂肪脫出是 retractor 鬆脫的徵象（Beigi 2008，doi:10.1016/j.ophtha.2008.02.014）。還沒寫進腳本。
   - 模型卡列為示意或 [待核對出處]、出片前要列進總覽的：眶下緣高度、下斜肌在切面上的位置、脂肪墊大小、內翻角度與睫毛被擋住的門檻、retractor 退縮量、正常眼瞼的 distraction 3 mm 與 LTS 預設剪掉的長度、tarsal fracture 的位置與切的面、出針點、MRD2 5 mm。
 - 下一步：拿到實際 OP note 後改參數（切口、fracture、縫線位置、有沒有 LTS）、寫腳本，再做影片頁。
+- 2026-11-06：站長決定不等 OP note、依院內範本與文獻、以專業判斷先做影片。影片完成到出片（未上傳、未改 `videos/index.html`）：
+  - 術式：範本三種下眼瞼術式中，本片**假設術前 distraction test 顯示 horizontal laxity**，示範「marginal rotation＋lateral tarsal strip」（範本順序：先 LTS 再 rotation）；旁白明說這是假設、實際依主治判斷；一年前的手術細節與復發原因不臆測。
+  - 旁白定稿：`script-draft.md` 第 2 版（由 `anim/segments.js` 產生）；PubMed 查證並新增 Pushker 2025、Beigi 2008（`[待核對出處]` 的兩項都支持，已用上）、Scheepers 2010、Anderson 1979、Becker 1982、Gioia 1987、Kakizaki 2006、Dunbar 2017；共 16 篇。
+  - 視角：下眼瞼步驟用矢狀切面＋正面；LTS 用外眥水平切面（從下往上看，同 CT）＋正面外眥，兩圖同一個 x 視窗（瞼板條拉緊時兩圖末端同 x）。下眼瞼的視角包裝放在本片 `anim/views-lower.js`（`kit.js` 與共用模型都沒改）。
+  - 檢查：`check.js` 數字帳本（259 項）＋22 項旁白↔模型檢查（復發時睫毛碰到角膜、綁緊後離開；切口 2.5 mm 兩圖同高；剝離平面在眶隔前；retractors 開到結膜；融合處 2.38 mm；fracture 一半深度、不穿結膜；mattress ×3／×2、進出針位置、穿過 retractors、不進眼球；過度矯正；distraction 範圍；canthotomy 水平、cantholysis 下支；Whitnall 1.5 mm；瞼板條固定在眶緣內面骨膜、一針、兩圖同 x）；`--selftest` 27 種改錯全部抓到。
+  - 參考圖 21 張（Claude 自檢）；出片前總覽 `ref/overview/`（每章一張）與 `overview-notes.md`（範本的解讀、示意與推論，刀後對照用）。
+  - 出片：`out/lower-lid-entropion-revision.mp4`（不進 git；DURINFO）；`publish/` 有章節、字幕、YouTube 說明欄與網站條目草稿（`yt: 'TBD'`）。
+- 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」與 `overview-notes.md` 的範本解讀，不同處改 `anim/params.js`／`segments.js` 後重新出片。

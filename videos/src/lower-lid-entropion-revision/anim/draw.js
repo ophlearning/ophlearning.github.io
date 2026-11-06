@@ -191,14 +191,14 @@ DRAW2['4-1'] = T => {
   let ex = lab('外側眶緣', 'lateral orbital rim', 14, 290, X.rim, { bold: true });
   ex += lab('外眥韌帶', 'lateral canthal tendon', 14, 196, X.tendon, { bold: true, op: 1 - ss(0.5, 1, c2) });
   ex += lab('外眥', 'lateral canthus', 14, 106, av.P(av.M.lc), { op: 1 - T.on(1) });
-  if (X.canthotomy) ex += lab('canthotomy', '', 14, 106, X.canthotomy, { color: COL.red, bold: true, op: T.on(1, 0.6) });
-  if (X.cantholysis) ex += lab('cantholysis：剪斷下支', 'inferior crus cut', 14, 196, X.cantholysis, { color: COL.red, bold: true, op: ss(0.5, 1, c2) });
+  if (X.canthotomy) ex += lab('外眥切開', 'canthotomy', 14, 106, X.canthotomy, { color: COL.red, bold: true, op: T.on(1, 0.6) });
+  if (X.cantholysis) ex += lab('剪斷外眥韌帶下支', 'cantholysis', 14, 196, X.cantholysis, { color: COL.red, bold: true, op: ss(0.5, 1, c2) });
   ex += lab('下眼瞼（投影）', 'lower lid, projected', PW - 12, 64, lidOff(av, 0.93, 1.2), { side: 'R' });
   ex += lab('眼球', 'globe', PW - 12, 290, av.P([-10, 0.5]), { side: 'R' });
   let rx = lab('外眥', 'lateral canthus', PW - 12, 64, B.lcL, { side: 'R', bold: true });
   rx += lab('外側眶緣（皮膚下）', 'lateral orbital rim', 14, 64, cv.P([cv.r.latRimX + 0.1, 3.0]));
-  if (B.canthotomy) rx += lab('canthotomy：水平剪開', 'canthotomy', 14, 150, B.canthotomy, { color: COL.red, bold: true, op: T.on(1, 0.6) });
-  if (B.cantholysis) rx += lab('cantholysis', 'inferior crus', 14, 236, B.cantholysis, { color: COL.red, bold: true, op: T.on(2, 0.6) });
+  if (B.canthotomy) rx += lab('外眥切開：水平剪開', 'canthotomy', 14, 150, B.canthotomy, { color: COL.red, bold: true, op: T.on(1, 0.6) });
+  if (B.cantholysis) rx += lab('下支切斷', 'cantholysis', 14, 236, B.cantholysis, { color: COL.red, bold: true, op: T.on(2, 0.6) });
   rx += note('Lateral tarsal strip：Anderson 1979', T.on(0, 0.6) * (1 - T.on(1)));
   return { L: { svg: av.svg, extra: ex, P: AX_P }, R: { svg: cv.svg, extra: rx, P: CANTH_P } };
 };
@@ -309,7 +309,7 @@ DRAW2['4-6'] = T => {
   ex += sbar(sv.k, 1);
   ex += note('切的面與高度：示意（前面、離瞼緣 2 mm）', T.on(2, 0.6), PH - 60);
   let rx = '';
-  if (B.fracL) rx += lab('tarsal fracture（瞼板上，畫虛線）', 'under the tissue', 14, PH - 28, B.fracL, { color: COL.red, bold: true, op: ss(0.2, 0.6, f) });
+  if (B.fracL) rx += lab('瞼板切一半（在瞼板上，畫虛線）', 'tarsal fracture', 14, PH - 28, B.fracL, { color: COL.red, bold: true, op: ss(0.2, 0.6, f) });
   rx += lab('瞼板條已固定（外眥）', 'strip fixed', 14, 64, B.stripFix, { color: COL.suture, op: 0.9 });
   return { L: { svg: sv.svg, extra: ex, P: { title: '下眼瞼矢狀切面放大 sagittal', orient: '左＝前　上＝上' } }, R: { svg: cv.svg, extra: rx, P: COR_P } };
 };
@@ -325,7 +325,7 @@ DRAW2['4-7'] = T => {
   ex += lab(t > 0.5 ? '睫毛離開角膜' : '睫毛碰到角膜', t > 0.5 ? 'lashes off the cornea' : 'lashes on the cornea', 14, 64, A.lashL, { color: t > 0.5 ? COL.accent : COL.red, bold: true });
   ex += lab('瞼板（已切一半）', 'tarsus', PW - 12, 64, A.tarsusL, { side: 'R' });
   let rx = '';
-  if (B.mattressL) rx += lab('Mattress ×3（4-0 vicryl，位置示意）', 'everting sutures', 14, PH - 28, B.mattressL, { color: COL.suture, bold: true, op: T.on(0, 0.6, 0.6) });
+  if (B.mattressL) rx += lab('外翻縫線 ×3（4-0 vicryl，位置示意）', 'mattress sutures', 14, PH - 28, B.mattressL, { color: COL.suture, bold: true, op: T.on(0, 0.6, 0.6) });
   rx += lab('瞼板條已固定（外眥）', 'strip fixed', 14, 64, B.stripFix, { color: COL.suture, op: 0.9 });
   rx += lab(t > 0.5 ? '綁緊：瞼緣外轉' : '下瞼緣往內翻', t > 0.5 ? 'everted' : 'inturned', PW - 12, 64, B.lashMidL, { side: 'R', color: t > 0.5 ? COL.accent : COL.red, bold: true });
   return { L: { svg: sv.svg, extra: ex, P: SAG_P }, R: { svg: cv.svg, extra: rx, P: COR_P } };
@@ -337,7 +337,7 @@ DRAW2['4-8'] = T => {
   const sv = VL.lsag(st, PW, PH, SAG, 'sL'), A = sv.A, cv = VL.lcor({ ...st, ...LTS_AFTER }, PW, PH, COR, 'cR'), B = cv.A;
   let ex = '';
   if (A.skinClose) ex += lab('7-0 ethilone 縫皮', 'skin closure', 14, 150, A.skinClose, { color: COL.ink, bold: true, op: ss(0.3, 0.8, c) });
-  ex += lab('Mattress suture（4-0 vicryl）', 'everting suture', PW - 12, 236, A.mattress, { side: 'R', color: COL.suture });
+  ex += lab('外翻縫線（4-0 vicryl）', 'mattress suture', PW - 12, 236, A.mattress, { side: 'R', color: COL.suture });
   ex += lab('睫毛離開角膜', 'lashes off the cornea', 14, 64, A.lashL, { color: COL.accent, bold: true });
   let rx = '';
   if (B.skinCloseL) rx += lab('縫皮（7-0 ethilone）', 'skin sutures', 14, PH - 28, B.skinCloseL, { bold: true, op: ss(0.3, 0.8, c) });
