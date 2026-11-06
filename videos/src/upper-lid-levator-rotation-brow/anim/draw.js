@@ -85,7 +85,7 @@ const EPI = (() => {
   const marginS = u => u < 1.58 ? 0 : 0.44 - Math.sqrt(Math.max(0, 0.44 ** 2 - (u - 1.58) ** 2));   // lid.js: rounded anterior margin
   const fol = r => { const E = r.DA.at(marginS(1.70), 1.70), B = r.DA.at(2.05, 1.56), d = unitV([B[0] - E[0], B[1] - E[1]]); return { E, B, d, L: Math.hypot(B[0] - E[0], B[1] - E[1]) }; };
   const ZST = { mrd1: LRP.mrdPost, misdirected: 1 };                          // the lid after the rotation and the levator (margin turned out; 示意)
-  function zoom(st, W, H, id) { const r0 = LID.draw({ state: { ...ZST, ...st } }), F0 = fol(r0), win = { x: F0.E[0] - 2.2, y: F0.E[1] - 2.9, w: 5 };
+  function zoom(st, W, H, id) { const r0 = LID.draw({ state: { ...ZST, ...st } }), F0 = fol(r0), win = { x: F0.E[0] - 2.2, y: F0.E[1] - 2.6, w: 5 };
     const sv = VIEWS.sag({ ...ZST, ...st }, W, H, win, id); return { sv, F: F0 }; }
   function needle(sv, F, k, op) { const out = [F.E[0] - F.d[0] * 0.9, F.E[1] - F.d[1] * 0.9], tip = [F.E[0] + F.d[0] * F.L * k, F.E[1] + F.d[1] * F.L * k];
     const a = sv.P(out), b = sv.P(mixP(out, tip, 1));
@@ -288,9 +288,9 @@ DRAW2['4-1'] = T => {
     ex += `<g opacity="${o2}"><path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="${COL.suture}" stroke-width="3"/></g>`;
     ex += lab(`插 ${EP.reach95Up} mm：碰到 95% 的毛囊`, 'needle depth', PW - 12, 52, q, { side: 'R', color: COL.suture, bold: true, op: o2 }); }
   ex += lab('毛囊', 'follicle', 14, 52, sv.P(mixP(F.E, F.B, 0.7)), { bold: true, op: 1 - o1 });
-  ex += lab('方向歪的睫毛', 'misdirected lash', 14, PH - 30, sv.P(mixP(F.E, sv.M.misLash, 0.2)), { color: COL.amber, bold: true, op: 1 - T.on(1) });
+  ex += lab('方向歪的睫毛', 'misdirected lash', 14, PH - 30, sv.P(mixP(F.E, sv.M.misLash, 0.1)), { color: COL.amber, bold: true, op: 1 - T.on(1) });
   ex += lab('瞼板', 'tarsus', PW - 12, PH - 30, A.tarsusZ || A.tarsus, { side: 'R', op: T.on(3, 0.6) });
-  ex += lab('順著睫毛的方向', 'along the lash', 14, PH - 64, sv.P([F.E[0] - F.d[0] * 1.2, F.E[1] - F.d[1] * 1.2]), { color: COL.accent, bold: true, op: T.on(3, 0.6) });
+  ex += lab('順著睫毛的方向', 'along the lash', 14, PH - 64, sv.P([F.E[0] - F.d[0] * 0.3, F.E[1] - F.d[1] * 0.3]), { color: COL.accent, bold: true, op: T.on(3, 0.6) });
   ex += `<g opacity="${T.on(3, 0.6)}">${curve([sv.P([F.E[0] - F.d[0] * 1.6, F.E[1] - F.d[1] * 1.6]), sv.P(F.B)], COL.accent, 2.4, 1, '6 5')}</g>`;
   ex += VIEWS.sbar(sv.k, 1, 1);
   let rx = '';
@@ -306,8 +306,8 @@ DRAW2['4-2'] = T => {
   const Z = EPI.zoom({ misdirected: 1 - pl }, PW, PH, 'sL'), sv = Z.sv, F = Z.F, A = sv.A, cv = EPI.cor({ misdirected: 1 - pl }, PW, PH, 'cR'), B = cv.A;
   const N = EPI.needle(sv, F, nd, T.on(1) * (1 - pl));
   let ex = N.svg + EPI.coag(sv, F, tr);
-  if (sv.M.misLash) ex += lab('轉正後還碰到角膜的睫毛', 'still touching', 14, PH - 30, sv.P(mixP(F.E, sv.M.misLash, 0.2)), { color: COL.amber, bold: true, op: (1 - T.on(1)) * (1 - pl) });
-  ex += lab('細針沿睫毛幹進到毛囊', 'electrolysis needle', 14, 52, N.out, { bold: true, op: T.on(1, 0.6) * (1 - pl) });
+  if (sv.M.misLash) ex += lab('轉正後還碰到角膜的睫毛', 'still touching', 14, PH - 30, sv.P(mixP(F.E, sv.M.misLash, 0.1)), { color: COL.amber, bold: true, op: (1 - T.on(1)) * (1 - pl) });
+  ex += lab('細針沿睫毛幹進到毛囊', 'electrolysis needle', 14, 52, sv.P([F.E[0] - F.d[0] * 0.3, F.E[1] - F.d[1] * 0.3]), { bold: true, op: T.on(1, 0.6) * (1 - pl) });
   ex += lab('毛囊根部：通電產熱', 'follicle destroyed', PW - 12, PH - 30, sv.P(F.B), { side: 'R', color: '#7a4a2a', bold: true, op: ss(0.3, 0.8, tr) });
   ex += lab('睫毛拔掉', 'lash removed', 14, PH - 30, sv.P(F.E), { color: COL.accent, bold: true, op: ss(0.4, 1, pl) * (1 - T.on(3)) });
   ex += note('凝固範圍為示意', ss(0.3, 0.8, tr), 26);
