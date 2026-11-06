@@ -98,12 +98,11 @@ DRAW2['1-1'] = T => {
     lab('脫出的虹膜', 'prolapsed iris', 14, 196, Q(G.P3(WND.h, G.PRO.s, -0.45)), { op: ow }),
     lab('傷口（切面在傷口裡）', 'wound', 14, 300, Q(G.P3(WND.h, 2.6, 0.25)), { bold: true, color: COL.red, op: ow }),
     lab('睫狀體', 'ciliary body', 14, 352, Q(G.P3(WND.h, 2.2, G.T(2.2) + 0.45)), { bold: true, op: oc }),
-    lab('ora serrata（角膜緣後 6.2 mm）', '', PW - 12, 330, Q(G.P3(WND.h, 6.2, G.T(6.2) + 0.2)), { side: 'R', op: oc }),
   ];
   const R = scope(PRE, SFW, 's11'), P = R.P, ring = r => `<circle cx="${P([0, 0])[0].toFixed(1)}" cy="${P([0, 0])[1].toFixed(1)}" r="${(r * R.k).toFixed(1)}" fill="none" stroke="${COL.accent}" stroke-width="2" stroke-dasharray="7 5" opacity="${oz}"/>`;
   const rx = [
     lab('角膜緣', 'limbus', 14, 40, P(M12(G.P3(4.6, 0))), { op: oz }),
-    lab('角膜緣後 5 mm（zone II 終點）', '', 14, 380, P(M12(G.P3(1.2, 5))), { color: COL.accent, bold: true, op: oz }),
+    lab('角膜緣後 5 mm（zone II 終點）', '', 14, 340, P((() => { const r = G.surfAt(5).rho, y = 6.1; return [-Math.sqrt(r * r - y * y), y]; })()), { color: COL.accent, bold: true, op: oz }),
     lab('傷口　10 點', 'laceration', PW - 12, 190, P(ef(-1.5)), { side: 'R', bold: true, color: COL.red, op: ow }),
     lab('停在角膜緣後 4 mm', '', PW - 12, 372, P(ef(WND.s1)), { side: 'R', op: ow }),
   ];
@@ -314,7 +313,7 @@ DRAW2['5-3'] = T => {
 DRAW2['6-1'] = T => {
   const pe = qz(T.p(1, 0.1, 0.9)), st = { ...REP, sutures: sut(CORNEA), peri360: pe };
   const L = mer(st, 'm61'), Q = p3 => L.P(G.toPlane(L.pl, p3));
-  const lx = [lab('結膜往後退', 'conjunctiva', PW - 12, 230, Q(G.P3(WND.h, 7.3, -0.15)), { side: 'R', op: T.on(1) }),
+  const lx = [lab('結膜剪開、往後退', 'conjunctiva', PW - 12, 230, Q(G.P3(WND.h, 4.6, -0.02)), { side: 'R', op: T.on(1) }),
               lab('傷口盡頭：角膜緣後 4 mm', '', PW - 12, 300, Q(G.P3(WND.h, WND.s1, 0.1)), { side: 'R', bold: true, color: COL.red, op: T.on(2) })];
   const R = scope(st, SFW, 's61'), P = R.P, a = P(ef(0.6, 0, 1.6)), b = P(ef(3.4, 0, 1.6));
   const rx = [lab('360° 剪開結膜', 'peritomy', PW - 12, 40, P(M12(G.P3(8, 3))), { side: 'R', bold: true, op: T.on(1) }),

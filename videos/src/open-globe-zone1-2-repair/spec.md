@@ -24,38 +24,37 @@
 - Zone 定義：Pieramici 1997。
 - 不要壓眼球，內容物會被擠出來：Zhou 2022。
 - 順序：
-  - 先做 paracentesis，再先對齊角膜緣，最後才縫角膜：Zhou 2022、Wong 2024。
-  - 角膜緣的縫線不縫全層：Wong 2024。
+  - 先做 paracentesis，再先對齊角膜緣，最後才縫角膜：Zhou 2022、Wong 2025。
+  - 角膜緣的縫線不縫全層：Wong 2025。
   - 鞏膜由前往後，前面縫好才往後：Hamill 2002、Zhou 2022。
 - 縫線：
   - 號數：角膜 10-0 nylon、角膜緣 9-0 nylon、前段鞏膜 8-0 nylon，都用間斷縫（Zhou 2022）。
   - 怎麼下針：深度 70–90%，垂直傷口，兩邊對稱（Zhou 2022）。
-  - 長短：周邊角膜的縫線長而淺，中央的短而深（Zhou 2022、Wong 2024）。
+  - 長短：周邊角膜的縫線長而淺，中央的短而深（Zhou 2022、Wong 2025）。
   - 間距：一針 10-0 可以關約 1.0–1.5 mm 的直線傷口（Zhou 2022）。
   - 咬距：離傷口邊緣 0.5–1 mm。這個數字只在 Zheng 2026 的研究背景順帶提到，旁白要說出處的層級。
   - 避開視軸，結埋在遠離視軸的一側（Zhou 2022）。
   - Rowsey–Hays 技巧：只講名字和原理（Hamill 2002、Rowsey 1983：縫緊的地方角膜變陡），原文沒有數字可引。
 - 虹膜：
-  - 何時切除：只有明顯沒有活性時才切（Zhou 2022、Wong 2024）；脫出超過 24 小時就清掉（Li 2015）。
+  - 何時切除：只有明顯沒有活性時才切（Zhou 2022、Wong 2025）；脫出超過 24 小時就清掉（Li 2015）。
   - 回納的風險：可能造成上皮內生（Nagra 2003，病例報告）。
-  - 回納方法：從傷口對側的 paracentesis 打 dispersive OVD，用 cyclodialysis spatula 掃回（Zhou 2022）；或另開 paracentesis 把組織拉回來（Wong 2024）。
+  - 回納方法：從傷口對側的 paracentesis 打 dispersive OVD，用 cyclodialysis spatula 掃回（Zhou 2022）；或另開 paracentesis 把組織拉回來（Wong 2025）。
 - 探查：沒有排除更後面的傷口前要 360° peritomy（Zhou 2022）。這部影片的探查畫 360°，並說明這個病例探查後傷口止於角膜緣後 4 mm。目前模型只有扇形，要補。
 - 手與器械：有出處與查不到的項目，見 `videos/models/globe/CARD.md`「手與器械（規劃）」。
 - 結膜縫合的材質、前房重建後的漏水測試、術後用藥：沒有找到出處，旁白說「依院內常規」。
 
-## 章節（草案；逐句旁白之後寫在 `script-draft.md`）
+## 章節（定稿；逐句旁白與出處見 `script-draft.md`，由 `anim/segments.js` 產生）
 | 章 | 內容 | 主要出處 |
 |---|---|---|
 | 片頭 | 一條跨 zone I–II 的傷口；三件事：先縫哪裡、每針怎麼下、兩手怎麼拿 | — |
-| 1 看懂這個傷口 | zone 定義；peaked pupil 與虹膜脫出；結膜下出血蓋住 zone II；不要壓眼球；zone II 底下是睫狀體、在直肌附著前面 | Pieramici 1997、Zhou 2022、Kim 2024、Liu 2014 |
-| 2 器械與雙手 | 器械盤（開瞼器、有齒鑷、持針器、綁線鑷、剪刀、spatula、OVD）；右手握筆式持針、左手有齒鑷；手靠穩；夾針位置；正手與反手；兩手都要練 | Jones 2023、Newton & Jones 2023、Li 2020 |
-| 3 第一針：角膜緣 | 先 paracentesis，再對齊角膜緣；9-0 nylon；不縫全層 | Zhou 2022、Wong 2024 |
-| 4 虹膜回納 | 切或不切的條件；OVD 與 spatula；上皮內生的風險 | Zhou 2022、Wong 2024、Li 2015、Nagra 2003 |
-| 5 角膜 | 10-0 nylon；深度 70–90%、垂直、對稱；周邊長淺、中央短深；一針 1.0–1.5 mm；避開視軸；打結與埋結 | Zhou 2022、Wong 2024、Hamill 2002、Jones 2023、Hammond 1996 |
-| 6 Zone II | 360° peritomy 探查；由前往後一段段縫；8-0 nylon；睫狀體不切 | Zhou 2022、Hamill 2002 |
-| 7 收尾 | 前房重建、檢查漏水、縫結膜、術後（依院內常規） | 院內常規 |
-| 8 模擬練習清單 | 照順序默念一次的清單 | — |
-| 參考文獻 | — | — |
+| 1 看懂這個傷口 | 1-1 zone 定義、本例停在角膜緣後 4 mm、睫狀體、直肌附著在後面；1-2 peaked pupil 與虹膜脫出、結膜下出血蓋住鞏膜段、不要壓眼球 | Pieramici 1997、Liu 2014、Kim 2024、Murali 2021、Zhou 2022 |
+| 2 器械與雙手 | 2-1 器械與縫線號數；2-2 握筆式持針、手靠穩（顫抖多 22%）、順著針的弧度；2-3 夾針位置、垂直進出；2-4 左手有齒鑷、反手、換手 | Zhou 2022、Jones 2023、Li 2021、Kil 2024、Newton 2023 |
+| 3 先回納虹膜 | 3-1 切或不切（沒有活性、超過 24 小時、上皮內生）；3-2 傷口對側 paracentesis、OVD、spatula、另開 paracentesis | Zhou 2022、Wong 2025、Li 2015、Nagra 2003 |
+| 4 第一針：角膜緣 | 4-1 為什麼先縫角膜緣、9-0、不縫全層；4-2 下針與打結（1 mm、80% 示意） | Wong 2025、Zhou 2022 |
+| 5 角膜 | 5-1 10-0、深度 70–90%、垂直對稱、離邊緣 0.5–1 mm；5-2 周邊長淺中央短深、一針 1.0–1.5 mm、避開視軸；5-3 打結（3-1-1、2-1-1）、埋結 | Zhou 2022、Zheng 2026、Wong 2025、Jones 2023、Hammond 1996 |
+| 6 Zone II：鞏膜 | 6-1 360° 剪開結膜探查、由前往後；6-2 8-0、睫狀體、3 針（示意） | Zhou 2022、Hamill 2002 |
+| 7 收尾 | 重建前房、確認不漏水、結膜蓋回（依院內常規） | 院內常規 |
+| 8 模擬練習清單 | 七件事 | 各章 |
 
 ## 兩個同步視角
 - 縫合的步驟（第 3、5、6 章）：
@@ -65,12 +64,15 @@
 - 虹膜回納（第 4 章）：子午切面看虹膜回到眼內，俯視圖看 pupil 變回圓的。
 
 ## 驗收項目
-- [ ] 病例情境照上面原樣；所有步驟都在 zone I–II，不出現直肌處理。
-- [ ] 每段手術步驟同時顯示兩個視角，並寫明方位（術者坐 12 點）。同一針縫線在兩圖的位置、方向、咬距一致（`check.js`）。
-- [ ] 旁白和重點框的每個數字都在數字帳本、有出處。沒有出處的標「示意」或說「依院內常規」，並列在 `overview-notes.md`。
-- [ ] 手的持法、夾針位置、打結都有出處；查不到的（例如前臂轉動、何時換手）標「示意」。
-- [ ] `node videos/tools/check-all.js videos/src/open-globe-zone1-2-repair` 全部通過；每段一張參考圖（Claude 自檢）。
-- [ ] 出片前交總覽（每章一張）。上傳為不公開並同步網站。
+- [x] 病例情境照上面原樣；所有步驟都在 zone I–II，不出現直肌處理（`check.js`：傷口止於 4 mm < 5 mm）。
+- [x] 每段手術步驟同時顯示兩個視角，並寫明方位（術者坐 12 點）。同一針縫線、同一支器械在兩圖的位置與方向一致：
+  - 縫線由模型 `check.js` 檢查。
+  - 手術野與顯微鏡的器械方向、持針器與縫線垂直，由影片 `check.js` 檢查。
+- [x] 旁白、重點框與畫面上的每個數字都在數字帳本、有出處（291 項）。沒有出處的標「示意」或說「依院內常規」，並列在 `overview-notes.md`。
+- [x] 手的持法、夾針位置、打結都有出處；查不到的（前臂轉動、何時換手）不講，三點握法與夾點比例標「示意」。
+- [x] `node videos/tools/check-all.js videos/src/open-globe-zone1-2-repair` 全部通過；每段一張參考圖（Claude 自檢）。
+- [x] 出片前交總覽（`ref/overview/`，每章一張）。
+- [ ] 上傳為不公開並同步網站。
 
 ## 進度
 - 2026-11-06：
@@ -78,23 +80,16 @@
   - 查證文獻：PubMed 與 PMC 全文。查不到的項目列在模型卡。
   - 建立眼球前段模型（`videos/models/globe/`）：模型卡、子午切面、垂直傷口切面、顯微鏡俯視；傷口、虹膜脫出、peaked pupil、結膜下出血、扇形 peritomy、縫線（穿、打結、埋結）。
   - 模型檢查 53 項通過，每項都故意改錯測過；樣本圖自己放大檢查過。
-- 下一步，依序做：
-  1. 手與器械：握筆式持針器、有齒鑷、綁線鑷、針；手部全景視角；先做樣本並自檢。
-  2. 360° peritomy、paracentesis 與 OVD、前房重建的模型狀態。
-  3. 寫 `anim/segments.js`（旁白）與 `draw.js`（每段畫面），然後做 TTS 語音、出片。每個對話做一章。
+- 2026-11-06（同日，第二個對話）：
+  - 手與器械模型 `videos/models/hands/`：模型卡、自我檢查、樣本。
+  - 眼球模型補 360° peritomy、paracentesis、OVD、切面中的針。
+  - 旁白 22 段、73 句，約 6 分 50 秒；每段畫面；TTS 語音與時間軸。
+  - 影片 `check.js`：數字帳本 291 項＋旁白對模型 28 項，16 種故意改錯都會被抓到。
+  - 參考圖 24 張、每章總覽 9 張、`overview-notes.md`、`publish/`。
+  - 文獻書目逐篇在 PubMed 查證，有兩處更正：
+    - Wong 的綜論是 2025 年（印刷年），內容是兒童 open globe。
+    - 顫抖研究 Li 的印刷年是 2021。
+- 下一步：上傳 YouTube（不公開），同步網站。合併進 main 後，`ref/manifest.json` 的 `textBase` 要改成 main 上的合併 commit。
 
 ## 參考文獻
-1. Pieramici DJ, et al. A system for classifying mechanical injuries of the eye (globe). Am J Ophthalmol 1997;123:820-31. doi:10.1016/s0002-9394(14)71132-8
-2. Zhou Y, et al. 2022, Clin Ophthalmol（open globe 修補綜論）. doi:10.2147/OPTH.S372011 [待核對出處：完整標題與作者]
-3. Wong 2024, Taiwan J Ophthalmol（open globe 處理綜論）. doi:10.4103/tjo.TJO-D-24-00061 [待核對出處：完整標題與作者]
-4. Hamill MB. Corneal and scleral trauma. Ophthalmol Clin North Am 2002. doi:10.1016/s0896-1549(02)00018-4
-5. Rowsey JJ, Hays JC. Refined technique for repair of corneal lacerations. Ophthalmic Surg 1984;15:569-74. PMID 6382097（摘要沒有數字）
-6. Rowsey JJ, 1983, Ophthalmology（縫線對角膜曲率的影響）. doi:10.1016/s0161-6420(83)34591-7 [待核對出處：完整標題]
-7. Li 2015, J Emerg Trauma Shock. doi:10.4103/0974-2700.166663 [待核對出處：完整標題與作者]
-8. Nagra 2003, Cornea（虹膜回納後上皮內生）. doi:10.1097/00003226-200303000-00023 [待核對出處：完整標題]
-9. Zheng 2026, Sci Rep. doi:10.1038/s41598-026-42805-4（只引用背景裡「離邊緣 0.5–1 mm」一句）[待核對出處：完整標題]
-10. Jones 2023, Community Eye Health. PMC10762710 [待核對出處：完整標題與卷期]
-11. Newton & Jones 2023, Community Eye Health. PMC10762700 [待核對出處：完整標題與卷期]
-12. Li 2020, Hum Factors（手靠額頭與腕托的顫抖）. doi:10.1177/0018720820916629 [待核對出處：完整標題]
-13. Hammond 1996, Br J Ophthalmol（角膜縫線結的大小）. doi:10.1136/bjo.80.2.164 [待核對出處：完整標題]
-14. 解剖數值：Fu 2015、Zheng 2008、Chua 2014、Olsen 1998、Vurgese 2012、Le 2018、Liu 2014、Kim 2024。DOI 見 `videos/models/globe/CARD.md`。
+見 `script-draft.md` 文末（15 篇，PubMed 逐篇查證，附 DOI 或 PMCID）。解剖數值的出處見 `videos/models/globe/CARD.md`。
