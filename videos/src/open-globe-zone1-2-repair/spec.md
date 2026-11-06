@@ -72,7 +72,7 @@
 - [x] 手的持法、夾針位置、打結都有出處；查不到的（前臂轉動、何時換手）不講，三點握法與夾點比例標「示意」。
 - [x] `node videos/tools/check-all.js videos/src/open-globe-zone1-2-repair` 全部通過；每段一張參考圖（Claude 自檢）。
 - [x] 出片前交總覽（`ref/overview/`，每章一張）。
-- [ ] 上傳為不公開並同步網站。
+- [x] 上傳為不公開並同步網站：YouTube `LTcdHLzDRkY`（privacy 回報 unlisted），`videos/index.html` 條目放在最前面，瀏覽器開 `videos/#open-globe-zone1-2-repair` 沒有 JS 錯誤、影片嵌得進來。
 
 ## 進度
 - 2026-11-06：
@@ -89,7 +89,8 @@
   - 文獻書目逐篇在 PubMed 查證，有兩處更正：
     - Wong 的綜論是 2025 年（印刷年），內容是兒童 open globe。
     - 顫抖研究 Li 的印刷年是 2021。
-- 下一步：上傳 YouTube（不公開），同步網站。合併進 main 後，`ref/manifest.json` 的 `textBase` 要改成 main 上的合併 commit。
+- 2026-11-06：出片（6:53，1080p30）；`check-all.js` 全部通過（含手與器械模型）；從 mp4 抽 6 格和參考圖一致；上傳 YouTube 不公開（`LTcdHLzDRkY`），同步網站。
+- 下一步：合併進 main 後，`ref/manifest.json` 的 `textBase` 改成 main 上的合併 commit。
 
 ## 參考文獻
 見 `script-draft.md` 文末（15 篇，PubMed 逐篇查證，附 DOI 或 PMCID）。解剖數值的出處見 `videos/models/globe/CARD.md`。
