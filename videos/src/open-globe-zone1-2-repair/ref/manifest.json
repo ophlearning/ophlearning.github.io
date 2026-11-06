@@ -1,0 +1,17 @@
+{
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/open-globe-zone1-2-repair；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。影片頁還沒做，page 為 null。",
+  "page": null,
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [0, 64, 1280, 656],
+  "items": [
+    {
+      "page": "../../../models/globe/sample.html",
+      "ref": "../../../models/globe/sample.jpg",
+      "dpr": 1,
+      "crop": null,
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（全圖看一次、右下角裁切放大看標籤與 ora 交界；數字由 globe/check.js 檢查）"
+    }
+  ]
+}
