@@ -12,6 +12,13 @@
 <link rel="stylesheet" href="print.css">
 </head>
 <body>
+<script>
+// paper (print.js --paper), landscape: lss = 270 × 210 mm (the pre-punched two-hole 「LSs」 copy paper the hospital uses; default),
+// a4 = 297 × 210 mm, letter = 279.4 × 215.9 mm
+(() => { const P = { lss: [270, 210], a4: [297, 210], letter: [279.4, 215.9] }, k = new URLSearchParams(location.search).get('paper') || 'lss';
+  if (!P[k]) throw new Error('unknown paper ' + k); const [w, h] = P[k]; window.PAPER = { name: k, w, h };
+  document.head.insertAdjacentHTML('beforeend', `<style>@page { size: ${w}mm ${h}mm; margin: 0; } body, .sheet { width: ${w}mm; height: ${h}mm; }</style>`); })();
+</script>
 <script src="print-kit.js"></script>
 <script src="layout.js"></script>
 <script>

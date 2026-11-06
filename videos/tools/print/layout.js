@@ -10,7 +10,7 @@
 // ============================================================================
 (() => {
   const P = PRINT, PT = P.PT;
-  const BODY = { w: 277, h: 210 - 28.2 - 22.5 };   // body box of print.css (mm)
+  const PAPER = window.PAPER || { w: 297, h: 210 }, BODY = { w: PAPER.w - 20, h: PAPER.h - 28.2 - 23.6 };   // body box of print.css (mm)
   let VIDEO_CFG = null;
 
   // ---------------------------------------------------------------- the video (print/video.js)
@@ -106,7 +106,9 @@
   // def: { figH, figures: [{ w, …view spec }], tables: [{ head, src: true (third column = source), rows: [[item, value, ledger key]] }],
   //        bottom: 'grid-template-columns of the tables row (tables …, legend)', legend: { rows, orient } }
   function anatomy(def) {
-    const figs = def.figures.map((f, i) => figure(f, f.w, def.figH, null).html).join('');
+    // figure widths are written for A4; on narrower paper they shrink together (same view windows, so the drawings scale)
+    const sumW = def.figures.reduce((a, f) => a + f.w, 0), k = Math.min(1, (BODY.w - 2.5 * (def.figures.length - 1)) / sumW);
+    const figs = def.figures.map((f, i) => figure(f, +(f.w * k).toFixed(2), +(def.figH * k).toFixed(2), null).html).join('');
     const table = t => `<table class="tbl"><tr><th${t.src ? '' : ' colspan="2"'}>${t.head}</th>${t.src ? `<th></th><th>出處</th>` : ''}</tr>` +
       t.rows.map(r => { const s = sourceOf(r[2], r[1], r[0]); return `<tr><td>${r[0]}</td><td class="v">${r[1]}</td>${t.src ? `<td class="s">${s || '院內常規'}</td>` : ''}</tr>`; }).join('') + `</table>`;
     return `<div style="display: flex; flex-direction: column; gap: 2.5mm; height: 100%"><div style="display: flex; gap: 2.5mm">${figs}</div>` +
