@@ -22,7 +22,7 @@ const LEDGER = {
   '1-1': { '60': 'Cruz 2015a', '2': 'Cruz 2015a', '1': 'Cruz 2015a' },
   '1-2': { '10': 'Cruz 2023', '70': 'Cruz 2023', '9': 'Cruz 2023；Tucker 2000', '60': 'Tucker 2000', '33': 'Tucker 2000', '6': 'Tucker 2000', '20': 'Tucker 2000', '1': 'Tucker 2000' },
   '2-1': { '2.5': '院內常規', '4': '院內常規' },
-  '2-2': { '3': 'Cruz 2015a', '15': 'Cruz 2015a' },
+  '2-2': { '3': 'Cruz 2015a', '15': 'Cruz 2015a', '4': '院內常規' },
   '2-3': { '6-0': 'Cruz 2015a', '3': 'Cruz 2015a' },
   '3-1': { '5': '院內常規', '4-0': '院內常規', '3': '院內常規', '4': '結構', '4-1': '結構', '4-4': '結構' },
   '3-2': { '2.5': 'Kokubo 2019；院內常規', '2.9': 'Kokubo 2019', '4-0': '院內常規', '1': '院內常規', '6-0': '院內常規', '4': '院內常規', '7-0': '院內常規', '4-5': '結構', '1-2': '結構' },
@@ -88,7 +88,7 @@ function modelChecks(ctx) {
   { const s = LID.draw({ state: { mrd1: P.mrdPre, creaseH: Q.creaseH, crease: 1, flap: 1, cut: 1 } }), DP = s.DP, c = CORONAL.draw({ state: { mrd1: P.mrdPre, incision: 1 } });
     const ant = DP.at(LID.S_CUT, LID.U_TAR), gap = hyp(ant, s.A.creaseSkin);
     ok(LID.S_CUT === Q.cutMm && line(ctx, '2-2', 1).includes(`離瞼緣 ${Q.cutMm} mm`) && line(ctx, '2-2', 1).includes(`${Q.blade} 號刀`), `2-2 tarsotomy at s = ${LID.S_CUT} mm (narration ${Q.cutMm} mm, ${Q.blade} 號刀)`);
-    ok(gap > 1 && line(ctx, '2-2', 3).includes('不在同一個高度'), `2-2 skin incision ${f2(gap)} mm from the front of the tarsotomy (different levels)`);
+    ok(gap > 1 && line(ctx, '2-2', 3).includes(`距睫毛線 ${P.incH[1]} mm`) && line(ctx, '2-2', 3).includes(`距瞼緣 ${Q.cutMm} mm`) && line(ctx, '2-2', 3).includes('不在同一處'), `2-2 skin incision ${f2(gap)} mm from the front of the tarsotomy (different levels)`);
     // the coronal tarsotomy line of this video (anim/draw.js ROT.view) scales the coronal model's cutY profile to the sagittal height
     const hS = DP.at(LID.S_CUT, 0)[1] - DP.at(0, 0)[1], hM = c.cutY(0) - c.Uy(0), hC = hM * (hS / hM);
     ok(near(hC, hS, 0.3) && Math.abs(hM - hS) < 0.6, `2-2 tarsotomy height above the margin: coronal ${f2(-hC)} (model profile ${f2(-hM)}, scaled) vs sagittal ${f2(-hS)} mm`); }
@@ -192,7 +192,7 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...viewChecks(
       ['incision position', c => { c.P.inc.incX = [-5.75, 5.75]; }],
       ['tarsotomy distance', c => { c.Q.cutMm = 4; }],
       ['tarsotomy blade', c => { c.Q.blade = 11; }],
-      ['different levels', c => { c.text['2-2'].lines[3] = c.text['2-2'].lines[3].replace('不在同一個高度', '在同一個高度'); }],
+      ['different levels', c => { c.text['2-2'].lines[3] = c.text['2-2'].lines[3].replace('不在同一處', '在同一處'); }],
       ['suture count', c => { c.Q.sutN = 2; }],
       ['suture end', c => { c.text['2-3'].lines[1] = c.text['2-3'].lines[1].replace('睫毛根附近的 orbicularis', '瞼板'); }],
       ['margin turned out', c => { c.Q.after = 1; }],
