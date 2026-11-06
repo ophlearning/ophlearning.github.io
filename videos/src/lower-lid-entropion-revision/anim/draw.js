@@ -203,29 +203,40 @@ DRAW2['4-1'] = T => {
   return { L: { svg: av.svg, extra: ex, P: AX_P }, R: { svg: cv.svg, extra: rx, P: CANTH_P } };
 };
 
+// the strip held out laterally: in the coronal its end is STRIP_L mm temporal to the lid end (CORONAL strip: x0 − stripL); in the axial the
+// same end position is shown by pulling the strip toward the tubercle (CANTHUS stripFix < 1, suture marks removed until the suture step),
+// so both views put the strip end at the same x (schematic length)
+const STRIP_L = 5, STRIP_X0 = CORONAL.LC[0] + 1.6;
+function axialStrip(k, sutured, id) {   // k: 0 = strip in place, 1 = end held at STRIP_X0 − STRIP_L; sutured: 0–1 from there to the tubercle
+  const st = { lax: 1, ...LTS_C, strip: 1 }, e = CANTHUS.draw({ state: st, id: id + 'p' }).A.lidEnd, Q = [CANTHUS.TUB[0] - 0.25 * CANTHUS.WALL[0], CANTHUS.TUB[1] - 0.25 * CANTHUS.WALL[1]];
+  const fHeld = Math.max(0, Math.min(1, (e[0] - (STRIP_X0 - STRIP_L)) / (e[0] - Q[0]))), f = sutured > 0 ? lerp(fHeld, 1, sutured) : fHeld * k;
+  const av = VL.axial({ ...st, stripFix: f }, PW, PH, AXC, id);
+  if (!sutured && f < 1) av.svg = av.svg.replace(/<path [^>]*stroke="#2463eb"[^>]*\/>/g, '').replace(/<circle [^>]*fill="#2463eb"\/>/g, '');
+  return av;
+}
 DRAW2['4-2'] = T => {
   const sp = T.on(1, 0.8), pull = T.p(2, 0.05, 0.5);
-  const av = VL.axial({ lax: 1, ...LTS_C, strip: sp > 0.5 ? 1 : 0 }, PW, PH, AXC, 'aL'), X = av.A;
-  const cv = VL.lcor({ ...LTS_C, strip: sp > 0.5 ? 1 : 0, rimShow: 1 }, PW, PH, CANTH, 'cR'), B = cv.A;
+  const av = sp > 0.5 ? axialStrip(pull, 0, 'aL') : VL.axial({ lax: 1, ...LTS_C }, PW, PH, AXC, 'aL'), X = av.A;
+  const cv = VL.lcor({ ...LTS_C, strip: sp > 0.5 ? 1 : 0, stripL: Math.max(0.05, STRIP_L * pull), rimShow: 1 }, PW, PH, CANTH, 'cR'), B = cv.A;
   let ex = lab('前層：皮膚＋orbicularis', 'anterior lamella', PW - 12, 64, lidOff(av, 0.95, 1.95), { side: 'R', bold: true, op: T.on(0, 0.6) * (1 - T.on(2)) });
   ex += lab('後層：瞼板＋結膜', 'posterior lamella', PW - 12, 106, lidOff(av, 0.92, 0.7), { side: 'R', bold: true, color: '#9b6a2a', op: T.on(0, 0.6, 0.8) * (1 - sp) });
-  if (X.strip) ex += lab('瞼板條（去掉一部分結膜）', 'tarsal strip', 14, 150, X.strip, { bold: true, color: '#9b6a2a', op: sp });
+  if (X.strip) ex += lab('瞼板條（去掉一部分結膜）', 'tarsal strip', 14, 150, X.strip, { bold: true, color: '#9b6a2a', op: sp * (1 - T.on(2)) });
   ex += lab('外側眶緣', 'lateral orbital rim', 14, 290, X.rim);
-  { const e = X.lidEnd, o = T.on(2, 0.6); if (e) ex += `<g opacity="${o}"><circle cx="${e[0].toFixed(1)}" cy="${e[1].toFixed(1)}" r="13" fill="none" stroke="${COL.red}" stroke-width="2.2" stroke-dasharray="5 4"/></g>` +
-      lab('剪掉多出來的長度（示意）', 'excess trimmed', 14, 64, e, { color: COL.red, bold: true, op: o }); }
+  if (X.stripBand) ex += lab('往外拉緊（示意）', 'strip pulled laterally', 14, 150, X.stripBand, { bold: true, color: '#9b6a2a', op: T.on(2, 0.6) });
+  ex += lab('多出來的長度剪掉（示意）', 'excess trimmed', 14, 64, X.lidEnd, { color: COL.red, bold: true, op: T.on(2, 0.6, 1.2) });
   let rx = '';
   if (B.strip) rx += lab('瞼板條', 'tarsal strip', PW - 12, 150, B.strip, { side: 'R', bold: true, color: '#9b6a2a', op: sp });
-  if (B.stripEnd) { const e = B.stripEnd, a = [e[0] + 46, e[1] - 30], o = T.on(2, 0.6);
-    rx += `<g opacity="${o}">${arrow([e[0] + 70, e[1] - 30], [e[0] + 10 - 30 * pull, e[1] - 30], COL.accent, 1, 'arrA', 2.6)}<path d="M${(e[0] + 8).toFixed(1)} ${(e[1] - 14).toFixed(1)}V${(e[1] + 14).toFixed(1)}" stroke="${COL.red}" stroke-width="2.4" stroke-dasharray="4 3"/></g>`;
-    rx += lab('往外拉緊，剪掉多的長度（示意）', 'pull and trim', 14, 236, [e[0] + 8, e[1] + 10], { color: COL.red, bold: true, op: o }); }
+  if (B.stripEnd) { const e = B.stripEnd, o = T.on(2, 0.6);
+    rx += `<g opacity="${o}">${arrow([e[0] + 64, e[1] - 26], [e[0] + 6, e[1] - 26], COL.accent, 1, 'arrA', 2.6)}</g>`;
+    rx += lab('往外拉緊，剪掉多的長度（示意）', 'pull and trim', 14, 340, [e[0] + 2, e[1] + 8], { color: COL.red, bold: true, op: o }); }
   rx += lab('外側眶緣（皮膚下）', 'lateral orbital rim', 14, 64, cv.P([cv.r.latRimX + 0.1, 3.0]));
   return { L: { svg: av.svg, extra: ex, P: AX_P }, R: { svg: cv.svg, extra: rx, P: CANTH_P } };
 };
 
 DRAW2['4-3'] = T => {
-  const f = T.p(0, 0.15, 0.85), tight = T.p(2, 0.35, 0.8) * (1 - T.p(2, 0.85, 1));
-  const av = VL.axial({ lax: 1, ...LTS_C, strip: 1, stripFix: f }, PW, PH, AXC, 'aL'), X = av.A, M = av.M;
-  const cv = VL.lcor({ ...LTS_C, strip: 1, stripFix: f, rimShow: 1 }, PW, PH, CANTH, 'cR'), B = cv.A;
+  const f = T.p(0, 0.15, 0.85);
+  const av = axialStrip(1, Math.max(f, 1e-4), 'aL'), X = av.A, M = av.M;
+  const cv = VL.lcor({ ...LTS_C, strip: 1, stripFix: f, stripL: lerp(STRIP_L, STRIP_X0 - LOWERC.LAT_RIM_X - 0.55, f), rimShow: 1 }, PW, PH, CANTH, 'cR'), B = cv.A;
   let ex = lab('外側眶緣', 'lateral orbital rim', 14, 290, X.rim, { bold: true });
   if (X.stripFix) ex += lab('4-0 vicryl ×1：固定到骨膜', 'strip to periosteum', 14, 196, X.stripFix, { color: COL.suture, bold: true, op: ss(0.5, 1, f) });
   { const o = T.on(1, 0.6) * (1 - T.on(2, 0.6)), a = av.P(M.rimEdge), b = av.P(M.tubercle);
