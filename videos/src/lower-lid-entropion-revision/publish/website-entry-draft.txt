@@ -1,7 +1,7 @@
   {
     id:'lower-lid-entropion-revision', type:'youtube', yt:'TBD', cat:'surgery',
     zh:'下眼瞼 entropion 復發的 revision 教學', en:'Revision of recurrent involutional lower-lid entropion: marginal rotation with lateral tarsal strip',
-    dur:DUR,
+    dur:529,
     short:'Marginal rotation 一年後又內翻：三個機轉與門診檢查、只轉瞼緣與加上 lateral tarsal strip 的復發率、院內三種術式怎麼選，以及 lateral tarsal strip＋marginal rotation 每一步動到哪一層。',
     sum:'這支影片從一位 marginal rotation 一年後復發的老年性下眼瞼內翻出發：先講 involutional entropion 的三個機轉（retractors 鬆脫、horizontal laxity、preseptal orbicularis 上跨）與門診怎麼看出每個機轉（distraction、snap-back、往下看的移動、下穹窿脂肪脫出、用力閉眼），再看只縫 everting sutures 和加上 lateral tarsal strip 的復發率，以及院內三種術式各處理哪個成分；接著依院內常規示範 lateral canthotomy 與 cantholysis、做瞼板條並固定到外側眶緣內面的骨膜、睫毛下切開穿過上次的疤痕、剝開眶隔與 retractor 到結膜、tarsal fracture、mattress suture 把瞼緣轉出來與縫皮；最後是術中狀況、術後追蹤與跟刀清單。',
     note:'畫面為右眼、亞洲人的示意動畫（下眼瞼矢狀切面＋正面；外眥水平切面＋正面外眥，兩圖同步），不是手術錄影，比例不精確。本片假設術前有 horizontal laxity，示範 marginal rotation＋lateral tarsal strip；各院做法不同的地方，影片中標「依院內常規」。',

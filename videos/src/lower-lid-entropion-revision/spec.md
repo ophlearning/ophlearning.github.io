@@ -80,5 +80,5 @@
   - 視角：下眼瞼步驟用矢狀切面＋正面；LTS 用外眥水平切面（從下往上看，同 CT）＋正面外眥，兩圖同一個 x 視窗（瞼板條拉緊時兩圖末端同 x）。下眼瞼的視角包裝放在本片 `anim/views-lower.js`（`kit.js` 與共用模型都沒改）。
   - 檢查：`check.js` 數字帳本（259 項）＋22 項旁白↔模型檢查（復發時睫毛碰到角膜、綁緊後離開；切口 2.5 mm 兩圖同高；剝離平面在眶隔前；retractors 開到結膜；融合處 2.38 mm；fracture 一半深度、不穿結膜；mattress ×3／×2、進出針位置、穿過 retractors、不進眼球；過度矯正；distraction 範圍；canthotomy 水平、cantholysis 下支；Whitnall 1.5 mm；瞼板條固定在眶緣內面骨膜、一針、兩圖同 x）；`--selftest` 27 種改錯全部抓到。
   - 參考圖 21 張（Claude 自檢）；出片前總覽 `ref/overview/`（每章一張）與 `overview-notes.md`（範本的解讀、示意與推論，刀後對照用）。
-  - 出片：`out/lower-lid-entropion-revision.mp4`（不進 git；DURINFO）；`publish/` 有章節、字幕、YouTube 說明欄與網站條目草稿（`yt: 'TBD'`）。
+  - 出片：`out/lower-lid-entropion-revision.mp4`（不進 git；ffprobe 528.80 秒＝8:49，1920×1080、30 fps、15864 格，AAC 48 kHz 立體聲，旁白 −16.7 LUFS，47 MB）；`publish/` 有章節、字幕、YouTube 說明欄與網站條目草稿（`yt: 'TBD'`）。
 - 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」與 `overview-notes.md` 的範本解讀，不同處改 `anim/params.js`／`segments.js` 後重新出片。
