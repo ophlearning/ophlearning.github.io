@@ -2,7 +2,7 @@
 // The last script of each model is its views.js, which fills MODEL_VIEWS[<model>] with the views it offers.
 // A new model is usable by the tools once it adds one line here.
 const MODEL_REGISTRY = {
-  eyelid: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'eyelid/views.js'],
+  eyelid: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'eyelid/laceration.js', 'eyelid/views.js'],
   // the orbit model reuses the eyelid model (globe, lateral canthus, rim) so the two share coordinates
   orbit: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'orbit/orbit.js', 'orbit/views.js'],
 };

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="lid.js"></script><script src="coronal.js"></script><script src="laceration.js"></script>
+<script>
+// Margin laceration repair (videos/src/eyelid-margin-laceration-repair, chapter 4): four steps, two synced views each.
+// Top row = mechanism view (margin face seen from below, or the wound face = sagittal section through the wound); bottom row = coronal view.
+// Gray line silk 2 mm from the wound edge and 3 upper tarsal sutures (EyeWiki); partial-thickness bites through the anterior tarsus (EyeRounds).
+// Gap width, wound length, suture heights, pout and the lash rows are schematic.
+const open = { lac: 1 }, grey = { lac: 1, lacGrey: 1 }, tar = { lac: 0.4, lacGrey: 1, lacTar: 1, lacWin: [-3.4, 3.4] },
+  done = { lac: 0, lacPout: 0.3, lacGrey: 1, lacGreyTie: 1, lacTar: 1, lacLash: 1, lacLashTie: 1, lacSkin: 1, lacTails: 1 };
+const STEPS = [['裂開', 'full-thickness, central', open, 'mar'], ['第一針：gray line', '6-0 silk，離邊緣 2 mm', grey, 'mar'],
+  ['Tarsus：partial-thickness', 'Vicryl ×3，只咬前表面', tar, 'sag'], ['縫好：瞼緣微微外翻', '線尾埋進皮膚縫線', done, 'mar']];
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const o = [`<text x="24" y="36" font-size="21" font-weight="700" fill="#1d2733">上眼瞼 margin laceration 的縫合（右眼，亞洲人）：上排機轉切面、下排正面</text>`,
+  `<text x="1256" y="36" font-size="13" fill="#5b6878" text-anchor="end">黑＝6-0 silk　紫＝Vicryl　棕＝皮膚縫線｜缺口寬度、縫線高度、外翻程度為示意</text>`];
+const PW = 306, PH = 320, WIN = { mar: [-4.5, -6.1, 9], mar1: [-2.5, -6.1, 9], sag: [-14.6, -11.3, 7], cor: [-6, -11.6, 12] };
+const panel = (px, py, svg, win, id) => { const K = PW / win[2];
+  return `<clipPath id="${id}C"><rect x="${px + 1}" y="${py + 1}" width="${PW - 2}" height="${PH - 2}" rx="8"/></clipPath><g clip-path="url(#${id}C)"><g transform="translate(${px} ${py}) scale(${K}) translate(${-win[0]} ${-win[1]})">${svg}</g></g>`; };
+const toPx = (px, py, win, p) => [px + (p[0] - win[0]) * PW / win[2], py + (p[1] - win[1]) * PW / win[2]];
+STEPS.forEach(([zh, en, st, top], i) => {
+  const px = 16 + i * (PW + 8);
+  for (const [row, kind] of [[0, top], [1, 'cor']]) {
+    const py = 56 + row * (PH + 8), id = `p${i}${row}`, win = WIN[i === 0 && kind === 'mar' ? 'mar1' : kind];   // step 1: wound left of centre, intact margin on the right carries the labels
+    let svg, A;
+    if (kind === 'mar') { const r = LAC.margin({ state: st, id }); svg = r.svg; A = r; }
+    else if (kind === 'sag') svg = LID.draw({ state: {}, id }).svg + LAC.sag({ state: st }).svg;
+    else { const r = CORONAL.draw({ state: st, id, section: false, windows: st.lacWin ? [CORONAL.strip(st.lacWin[0], st.lacWin[1], 1)] : [] }); svg = r.svg + LAC.cor(r, { state: st }).svg; }
+    o.push(`<rect x="${px}" y="${py}" width="${PW}" height="${PH}" rx="9" fill="#fff" stroke="#d3dae1"/>` + panel(px, py, svg, win, id));
+    const sub = kind === 'mar' ? '瞼緣面：從下方看（上＝前、皮膚；下＝後、結膜）' : kind === 'sag' ? '傷口面＝經傷口的矢狀切面（左＝前）' : '正面（檢查者看病人：左＝temporal）';
+    o.push(`<rect x="${px + 1}" y="${py + 1}" width="${PW - 2}" height="${row ? 24 : 72}" rx="8" fill="#fff" opacity="0.9"/>`);
+    if (!row) o.push(`<circle cx="${px + 20}" cy="${py + 20}" r="12" fill="#1d2733"/><text x="${px + 20}" y="${py + 25}" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">${i + 1}</text>`
+      + `<text x="${px + 38}" y="${py + 20}" font-size="13.5" font-weight="700" fill="#1f2a36">${esc(zh)}</text><text x="${px + 38}" y="${py + 38}" font-size="11.5" fill="#5b6878">${esc(en)}</text>`);
+    o.push(`<text x="${px + 10}" y="${py + (row ? 17 : 64)}" font-size="11" fill="#5b6878">${esc(sub)}</text>`);
+    if (i === 0 && kind === 'mar') { const M = A.M, U = A.U, R = px + PW - 8;
+      [['皮膚', 'skin', U.skin + 0.6, 102], ['睫毛', 'lashes', U.lash, 128], ['灰線', 'gray line', U.grey, 154], ['瞼板腺開口', 'meibomian orifices', U.orif, 182], ['MCJ', 'mucocutaneous junction', U.mcj, 208], ['結膜', 'conjunctiva', -0.7, 244]]
+        .forEach(([z, e, u, ty]) => { const a = toPx(px, py, win, M([1.0, -u])), w = z.length * (z === 'MCJ' ? 7 : 11) + e.length * 5.7 + 6;
+          o.push(`<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${(R - w - 3).toFixed(1)} ${(py + ty - 4).toFixed(1)}" stroke="#1d2733" stroke-width="1"/><circle cx="${a[0].toFixed(1)}" cy="${a[1].toFixed(1)}" r="2.2" fill="#1d2733"/>`
+            + `<text x="${R}" y="${py + ty}" font-size="11" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="3" fill="#1d2733">${z} <tspan fill="#5b6878">${e}</tspan></text>`); }); }
+  }
+});
+document.getElementById('stage').innerHTML = o.join('');
+</script></body></html>

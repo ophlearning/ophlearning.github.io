@@ -626,6 +626,6 @@ const LID = (() => {
     return { margin: DP.at(0, 0), tarTop: DP.at(S_TAR, 0.6), lash: SK.off(EX.qLash, 0), incLo: SK.off(EX.qLo, 0), incHi: SK.off(EX.qHi, 0), fix: DP.at(fixS, 0.62), clamp: cl, browY,
       prolapseLow: st.prolapse ? prolapseGeom(st.prolapse, DP.at(0, 0)[1]).low : null };
   }
-  return { draw, keyPoints, slide, slideAngle, wSlide, creasePointUF, makeDeform, levTrack, levState, gp, RIM_Y, PERI, BROW_LO, BROW_H, wBrow, boneCtrl, S_CUT, S_TAR, U_TAR, U_SKIN, uSkin, UF, LEV, geom, VARIANTS, sLv, S_J, ARCUS, hash, spline, track, poly, F, add, sub, unit, hyp, lerp, ss, NS, C };
+  return { draw, keyPoints, slide, slideAngle, wSlide, creasePointUF, makeDeform, levTrack, levState, gp, RIM_Y, PERI, BROW_LO, BROW_H, wBrow, boneCtrl, S_CUT, S_TAR, U_TAR, U_SKIN, U_CONJ, U_MCJ, U_ORIF, U_GREY, uSkin, UF, LEV, geom, VARIANTS, sLv, S_J, ARCUS, hash, spline, track, poly, F, add, sub, unit, hyp, lerp, ss, NS, C };
 })();
 if (typeof module !== 'undefined') module.exports = LID;
