@@ -68,7 +68,9 @@
   - `kit.js`：畫面標記跟上一格相同就不重設，設 `window.FRAME_CHANGED = false`。
   - `render.js`：沿用上一格的 JPEG。畫面一變，下一格會再截一次確認，才開始沿用，避免沿用到還沒畫完的那一格。截圖改走 CDP（同樣的裝置比例），位元組和 `page.screenshot` 相同。
   - `build.sh`：切成 4 × worker 段，讓 4 核一起收尾；同一台機器一次只出一部（鎖檔 `/tmp/ophlearning-video-build.lock`）。
-- 驗證：`node videos/tools/video-kit/render.js $V/anim/video.html - --verify --from F --to F` 逐格比對快速路徑和舊路徑（每格重設畫面＋`page.screenshot`），要全部相同。
+  - `kit.js` 的 `drawMemo`：`DRAW2` 是 T 的純函式，記下它讀過的 `T.on`／`T.p` 值；沒讀 `T.u`、而且這一格這些值都一樣，就沿用上一次的畫面，不重算模型。字型還在載入時不沿用，載完就清掉（標籤位置靠量字寬；2026-11-06 片頭的標籤曾因此被沿用在錯的位置，是 `check-all` 抓到的）。
+  - `render.js`：畫面一變，先等兩個 animation frame 再截圖；沒等的話，機器忙時偶爾會截到還沒畫完的一格。
+- 驗證：`node videos/tools/video-kit/render.js $V/anim/video.html - --verify --from F --to F` 逐格比對快速路徑和舊路徑（每格重設畫面＋`page.screenshot`；舊路徑本身同一格每次都相同、和前一格是什麼無關）。結果分三類：逐位元相同、只差最低位元、看得出差異（任何像素任一色版差超過 8/255）。2026-11-06 抽驗四段（各 240 格）：PLTR 全部逐位元相同；用 kit 的影片有少數沿用的格子差 1 個像素（約 9/255），肉眼看不出。所以正確說法是「畫面相同到肉眼分不出」，不是逐位元相同。改了 kit 或 render 一定要再跑 `check-all`（參考圖）和幾段 `--verify`。
 - 實測：舊流程出第二部（8:49）時和第三部同時跑，53 分鐘；新流程單獨出第一部（9:54，17,813 格，其中 6,686 格沿用），20 分鐘（同時有一個 agent 在寫另一部的腳本）。剩下的大頭是每一格都要呼叫 `renderAt`（約 0.15 秒），連沿用的格子也一樣。
 
 ### 共用套件還沒收進來、各影片自己帶的東西

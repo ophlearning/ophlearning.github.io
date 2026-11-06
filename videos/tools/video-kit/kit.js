@@ -148,9 +148,27 @@ const KIT = (() => {
     // T.on(i, d, off): 0 → 1 over d seconds from the start of line i (+off); T.p(i, a, b): 0 → 1 between fractions a and b of line i
     return { u, dur, st, en, on: (i, d = 0.6, off = 0) => ss(st(i) + off, st(i) + off + d, u), p: (i, a = 0, b = 1) => ss(lerp(st(i), en(i), a), lerp(st(i), en(i), b), u) };
   }
+  // DRAW2 functions are pure functions of T. Record which T.on / T.p values a call read; if the segment's drawing did not read
+  // T.u and every recorded value is the same at this frame, the drawing is the same, so reuse it instead of redrawing the model.
+  // window.KIT_NO_REUSE turns this off (render.js --verify compares both ways).
+  // Labels are placed with measured text widths, so nothing drawn before the fonts finish loading may be reused.
+  let lastHTML = null;
+  const MEMO = {};
+  if (document.fonts) document.fonts.addEventListener('loadingdone', () => { for (const k in MEMO) delete MEMO[k]; lastHTML = null; });
+  function drawMemo(id, T) {
+    if (document.fonts && document.fonts.status !== 'loaded') return DRAW2[id](T);
+    const m = MEMO[id];
+    if (!window.KIT_NO_REUSE && m && !m.usedU && m.log.every(([k, a, v]) => T[k](...a) === v)) return m.out;
+    const log = []; let usedU = false;
+    const R = { get u() { usedU = true; return T.u; }, dur: T.dur, st: T.st, en: T.en,
+      on: (...a) => { const v = T.on(...a); log.push(['on', a, v]); return v; },
+      p: (...a) => { const v = T.p(...a); log.push(['p', a, v]); return v; } };
+    const out = DRAW2[id](R);
+    MEMO[id] = { log, usedU, out };
+    return out;
+  }
   // A frame whose markup is the same as the previous frame's is not put on the page again: the page keeps its pixels, and
   // window.FRAME_CHANGED = false tells render.js to reuse the previous frame's image (identical bytes, no layout or paint).
-  let lastHTML = null;
   function setStage(stage, html) {
     window.FRAME_CHANGED = !!window.KIT_NO_REUSE || html !== lastHTML || stage.childElementCount === 0;
     if (window.FRAME_CHANGED) { stage.innerHTML = html; lastHTML = html; }
@@ -176,7 +194,7 @@ const KIT = (() => {
       return setStage(stage, o.join(''));
     }
     if (sg.layout === 'title') {
-      const D = DRAW2.title ? DRAW2.title(T) : {}, V = VIDEO.titleLayout || {};
+      const D = DRAW2.title ? drawMemo('title', T) : {}, V = VIDEO.titleLayout || {};
       o.push(`<g opacity="${op}">`);
       if (D.R) { o.push(panelFrame(648, 608, D.R.P || {}), panelBody(648, 608, D.R, 'R')); }
       const z = V.size || 46; let y = 170;
@@ -185,7 +203,7 @@ const KIT = (() => {
       if (VIDEO.line) { o.push(text(40, y, VIDEO.line, { size: 19 })); y += 34; }
       o.push(tblock(40, y + 34, VIDEO.note || ['示意動畫，不是手術錄影；比例不精確。', '各院做法不同的地方，依院內常規。'], { size: 15.5, color: COL.sub }), `</g>`);
     } else {
-      const D = DRAW2[sg.id] ? DRAW2[sg.id](T) : {}, panels = PANELS[sg.layout === 'dual' ? 'dual' : 'full'];
+      const D = DRAW2[sg.id] ? drawMemo(sg.id, T) : {}, panels = PANELS[sg.layout === 'dual' ? 'dual' : 'full'];
       o.push(header(tl, t), `<g opacity="${op}">`);
       for (const [key, x, w] of panels) { const c = D[key]; o.push(panelFrame(x, w, (c && c.P) || {}), panelBody(x, w, c, key)); }
       o.push(keyBox(tl, T, op), `</g>`);

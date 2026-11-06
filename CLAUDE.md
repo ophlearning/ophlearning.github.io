@@ -5,7 +5,7 @@
 - 手術影片有時間壓力（2026-11-06 站長同意的做法）：
   1. 開工前只問站長一件事：這台刀的日期與時間（沒有手術日期就不問）。排程從手術時間倒推；同時有好幾部時，手術最早的那部先做完，不要為了一次做完而讓它等。
   2. 有手術日期時，旁白與畫面一通過 `check-all`，就先跑 `node videos/tools/video-kit/brief.js videos/src/<影片>`，把術前速讀包（`旁白.md`＋每段一張圖）傳給站長，再出 mp4。速讀包和影片是同一份檢查過的內容，不因為趕而少檢查。
-  3. 出片一次只跑一部（`build.sh` 有鎖，兩部搶 4 核各慢一倍）。出片加速只用不改畫面的方法（沿用不變的格子、分段平衡），不降 fps 或解析度；改出片工具時用 `render.js --verify` 證明輸出逐位元相同。
+  3. 出片一次只跑一部（`build.sh` 有鎖，兩部搶 4 核各慢一倍）。出片加速只用不改畫面的方法（沿用不變的格子、分段平衡），不降 fps 或解析度；改出片工具時跑 `check-all` 和幾段 `render.js --verify`，證明畫面相同到肉眼分不出（任何像素差都不超過 8/255，只容許極少數單一像素）。
 - 影片一律以「不公開」（unlisted）上傳 YouTube，不需要再問站長同意。授權只從環境變數讀（YOUTUBE_CLIENT_ID、YOUTUBE_CLIENT_SECRET、YOUTUBE_REFRESH_TOKEN），絕不印出或寫進檔案。
 - 上傳成功後，同一個 session 直接同步到網站 https://ophlearning.github.io/videos/ ，不用再問：
   1. 把 `videos/src/<影片>/publish/website-entry-draft.txt` 的 `yt` 換成新的影片 ID，`refs` 從 `script-draft.md` 文末的參考文獻清單展開成 `{c:'…', doi:'…'}`。
