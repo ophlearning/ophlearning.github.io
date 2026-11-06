@@ -4,6 +4,8 @@
 const MODEL_REGISTRY = {
   eyelid: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'eyelid/laceration.js', 'eyelid/views.js'],
   globe: ['globe/globe.js', 'globe/views.js'],
+  // the orbit model reuses the eyelid model (globe, lateral canthus, rim) so the two share coordinates
+  orbit: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'orbit/orbit.js', 'orbit/views.js'],
 };
 const MODEL_VIEWS = {};
 if (typeof module !== 'undefined') module.exports = { MODEL_REGISTRY, MODEL_VIEWS };

@@ -147,6 +147,6 @@
       "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
     }
   ],
-  "textBase": "f3e6e03",
+  "textBase": "2a9ce8f",
   "textBaseNote": "旁白、重點、來源、章節與參考文獻定稿的版本；check-video.js 以它比對文字。anim/timeline.js 進 git，參考圖用真實語音時間軸"
 }

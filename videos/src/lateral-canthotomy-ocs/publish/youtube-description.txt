@@ -1,0 +1,30 @@
+Orbital compartment syndrome（OCS）的床邊減壓：lateral canthotomy 加 cantholysis。情境是右眼外傷後的 retrobulbar hemorrhage。從眼窩為什麼會「關在盒子裡」、床邊怎麼判斷（前凸、眼瞼繃緊、RAPD、IOP）、先排除 open globe、時間有多緊，到局麻與 hemostat、canthotomy、找到並剪斷外眥韌帶下支（剪刀朝下、像撥弦一樣）、重測後剪上支、再不行怎麼升級，以及減壓後的重測與 CT（globe tenting），最後是值班清單。
+
+示意動畫，不是手術錄影；藥物、劑量與器械依院內常規。畫面為右眼（眼窩水平切面從下往上看，同 CT＋術者視角的外眥正面），比例不精確。
+
+章節
+0:00 片頭
+0:14 1 什麼時候要做
+2:18 2 準備
+2:43 3 Lateral canthotomy
+3:08 4 Inferior cantholysis
+4:08 5 重測與 superior cantholysis
+5:12 6 術後與 CT
+5:50 7 值班清單
+6:31 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Murali 2021. J Am Coll Emerg Physicians Open 2:e12372
+2. Zoumalan 2008. Arch Ophthalmol 126:1257-60
+3. Oester 2012a. Ophthalmic Plast Reconstr Surg 28:40-3
+4. Oester 2012b. Ophthalmic Plast Reconstr Surg 28:7-10
+5. Lima 2009. Surv Ophthalmol 54:441-9
+6. Hayreh 2004. Exp Eye Res 78:723-36
+7. McCallum 2019. Clin Ophthalmol 13:2189-94
+8. Weightman 2024. Mil Med 189:966-72
+9. Haubner 2015. Eur Arch Otorhinolaryngol 272:479-83
+10. Gioia 1987. Arch Ophthalmol 105:529-32
+11. Blandford 2018. Ophthalmic Plast Reconstr Surg 34:428-31
+12. Kitaguchi 2019. J Craniofac Surg 30:231-4
+13. Papadiochos 2023. Oral Maxillofac Surg 27:101-16
+14. Dalley 1989. AJNR Am J Neuroradiol 10:181-6
