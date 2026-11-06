@@ -14,7 +14,7 @@
     figH: 73,
     figures: [
       { w: 92, kind: 'sag', state: { ...INC }, win: { x: -32, y: -31.5, w: 40, h: 34 }, red: 'none', labelOpts: { sides: true, gap: 5.1 }, scale: { mm: 5, x: 57, y: 4.5 },
-        dims: [{ from: V => cutDim(V)[0], to: V => cutDim(V)[1], w: 0.4, label: ['瞼板切開：離瞼緣 3 mm', '', L] }],
+        dims: [{ from: V => cutDim(V)[0], to: V => cutDim(V)[1], w: 0.4, label: ['瞼板切開：離瞼緣 3 mm（文獻 Cruz 2015a）', '', L] }],
         draw: V => `<circle cx="${V.A.incLo[0]}" cy="${V.A.incLo[1]}" r="1" fill="#fff" stroke="#000" stroke-width="0.5"/>`,
         labels: [['眉毛', 'eyebrow', 'brow', L], ['眉下脂肪', 'ROOF', 'roof', L], ['眶隔', 'septum', 'septum', L], ['切口 4 mm（院內常規）', '', 'incLo', L], ['睫毛', 'lashes', 'lash', L],
           ['骨膜', 'periosteum', 'periosteum', Rr], ['眶上緣', 'orbital rim', [-12.4, -18.3], Rr], ['提上瞼肌', 'levator', levAt, Rr], ['腱膜前脂肪', 'fat', 'fat', Rr],
