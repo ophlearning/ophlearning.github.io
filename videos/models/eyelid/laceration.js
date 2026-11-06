@@ -27,7 +27,7 @@ const LAC = (() => {
   // the coronal warp at the margin height, and the AP misalignment of the nasal side (lacAP mm, + = nasal side more anterior)
   function marginMap(st) {
     const W = CORONAL.lacWarp(st), x0 = lacX(st), ap = st.lacAP || 0;
-    return ([x, y]) => { const xw = W ? W([x, CORONAL.Uy(x)])[0] : x, side = x - x0 >= 0 ? 1 : -1, h = 1 - LID.ss(0, CORONAL.LAC_FADE, Math.abs(x - x0));
+    return ([x, y]) => { const xw = W ? W([x, CORONAL.Uy(x)])[0] : x, side = x - x0 >= 0 ? 1 : -1, h = 1 - LID.ss(CORONAL.LAC_RIGID, CORONAL.LAC_FADE, Math.abs(x - x0));
       return [xw, y - (side > 0 ? ap * h : 0)]; };
   }
   const dot = (p, r, fill, stroke = 'none') => `<circle cx="${p[0].toFixed(3)}" cy="${p[1].toFixed(3)}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="0.9" ${NS}/>`;

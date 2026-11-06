@@ -109,12 +109,12 @@
 - [x] 站長確認的病例摘要原樣寫進「病例情境」並註明日期（2026-11-06）。
 - [x] 模型卡加上裂傷、縫線與瞼緣面的段落與出處；樣本圖自己放大檢查（`sample-laceration.jpg`，Claude 自檢）；`eyelid/check.js` 新增 27 項全部通過，12 種故意改錯全部抓到（2026-11-06）。下眼瞼的裂傷與淚道沒有建模（第 6 章用矢狀切面＋縫好的正面圖）。
 - [x] 舊影片畫面不變：五部舊影片的參考圖不更新即全部 0 差異；另外對 96 組正面圖狀態做 SVG 雜湊比對，逐字相同（2026-11-06）。影片層級檢查在 4 部影片失敗，原因是 `ref/manifest.json` 的 `textBase` 指向已合併、刪除的 PR 分支上的 commit，新抓的 repo 裡沒有；這是原本就有的問題，和這次改動無關，沒有修。
-- [ ] 每段縫合步驟同時顯示兩個視角，同一針在兩圖的位置差 < 0.3 mm。
-- [ ] 第 2 章每一個「轉 OR」條件都有出處；沒有出處的標示意或拿掉。
-- [ ] 旁白每個數值都有出處並寫成檢查（數字帳本）；沒有出處的標「示意」或拿掉，列在出片前的總覽（`overview-notes.md`）。
-- [ ] 下眼瞼那一章完成。
-- [ ] `node videos/tools/check-all.js videos/src/eyelid-margin-laceration-repair` 全部通過；每章至少一張參考圖。
-- [ ] 出片前交總覽（每章一張）；上傳為不公開並同步網站。
+- [x] 每段縫合步驟同時顯示兩個視角，同一針在兩圖的位置差 < 0.3 mm（瞼緣面與正面 0.000 mm；傷口面與正面的 tarsal suture 高度 0.109 mm）。
+- [x] 第 2 章每一個「轉 OR」條件都有出處（EyeWiki、Clark 2015、Butterfield 2025、EyeWiki 淚道外傷、Subramanian 2011）；「第一次縫要有 senior 在旁」標為推論。
+- [x] 旁白每個數值都有出處並寫成檢查（本片 `check.js`：293 項數字帳本＋32 項旁白對模型，`--selftest` 23 種改錯全部抓到）；示意與推論列在 `overview-notes.md`。
+- [x] 下眼瞼那一章完成（下眼瞼矢狀切面＋正面內側；兩針 tarsal suture 的高度標示意，沒有畫下眼瞼裂開）。
+- [x] `node videos/tools/check-all.js videos/src/eyelid-margin-laceration-repair` 六項全部通過；參考圖 13 張（每章至少一張，Claude 自檢）。
+- [x] 出片前總覽（`ref/overview/` 每章一張）已備好；mp4 已出片；2026-11-06 上傳 YouTube（不公開，ID `JXGYQOkhiGk`，YouTube 回報 privacy: unlisted）並同步網站 `videos/index.html`（瀏覽器開 `videos/#eyelid-margin-laceration-repair`：沒有 JS 錯誤、嵌入網址正確）。
 
 ## 進度
 - 2026-11-06：站長確認病例情境（以上眼瞼為主、最後一章講下眼瞼）；規格書與第一批文獻（8 篇）完成。
@@ -128,4 +128,10 @@
   - 檢查：同一針在瞼緣面與正面差 0.000 mm；tarsal suture 在正面與傷口面高度差 0.109 mm。
   - 樣本圖 `videos/models/eyelid/sample-laceration.jpg` 登記在本片 `ref/manifest.json`（`page` 還是 null）。
   - 這台機器補裝了字型（`videos/models/fonts/`、PLTR 的 `anim/fonts/`，都不進 git）。
-- 下一步：影片頁（`anim/segments.js`、`anim/draw.js`、`anim/video.html`，照第一部組合刀影片的寫法）→ 每段兩個視角 → 本片 `check.js`（數字帳本＋旁白↔模型）→ 參考圖 → 出片前總覽。
+- 2026-11-06：影片頁完成並出片（站長要求直接做到影片產出）：`out/eyelid-margin-laceration-repair.mp4`（不進 git；ffprobe 773.07 秒＝12:53，1920×1080、30 fps、23192 格，AAC 48 kHz 立體聲，旁白 −16.6 LUFS，60 MB）；從成品抽 6 格自檢，畫面與字幕正常。
+  - 影片頁（`anim/`）、本片 `check.js`、發音表與參考圖由小助手依腳本做，Claude 檢查後修正：1-1 的 zone 5 mm 出處改成 EyeWiki Ruptured Globe（原本誤登記為 Anant 2025）；4-4 拿掉沒有出處的「癒合時傷口往內收、外翻正好抵掉」，改用 EyeRounds 圖譜原文；「00 或 0 號」念成「雙零或零號」。
+  - 模型小改：傷口兩側 2.5 mm 內整塊平移，打開時 gray line 縫線離邊緣也是 2 mm（原本約 1.76 mm）。
+  - 語音：136 句，影片約 12 分 30 秒；`anim/timeline.js` 進 git。`textBase` 填影片頁的 commit（ef9bf49），PR squash 合併後要改成 main 上的合併 commit。
+  - `publish/`：章節、字幕、YouTube 說明欄、網站條目草稿（`yt: 'TBD'`）。
+- 2026-11-06：上傳 YouTube（不公開，`JXGYQOkhiGk`）並同步網站；條目加在 `VIDEOS` 最前面，章節照 `publish/chapters.txt`、`dur` 773（ffprobe 773.07 秒）。
+- 下一步：無（刀後或站長提供院內 SOP 時再依規格書「術式依據」校正）。PR 用合併 commit（不 squash）合併，`textBase`（ef9bf49）在 main 上仍找得到。

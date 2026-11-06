@@ -77,7 +77,7 @@ const CORONAL = (() => {
   // the apex lacS mm up the tarsus (sagittal distance from the margin, projected with LID.UF so both views agree) and the shift fades over
   // LAC_FADE mm sideways (schematic). lacPout (mm, + = everted / pouting margin, − = notch) and lacStep (mm, nasal side raised = misaligned
   // margin) act on the margin around the wound. Returns the warp (tissue point → drawn point) or null.
-  const LAC_FADE = 7;
+  const LAC_FADE = 7, LAC_RIGID = 2.5;   // the lid within 2.5 mm of the wound moves as a block (sutures 2 mm from the edge keep their distance), then the shift fades by 7 mm
   function lacWarp(st) {
     const open = st.lac || 0, pout = st.lacPout || 0, step = st.lacStep || 0;
     if (!open && !pout && !step) return null;
@@ -86,7 +86,7 @@ const CORONAL = (() => {
     const dAnt = LID.UF.at(0, LID.U_SKIN)[1] - LID.UF.at(0, 0)[1], pr = x => prof(x, LC[0], MC[0], 0.6), dLa = dL + dAnt * pr(x0);
     const fA = a => a <= 0 ? (a >= -3 ? 1 : Math.max(0, a + 4)) : Math.max(0, 1 - a / dLa);    // a = height above the lash line
     const mA = a => a <= 0 ? (a >= -3 ? 1 : Math.max(0, a + 4)) : Math.max(0, 1 - a / 1.2);    // pout / step: the margin edge only
-    return ([x, y]) => { const xc = Math.max(LC[0], Math.min(MC[0], x)), d = x - x0, side = d >= 0 ? 1 : -1, a = Uy(xc) + dAnt * pr(xc) - y, h = 1 - ss(0, LAC_FADE, Math.abs(d));
+    return ([x, y]) => { const xc = Math.max(LC[0], Math.min(MC[0], x)), d = x - x0, side = d >= 0 ? 1 : -1, a = Uy(xc) + dAnt * pr(xc) - y, h = 1 - ss(LAC_RIGID, LAC_FADE, Math.abs(d));
       return [x + side * G / 2 * fA(a) * h, y + (pout * Math.exp(-((d / 0.9) ** 2)) - (side > 0 ? step : 0) * h) * mA(a)]; };
   }
   function drawBody(opt = {}) {
@@ -413,6 +413,6 @@ const CORONAL = (() => {
   }
   // vertical strip windows across the upper lid, from the rim down to just above the lash line
   function strip(x0, x1, depth, top = -21.4) { const p = []; for (let x = x0; x <= x1 + 1e-9; x += 0.25) p.push([x, top]); for (let x = x1; x >= x0 - 1e-9; x -= 0.25) p.push([x, Uy(Math.max(LC[0], Math.min(MC[0], x))) - 0.75]); return { poly: p, depth }; }
-  return { draw, drawEverted, EV_TILT, strip, Uy, Ly, LC, MC, NOTCH_X, NOTCH_W, browLoY, U4, LIMB, lacWarp, LAC_FADE };
+  return { draw, drawEverted, EV_TILT, strip, Uy, Ly, LC, MC, NOTCH_X, NOTCH_W, browLoY, U4, LIMB, lacWarp, LAC_FADE, LAC_RIGID };
 })();
 if (typeof module !== 'undefined') module.exports = CORONAL;
