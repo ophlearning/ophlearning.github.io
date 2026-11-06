@@ -1,0 +1,22 @@
+{
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/lateral-canthotomy-ocs；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": null,
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
+  "items": [
+    {
+      "page": "../../../models/orbit/sample.html",
+      "ref": "../../../models/orbit/sample.jpg",
+      "dpr": 2,
+      "crop": null,
+      "approved": "2026-11-06",
+      "note": "Claude 自檢（眼窩模型：正常、OCS 血腫＋前凸 4.5 mm＋globe tenting、切開＋下支切斷後拉離眼瞼、正面韌帶窗與剪刀方向；外眥與眶尖另用 1 mm 格線放大看過）"
+    }
+  ]
+}
