@@ -247,5 +247,52 @@ for (const st of [{}, { entr: 1, dehis: 1, override: 1 }, { subcil: 1, plane: 1,
   ok(LOWER.draw({ state: {}, upper: { curl: 1 } }).svg.startsWith(LID.draw({ state: { curl: 1 }, id: 'lowu' }).svg), 'combined view starts with the unchanged upper-lid drawing');
   for (const st of [all, { ...all, tie: 0.5, entr: 0.5, mattress: 0.4 }, { entr: 0.3, subcil: 0.5, frac: 0.5, hotzExc: 0.4 }, { follicleDepth: 1.8, needle: 0.5 }])
     ok(!/NaN|undefined/.test(LOWER.draw({ state: st }).svg + CORONAL.draw({ lower: st }).svg + CANTHUS.draw({ state: { ...st, lax: 1, distract: 0.6 } }).svg), `lower-lid states (${Object.keys(st).length} keys): no NaN/undefined in sagittal, coronal, axial`); }
+// ---------------------------------------------------------------- margin laceration repair (laceration.js; 2026-11-06, fifth video)
+{ const LAC = global.LAC = require('./laceration.js'), near = (a, b, e = 0.01) => Math.abs(a - b) <= e;
+  const cor = st => CORONAL.draw({ state: st, id: 'lc', section: false });
+  // LAC1. a laceration state of 0 changes nothing (every older drawing is byte-for-byte the same)
+  ok(cor({ lac: 0, lacPout: 0, lacStep: 0 }).svg === cor({}).svg, 'LAC1 lac = 0 draws exactly the intact lid');
+  { const s = cor({}).svg; ok(!s.includes('#a5474a') && !s.includes('height="23"') && !s.includes('_m1)"/>'), 'LAC1 the intact lid has no laceration elements (no gap, no wound edges, original globe backdrop)'); }
+  // LAC2. the gap: lacGap (2.4 mm, schematic) at the margin when open, 0 when closed, and the slit closes at the apex
+  { const o = cor({ lac: 1 }).A, c = cor({ lac: 0, lacPout: 0.3 }).A, W = CORONAL.lacWarp({ lac: 1 });
+    ok(near(o.lacEdgeN[0] - o.lacEdgeT[0], 2.4 + 0.008), `LAC2 open gap at the margin ${(o.lacEdgeN[0] - o.lacEdgeT[0]).toFixed(3)} mm = 2.4`);
+    ok(near(c.lacEdgeN[0] - c.lacEdgeT[0], 0.008), 'LAC2 closed: the two edges meet');
+    const ap = [0, CORONAL.Uy(0) - (UF.at(0, 0)[1] - UF.at(6, 0)[1])], d = W([ap[0] + 0.004, ap[1]])[0] - W([ap[0] - 0.004, ap[1]])[0];   // the apex in tissue coordinates
+    ok(d < 0.02, `LAC2 the gap closes at the apex (${d.toFixed(3)} mm)`); }
+  // LAC3. gray line silk 2 mm from the wound edge on either side (EyeWiki), in the margin view and in the coronal view
+  { const st = { lac: 0, lacGrey: 1, lacGreyTie: 1 }, m = LAC.margin({ state: st }).A, r = cor(st), c = LAC.cor(r, { state: st }).A;
+    ok(near(m.edgeT[0] - m.greyT[0], 2.0 - 0.004) && near(m.greyN[0] - m.edgeN[0], 2.0 - 0.004), `LAC3 gray line suture 2 mm from each wound edge (margin view ${(m.edgeT[0] - m.greyT[0] + 0.004).toFixed(2)})`);
+    ok(near(m.greyT[1], -LID.U_GREY), 'LAC3 the gray line suture is at the gray line depth'); }
+  // LAC4. the two synced views agree: the same stitch lands at the same x (< 0.3 mm), open and closed, for gray line and lash line sutures
+  for (const lac of [1, 0.4, 0]) { const st = { lac, lacGrey: 1, lacLash: 1 }, m = LAC.margin({ state: st }).A, c = LAC.cor(cor(st), { state: st }).A, mo = cor(st).A;
+    const worst = Math.max(...['greyT', 'greyN', 'lashT', 'lashN'].map(k => Math.abs(m[k][0] - c[k][0])), mo.lacEdgeT ? Math.abs(m.edgeT[0] - mo.lacEdgeT[0]) : 0);
+    ok(worst < 0.3, `LAC4 lac ${lac}: margin view and coronal view agree within ${worst.toFixed(3)} mm`); }
+  // LAC5. tarsal sutures: 3 upper, 2 lower (EyeWiki); all inside the wound (below its apex)
+  ok(LAC.TAR.upper.length === 3 && LAC.TAR.lower.length === 2, 'LAC5 tarsal sutures: upper 3, lower 2 (EyeWiki)');
+  ok(Math.max(...LAC.TAR.upper) < 6, 'LAC5 every upper tarsal suture lies below the apex of the 6 mm wound');
+  // LAC6. partial thickness, anterior part of the tarsus (EyeRounds): ≥ 0.3 mm from the conjunctival side and from the anterior surface
+  ok(LAC.TAR_U - LID.U_CONJ >= 0.3 && LID.U_TAR - LAC.TAR_U >= 0.3 && LAC.TAR_U > (LID.U_CONJ + LID.U_TAR) / 2,
+    `LAC6 tarsal bite at u ${LAC.TAR_U}: ${(LAC.TAR_U - LID.U_CONJ).toFixed(2)} mm from the conjunctiva, ${(LID.U_TAR - LAC.TAR_U).toFixed(2)} mm from the anterior tarsal surface, in the anterior half`);
+  // LAC7. pout / notch / step move the margin at the wound by exactly the parameter; lacAP shifts the nasal side in the margin view
+  { const base = cor({}).Uy(0), y = st => cor(st).A.lacEdgeT[1];
+    ok(near(y({ lacPout: 0.3 }) - base, 0.3), `LAC7 everted (pout 0.3): margin ${(y({ lacPout: 0.3 }) - base).toFixed(3)} mm lower`);
+    ok(near(y({ lacPout: -0.5 }) - base, -0.5), `LAC7 notch (−0.5): margin ${(y({ lacPout: -0.5 }) - base).toFixed(3)} mm higher`);
+    const s = cor({ lac: 1, lacStep: 0.6 }).A; ok(near(s.lacEdgeT[1] - s.lacEdgeN[1], 0.6), 'LAC7 step 0.6: nasal edge 0.6 mm higher');
+    const m = LAC.margin({ state: { lac: 1, lacAP: 0.4 } }).A; ok(near(m.edgeT[1] - m.edgeN[1], 0.4), 'LAC7 lacAP 0.4: nasal gray line 0.4 mm more anterior'); }
+  // LAC8. silk tails buried under the lowest skin suture point up, away from the cornea (EyeWiki)
+  { const st = { lac: 0, lacGrey: 1, lacGreyTie: 1, lacLash: 1, lacLashTie: 1, lacSkin: 1, lacTails: 1 }, r = cor(st), c = LAC.cor(r, { state: st }).A;
+    ok(c.tailKnot[1] < r.Uy(0) - 1, `LAC8 tails end ${(r.Uy(0) - c.tailKnot[1]).toFixed(2)} mm above the margin, away from the cornea`); }
+  // LAC9. margin face, posterior → anterior: posterior edge, MCJ, meibomian orifices, gray line, lashes, anterior edge
+  { const u = LAC.U; ok(0 < u.mcj && u.mcj < u.orif && u.orif < u.grey && u.grey < u.lash && u.lash < u.skin, 'LAC9 margin landmarks in order: MCJ < orifices < gray line < lashes < anterior edge'); }
+  // LAC10. no NaN / undefined in any laceration state, all three views
+  for (const st of [{ lac: 1 }, { lac: 0.5, lacGrey: 1, lacTar: 0.67, lacWin: [-3, 3] }, { lac: 0, lacPout: 0.3, lacGrey: 1, lacGreyTie: 1, lacTar: 1, lacLash: 1, lacLashTie: 1, lacSkin: 1, lacTails: 1 },
+    { lac: 1, lacVM: 1 }, { lac: 0, lacVM: 1, lacVMTie: 1 }, { lac: 1, lacAP: 0.4, lacStep: 0.6, lacGrey: 1 }, { lacPout: -0.5 }]) {
+    const r = cor(st), s = r.svg + LAC.cor(r, { state: st }).svg + LAC.margin({ state: st }).svg + LAC.sag({ state: st }).svg + LAC.sag({ state: st, lid: 'lower' }).svg;
+    ok(!/NaN|undefined/.test(s), `LAC10 no NaN / undefined: ${JSON.stringify(st).slice(0, 60)}`); }
+  // LAC11. a tarsal suture in the coronal view sits at the height of the same suture on the wound face (< 0.3 mm)
+  { const st = { lac: 0.4, lacTar: 1, lacWin: [-3, 3] }, c = LAC.cor(cor(st), { state: st }).A, s = LAC.sag({ state: st }).A;
+    const worst = Math.max(...[0, 1, 2].map(i => Math.abs(c['tar' + i][1] - s['tar' + i][1])));
+    ok(worst < 0.3, `LAC11 tarsal sutures: coronal and wound-face heights agree within ${worst.toFixed(3)} mm`); }
+}
 console.log(fail ? `${fail} check(s) failed` : 'all checks passed');
 process.exit(fail ? 1 : 0);
