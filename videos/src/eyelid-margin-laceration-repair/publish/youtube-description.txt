@@ -1,0 +1,37 @@
+值班時在治療室縫上眼瞼 full-thickness margin laceration：先排除 open globe 與穿入傷、哪些情況不在治療室縫（指引建議 full-thickness 與傷到瞼緣的裂傷在 OR 縫；punctum 內側先探查淚道；看到脂肪、levator 或 canthal tendon 受傷、組織缺損、不能配合就轉），以及術前準備；縫合步驟用「瞼緣面＋正面」與「傷口面＋正面」兩個同步視角：gray line 6-0 silk 離傷口邊緣 2 mm、partial-thickness tarsal sutures 承擔張力、睫毛線、瞼緣微微外翻、silk 線尾埋進皮膚縫線，並對照 EyeRounds 的 Vicryl vertical mattress；最後是常見的錯、下眼瞼的差別、術後照顧與值班清單。
+
+畫面為右眼的示意動畫（瞼緣面從下方看，上＝前；傷口面＝經傷口的矢狀切面；正面左＝temporal），不是手術錄影，比例不精確。縫線粗細、針數與拆線天數依出處，各院做法不同；藥物、劑量與器械依院內常規。
+
+章節
+0:00 片頭
+0:21 1 先排除什麼
+2:10 2 能不能在治療室縫
+5:46 3 術前準備
+6:47 4 縫合步驟（上眼瞼）
+9:22 5 常見的錯
+10:11 6 下眼瞼哪裡不同
+10:57 7 術後
+11:40 8 值班清單
+12:16 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. EyeWiki (American Academy of Ophthalmology). Eyelid Laceration. Reviewed 2026-09-14.
+2. Clark TJE, Shriver EM. Emergent Evaluation of Eyelid Lacerations: a guide for ophthalmology residents. EyeRounds.org, 2015-12-17.
+3. Allen R. Repair of full-thickness upper and lower eyelid laceration (videos; in this video: EyeRounds 影片). EyeRounds.org, University of Iowa, 2015-04-27.
+4. Graff JM, Fraterrigo LE. Lid Margin laceration (in this video: EyeRounds 圖譜). EyeRounds Ophthalmic Atlas.
+5. Anant S, et al. Demographic and clinical factors associated with mechanisms of open globe injury in the United States: a multi-center study. Clin Ophthalmol 2025;19:1543-56.
+6. Schafer GL, Gad El Sayed M, Chen N, et al. Outcomes of traumatic eyelid laceration repairs by ophthalmology residents performed in the emergency department. Cureus 2026;18(6):e110056.
+7. Butterfield E, Bolt A, Clare G, et al. Explosive Weapons Trauma Care Collective (EXTRACCT) blast injury clinical practice guideline: ocular trauma. World J Surg 2025;50(2):289-97.
+8. Savar A, Kirszrot J, Rubin PA. Canalicular involvement in dog bite related eyelid lacerations. Ophthalmic Plast Reconstr Surg 2008;24(4):296-8.
+9. Huang J, et al. Pediatric eyelid and canalicular lacerations: epidemiology and outcomes. J Pediatr Ophthalmol Strabismus 2023;60(1):33-8 (online 2022).
+10. Subramanian N. Reconstructions of eyelid defects. Indian J Plast Surg 2011;44(1):5-13.
+11. Truong PN, et al. Characterization, epidemiology, and outcomes of periocular dog bites in children. Ophthalmic Plast Reconstr Surg 2026;42(2):189-95 (online 2025).
+12. Chu YC, et al. Early versus late canalicular laceration repair outcomes. Am J Ophthalmol 2017;182:155-9.
+13. Wu SY, et al. Analysis of bicanalicular nasal intubation in the repair of canalicular lacerations. Jpn J Ophthalmol 2010;54(1):24-31.
+14. Raj A, Thakur S, Arya KS, Kesarwani P, Sinha U. Canalicular lacerations in a tertiary eye hospital: our experience with monocanalicular stents. Rom J Ophthalmol 2020;64(2):146-52. PMC7339683
+15. Divine RD, Anderson RL. Techniques in eyelid wound closure. Ophthalmic Surg 1982;13(4):283-7. PMID 7048176
+16. Zhao J, et al. Evaluation and implementation of a mannequin-based surgical simulator for margin-involving eyelid laceration repair. BMC Med Educ 2021;21(1):170.
+17. Tyers AG, Mokete B, Self J. Comparison of standard eyelid margin closure using silk with a modified repair using 7/0 vicryl and a buried knot. Orbit 2005;24(2):103-8.
+18. Lim WK, Rajendran K, Choo CT. Microscopic anatomy of the lower eyelid in asians. Ophthalmic Plast Reconstr Surg 2004;20(3):207-11.
+19. EyeWiki (American Academy of Ophthalmology). Ruptured Globe. Reviewed 2026-01-29.
+20. EyeWiki (American Academy of Ophthalmology). Canalicular trauma.
