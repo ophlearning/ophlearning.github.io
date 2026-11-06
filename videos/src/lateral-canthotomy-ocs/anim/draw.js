@@ -120,7 +120,8 @@ DRAW2['2-1'] = T => {
   let el = arrow(L.P(M.lc), L.P([M.rim[0] + 1.2, M.rim[1] - 1.4]), COL.accent, T.on(1));
   el += lab('器械朝外側眶緣、遠離眼球', 'toward the rim', 14, 40, L.P([(M.lc[0] + M.rim[0]) / 2, (M.lc[1] + M.rim[1]) / 2 - 1]), { bold: true, color: COL.accent, lc: COL.accent, op: T.on(1) });
   el += lab('外側眶緣', 'lateral orbital rim', 14, 330, a.rim);
-  el += lab('外直肌', 'lateral rectus', PW - 12, 330, a.lr, { side: 'R', op: T.on(1) });
+  const lrT = ORBIT.rectus(-1, ORBIT.PROP_OCS).T, lrA = L.P(lrT.off(lrT.near([-13.5, 2]), 0));   // the part of the muscle inside this window
+  el += lab('外直肌', 'lateral rectus', PW - 12, 330, lrA, { side: 'R', op: T.on(1) });
   el += lab('hemostat 壓痕', 'crush', PW - 12, 40, a.clamp, { side: 'R', op: T.on(2, 0.6, 0.6) });
   let svgR = R.svg;
   svgR += arrow(R.P([lc[0] + 0.3, lc[1] + 0.9]), R.P([ORBIT.LAT_RIM_X + 0.8, lc[1] + 0.9]), COL.accent, T.on(0) * (1 - T.on(2)));

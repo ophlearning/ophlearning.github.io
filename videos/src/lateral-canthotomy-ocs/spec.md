@@ -10,17 +10,18 @@
 ## 病例情境（站長 2026-11-06 確認）
 - OD：外傷後 retrobulbar hemorrhage 造成 OCS → 急診床邊局麻 → lateral canthotomy → inferior cantholysis → 重測 IOP 仍高 → superior cantholysis；不縫合，放鬆後才排 CT orbit。
 
-## 章節大綱
+## 章節大綱（2026-11-06 定稿；旁白在 `anim/segments.js`）
 | 章 | 內容 | 主要出處 |
 |---|---|---|
-| 片頭 | 外傷後眼睛腫、看不見、眼窩很硬：時間有限 | Hayreh 2004 |
-| 1 什麼時候要做 | 1-1 眼窩是一個前面有門的硬盒子：血腫把眼球往前推，眼瞼與外眥韌帶擋住，壓力上升；1-2 臨床判斷（VA、RAPD、IOP、resistance to retropulsion），不等 CT；先排除 open globe；1-3 時間：視網膜缺血約 97 分鐘內沒有可偵測的損傷、約 240 分鐘大範圍不可逆 | Lima 2009；McCallum 2019；Makarewicz 2024；Kitaguchi 2019；Hayreh 2004；Hayreh 1980 |
-| 2 準備 | 局麻（針朝外側眶緣、遠離眼球）；hemostat 水平夾外眥到眶緣，止血兼壓出切線 | 局麻藥與夾的時間 [待核對出處] |
-| 3 Lateral canthotomy | 從外眥水平剪到外側眶緣；單做這一步 IOP 只部分下降 | Haubner 2015 |
-| 4 Inferior cantholysis | 外眥韌帶分成上支與下支；剪刀尖朝下、撥到像弦一樣繃緊的下支、剪斷；剪到下眼瞼整片能離開眼球才算完 | Haubner 2015；Blandford 2018；Zoumalan 2008 |
-| 5 重測 → superior cantholysis | 下眼瞼已經鬆了、IOP 仍高：剪上支（剪刀尖朝上；小心淚腺與 levator）；還不行：septolysis、bony decompression，並通知主治 | Haubner 2015；Dryden 2024；Oester 2012（cadaver）；Lima 2009；Kitaguchi 2019 |
-| 6 術後與 CT | 傷口不縫；IOP 與眼底反覆重測（持續出血時壓力會再升）；放鬆後才排 CT（看血腫、骨折、globe tenting） | Zoumalan 2008；Dalley 1989；Papadiochos 2023 |
-| 參考文獻 | — | — |
+| 片頭 | 情境：右眼外傷後 retrobulbar hemorrhage；先剪下支，IOP 還高再剪上支 | 病例摘要 |
+| 1 什麼時候要做 | 1-1 眼窩是前面有門的硬盒子；1-2 診斷靠臨床（病史、前凸、眼瞼繃緊、RAPD、IOP 門檻），不等 CT；1-3 先排除 open globe；1-4 時間 | Murali 2021；Zoumalan 2008；Oester 2012a、b；Lima 2009；Hayreh 2004；McCallum 2019 |
+| 2 準備 | 局麻、器械朝眶緣遠離眼球、直 hemostat 夾 1 分鐘 | Murali 2021；Weightman 2024 |
+| 3 Lateral canthotomy | 水平剪到外側眶緣；露出上下支；單做 canthotomy 只部分降壓 | Murali 2021；Haubner 2015 |
+| 4 Inferior cantholysis | 上下支與 Whitnall 結節；鑷子提下眼瞼、剪刀朝下撥弦、剪斷，直到下眼瞼整片鬆開 | Gioia 1987；Murali 2021；Haubner 2015；Blandford 2018 |
+| 5 重測與 superior cantholysis | 重測；剪上支（朝上、往後、不要深）；再不行升級 | Murali 2021；Haubner 2015；Lima 2009；Oester 2012a；Kitaguchi 2019 |
+| 6 術後與 CT | 這個病例不縫；持續出血會再升壓、反覆重測；放鬆後 CT、globe tenting；之後修補外翻 | Zoumalan 2008；Murali 2021；Papadiochos 2023；Dalley 1989 |
+| 7 值班清單 | 八件事 | 各章 |
+| 參考文獻 | 14 篇 | — |
 
 ## 兩個同步視角（寫進 `orbit/CARD.md` 時定案）
 - 機轉切面：眼窩的水平切面（axial，經過外眥與視神經的高度），從下往上看，和 axial CT、`eyelid` 的外眥水平切面同一套方向：上＝前，病人右側在畫面左邊。看血腫、眼球前凸、視神經被拉直、眼瞼與外眥韌帶擋在前面，以及剪斷後前面的門打開。
@@ -55,10 +56,10 @@
 ## 驗收項目
 - [x] `orbit/CARD.md` 照模板寫完，每個數值有出處或標「示意」「[待核對出處]」（2026-11-06）。
 - [x] 眼窩模型的樣本圖（OCS 前後、canthotomy、下支、上支）自己放大檢查；`orbit/check.js` 26 項全部通過，21 種故意改錯都會報錯（2026-11-06）。
-- [ ] 每段手術步驟同時顯示機轉切面＋術者視角；兩圖的外眥、外側眶緣、Whitnall 結節 x 差小於 0.3 mm。
-- [ ] 旁白每個數值都有出處並寫成檢查；沒有出處的標「示意」或拿掉，列進出片前的總覽。
-- [ ] 旁白不說「單做 canthotomy 沒有用」：屍體研究是「部分下降」（Haubner 2015）。
-- [ ] `node videos/tools/check-all.js videos/src/lateral-canthotomy-ocs` 全部通過；每章至少一張參考圖。
+- [x] 每段手術步驟同時顯示機轉切面＋術者視角；兩圖的外眥、外側眶緣、Whitnall 結節 x 差小於 0.3 mm（`orbit/check.js`、本片 `check.js`）。
+- [x] 旁白每個數值都有出處並寫成檢查（`check.js` 數字帳本，14 種故意改錯都會報錯）；沒有出處的標「示意」或拿掉，列在 `overview-notes.md`。
+- [x] 旁白不說「單做 canthotomy 沒有用」：屍體研究是「部分下降」（Haubner 2015）。
+- [x] `node videos/tools/check-all.js videos/src/lateral-canthotomy-ocs` 全部通過；每章至少一張參考圖（16 張＋模型樣本）。
 - [ ] 出片前交總覽（每章一張）；上傳為不公開並同步網站。
 
 ## 進度
@@ -69,4 +70,6 @@
   - 檢查：`orbit/check.js` 26 項；樣本 `orbit/sample.jpg` 自檢後登記在 `ref/manifest.json`（`page` 還是 null）。
   - 模型卡列為示意或 [待核對出處]、出片前要列進總覽的：視神經直徑與餘裕、眶尖位置與眶壁後段形狀、直肌厚度、血腫形狀、眼瞼回縮 1.5 mm 與拉離 4 mm、外眥韌帶上下支的畫法。
   - 寫影片時要注意（模型卡「已知的坑」）：前凸 4.5 mm 不一定造成 tenting（Oester 2012 正常視力組沒有），旁白要說「可能出現」；水平切面的眼瞼是投影；正面圖剪斷後眼瞼的位移沒有畫，用箭頭或鑷子表示。
-- 下一步（新對話接手）：照 `videos/src/levator-resection-brow-fixation/` 的共用影片套件寫 `anim/segments.js`（旁白定稿前先寫 `script-draft.md`）、`anim/draw.js`、`anim/video.html`、`check.js`（數字帳本：97／240 分鐘、IOP 30–40、< 20 mmHg、8 眼中 7 眼、2 眼、前凸 4.5 mm、< 130°／< 120°）；一個對話做一章，做完更新這裡的進度並 commit。沒有手術日期，不做術前速讀包。
+- 2026-11-06：影片完成（站長要求一路做完、不再中途確認）。
+  - 步驟細節的出處：環境連不到 NCBI Bookshelf（StatPearls），改用 PubMed Central 全文的 Murali 2021（急診醫學的 pearls and pitfalls 回顧）：局麻、直 hemostat 夾 1 分鐘、iris scissors、器械朝外側眶緣、鑷子把下眼瞼往內往前提、剪刀朝下撥弦、下眼瞼要整片鬆開、上支要往上往後且不深、open globe 是唯一的相對禁忌症、IOP > 30 緊急找眼科、> 40 立刻減壓。另加 Weightman 2024、Gioia 1987；共 14 篇。
+  - 旁白定稿在 commit aa0e730（`ref/manifest.json` 的 `textBase`）；語音約 7 分鐘；參考圖 16 張與總覽 8 張自檢。
