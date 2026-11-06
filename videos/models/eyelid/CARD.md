@@ -5,6 +5,9 @@
 ## 適用的手術
 - 已做：PLTR（上眼瞼 margin rotation，Trabut 型）；BLTR 只做到全層切口（對照用）；從 lid crease 進去的做法（Cruz 2015）：皺褶切口、皮膚肌肉瓣、埋線。
 - 之後可用：entropion／ectropion、ptosis、雙眼皮、lateral tarsal strip、眼瞼腫瘤重建。下眼瞼還沒建，做這些之前要先補。
+- 排定要做（2026-11-06，規格見 `videos/src/` 下三份 `spec.md`）：
+  - 第一部：矢狀切面往上延伸到眉毛（眉下脂肪 ROOF、眶上緣骨膜；亞洲人 ROOF 往下延伸進上眼瞼，Manta 2025），正面加 supraorbital notch；levator resection（disinsert、Putterman clamp、瞼板固定）、internal brow fixation、上穹窿結膜脫出與修復的狀態。
+  - 第二、三部：下眼瞼整套（retractors、下瞼板、外眥韌帶），marginal rotation（tarsal fracture、mattress suture）、LTS／canthopexy、電解睫毛的狀態。
 
 ## 兩個同步視角與方位慣例
 - **機轉切面**：矢狀切面，右眼，經瞳孔中央；左＝前、上＝上。
