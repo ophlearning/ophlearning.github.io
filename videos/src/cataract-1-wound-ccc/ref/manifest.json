@@ -1,0 +1,22 @@
+{
+  "about": "白內障系列 ①（主切口、side port、OVD、CCC）的檢查。還在模型階段、沒有影片頁（page: null），check-all 只跑模型自我檢查與參考圖。改了 globe/cataract.js 或樣本頁後跑 node videos/tools/check-all.js videos/src/cataract-1-wound-ccc；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": null,
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
+  "items": [
+    {
+      "page": "../../../models/globe/sample-cataract.html",
+      "ref": "../../../models/globe/sample-cataract.jpg",
+      "dpr": 1,
+      "crop": null,
+      "approved": "2026-11-09",
+      "note": "Claude 自檢（dpr 1 看全圖；dpr 2 裁切放大看隧道、12–6 切面中央、run-out 切面；每個狀態另用 shot-model.js 加 1 mm 格線放大到 3–4 mm 與 0.3 mm 視窗看；數字與兩圖一致由 globe/check.js 檢查）"
+    }
+  ]
+}

@@ -104,3 +104,8 @@
     - 檢查（裁切不碰 overlay、主切口在下方 ±30°、事件在 clip 內、影格齊全且最新）由 `check-all` 自動跑，每條都故意改錯驗證過；錄影不在機器上時報 SKIP。
     - 示範頁 `anim/footage-demo.html`（案例 A 0:58–1:20，0.5×，70.0 s 停格 3 秒）Claude 自檢：看不到任何文字、12 點在下、標籤指對鉗尖與主切口；參考圖在 `ref/`。
     - 下一步：① 開工時在 `cataract-1-wound-ccc/anim/footage.js` 從案例 A 0:00–4:55 挑 clip，每個 clip 補定位點。
+  - ① 的模型（`videos/models/globe/cataract.js`，選用式 `st.cat`，舊影片畫面不變；細節、出處與示意清單見 `globe/CARD.md`「白內障」）：
+    - PubMed 查證：水晶體厚度、前後表面曲率、赤道直徑、散瞳下前房深度用華人白內障資料（Chen 2021）；前後囊厚度（Barraquer 2006）、zonule 附著（Sakabe 1998 迴歸式）、散瞳 7 mm（Chiambaretta 2018）、CCC 5.0–5.5 mm 蓋住 optic（Hollick 1999、Haripriya 2025）、隧道 1.75–2.0 mm 與方形切口（Ernest 1994／1995、Masket 2007、Wilczynski 2016；superior 長隧道 SIA 較大，Sonmez 2018）、zonule 弱的術中線索（做 CCC 時前囊起皺，Chen 2025；Rai 2015）。
+    - 視角：12–6 切面（上＝前、左＝12 點）、主切口放大、撕囊前緣切面、前囊 µm 放大框、顯微鏡俯視（散瞳、red reflex）。狀態：主切口與 side port、OVD、CCC（radial cut、沿圓撕、翻折、取出）、run-out、zonule 弱；器械 keratome、15° 刀、cannula、cystotome、撕囊鉗都只從切口進出。
+    - `globe/check.js` 加 51 條，38 個故意改錯全部抓到；open globe 參考圖 0.000% 不變；樣本 `globe/sample-cataract.html` 自檢，參考圖登記在 `cataract-1-wound-ccc/ref/manifest.json`（page: null）。
+    - 待確認：keratome 寬（模型 2.4 mm）、side port 位置（模型 2 點）、CCC 起點與方向、IOL optic 直徑；錄影裡主切口偏 temporal 約 22°，做影片時把 `main.h` 設成實測值。

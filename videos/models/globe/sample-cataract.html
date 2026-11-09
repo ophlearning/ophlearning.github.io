@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="globe.js"></script>
+<script src="cataract.js"></script>
+<script>
+// Cataract model sample (video ①: main incision, side port, OVD, CCC). Right eye, surgeon at 12. Every panel is the same 3D eye (sources: CARD.md 白內障).
+// Row 1: keratome in the 12 o'clock tunnel (section + microscope), the full 12–6 section half-way through the capsulorhexis.
+// Row 2: tear-front section of a run-out; microscope: normal, run-out (動畫示意), weak zonules (動畫示意).
+const G = GLOBE, K = CATARACT, esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 12, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 4 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 5 : tx + w + 5, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.3" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="4">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 12}" fill="${o.color || '#1d2733'}" font-weight="${o.bold ? 700 : 400}" text-anchor="${o.anchor || 'start'}" ${o.halo ? 'stroke="#fff" stroke-width="3.2" paint-order="stroke"' : ''}>${esc(s)}</text>`;
+const sbar = (x, y, k, txt = '1 mm') => `<rect x="${x - 6}" y="${y - 20}" width="${k + 12}" height="28" rx="5" fill="#fff" opacity="0.85"/><path d="M${x} ${y}h${k}" stroke="#1d2733" stroke-width="3"/>${T(x + k / 2, y - 7, txt, { size: 11, bold: true, anchor: 'middle' })}`;
+const o = [], HEAD = 30;
+function panel(id, PX, PY, PW, PH, title, note) {
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="9" fill="#fff" stroke="#d3dae1"/>`, `<clipPath id="c${id}"><rect x="${PX + 1}" y="${PY + HEAD}" width="${PW - 2}" height="${PH - HEAD - 1}" rx="7"/></clipPath>`);
+  o.push(T(PX + 10, PY + 20, title, { size: 13, bold: true }), T(PX + PW - 9, PY + 20, note || '', { size: 11, color: '#5b6878', anchor: 'end' }));
+}
+const clipG = (id, tf, svg) => `<g clip-path="url(#c${id})"><g transform="${tf}">${svg}</g></g>`;
+
+// ---------------------------------------------------------------- states (OD, surgeon at 12; order as in the footage: side port, OVD, main incision, CCC)
+const KER = { cat: { side: { cut: 1 }, ovd: 1, main: { cut: 0 }, inst: [{ kind: 'keratome', adv: 0.75 }] } };
+const midC = { ccc: { prog: 0.3, fold: 1 }, main: { cut: 1 }, side: { cut: 1 }, ovd: 1 };
+const MID = { cat: Object.assign({}, midC, { inst: [{ kind: 'forceps', at: K.graspAt(K.norm({ cat: midC })) }] }) };
+const runC = { ccc: { prog: 0.42, fold: 1, run: 1, runAt: 0.26 }, main: { cut: 1 }, side: { cut: 1 }, ovd: 1 };
+const RUN = { cat: Object.assign({}, runC, { inst: [{ kind: 'forceps', at: Object.assign(K.graspAt(K.norm({ cat: runC })), { r: 2.5 }) }] }) };
+const WEAK = { cat: Object.assign({}, MID.cat, { zonule: { weak: 1, pull: 1 } }) };
+const L = K.LENS, CN = K.CN;
+
+o.push(T(16, 32, '白內障模型樣本（① 切口與 CCC）：右眼 OD、術者坐 12 點', { size: 20, bold: true }));
+o.push(T(1264, 32, 'mm 建模、同一顆 3D 眼球；器械形狀與動畫示意處見 CARD.md', { size: 12, color: '#5b6878', anchor: 'end' }));
+
+// ================= A: tunnel close-up, keratome 3/4 through (12–6 section, 12 o'clock on the left)
+{ const PX = 12, PY = 48, PW = 306, PH = 330, k = 69.5, x0 = -7.25, y0 = -12.75, c = cam(PX, PY + HEAD, k, x0, y0);
+  const s = K.section({ st: KER, h: 6, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.008, id: 'a' }), A = s.A, P = c.P, Q = p3 => P(G.toPlane(s.pl, p3));
+  panel('a', PX, PY, PW, PH, '主切口隧道（12–6 點切面）', '左＝12 點　上＝前');
+  o.push(clipG('a', c.tf, s.svg));
+  const tn = K.tunnelOf(CN.main), g = K.instGeom(K.norm(KER), K.norm(KER).inst[0]);
+  o.push(lab('角膜', 'cornea', PX + 170, PY + 62, Q(tn.to3([3.9, G.surfAt(-2.25).z - 0.25])), { bold: true }));
+  o.push(lab('外口', 'outer', PX + 12, PY + 62, P(A.mainExt)));
+  o.push(lab('隧道 2.0 mm', 'tunnel', PX + 12, PY + 172, Q(tn.to3(tn.at(0.45))), { bold: true, color: '#0e7c6b', lc: '#0e7c6b' }));
+  o.push(lab('keratome 2.4 mm', '', PX + 10, PY + 120, Q(G.add(g.tip, g.axis, 0.6)), { color: '#3c4a57' }));
+  o.push(lab('預定內口', 'inner', PX + PW - 10, PY + 190, P(A.mainInt), { side: 'R' }));
+  o.push(lab('虹膜', 'iris', PX + PW - 10, PY + 300, Q([0, 4.6, K.irisOf(K.norm(KER)).pm[0] - 0.05]), { side: 'R' }));
+  o.push(sbar(PX + 18, PY + PH - 14, k));
+}
+// ================= B: microscope, keratome entering at 12 (side port already at 2 o'clock, OVD in)
+{ const PX = 326, PY = 48, PW = 306, PH = 330, k = 26.8, x0 = -5.7, y0 = -4.15, c = cam(PX, PY + HEAD, k, x0, y0);
+  const e = K.enface({ st: KER, id: 'b' }), A = e.A, P = c.P;
+  panel('b', PX, PY, PW, PH, '術者視角', '下＝12 點　右＝temporal');
+  o.push(clipG('b', c.tf, e.svg));
+  o.push(lab('主切口', 'main incision', PX + PW - 10, PY + 300, P(A.mainExt), { side: 'R', bold: true }));
+  o.push(lab('側切口 2 點', 'side port', PX + 10, PY + 236, P(A.sideExt), { bold: true }));
+  o.push(lab('瞳孔 7 mm', 'pupil', PX + 10, PY + 54, P([-2.4, -2.55])));
+  o.push(sbar(PX + PW - 48, PY + 56, k));
+}
+// ================= C: full 12–6 section, half-way through the capsulorhexis (forceps on the folded flap)
+{ const PX = 640, PY = 48, PW = 628, PH = 330, k = 34, x0 = -9.2, y0 = -13.65, c = cam(PX, PY + HEAD, k, x0, y0);
+  const s = K.section({ st: MID, h: 6, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.025, id: 'c' }), A = s.A, P = c.P, Q = p3 => P(G.toPlane(s.pl, p3));
+  panel('c', PX, PY, PW, PH, '經主切口的 12–6 點切面：撕囊進行到 110°（撕囊鉗投影到切面）', '左＝12 點　右＝6 點　上＝前');
+  o.push(clipG('c', c.tf, s.svg));
+  const cap6 = s.A.capRuns.find(r => r.pts[0][0] > 0);
+  o.push(lab('前囊瓣翻折', 'flap folded over', PX + 10, PY + 62, P([-1.6, -(L.zAnt(1.6) + 0.04)]), { bold: true, color: '#1d5d93', lc: '#1d5d93' }));
+  o.push(lab('前囊已撕開', 'opening', PX + PW - 10, PY + 62, P([1.4, -L.zAnt(1.4)]), { side: 'R', bold: true, color: '#1d5d93', lc: '#1d5d93' }));
+  o.push(lab('撕囊鉗', 'forceps', PX + 210, PY + 50, P(A.tip0), { color: '#3c4a57' }));
+  o.push(lab('主切口', 'main incision', PX + 10, PY + 150, P(A.mainPivot), {}));
+  o.push(lab('OVD', '', PX + 290, PY + 100, P([1.2, -11.6]), { color: '#6a5a9a', lc: '#6a5a9a' }));
+  o.push(lab('核', 'nucleus', PX + PW - 10, PY + 200, P([1.2, -7.6]), { side: 'R' }));
+  o.push(lab('皮質', 'cortex', PX + PW - 10, PY + 240, P([3.4, -7.6]), { side: 'R' }));
+  o.push(lab('小帶', 'zonules', PX + PW - 10, PY + 168, Q([0, -5.4, 8.6]), { side: 'R' }));
+  o.push(lab('後囊：前囊下 4.6 mm', 'posterior capsule', PX + 10, PY + 300, P(A.postPole), { bold: true }));
+  o.push(lab('赤道', 'equator', PX + 10, PY + 220, P(A['eq-'])));
+  o.push(sbar(PX + PW - 62, PY + 300, k));
+}
+// ================= D: tear-front section of the run-out (right = periphery at the front's clock hour)
+{ const PX = 12, PY = 386, PW = 306, PH = 322, k = 43.4, x0 = -0.55, y0 = -12.45, c = cam(PX, PY + HEAD, k, x0, y0), RUN_D = { cat: runC }, hf = K.tearPlane(K.norm(RUN_D));
+  const s = K.section({ st: RUN_D, h: hf, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.012, id: 'd' }), A = s.A, P = c.P;
+  panel('d', PX, PY, PW, PH, '撕囊前緣切面：run-out', '右＝周邊');
+  o.push(clipG('d', c.tf, s.svg));
+  const tick = (r, col) => { const a = P([r, -(L.zAnt(r) + 0.18)]), b = P([r, -(L.zAnt(r) + 0.42)]); return `<path d="M${a[0]} ${a[1]}L${b[0]} ${b[1]}" stroke="${col}" stroke-width="2.4"/>`; };
+  o.push(tick(CN.cccD / 2, '#0e7c6b'), tick(K.R_AZI, '#8a5a00'));
+  o.push(lab('正常撕囊緣 2.6 mm', '', PX + 10, PY + 58, P([CN.cccD / 2, -(L.zAnt(CN.cccD / 2) + 0.42)]), { bold: true, color: '#0e7c6b', lc: '#0e7c6b' }));
+  o.push(lab('小帶附著 3.3 mm', 'zonules', PX + 10, PY + 92, P([K.R_AZI, -(L.zAnt(K.R_AZI) + 0.42)]), { color: '#8a5a00', lc: '#8a5a00' }));
+  const edge = s.A.capRuns.filter(r => r.pts[0][0] > 0).map(r => r.pts[0]).sort((a, b) => a[0] - b[0])[0];
+  o.push(lab('撕開的前囊邊緣', 'capsule edge', PX + 10, PY + 236, P(edge), { bold: true, color: '#b3262c', lc: '#b3262c' }));
+  o.push(lab('虹膜擋住', 'iris', PX + PW - 10, PY + 130, P([4.8, -9.6]), { side: 'R' }));
+  o.push(lab('赤道', 'equator', PX + 10, PY + 296, P(A['eq+'])));
+  o.push(sbar(PX + PW - 62, PY + 300, k));
+}
+// ================= E–G: microscope, same window: normal, run-out, weak zonules
+const SC = [['e', MID, '正常：沿 5.25 mm 的圓走', ''], ['f', RUN, '動畫示意：開始往周邊跑', 'run-out'], ['g', WEAK, '動畫示意：zonule 弱', '同樣拉法']];
+SC.forEach(([id, st, title, note], i) => {
+  const PX = 326 + i * 314, PY = 386, PW = 306, PH = 322, k = 35.5, x0 = -4.3, y0 = -4.1, c = cam(PX, PY + HEAD, k, x0, y0), P = c.P;
+  const e = K.enface({ st, id }), A = e.A;
+  panel(id, PX, PY, PW, PH, title, note);
+  o.push(clipG(id, c.tf, e.svg));
+  if (id === 'e') { o.push(lab('撕囊緣（red reflex 襯出）', 'rhexis edge', PX + 10, PY + 58, P(A.edge3)), lab('翻折的前囊瓣', 'flap', PX + PW - 10, PY + 296, P(A.flapEdge), { side: 'R' }), lab('撕囊鉗', 'forceps', PX + 10, PY + 296, P(A.tip0), { color: '#3c4a57' })); }
+  if (id === 'f') { o.push(lab('前緣跑到虹膜下，看不到', 'hidden', PX + 10, PY + 296, P(A.front), { bold: true, color: '#b3262c', lc: '#b3262c' }), lab('撕囊緣往外偏', 'edge veers out', PX + 10, PY + 58, P((() => { const X = K.rhex(K.norm(RUN).ccc), t = X.span - 0.9; return e.M(K.capPt(K.norm(RUN), X.R(t), (X.hf + 0.9 + 12) % 12)); })()), { color: '#b3262c', lc: '#b3262c' })); }
+  if (id === 'g') { o.push(lab('前囊皺褶', 'capsule wrinkling', PX + PW - 10, PY + 296, P(A.striae), { side: 'R', bold: true, color: '#8a3b12', lc: '#8a3b12' }), lab(`囊袋跟著動 ${A.lensShift.toFixed(1)} mm`, '', PX + 10, PY + 58, P(A.front), { color: '#8a3b12', lc: '#8a3b12' })); }
+  if (i === 0) o.push(sbar(PX + PW - 48, PY + 56, k));
+});
+document.getElementById('stage').innerHTML = o.join('');
+window.READY = true;
+</script></body></html>
