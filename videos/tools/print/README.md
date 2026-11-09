@@ -60,7 +60,7 @@ PRINT.sheet({ type: 'steps', title: '手術步驟圖', sub: '…', sources: […
     … ] });
 ```
 一個視角（view）的欄位：
-- `kind`：`sag`（上眼瞼矢狀切面）、`cor`（正面）、`lsag`、`lcor`、`axial`（下眼瞼與外眥，見 `videos/models/eyelid/CARD.md`）；新模型在 `print-kit.js` 的 `model()` 加一行。
+- `kind`：`sag`（上眼瞼矢狀切面）、`cor`（正面）、`lsag`、`lcor`、`axial`（下眼瞼與外眥，見 `videos/models/eyelid/CARD.md`）；白內障（`globe/cataract.js`，狀態寫成 `{ cat: … }`）：`csec`（子午切面，`hp`＝切面右邊的鐘點、左邊是 `hp + 6`，整張圖的範圍都會算組織）、`cscope`（顯微鏡俯視，術者坐 12 點）；新模型在 `print-kit.js` 的 `model()` 加一行。第二個範例：`videos/src/cataract-1-wound-ccc/print/`（標籤用 `draw` 指定位置，見該資料夾 `video.js` 的 `lb`）。
 - `state`、`windows`（正面開窗）、`win`：模型視窗 `{ x, y, w[, h] }`（mm，左上角與寬高；圖的大小由 `grid` 算，視窗置中）。
 - 模型自己的疊圖怎麼轉成黑白：`red: 'cut'`（預設，紅色→粗黑實線）／`'inc'`（紅色→粗黑虛線）／`'none'`（不畫，改用 `overlays` 依意義自己畫）；紫色畫線一律→虛線；藍色縫線→黑點線（`blue: false` 不畫）；`amber: true` 把眶上神經的投影→細點劃線。
 - `overlays: [{ cut | inc | sut: 路徑, w }]`：路徑是 `V => [圖上的點]`、定位點陣列，或 `PRINT.along('excLoY', -12.4, 9.8)`（沿正面模型的高度函式取樣）。
@@ -102,7 +102,7 @@ PRINT.sheet({ type: 'anatomy', title: '關鍵解剖與數字速查', sub: '…',
 
 ## `print.js` 檢查什麼
 - 沒有頁面錯誤（資料檔寫錯會直接顯示哪一行）；PDF 一頁、正好是那種紙；PNG 是那種紙的 300 dpi 尺寸。
-- 數字（`numcheck.js`）：畫面上每個數字都在影片帳本（任一段，來源不是「結構」）或單子的 `ledger`，文獻來源列在頁尾；出現的「作者 年份」都在 `REFS`；頁尾的出處都在 `REFS`；圈號只能是 1–n；`ledger` 裡登記了卻沒用到也算錯。`--selftest` 把每條規則故意弄錯一次。
+- 數字（`numcheck.js`）：頁尾的網址不算數字（影片 id 裡的 `-1-` 不會被當成 1）；畫面上每個數字都在影片帳本（任一段，來源不是「結構」）或單子的 `ledger`，文獻來源列在頁尾；出現的「作者 年份」都在 `REFS`；頁尾的出處都在 `REFS`；圈號只能是 1–n；`ledger` 裡登記了卻沒用到也算錯。`--selftest` 把每條規則故意弄錯一次。
 - 版面：四邊 10 mm 內與兩個孔的周圍沒有東西、沒有框溢出、標籤在自己的圖裡且互不重疊。
 - 字級：見上面。
 

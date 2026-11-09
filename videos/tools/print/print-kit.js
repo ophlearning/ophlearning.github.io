@@ -33,6 +33,12 @@ const PRINT = (() => {
     if (kind === 'lsag') return LOWER.draw({ variant: 'asian', state, upper: o.upper ?? {}, id });
     if (kind === 'lcor') return CORONAL.draw({ variant: 'asian', state: o.upper || {}, lower: state, id, windows: o.windows || [], section: false });
     if (kind === 'axial') return CANTHUS.draw({ state, id });
+    // cataract (globe/cataract.js, state { cat: … }): csec = meridional section, o.hp = the clock hour on its RIGHT (left = hp + 6; the
+    // video's 12–6 section through the main incision is hp = main.h + 6); computed over the whole visible figure, not only o.win.
+    // cscope = microscope view, surgeon at 12 (下＝12 點、右＝temporal for OD)
+    if (kind === 'csec') { const h = o.win.h || o.win.w * o.h / o.w, k = Math.min(o.w / o.win.w, o.h / h), vw = o.w / k, vh = o.h / k;
+      return CATARACT.section({ st: state, h: o.hp ?? 6, win: { x: o.win.x - (vw - o.win.w) / 2, y: o.win.y - (vh - h) / 2, w: vw, h: vh }, step: o.step || +(vw / 320).toFixed(4), id }); }
+    if (kind === 'cscope') return CATARACT.enface({ st: state, id, surgeon: 12 });
     throw new Error('unknown view ' + kind);
   }
   const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') r[n] = P(v); return r; };

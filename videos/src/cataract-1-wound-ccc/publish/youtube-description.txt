@@ -1,0 +1,34 @@
+白內障手術系列的第一支：主切口、side port、OVD 和 CCC。每一步先看做完的樣子，再看真實手術錄影與同步的機轉切面，最後看出錯的線索與當下的第一步；一半以上的時間花在 CCC。內容：side port 的位置與 OVD（撐滿前房、壓平前囊；前房淺時撕囊容易往外跑）、keratome 做三平面主切口（隧道長約等於寬才自閉，太短、太長在刀房看到什麼）、CCC 的目標（連續、圓、置中、5.0–5.5 mm、360° 蓋住 optic 邊緣）與力學（拉力的方向、夾在靠近前緣的瓣上、勤重新夾）、一台撕囊逐段看、run-out 與 zonule 弱的線索和第一步（Little 法），最後是 wet lab 練習清單。
+
+左邊是右眼 OD、術者坐 12 點的手術錄影，已去識別：只裁出眼睛範圍，畫面上沒有任何文字或病人資訊，也不用聲音；慢放、加速與停格都標在畫面上。右邊是以 mm 建模的機轉切面，和錄影用同一組事件時間同步；示意的部分畫面上有標。這一眼 zonule 弱（後來放了 capsular tension ring），所以撕囊比 routine 慢、重新夾得多；主切口實測在 12 點偏 temporal 約 22°（11 點多）；撕囊由撕囊鉗直接夾住前囊中央起頭，沒有先用 cystotome。Routine 的樣子用模型示範。切口寬度、IOL optic 大小等各院做法不同的地方，依院內常規。
+
+章節
+0:00 片頭
+0:16 1 目標
+1:14 2 Side port 與 OVD
+1:57 3 主切口
+3:17 4 CCC 的目標與力學
+4:56 5 實錄：案例 A 的撕囊
+6:54 6 出錯的線索與第一步
+7:56 7 練習清單
+8:35 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Ernest 1994. J Cataract Refract Surg 20:626-9. doi:10.1016/s0886-3350(13)80651-7
+2. Masket 2007. J Cataract Refract Surg 33:383-6. doi:10.1016/j.jcrs.2006.11.006
+3. LoBue 2024. Indian J Ophthalmol 72:162-173. doi:10.4103/IJO.IJO_1418_23
+4. Hollick 1999. Am J Ophthalmol 128:271-9. doi:10.1016/s0002-9394(99)00157-9
+5. Haripriya 2025. Am J Ophthalmol 278:337-345. doi:10.1016/j.ajo.2025.06.043
+6. Fairaq 2025. Saudi J Ophthalmol 39:354-360. doi:10.4103/sjopt.sjopt_96_24
+7. Ernest 1995. J Cataract Refract Surg 21:39-42. doi:10.1016/s0886-3350(13)80477-4
+8. Sonmez 2020. Eur J Ophthalmol 30:104-111. doi:10.1177/1120672118805875
+9. Gimbel 1990. J Cataract Refract Surg 16:31-7. doi:10.1016/s0886-3350(13)80870-x
+10. Karim 2010. J Vis Exp (39):1962. doi:10.3791/1962
+11. Chen 2025. PeerJ 13:e19330. doi:10.7717/peerj.19330
+12. Yaguchi 2017. PLoS One 12:e0176169. doi:10.1371/journal.pone.0176169
+13. Little 2006. J Cataract Refract Surg 32:1420-2. doi:10.1016/j.jcrs.2006.03.038
+14. Rai 2015. J Clin Diagn Res 9:NC05-7. doi:10.7860/JCDR/2015/10425.6999
+15. Dooley 2006. J Cataract Refract Surg 32:604-8. doi:10.1016/j.jcrs.2006.01.045
+16. Ferris 2020. Br J Ophthalmol 104:324-329. doi:10.1136/bjophthalmol-2018-313817
+
+製作　張博淳
