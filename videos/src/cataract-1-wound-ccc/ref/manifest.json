@@ -195,6 +195,6 @@
       "note": "Claude 自檢（dpr 1 看全圖、可疑處放大；錄影只有裁切後的眼睛、看不到燒進畫面的文字；標籤與數字由 check-video.js、check.js 檢查）。第 1 版畫面，之後逐章精修"
     }
   ],
-  "textBase": "9454377",
+  "textBase": "7c25f5a",
   "textBaseNote": "旁白、重點、來源、章節與參考文獻第 1 版（2026-11-09）的 commit；check-video.js 以它比對文字。改旁白時：改 segments.js、重做語音與參考圖，commit 後把 textBase 換成那個 commit。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。anim/timeline.js 進 git，參考圖用真實語音時間軸"
 }
