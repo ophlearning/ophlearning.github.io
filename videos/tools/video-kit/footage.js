@@ -55,7 +55,8 @@
       if (tau < vf + f.dur) return { s: f.at, frozen: f };
       s = f.at; v = vf + f.dur;
     }
-    return { s: Math.min(c.out, s + (tau - v) * r), frozen: null };
+    const s1 = s + (tau - v) * r;                        // past the clip end the last frame is held: show it as 停格, not at the clip's rate
+    return s1 >= c.out ? { s: c.out, frozen: { at: c.out, held: true } } : { s: s1, frozen: null };
   }
   // source time → the first video time at which it is shown (an event on a freeze → the start of the freeze)
   function videoTime(c, s) {

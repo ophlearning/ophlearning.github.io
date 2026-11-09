@@ -7,7 +7,7 @@
     note:'左邊是右眼 OD、術者坐 superior（12 點）的真實手術錄影，已去識別（只裁出眼睛範圍、畫面上沒有文字、不用聲音）；右邊是以 mm 建模的機轉切面，和錄影同步，示意的部分畫面上有標。本例 zonule 弱（後來放了 CTR）、主切口在 12 點偏 temporal 約 22°（11 點多）、撕囊由撕囊鉗直接夾住前囊中央起頭，沒有先用 cystotome；routine 的樣子用模型示範。切口寬度、IOL optic 大小等各院做法不同的地方，依院內常規。',
     tags:['白內障'],
     chapters:[
-      {g:'', items:[[0,'片頭'], [16,'1　目標'], [74,'2　Side port 與 OVD'], [117,'3　主切口'], [197,'4　CCC 的目標與力學'], [296,'5　實錄：案例 A 的撕囊'], [414,'6　出錯的線索與第一步'], [476,'7　練習清單'], [515,'參考文獻']]},
+      {g:'', items:[[0,'片頭'], [16,'1　目標'], [74,'2　Side port 與 OVD'], [118,'3　主切口'], [197,'4　CCC 的目標與力學'], [296,'5　實錄：案例 A 的撕囊'], [415,'6　出錯的線索與第一步'], [477,'7　練習清單'], [515,'參考文獻']]},
     ],
     refs:[
       {c:'Ernest PH, Lavery KT, Kiessling LA. Relative strength of scleral corneal and clear corneal incisions constructed in cadaver eyes. J Cataract Refract Surg 1994;20(6):626-9.', doi:'10.1016/s0886-3350(13)80651-7'},
