@@ -3,12 +3,13 @@
 //   · in the sheet's print ledger (def.ledger: number → source: a citation in REFS, 院內常規, 示意 or 結構), or
 //   · in the video's number ledger (LEDGER in <video>/check.js, any segment) with a source that is not 結構 (a list number of the video
 //     does not vouch for the same digit on paper) and that the sheet's footer cites (院內常規 / 示意 need no footer entry).
+// The footer URL (https://…/#<video id>) is not a number on the sheet (an id like cataract-1-wound-ccc would read as 1).
 // Step numbers and scale bars are marked data-struct: step numbers must be integers 1 … def.steps; scale bars must read "<n> mm".
 // A ledger entry with two sources (「A；B」) counts each one. Every citation shown on a sheet (footer included) must be one of the video's REFS; every print-ledger entry must be used.
 const fs = require('fs'), path = require('path');
 const CITE = /([A-Z][A-Za-zÀ-ž'\-]+(?: Glass)?) (\d{4})([a-z])?/g;
 const cites = s => [...s.matchAll(CITE)].map(m => ({ who: m[1], year: m[2], all: m[0] }));
-const numbers = s => s.replace(CITE, ' ').match(/(?<![A-Za-z0-9.])\d+(?:\.\d+)?(?:-\d+)?(?![A-Za-z0-9.])/g) || [];
+const numbers = s => s.replace(/https?:\/\/\S+/g, ' ').replace(CITE, ' ').match(/(?<![A-Za-z0-9.])\d+(?:\.\d+)?(?:-\d+)?(?![A-Za-z0-9.])/g) || [];
 const FREE = ['院內常規', '示意', '結構'];
 
 // the video's ledger, read from check.js without running it (check.js starts a browser when required)

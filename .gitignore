@@ -3,3 +3,5 @@ qa-screenshots/
 agent-browser-downloads/
 agent-browser-state/
 *.har
+# 手術錄影原始檔與抽出的影格（可能含病人資訊），不進 git
+videos/src/*/footage/

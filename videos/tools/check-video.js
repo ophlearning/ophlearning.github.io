@@ -35,7 +35,7 @@ const fs = require('fs'), path = require('path'), os = require('os'), cp = requi
     const tl = (await p.evaluate(() => window.TL_EXPORT)).find(s => s.id === id);
     for (let i = 0; i < tl.lines.length; i++) {
       const [a, e] = tl.lines[i], t = a + (e - a) * 0.6, t0 = Date.now();
-      await p.evaluate(tt => window.renderAt(tt), t); slow = Math.max(slow, Date.now() - t0); nFrames++;
+      await p.evaluate(async tt => { window.renderAt(tt); if (window.KIT_READY) await window.KIT_READY; }, t); slow = Math.max(slow, Date.now() - t0); nFrames++;   // KIT_READY: footage frames decoded
       const probs = await p.evaluate(id => {
         const op = el => { let o = 1; for (let x = el; x && x.id !== 'stage'; x = x.parentElement) { const v = x.getAttribute('opacity'); if (v !== null) o *= parseFloat(v); } return o; };
         const sg = SEGS.find(s => s.id === id), rects = PANELS[sg.layout === 'dual' ? 'dual' : 'full'].map(([, x, w]) => ({ x: x + 1, y: CONTENT_Y, w: w - 2, h: CONTENT_H }));   // panel content areas, read from the page

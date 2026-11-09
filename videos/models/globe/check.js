@@ -67,5 +67,145 @@ ok(gapAt({ wound: W, sutures: [{ s: -1.5, b: 1, tie: 1 }] }, -1.5) < 0.01, 'a ti
 { const st = { wound: W, peritomy: 1 }, fd = makeField(st);
   ok(fd.g.conj(fd.wall(P3(10, 3, -0.1))) > 0 && fd.g.conj(fd.wall(P3(10.9, 3, -0.1))) < 0, 'peritomy: conjunctiva gone over the wound, still there beyond the radial cuts'); }
 
+// =====================================================================================================================
+// 11. cataract states (cataract.js; CATARACT_PATH=<file> runs these on another copy — used to break a value on purpose).
+//     Sources: CARD.md 白內障. Section plane = meridian(6): screen u = −Y (12 o'clock on the LEFT), v = −Z. Microscope, surgeon at 12: screen y = Y.
+const CAT = require(process.env.CATARACT_PATH || './cataract.js')(G), L = CAT.LENS, CN = CAT.CN;
+const W12 = { x: -8.5, y: -14.6, w: 17, h: 10.2 }, sec6 = (st, step = 0.06, win = W12) => CAT.section({ st, h: 6, win, step });
+const fitR = pts => { const [a, b, c] = pts, A = 2 * (b[0] - a[0]), B = 2 * (b[1] - a[1]), C = 2 * (c[0] - a[0]), D = 2 * (c[1] - a[1]),
+  E = b[0] ** 2 - a[0] ** 2 + b[1] ** 2 - a[1] ** 2, Fv = c[0] ** 2 - a[0] ** 2 + c[1] ** 2 - a[1] ** 2, det = A * D - B * C, x = (E * D - B * Fv) / det, y = (A * Fv - E * C) / det; return Math.hypot(a[0] - x, a[1] - y); };
+// 11.1 lens (Chen 2021, Chinese age-related cataract, CASIA2, dilated)
+ok(near(L.za - L.zp, 4.56, 0.005), `cataract lens thickness ${(L.za - L.zp).toFixed(3)} mm = 4.56 (Chen 2021)`);
+{ const ra = fitR([[-1.5, L.zAnt(1.5)], [0, L.zAnt(0)], [1.5, L.zAnt(1.5)]]), rp = fitR([[-1.5, L.zPost(1.5)], [0, L.zPost(0)], [1.5, L.zPost(1.5)]]);
+  ok(near(ra, 9.73, 0.02) && near(rp, 5.49, 0.02), `lens central radii (3 mm zone) anterior ${ra.toFixed(2)} / posterior ${rp.toFixed(2)} mm = 9.73 / 5.49 (Chen 2021)`); }
+{ const led = 2 * Math.max(...L.P.map(p => p[0])); ok(Math.abs(led - 9.81) <= 0.83, `lens equator diameter ${led.toFixed(2)} mm within 9.81 ± 0.83 (Chen 2021)`); }
+{ const endo = G.keyPoints({}).apexZ - T(G.S_APEX); ok(near(endo - L.za, 2.72, 0.005), `ACD endothelium → lens ${(endo - L.za).toFixed(3)} mm = 2.72 (Chen 2021)`); }
+// 11.2 capsule thickness as drawn (Barraquer 2006, elderly): anterior pole 15, anterior maximum 16, equator 7, posterior pole 3.5 µm; anterior > posterior
+{ const s = sec6({ cat: {} }), um = r => r.pts.map((p, i) => Math.hypot(p[0] - r.band[i][0], p[1] - r.band[i][1]) * 1000);
+  const run = s.A.capRuns.find(r => r.pts.some(p => p[0] > 0.5)) || s.A.capRuns[0], t = um(run), u = run.pts.map(p => p[0]);
+  const iPole = u.reduce((b, x, i) => Math.abs(x) < Math.abs(u[b]) && i < u.length / 2 ? i : b, 0), iEq = u.reduce((b, x, i) => Math.abs(x) > Math.abs(u[b]) ? i : b, 0);
+  const iPost = u.reduce((b, x, i) => i > iEq && Math.abs(x) < Math.abs(u[b]) ? i : b, iEq), antMax = Math.max(...t.slice(0, iEq));
+  ok(near(t[iPole], 15, 0.3) && near(antMax, 16, 0.3) && near(t[iEq], 7, 0.3) && near(t[iPost], 3.5, 0.3),
+    `capsule as drawn: anterior pole ${t[iPole].toFixed(1)}, anterior max ${antMax.toFixed(1)}, equator ${t[iEq].toFixed(1)}, posterior pole ${t[iPost].toFixed(1)} µm (Barraquer 2006: 15 / 16 / 7 / 3.5)`);
+  let worse = 0; for (let r = 0.2; r < L.Req - 0.3; r += 0.2) if (CAT.capT(L.S[L.P.findIndex(p => p[0] >= r)]) <= CAT.capT(L.S[L.P.length - 1 - L.P.slice().reverse().findIndex(p => p[0] >= r)])) worse++;
+  ok(worse === 0, 'anterior capsule thicker than the posterior capsule at every radius (Barraquer 2006)'); }
+// 11.3 zonules: anterior insertion distance from the equator by Sakabe 1998's regression; the rhexis stays inside the zonule-free zone
+{ const azi = 0.0079 * 69 + 0.202 * L.LED - 0.041 * 23.53 + 0.0114;
+  ok(near(CAT.AZI, azi, 1e-9) && near(L.Req - CAT.R_AZI, azi, 1e-9), `anterior zonular insertion ${azi.toFixed(2)} mm inside the equator (Sakabe 1998 regression, age 69, AL 23.53, Chen 2021)`);
+  const fib = CAT.zonules(CAT.norm({}), 6), antmost = Math.min(...fib.map(f => f[1][0]));
+  ok(near(antmost, CAT.R_AZI, 1e-6), `the most central zonule inserts at r = ${antmost.toFixed(2)} mm, where the zonule-free zone ends`);
+  ok(CN.cccD / 2 < CAT.R_AZI, `a ${CN.cccD} mm rhexis edge is ${(CAT.R_AZI - CN.cccD / 2).toFixed(2)} mm inside the zonular insertion`); }
+// 11.4 dilated pupil 7.0 mm (Chiambaretta 2018): the same pupil margin in both views; the red reflex only inside the pupil
+{ const s = sec6({ cat: {} }), e = CAT.enface({ st: { cat: {} }, id: 'k' });
+  ok(near(s.A['pm+'][0], 3.5, 1e-6) && near(s.A['pm-'][0], -3.5, 1e-6) && near(e.A.pupilR, 3.5, 1e-9), `pupil 7.0 mm: section pupil margins at u = ±${s.A['pm+'][0].toFixed(2)}, microscope radius ${e.A.pupilR} (Chiambaretta 2018)`);
+  const g = e.svg.match(/<g clip-path="url\(#k_pup\)">([\s\S]*?)<\/g>/), clip = e.svg.match(/<clipPath id="k_pup"><circle cx="[^"]+" cy="[^"]+" r="([^"]+)"/);
+  const outside = e.svg.replace(g ? g[0] : '', '');
+  ok(!!g && /url\(#k_rr\)/.test(g[1]) && !/url\(#k_rr\)/.test(outside) && clip && near(Number(clip[1]), 3.5, 1e-9), 'red reflex drawn only inside the pupil clip (r 3.5 mm)');
+  ok(new RegExp(`Z" fill="url\\(#k_ir\\)" fill-rule="evenodd"`).test(e.svg) && e.svg.indexOf('url(#k_ir)" fill-rule') > e.svg.indexOf('clip-path="url(#k_pup)"'), 'iris annulus (pupil → limbus) drawn over the lens: anything beyond the pupil is hidden'); }
+// 11.5 capsulorhexis size: 5.0–5.5 mm, rim on a 6.0 mm optic all round (Hollick 1999: rim on the optic; Haripriya 2025: no overlap → decentration, YAG)
+ok(CN.cccD >= 5.0 && CN.cccD <= 5.5 && CN.cccD / 2 + 0.25 <= CN.optic / 2, `rhexis ${CN.cccD} mm in 5.0–5.5 and ≥ 0.25 mm on the ${CN.optic} mm optic all round`);
+// 11.6 cross-view: a completed rhexis cuts the capsule at the same 12 and 6 o'clock points in the section and the microscope view
+{ const st = { cat: { ccc: { prog: 1, fold: 1 } } }, s = sec6(st), e = CAT.enface({ st, id: 'x' }), r = CN.cccD / 2;
+  const ends = s.A.capRuns.map(R => R.pts[0]), u6 = Math.min(...ends.filter(p => p[0] > 0).map(p => p[0])), u12 = Math.max(...ends.filter(p => p[0] < 0).map(p => p[0]));
+  ok(near(u6, r, 0.03) && near(u12, -r, 0.03), `section: anterior capsule opening from u = ${u12.toFixed(2)} (12 o'clock) to ${u6.toFixed(2)} (6 o'clock), radius ${r}`);
+  ok(near(e.A.edge12[1], -u12, 0.03) && near(e.A.edge6[1], -u6, 0.03) && Math.abs(e.A.edge12[0]) < 1e-6, `microscope: rhexis edge at 12 o'clock y = ${e.A.edge12[1].toFixed(2)} (bottom), 6 o'clock y = ${e.A.edge6[1].toFixed(2)} — same points (u = −y)`); }
+// 11.7 main incision (Ernest 1995: tunnel 1.75–2.0 mm, beveled width ≤ 3.0 mm; Wilczynski 2016 1.84 ± 0.36): clear cornea, ends on the corneal back surface
+{ const tn = CAT.tunnelOf(CN.main), ext = tn.to3(tn.ext), int = tn.to3(tn.int), wE = wallOf(G.mer(ext).z, G.mer(ext).rho), wI = wallOf(G.mer(int).z, G.mer(int).rho);
+  ok(tn.chord >= 1.75 && tn.chord <= 2.0 && CN.main.w <= 3.0, `tunnel ${tn.chord.toFixed(2)} mm (1.75–2.0, Ernest 1995), path ${tn.Lp.toFixed(2)} mm, width ${CN.main.w} mm (≤ 3.0)`);
+  ok(wE.s < 0 && Math.abs(wE.d) < 0.005, `outer opening on the surface ${(-wE.s).toFixed(2)} mm inside the visible limbus (clear cornea)`);
+  ok(wI.s < 0 && near(wI.d, T(wI.s), 0.005), `inner opening on the corneal back surface (depth ${wI.d.toFixed(3)} = wall ${T(wI.s).toFixed(3)})`);
+  const st = { cat: { main: { cut: 1 }, side: { cut: 1 } } }, s = sec6(st, 0.08), e = CAT.enface({ st });
+  ok(near(s.A.mainExt[0], -tn.ext[0], 1e-6) && near(s.A.mainExt[1], -tn.ext[1], 1e-6) && s.A.mainExt[0] < 0, `section: main incision on the LEFT (12 o'clock), outer opening u = ${s.A.mainExt[0].toFixed(2)}`);
+  ok(Math.abs(e.A.mainExt[0]) < 1e-6 && near(e.A.mainExt[1], tn.ext[0], 1e-6) && near(e.A.mainW, CN.main.w, 1e-6), `microscope: main incision at the bottom (12 o'clock), ${e.A.mainW.toFixed(2)} mm wide`);
+  const sp = e.A.sideExt, hS = G.clockOf(-sp[0], sp[1]); ok(near(hS, 2, 0.01) && sp[0] < 0, `microscope: side port at ${hS.toFixed(2)} o'clock, on the left (nasal for OD, the left hand's side; 2 o'clock 示意 / 院內常規待確認)`); }
+// 11.8 instruments: enter only through their incision, turning about a point in the tunnel; tip at the same place in both views; hand above the eye
+{ const nst = CAT.norm({ cat: { ccc: { prog: 0.3, fold: 1 } } }), gA = CAT.graspAt(nst);
+  const cases = [['forceps', { kind: 'forceps', at: gA }], ['cystotome', { kind: 'cystotome', at: { h: 6, r: 0.1, lift: 0 } }], ['cannula (main)', { kind: 'cannula', at: { h: 7, r: 1.5, lift: 0.6 } }], ['cannula (side port)', { kind: 'cannula', via: 'side', at: { h: 8, r: 1.0, lift: 0.6 } }]];
+  for (const [nm, inst] of cases) { const st = { cat: { main: { cut: 1 }, side: { cut: 1 }, ccc: { prog: 0.3, fold: 1 }, inst: [inst] } }, c = CAT.norm(st), g = CAT.instGeom(c, c.inst[0]);
+    const piv = g.tn.to3(g.tn.pivot), from = g.bend || g.tip, d = G.len(G.cross(G.sub(piv, from), g.axis));
+    const wp = wallOf(G.mer(piv).z, G.mer(piv).rho);
+    ok(d < 1e-9 && wp.d > 0 && wp.d < T(wp.s) && near(G.clockOf(piv[0], piv[1]) % 12, g.tn.h % 12, 1e-6), `${nm}: shaft passes through its tunnel (${g.via}) at depth ${wp.d.toFixed(2)} of ${T(wp.s).toFixed(2)} mm`);
+    const bad = [];
+    for (let t = 0.05; t < 0.95; t += 0.05) { const p = G.add(from, G.sub(piv, from), t), o = CAT.layersAt({ cat: { ovd: 0, pupil: c.pupil } }, p), w = wallOf(G.mer(p).z, G.mer(p).rho);
+      if (o.lens < 0 || o.iris < 0 || (w.d < T(w.s) && w.s > g.tn.sE + 0.01) || (w.d < T(w.s) && w.s < g.tn.sI - 0.3)) bad.push(t.toFixed(2)); }
+    ok(!bad.length, `${nm}: shaft from the tip to the tunnel stays in the chamber (no lens, iris or cornea outside the tunnel)${bad.length ? ' at ' + bad.join(',') : ''}`);
+    const out = G.add(piv, g.axis, 6); ok(out[2] > piv[2] + 0.05, `${nm}: handle rises outward (${((out[2] - piv[2]) / 6 * 57.3).toFixed(1)}°): the hand is above the eye`);
+    const s = sec6(st, 0.1), e = CAT.enface({ st }), tS = s.A.tip0, tE = e.A.tip0;
+    ok(near(tS[0], -tE[1], 1e-6) && near(tS[1], -g.tip[2], 1e-6) && near(tE[0], -g.tip[0], 1e-6), `${nm}: tip at the same place in both views (section u ${tS[0].toFixed(2)} = −y ${(-tE[1]).toFixed(2)}, depth z ${g.tip[2].toFixed(2)})`); } }
+// 11.9 keratome: the tip follows the tunnel inside the cornea; its blade is the incision width
+{ const st = { cat: { main: { cut: 0 }, inst: [{ kind: 'keratome', adv: 0.5 }] } }, c = CAT.norm(st), g = CAT.instGeom(c, c.inst[0]), w = wallOf(G.mer(g.tip).z, G.mer(g.tip).rho);
+  ok(w.d > 0.05 && w.d < T(w.s) - 0.05 && near(g.blade.W, CN.main.w, 1e-9), `keratome half-way: tip in the stroma (depth ${w.d.toFixed(2)} of ${T(w.s).toFixed(2)} mm), blade ${g.blade.W} mm`); }
+// 11.10 cystotome on the capsule: the posterior capsule is a lens thickness (4.56 mm) below the tip
+{ const st = { cat: { main: { cut: 1 }, ccc: { cut: 1 }, inst: [{ kind: 'cystotome', at: { h: 6, r: 0, lift: 0 } }] } }, c = CAT.norm(st), g = CAT.instGeom(c, c.inst[0]);
+  ok(near(g.tip[2], L.zAnt(0), 1e-6) && near(g.tip[2] - L.zPost(0), 4.56, 0.005), `cystotome tip on the anterior capsule; posterior capsule ${(g.tip[2] - L.zPost(0)).toFixed(2)} mm below it`); }
+// 11.11 the folded flap lies on the anterior capsule (a second layer), never inside the lens, ahead of the tear front
+{ const c = CAT.norm({ cat: { ccc: { prog: 0.3, fold: 1 } } }), fm = CAT.flapMesh(c); let lo = 1e9, hi = -1e9, inside = 0;
+  for (const row of fm.V) for (const p of row) { const r = Math.hypot(p[0], p[1]); if (r > L.Req) continue; const dz = p[2] - L.zAnt(r); lo = Math.min(lo, dz); hi = Math.max(hi, dz); if (L.g(r, p[2]) < 0) inside++; }
+  const X = CAT.rhex(c.ccc), mid = fm.edge[Math.floor(fm.edge.length / 2)], hMid = G.clockOf(mid[0], mid[1]), ahead = ((X.hf - hMid) * -c.ccc.dir + 24) % 12;
+  ok(inside === 0 && lo >= 0.02 && hi <= 0.06, `folded flap: ${inside} points inside the lens, ${lo.toFixed(3)}–${hi.toFixed(3)} mm above the capsule`);
+  ok(ahead > 0 && ahead < 6, `folded flap lies ahead of the tear front (its free edge ${ahead.toFixed(1)} clock hours ahead)`); }
+// 11.12 run-out vs normal: the run-out front reaches the zonular insertion and goes under the iris (hidden in the microscope view)
+{ const n = CAT.enface({ st: { cat: { ccc: { prog: 0.42, fold: 1 } } } }), r = CAT.enface({ st: { cat: { ccc: { prog: 0.42, fold: 1, run: 1, runAt: 0.26 } } } });
+  ok(near(n.A.frontR, CN.cccD / 2, 1e-9) && !n.A.frontHidden, `normal tear front at r = ${n.A.frontR.toFixed(2)} mm, visible in the pupil`);
+  ok(r.A.frontR > CAT.R_AZI && r.A.frontR > CN.pupil / 2 && r.A.frontHidden, `run-out front at r = ${r.A.frontR.toFixed(2)} mm: past the zonular insertion (${CAT.R_AZI.toFixed(2)}) and under the iris (hidden)`);
+  const s = CAT.section({ st: { cat: { ccc: { prog: 0.42, fold: 1, run: 1, runAt: 0.26 } } }, h: CAT.rhex(CAT.norm({ cat: { ccc: { prog: 0.42, fold: 1, run: 1, runAt: 0.26 } } }).ccc).hf, win: { x: -1, y: -12, w: 7, h: 4 }, step: 0.1 });
+  ok(near(s.A.front[0], r.A.frontR, 1e-6), `tear-front section shows the same run-out radius (${s.A.front[0].toFixed(2)} mm)`); }
+// 11.13 OVD fills the anterior chamber only (in front of the lens and iris), not the posterior chamber
+{ const st = { cat: { ovd: 1 } }, ac = CAT.layersAt(st, [0, 0, L.za + 1]), pc = CAT.layersAt(st, [0, 4.5, (L.zAnt(4.5) + CAT.irisOf(CAT.norm(st)).root[0]) / 2 - 0.05]);
+  ok(ac.ovd < 0 && pc.ovd > 0 && pc.aqueous < 0, 'OVD fills the anterior chamber; the posterior chamber (behind the iris) stays aqueous'); }
+// 11.14 weak zonules (Chen 2025: anterior-capsule wrinkling during CCC; Rai 2015: bag instability during CCC): the same pull moves the bag and wrinkles
+//       the capsule only when the zonules are weak; both views move by the same vector (amount and pattern 示意)
+{ const base = { ccc: { prog: 0.3, fold: 1 } }, weak = CAT.norm({ cat: { ...base, zonule: { weak: 1, pull: 1 } } }), rout = CAT.norm({ cat: { ...base, zonule: { weak: 0, pull: 1 } } });
+  const Sw = CAT.lensShift(weak), Sr = CAT.lensShift(rout), mv = Math.hypot(Sw.LO[0], Sw.LO[1]);
+  ok(mv > 0.1 && Math.hypot(Sr.LO[0], Sr.LO[1]) === 0, `weak zonules: the bag moves ${mv.toFixed(2)} mm with the pull (示意); routine: it does not`);
+  const f0 = CAT.capPt(rout, CAT.rhex(rout.ccc).front[0], CAT.rhex(rout.ccc).front[1]), r1 = CAT.norm({ cat: { ccc: { prog: 0.31, fold: 1 } } }), f1 = CAT.capPt(r1, CAT.rhex(r1.ccc).front[0], CAT.rhex(r1.ccc).front[1]);
+  const go = G.unit([f1[0] - f0[0], f1[1] - f0[1], 0]); ok(Sw.LO[0] * go[0] + Sw.LO[1] * go[1] > 0.99 * mv, 'the bag moves the way the tear is going (where the forceps pull)');
+  let wr = 0, wr0 = 0; for (let a = 0; a < 2 * Math.PI; a += 0.05) for (let r = 0.3; r < 3.2; r += 0.1) { if (Math.abs(CAT.striae(weak, r * Math.cos(a), r * Math.sin(a))) > 0.01) wr++; if (CAT.striae(rout, r * Math.cos(a), r * Math.sin(a)) !== 0) wr0++; }
+  ok(wr > 0 && wr0 === 0, `anterior-capsule wrinkles only with weak zonules (${wr} sample points wrinkled vs ${wr0})`);
+  const sw = sec6({ cat: { ...base, zonule: { weak: 1, pull: 1 } } }, 0.1), sr = sec6({ cat: { ...base } }, 0.1), ew = CAT.enface({ st: { cat: { ...base, zonule: { weak: 1, pull: 1 } } } }), er = CAT.enface({ st: { cat: base } });
+  const du = sw.A.antPole[0] - sr.A.antPole[0], dy = ew.A.front[1] - er.A.front[1];
+  ok(near(du, -Sw.LO[1], 1e-6) && near(dy, Sw.LO[1], 1e-6), `both views move by the same vector (section Δu ${du.toFixed(3)} = −Δy ${(-dy).toFixed(3)})`); }
+// 11.16 an instrument held in the main tunnel (示意; CARD.md 白內障「物理與器械」): the roof is lifted, the posterior lip pressed down and the tunnel
+//       gapes around the shaft. The cornea stays one roof above and one lip below the shaft (not torn into strips), its field is continuous
+//       (a smooth outline, no stair steps), the drawn position is exactly where the rest tissue was moved to, and the folds stay small.
+{ const st = { cat: { main: { cut: 1 }, side: { cut: 1 }, ovd: 1, folds: 1, inst: [{ kind: 'forceps', at: { h: 6, r: 2.0, lift: 0.1 }, open: 0 }] } }, c = CAT.norm(st), def = CAT.deformer(c);
+  const D = def && def.parts && def.parts[0], f = CAT.layersFn(st), a = G.clockDir(12), P = (r, z) => [r * a[0], r * a[1], z];
+  if (!D || !D.fwd) ok(false, 'tunnel deformation: the deformer exposes its parts (roof lift, lip push, forward map)');
+  else {
+    let maxRuns = 0, two = 0, inShaft = 0, jump = 0, incons = 0, n = 0;
+    for (let r = D.rIn - 1.5; r < D.rOut - 0.03; r += 0.04) { let runs = 0, prev = false, pv = null;   // the tunnel and 1.5 mm central to it (folds)
+      for (let z = 10.0; z < 12.6; z += 0.004) { const o = f(P(r, z)), inC = o.cornea < 0; if (inC && !prev) runs++; prev = inC;
+        if (inC && Math.abs(z - D.zLine(r)) < D.rr - 0.015) inShaft++;
+        if (pv !== null && Math.abs(o.cornea - pv) > 0.012) jump++; pv = o.cornea;
+        if (inC) { const q = def(P(r, z)); if (Math.abs(D.fwd(r, q.q[2]) - z) > 2e-3) incons++; n++; } }
+      maxRuns = Math.max(maxRuns, runs); if (runs === 2) two++; }
+    ok(maxRuns <= 2 && two > 10 && inShaft === 0, `held tunnel: at most 2 cornea pieces on each vertical line through the tunnel (roof + lip; ${two} lines with both), none inside the shaft`);
+    ok(jump === 0, `held tunnel: the cornea field is continuous (no step > 0.012 per 0.004 mm${jump ? `; ${jump} steps` : ''}): smooth outline`);
+    ok(incons === 0, `held tunnel: every drawn corneal point maps back to where it was (forward ∘ inverse within 2 µm; ${n} points${incons ? `, ${incons} off` : ''})`);
+    const s = sec6(st, 0.1), lift = s.A.mainRoofRest[1] - s.A.mainRoof[1], push = s.A.mainLip[1] - s.A.mainLipRest[1];
+    ok(lift > 0.2 && push > 0.3, `held tunnel: roof lifted ${lift.toFixed(2)} mm (toward the outer opening), posterior lip pressed ${push.toFixed(2)} mm (toward the inner opening)`);
+    let d2 = 0; for (let r = D.r0 + 0.02; r < D.r1 - 0.02; r += 0.01) d2 = Math.max(d2, Math.abs(D.ue(r + 0.01) - 2 * D.ue(r) + D.ue(r - 0.01)), Math.abs(D.de(r + 0.01) - 2 * D.de(r) + D.de(r - 0.01)));
+    ok(d2 < 0.002, `held tunnel: roof lift and lip push vary smoothly along the tunnel (largest second difference ${(d2 * 1000).toFixed(2)} µm per 0.01 mm)`);
+    const D0 = CAT.deformer(CAT.norm({ cat: { ...st.cat, folds: 0 } })).parts[0];
+    ok(D.fold > 0 && D.fold <= 0.08 && D0.fold === 0, `Descemet folds central to the pressed lip: ${(D.fold * 1000).toFixed(0)} µm (≤ 80 µm, 示意), only when asked for (folds: 1)`); } }
+// 11.17 posterior pressure (st.cat.push, 示意): the lens–iris diaphragm moves forward (0.35 mm, the centre 0.6 mm), the anterior capsule is more
+//       convex, the iris margin still rests on it, and the capsule drawn in the section is the lens's own surface
+{ const p0 = { cat: { ovd: 0.5 } }, p1 = { cat: { ovd: 0.5, push: 1 } }, c1 = CAT.norm(p1), s0 = sec6(p0, 0.1), s1 = sec6(p1, 0.1);
+  const dPole = s0.A.antPole[1] - s1.A.antPole[1], dEq = s0.A['eq+'][1] - s1.A['eq+'][1], endo = G.keyPoints({}).apexZ - T(G.S_APEX);
+  ok(near(dPole, 0.6, 1e-6) && near(dEq, 0.35, 1e-6) && near(endo - (L.za + dPole), 2.12, 0.005), `push: anterior pole forward ${dPole.toFixed(2)} mm, equator ${dEq.toFixed(2)} mm → chamber ${(endo - L.za - dPole).toFixed(2)} mm deep (示意)`);
+  const z = r => CAT.capPt(c1, Math.abs(r), r < 0 ? 12 : 6)[2], ra = fitR([[-1.5, z(-1.5)], [0, z(0)], [1.5, z(1.5)]]);
+  ok(ra < 9.73 - 0.5, `push: anterior capsule more convex (central radius ${ra.toFixed(2)} mm < 9.73)`);
+  const I0 = CAT.irisOf(CAT.norm(p0)), I1 = CAT.irisOf(c1), pr = c1.pupil / 2;
+  ok(near(I1.pm[0] - I0.pm[0], CAT.liftZ(c1, pr), 1e-9) && CAT.liftZ(CAT.norm(p0), pr) === 0, `push: the pupil margin rides forward with the capsule (${CAT.liftZ(c1, pr).toFixed(2)} mm)`);
+  const run = s1.A.capRuns.find(R => R.pts.some(q => Math.abs(q[0]) < 0.05)), q0 = run && run.pts.reduce((b, q) => Math.abs(q[0]) < Math.abs(b[0]) ? q : b);
+  ok(!!q0 && near(q0[1], s1.A.antPole[1], 0.01) && CAT.layersAt(p1, [0, 0, -s1.A.antPole[1] - 0.05]).lens < 0, `push: the capsule line lies on the moved lens (anterior pole v ${q0 ? q0[1].toFixed(2) : '?'} = ${s1.A.antPole[1].toFixed(2)})`); }
+// 11.18 the freed disc taken out: its radial cut goes with it (only the round rhexis edge is drawn)
+{ const n = st => (CAT.enface({ st, id: 'q' }).svg.match(/stroke="#ffe0c2"/g) || []).length;
+  ok(n({ cat: { ccc: { prog: 1, fold: 1, out: 1 } } }) === 1 && n({ cat: { ccc: { prog: 0.5, fold: 1 } } }) === 2, 'microscope: after the disc is out only the rhexis edge is drawn (no radial cut line)'); }
+// 11.15 orientation of the 12–6 section: 12 o'clock on the left, anterior up
+{ const pl = G.planes.meridian(6), a = G.toPlane(pl, [0, 3, 10]), b = G.toPlane(pl, [0, -3, 10]); ok(a[0] < 0 && b[0] > 0 && a[1] === -10, '12–6 section: 12 o\'clock on the left, 6 on the right, anterior up'); }
+{ const st = { cat: { main: { cut: 1 }, side: { cut: 1 }, ovd: 1, ccc: { prog: 0.3, fold: 1 }, zonule: { weak: 1, pull: 1 }, inst: [{ kind: 'forceps', at: { h: 2.1, r: 2.2, lift: 0.03 } }] } };
+  const all = sec6(st, 0.08).svg + CAT.enface({ st }).svg; ok(!/NaN|undefined/.test(all), `cataract views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
+
 console.log(fail ? `\n${fail} check(s) FAILED` : '\nall globe checks passed');
 process.exit(fail ? 1 : 0);

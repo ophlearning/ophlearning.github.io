@@ -1,0 +1,111 @@
+# 白內障手術（phaco）系列重製：系列規格書
+
+2026-11-09 訂。取代 2026-10-21 上線的舊版 `cataract`（YouTube `Z74G7jgHq4o`，15:29）。四支影片共用的決定寫在這裡；每支影片開工時在自己的資料夾另寫 `spec.md`，只寫那一支的章節、驗收與進度。
+
+## 目標（站長 2026-11-09）
+- 唯一目標：住院醫師有效學會 cataract surgery。
+- 每段內容都用同一個標準篩選：**看完之後，上刀時的動作或判斷會不會不一樣**。不會的（純知識、罕見情境）移出手術影片。
+
+## 舊版為什麼要重做（2026-11-09 Claude 分析）
+這個環境連不到 YouTube，沒看到舊版畫面；以下根據 `videos/index.html` 的章節表、說明與參考文獻。舊版沒有原始檔（早於 2026-11-04 的模型流程），所以是重做，不是修改。
+1. **時間分配和難度相反。**
+   - 舊版 15.5 分鐘 12 章：OVD＋CCC 82 秒、四種乳化技術合計 132 秒、I/A 45 秒；術前風險、PCR 與 suprachoroidal hemorrhage、術後、總表加起來約 5.6 分鐘。
+   - 住院醫師自評最難的是 phaco（3.32/5）與 CCC（3.30/5），學員完成率最低（66.7%、74.4%）；切口 1.97、hydrodissection 2.42（Dooley 2006，doi:10.1016/j.jcrs.2006.01.045）。
+   - 照傳統順序教，PCR 最常發生在 cortex aspiration（2.8%）與 segment removal（1.7%）（Suryawanshi 2016，doi:10.4103/0974-9233.175886）。
+2. **只有顯微鏡俯視，看不出深度。** 刻槽離後囊多遠、chopper 在哪一層、I/A 吸口朝哪裡，俯視圖都看不到。舊版早於「機轉切面＋術者視角」的通用原則。
+3. **畫面不是學員在刀房看到的樣子。** 判斷對錯靠的是真實的視覺線索：red reflex 襯出的撕囊邊緣、flap 往周邊跑的走向、fluid wave、nucleus 能不能轉、PCR 時前房與瞳孔的變化。示意圖沒有這些線索，看完還是認不出來。
+4. **機器的狀態看不到。** 腳踏 1–2–3 段、vacuum、occlusion break surge、wound burn，錄影和示意圖上都看不到。
+5. **知識和技能混在一起。** IFIS、posterior polar、TASS／endophthalmitis 是知識，適合講義或一頁式圖；放在手術影片裡會擠掉操作的時間。
+
+## 病例情境（站長 2026-11-09 確認，原文照錄）
+「OD，術者坐 superior：superior clear corneal 主切口＋side port；divide and conquer；one-piece hydrophobic acrylic IOL 用 injector 放 in the bag；不縫合。」
+- 沒有手術日期：純學習用，不做術前速讀包。之後若有排刀，手術最早的那一步先交速讀包（規則見 repo 根目錄 `CLAUDE.md`）。
+- 右手是慣用手（Claude 補，沒問）。
+
+## 系列結構（站長 2026-11-09 選「系列 4 支」）
+每支 8–12 分鐘，時間照難度分配，各附一頁式跟刀圖（`videos/tools/print/`）。
+
+| # | 資料夾（預定） | 內容 | 時間重心 |
+|---|---|---|---|
+| ① | `cataract-1-wound-ccc` | 主切口與 side port、OVD、CCC | CCC 至少一半 |
+| ② | `cataract-2-hydro-dc` | Hydrodissection、divide and conquer（刻槽、分核、四象限移除） | 刻槽深度、分核、segment removal；加腳踏與流體面板 |
+| ③ | `cataract-3-ia-iol` | I/A、IOL 植入 in the bag、移除 OVD、切口密閉 | subincisional cortex、吸口方向 |
+| ④ | `cataract-4-pcr` | PCR 怎麼認、當下第一步、之後怎麼處理 | 認出 PCR 的線索與第一個動作 |
+
+- 製作順序 ①→②→③→④（站長沒有指定先做哪一支，照手術順序）。
+- 移出手術影片：術前風險分級、IFIS 與特殊白內障、術後併發症。之後視需要做成一頁式圖或互動圖譜，不放進這個系列。
+- 舊版上線到新版 ① 上線前不動；四支都上線後，舊條目從 `videos/index.html` 移除（YouTube 上的舊片留著不刪，除非站長要求）。
+
+## 每一步的教學結構（四件事）
+1. **目標狀態**：這一步做完應該長什麼樣子（例：CCC 完整、圓、5–5.5 mm、360° 蓋住 optic 邊緣；數值做的時候查證出處）。
+2. **動作**：兩個同步視角，見下一節。
+3. **線索的對錯對照**：同一刻的正常與出錯並排（例：flap 走向正常 vs 開始往周邊跑）。
+4. **出事時的第一步**：只講當下第一個動作和為什麼；後續處理在 ④ 或註明出處。
+- 片尾：這一步在 wet lab 或模擬器要練什麼（Ferris 2019，doi:10.1136/bjophthalmol-2018-313817：有 Eyesi 可用的第 1–2 年住院醫師 PCR 4.2% → 2.6%；觀察性研究，旁白照實說是相關）。
+
+## 畫面
+### 術者視角：院內真實錄影（站長 2026-11-09 表示可以提供）
+- **去識別**：顯微鏡錄影常把姓名、病歷號、日期燒在畫面角落。只保留眼睛範圍，裁掉所有文字；原始檔與抽出的影格不進 git（`.gitignore` 的 `videos/src/*/footage/`）。參考圖、總覽、速讀包只會有裁切後的眼睛畫面。
+- **方位**：術者坐 superior、右眼，畫面下方＝12 點、右＝temporal（9 點），和 `globe/CARD.md` 的 `scope` 相同。拿到錄影後用主切口位置確認錄影的方向，方向不同就旋轉，並寫成檢查。
+- **剪輯**：關鍵處慢放（0.5×）或停格加標註；每段錄影記下原始時間碼，換算寫成檢查，避免標註對錯格。
+- **錄影做不到的**用模型動畫補，並標「動畫示意」：錯誤示範（run-out、太淺的刻槽、吸到後囊）、看不到的力的方向、眼內深度。
+### 機轉切面：`videos/models/globe/` 擴充
+- 經主切口（12 點）的子午切面：角膜切口隧道、前房、虹膜、水晶體（前囊、cortex、nucleus）、後囊、zonule、器械。
+- 和錄影同步：錄影裡的每個事件（例：cystotome 刺破前囊、flap 翻折、regrasp）記下時間碼，切面的狀態照同一組時間碼走。依錄影重建的幾何標「示意（依錄影重建）」。
+- 水晶體與囊袋目前在模型裡都是「示意」：開工前要照通用原則補有出處的數值（厚度、直徑、前後囊厚度、zonule 附著位置；有華人資料就用華人的），寫進模型卡並做樣本圖自檢。
+### 腳踏與流體面板（②–④）
+- 腳踏 0–3 段、vacuum、aspiration、phaco power、IOP（或瓶高），和錄影同步顯示。
+- 機器：J&J Veritas Vision System（站長 2026-11-09 確認）。院內預設參數待站長提供設定畫面；沒有的話用廠商手冊、FDA 文件或文獻的範圍，畫面標「示意，依院內機器設定」。
+- ① 不需要這個面板（切口與 CCC 不踩 phaco），所以不擋 ① 開工。
+
+## 錄影清單（2026-11-09 站長給 Google Drive 資料夾；Claude 用低解析度縮圖看過）
+- 原始檔放 `videos/src/cataract-series/footage/`（不進 git）。檔名、Drive 檔案 ID 與連結都不寫進 repo：檔名含病人姓名與病歷號，資料夾是「知道連結的人都能看」。
+- 資料夾裡另有一台 superficial keratectomy＋AMG，不是白內障，沒下載。
+- **案例 A**（`case-a.mp4`，21:20，1280×720 30 fps，Zeiss 錄影，Clipchamp 輸出）：
+  - 畫面：red reflex 很好；12 點的主切口在畫面下方，上眼瞼睫毛在下方（術者坐 superior，符合）。OD（站長 2026-11-09 確認）。
+  - **這一眼 zonule 弱（PXF 等，站長 2026-11-09 確認），所以放了 CTR。** 案例 A 不是單純的 routine：CCC 花約 4 分鐘、多次 regrasp，部分原因可能在這裡。用它的畫面時，旁白要說明本例 zonule 弱，並把畫面上看得到的 zonule 弱線索（做的時候逐格找、附出處）當成「線索的對錯對照」；routine 的目標狀態用模型示範。
+  - 燒進畫面的資訊：左上 ZEISS 標誌、左側一欄顯微鏡參數，下方兩個框（第一個是「Dr.」術者欄位＋「Anterior」，第二個是「---」）。座標量測與裁切檢查見 `footage-sources.js`。聲音全部不用。
+  - 主切口實測在正下方偏 temporal 約 21–24°（約 11 點多），旁白說「12 點附近」。
+  - 時間碼（縮圖判讀，做每支影片時再逐格確認）：
+    - 0:00–0:50 side port、OVD、keratome 做 12 點主切口（角膜緣附近有出血）。
+    - 1:00–4:55 撕囊鉗 CCC，約 4 分鐘、多次 regrasp，中途補 OVD、擦血。
+    - 5:15–5:40 hydrodissection，撕囊邊緣出現金色的環。
+    - 5:50–6:30 刻槽（groove 底部的 red reflex 變亮）；6:40–10:40 chopper 經 side port 分核、四象限移除。
+    - 11:00–14:20 I/A。
+    - 14:28–14:48 OVD 打進囊袋；14:52–16:10 放 CTR（帶 eyelet 的 C 形環，先拍包裝再放入；原因是 zonule 弱，站長確認）。
+    - 16:30–19:30 IOL 植入與調整、移除 OVD。
+    - 19:30–21:10 縫合主切口（彎針）。
+  - 用法：① 用 0:00–4:55；② 用 5:15–10:40；③ 用 I/A、IOL 植入與移除 OVD，略過 CTR 與縫合，旁白說明本例另放 CTR 並縫合、routine 不需要（站長 2026-11-09 選）。
+- **PCR 案例**（`case-pcr.mp4`，50:14，1280×720，另一套錄影系統，看不到燒進畫面的文字）：red reflex 弱；約 14:00 起畫面方向改變，之後有長時間的雙手操作、白色的懸浮物（可能是 triamcinolone，待確認）、後段的 IOL 植入與縫合。④ 開工時再逐段判讀，搭配 OP note（若站長願意提供）。
+
+## 需要站長提供（不擋 ① 的模型工作，擋 ① 的術者視角）
+1. 1–3 台 routine case 的完整原始錄影（顯微鏡錄影系統匯出，不是手機翻拍），已依院內規定取得同意；放 Dropbox 或 Google Drive，告訴 Claude 位置。檔案大，下載時可能要把雲端的下載網域加進這個環境的網路白名單，Claude 會在那時提出。
+2. Veritas 院內預設參數的照片（② 開工前；機型已確認是 Veritas）。
+3. 如果有：PCR、撕囊 run-out 等併發症的錄影（④ 與每支的錯誤對照用）。
+
+## 系列層級的驗收
+- [ ] 四支都照「四件事」的結構；每段都能回答「看完上刀會做得不一樣在哪裡」。
+- [ ] 每支的時間分配照難度（① 的 CCC 至少一半）。
+- [ ] 錄影去識別：畫面上沒有任何文字或可識別資訊；原始檔不進 git。
+- [ ] 錄影與切面同步：事件時間碼寫成檢查；錄影方向（12 點在下）寫成檢查。
+- [ ] 旁白與畫面的每個數字都在數字帳本、有出處；沒有出處的標「示意」或「依院內常規」，列在各支的 `overview-notes.md`。
+- [ ] 每支 `check-all.js` 全部通過；出片前交總覽（每章一張）。
+- [ ] 上傳不公開、同步網站；四支都上線後移除舊條目。
+
+## 進度
+- 2026-11-09：
+  - 和站長討論舊版的問題與重製方向；站長確認病例摘要（OD、superior、D&C、one-piece in the bag、不縫合）、系列 4 支、可提供錄影、機器是 J&J。
+  - 查證三篇教學相關文獻（PubMed）：Dooley 2006、Suryawanshi 2016、Ferris 2019。
+  - 下一步：① 的模型工作（水晶體、囊袋、zonule、主切口隧道、CCC 狀態與器械），不等錄影先做；錄影到了再做術者視角的剪輯與同步工具。
+  - 站長給錄影資料夾。預設環境的網路白名單加 `drive.usercontent.google.com`（站長核准）。下載案例 A 與 PCR 案例，縮圖判讀寫在「錄影清單」。站長確認：案例 A 是 OD、因 zonule 弱放 CTR、③ 用案例 A 略過 CTR 與縫合、機器是 Veritas。
+  - 錄影工具（`videos/tools/video-kit/footage.js`、`footage-cli.js`；用法、檢查與坑見 `videos/tools/README.md`「真實手術錄影」）：
+    - 抽格時就裁掉燒進畫面的文字，抽出的影格只有眼睛；慢放、停格、原始時間的事件、標籤釘在錄影座標，切面用同一組事件同步。
+    - 案例 A 的 overlay 與方位定位點實測後寫在 `footage-sources.js`；主切口在正下方偏 temporal 21–24°。左側參數欄擋住 x < 134，眼睛偏左時（例如 1:04 之後）角膜中心在面板裡會偏左。
+    - 檢查（裁切不碰 overlay、主切口在下方 ±30°、事件在 clip 內、影格齊全且最新）由 `check-all` 自動跑，每條都故意改錯驗證過；錄影不在機器上時報 SKIP。
+    - 示範頁 `anim/footage-demo.html`（案例 A 0:58–1:20，0.5×，70.0 s 停格 3 秒）Claude 自檢：看不到任何文字、12 點在下、標籤指對鉗尖與主切口；參考圖在 `ref/`。
+    - 下一步：① 開工時在 `cataract-1-wound-ccc/anim/footage.js` 從案例 A 0:00–4:55 挑 clip，每個 clip 補定位點。
+  - ① 的模型（`videos/models/globe/cataract.js`，選用式 `st.cat`，舊影片畫面不變；細節、出處與示意清單見 `globe/CARD.md`「白內障」）：
+    - PubMed 查證：水晶體厚度、前後表面曲率、赤道直徑、散瞳下前房深度用華人白內障資料（Chen 2021）；前後囊厚度（Barraquer 2006）、zonule 附著（Sakabe 1998 迴歸式）、散瞳 7 mm（Chiambaretta 2018）、CCC 5.0–5.5 mm 蓋住 optic（Hollick 1999、Haripriya 2025）、隧道 1.75–2.0 mm 與方形切口（Ernest 1994／1995、Masket 2007、Wilczynski 2016；superior 長隧道 SIA 較大，Sonmez 2018）、zonule 弱的術中線索（做 CCC 時前囊起皺，Chen 2025；Rai 2015）。
+    - 視角：12–6 切面（上＝前、左＝12 點）、主切口放大、撕囊前緣切面、前囊 µm 放大框、顯微鏡俯視（散瞳、red reflex）。狀態：主切口與 side port、OVD、CCC（radial cut、沿圓撕、翻折、取出）、run-out、zonule 弱；器械 keratome、15° 刀、cannula、cystotome、撕囊鉗都只從切口進出。
+    - `globe/check.js` 加 51 條，38 個故意改錯全部抓到；open globe 參考圖 0.000% 不變；樣本 `globe/sample-cataract.html` 自檢，參考圖登記在 `cataract-1-wound-ccc/ref/manifest.json`（page: null）。
+    - 待確認：keratome 寬（模型 2.4 mm）、side port 位置（模型 2 點）、CCC 起點與方向、IOL optic 直徑；錄影裡主切口偏 temporal 約 22°，做影片時把 `main.h` 設成實測值。

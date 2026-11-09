@@ -32,7 +32,7 @@
 |---|---|---|---|---|
 | 眼瞼（上、下瞼） | 矢狀切面＋正面皮膚面或翻瞼 | entropion／ectropion、ptosis、雙眼皮、lateral tarsal strip、眼瞼腫瘤重建、PLTR、internal brow fixation | `eyelid/CARD.md` | 上眼瞼解剖、PLTR 的手術狀態與翻瞼視角已做；2026-11-06 補好眉毛區（ROOF、骨膜、眉毛、眶上切跡與神經、淚腺）與 levator resection／眉毛固定／結膜脫出的手術狀態（第一部組合刀）；2026-11-06 補好下眼瞼（選用式，舊畫面逐字不變）：下眼瞼矢狀切面、正面逐層開窗、外眥水平切面（從下往上看，同 CT）、瞼緣放大，以及 involutional entropion、院內範本的 marginal rotation、Hotz、LTS／canthopexy、電解睫毛的狀態（第二、三部）。2026-11-06 第一部影片出片（依院內範本，未等 OP note；正面模型加 `incX`）。2026-11-06 第二部（marginal rotation＋LTS，假設術前有 horizontal laxity）與第三部（上眼瞼重用第一部的狀態；下眼瞼 marginal rotation＋電解睫毛）出片，都依院內範本、未等 OP note；上下眼瞼一起閉眼的動作沒有出處，沒做。下一步：刀後依 OP note 定參數；上下眼瞼一起閉眼的動作還沒做 |
 | 眼眶與淚道 | 軸向切面（從下往上看，同 CT）＋正面外眥（韌帶窗） | OCS 的 lateral canthotomy／cantholysis；之後：眶骨骨折、眼眶減壓、DCR、眼球摘除 | `orbit/CARD.md` | 2026-11-06 建立（沿用眼瞼模型的眼球與外眥）：眶骨、眼球、視神經餘裕與 globe tenting、直肌、球後血腫與眼球前凸、眼瞼「前門」與外眥韌帶上下支、canthotomy、cantholysis；樣本 `orbit/sample.html` 自檢。下一步：做 LCC 影片（`videos/src/lateral-canthotomy-ocs/`）；眶底、冠狀切面、淚道還沒做 |
-| 前段 | 經傷口的子午切面或垂直傷口切面＋手術顯微鏡俯視 | open globe（zone I–II）、白內障、PK／DALK／DSAEK／DMEK、翼狀胬肉、trabeculectomy、tube、MIGS | `globe/CARD.md` | 2026-11-06 建立（open globe 第一部）：和眼瞼共用同一顆眼球的外表面；組織寫成 3D 函數，任何平面都能切；傷口、虹膜脫出、peaked pupil、結膜下出血、扇形 peritomy、縫線（穿、打結、埋結）；樣本圖已自檢。下一步：手與器械、360° peritomy、paracentesis 與前房重建 |
+| 前段 | 經傷口的子午切面或垂直傷口切面＋手術顯微鏡俯視 | open globe（zone I–II）、白內障、PK／DALK／DSAEK／DMEK、翼狀胬肉、trabeculectomy、tube、MIGS | `globe/CARD.md` | 2026-11-06 建立（open globe 第一部）：和眼瞼共用同一顆眼球的外表面；組織寫成 3D 函數，任何平面都能切；傷口、虹膜脫出、peaked pupil、結膜下出血、扇形 peritomy、縫線（穿、打結、埋結）；樣本圖已自檢。下一步：手與器械、360° peritomy、paracentesis 與前房重建。2026-11-09 加白內障（選用式 `st.cat`，`globe/cataract.js`）：華人白內障水晶體、前後囊、zonule、散瞳、主切口隧道與 side port、OVD、CCC、run-out 與 zonule 弱的示範；12–6 切面左＝12 點；樣本 `globe/sample-cataract.html` 自檢。2026-11-09 器械撐開隧道的變形改成平滑（頂蓋抬起、後唇壓下、選用的 Descemet 皺褶），加後方壓力（前房淺、前囊前凸）狀態 `push` |
 | 前段放大 | 角膜分層；隅角＋前房角鏡視角 | 屈光雷射、CXL、SLT、LPI | 尚未建立 | 未開始 |
 | 後段 | 眼球矢狀切面（三孔 PPV）＋廣角眼底 | RD（PPV、scleral buckle、pneumatic）、IVI、PRP | 尚未建立 | 未開始 |
 | 黃斑放大 | OCT 式分層＋黃斑俯視 | ERM／ILM peel、macular hole＋氣體 | 尚未建立 | 未開始 |
@@ -77,6 +77,7 @@
 
 ## 決定紀錄
 
+- 2026-11-09　站長認為舊版白內障影片不夠真實、學習效果不好，要重做，唯一目標是住院醫師有效學會 cataract surgery。決定：拆成 4 支（切口與 CCC、hydrodissection 與 divide and conquer、I/A 與 IOL、PCR），時間照步驟難度分配；術者視角改用站長提供的院內真實錄影（去識別、不進 git），模型動畫只補錄影看不到的（經主切口的切面、錯誤示範、腳踏與流體面板）。第一次用真實錄影當其中一個視角：錄影方向與事件時間碼都要寫成檢查。規格見 `videos/src/cataract-series/spec.md`。
 - 2026-11-04　站長看過舊的眼瞼圖後判定不及格，要求依專業重新設計模型，重做也可以。
 - 2026-11-04　眼瞼模型改成亞洲人眶隔位置（單眼皮）、標籤中英並列、手術過程同時顯示矢狀切面與正面；各類手術（角膜、視網膜剝離、黃斑、青光眼、雷射、斜視、眼整形）都要有對應的正確模型。
 - 2026-11-04　下一步：用眼瞼模型重做 PLTR 影片，規格見 `videos/src/upper-lid-margin-rotation/redo-spec.md`。
