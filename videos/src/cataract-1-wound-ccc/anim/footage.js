@@ -42,7 +42,7 @@ const FOOTAGE_DEF = {
       events: { 'forceps-at-incision': 65.4, 'pass1-in': 66.1, 'pinch': 69.5, 'wrinkles': 70.0, 'freeze': 72.0, 'wrinkles-gone': 74.3, 'grasp-1': 75.0 },
       points: {
         'forceps-tip': [{ t: 72.0, p: [375, 345] }],
-        'wrinkle': [{ t: 72.0, p: [330, 305] }],
+        'wrinkle': [{ t: 72.0, p: [350, 312] }],   // on the darkest radial fold, between the forceps tip and the fan's end (checked at 8× zoom)
         'incision': [{ t: 66.1, p: [494, 536] }, { t: 70.0, p: [520, 535] }, { t: 78.0, p: [524, 536] }],
       },
     },
