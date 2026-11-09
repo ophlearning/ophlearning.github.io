@@ -103,3 +103,7 @@
   - 列印工具：`print-kit.js` 的 `model()` 加白內障兩種視角（`csec`、`cscope`，選用、不影響眼瞼）；`numcheck.js` 不把頁尾網址當數字（id 的「-1-」原本被當成數字 1）；README 補。範例 `upper-lid-levator-rotation-brow` 重跑三張 PASS。
   - `check-all` 全部 PASS（出片同時跑）。
   - 上傳前可以再看的（不擋出片，沒改）：5-6 第 1 句（6:17–6:20）重點框寫「擦血 → 經主切口補 OVD」，錄影的順序其實是先補 OVD（4:01–4:12）再擦血（4:14–4:25）；3-1 第 4 句（約 2:14–2:21）keratome 已退出、片段最後一格停住，左下「keratome 從 12 點附近的透明角膜進入」與「慢放 0.5×」角標仍在。
+- 2026-11-09（上線）：
+  - 上線前修兩處：5-6 第 1 句改成照錄影順序「先經主切口補 OVD，再擦一次血」（錄影 4:00–4:08 補 OVD、4:12–4:26 擦血）；錄影片段播完停在最後一格時標「停格」（kit `footage.js`）。重新合成語音後全片 552.4 s，6 張參考圖換成相鄰的錄影格（Claude 自檢），`textBase` 改成旁白定稿的 commit。
+  - 出片（9:12，1080p30），從 mp4 抽格確認兩處修正；上傳 YouTube 不公開（`c4TrAOf9m3U`，privacy 回報 unlisted）；`videos/index.html` 條目放在最前面，瀏覽器開 `videos/#cataract-1-wound-ccc` 沒有 JS 錯誤、嵌入的是這支影片（這台機器連不到 YouTube，播放器本身沒載入）。
+  - 下一步：PR 合併後把 `textBase` 改成 main 上的合併 commit；舊版 `cataract` 條目等四支都上線再移除。

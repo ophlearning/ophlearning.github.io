@@ -160,6 +160,36 @@ const CATS = [
    dur 是片長（秒）；chapters 的時間以秒為單位；refs 的 doi 或 url 擇一 */
 const VIDEOS = [
   {
+    id:'cataract-1-wound-ccc', type:'youtube', yt:'c4TrAOf9m3U', cat:'surgery',
+    zh:'白內障 ①：主切口、side port、OVD 與 CCC', en:'Cataract surgery ①: main incision, side port, OVD and CCC',
+    dur:552,
+    short:'白內障系列第一支，真實手術錄影＋同步的機轉切面：side port 與 OVD、keratome 三平面主切口（長≈寬）、CCC 的目標（5.0–5.5 mm、360° 蓋住 optic）與力學、一台撕囊逐段看、run-out 與 zonule 弱的線索和第一步，以及 wet lab 練習清單。',
+    sum:'這支影片是白內障手術系列的第一支，一半以上的時間花在 CCC。每一步先看做完的樣子，再看手術錄影與同步的機轉切面，最後看出錯的線索與當下的第一步。Side port 開在左手那側（右眼、術者坐 12 點時是 nasal），經 side port 打 OVD 撐滿前房、保護內皮、壓平前囊；前房不夠深時，後方壓力把水晶體往前推，撕囊就多一個往外的力。主切口用 keratome 做三平面隧道，屍眼研究裡，長度接近寬度的方形切口比長方形切口耐壓得多；太短會漏、虹膜往切口跑，太長器械卡住、角膜起皺；superior 長隧道的 SIA 較大，長度怎麼取捨依院內常規。CCC 的目標是連續、圓、置中、約 5.0–5.5 mm、一圈蓋在 IOL optic 邊緣上；前緣的走向看拉力的方向，要夾在瓣上、靠近撕開的前緣，每撕一小段就重新夾。接著逐段看一台 zonule 弱的撕囊：夾住前囊時整片放射狀起皺、四段撕囊中重新夾與補 OVD 的節奏。最後是 run-out（前緣偏離圓、跑到虹膜下）的第一步：停、補 OVD 壓平、把瓣往反方向拉再往中央（Little 法），以及 zonule 弱時放慢、減小拉力、撕囊時囊袋不穩是放 CTR 的時機之一，和上刀前在 wet lab 要練的四件事。',
+    note:'左邊是右眼 OD、術者坐 superior（12 點）的真實手術錄影，已去識別（只裁出眼睛範圍、畫面上沒有文字、不用聲音）；右邊是以 mm 建模的機轉切面，和錄影同步，示意的部分畫面上有標。本例 zonule 弱（後來放了 CTR）、主切口在 12 點偏 temporal 約 22°（11 點多）、撕囊由撕囊鉗直接夾住前囊中央起頭，沒有先用 cystotome；routine 的樣子用模型示範。切口寬度、IOL optic 大小等各院做法不同的地方，依院內常規。',
+    tags:['白內障'],
+    chapters:[
+      {g:'', items:[[0,'片頭'], [16,'1　目標'], [74,'2　Side port 與 OVD'], [118,'3　主切口'], [197,'4　CCC 的目標與力學'], [296,'5　實錄：案例 A 的撕囊'], [415,'6　出錯的線索與第一步'], [477,'7　練習清單'], [515,'參考文獻']]},
+    ],
+    refs:[
+      {c:'Ernest PH, Lavery KT, Kiessling LA. Relative strength of scleral corneal and clear corneal incisions constructed in cadaver eyes. J Cataract Refract Surg 1994;20(6):626-9.', doi:'10.1016/s0886-3350(13)80651-7'},
+      {c:'Masket S, Belani S. Proper wound construction to prevent short-term ocular hypotony after clear corneal incision cataract surgery. J Cataract Refract Surg 2007;33(3):383-6.', doi:'10.1016/j.jcrs.2006.11.006'},
+      {c:'LoBue SA, et al. Preventing the Argentinian flag sign and managing anterior capsular tears: a review. Indian J Ophthalmol 2024;72(2):162-173.', doi:'10.4103/IJO.IJO_1418_23'},
+      {c:'Hollick EJ, Spalton DJ, Meacock WR. The effect of capsulorhexis size on posterior capsular opacification: one-year results of a randomized prospective trial. Am J Ophthalmol 1999;128(3):271-9.', doi:'10.1016/s0002-9394(99)00157-9'},
+      {c:'Haripriya A, et al. Aravind Pseudoexfoliation Study (APEX): 10-year postoperative results. Am J Ophthalmol 2025;278:337-345.', doi:'10.1016/j.ajo.2025.06.043'},
+      {c:'Fairaq R, et al. Zonular compromise: a narrative review of indicators and management strategies. Saudi J Ophthalmol 2025;39(4):354-360.', doi:'10.4103/sjopt.sjopt_96_24'},
+      {c:'Ernest PH, Fenzl R, Lavery KT, Sensoli A. Relative stability of clear corneal incisions in a cadaver eye model. J Cataract Refract Surg 1995;21(1):39-42.', doi:'10.1016/s0886-3350(13)80477-4'},
+      {c:'Sonmez S, Karaca C. The effect of tunnel length and position on postoperative corneal astigmatism: an optical coherence tomographic study. Eur J Ophthalmol 2020;30(1):104-111.', doi:'10.1177/1120672118805875'},
+      {c:'Gimbel HV, Neuhann T. Development, advantages, and methods of the continuous circular capsulorhexis technique. J Cataract Refract Surg 1990;16(1):31-7.', doi:'10.1016/s0886-3350(13)80870-x'},
+      {c:'Karim SM, Ong CT, Sleep TJ. A novel capsulorhexis technique using shearing forces with cystotome. J Vis Exp 2010;(39):1962.', doi:'10.3791/1962'},
+      {c:'Chen J, et al. Occult zonulopathy detected during cataract surgery in patients with acute primary angle closure: a retrospective study. PeerJ 2025;13:e19330.', doi:'10.7717/peerj.19330'},
+      {c:'Yaguchi S, et al. Objective classification of zonular weakness based on lens movement at the start of capsulorhexis. PLoS One 2017;12(4):e0176169.', doi:'10.1371/journal.pone.0176169'},
+      {c:'Little BC, Smith JH, Packer M. Little capsulorhexis tear-out rescue. J Cataract Refract Surg 2006;32(9):1420-2.', doi:'10.1016/j.jcrs.2006.03.038'},
+      {c:'Rai G, Sahai A, Kumar PR. Outcome of capsular tension ring (CTR) implant in complicated cataracts. J Clin Diagn Res 2015;9(12):NC05-7.', doi:'10.7860/JCDR/2015/10425.6999'},
+      {c:'Dooley IJ, O\'Brien PD. Subjective difficulty of each stage of phacoemulsification cataract surgery performed by basic surgical trainees. J Cataract Refract Surg 2006;32(4):604-8.', doi:'10.1016/j.jcrs.2006.01.045'},
+      {c:'Ferris JD, et al. Royal College of Ophthalmologists\' National Ophthalmology Database study of cataract surgery: report 6. The impact of EyeSi virtual reality training on complications rates of cataract surgery performed by first and second year trainees. Br J Ophthalmol 2020;104(3):324-329.', doi:'10.1136/bjophthalmol-2018-313817'},
+    ],
+  },
+  {
     id:'eyelid-margin-laceration-repair', type:'youtube', yt:'JXGYQOkhiGk', cat:'surgery',
     zh:'外傷性瞼緣裂傷（marginal eyelid laceration）的一期縫合', en:'Primary repair of a traumatic full-thickness eyelid margin laceration',
     dur:773,

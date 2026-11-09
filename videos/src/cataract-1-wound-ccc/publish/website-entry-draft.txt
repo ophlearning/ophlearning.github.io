@@ -1,7 +1,7 @@
   {
-    id:'cataract-1-wound-ccc', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'cataract-1-wound-ccc', type:'youtube', yt:'c4TrAOf9m3U', cat:'surgery',
     zh:'白內障 ①：主切口、side port、OVD 與 CCC', en:'Cataract surgery ①: main incision, side port, OVD and CCC',
-    dur:0,   // TBD：出片後用 ffprobe 實測秒數四捨五入
+    dur:552,
     short:'白內障系列第一支，真實手術錄影＋同步的機轉切面：side port 與 OVD、keratome 三平面主切口（長≈寬）、CCC 的目標（5.0–5.5 mm、360° 蓋住 optic）與力學、一台撕囊逐段看、run-out 與 zonule 弱的線索和第一步，以及 wet lab 練習清單。',
     sum:'這支影片是白內障手術系列的第一支，一半以上的時間花在 CCC。每一步先看做完的樣子，再看手術錄影與同步的機轉切面，最後看出錯的線索與當下的第一步。Side port 開在左手那側（右眼、術者坐 12 點時是 nasal），經 side port 打 OVD 撐滿前房、保護內皮、壓平前囊；前房不夠深時，後方壓力把水晶體往前推，撕囊就多一個往外的力。主切口用 keratome 做三平面隧道，屍眼研究裡，長度接近寬度的方形切口比長方形切口耐壓得多；太短會漏、虹膜往切口跑，太長器械卡住、角膜起皺；superior 長隧道的 SIA 較大，長度怎麼取捨依院內常規。CCC 的目標是連續、圓、置中、約 5.0–5.5 mm、一圈蓋在 IOL optic 邊緣上；前緣的走向看拉力的方向，要夾在瓣上、靠近撕開的前緣，每撕一小段就重新夾。接著逐段看一台 zonule 弱的撕囊：夾住前囊時整片放射狀起皺、四段撕囊中重新夾與補 OVD 的節奏。最後是 run-out（前緣偏離圓、跑到虹膜下）的第一步：停、補 OVD 壓平、把瓣往反方向拉再往中央（Little 法），以及 zonule 弱時放慢、減小拉力、撕囊時囊袋不穩是放 CTR 的時機之一，和上刀前在 wet lab 要練的四件事。',
     note:'左邊是右眼 OD、術者坐 superior（12 點）的真實手術錄影，已去識別（只裁出眼睛範圍、畫面上沒有文字、不用聲音）；右邊是以 mm 建模的機轉切面，和錄影同步，示意的部分畫面上有標。本例 zonule 弱（後來放了 CTR）、主切口在 12 點偏 temporal 約 22°（11 點多）、撕囊由撕囊鉗直接夾住前囊中央起頭，沒有先用 cystotome；routine 的樣子用模型示範。切口寬度、IOL optic 大小等各院做法不同的地方，依院內常規。',
