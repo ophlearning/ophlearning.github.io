@@ -110,27 +110,29 @@ DRAW2['title'] = T => {
 DRAW2['1-1'] = T => {
   const sv = scope(DONE, W_SCOPE, 'sL'), A = sv.A, cv = sec(DONE, W_CAT, 'cR'), B = cv.A;
   const k1 = T.on(1), k2 = T.on(2), k3 = T.on(3), k4 = T.on(4);
-  let ex = lab('側切口', 'side port', 14, 120, A.sideExt, { bold: true, op: ss(0, 1, k1) });
-  ex += lab('主切口', 'main incision', PW - 12, YB, A.mainExt, { side: 'R', bold: true, op: k2 });
-  ex += lab('撕囊邊緣', 'CCC edge', PW - 12, 64, A.edge6 || sv.P([0, -2.625]), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: k4 });
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  let ex = lab('側切口', 'side port', 14, A.sideExt[1] - 44, A.sideExt, { bold: true, op: ss(0, 1, k1) });
+  ex += lab('主切口', 'main incision', PW - 12, YB, mid(A.mainExt, A.mainInt), { side: 'R', bold: true, op: k2 });
+  ex += lab('撕囊邊緣', 'CCC edge', PW - 12, A.edge9[1] - 6, A.edge9, { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: k4 });
   // optic outline (6.0 mm) under the rhexis edge
   ex += `<g opacity="${k4}">${circ(sv.P([0, 0]), CASE.optic / 2 * sv.k, '#2463eb', 0.9, '6 4', 1.8)}</g>` + lab(`IOL optic ${CASE.optic.toFixed(1)} mm`, '', 14, YB, sv.P([-CASE.optic / 2 * 0.71, CASE.optic / 2 * 0.71]), { color: '#2463eb', lc: '#2463eb', op: k4 });
   let rx = lab('主切口', 'main incision', 14, 64, B.mainPivot || B.mainExt, { bold: true, op: k2 });
-  rx += lab('前房 OVD', '', 14, 150, cv.P([-2.4, -(L0.za + 1.1)]), { color: OVD_COL, lc: OVD_COL, op: k3 });
+  rx += lab('前房 OVD', '', 14, 150, cv.P([-3.6, -(L0.za + 0.9)]), { color: OVD_COL, lc: OVD_COL, op: k3 });
   rx += lab('撕囊後的開口', 'capsulorhexis', PW - 12, 64, cv.P([1.0, -(L0.za + 0.02)]), { side: 'R', color: CAP_COL, lc: CAP_COL, op: k4 });
-  rx += lab('水晶體', 'lens', PW - 12, YB, cv.P([2.2, -(L0.za - 2.0)]), { side: 'R' });
+  rx += lab('水晶體', 'lens', PW - 12, 300, cv.P([3.6, -L0.zMid]), { side: 'R' });
   return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: CAT_T } };
 };
 DRAW2['1-2'] = T => {
   // still frame: the forceps just inside the main incision (1:06.1), the incision point measured on that frame
   const tau = FOOTAGE.ev('pinch', 'pass1-in'), L = FOOTAGE.panel('pinch', tau, { badge: false });
   const k1 = T.on(1), k3 = T.on(3);
-  L.extra = lab('主切口：12 點偏 temporal 約 22°', 'main incision', PW - 12, YB, fpt('pinch', 'incision', tau), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: k1 }) +
+  const inc = fpt('pinch', 'incision', tau);   // label just above-left of the incision, the leader drops to it (does not run back under the text)
+  L.extra = lab('主切口：12 點偏 temporal 約 22°', 'main incision', 14, inc[1] - 9, [inc[0], inc[1]], { bold: true, color: COL.accent, lc: COL.accent, op: k1 }) +
     note('錄影 1:06', 1, 58);
   const cv = sec({ cat: BASE }, W_CAT, 'cR'), B = cv.A;
-  let rx = lab('主切口（11 點多）', 'main incision', 14, 64, B.mainPivot || B.mainExt, { bold: true, color: COL.accent, lc: COL.accent, op: k1 });
-  rx += lab('小帶', 'zonules', PW - 12, YB, cv.Q([...G.clockDir((HP + 6) % 12).map(v => v * 0.1), 0]) && B['eq+'], { side: 'R', color: COL.amber, lc: COL.amber, bold: true, op: k3 });
-  rx += lab('水晶體', 'lens', PW - 12, 64, cv.P([1.5, -(L0.za - 1.6)]), { side: 'R' });
+  let rx = lab('主切口', 'main incision', 14, 64, B.mainPivot || B.mainExt, { bold: true, color: COL.accent, lc: COL.accent, op: k1 });
+  rx += lab('小帶', 'zonules', PW - 12, 262, B['eq+'], { side: 'R', color: COL.amber, lc: COL.amber, bold: true, op: k3 });
+  rx += lab('水晶體', 'lens', PW - 12, 330, cv.P([3.6, -L0.zMid]), { side: 'R' });
   rx += note('本例 zonule 弱：切面的形狀是 routine 模型', k3, PH - 14);
   return { L, R: { svg: cv.svg, extra: rx, P: CAT_T } };
 };
@@ -138,13 +140,14 @@ DRAW2['1-2'] = T => {
 // ---------------------------------------------------------------- 2 Side port 與 OVD
 DRAW2['2-1'] = T => {
   const f = footSeg(T, 'sideport', { at0: Math.min(0.3, T.st(1) + 0.6 - FOOTAGE.ev('sideport', 'freeze')) }), L = f.L, op = frozenOp('sideport', f.tau);   // the freeze (blade tip in the chamber) during line 1
-  if (op > 0) L.extra = lab('刀尖在前房', 'blade tip', 14, 64, fpt('sideport', 'blade-tip', f.tau), { bold: true, op });
+  if (op > 0) { const bt = fpt('sideport', 'blade-tip', f.tau); L.extra = lab('刀尖在前房', 'blade tip', 14, bt[1] - 48, bt, { bold: true, op }); }
   // model: the side-port blade advancing with the footage (limbus 6.4 s → anterior chamber 7.5 s → out 9.0 s)
   const adv = f.s < ev('blade-out') ? pw([[ev('blade-limbus'), 0], [ev('blade-ac'), 1.15]], f.s) : 0;
   const cut = pw([[ev('blade-limbus'), 0], [ev('blade-ac'), 1]], f.s);
   const st = { cat: { side: { ...SIDE, cut }, inst: adv > 0 && f.s < ev('blade-out') ? [{ kind: 'sideblade', adv }] : [] } };
   const cv = sec(st, W_TUN, 'cR', { hp: HP_SIDE }), B = cv.A;
-  let rx = lab('側切口', 'side port', 14, 64, B.sideInt || B.sideExt || cv.P([W_TUN.x + 2, W_TUN.y + 1]), { bold: true, op: ss(0, 1, cut) });
+  const sp = B.sideInt || B.sideExt || cv.P([W_TUN.x + 2, W_TUN.y + 1]);
+  let rx = lab('側切口', 'side port', PW - 12, sp[1] + 44, sp, { side: 'R', bold: true, op: ss(0, 1, cut) });
   rx += lab('角膜', 'cornea', PW - 12, 64, cv.P([W_TUN.x + 4.6, -(G.keyPoints({}).apexZ - 0.5)]), { side: 'R' });
   rx += note('寬與長為示意', 1, PH - 14);
   return { L, R: { svg: cv.svg, extra: rx, P: SIDE_T } };
@@ -152,19 +155,29 @@ DRAW2['2-1'] = T => {
 DRAW2['2-2'] = T => {
   const f = footSeg(T, 'ovd'), L = f.L, op = frozenOp('ovd', f.tau);
   if (op > 0) L.extra = lab('cannula（經側切口）', 'OVD', PW - 12, 64, fpt('ovd', 'cannula-tip', f.tau), { side: 'R', bold: true, op });
-  const ovd = pw([[ev('cannula-in'), 0.05], [ev('fill-1-end'), 0.6], [ev('cannula-2-in'), 0.6], [ev('ovd-end'), 1]], f.s);
+  const ovdSync = pw([[ev('cannula-in'), 0.05], [ev('fill-1-end'), 0.6], [ev('cannula-2-in'), 0.6], [ev('ovd-end'), 1]], f.s);
   const inEye = (f.s >= ev('cannula-in') && f.s <= ev('fill-1-end')) || (f.s >= ev('cannula-2-in') && f.s <= ev('ovd-end'));
-  const st = { cat: { main: null, side: SIDE, ovd, inst: inEye ? [{ kind: 'cannula', via: 'side', at: { h: CASE.side.h, r: 1.2, lift: 0.9 } }] : [] } };
-  const cv = sec(st, W_CAT, 'cR', { hp: HP_SIDE }), B = cv.A;
-  let rx = lab('OVD', '', 14, 64, cv.P([0.3, -(L0.za + 1.2)]), { bold: true, color: OVD_COL, lc: OVD_COL });
-  rx += lab('前囊被壓平', 'anterior capsule', PW - 12, 64, cv.P([1.4, -L0.zAnt(1.4)]), { side: 'R', color: CAP_COL, lc: CAP_COL, op: T.on(1) });
-  if (B.tip0) rx += lab('cannula', '', 14, YB, B.tip0, { color: '#3c4a57' });
-  rx += note('切面經側切口；OVD 的擴散為示意', 1, PH - 14);
-  // pressure arrows (line 2): posterior pressure pushes the lens forward → outward force at the tear
-  const k2 = T.on(2) * (1 - T.on(3));
-  rx += `<g opacity="${k2}">${arrow(cv.P([0, -(L0.zp - 0.6)]), cv.P([0, -(L0.zp + 1.4)]), WARN, 1, 'arrR', 3)}${arrow(cv.P([1.6, -(L0.zAnt(1.6) + 0.15)]), cv.P([3.6, -(L0.zAnt(3.6) + 0.15)]), WARN, 1, 'arrR', 3)}</g>` +
-    `<g opacity="${k2}">${htext(PW / 2, PH - 60, '前房淺：後方壓力 → 撕囊往外跑（示意）', { size: 15, bold: true, color: WARN, anchor: 'middle' })}</g>`;
-  return { L, R: { svg: cv.svg, extra: rx, P: SIDE_T } };
+  // lines 2–3 are the model alone (示意, not this moment of the footage): OVD lost → posterior pressure pushes the lens–iris diaphragm
+  // forward (shallow chamber, anterior capsule bulging: the tear gets an outward pull); line 3: OVD topped up → deep chamber, flat capsule again
+  const kS = T.on(2, 1.4, 0.2) * (1 - T.on(3, 1.6, 0.5)), refill = T.on(3, 0.3, 0.3) * (1 - T.on(3, 0.4, 2.3));
+  const ovd = lerp(ovdSync, 0.5, kS), cannula = (inEye && kS < 0.02 && !(T.u > T.st(2))) || refill > 0.5;
+  const st = { cat: { main: null, side: SIDE, ovd, push: kS, inst: cannula ? [{ kind: 'cannula', via: 'side', at: { h: CASE.side.h, r: 1.2, lift: 0.9 } }] : [] } };
+  const cv = sec(st, W_CAT, 'cR', { hp: HP_SIDE }), B = cv.A, c = K.norm(st);
+  const capV = u => -(L0.zAnt(Math.abs(u)) + K.liftZ(c, Math.abs(u)));     // anterior capsule height in this frame (plane v)
+  // the flat capsule of a full chamber (dashed) under the bulging one
+  const flat = []; for (let u = -4.4; u <= 4.4001; u += 0.2) flat.push(cv.P([u, -L0.zAnt(Math.abs(u))]));
+  let rsv = cv.svg + `<path d="${pathOf(flat)}" fill="none" stroke="${CAP_COL}" stroke-width="1.6" stroke-dasharray="6 4" opacity="${(0.85 * ss(0.15, 0.6, kS)).toFixed(2)}"/>`;
+  const kA = ss(0.75, 1, kS);
+  rsv += `<g opacity="${kA.toFixed(2)}">${arrow(cv.P([0, -(L0.zp + K.liftZ(c, 0) - 0.9)]), cv.P([0, -(L0.zp + K.liftZ(c, 0) + 0.9)]), WARN, 1, 'arrR', 3)}` +
+    `${arrow(cv.P([1.9, capV(1.9) - 0.18]), cv.P([3.8, capV(3.8) - 0.18]), WARN, 1, 'arrR', 3)}</g>`;
+  let rx = lab('OVD', '', PW / 2 - 70, 132, null, { bold: true, color: OVD_COL, size: 17 });   // written inside the chamber it fills
+  rx += lab('前囊被壓平', 'anterior capsule', PW - 12, 64, cv.P([1.4, capV(1.4)]), { side: 'R', color: CAP_COL, lc: CAP_COL, op: T.on(1) * (1 - ss(0.05, 0.3, kS)) });
+  rx += lab('前囊往前凸', 'bulging', PW - 12, 64, cv.P([1.4, capV(1.4)]), { side: 'R', bold: true, color: WARN, lc: WARN, op: ss(0.4, 0.8, kS) });
+  rx += lab('後方壓力', 'posterior pressure', PW - 12, 330, cv.P([0, -(L0.zp + K.liftZ(c, 0) - 0.5)]), { side: 'R', bold: true, color: WARN, lc: WARN, op: kA });
+  if (B.tip0 && B.sidePivot) { const t = B.tip0, q = B.sidePivot, sh = [lerp(t[0], q[0], 1.25), lerp(t[1], q[1], 1.25)]; rx += lab('cannula', '', 14, 64, sh, { color: '#3c4a57' }); }   // on the shaft just outside the side port
+  rx += `<g opacity="${kA.toFixed(2)}">${tag('示意：前房淺 → 撕囊往外跑', 1, WARN)}</g>` + `<g opacity="${T.on(3, 0.6, 1.2).toFixed(2)}">${tag('補 OVD → 前房加深、前囊壓平', 1)}</g>`;
+  rx += kS > 0.02 ? note('虛線＝OVD 撐滿時的前囊；前房變淺為示意', 1, PH - 14) : note('切面經側切口；OVD 的擴散為示意', 1, PH - 14);
+  return { L, R: { svg: rsv, extra: rx, P: SIDE_T } };
 };
 
 // ---------------------------------------------------------------- 3 主切口
@@ -175,9 +188,9 @@ DRAW2['3-1'] = T => {
   const cut = pw([[ev('k-touch'), 0], [ev('k-ac'), 1]], f.s);
   const st = { cat: { side: SIDE, ovd: 1, main: { ...MAIN, cut }, inst: adv > 0 ? [{ kind: 'keratome', adv }] : [] } };
   const cv = sec(st, W_TUN, 'cR'), B = cv.A, k2 = T.on(2), k3 = T.on(3);
-  let rx = lab('keratome', '', PW - 12, 64, B.tip0 || cv.P([W_TUN.x + 3, W_TUN.y + 1.5]), { side: 'R', color: '#3c4a57', op: adv > 0 ? 1 : 0 });
-  rx += lab('三平面隧道', 'tri-planar', 14, 64, B.mainPivot || B.mainExt || cv.P([W_TUN.x + 1, W_TUN.y + 1]), { bold: true, color: COL.accent, lc: COL.accent, op: k2 * ss(0.2, 1, cut) });
-  if (B.mainExt && B.mainInt) rx += `<g opacity="${k3 * ss(0.95, 1, cut)}">${VIEWS.dim(B.mainExt, B.mainInt, COL.accent)}</g>` + lab(`長 ${CASE.main.L.toFixed(1)} mm`, 'tunnel', PW - 12, YB, [(B.mainExt[0] + B.mainInt[0]) / 2, (B.mainExt[1] + B.mainInt[1]) / 2], { side: 'R', color: COL.accent, lc: COL.accent, bold: true, op: k3 * ss(0.95, 1, cut) });
+  let rx = lab('keratome', '', PW - 12, 130, B.tip0 || cv.P([W_TUN.x + 3, W_TUN.y + 1.5]), { side: 'R', color: '#3c4a57', op: adv > 0 ? 1 : 0 });
+  rx += lab('三平面隧道', 'tri-planar', 100, 170, B.mainPivot || B.mainExt || cv.P([W_TUN.x + 1, W_TUN.y + 1]), { bold: true, color: COL.accent, lc: COL.accent, op: k2 * ss(0.2, 1, cut) });
+  if (B.mainExt && B.mainInt) rx += `<g opacity="${k3 * ss(0.95, 1, cut)}">${VIEWS.dim(B.mainExt, B.mainInt, COL.accent)}</g>` + lab(`長 ${CASE.main.L.toFixed(1)} mm`, 'tunnel', 470, 262, [(B.mainExt[0] + B.mainInt[0]) / 2, (B.mainExt[1] + B.mainInt[1]) / 2], { side: 'R', color: COL.accent, lc: COL.accent, bold: true, op: k3 * ss(0.95, 1, cut) });
   rx += VIEWS.sbar(cv.k, 1, 1);
   return { L, R: { svg: cv.svg, extra: rx, P: TUN_T } };
 };
@@ -188,32 +201,53 @@ DRAW2['3-2'] = T => {
   const sv = scope(st, win, 'sL'), A = sv.A;
   const lat = (() => { const d = G.clockDir(CASE.main.h); return [d[1], -d[0]]; })();   // lateral direction (examiner X, Y)
   const ext = K.tunnelOf(CASE.main).ext, wE = [-1, 1].map(sg => sv.Q([...[0, 1].map(i => ext[0] * G.clockDir(CASE.main.h)[i] + sg * CASE.main.w / 2 * lat[i]), ext[1]]));
-  let ex = `<g opacity="${T.on(0)}">${VIEWS.dim(wE[0], wE[1], '#2463eb')}</g>` + lab(`寬 ${CASE.main.w.toFixed(1)} mm`, 'width', 14, YB, wE[0], { color: '#2463eb', lc: '#2463eb', bold: true, op: T.on(0) });
-  ex += lab('長（隧道）', 'length', 14, 64, A.mainInt, { color: COL.accent, lc: COL.accent, bold: true, op: T.on(0) });
+  // width along the outer opening, length along the tunnel axis (outer → inner opening; seen from above it is the tunnel's horizontal extent)
+  const wR = wE[0][0] > wE[1][0] ? wE[0] : wE[1];
+  let ex = `<g opacity="${T.on(0)}">${VIEWS.dim(wE[0], wE[1], '#2463eb')}${VIEWS.dim(A.mainExt, A.mainInt, COL.accent)}</g>` + lab(`寬 ${CASE.main.w.toFixed(1)} mm`, 'width', PW - 12, YB, wR, { side: 'R', color: '#2463eb', lc: '#2463eb', bold: true, op: T.on(0) });
+  ex += lab('長（隧道）', 'length', 14, A.mainInt[1] + 4, A.mainInt, { color: COL.accent, lc: COL.accent, bold: true, op: T.on(0) });
   ex += note('長≈寬＝方形切口', 1, PH - 14);
   const cv = sec(st, W_TUN, 'cR'), B = cv.A;
   let rx = '';
-  if (B.mainExt && B.mainInt) rx += VIEWS.dim(B.mainExt, B.mainInt, COL.accent) + lab(`長 ${CASE.main.L.toFixed(1)} mm`, 'tunnel', PW - 12, 112, [(B.mainExt[0] + B.mainInt[0]) / 2, (B.mainExt[1] + B.mainInt[1]) / 2], { side: 'R', color: COL.accent, lc: COL.accent, bold: true });
-  rx += lab('外口', 'outer', 14, 64, B.mainExt) + lab('內口', 'inner', PW - 12, 64, B.mainInt, { side: 'R' });
+  if (B.mainExt && B.mainInt) rx += VIEWS.dim(B.mainExt, B.mainInt, COL.accent) + lab(`長 ${CASE.main.L.toFixed(1)} mm`, 'tunnel', 470, 262, [(B.mainExt[0] + B.mainInt[0]) / 2, (B.mainExt[1] + B.mainInt[1]) / 2], { side: 'R', color: COL.accent, lc: COL.accent, bold: true });
+  rx += lab('外口', 'outer', 120, B.mainExt[1] + 2, B.mainExt) + lab('內口', 'inner', PW - 12, B.mainInt[1] + 5, B.mainInt, { side: 'R' });
   // evidence card (lines 1–4)
   const card2 = (y, rows, op) => `<g opacity="${op}"><rect x="${PW - 300}" y="${y}" width="288" height="${16 + rows.length * 24}" rx="8" fill="#fff" stroke="#d3dae1"/>${rows.map((r, i) => text(PW - 288, y + 28 + i * 24, r[0], { size: 14, bold: r[1], color: r[2] || COL.ink })).join('')}</g>`;
-  rx += card2(PH - 150, [['屍眼（Ernest 1994）', true], ['方形 2.0×2.0：525 psi 不漏'], ['長方形 3.2×2.0：13 psi 就漏', false, WARN]], T.on(1) * (1 - T.on(3)));
-  rx += card2(PH - 150, [['臨床', true], ['方形切口 60 人：沒有低眼壓（Masket）'], ['Superior 長隧道：SIA 最大（Sonmez）', false, WARN]], T.on(3));
+  rx += card2(PH - 108, [['屍眼（Ernest 1994）', true], ['方形 2.0×2.0：525 psi 不漏'], ['長方形 3.2×2.0：13 psi 就漏', false, WARN]], T.on(1) * (1 - T.on(3)));
+  rx += card2(PH - 108, [['臨床', true], ['方形切口 60 人：沒有低眼壓（Masket）'], ['Superior 長隧道：SIA 最大（Sonmez）', false, WARN]], T.on(3));
   rx += VIEWS.sbar(cv.k, 1, 1);
   return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: TUN_T } };
 };
 DRAW2['3-3'] = T => {
-  // both panels are the tunnel section: left a well-built tunnel at rest; right an instrument pressing down in it (示意 deformation)
-  const at = { h: CASE.main.h + 6, r: 2.0, lift: 0.1 };   // forceps reaching across the pupil (lens-local)
-  const s0 = { cat: { ...BASE } }, s1 = { cat: { ...BASE, inst: [{ kind: 'forceps', at, open: 0 }] } };
-  const lv = sec(s0, W_TUN, 'sL'), rv = sec(s1, W_MID, 'cR', { step: 0.03 }), A = lv.A, B = rv.A;
-  let ex = lab('隧道閉合', 'self-sealing', 14, 64, A.mainPivot || A.mainExt, { bold: true, color: COL.accent, lc: COL.accent });
-  ex += `<g opacity="${T.on(0) * (1 - T.on(1))}">${htext(PW / 2, PH - 50, '太短：前房一淺就漏、虹膜往切口跑', { size: 15, bold: true, color: WARN, anchor: 'middle' })}</g>`;
-  ex += note('模型：三平面隧道', 1, PH - 14);
-  let rx = lab('頂蓋被抬起', 'roof lifted', PW - 12, 64, B.mainPivot ? [B.mainPivot[0] + 6, B.mainPivot[1] - 22] : rv.P([W_MID.x + 2, W_MID.y + 1]), { side: 'R', bold: true, color: WARN, lc: WARN, op: T.on(1) });
-  rx += lab('撕囊鉗', 'forceps', 14, YB, B.tip0 || rv.P([W_MID.x + 5, W_MID.y + 3]), { color: '#3c4a57' });
-  rx += note('器械壓下時的變形為機轉示意', 1, PH - 14);
-  return { L: { svg: lv.svg, extra: ex, P: TUN_T }, R: { svg: rv.svg, extra: rx, P: { title: '器械伸到對側：隧道被撐開（模型）', orient: '左＝主切口　上＝前' } } };
+  // left: the well-built tunnel at rest; right: the SAME window with the forceps reaching across the pupil (示意 deformation of the model:
+  // roof lifted, posterior lip pressed down, Descemet folds central to it), the rest cornea dashed, and an overview inset (the forceps tip)
+  const at = { h: CASE.main.h + 6, r: 2.0, lift: 0.1 };   // forceps reaching across the pupil to the far anterior capsule (lens-local)
+  const s0 = { cat: { ...BASE } }, s1 = { cat: { ...BASE, folds: 1, inst: [{ kind: 'forceps', at, open: 0 }] } };
+  const lv = sec(s0, W_TUN, 'sL'), rv = sec(s1, W_TUN, 'cR'), A = lv.A, B = rv.A;
+  let ex = lab('隧道閉合', 'self-sealing', 104, 150, A.mainPivot, { bold: true, color: COL.accent, lc: COL.accent });
+  ex += `<g opacity="${T.on(0) * (1 - T.on(1))}">${htext(PW / 2, PH - 64, '太短：前房一淺就漏、虹膜往切口跑', { size: 15, bold: true, color: WARN, anchor: 'middle' })}</g>`;
+  ex += VIEWS.sbar(lv.k, 1, 1) + note('模型：三平面隧道', 1, PH - 14);
+  // right: rest outline (dashed) over the deformed section, within the deformation zone; lift / push arrows
+  const ghost = (lv.r.outline.cornea.match(/M[^MZ]+Z?/g) || []).map(seg => 'M' + seg.replace(/[MZ]/g, '').split('L').map(q => rv.P(q.trim().split(/\s+/).map(Number)).map(v => v.toFixed(1)).join(' ')).join('L')).join('');
+  const zx0 = rv.P([-(K.deformer(K.norm(s1)).parts[0].rOut + 0.05), 0])[0], zx1 = rv.P([-(K.deformer(K.norm(s1)).parts[0].rIn - 1.45), 0])[0];
+  const k2 = T.on(2), k2b = T.on(2, 0.6, 1.2), k2c = T.on(2, 0.6, 2.4);
+  let rsv = rv.svg + `<clipPath id="cR_gz"><rect x="${zx0.toFixed(1)}" y="0" width="${(zx1 - zx0).toFixed(1)}" height="${PH}"/></clipPath>` +
+    `<path d="${ghost}" clip-path="url(#cR_gz)" fill="none" stroke="#2c4a63" stroke-width="1.3" stroke-dasharray="5 4" opacity="0.7"/>`;
+  rsv += `<g opacity="${k2}">${arrow(B.mainRoofRest, B.mainRoof, WARN, 1, 'arrR', 3)}</g><g opacity="${k2b}">${arrow(B.mainLipRest, B.mainLip, WARN, 1, 'arrR', 3)}</g>`;
+  // overview inset (top left, air above the cornea): the whole section, forceps tip on the far capsule, the zoom window boxed
+  const IW = { x: -7.6, y: -13.55, w: 11.2 }, ix = 10, iy = 8, iw = 236, ih = 116, ic = VIEWS.cam({ ...IW, h: IW.w * ih / iw }, iw, ih);
+  const ir = K.section({ st: s1, h: HP, win: { x: IW.x, y: IW.y, w: IW.w, h: IW.w * ih / iw }, step: 0.05, id: 'cI' }), bx = ic.P([W_TUN.x, W_TUN.y]), bw = W_TUN.w * ic.k, bh = W_TUN.w * PH / PW * ic.k;
+  rsv += `<g transform="translate(${ix} ${iy})"><clipPath id="cR_in"><rect x="0" y="0" width="${iw}" height="${ih}" rx="6"/></clipPath><rect x="0" y="0" width="${iw}" height="${ih}" rx="6" fill="#f4f7f9"/>` +
+    `<g clip-path="url(#cR_in)"><g transform="${ic.tf}">${ir.svg}</g><rect x="${bx[0].toFixed(1)}" y="${bx[1].toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="none" stroke="${COL.accent}" stroke-width="1.6" stroke-dasharray="4 3"/></g>` +
+    `<rect x="0" y="0" width="${iw}" height="${ih}" rx="6" fill="none" stroke="#9aa8b4" stroke-width="1.2"/>${htext(7, 16, '全景：鉗尖伸到對側', { size: 12, bold: true, color: '#3c4a57' })}</g>`;
+  // a point on the top of the forceps shaft in the chamber, just left of its label (the shaft's centre line is the instrument axis)
+  const gF = K.instGeom(K.norm(s1), K.norm(s1).inst[0]), uF = -3.55, tF = (uF - rv.r.A.mainPivot[0]) / (G.toPlane(rv.r.pl, gF.bend)[0] - rv.r.A.mainPivot[0]);
+  const shaft = rv.P([uF, lerp(rv.r.A.mainPivot[1], G.toPlane(rv.r.pl, gF.bend)[1], tF)]);
+  let rx = lab('撕囊鉗', 'forceps', PW - 12, 182, [shaft[0], shaft[1] - 13], { side: 'R', color: '#3c4a57' });
+  rx += lab('頂蓋被抬起', 'roof lifted', 14, 168, B.mainRoof, { bold: true, color: WARN, lc: WARN, op: k2 });
+  rx += lab('後唇被壓下', 'posterior lip', PW - 12, 318, B.mainLip, { side: 'R', bold: true, color: WARN, lc: WARN, op: k2b });
+  rx += lab('角膜皺褶（示意）', 'folds', PW - 12, 64, B.mainFolds, { side: 'R', bold: true, color: WARN, lc: WARN, op: k2c });
+  rx += VIEWS.sbar(rv.k, 1, 1) + note('虛線＝器械進來前；變形為機轉示意', 1, PH - 14);
+  return { L: { svg: lv.svg, extra: ex, P: TUN_T }, R: { svg: rsv, extra: rx, P: { title: '器械伸到對側：隧道被撐開（模型）', orient: '左＝周邊　上＝前' } } };
 };
 
 // ---------------------------------------------------------------- 4 CCC 的目標與力學

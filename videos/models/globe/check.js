@@ -165,6 +165,43 @@ ok(CN.cccD >= 5.0 && CN.cccD <= 5.5 && CN.cccD / 2 + 0.25 <= CN.optic / 2, `rhex
   const sw = sec6({ cat: { ...base, zonule: { weak: 1, pull: 1 } } }, 0.1), sr = sec6({ cat: { ...base } }, 0.1), ew = CAT.enface({ st: { cat: { ...base, zonule: { weak: 1, pull: 1 } } } }), er = CAT.enface({ st: { cat: base } });
   const du = sw.A.antPole[0] - sr.A.antPole[0], dy = ew.A.front[1] - er.A.front[1];
   ok(near(du, -Sw.LO[1], 1e-6) && near(dy, Sw.LO[1], 1e-6), `both views move by the same vector (section Δu ${du.toFixed(3)} = −Δy ${(-dy).toFixed(3)})`); }
+// 11.16 an instrument held in the main tunnel (示意; CARD.md 白內障「物理與器械」): the roof is lifted, the posterior lip pressed down and the tunnel
+//       gapes around the shaft. The cornea stays one roof above and one lip below the shaft (not torn into strips), its field is continuous
+//       (a smooth outline, no stair steps), the drawn position is exactly where the rest tissue was moved to, and the folds stay small.
+{ const st = { cat: { main: { cut: 1 }, side: { cut: 1 }, ovd: 1, folds: 1, inst: [{ kind: 'forceps', at: { h: 6, r: 2.0, lift: 0.1 }, open: 0 }] } }, c = CAT.norm(st), def = CAT.deformer(c);
+  const D = def && def.parts && def.parts[0], f = CAT.layersFn(st), a = G.clockDir(12), P = (r, z) => [r * a[0], r * a[1], z];
+  if (!D || !D.fwd) ok(false, 'tunnel deformation: the deformer exposes its parts (roof lift, lip push, forward map)');
+  else {
+    let maxRuns = 0, two = 0, inShaft = 0, jump = 0, incons = 0, n = 0;
+    for (let r = D.rIn - 1.5; r < D.rOut - 0.03; r += 0.04) { let runs = 0, prev = false, pv = null;   // the tunnel and 1.5 mm central to it (folds)
+      for (let z = 10.0; z < 12.6; z += 0.004) { const o = f(P(r, z)), inC = o.cornea < 0; if (inC && !prev) runs++; prev = inC;
+        if (inC && Math.abs(z - D.zLine(r)) < D.rr - 0.015) inShaft++;
+        if (pv !== null && Math.abs(o.cornea - pv) > 0.012) jump++; pv = o.cornea;
+        if (inC) { const q = def(P(r, z)); if (Math.abs(D.fwd(r, q.q[2]) - z) > 2e-3) incons++; n++; } }
+      maxRuns = Math.max(maxRuns, runs); if (runs === 2) two++; }
+    ok(maxRuns <= 2 && two > 10 && inShaft === 0, `held tunnel: at most 2 cornea pieces on each vertical line through the tunnel (roof + lip; ${two} lines with both), none inside the shaft`);
+    ok(jump === 0, `held tunnel: the cornea field is continuous (no step > 0.012 per 0.004 mm${jump ? `; ${jump} steps` : ''}): smooth outline`);
+    ok(incons === 0, `held tunnel: every drawn corneal point maps back to where it was (forward ∘ inverse within 2 µm; ${n} points${incons ? `, ${incons} off` : ''})`);
+    const s = sec6(st, 0.1), lift = s.A.mainRoofRest[1] - s.A.mainRoof[1], push = s.A.mainLip[1] - s.A.mainLipRest[1];
+    ok(lift > 0.2 && push > 0.3, `held tunnel: roof lifted ${lift.toFixed(2)} mm (toward the outer opening), posterior lip pressed ${push.toFixed(2)} mm (toward the inner opening)`);
+    let d2 = 0; for (let r = D.r0 + 0.02; r < D.r1 - 0.02; r += 0.01) d2 = Math.max(d2, Math.abs(D.ue(r + 0.01) - 2 * D.ue(r) + D.ue(r - 0.01)), Math.abs(D.de(r + 0.01) - 2 * D.de(r) + D.de(r - 0.01)));
+    ok(d2 < 0.002, `held tunnel: roof lift and lip push vary smoothly along the tunnel (largest second difference ${(d2 * 1000).toFixed(2)} µm per 0.01 mm)`);
+    const D0 = CAT.deformer(CAT.norm({ cat: { ...st.cat, folds: 0 } })).parts[0];
+    ok(D.fold > 0 && D.fold <= 0.08 && D0.fold === 0, `Descemet folds central to the pressed lip: ${(D.fold * 1000).toFixed(0)} µm (≤ 80 µm, 示意), only when asked for (folds: 1)`); } }
+// 11.17 posterior pressure (st.cat.push, 示意): the lens–iris diaphragm moves forward (0.35 mm, the centre 0.6 mm), the anterior capsule is more
+//       convex, the iris margin still rests on it, and the capsule drawn in the section is the lens's own surface
+{ const p0 = { cat: { ovd: 0.5 } }, p1 = { cat: { ovd: 0.5, push: 1 } }, c1 = CAT.norm(p1), s0 = sec6(p0, 0.1), s1 = sec6(p1, 0.1);
+  const dPole = s0.A.antPole[1] - s1.A.antPole[1], dEq = s0.A['eq+'][1] - s1.A['eq+'][1], endo = G.keyPoints({}).apexZ - T(G.S_APEX);
+  ok(near(dPole, 0.6, 1e-6) && near(dEq, 0.35, 1e-6) && near(endo - (L.za + dPole), 2.12, 0.005), `push: anterior pole forward ${dPole.toFixed(2)} mm, equator ${dEq.toFixed(2)} mm → chamber ${(endo - L.za - dPole).toFixed(2)} mm deep (示意)`);
+  const z = r => CAT.capPt(c1, Math.abs(r), r < 0 ? 12 : 6)[2], ra = fitR([[-1.5, z(-1.5)], [0, z(0)], [1.5, z(1.5)]]);
+  ok(ra < 9.73 - 0.5, `push: anterior capsule more convex (central radius ${ra.toFixed(2)} mm < 9.73)`);
+  const I0 = CAT.irisOf(CAT.norm(p0)), I1 = CAT.irisOf(c1), pr = c1.pupil / 2;
+  ok(near(I1.pm[0] - I0.pm[0], CAT.liftZ(c1, pr), 1e-9) && CAT.liftZ(CAT.norm(p0), pr) === 0, `push: the pupil margin rides forward with the capsule (${CAT.liftZ(c1, pr).toFixed(2)} mm)`);
+  const run = s1.A.capRuns.find(R => R.pts.some(q => Math.abs(q[0]) < 0.05)), q0 = run && run.pts.reduce((b, q) => Math.abs(q[0]) < Math.abs(b[0]) ? q : b);
+  ok(!!q0 && near(q0[1], s1.A.antPole[1], 0.01) && CAT.layersAt(p1, [0, 0, -s1.A.antPole[1] - 0.05]).lens < 0, `push: the capsule line lies on the moved lens (anterior pole v ${q0 ? q0[1].toFixed(2) : '?'} = ${s1.A.antPole[1].toFixed(2)})`); }
+// 11.18 the freed disc taken out: its radial cut goes with it (only the round rhexis edge is drawn)
+{ const n = st => (CAT.enface({ st, id: 'q' }).svg.match(/stroke="#ffe0c2"/g) || []).length;
+  ok(n({ cat: { ccc: { prog: 1, fold: 1, out: 1 } } }) === 1 && n({ cat: { ccc: { prog: 0.5, fold: 1 } } }) === 2, 'microscope: after the disc is out only the rhexis edge is drawn (no radial cut line)'); }
 // 11.15 orientation of the 12–6 section: 12 o'clock on the left, anterior up
 { const pl = G.planes.meridian(6), a = G.toPlane(pl, [0, 3, 10]), b = G.toPlane(pl, [0, -3, 10]); ok(a[0] < 0 && b[0] > 0 && a[1] === -10, '12–6 section: 12 o\'clock on the left, 6 on the right, anterior up'); }
 { const st = { cat: { main: { cut: 1 }, side: { cut: 1 }, ovd: 1, ccc: { prog: 0.3, fold: 1 }, zonule: { weak: 1, pull: 1 }, inst: [{ kind: 'forceps', at: { h: 2.1, r: 2.2, lift: 0.03 } }] } };
