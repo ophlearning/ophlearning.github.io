@@ -137,7 +137,7 @@ DRAW2['1-2'] = T => {
 
 // ---------------------------------------------------------------- 2 Side port 與 OVD
 DRAW2['2-1'] = T => {
-  const f = footSeg(T, 'sideport'), L = f.L, op = frozenOp('sideport', f.tau);
+  const f = footSeg(T, 'sideport', { at0: Math.min(0.3, T.st(1) + 0.6 - FOOTAGE.ev('sideport', 'freeze')) }), L = f.L, op = frozenOp('sideport', f.tau);   // the freeze (blade tip in the chamber) during line 1
   if (op > 0) L.extra = lab('刀尖在前房', 'blade tip', 14, 64, fpt('sideport', 'blade-tip', f.tau), { bold: true, op });
   // model: the side-port blade advancing with the footage (limbus 6.4 s → anterior chamber 7.5 s → out 9.0 s)
   const adv = f.s < ev('blade-out') ? pw([[ev('blade-limbus'), 0], [ev('blade-ac'), 1.15]], f.s) : 0;
@@ -240,7 +240,7 @@ DRAW2['4-2'] = T => {
   const fr = A.front, gp = sv.Q(K.capPt(c, K.graspAt(c).r, K.graspAt(c).h, 0.03));
   const P3 = (x, y) => sv.Q([x, y, L0.za]);
   const f3 = K.capPt(c, X.front[0], X.front[1]);
-  const tEnd = P3(f3[0] + tg[0] * 1.6, f3[1] + tg[1] * 1.6), oEnd = P3(f3[0] + (tg[0] * 0.8 + d[0] * 1.2), f3[1] + (tg[1] * 0.8 + d[1] * 1.2));
+  const tEnd = P3(f3[0] + tg[0] * 2.6, f3[1] + tg[1] * 2.6), oEnd = P3(f3[0] + (tg[0] * 1.4 + d[0] * 1.9), f3[1] + (tg[1] * 1.4 + d[1] * 1.9));
   let ex = `<g opacity="${T.on(1, 0.6) * (1 - T.on(2))}">${arrow(gp, tEnd, COL.accent, 1, 'arrA', 3)}${arrow(gp, oEnd, WARN, 1, 'arrR', 3)}</g>`;
   ex += lab('沿切線拉 → 照著圓走', '', 14, 64, tEnd, { bold: true, color: COL.accent, lc: COL.accent, op: T.on(1) * (1 - T.on(2)) });
   ex += lab('偏外 → 往外跑', '', 14, YB, oEnd, { bold: true, color: WARN, lc: WARN, op: T.on(1) * (1 - T.on(2)) });
