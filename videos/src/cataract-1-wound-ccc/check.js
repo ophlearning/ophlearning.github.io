@@ -30,11 +30,11 @@ const LEDGER = {
   '4-2': { '12': '結構', '1': '結構' },
   '4-3': { '402': 'Yaguchi 2017', '0.2': 'Yaguchi 2017', '0.39': 'Yaguchi 2017', '0.4': 'Yaguchi 2017', '5': 'Fairaq 2025', '6': 'Fairaq 2025', '12': '結構' },
   '5-1': { '0.5': '錄影', '12': '結構' },
-  '5-2': { '3': '錄影', '12': '結構' },
-  '5-3': { '4': '錄影', '12': '結構' },
-  '5-4': { '12': '結構' },
-  '5-5': { '5': '錄影', '4': '錄影', '12': '結構' },
-  '5-6': { '6': '錄影', '3': '錄影', '4': '錄影', '8': '錄影', '0.5': '錄影', '12': '結構' },
+  '5-2': { '3': '錄影', '12': '結構', '1': '結構' },
+  '5-3': { '4': '錄影', '12': '結構', '2': '錄影' },
+  '5-4': { '12': '結構', '1': '結構' },
+  '5-5': { '5': '錄影', '4': '錄影', '12': '結構', '1': '結構' },
+  '5-6': { '6': '錄影', '3': '錄影', '4': '錄影', '8': '錄影', '0.5': '錄影', '12': '結構', '1': '結構' },
   '5-7': { '1': '結構', '2': '結構', '4': '結構', '5': '結構', '00': '結構', '3': '錄影', '8': '錄影' },
   '6-1': { '12': '結構', '1': '結構' },
   '6-2': { '1': '結構', '2': '結構', '3': '結構', '4': '結構', '12': '結構' },
@@ -60,9 +60,14 @@ async function screenText() {   // all text drawn on screen per segment, at 60 %
         for (const t of document.querySelectorAll('#stage text')) if (!t.classList.contains('hdr')) set.add(t.textContent); }
       r[s.id] = [...set]; }
     return r; });
+  // chapter 5: the right panel's state at every tear keyframe (and at the moments another instrument is in the eye), as the page draws it
+  const sync = await p.evaluate(() => { const r = [], segOf = { pass2: '5-4', pass3: '5-5', pass4: '5-6' };
+    for (const [id, c] of Object.entries(FOOTAGE_DEF.clips)) for (const q of ((c.points || {}).grasp || [])) r.push({ seg: segOf[id], s: q.t });
+    for (const [seg, s] of [['5-1', 68], ['5-1', 70], ['5-3', 121], ['5-3', 124], ['5-6', 242], ['5-6', 248], ['5-6', 298], ['5-6', 299]]) r.push({ seg, s, other: 1 });
+    return r.map(q => { const z = SYNC_AT(q.seg, q.s), i = (z.st.cat.inst || [])[0]; return { ...q, view: z.view, hp: z.hp, frontH: z.frontH, prog: z.prog, secSt: z.secSt, inst: i ? { kind: i.kind, via: i.via || 'main', h: i.at && i.at.h } : null }; }); });
   await b.close();
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
-  return out;
+  return { out, sync };
 }
 
 // ---------------------------------------------------------------- 2. narration ↔ model ↔ footage
@@ -122,6 +127,39 @@ function modelChecks(ctx) {
   { const pc = D.clips.pinch, w = pc.points.wrinkle[0].t, pr = D.clips.pass2;
     ok(w >= E.wrinkles && w <= E['wrinkles-gone'] && pc.freeze[0].at === w && pr.freeze[0].at === E['grasp-3'] && pr.points['regrasp-tips'][0].t === E['grasp-3'],
       `wrinkle label measured at ${w} s inside ${E.wrinkles}–${E['wrinkles-gone']} s (frozen); regrasp label on the frozen ${E['grasp-3']} s frame`); }
+  // chapter 5 sync (2026-11-09): the footage keyframes (forceps jaws and cornea centre, source px) → clock hour of the forceps; the tear front
+  // reconstructed from them (the forceps hold the folded flap = the torn arc mirrored about the front, so front φ ≥ ½ grasp φ; front at that
+  // bound, never back; pass1End before pass 2; complete at pass4-out). Re-implemented here and compared with what the page draws (SYNC_AT).
+  { const cc = P.ccc, m12 = v => ((v % 12) + 12) % 12, dH = (a, b) => Math.abs(m12(a - b + 6) - 6);
+    const hourPx = (p, c) => m12(12 - Math.atan2(p[0] - c[0], p[1] - c[1]) * 180 / Math.PI / 30);
+    const keys = []; for (const c of Object.values(D.clips)) { const g = (c.points || {}).grasp, k = (c.points || {}).cornea; if (g) g.forEach((q, i) => keys.push({ s: q.t, h: hourPx(q.p, k[i].p) })); }
+    keys.sort((a, b) => a.s - b.s); let prev = null, M = 0;
+    for (const q of keys) { const r = m12(cc.dir * (q.h - cc.h0)); q.g = prev === null ? r : prev + (m12(r - prev + 6) - 6); prev = q.g; M = Math.max(M, q.g); q.f = Math.max(P.pass1End, M / 2); q.fh = m12(cc.h0 + cc.dir * q.f); }
+    const page = s => ctx.sync.find(z => z.s === s && !z.other), bad = [], badF = [], badV = [], badFold = [];
+    for (const q of keys) { const z = page(q.s);
+      if (!z || !z.inst || z.inst.kind !== 'forceps' || dH(z.inst.h, q.h) > 0.5) bad.push(`${q.s}s footage ${q.h.toFixed(1)} h, model ${z && z.inst ? (+z.inst.h).toFixed(1) : '—'}`);
+      if (!z || z.frontH === null || dH(z.frontH, q.fh) > 0.5) badF.push(`${q.s}s expected ${q.fh.toFixed(1)} h, model ${z && z.frontH !== null ? z.frontH.toFixed(1) : '—'}`);
+      if (!z || z.view !== 'tear' || dH(z.hp, z.frontH) > 0.5 || (z.secSt.cat.inst || []).length) badV.push(`${q.s}s ${z ? z.view : '—'}`);
+      if (!(q.f <= q.g + 0.3 && q.g <= 2 * q.f + 0.3)) badFold.push(`${q.s}s grasp φ ${q.g.toFixed(1)}, front φ ${q.f.toFixed(1)}`); }
+    ok(keys.length >= 40 && !bad.length, `chapter 5: at all ${keys.length} tear keyframes the model's forceps sit at the footage's clock hour (±0.5 h)${bad.length ? '; off: ' + bad.slice(0, 4).join(', ') : ''}`);
+    ok(!badF.length, `chapter 5: the model's tear front at every keyframe is the front reconstructed from the footage (±0.5 h)${badF.length ? '; off: ' + badF.slice(0, 4).join(', ') : ''}`);
+    ok(!badV.length, `chapter 5: while the forceps tear the right panel is the section through the front (±0.5 h) and draws no instrument${badV.length ? '; wrong: ' + badV.slice(0, 4).join(', ') : ''}`);
+    ok(!badFold.length, `chapter 5: every grasp lies on the folded flap (front φ ≤ grasp φ ≤ 2 × front φ)${badFold.length ? '; off: ' + badFold.slice(0, 3).join(', ') : ''}`);
+    // narration: pass 2 tears to the right (temporal, 9 o'clock side); pass 3 goes on; pass 4 finishes and the front meets the start
+    const at = s => { const r = keys.filter(q => q.s <= s); return r.length ? r[r.length - 1] : null; }, e2 = at(E['pass2-out']), e3 = at(E['pass3-out']);
+    const end = ctx.sync.filter(z => !z.other && z.s >= E['pass4-in']).slice(-1)[0];
+    ok(e2 && e2.fh >= 8 && e2.fh <= 10.5 && e3 && e3.f >= e2.f + 1 && e3.f < 11.5 && line(ctx, '5-4', 0).includes('撕到右側') && line(ctx, '5-6', 1).includes('接回起點'),
+      `chapter 5: front at the end of pass 2 at ${e2 ? e2.fh.toFixed(1) : '—'} h (temporal, narration 撕到右側), end of pass 3 ${e3 ? e3.fh.toFixed(1) : '—'} h (not complete; pass 4 接回起點)`);
+    // other instruments: OVD through the side port → side-port section, through the main incision / flap out / pinch → main-incision section,
+    // and the section contains the tunnel the instrument goes through (it enters through its incision in the drawing)
+    const oth = ctx.sync.filter(z => z.other), badI = [];
+    for (const z of oth) { if (!z.inst) { badI.push(`${z.seg} ${z.s}s no instrument`); continue; }
+      const want = z.inst.via === 'side' ? 'side' : 'main', r = z.view === want ? K.section({ st: z.secSt, h: z.hp, win: { x: -8.6, y: -14.5, w: 17.2, h: 11.6 }, step: 0.25, id: 'x' }) : null;
+      if (!r || !r.A[want + 'Pivot'] || !r.A.tip0) badI.push(`${z.seg} ${z.s}s ${z.inst.kind} via ${z.inst.via} in the ${z.view} section`); }
+    ok(oth.length >= 8 && !badI.length, `chapter 5: ${oth.length} moments with the pinching forceps, the cannula or the flap out: each section passes through the incision that instrument uses${badI.length ? '; wrong: ' + badI.join(', ') : ''}`);
+    // the freeze-frame regrasp label points at the measured jaws (the grasp keyframe on that frame)
+    const rg = D.clips.pass2.points['regrasp-tips'][0], gk = D.clips.pass2.points.grasp.find(q => q.t === rg.t);
+    ok(gk && Math.hypot(gk.p[0] - rg.p[0], gk.p[1] - rg.p[1]) <= 3 && rg.t === E['grasp-3'], `regrasp label at the jaws measured on the frozen ${rg.t} s frame (grasp keyframe ${gk ? gk.p.join(', ') : '—'})`); }
   return R;
 }
 
@@ -148,13 +186,15 @@ function ledgerChecks(ctx) {
 const clone = o => JSON.parse(JSON.stringify(o));
 function baseCtx(screen) {
   const text = {}; for (const s of SEGS) text[s.id] = clone(s);
-  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(screen), ledger: clone(LEDGER) };
+  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(screen), ledger: clone(LEDGER), sync: clone(SYNC) };
 }
+let SYNC = null;
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
 (async () => {
-  const screen = await screenText();
+  const { out: screen, sync } = await screenText();
   if (process.argv.includes('--list')) { for (const s of SEGS) if (!s.chapterCard && s.layout !== 'refs') { const t = [s.title || '', ...(s.lines || []), ...(s.keys || []).map(k => k[1]), ...(screen[s.id] || [])];
     console.log(s.id, [...new Set(t.flatMap(numbers))].join(' '), '|', [...new Set(t.flatMap(x => cites(x).map(c => c.all)))].join(', ')); } return; }
+  SYNC = sync;
   const res = runAll(baseCtx(screen));
   let fail = 0; const shown = new Set();
   for (const [c, m] of res) { if (!c) fail++; const key = (c ? 'PASS ' : 'FAIL ') + m; if (!c || !/ledger|has a source|is a reference|citation/.test(m)) console.log(key); else shown.add(m); }
@@ -177,6 +217,12 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['narrated speed wrong', c => { c.foot.clips.pass1.rate = 2; }],
       ['wrinkle label outside the window', c => { c.foot.clips.pinch.points.wrinkle[0].t = 76; }],
       ['narration count wrong', c => { c.text['5-6'].lines[3] = c.text['5-6'].lines[3].replace('夾瓣 8 次', '夾瓣 6 次'); }],
+      ['a grasp keyframe on the other side of the pupil', c => { const q = c.foot.clips.pass3.points.grasp[8], k = c.foot.clips.pass3.points.cornea[8]; q.p = [2 * k.p[0] - q.p[0], 2 * k.p[1] - q.p[1]]; }],
+      ['tear progress spread over the passes by time (the old drawing)', c => { const old = [[74.3, 0], [107.5, 0.06], [134, 0.06], [160.5, 0.5], [184, 0.5], [231.5, 0.88], [273.5, 0.88], [295, 1]];
+        const pw = s => { for (let i = 1; i < old.length; i++) if (s <= old[i][0]) { const [a, va] = old[i - 1], [b, vb] = old[i]; return va + (vb - va) * Math.max(0, Math.min(1, (s - a) / (b - a))); } return 1; };
+        for (const z of c.sync) if (!z.other) z.frontH = (((c.P.ccc.h0 + c.P.ccc.dir * 12 * pw(z.s)) % 12) + 12) % 12; }],
+      ['the OVD through the side port drawn in the main-incision section', c => { for (const z of c.sync) if (z.seg === '5-3') { z.view = 'main'; z.hp = (c.P.main.h + 6) % 12; } }],
+      ['regrasp label off the jaws', c => { c.foot.clips.pass2.points['regrasp-tips'][0].p = [510, 448]; }],
     ];
     let bad = 0;
     for (const [name, mut] of M) { const c = baseCtx(screen); mut(c); const n = runAll(c).filter(r => !r[0]).length; console.log(`${n ? 'PASS' : 'FAIL'} selftest: breaking 「${name}」 → ${n} check(s) fail`); if (!n) bad++; }

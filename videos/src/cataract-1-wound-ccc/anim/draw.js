@@ -3,7 +3,8 @@
 // { svg (clipped to the panel), extra (labels, VIEWS.lab2), P: { title, orient } }. Panels are PW × PH px (video-kit/kit.js).
 // Left: case A footage (术者視角, footage.js) or the model's microscope view; right: the globe model's section through the measured main
 // incision meridian (videos/models/globe/cataract.js), driven by the SAME footage clock: every model state in a footage segment is
-// a function of the source time of the frame on screen (caseAt(s)), so both panels show the same moment.
+// a function of the source time of the frame on screen (caseAt(s)), so both panels show the same moment. Chapter 5 picks the section the moment
+// needs (syncR: the tear front while tearing, the incision an instrument uses otherwise) and adds the model's microscope view as an inset.
 // Case parameters: params.js (CASE). Model numbers and sources: videos/models/globe/CARD.md 白內障.
 // ============================================================================
 const DRAW2 = {};
@@ -31,7 +32,7 @@ const CAT_T = { title: '經主切口的切面（模型）', orient: '左＝主�
 const SIDE_T = { title: '經側切口的切面（模型）', orient: '左＝側切口（約 2 點）　上＝前' };
 const TUN_T = { title: '主切口隧道放大（模型）', orient: '左＝周邊　上＝前' };
 const SCOPE_T = { title: '術者視角　右眼 OD（模型）', orient: '下＝12 點　右＝temporal' };
-const SYNC_T = { title: '同一刻的切面（模型，依錄影時間）', orient: '左＝主切口　上＝前' };
+const SYNC_T = { title: '經主切口的切面（模型，依錄影時間）', orient: '左＝主切口　上＝前' };
 window.PRELOAD_EXTRA = JSON.stringify([CAT_T, SIDE_T, TUN_T, SCOPE_T, SYNC_T]);
 
 // ---------------------------------------------------------------- views: model window → panel (px), anchors mapped to panel px
@@ -59,19 +60,26 @@ const OVDS = Object.keys(EVS).filter(n => /^ovd-refill-\d+$/.test(n)).map(ev).so
 const WIPES = Object.keys(EVS).filter(n => /^wipe-\d+$/.test(n)).map(ev).sort((a, b) => a - b);
 const pw = (keys, s) => { if (s <= keys[0][0]) return keys[0][1]; for (let i = 1; i < keys.length; i++) if (s <= keys[i][0]) { const [a, va] = keys[i - 1], [b, vb] = keys[i]; return va + (vb - va) * ss(a, b, s); } return keys[keys.length - 1][1]; };
 const inPass = s => PASSES.some(([a, b]) => s >= a && s <= b);
+// tear of case A reconstructed from the forceps keyframes (params.js tearTrack, 依鉗子位置重建（示意）): front φ → prog, forceps clock hour
+const TEAR = tearTrack(FOOTAGE_DEF, CASE);
+const OPEN = s => 0.9 * Math.max(0, ...GRASPS.map(g => 1 - Math.abs(s - g) / 0.6));      // the jaws open around each grasp (mm, 示意)
 // model state at source time s of case A (示意 where the recording does not show it: the tear front, the flap shape)
 function caseAt(s) {
-  const prog = pw(CASE.prog, s), cut = pw([[ev('pinch'), 0], [ev('wrinkles-gone'), 0.4], [90, 1]], s), fold = pw([[76, 0], [100, 1]], s), out = pw([[ev('flap-out'), 0], [ev('flap-out-end'), 1]], s);
+  const prog = TEAR.front(s) / 12, cut = pw([[ev('pinch'), 0], [ev('wrinkles-gone'), 0.4], [90, 1]], s), fold = pw([[76, 0], [100, 1]], s), out = pw([[ev('flap-out'), 0], [ev('flap-out-end'), 1]], s);
   const pull = pw([[ev('wrinkles') - 0.4, 0], [ev('wrinkles'), 1], [ev('wrinkles-gone'), 1], [ev('wrinkles-gone') + 0.5, 0]], s);
   const c = { ...BASE, ccc: s >= ev('pinch') ? cccS({ cut, prog, fold, out }) : null, zonule: { weak: 1, pull } };
-  const inst = [];
+  const inst = [], pi = TEAR.passAt(s), gF = TEAR.grasp(s), within = (a, b) => s >= ev(a) && s <= ev(b);
   if (s >= ev('pass1-in') && s < ev('wrinkles-gone')) {        // approach from the main incision, then pinch at the centre
     const k = ss(ev('pass1-in'), ev('pinch'), s);
     inst.push({ kind: 'forceps', at: { h: lerp(CASE.main.h, CASE.ccc.h0, k), r: lerp(4.3, 0.35, k), lift: lerp(0.9, 0.02, k) }, open: 0 });
-  } else if (inPass(s) || (s >= ev('flap-out') && s <= ev('flap-out-end'))) {
+  } else if (pi >= 1 && gF !== null) {                           // passes 2–4: on the folded flap at the footage's clock hour; in / out through the main incision
+    const [a, b] = PASSES[pi], k = ss(a, a + 1.5, s) * (1 - ss(b - 0.4, b, s));
+    inst.push({ kind: 'forceps', at: { h: lerpH(CASE.main.h, TEAR.hourOf(gF), k), r: lerp(4.3, 0.85 * CASE.ccc.r, k), lift: lerp(0.9, 0.03, k) }, open: OPEN(s) * k });
+  } else if (inPass(s) || within('flap-out', 'flap-out-end')) {
     const g = K.graspAt(K.norm({ cat: c }));
     inst.push({ kind: 'forceps', at: c.ccc && c.ccc.out > 0 ? { h: CASE.main.h, r: lerp(1.0, 4.3, c.ccc.out), lift: lerp(0.3, 0.9, c.ccc.out) } : g, open: 0 });
-  }
+  } else if (within('ovd-refill-1', 'ovd-refill-1-end')) inst.push({ kind: 'cannula', via: 'side', at: { h: CASE.side.h, r: 1.2, lift: 0.9 } });
+  else if (within('ovd-refill-3', 'ovd-refill-3-end')) inst.push({ kind: 'cannula', via: 'main', at: { h: CASE.main.h + 6, r: 0.8, lift: 0.9 } });
   c.inst = inst;
   return { cat: c };
 }
@@ -82,18 +90,6 @@ function footSeg(T, clip, o = {}) {
 }
 const fpt = (clip, name, tau) => FOOTAGE.point(clip, name, tau);
 const frozenOp = (clip, tau, d = 0.35) => { const f = (FOOTAGE_DEF.clips[clip].freeze || [])[0]; if (!f) return 0; const a = FOOTAGE.ev(clip, 'freeze'); return ss(a, a + d, tau) * (1 - ss(a + f.dur - d, a + f.dur, tau)); };
-// labels for the synced section: forceps (projected), flap, OVD, main incision
-function secLabels(v, st, op = 1) {
-  let ex = '';
-  const c = K.norm(st);
-  const k0 = ((c.inst || [])[0] || {}).kind;
-  if (v.A.tip0) ex += lab(k0 === 'cannula' ? 'cannula（投影到切面）' : '撕囊鉗（投影到切面）', k0 === 'cannula' ? 'OVD' : 'forceps', PW - 12, 64, v.A.tip0, { side: 'R', color: '#3c4a57', op });
-  if (v.A.mainPivot) ex += lab('主切口', 'main incision', 14, 64, v.A.mainPivot, { op });
-  ex += lab('前房 OVD', '', 14, YB, v.P([-2.2, -(L0.za + 1.0)]), { color: OVD_COL, lc: OVD_COL, op });
-  if (c.ccc && c.ccc.prog > 0.02 && c.ccc.out < 0.5) ex += note('撕囊進度依錄影時間重建（示意）', op, PH - 14);
-  return ex;
-}
-
 // ---------------------------------------------------------------- 片頭
 DRAW2['title'] = T => {
   const R = FOOTAGE.panel('title', 0, { badge: false });
@@ -400,33 +396,80 @@ DRAW2['4-3'] = T => {
   return { L: { svg: sp.svg, extra: sp.extra + note('動畫示意', 1, PH - 14), P: SPLIT_T }, R: { svg: rs, extra: rx, P: PULL_T } };
 };
 
-// ---------------------------------------------------------------- 5 實錄：案例 A 的撕囊 (footage left, synced section right)
-const syncR = (f, extra = '') => { const cv = sec(f.st, W_CAT, 'cR'); return { svg: cv.svg, extra: secLabels(cv, f.st) + extra, P: SYNC_T, cv }; };
-// (labels follow the instrument in the section: cannula while OVD is added, forceps otherwise)
+// ---------------------------------------------------------------- 5 實錄：案例 A 的撕囊 (footage left, the model at the same source time right)
+// Right panel = which section the moment needs, all from caseAt(s) of the frame on screen:
+//   tear  while the forceps tear (passes 1–4): the meridian 0.12 h behind the reconstructed front (K.tearPlane), right = periphery; it turns
+//         with the front. The forceps are not in this plane and are not drawn in it (footer); the inset shows them.
+//   main  OVD through the main incision, the flap taken out of it, the pinch: the main-incision meridian (the instrument enters in-plane).
+//   side  OVD through the side port: the side-port meridian (the cannula enters through the side-port tunnel, in-plane).
+// The inset (top left; bottom right in main / side, where the incision is on the left) is the model's microscope view in the footage's
+// orientation (下＝12 點): the torn edge, the front, the forceps at the footage's clock hour, and the section's footprint (dashed line).
+const W_TEAR = { x: -1.6, y: -12.45, w: 7.8 }, W_INSET = { x: -6.6, y: -6.6, w: 13.2 };
+const TEAR_T = { title: '撕囊前緣的切面（模型，依錄影重建）', orient: '右＝周邊　上＝前' };
+const SIDE_SYNC_T = { title: '經側切口的切面（模型，依錄影時間）', orient: '左＝側切口（約 2 點）　上＝前' };
+window.PRELOAD_EXTRA += JSON.stringify([TEAR_T, SIDE_SYNC_T, '俯視（模型）虛線＝切面＝前緣依鉗子位置重建（示意）；不畫撕囊鉗側切口side port撕囊進度依錄影時間']);
+// the model's microscope view in a small box, with the footprint of the section (u0…u1 along plane hp) and the front
+function inset(st, hp, u0, u1, box, id) {
+  const v = scopeBox(st, W_INSET, id, box), c = K.norm(st), d = G.clockDir(hp), q = u => v.Q([d[0] * u, d[1] * u, L0.zAnt(Math.min(Math.abs(u), L0.Req - 1e-6))]);
+  const a = q(u0), b = q(u1), A = v.A;
+  let o = `<rect x="${box.x - 2}" y="${box.y - 2}" width="${box.w + 4}" height="${box.h + 4}" rx="4" fill="#fff"/>` + v.svg;
+  o += `<g clip-path="url(#${id}_bx)"><path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="#fff" stroke-width="4.5" opacity="0.85"/>` +
+    `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="#1d2733" stroke-width="2" stroke-dasharray="5 3"/>` +
+    (c.ccc && c.ccc.prog > 0.01 && !(c.ccc.out > 0.5) ? dot5(A.front, COL.accent, 4) : '') + `</g>`;
+  o += `<rect x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" fill="none" stroke="#9aa6b1" stroke-width="1.2"/>`;
+  o += htext(box.x + 6, box.y + 16, '俯視（模型）', { size: 12, bold: true, color: '#1d2733' }) + htext(box.x + 6, box.y + box.h - 7, '虛線＝切面', { size: 12, bold: true, color: '#1d2733' });
+  const lx = box.x + 18 + measure('虛線＝切面', 12, true);
+  o += dot5([lx, box.y + box.h - 11.5], COL.accent, 4) + htext(lx + 6, box.y + box.h - 7, '＝前緣', { size: 12, bold: true, color: '#1d2733' });
+  return o;
+}
+const BOX_TL = { x: 10, y: 10, w: 148, h: 148 }, BOX_BR = { x: PW - 160, y: PH - 194, w: 148, h: 148 };
+// the right panel for the state f.st of the frame on screen; view 'tear' | 'main' | 'side'
+function syncR(f, view, o = {}) {
+  const st = f.st, c = K.norm(st), k0 = ((c.inst || [])[0] || {}).kind;
+  if (view === 'tear') {
+    const hp = K.tearPlane(c), cv = sec({ cat: { ...st.cat, inst: [] } }, W_TEAR, 'cR', { hp }), X = K.rhex(c.ccc), rE = X.R(Math.max(0, X.span - 0.12));
+    const e = cv.Q(K.capPt(c, rE, hp)), B = cv.A;
+    let svg = cv.svg + dot5(e, COL.accent);
+    let ex = labNear('撕開的前緣', 'tear front', e, -40, 70, { bold: true, color: COL.accent, lc: COL.accent });
+    ex += labNear('虹膜', 'iris', B['pm+'], 40, -64);
+    ex += labNear('前房 OVD', '', cv.P([1.2, -10.5]), 22, 4, { color: OVD_COL, lc: OVD_COL });
+    ex += lab('赤道', 'equator', PW - 12, YB, B['eq+'], { side: 'R' });
+    ex += VIEWS.sbar(cv.k, 1, 1) + note(o.pass1 ? '撕囊進度依錄影時間重建（示意）；切面不畫撕囊鉗' : '前緣依鉗子位置重建（示意）；切面不畫撕囊鉗', 1, PH - 14);
+    return { svg: svg + inset(st, hp, W_TEAR.x, W_TEAR.x + W_TEAR.w, BOX_TL, 'iR'), extra: ex + (o.extra || ''), P: TEAR_T, hp };
+  }
+  const side = view === 'side', hp = side ? HP_SIDE : HP, cv = sec(st, W_CAT, 'cR', { hp }), A = cv.A;
+  let ex = '';
+  // the instrument: label on its shaft halfway between the tip and the tunnel (in the chamber), text just above and right of it
+  if (cv.r.A.inst0) { const g = cv.r.A.inst0, o0 = g.bend || g.tip, in3 = g.tn.to3(g.tn.int), a = cv.Q(add3(o0, g.axis, 0.5 * [0, 1, 2].reduce((t, i) => t + (in3[i] - o0[i]) * g.axis[i], 0)));   // on the straight shaft, halfway from the bend (forceps) or the tip to the inner opening
+    ex += labNear(k0 === 'cannula' ? 'cannula' : '撕囊鉗', k0 === 'cannula' ? 'OVD' : 'forceps', a, Math.max(20, 180 - a[0]), -44, { color: '#3c4a57' }); }   // text right of the incision label
+  const piv = side ? A.sidePivot : A.mainPivot;
+  if (piv) ex += lab(side ? '側切口' : '主切口', side ? 'side port' : 'main incision', 14, 64, piv);
+  ex += labNear('前房 OVD', '', cv.P([2.8, -(L0.za + 0.9)]), 26, 22, { color: OVD_COL, lc: OVD_COL });
+  return { svg: cv.svg + inset(st, hp, W_CAT.x, W_CAT.x + W_CAT.w, BOX_BR, 'iR'), extra: ex + (o.extra || ''), P: side ? SIDE_SYNC_T : SYNC_T, hp };
+}
 DRAW2['5-1'] = T => {
   const f = footSeg(T, 'pinch', { at0: T.st(2) - FOOTAGE.ev('pinch', 'pinch') }), L = f.L, op = frozenOp('pinch', f.tau);   // the pinch at line 2, the freeze at line 3
   if (op > 0) L.extra = lab('前囊放射狀皺褶', 'capsule wrinkling', 14, 64, fpt('pinch', 'wrinkle', f.tau), { bold: true, lc: '#ffd34d', op }) +
-    lab('撕囊鉗夾住前囊', 'forceps', PW - 12, YB, fpt('pinch', 'forceps-tip', f.tau), { side: 'R', bold: true, op });
-  const R = syncR(f), sh = K.lensShift(K.norm(f.st)).k;
-  R.extra += `<g opacity="${sh}">${htext(PW / 2, PH - 50, '囊袋被拉動（模型示意）', { size: 15, bold: true, color: '#8a3b12', anchor: 'middle' })}</g>`;
+    labNear('撕囊鉗夾住前囊', 'forceps', fpt('pinch', 'forceps-tip', f.tau), 60, 64, { bold: true, op });
+  const sh = K.lensShift(K.norm(f.st)).k;
+  const R = syncR(f, 'main', { extra: `<g opacity="${sh}">${htext(PW / 2 - 60, PH - 50, '囊袋被拉動（模型示意）', { size: 15, bold: true, color: '#8a3b12', anchor: 'middle' })}</g>` });
   return { L, R };
 };
-DRAW2['5-2'] = T => { const f = footSeg(T, 'pass1'); return { L: f.L, R: syncR(f) }; };
+DRAW2['5-2'] = T => { const f = footSeg(T, 'pass1'); return { L: f.L, R: syncR(f, 'tear', { pass1: 1 }) }; };   // pass 1: no forceps keyframes, the front by time (示意)
 DRAW2['5-3'] = T => {
   const f = footSeg(T, 'gap1'), L = f.L;
   const wip = f.s >= ev('wipe-1') && f.s < ev('ovd-refill-1') - 2, ovd = f.s >= ev('ovd-refill-1') && f.s <= ev('ovd-refill-1-end');
   L.extra = htext(14, PH - 14, wip ? '擦切口的血' : ovd ? '經側切口補 OVD' : '', { size: 15, bold: true, color: '#fff' }).replace('stroke="#fff"', 'stroke="#1d2733"');
-  const st = f.st; if (ovd) st.cat.inst = [{ kind: 'cannula', via: 'side', at: { h: CASE.side.h, r: 1.2, lift: 0.9 } }];
-  return { L, R: syncR(f) };
+  return { L, R: syncR(f, 'side') };
 };
 DRAW2['5-4'] = T => {
   const f = footSeg(T, 'pass2', { at0: T.st(2) - FOOTAGE.ev('pass2', 'grasp-3') }), L = f.L, op = frozenOp('pass2', f.tau);   // the regrasp freeze at line 2 (停格)
-  if (op > 0) L.extra = lab('鉗子張開，重新夾', 'regrasp', PW - 12, YB, fpt('pass2', 'regrasp-tips', f.tau), { side: 'R', bold: true, op });
-  // direction cue (line 1): counter-clockwise arc on the footage, centred on the cornea of the frame
+  if (op > 0) L.extra = labNear('鉗子張開，重新夾', 'regrasp', fpt('pass2', 'regrasp-tips', f.tau), 40, -56, { bold: true, op });
+  // direction cue (line 1): counter-clockwise arc on the footage, centred on the cornea of the frame (tracked keyframes)
   const k1 = T.on(1) * (1 - T.on(2));
-  if (k1 > 0) { const c = FOOTAGE.toPanel('pass2', [438, 314], f.tau), r = 92, pts = []; for (let a = 150; a >= -10; a -= 8) { const t = a * Math.PI / 180; pts.push([c[0] + r * Math.cos(t), c[1] + r * Math.sin(t)]); }   // lower left → bottom (12 o'clock) → right: the pass-2 sweep
+  if (k1 > 0) { const c = fpt('pass2', 'cornea', f.tau), r = 92, pts = []; for (let a = 150; a >= -10; a -= 8) { const t = a * Math.PI / 180; pts.push([c[0] + r * Math.cos(t), c[1] + r * Math.sin(t)]); }   // lower left → bottom (12 o'clock) → right: the pass-2 sweep
     L.extra = (L.extra || '') + `<path d="${pathOf(pts)}" fill="none" stroke="#ffd34d" stroke-width="3.2" marker-end="url(#arrM)" opacity="${k1}"/>` + htext(14, PH - 14, '術者看：逆時針', { size: 15, bold: true, color: '#ffd34d', op: k1 }).replace('stroke="#fff"', 'stroke="#1d2733"'); }
-  return { L, R: syncR(f) };
+  return { L, R: syncR(f, 'tear') };
 };
 DRAW2['5-5'] = T => {
   const f = footSeg(T, 'pass3', { at0: T.en(2) + 0.3 - FOOTAGE.ev('pass3', 'pass3-out') }), L = f.L, n = GRASPS.filter(g => g >= ev('pass3-in') && g <= f.s).length;
@@ -434,7 +477,7 @@ DRAW2['5-5'] = T => {
     L.extra = htext(14, PH - 14, '這段夾瓣', { size: 15, bold: true, color: '#fff' }).replace('stroke="#fff"', 'stroke="#1d2733"') +
       Array.from({ length: all }, (_, i) => `<circle cx="${92 + i * 20}" cy="${PH - 19}" r="6.5" fill="${i < n ? '#ffd34d' : 'none'}" stroke="#ffd34d" stroke-width="2"/>`).join(''); }
   else L.extra = htext(14, PH - 14, f.s < ev('ovd-refill-2') ? '擦血' : '補 OVD', { size: 15, bold: true, color: '#fff' }).replace('stroke="#fff"', 'stroke="#1d2733"');
-  return { L, R: syncR(f) };
+  return { L, R: syncR(f, 'tear') };
 };
 DRAW2['5-6'] = T => {
   // three clips in a row: gap3 (6×), pass4 (6×) from line 1, flap (0.5×) from line 2
@@ -442,9 +485,13 @@ DRAW2['5-6'] = T => {
   const [clip, at0] = T.u < t1 ? ['gap3', 0.3] : T.u < t2 ? ['pass4', t1] : ['flap', t2];
   const f = footSeg(T, clip, { at0 }), L = f.L;
   if (clip === 'flap') L.extra = htext(14, PH - 14, '前囊瓣從主切口帶出來', { size: 15, bold: true, color: '#fff', op: FOOTAGE.k('flap', 'flap-out', f.tau, 0.4) }).replace('stroke="#fff"', 'stroke="#1d2733"');
-  if (clip === 'gap3') { const st = f.st; if (f.s >= ev('ovd-refill-3') && f.s <= ev('ovd-refill-3-end')) st.cat.inst = [{ kind: 'cannula', via: 'main', at: { h: CASE.main.h + 6, r: 0.8, lift: 0.9 } }]; }
-  return { L, R: syncR(f) };
+  return { L, R: syncR(f, clip === 'pass4' ? 'tear' : 'main') };
 };
+// for check.js: which section the right panel shows at source time s in a segment, and the model state there
+// (the same choice of view as the DRAW2 functions above; secSt = the state the section draws: no instruments in the tear view)
+window.SYNC_AT = (id, s) => { const view = { '5-1': 'main', '5-3': 'side', '5-2': 'tear', '5-4': 'tear', '5-5': 'tear' }[id] || (s >= ev('pass4-in') && s <= ev('pass4-out') + 1 ? 'tear' : 'main');
+  const st = caseAt(s), c = K.norm(st), X = c.ccc ? K.rhex(c.ccc) : null;
+  return { view, hp: view === 'tear' ? K.tearPlane(c) : view === 'side' ? HP_SIDE : HP, st, secSt: view === 'tear' ? { cat: { ...st.cat, inst: [] } } : st, frontH: X ? X.hf : null, prog: c.ccc ? c.ccc.prog : 0 }; };
 DRAW2['5-7'] = T => {
   // timeline of the capsulorhexis of case A (source seconds 60–305): passes, grasps, OVD, wipes, flap out
   const x0 = 70, x1 = FW - 40, s0 = 60, s1 = 305, X = s => x0 + (s - s0) / (s1 - s0) * (x1 - x0), y = 190;
