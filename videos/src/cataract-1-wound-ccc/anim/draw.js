@@ -1,0 +1,386 @@
+// ============================================================================
+// Drawing of every segment of video ① (text is in segments.js). DRAW2[id](T) returns { L, R } (dual) or { F } (full) / { R } (title):
+// { svg (clipped to the panel), extra (labels, VIEWS.lab2), P: { title, orient } }. Panels are PW × PH px (video-kit/kit.js).
+// Left: case A footage (术者視角, footage.js) or the model's microscope view; right: the globe model's section through the measured main
+// incision meridian (videos/models/globe/cataract.js), driven by the SAME footage clock: every model state in a footage segment is
+// a function of the source time of the frame on screen (caseAt(s)), so both panels show the same moment.
+// Case parameters: params.js (CASE). Model numbers and sources: videos/models/globe/CARD.md 白內障.
+// ============================================================================
+const DRAW2 = {};
+const lab = VIEWS.lab2, K = CATARACT, G = GLOBE;
+const tag = (s, op, col = COL.accent, y = 34) => htext(PW / 2, y, s, { size: 17, bold: true, color: col, anchor: 'middle', op });
+const note = (s, op = 1, y = PH - 14, W = PW) => htext(W - 12, y, s, { size: 13, color: COL.sub, anchor: 'end', op });
+const pathOf = q => 'M' + q.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L');
+const arrow = (a, b, col = COL.accent, op = 1, mk = 'arrA', w = 2.6) => `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="${col}" stroke-width="${w}" fill="none" marker-end="url(#${mk})" opacity="${op}"/>`;
+const circ = (c, r, col, op = 1, dash = '', w = 2) => `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${r.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${w}"${dash ? ` stroke-dasharray="${dash}"` : ''} opacity="${op}"/>`;
+const YB = PH - 48;   // bottom label row (the note row is PH − 14)
+const OVD_COL = '#6a5a9a', CAP_COL = '#1d5d93', WARN = '#b3262c';
+
+// ---------------------------------------------------------------- case states (params.js); model windows (mm: left, top, width)
+const MAIN = { ...CASE.main, cut: 1 }, SIDE = { ...CASE.side, cut: 1 };
+const HP = (CASE.main.h + 6) % 12;            // section plane through the main incision: left = main incision (11 o'clock-ish), right = 5 o'clock-ish
+const HP_SIDE = (CASE.side.h + 6) % 12;       // section through the side port: left = side port
+const BASE = { main: MAIN, side: SIDE, ovd: 1 };
+const cccS = o => ({ ...CASE.ccc, cut: 1, ...o });
+const DONE = { cat: { ...BASE, ccc: cccS({ prog: 1, fold: 1, out: 1 }) } };
+const MIDc = { ...BASE, ccc: cccS({ prog: 0.3, fold: 1 }) };
+const MID = { cat: { ...MIDc, inst: [{ kind: 'forceps', at: K.graspAt(K.norm({ cat: MIDc })) }] } };
+const RUNc = { ...BASE, ccc: cccS({ prog: 0.42, fold: 1, run: 1, runAt: 0.26 }) };
+const RUN = { cat: { ...RUNc, inst: [{ kind: 'forceps', at: { ...K.graspAt(K.norm({ cat: RUNc })), r: 2.5 } }] } };
+const WEAK = { cat: { ...MID.cat, zonule: { weak: 1, pull: 1 } } };
+const W_CAT = { x: -8.6, y: -14.5, w: 17.2 }, W_TUN = { x: -8.3, y: -13.3, w: 6.2 }, W_TEAR = { x: -1.2, y: -12.7, w: 9.8 };
+const W_MID = { x: -8.4, y: -14.2, w: 10.4 };
+const W_SCOPE = { x: -8.0, y: -5.41, w: 16 }, W_SCOPE_IN = { x: -6.2, y: -4.2, w: 12.4 };
+const CAT_T = { title: '經主切口的切面（模型）', orient: '左＝主切口（11 點多）　上＝前' };
+const SIDE_T = { title: '經側切口的切面（模型）', orient: '左＝側切口（約 2 點）　上＝前' };
+const TUN_T = { title: '主切口隧道放大（模型）', orient: '左＝周邊　上＝前' };
+const TEAR_T = { title: '撕囊前緣的切面（模型）', orient: '右＝周邊　上＝前' };
+const SCOPE_T = { title: '術者視角　右眼 OD（模型）', orient: '下＝12 點　右＝temporal' };
+const SYNC_T = { title: '同一刻的切面（模型，依錄影時間）', orient: '左＝主切口　上＝前' };
+window.PRELOAD_EXTRA = JSON.stringify([CAT_T, SIDE_T, TUN_T, TEAR_T, SCOPE_T, SYNC_T]);
+
+// ---------------------------------------------------------------- views: model window → panel (px), anchors mapped to panel px
+const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') r[n] = P(v); return r; };
+function sec(st, win, id, o = {}) {
+  const c = VIEWS.cam(win, PW, PH), h = win.w * PH / PW;
+  const r = K.section({ st, h: o.hp ?? HP, win: { x: win.x, y: win.y, w: win.w, h }, step: o.step || +(win.w / 250).toFixed(4), id });
+  return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A: mapA(r.A, c.P), P: c.P, k: c.k, r, Q: p3 => c.P(G.toPlane(r.pl, p3)) };
+}
+function scope(st, win, id) {
+  const c = VIEWS.cam(win, PW, PH), r = K.enface({ st, id, surgeon: 12 });
+  return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A: mapA(r.A, c.P), P: c.P, k: c.k, r, Q: p3 => c.P(r.M(p3)) };
+}
+// a point on the anterior capsule (lens-local clock hour h, radius r) in a view
+const capP = (v, st, r, h, lift = 0) => v.Q(K.capPt(K.norm(st), r, h, lift));
+// leader anchors inside the lens / chamber of a section (plane coordinates: u along the plane, v = −z)
+const L0 = K.LENS;
+
+// ---------------------------------------------------------------- footage clock → model state (the same events drive both panels)
+const EVS = (() => { const o = {}; for (const c of Object.values(FOOTAGE_DEF.clips)) Object.assign(o, c.events || {}); return o; })();
+const ev = n => { if (EVS[n] === undefined) throw new Error('no footage event ' + n); return EVS[n]; };
+const PASSES = [1, 2, 3, 4].map(i => [ev(`pass${i}-in`), ev(`pass${i}-out`)]);
+const GRASPS = Object.keys(EVS).filter(n => /^grasp-\d+$/.test(n)).map(ev).sort((a, b) => a - b);
+const OVDS = Object.keys(EVS).filter(n => /^ovd-refill-\d+$/.test(n)).map(ev).sort((a, b) => a - b);
+const WIPES = Object.keys(EVS).filter(n => /^wipe-\d+$/.test(n)).map(ev).sort((a, b) => a - b);
+const pw = (keys, s) => { if (s <= keys[0][0]) return keys[0][1]; for (let i = 1; i < keys.length; i++) if (s <= keys[i][0]) { const [a, va] = keys[i - 1], [b, vb] = keys[i]; return va + (vb - va) * ss(a, b, s); } return keys[keys.length - 1][1]; };
+const inPass = s => PASSES.some(([a, b]) => s >= a && s <= b);
+// model state at source time s of case A (示意 where the recording does not show it: the tear front, the flap shape)
+function caseAt(s) {
+  const prog = pw(CASE.prog, s), cut = pw([[ev('pinch'), 0], [ev('wrinkles-gone'), 0.4], [90, 1]], s), fold = pw([[76, 0], [100, 1]], s), out = pw([[ev('flap-out'), 0], [ev('flap-out-end'), 1]], s);
+  const pull = pw([[ev('wrinkles') - 0.4, 0], [ev('wrinkles'), 1], [ev('wrinkles-gone'), 1], [ev('wrinkles-gone') + 0.5, 0]], s);
+  const c = { ...BASE, ccc: s >= ev('pinch') ? cccS({ cut, prog, fold, out }) : null, zonule: { weak: 1, pull } };
+  const inst = [];
+  if (s >= ev('pass1-in') && s < ev('wrinkles-gone')) {        // approach from the main incision, then pinch at the centre
+    const k = ss(ev('pass1-in'), ev('pinch'), s);
+    inst.push({ kind: 'forceps', at: { h: lerp(CASE.main.h, CASE.ccc.h0, k), r: lerp(4.3, 0.35, k), lift: lerp(0.9, 0.02, k) }, open: 0 });
+  } else if (inPass(s) || (s >= ev('flap-out') && s <= ev('flap-out-end'))) {
+    const g = K.graspAt(K.norm({ cat: c }));
+    inst.push({ kind: 'forceps', at: c.ccc && c.ccc.out > 0 ? { h: CASE.main.h, r: lerp(1.0, 4.3, c.ccc.out), lift: lerp(0.3, 0.9, c.ccc.out) } : g, open: 0 });
+  }
+  c.inst = inst;
+  return { cat: c };
+}
+// footage panel + the synced section; at0 = when the clip starts in the segment
+function footSeg(T, clip, o = {}) {
+  const tau = T.u - (o.at0 ?? 0.3), L = FOOTAGE.panel(clip, tau, { badge: o.badge }), st = (o.state || caseAt)(L.s);
+  return { tau, L, st, s: L.s };
+}
+const fpt = (clip, name, tau) => FOOTAGE.point(clip, name, tau);
+const frozenOp = (clip, tau, d = 0.35) => { const f = (FOOTAGE_DEF.clips[clip].freeze || [])[0]; if (!f) return 0; const a = FOOTAGE.ev(clip, 'freeze'); return ss(a, a + d, tau) * (1 - ss(a + f.dur - d, a + f.dur, tau)); };
+// labels for the synced section: forceps (projected), flap, OVD, main incision
+function secLabels(v, st, op = 1) {
+  let ex = '';
+  const c = K.norm(st);
+  const k0 = ((c.inst || [])[0] || {}).kind;
+  if (v.A.tip0) ex += lab(k0 === 'cannula' ? 'cannula（投影到切面）' : '撕囊鉗（投影到切面）', k0 === 'cannula' ? 'OVD' : 'forceps', PW - 12, 64, v.A.tip0, { side: 'R', color: '#3c4a57', op });
+  if (v.A.mainPivot) ex += lab('主切口', 'main incision', 14, 64, v.A.mainPivot, { op });
+  ex += lab('前房 OVD', '', 14, YB, v.P([-2.2, -(L0.za + 1.0)]), { color: OVD_COL, lc: OVD_COL, op });
+  if (c.ccc && c.ccc.prog > 0.02 && c.ccc.out < 0.5) ex += note('撕囊進度依錄影時間重建（示意）', op, PH - 14);
+  return ex;
+}
+
+// ---------------------------------------------------------------- 片頭
+DRAW2['title'] = T => {
+  const R = FOOTAGE.panel('title', 0, { badge: false });
+  R.extra = note('案例 A：撕囊鉗夾著前囊瓣（錄影 3:12）', 1, PH - 14);
+  return { R };
+};
+
+// ---------------------------------------------------------------- 1 目標
+DRAW2['1-1'] = T => {
+  const sv = scope(DONE, W_SCOPE, 'sL'), A = sv.A, cv = sec(DONE, W_CAT, 'cR'), B = cv.A;
+  const k1 = T.on(1), k2 = T.on(2), k3 = T.on(3), k4 = T.on(4);
+  let ex = lab('側切口', 'side port', 14, 120, A.sideExt, { bold: true, op: ss(0, 1, k1) });
+  ex += lab('主切口', 'main incision', PW - 12, YB, A.mainExt, { side: 'R', bold: true, op: k2 });
+  ex += lab('撕囊邊緣', 'CCC edge', PW - 12, 64, A.edge6 || sv.P([0, -2.625]), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: k4 });
+  // optic outline (6.0 mm) under the rhexis edge
+  ex += `<g opacity="${k4}">${circ(sv.P([0, 0]), CASE.optic / 2 * sv.k, '#2463eb', 0.9, '6 4', 1.8)}</g>` + lab(`IOL optic ${CASE.optic.toFixed(1)} mm`, '', 14, YB, sv.P([-CASE.optic / 2 * 0.71, CASE.optic / 2 * 0.71]), { color: '#2463eb', lc: '#2463eb', op: k4 });
+  let rx = lab('主切口', 'main incision', 14, 64, B.mainPivot || B.mainExt, { bold: true, op: k2 });
+  rx += lab('前房 OVD', '', 14, 150, cv.P([-2.4, -(L0.za + 1.1)]), { color: OVD_COL, lc: OVD_COL, op: k3 });
+  rx += lab('撕囊後的開口', 'capsulorhexis', PW - 12, 64, cv.P([1.0, -(L0.za + 0.02)]), { side: 'R', color: CAP_COL, lc: CAP_COL, op: k4 });
+  rx += lab('水晶體', 'lens', PW - 12, YB, cv.P([2.2, -(L0.za - 2.0)]), { side: 'R' });
+  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: CAT_T } };
+};
+DRAW2['1-2'] = T => {
+  // still frame: the forceps just inside the main incision (1:06.1), the incision point measured on that frame
+  const tau = FOOTAGE.ev('pinch', 'pass1-in'), L = FOOTAGE.panel('pinch', tau, { badge: false });
+  const k1 = T.on(1), k3 = T.on(3);
+  L.extra = lab('主切口：12 點偏 temporal 約 22°', 'main incision', PW - 12, YB, fpt('pinch', 'incision', tau), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: k1 }) +
+    note('錄影 1:06', 1, 58);
+  const cv = sec({ cat: BASE }, W_CAT, 'cR'), B = cv.A;
+  let rx = lab('主切口（11 點多）', 'main incision', 14, 64, B.mainPivot || B.mainExt, { bold: true, color: COL.accent, lc: COL.accent, op: k1 });
+  rx += lab('小帶', 'zonules', PW - 12, YB, cv.Q([...G.clockDir((HP + 6) % 12).map(v => v * 0.1), 0]) && B['eq+'], { side: 'R', color: COL.amber, lc: COL.amber, bold: true, op: k3 });
+  rx += lab('水晶體', 'lens', PW - 12, 64, cv.P([1.5, -(L0.za - 1.6)]), { side: 'R' });
+  rx += note('本例 zonule 弱：切面的形狀是 routine 模型', k3, PH - 14);
+  return { L, R: { svg: cv.svg, extra: rx, P: CAT_T } };
+};
+
+// ---------------------------------------------------------------- 2 Side port 與 OVD
+DRAW2['2-1'] = T => {
+  const f = footSeg(T, 'sideport'), L = f.L, op = frozenOp('sideport', f.tau);
+  if (op > 0) L.extra = lab('刀尖在前房', 'blade tip', 14, 64, fpt('sideport', 'blade-tip', f.tau), { bold: true, op });
+  // model: the side-port blade advancing with the footage (limbus 6.4 s → anterior chamber 7.5 s → out 9.0 s)
+  const adv = f.s < ev('blade-out') ? pw([[ev('blade-limbus'), 0], [ev('blade-ac'), 1.15]], f.s) : 0;
+  const cut = pw([[ev('blade-limbus'), 0], [ev('blade-ac'), 1]], f.s);
+  const st = { cat: { side: { ...SIDE, cut }, inst: adv > 0 && f.s < ev('blade-out') ? [{ kind: 'sideblade', adv }] : [] } };
+  const cv = sec(st, W_TUN, 'cR', { hp: HP_SIDE }), B = cv.A;
+  let rx = lab('側切口', 'side port', 14, 64, B.sideInt || B.sideExt || cv.P([W_TUN.x + 2, W_TUN.y + 1]), { bold: true, op: ss(0, 1, cut) });
+  rx += lab('角膜', 'cornea', PW - 12, 64, cv.P([W_TUN.x + 4.6, -(G.keyPoints({}).apexZ - 0.5)]), { side: 'R' });
+  rx += note('寬與長為示意', 1, PH - 14);
+  return { L, R: { svg: cv.svg, extra: rx, P: SIDE_T } };
+};
+DRAW2['2-2'] = T => {
+  const f = footSeg(T, 'ovd'), L = f.L, op = frozenOp('ovd', f.tau);
+  if (op > 0) L.extra = lab('cannula（經側切口）', 'OVD', PW - 12, 64, fpt('ovd', 'cannula-tip', f.tau), { side: 'R', bold: true, op });
+  const ovd = pw([[ev('cannula-in'), 0.05], [ev('fill-1-end'), 0.6], [ev('cannula-2-in'), 0.6], [ev('ovd-end'), 1]], f.s);
+  const inEye = (f.s >= ev('cannula-in') && f.s <= ev('fill-1-end')) || (f.s >= ev('cannula-2-in') && f.s <= ev('ovd-end'));
+  const st = { cat: { main: null, side: SIDE, ovd, inst: inEye ? [{ kind: 'cannula', via: 'side', at: { h: CASE.side.h, r: 1.2, lift: 0.9 } }] : [] } };
+  const cv = sec(st, W_CAT, 'cR', { hp: HP_SIDE }), B = cv.A;
+  let rx = lab('OVD', '', 14, 64, cv.P([0.3, -(L0.za + 1.2)]), { bold: true, color: OVD_COL, lc: OVD_COL });
+  rx += lab('前囊被壓平', 'anterior capsule', PW - 12, 64, cv.P([1.4, -L0.zAnt(1.4)]), { side: 'R', color: CAP_COL, lc: CAP_COL, op: T.on(1) });
+  if (B.tip0) rx += lab('cannula', '', 14, YB, B.tip0, { color: '#3c4a57' });
+  rx += note('切面經側切口；OVD 的擴散為示意', 1, PH - 14);
+  // pressure arrows (line 2): posterior pressure pushes the lens forward → outward force at the tear
+  const k2 = T.on(2) * (1 - T.on(3));
+  rx += `<g opacity="${k2}">${arrow(cv.P([0, -(L0.zp - 0.6)]), cv.P([0, -(L0.zp + 1.4)]), WARN, 1, 'arrR', 3)}${arrow(cv.P([1.6, -(L0.zAnt(1.6) + 0.15)]), cv.P([3.6, -(L0.zAnt(3.6) + 0.15)]), WARN, 1, 'arrR', 3)}</g>` +
+    `<g opacity="${k2}">${htext(PW / 2, PH - 60, '前房淺：後方壓力 → 撕囊往外跑（示意）', { size: 15, bold: true, color: WARN, anchor: 'middle' })}</g>`;
+  return { L, R: { svg: cv.svg, extra: rx, P: SIDE_T } };
+};
+
+// ---------------------------------------------------------------- 3 主切口
+DRAW2['3-1'] = T => {
+  const f = footSeg(T, 'keratome'), L = f.L;
+  L.extra = htext(14, PH - 14, 'keratome 從 12 點附近的透明角膜進入', { size: 14, bold: true, color: '#fff', op: FOOTAGE.k('keratome', 'k-touch', f.tau, 0.4) }).replace('stroke="#fff"', 'stroke="#1d2733"');
+  const adv = f.s < ev('k-out') ? pw([[ev('k-touch'), 0], [ev('k-ac'), 1], [ev('k-out'), 1.25]], f.s) : 0;
+  const cut = pw([[ev('k-touch'), 0], [ev('k-ac'), 1]], f.s);
+  const st = { cat: { side: SIDE, ovd: 1, main: { ...MAIN, cut }, inst: adv > 0 ? [{ kind: 'keratome', adv }] : [] } };
+  const cv = sec(st, W_TUN, 'cR'), B = cv.A, k2 = T.on(2), k3 = T.on(3);
+  let rx = lab('keratome', '', PW - 12, 64, B.tip0 || cv.P([W_TUN.x + 3, W_TUN.y + 1.5]), { side: 'R', color: '#3c4a57', op: adv > 0 ? 1 : 0 });
+  rx += lab('三平面隧道', 'tri-planar', 14, 64, B.mainPivot || B.mainExt || cv.P([W_TUN.x + 1, W_TUN.y + 1]), { bold: true, color: COL.accent, lc: COL.accent, op: k2 * ss(0.2, 1, cut) });
+  if (B.mainExt && B.mainInt) rx += `<g opacity="${k3 * ss(0.95, 1, cut)}">${VIEWS.dim(B.mainExt, B.mainInt, COL.accent)}</g>` + lab(`長 ${CASE.main.L.toFixed(1)} mm`, 'tunnel', PW - 12, YB, [(B.mainExt[0] + B.mainInt[0]) / 2, (B.mainExt[1] + B.mainInt[1]) / 2], { side: 'R', color: COL.accent, lc: COL.accent, bold: true, op: k3 * ss(0.95, 1, cut) });
+  rx += VIEWS.sbar(cv.k, 1, 1);
+  return { L, R: { svg: cv.svg, extra: rx, P: TUN_T } };
+};
+DRAW2['3-2'] = T => {
+  // left: microscope close-up of the incision (width and tunnel seen through the cornea); right: the tunnel section with its length
+  const st = { cat: BASE }, e = K.enface({ st, id: 'x' }), mE = e.A.mainExt, mI = e.A.mainInt;
+  const cxm = (mE[0] + mI[0]) / 2, cym = (mE[1] + mI[1]) / 2, win = { x: cxm - 3.4, y: cym - 3.4 * PH / PW, w: 6.8 };
+  const sv = scope(st, win, 'sL'), A = sv.A;
+  const lat = (() => { const d = G.clockDir(CASE.main.h); return [d[1], -d[0]]; })();   // lateral direction (examiner X, Y)
+  const ext = K.tunnelOf(CASE.main).ext, wE = [-1, 1].map(sg => sv.Q([...[0, 1].map(i => ext[0] * G.clockDir(CASE.main.h)[i] + sg * CASE.main.w / 2 * lat[i]), ext[1]]));
+  let ex = `<g opacity="${T.on(0)}">${VIEWS.dim(wE[0], wE[1], '#2463eb')}</g>` + lab(`寬 ${CASE.main.w.toFixed(1)} mm`, 'width', 14, YB, wE[0], { color: '#2463eb', lc: '#2463eb', bold: true, op: T.on(0) });
+  ex += lab('長（隧道）', 'length', 14, 64, A.mainInt, { color: COL.accent, lc: COL.accent, bold: true, op: T.on(0) });
+  ex += note('長≈寬＝方形切口', 1, PH - 14);
+  const cv = sec(st, W_TUN, 'cR'), B = cv.A;
+  let rx = '';
+  if (B.mainExt && B.mainInt) rx += VIEWS.dim(B.mainExt, B.mainInt, COL.accent) + lab(`長 ${CASE.main.L.toFixed(1)} mm`, 'tunnel', PW - 12, 112, [(B.mainExt[0] + B.mainInt[0]) / 2, (B.mainExt[1] + B.mainInt[1]) / 2], { side: 'R', color: COL.accent, lc: COL.accent, bold: true });
+  rx += lab('外口', 'outer', 14, 64, B.mainExt) + lab('內口', 'inner', PW - 12, 64, B.mainInt, { side: 'R' });
+  // evidence card (lines 1–4)
+  const card2 = (y, rows, op) => `<g opacity="${op}"><rect x="${PW - 300}" y="${y}" width="288" height="${16 + rows.length * 24}" rx="8" fill="#fff" stroke="#d3dae1"/>${rows.map((r, i) => text(PW - 288, y + 28 + i * 24, r[0], { size: 14, bold: r[1], color: r[2] || COL.ink })).join('')}</g>`;
+  rx += card2(PH - 150, [['屍眼（Ernest 1994）', true], ['方形 2.0×2.0：525 psi 不漏'], ['長方形 3.2×2.0：13 psi 就漏', false, WARN]], T.on(1) * (1 - T.on(3)));
+  rx += card2(PH - 150, [['臨床', true], ['方形切口 60 人：沒有低眼壓（Masket）'], ['Superior 長隧道：SIA 最大（Sonmez）', false, WARN]], T.on(3));
+  rx += VIEWS.sbar(cv.k, 1, 1);
+  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: TUN_T } };
+};
+DRAW2['3-3'] = T => {
+  // both panels are the tunnel section: left a well-built tunnel at rest; right an instrument pressing down in it (示意 deformation)
+  const at = { h: CASE.main.h + 6, r: 2.0, lift: 0.1 };   // forceps reaching across the pupil (lens-local)
+  const s0 = { cat: { ...BASE } }, s1 = { cat: { ...BASE, inst: [{ kind: 'forceps', at, open: 0 }] } };
+  const lv = sec(s0, W_TUN, 'sL'), rv = sec(s1, W_MID, 'cR', { step: 0.03 }), A = lv.A, B = rv.A;
+  let ex = lab('隧道閉合', 'self-sealing', 14, 64, A.mainPivot || A.mainExt, { bold: true, color: COL.accent, lc: COL.accent });
+  ex += `<g opacity="${T.on(0) * (1 - T.on(1))}">${htext(PW / 2, PH - 50, '太短：前房一淺就漏、虹膜往切口跑', { size: 15, bold: true, color: WARN, anchor: 'middle' })}</g>`;
+  ex += note('模型：三平面隧道', 1, PH - 14);
+  let rx = lab('頂蓋被抬起', 'roof lifted', PW - 12, 64, B.mainPivot ? [B.mainPivot[0] + 6, B.mainPivot[1] - 22] : rv.P([W_MID.x + 2, W_MID.y + 1]), { side: 'R', bold: true, color: WARN, lc: WARN, op: T.on(1) });
+  rx += lab('撕囊鉗', 'forceps', 14, YB, B.tip0 || rv.P([W_MID.x + 5, W_MID.y + 3]), { color: '#3c4a57' });
+  rx += note('器械壓下時的變形為機轉示意', 1, PH - 14);
+  return { L: { svg: lv.svg, extra: ex, P: TUN_T }, R: { svg: rv.svg, extra: rx, P: { title: '器械伸到對側：隧道被撐開（模型）', orient: '左＝主切口　上＝前' } } };
+};
+
+// ---------------------------------------------------------------- 4 CCC 的目標與力學
+DRAW2['4-1'] = T => {
+  const sv = scope(DONE, W_SCOPE_IN, 'sL'), A = sv.A, k2 = T.on(2), k6 = T.on(6);
+  let ex = lab('連續的撕囊邊緣', 'continuous edge', 14, 64, A.edge6, { bold: true, color: COL.accent, lc: COL.accent });
+  ex += `<g opacity="${k2}">${circ(sv.P([0, 0]), CASE.optic / 2 * sv.k, '#2463eb', 0.9, '6 4', 1.8)}</g>`;
+  ex += lab(`IOL optic ${CASE.optic.toFixed(1)} mm`, '', PW - 12, YB, sv.P([CASE.optic / 2 * 0.71, CASE.optic / 2 * 0.71]), { side: 'R', color: '#2463eb', lc: '#2463eb', op: k2 });
+  ex += `<g opacity="${k6}">${VIEWS.dim(sv.P([-CASE.ccc.r, 0]), sv.P([CASE.ccc.r, 0]), COL.accent)}</g>` + lab(`${(2 * CASE.ccc.r).toFixed(2)} mm（目標 5.0–5.5）`, '', 14, YB, sv.P([-CASE.ccc.r * 0.5, 0]), { color: COL.accent, lc: COL.accent, bold: true, op: k6 });
+  // right: tear-front section of the finished rhexis at 3 o'clock: edge, optic edge, zonule insertion (radius ticks)
+  const tv = sec(DONE, W_TEAR, 'cR', { hp: 3 }), y0 = r => -(L0.zAnt(r) + 0.35), tick = (r, col, op = 1) => `<path d="M${tv.P([r, -(L0.zAnt(r) + 0.12)]).join(' ')}L${tv.P([r, y0(r)]).join(' ')}" stroke="${col}" stroke-width="2.6" opacity="${op}"/>`;
+  let rx = tick(CASE.ccc.r, COL.accent) + tick(CASE.optic / 2, '#2463eb', k2) + tick(K.R_AZI, COL.amber, k2);
+  rx += lab('撕囊邊緣', 'CCC edge', 14, 64, tv.P([CASE.ccc.r, y0(CASE.ccc.r)]), { bold: true, color: COL.accent, lc: COL.accent });
+  rx += lab('optic 邊緣', 'optic edge', 14, 112, tv.P([CASE.optic / 2, y0(CASE.optic / 2)]), { color: '#2463eb', lc: '#2463eb', op: k2 });
+  rx += lab('zonule 附著', 'zonular insertion', PW - 12, 64, tv.P([K.R_AZI, y0(K.R_AZI)]), { side: 'R', color: COL.amber, lc: COL.amber, op: k2 });
+  rx += lab('赤道', 'equator', PW - 12, YB, tv.A['eq+'], { side: 'R' });
+  rx += VIEWS.sbar(tv.k, 1, 1);
+  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: tv.svg, extra: rx, P: { title: '3 點方向的子午切面（模型）', orient: '右＝周邊（3 點）　上＝前' } } };
+};
+DRAW2['4-2'] = T => {
+  const sv = scope(MID, W_SCOPE_IN, 'sL'), A = sv.A, c = K.norm(MID), X = K.rhex(c.ccc);
+  // tangent at the front (direction of travel) and an outward-veering pull (line 1)
+  const hf = X.hf, d = G.clockDir(hf), tg = [c.ccc.dir * d[1], -c.ccc.dir * d[0]];
+  const fr = A.front, gp = sv.Q(K.capPt(c, K.graspAt(c).r, K.graspAt(c).h, 0.03));
+  const P3 = (x, y) => sv.Q([x, y, L0.za]);
+  const f3 = K.capPt(c, X.front[0], X.front[1]);
+  const tEnd = P3(f3[0] + tg[0] * 1.6, f3[1] + tg[1] * 1.6), oEnd = P3(f3[0] + (tg[0] * 0.8 + d[0] * 1.2), f3[1] + (tg[1] * 0.8 + d[1] * 1.2));
+  let ex = `<g opacity="${T.on(1, 0.6) * (1 - T.on(2))}">${arrow(gp, tEnd, COL.accent, 1, 'arrA', 3)}${arrow(gp, oEnd, WARN, 1, 'arrR', 3)}</g>`;
+  ex += lab('沿切線拉 → 照著圓走', '', 14, 64, tEnd, { bold: true, color: COL.accent, lc: COL.accent, op: T.on(1) * (1 - T.on(2)) });
+  ex += lab('偏外 → 往外跑', '', 14, YB, oEnd, { bold: true, color: WARN, lc: WARN, op: T.on(1) * (1 - T.on(2)) });
+  ex += lab('撕開的前緣', 'tear front', PW - 12, 64, fr, { side: 'R', bold: true, op: T.on(0) });
+  ex += lab('夾點：瓣上、靠近前緣', 'grasp', 14, 64, gp, { bold: true, color: COL.accent, lc: COL.accent, op: T.on(2) });
+  ex += lab('前囊瓣', 'flap', PW - 12, YB, A.flapEdge, { side: 'R', color: CAP_COL, lc: CAP_COL, op: T.on(2) });
+  const cv = sec(MID, W_CAT, 'cR'), B = cv.A;
+  let rx = lab('撕囊鉗（投影到切面）', 'forceps', PW - 12, 64, B.tip0, { side: 'R', color: '#3c4a57' });
+  rx += lab('主切口', 'main incision', 14, 64, B.mainPivot || B.mainExt);
+  rx += note('撕囊進行到約 110°（模型）', 1, PH - 14);
+  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: CAT_T } };
+};
+DRAW2['4-3'] = T => {
+  const sv = scope(WEAK, W_SCOPE_IN, 'sL'), A = sv.A, cv = sec(WEAK, W_CAT, 'cR'), B = cv.A, k2 = T.on(2);
+  let ex = lab('前囊皺褶（示意）', 'capsule wrinkling', PW - 12, YB, A.striae, { side: 'R', bold: true, color: '#8a3b12', lc: '#8a3b12', op: k2 });
+  ex += lab('同樣的拉法，囊袋跟著動', '', 14, 64, A.front, { color: '#8a3b12', lc: '#8a3b12', op: T.on(1) });
+  ex += note('動畫示意：zonule 弱', 1, PH - 14);
+  let rx = lab('小帶', 'zonules', PW - 12, YB, B['eq+'], { side: 'R', color: COL.amber, lc: COL.amber, bold: true });
+  rx += lab('撕囊鉗（投影到切面）', 'forceps', PW - 12, 64, B.tip0, { side: 'R', color: '#3c4a57' });
+  rx += note('囊袋位移與皺褶為示意', 1, PH - 14);
+  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: CAT_T } };
+};
+
+// ---------------------------------------------------------------- 5 實錄：案例 A 的撕囊 (footage left, synced section right)
+const syncR = (f, extra = '') => { const cv = sec(f.st, W_CAT, 'cR'); return { svg: cv.svg, extra: secLabels(cv, f.st) + extra, P: SYNC_T, cv }; };
+// (labels follow the instrument in the section: cannula while OVD is added, forceps otherwise)
+DRAW2['5-1'] = T => {
+  const f = footSeg(T, 'pinch', { at0: T.st(2) - FOOTAGE.ev('pinch', 'pinch') }), L = f.L, op = frozenOp('pinch', f.tau);   // the pinch at line 2, the freeze at line 3
+  if (op > 0) L.extra = lab('前囊放射狀皺褶', 'capsule wrinkling', 14, 64, fpt('pinch', 'wrinkle', f.tau), { bold: true, lc: '#ffd34d', op }) +
+    lab('撕囊鉗夾住前囊', 'forceps', PW - 12, YB, fpt('pinch', 'forceps-tip', f.tau), { side: 'R', bold: true, op });
+  const R = syncR(f), sh = K.lensShift(K.norm(f.st)).k;
+  R.extra += `<g opacity="${sh}">${htext(PW / 2, PH - 50, '囊袋被拉動（模型示意）', { size: 15, bold: true, color: '#8a3b12', anchor: 'middle' })}</g>`;
+  return { L, R };
+};
+DRAW2['5-2'] = T => { const f = footSeg(T, 'pass1'); return { L: f.L, R: syncR(f) }; };
+DRAW2['5-3'] = T => {
+  const f = footSeg(T, 'gap1'), L = f.L;
+  const wip = f.s >= ev('wipe-1') && f.s < ev('ovd-refill-1') - 2, ovd = f.s >= ev('ovd-refill-1') && f.s <= ev('ovd-refill-1-end');
+  L.extra = htext(14, PH - 14, wip ? '擦切口的血' : ovd ? '經側切口補 OVD' : '', { size: 15, bold: true, color: '#fff' }).replace('stroke="#fff"', 'stroke="#1d2733"');
+  const st = f.st; if (ovd) st.cat.inst = [{ kind: 'cannula', via: 'side', at: { h: CASE.side.h, r: 1.2, lift: 0.9 } }];
+  return { L, R: syncR(f) };
+};
+DRAW2['5-4'] = T => {
+  const f = footSeg(T, 'pass2', { at0: T.st(2) - FOOTAGE.ev('pass2', 'grasp-3') }), L = f.L, op = frozenOp('pass2', f.tau);   // the regrasp freeze at line 2 (停格)
+  if (op > 0) L.extra = lab('鉗子張開，重新夾', 'regrasp', PW - 12, YB, fpt('pass2', 'regrasp-tips', f.tau), { side: 'R', bold: true, op });
+  // direction cue (line 1): counter-clockwise arc on the footage, centred on the cornea of the frame
+  const k1 = T.on(1) * (1 - T.on(2));
+  if (k1 > 0) { const c = FOOTAGE.toPanel('pass2', [438, 314], f.tau), r = 92, pts = []; for (let a = 150; a >= -10; a -= 8) { const t = a * Math.PI / 180; pts.push([c[0] + r * Math.cos(t), c[1] + r * Math.sin(t)]); }   // lower left → bottom (12 o'clock) → right: the pass-2 sweep
+    L.extra = (L.extra || '') + `<path d="${pathOf(pts)}" fill="none" stroke="#ffd34d" stroke-width="3.2" marker-end="url(#arrM)" opacity="${k1}"/>` + htext(14, PH - 14, '術者看：逆時針', { size: 15, bold: true, color: '#ffd34d', op: k1 }).replace('stroke="#fff"', 'stroke="#1d2733"'); }
+  return { L, R: syncR(f) };
+};
+DRAW2['5-5'] = T => {
+  const f = footSeg(T, 'pass3', { at0: T.en(2) + 0.3 - FOOTAGE.ev('pass3', 'pass3-out') }), L = f.L, n = GRASPS.filter(g => g >= ev('pass3-in') && g <= f.s).length;
+  if (f.s >= ev('pass3-in')) { const all = GRASPS.filter(g => g >= ev('pass3-in') && g <= ev('pass3-out')).length;   // one dot per grasp of pass 3, filled once it has happened
+    L.extra = htext(14, PH - 14, '這段夾瓣', { size: 15, bold: true, color: '#fff' }).replace('stroke="#fff"', 'stroke="#1d2733"') +
+      Array.from({ length: all }, (_, i) => `<circle cx="${92 + i * 20}" cy="${PH - 19}" r="6.5" fill="${i < n ? '#ffd34d' : 'none'}" stroke="#ffd34d" stroke-width="2"/>`).join(''); }
+  else L.extra = htext(14, PH - 14, f.s < ev('ovd-refill-2') ? '擦血' : '補 OVD', { size: 15, bold: true, color: '#fff' }).replace('stroke="#fff"', 'stroke="#1d2733"');
+  return { L, R: syncR(f) };
+};
+DRAW2['5-6'] = T => {
+  // three clips in a row: gap3 (6×), pass4 (6×) from line 1, flap (0.5×) from line 2
+  const t1 = T.st(1) - 0.3, t2 = T.st(2) - 1.0;
+  const [clip, at0] = T.u < t1 ? ['gap3', 0.3] : T.u < t2 ? ['pass4', t1] : ['flap', t2];
+  const f = footSeg(T, clip, { at0 }), L = f.L;
+  if (clip === 'flap') L.extra = htext(14, PH - 14, '前囊瓣從主切口帶出來', { size: 15, bold: true, color: '#fff', op: FOOTAGE.k('flap', 'flap-out', f.tau, 0.4) }).replace('stroke="#fff"', 'stroke="#1d2733"');
+  if (clip === 'gap3') { const st = f.st; if (f.s >= ev('ovd-refill-3') && f.s <= ev('ovd-refill-3-end')) st.cat.inst = [{ kind: 'cannula', via: 'main', at: { h: CASE.main.h + 6, r: 0.8, lift: 0.9 } }]; }
+  return { L, R: syncR(f) };
+};
+DRAW2['5-7'] = T => {
+  // timeline of the capsulorhexis of case A (source seconds 60–305): passes, grasps, OVD, wipes, flap out
+  const x0 = 70, x1 = FW - 40, s0 = 60, s1 = 305, X = s => x0 + (s - s0) / (s1 - s0) * (x1 - x0), y = 190;
+  let o = `<rect width="${FW}" height="${PH}" fill="#fff"/>`;
+  o += `<path d="M${x0} ${y}H${x1}" stroke="#cfd6dd" stroke-width="10" stroke-linecap="round"/>`;
+  PASSES.forEach(([a, b], i) => { o += `<path d="M${X(a).toFixed(1)} ${y}H${X(b).toFixed(1)}" stroke="${COL.accent}" stroke-width="10" stroke-linecap="round" opacity="${T.on(1)}"/>` + text((X(a) + X(b)) / 2, y - 22, `第 ${i + 1} 段`, { size: 15, bold: true, color: COL.accent, anchor: 'middle', op: T.on(1) }); });
+  GRASPS.forEach(g => { o += `<circle cx="${X(g).toFixed(1)}" cy="${y}" r="7" fill="#ffd34d" stroke="#1d2733" stroke-width="1.5" opacity="${T.on(1)}"/>`; });
+  OVDS.forEach(g => { o += `<path d="M${X(g).toFixed(1)} ${y + 18}v30" stroke="${OVD_COL}" stroke-width="3" opacity="${T.on(1)}"/>` + text(X(g), y + 66, 'OVD', { size: 13.5, bold: true, color: OVD_COL, anchor: 'middle', op: T.on(1) }); });
+  WIPES.forEach(g => { o += `<path d="M${X(g).toFixed(1)} ${y + 18}v18" stroke="${COL.sub}" stroke-width="3" opacity="${T.on(1)}"/>` + text(X(g), y + 88, '擦血', { size: 13.5, color: COL.sub, anchor: 'middle', op: T.on(1) }); });
+  o += `<path d="M${X(ev('pinch')).toFixed(1)} ${y - 46}v30" stroke="#8a3b12" stroke-width="2.5"/>` + text(X(ev('pinch')) - 4, y - 52, '夾破前囊（起皺）', { size: 13.5, bold: true, color: '#8a3b12' });
+  o += `<path d="M${X(ev('flap-out')).toFixed(1)} ${y - 46}v30" stroke="${CAP_COL}" stroke-width="2.5"/>` + text(X(ev('flap-out')) + 4, y - 52, '取出前囊瓣', { size: 13.5, bold: true, color: CAP_COL, anchor: 'end' });
+  for (let m = 60; m <= 300; m += 60) o += `<path d="M${X(m).toFixed(1)} ${y + 110}v8" stroke="${COL.sub}"/>` + text(X(m), y + 136, `${m / 60}:00`, { size: 13, color: COL.sub, anchor: 'middle' });
+  o += text(x0, y + 160, '錄影時間（分:秒）', { size: 13, color: COL.sub });
+  // legend
+  o += `<g opacity="${T.on(1)}"><path d="M${x0} 50H${x0 + 40}" stroke="${COL.accent}" stroke-width="10" stroke-linecap="round"/>${text(x0 + 52, 55, '撕囊鉗在眼內', { size: 15 })}` +
+    `<circle cx="${x0 + 230}" cy="50" r="7" fill="#ffd34d" stroke="#1d2733" stroke-width="1.5"/>${text(x0 + 244, 55, `夾瓣（${GRASPS.length} 次）`, { size: 15 })}` +
+    `<path d="M${x0 + 400} 38v24" stroke="${OVD_COL}" stroke-width="3"/>${text(x0 + 410, 55, `補 OVD（${OVDS.length} 次）`, { size: 15 })}</g>`;
+  o += `<g opacity="${T.on(2)}">${htext(FW / 2, PH - 40, '重新夾＝控制撕囊的方法；前房一淺，先停下來補 OVD', { size: 19, bold: true, color: COL.accent, anchor: 'middle' })}</g>`;
+  return { F: { svg: o, extra: '', P: { title: '案例 A 撕囊的時間軸（錄影實測）', orient: '每次夾瓣在 2–4 fps 判讀，短暫的可能漏掉' } } };
+};
+
+// ---------------------------------------------------------------- 6 出錯的線索與第一步
+DRAW2['6-1'] = T => {
+  const sv = scope(RUN, W_SCOPE_IN, 'sL'), A = sv.A, c = K.norm(RUN), X = K.rhex(c.ccc);
+  const t = X.span - 0.9, vp = sv.Q(K.capPt(c, X.R(t), (c.ccc.h0 + c.ccc.dir * t + 12) % 12));
+  let ex = lab('前緣偏離圓、往外走', 'veering out', 14, 64, vp, { bold: true, color: WARN, lc: WARN, op: T.on(1) });
+  ex += lab('前緣跑到虹膜下，看不到', 'hidden', 14, YB, A.front, { bold: true, color: WARN, lc: WARN, op: T.on(2) });
+  ex += `<g opacity="${T.on(1)}">${circ(sv.P([0, 0]), CASE.ccc.r * sv.k, COL.accent, 0.7, '5 4', 1.6)}</g>` + note('虛線＝原本的圓；動畫示意', 1, PH - 14);
+  const tv = sec({ cat: RUNc }, W_TEAR, 'cR', { hp: K.tearPlane(K.norm({ cat: RUNc })) }), B = tv.A;
+  const edge = (B && tv.r.A.capRuns || []).filter(r => r.pts[0][0] > 0).map(r => r.pts[0]).sort((a, b) => a[0] - b[0])[0];
+  let rx = edge ? lab('撕開的前囊邊緣', 'capsule edge', 14, 64, tv.P(edge), { bold: true, color: WARN, lc: WARN }) : '';
+  rx += lab('zonule 附著', 'zonular insertion', 14, 112, tv.P([K.R_AZI, -(L0.zAnt(K.R_AZI) + 0.35)]), { color: COL.amber, lc: COL.amber, op: T.on(3) });
+  rx += lab('虹膜', 'iris', PW - 12, 64, tv.P([4.6, -(L0.zAnt(4.6) + 0.5)]), { side: 'R' });
+  rx += lab('赤道', 'equator', PW - 12, YB, B['eq+'], { side: 'R', op: T.on(3) });
+  rx += note('動畫示意：run-out', 1, PH - 14);
+  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: tv.svg, extra: rx, P: TEAR_T } };
+};
+DRAW2['6-2'] = T => {
+  const sv = scope(RUN, W_SCOPE_IN, 'sL'), A = sv.A, c = K.norm(RUN), X = K.rhex(c.ccc), d = G.clockDir(X.hf), tg = [c.ccc.dir * d[1], -c.ccc.dir * d[0]];
+  const g = K.graspAt(c), gp = sv.Q(K.capPt(c, g.r, g.h, 0.03)), g3 = K.capPt(c, g.r, g.h);
+  const back = sv.Q([g3[0] - tg[0] * 1.6, g3[1] - tg[1] * 1.6, L0.za]), cen = sv.Q([g3[0] - tg[0] * 1.6 - d[0] * 1.2, g3[1] - tg[1] * 1.6 - d[1] * 1.2, L0.za]);
+  const k2 = T.on(2);
+  let ex = `<g opacity="${k2}">${arrow(gp, back, COL.accent, 1, 'arrA', 3)}${arrow(back, cen, COL.accent, 1, 'arrA', 3)}</g>`;
+  ex += lab('1 往撕囊的反方向拉', 'backward', 14, 64, back, { bold: true, color: COL.accent, lc: COL.accent, op: k2 });
+  ex += lab('2 再往中央', 'centripetal', 14, YB, cen, { bold: true, color: COL.accent, lc: COL.accent, op: k2 });
+  ex += `<g opacity="${T.on(0) * (1 - T.on(2))}">${htext(PW / 2, 34, '停：不要繼續往前拉', { size: 17, bold: true, color: WARN, anchor: 'middle' })}</g>`;
+  ex += note('Little 法；動畫示意', 1, PH - 14);
+  const st = { cat: { ...RUNc, ovd: 1 } }, cv = sec(st, W_CAT, 'cR'), B = cv.A;
+  let rx = lab('補 OVD：壓平前囊和瓣', '', 14, 64, cv.P([-0.5, -(L0.za + 1.0)]), { bold: true, color: OVD_COL, lc: OVD_COL, op: T.on(1) });
+  rx += lab('水晶體', 'lens', PW - 12, YB, cv.P([2.0, -(L0.za - 2.0)]), { side: 'R' });
+  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: CAT_T } };
+};
+DRAW2['6-3'] = T => {
+  // left: case A frozen on the wrinkled capsule (1:12); right: the model's weak-zonule state with the same kind of pull (示意)
+  const tau = FOOTAGE.ev('pinch', 'freeze') + 1.0, L = FOOTAGE.panel('pinch', tau, { badge: false });
+  L.extra = lab('前囊放射狀皺褶', 'capsule wrinkling', 14, 64, fpt('pinch', 'wrinkle', tau), { bold: true, lc: '#ffd34d' }) + note('案例 A　錄影 1:12', 1, 58);
+  const cv = sec(WEAK, W_CAT, 'cR'), B = cv.A;
+  let rx = lab('撕囊鉗（投影到切面）', 'forceps', PW - 12, 64, B.tip0, { side: 'R', color: '#3c4a57' });
+  rx += lab('小帶', 'zonules', PW - 12, YB, B['eq+'], { side: 'R', color: COL.amber, lc: COL.amber, bold: true });
+  rx += `<g opacity="${T.on(1)}">${htext(PW / 2, PH - 50, '囊袋跟著鉗子移動（模型示意）', { size: 15, bold: true, color: '#8a3b12', anchor: 'middle' })}</g>`;
+  return { L, R: { svg: cv.svg, extra: rx, P: CAT_T } };
+};
+
+// ---------------------------------------------------------------- 7 練習清單
+DRAW2['7'] = T => {
+  const box = (x, y, w, h, title, rows, op) => `<g opacity="${op}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="#f7f9fa" stroke="#d3dae1"/>${text(x + 20, y + 36, title, { size: 19, bold: true, color: COL.accent })}` +
+    rows.map((r, i) => text(x + 20, y + 76 + i * 34, r[0], { size: 16.5, bold: r[1], color: r[2] || COL.ink })).join('') + `</g>`;
+  let o = `<rect width="${FW}" height="${PH}" fill="#fff"/>`;
+  o += box(20, 20, 560, 200, '為什麼要先練', [['CCC：住院醫師自評 3.30／5、完成率 74.4%'], ['（Dooley 2006）', false, COL.sub], ['有 Eyesi 之後 PCR 4.2% → 2.6%（第 1–2 年）'], ['觀察性研究，只能說相關（Ferris 2020）', false, COL.sub]], T.on(0));
+  const items = [['一', '三平面隧道，長度接近寬度'], ['二', 'OVD 撐滿再撕'], ['三', '夾在靠近前緣的瓣上，勤重新夾'], ['四', 'Run-out：停、補 OVD、往反方向拉']];
+  o += `<g opacity="${T.on(3)}"><rect x="600" y="20" width="610" height="${PH - 40}" rx="10" fill="#f7f9fa" stroke="${COL.accent}" stroke-width="2"/>${text(620, 56, 'Wet lab／模擬器：上刀前練這四件事', { size: 19, bold: true, color: COL.accent })}</g>`;
+  items.forEach(([n, s], i) => { const k = i === 0 ? T.on(3) : i < 3 ? T.on(4) : T.on(5);
+    o += `<g opacity="${k}"><circle cx="642" cy="${110 + i * 72}" r="18" fill="${COL.accent}"/>${text(642, 116 + i * 72, n, { size: 17, bold: true, color: '#fff', anchor: 'middle' })}${text(674, 116 + i * 72, s, { size: 19, bold: i === 3 })}</g>`; });
+  return { F: { svg: o, extra: '', P: { title: '練習清單', orient: '' } } };
+};

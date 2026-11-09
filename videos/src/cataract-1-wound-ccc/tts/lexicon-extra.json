@@ -1,0 +1,12 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py",
+ "replace": { "psi": "PSI", "Eyesi": "eyesi" },
+ "words": {
+  "cannula": "K AE1 N Y AH0 L AH0",
+  "capsular": "K AE1 P S AH0 L ER0",
+  "cystotome": "S IH1 S T AH0 T OW2 M",
+  "eyesi": "AY1 S IY0",
+  "keratome": "K EH1 R AH0 T OW2 M",
+  "zonule": "Z OW1 N Y UW0 L"
+ }
+}

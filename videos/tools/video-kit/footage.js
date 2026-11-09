@@ -23,7 +23,7 @@
 //   FOOTAGE.sync(clip, name, u, atU) = the tau that puts event `name` at segment time atU (e.g. T.st(2)): pass it to panel().
 // Geometry: FOOTAGE.toPanel(clip, [x, y], tau) maps source px to panel px through the crop at that moment;
 //   FOOTAGE.point(clip, name, tau) does it for a tracked point. Use these as VIEWS.lab2 anchors.
-// Panel: FOOTAGE.panel(clip, tau) → { svg, extra, P } for DRAW2 (an <image> of the extracted frame, plus a 慢放 / 停格 badge).
+// Panel: FOOTAGE.panel(clip, tau) → { svg, extra, P } for DRAW2 (an <image> of the extracted frame, plus a 慢放 / 加速 / 停格 badge).
 // Frames: node videos/tools/video-kit/footage-cli.js extract videos/src/<video> writes <video>/footage/frames/<clip>/<n>.jpg
 //   (n = source frame number), already cropped and scaled to the panel at the render scale; the page only shows them.
 // Checks: node videos/tools/video-kit/footage-cli.js check videos/src/<video> (check-all.js runs it when anim/footage.js exists).
@@ -116,12 +116,12 @@
   function panel(id, tau, opt = {}) {
     if (typeof PW !== 'undefined' && (PANEL_PX.dual[0] !== PW || PANEL_PX.dual[1] !== PH || PANEL_PX.full[0] !== FW)) throw new Error('footage: PANEL_PX out of step with kit.js');   // eslint-disable-line no-undef
     const c = clipOf(id), src = srcOf(c), [W, H] = panelPx(c), a = at(c, tau), n = frameAt(c, a.s), r = c.rate || 1;
-    const b = opt.badge === false ? '' : a.frozen ? '停格' : r !== 1 ? `慢放 ${r}×` : '';
+    const b = opt.badge === false ? '' : a.frozen ? '停格' : r < 1 ? `慢放 ${r}×` : r > 1 ? `加速 ${r}×` : '';
     return { svg: `<rect width="${W}" height="${H}" fill="#1d2733"/><image href="${href(id, n)}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none"/>` + (b ? badge(b, W) : ''),
       extra: opt.extra || '', P: tag(src), s: a.s, frame: n, frozen: !!a.frozen };
   }
   // every string the page may draw (kit.js preloads the font subset before the first frame)
-  function text() { const D = def(); return D ? Object.values(D.sources).map(s => JSON.stringify(tag(s))).join('') + '慢放停格×0123456789.' : ''; }
+  function text() { const D = def(); return D ? Object.values(D.sources).map(s => JSON.stringify(tag(s))).join('') + '慢放加速停格×0123456789.' : ''; }
 
   // ---------------------------------------------------------------- checks (pure; footage-cli.js adds the frame files)
   // separating axis test: convex polygon vs axis-aligned rect

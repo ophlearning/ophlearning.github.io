@@ -111,7 +111,7 @@
    - 對旁白：`tau = FOOTAGE.sync(clip, '事件', T.u, T.st(2))`，事件就落在第 2 句開始。
    - 事件：`FOOTAGE.ev(clip, 名稱)`（clip 秒數）、`FOOTAGE.k(clip, 名稱, tau, d)`（事件後 d 秒 0→1）。標籤和模型狀態都用它，兩個視角才會對同一格。
    - 標籤定位點：`FOOTAGE.point(clip, 名稱, tau)` 或 `FOOTAGE.toPanel(clip, [x, y], tau)`（source px → 面板 px，用畫面上那一格的裁切）。
-   - 面板標題自動產生：「術者視角　右眼 OD　手術錄影」「下＝12 點（主切口）　右＝temporal」；右上角自動加「慢放 0.5×」或「停格」，右側標籤放在 y 44 以下。
+   - 面板標題自動產生：「術者視角　右眼 OD　手術錄影」「下＝12 點（主切口）　右＝temporal」；右上角自動加「慢放 0.5×」「加速 4×」或「停格」（2026-11-09 起 rate > 1 標「加速」，之前會誤標成慢放），右側標籤放在 y 44 以下。
 5. 出片前 `check-all`；`render.js`、`brief.js` 遇到缺影格直接失敗，不會出現空白面板。
 
 ### 檢查（`footage-cli.js check`；`check-all.js` 看到 `anim/footage.js` 就自動跑）
