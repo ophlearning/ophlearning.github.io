@@ -1,0 +1,30 @@
+{
+  "about": "白內障系列資料夾的檢查：這裡還沒有影片頁（page: null），只有錄影工具（videos/tools/video-kit/footage.js）的示範頁 anim/footage-demo.html。參考圖是裁切後的錄影畫面（不含任何燒進畫面的文字）；錄影不在這台機器上時，ref-check 對這些項目報 SKIP。改了錄影工具或示範頁後跑 node videos/tools/check-all.js videos/src/cataract-series。",
+  "page": null,
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
+  "items": [
+    {
+      "page": "../anim/footage-demo.html",
+      "seg": "demo",
+      "at": "0:0.5",
+      "ref": "footage-demo-L0-0.5.jpg",
+      "approved": "2026-11-09",
+      "note": "Claude 自檢（dpr 1）：慢放 0.5× 的錄影格，裁切後看不到 ZEISS 標誌、左側參數欄與下方兩個框；主切口在下方偏右（約 24°）"
+    },
+    {
+      "page": "../anim/footage-demo.html",
+      "seg": "demo",
+      "at": "1:0.5",
+      "ref": "footage-demo-L1-0.5.jpg",
+      "approved": "2026-11-09",
+      "note": "Claude 自檢（dpr 1）：停格（原始 70.0 s），撕囊鉗標籤指在鉗尖、主切口標籤指在鉗子穿過角膜緣處"
+    }
+  ]
+}

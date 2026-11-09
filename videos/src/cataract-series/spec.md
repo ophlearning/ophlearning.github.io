@@ -97,3 +97,9 @@
   - 查證三篇教學相關文獻（PubMed）：Dooley 2006、Suryawanshi 2016、Ferris 2019。
   - 下一步：① 的模型工作（水晶體、囊袋、zonule、主切口隧道、CCC 狀態與器械），不等錄影先做；錄影到了再做術者視角的剪輯與同步工具。
   - 站長給錄影資料夾。預設環境的網路白名單加 `drive.usercontent.google.com`（站長核准）。下載案例 A 與 PCR 案例，縮圖判讀寫在「錄影清單」。站長確認：案例 A 是 OD、因 zonule 弱放 CTR、③ 用案例 A 略過 CTR 與縫合、機器是 Veritas。
+  - 錄影工具（`videos/tools/video-kit/footage.js`、`footage-cli.js`；用法、檢查與坑見 `videos/tools/README.md`「真實手術錄影」）：
+    - 抽格時就裁掉燒進畫面的文字，抽出的影格只有眼睛；慢放、停格、原始時間的事件、標籤釘在錄影座標，切面用同一組事件同步。
+    - 案例 A 的 overlay 與方位定位點實測後寫在 `footage-sources.js`；主切口在正下方偏 temporal 21–24°。左側參數欄擋住 x < 134，眼睛偏左時（例如 1:04 之後）角膜中心在面板裡會偏左。
+    - 檢查（裁切不碰 overlay、主切口在下方 ±30°、事件在 clip 內、影格齊全且最新）由 `check-all` 自動跑，每條都故意改錯驗證過；錄影不在機器上時報 SKIP。
+    - 示範頁 `anim/footage-demo.html`（案例 A 0:58–1:20，0.5×，70.0 s 停格 3 秒）Claude 自檢：看不到任何文字、12 點在下、標籤指對鉗尖與主切口；參考圖在 `ref/`。
+    - 下一步：① 開工時在 `cataract-1-wound-ccc/anim/footage.js` 從案例 A 0:00–4:55 挑 clip，每個 clip 補定位點。

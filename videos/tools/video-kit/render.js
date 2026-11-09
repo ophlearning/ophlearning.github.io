@@ -7,6 +7,8 @@
 // previous image, and frames are captured through a CDP session with the same device metrics — byte-identical to
 // page.screenshot (checked with --verify), without Playwright's per-shot overhead.
 //   node render.js <page.html> - --verify --from F --to F    compares the fast path with page.screenshot on every frame F..F
+// Footage (footage.js): after a change the page's window.KIT_READY (images decoded) is awaited before the capture; a missing
+// footage frame stops the render (exit 1) instead of putting a blank panel in the video.
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const path = require('path');
@@ -24,14 +26,17 @@ const path = require('path');
   await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 720, deviceScaleFactor: 1.5, mobile: false });   // CDP emulation is per session
   // after a change, wait for two animation frames so the new markup is painted before the CDP capture (without this, a capture
   // under load sometimes caught a partly repainted frame: a few dozen pixels off)
-  const settle = async tt => { window.renderAt(tt); const ch = window.FRAME_CHANGED !== false; if (ch) await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); return ch; };
+  const settle = async tt => { window.renderAt(tt); const ch = window.FRAME_CHANGED !== false;
+    if (ch) { const miss = window.KIT_READY ? await window.KIT_READY : []; if (miss.length) throw new Error('footage frame missing: ' + miss[0] + ' (run videos/tools/video-kit/footage-cli.js extract)');
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
+    return ch; };
   const grab = async () => Buffer.from((await cdp.send('Page.captureScreenshot', { format: 'jpeg', quality: 93 })).data, 'base64');
   if (args.includes('--verify')) {   // fast path (reuse + CDP) against a fresh page.screenshot of every frame
     const from = Number(opt('--from') ?? 0), to = Number(opt('--to') ?? from + 300); let last = null, bad = 0, reused = 0, fresh = 0, lsb = 0, maxLsb = 0;
     for (let i = from; i < to; i++) {
       const changed = await page.evaluate(settle, i / 30);
       if (changed || !last || fresh < 2) { last = await grab(); fresh = changed ? 1 : fresh + 1; } else reused++;
-      await page.evaluate(tt => { window.KIT_NO_REUSE = true; window.renderAt(tt); window.KIT_NO_REUSE = false; }, i / 30);   // the old path: markup set afresh
+      await page.evaluate(async tt => { window.KIT_NO_REUSE = true; window.renderAt(tt); window.KIT_NO_REUSE = false; if (window.KIT_READY) await window.KIT_READY; }, i / 30);   // the old path: markup set afresh
       const ref = await page.screenshot({ type: 'jpeg', quality: 93 });
       if (ref.equals(last)) continue;
       // Chrome's raster can differ in the lowest bits depending on the previous frame (the old path does too), so a byte
@@ -47,7 +52,7 @@ const path = require('path');
     }
     console.log(`verify frames ${from}-${to}: ${to - from - lsb} byte-identical, ${lsb - bad} differ only in the lowest bits (max ${maxLsb}/255), ${bad} visibly different; ${reused} reused`); await browser.close(); process.exit(bad ? 1 : 0);
   }
-  const shot = async (t, file) => { await page.evaluate(tt => window.renderAt(tt), t); return page.screenshot(file ? { path: file, type: 'jpeg', quality: 88 } : { type: 'jpeg', quality: 93 }); };
+  const shot = async (t, file) => { await page.evaluate(async tt => { window.renderAt(tt); if (window.KIT_READY) { const m = await window.KIT_READY; if (m.length) throw new Error('footage frame missing: ' + m[0]); } }, t); return page.screenshot(file ? { path: file, type: 'jpeg', quality: 88 } : { type: 'jpeg', quality: 93 }); };
   if (args.includes('--seg-stills') || opt('--stills')) {
     let ts = opt('--stills') ? opt('--stills').split(',').map(Number) : [];
     if (args.includes('--seg-stills')) { const tl = await page.evaluate(() => window.TL_EXPORT); for (const s of tl) if (s.lines.length) ts.push(+(s.t0 + (s.t1 - s.t0) * 0.35).toFixed(2), +(s.t0 + (s.t1 - s.t0) * 0.9).toFixed(2)); }

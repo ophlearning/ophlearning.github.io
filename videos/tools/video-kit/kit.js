@@ -6,7 +6,9 @@
 // Each video then only provides text (segments.js) and the drawing of each segment (draw.js: DRAW2[id](T) → { L, R } or { F }).
 // Layout: header (chapter tag + title + chapter progress) · two panels (dual) or one wide panel (full) · key box with 來源 · caption bar;
 // chapter cards; title layout; scrolling references with the credit line.
-// Globals read by videos/tools/check-video.js and ref-check.js: PANELS, CONTENT_Y, CONTENT_H, SEGS, DRAW2, renderAt, TL_EXPORT.
+// Globals read by videos/tools/check-video.js and ref-check.js: PANELS, CONTENT_Y, CONTENT_H, SEGS, DRAW2, renderAt, TL_EXPORT;
+// after renderAt, the tools await window.KIT_READY when it is set (footage frames still decoding; see setStage).
+// Real surgical footage as a panel: footage.js (loaded after this file; the video's registry is anim/footage.js).
 // Every label drawn with VIEWS.lab2 is a <g class="lbl"> (check-video.js checks those: inside the panel, no overlap).
 // ============================================================================
 const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
@@ -169,9 +171,19 @@ const KIT = (() => {
   }
   // A frame whose markup is the same as the previous frame's is not put on the page again: the page keeps its pixels, and
   // window.FRAME_CHANGED = false tells render.js to reuse the previous frame's image (identical bytes, no layout or paint).
+  // A new footage frame (footage.js: an <image> with a new href) is new markup, so it is always a change.
   function setStage(stage, html) {
     window.FRAME_CHANGED = !!window.KIT_NO_REUSE || html !== lastHTML || stage.childElementCount === 0;
-    if (window.FRAME_CHANGED) { stage.innerHTML = html; lastHTML = html; }
+    if (window.FRAME_CHANGED) { stage.innerHTML = html; lastHTML = html; window.KIT_READY = imagesReady(stage); }
+  }
+  // Images (footage frames) load asynchronously, but renderAt is synchronous and the tools capture right after it. window.KIT_READY
+  // is a promise that resolves once every <image> in the stage is decoded (to the list of hrefs that failed to load: missing
+  // frames), or null when the stage has no image (every video without footage: nothing changes for them). The tools await it.
+  function imagesReady(stage) {
+    const ims = [...stage.getElementsByTagName('image')];
+    if (!ims.length) return null;
+    return Promise.all(ims.map(im => Promise.race([im.decode().then(() => null), new Promise(r => setTimeout(r, 15000, 'timeout'))])
+      .then(r => r ? im.getAttribute('href') : null, () => im.getAttribute('href')))).then(r => r.filter(Boolean));
   }
   function renderAt(t) {
     t = Math.min(Math.max(t, 0), DURATION - 1e-6);
@@ -221,7 +233,7 @@ const KIT = (() => {
     const pre = document.getElementById('preload') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'preload' }));
     pre.style.cssText = 'position:absolute;left:0;top:0;opacity:0;white-space:nowrap;pointer-events:none;font-family:"Noto Sans TC"';
     const all = SEGS.map(s => (s.lines || []).join('') + (s.title || '') + JSON.stringify(s.keys || '') + JSON.stringify(s.src || '')).join('') + CHAPTERS.join('') + REFS.join('') + JSON.stringify(VIDEO) +
-      Object.values(DRAW2).map(f => f.toString()).join('') + JSON.stringify([SAG_T, COR_T, EV_T]) + (window.PRELOAD_EXTRA || '') + '第章重點來源製作張博淳示意動畫不是手術錄影比例不精確各院做法不同處依院內常規0123456789';
+      Object.values(DRAW2).map(f => f.toString()).join('') + JSON.stringify([SAG_T, COR_T, EV_T]) + (window.PRELOAD_EXTRA || '') + (window.FOOTAGE ? FOOTAGE.text() : '') + '第章重點來源製作張博淳示意動畫不是手術錄影比例不精確各院做法不同處依院內常規0123456789';
     pre.innerHTML = ['400', '500', '700'].map(w => `<span style="font-weight:${w}">${esc(all.replace(/[\x00-\x1f]/g, ''))}</span>`).join('');
     window.renderAt = renderAt;
     renderAt(0);

@@ -15,8 +15,8 @@ const path = require('path');
   if (!tl) { console.error('no segment ' + id); process.exit(2); }
   for (const sp of specs) {
     const [i, f] = sp.split(':').map(Number), [a, e] = tl.lines[i], t = a + (e - a) * f;
-    const t0 = Date.now(); await p.evaluate(tt => window.renderAt(tt), t); const ms = Date.now() - t0;
-    const file = `${out}-${id}-L${i}-${f}.png`; await p.screenshot({ path: file }); console.log(file, `t=${t.toFixed(2)}s render ${ms}ms`);
+    const t0 = Date.now(), miss = await p.evaluate(async tt => { window.renderAt(tt); return window.KIT_READY ? await window.KIT_READY : []; }, t), ms = Date.now() - t0;   // footage: wait for its frames
+    const file = `${out}-${id}-L${i}-${f}.png`; await p.screenshot({ path: file }); console.log(file, `t=${t.toFixed(2)}s render ${ms}ms`, miss.length ? `WARNING ${miss.length} footage frame(s) missing (${miss[0]})` : '');
   }
   await b.close();
   if (errs.length) { console.error('PAGE ERRORS: ' + errs.join(' | ')); process.exit(1); }

@@ -8,6 +8,9 @@
 //                { "page": "…/sample.html", "ref": "…/sample-asian.jpg", "dpr": 2, "crop": null } ] }
 // threshold = share of pixels allowed to differ; tol = brightness difference (0–255) below which a pixel counts as the same.
 // Brightness, not colour, is compared: JPEG halves colour resolution, so thin saturated lines would otherwise always differ. Diff images (changed pixels in red) go to the system temp folder.
+// Footage pages (video-kit/footage.js): the page's window.KIT_READY is awaited after renderAt. An item whose footage frames are not
+// on this machine (gitignored; fresh checkout) is reported as SKIP, and the exit code is 3 when nothing failed but something was
+// skipped (check-all.js shows SKIP, not PASS); --update refuses such an item.
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), os = require('os');
 (async () => {
@@ -17,17 +20,23 @@ const fs = require('fs'), path = require('path'), os = require('os');
   const M = JSON.parse(fs.readFileSync(mpath, 'utf8')), dir = path.dirname(mpath), outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ref-diff-'));
   const b = await chromium.launch();
   const cmp = await b.newPage();
-  let fails = 0;
+  let fails = 0, skips = 0;
   const pages = {};
   for (const it of M.items.filter(x => !only || x.seg === only || path.basename(x.ref) === only || path.basename(x.page) === only)) {
     const dpr = it.dpr || 1, crop = it.crop === undefined ? M.crop : it.crop, key = it.page + '@' + dpr;
     if (!pages[key]) { const p = await b.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: dpr }); p._errs = []; p.on('pageerror', e => p._errs.push(String(e)));
       await p.goto('file://' + path.resolve(dir, it.page)); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300); pages[key] = p; }
     const p = pages[key];
+    let miss = [];
     if (it.seg) { const [i, f] = it.at.split(':').map(Number);
       const t = await p.evaluate(([id, i, f]) => { const s = window.TL_EXPORT.find(x => x.id === id), [a, e] = s.lines[i]; return a + (e - a) * f; }, [it.seg, i, f]);
-      await p.evaluate(tt => window.renderAt(tt), t); }
+      miss = await p.evaluate(async tt => { window.renderAt(tt); return window.KIT_READY ? await window.KIT_READY : []; }, t); }
     const refFile = path.resolve(dir, it.ref), name = it.seg ? `${it.seg} ${it.at}` : path.basename(it.page);
+    if (miss.length) {
+      const why = `${miss.length} footage frame(s) not on this machine (${miss[0]}) — run node videos/tools/video-kit/footage-cli.js extract <video>`;
+      if (update) { console.log('NOT UPDATED', name, why); fails++; } else { console.log('SKIP', name, why); skips++; }
+      continue;
+    }
     if (update) { await p.screenshot({ path: refFile, type: 'jpeg', quality: 90 }); console.log('UPDATED', name, '→', path.relative(process.cwd(), refFile)); continue; }
     if (!fs.existsSync(refFile)) { console.log('MISSING', name, refFile); fails++; continue; }
     const now = (await p.screenshot({ type: 'png' })).toString('base64'), ref = fs.readFileSync(refFile).toString('base64');
@@ -53,6 +62,6 @@ const fs = require('fs'), path = require('path'), os = require('os');
     console.log(msg); if (bad) fails++;
   }
   await b.close();
-  if (!update) console.log(fails ? `${fails} item(s) differ from their reference — show the editor before updating references` : 'all references match');
-  process.exit(fails ? 1 : 0);
+  if (!update) console.log(fails ? `${fails} item(s) differ from their reference — show the editor before updating references` : skips ? `${skips} item(s) skipped (footage not on this machine); the others match` : 'all references match');
+  process.exit(fails ? 1 : skips ? 3 : 0);
 })();

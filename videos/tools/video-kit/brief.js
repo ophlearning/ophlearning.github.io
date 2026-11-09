@@ -32,7 +32,8 @@ const fs = require('fs'), path = require('path');
   for (const x of tl) {
     const s = byId[x.id]; if (!s || s.chapterCard || s.layout === 'refs' || !x.lines.length) continue;
     const name = `${String(++k).padStart(2, '0')}-${strip(s.title || s.id).replace(/[\\/:*?"<>|\s]+/g, '_').slice(0, 40)}.jpg`;
-    await page.evaluate(t => window.renderAt(t), x.t0 + (x.t1 - x.t0) * 0.9);
+    const miss = await page.evaluate(async t => { window.renderAt(t); return window.KIT_READY ? await window.KIT_READY : []; }, x.t0 + (x.t1 - x.t0) * 0.9);   // footage: wait for its frames
+    if (miss.length) errs.push(`footage frame missing in ${x.id}: ${miss[0]} (run videos/tools/video-kit/footage-cli.js extract)`);
     await page.screenshot({ path: path.join(out, name), type: 'jpeg', quality: 85 });
   }
   await browser.close();
