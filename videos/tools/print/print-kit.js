@@ -35,9 +35,11 @@ const PRINT = (() => {
     if (kind === 'axial') return CANTHUS.draw({ state, id });
     // cataract (globe/cataract.js, state { cat: … }): csec = meridional section, o.hp = the clock hour on its RIGHT (left = hp + 6; the
     // video's 12–6 section through the main incision is hp = main.h + 6); computed over the whole visible figure, not only o.win.
+    // Optional (video ②): o.off = the plane's offset from the centre in mm (a cross-section across a groove, as the video's draw.js),
+    // o.cut = instruments drawn where they cross the plane (cut ellipses) instead of projected; both default to the plain section.
     // cscope = microscope view, surgeon at 12 (下＝12 點、右＝temporal for OD)
     if (kind === 'csec') { const h = o.win.h || o.win.w * o.h / o.w, k = Math.min(o.w / o.win.w, o.h / h), vw = o.w / k, vh = o.h / k;
-      return CATARACT.section({ st: state, h: o.hp ?? 6, win: { x: o.win.x - (vw - o.win.w) / 2, y: o.win.y - (vh - h) / 2, w: vw, h: vh }, step: o.step || +(vw / 320).toFixed(4), id }); }
+      return CATARACT.section({ st: state, h: o.hp ?? 6, off: o.off || 0, cut: !!o.cut, win: { x: o.win.x - (vw - o.win.w) / 2, y: o.win.y - (vh - h) / 2, w: vw, h: vh }, step: o.step || +(vw / 320).toFixed(4), id }); }
     if (kind === 'cscope') return CATARACT.enface({ st: state, id, surgeon: 12 });
     throw new Error('unknown view ' + kind);
   }

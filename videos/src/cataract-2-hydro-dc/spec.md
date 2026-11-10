@@ -41,11 +41,11 @@
 
 ## 驗收項目
 - [ ] 系列規格書的「系列層級的驗收」全部適用。
-- [ ] 刻槽＋分核＋四象限（第 3–5 章）至少占全片一半。
-- [ ] 腳踏與面板的數字都有出處或標「示意，依院內機器設定」；面板和錄影同步。
-- [ ] 每段手術步驟有錄影（或動畫示意）與同步切面；器械只從切口進出（phaco tip 經主切口、chopper 經 side port）。
-- [ ] 本例 zonule 弱的地方旁白照實說。
-- [ ] `check-all.js` 全部通過；參考圖 Claude 自檢；出片前交總覽。
+- [x] 刻槽＋分核＋四象限（第 3–5 章）至少占全片一半。（5:19，53.3%）
+- [x] 腳踏與面板的數字都有出處或標「示意，依院內機器設定」；面板和錄影同步。（照文獻的只有 Quesada 2022、Choi 2026、Soule 2026、Scarfone 2026，見 `overview-notes.md`）
+- [x] 每段手術步驟有錄影（或動畫示意）與同步切面；器械只從切口進出（phaco tip 經主切口、chopper 經 side port）。
+- [x] 本例 zonule 弱的地方旁白照實說。
+- [x] `check-all.js` 全部通過；參考圖 Claude 自檢；出片前交總覽。（總覽在 `ref/overview/`，和 mp4 一起交站長，上傳前看）
 
 ## 進度
 - 2026-11-10：規格書訂好章節；下一步：模型（hydrodissection、核的刻槽與分核、phaco tip 與 chopper、腳踏與流體面板）。
@@ -92,3 +92,9 @@
   - 檢查 `check.js` 加 1 條：模型在錄影每個 `piece<n>` 拿走的那一塊、到 `reflex-<n>` 時已清掉、量到的紅光鐘點在模型那一塊的範圍內（±1.5 h），旁白「6 點那一側」；故意改錯 2 個（第 1、2 塊對調、第 2 塊在紅光出現時還在）都抓到，另把 `params.js` 的 `pieceQ` 真的對調跑一次 → FAIL，再改回。量測點（`m-*`）不算標籤，不要求停格。
   - 參考圖重新自檢更新：1-1、1-2、1-3、1-4、2-1、3-2、4-1、4-2、4-3、5-1、5-2、5-3、5-4、6-2（其餘 0.000%）。`check-all` 全部 PASS。
   - 還可以做的（不擋出片）：5-2 旁白第 7 句「順序是示意」現在只對第 3 塊與四塊的分法成立，下次改旁白時可改成「第 3 塊的位置是示意」；4-3 第 0 句右邊在轉核那 2 秒切面形狀會變（真的切面，不好讀）；2-1、5-1、6-1 的面板仍是長條（等院內 Veritas 設定）；總覽（`ref/overview/`）、`publish/`、跟刀單還沒做。
+- 2026-11-10（出片前：總覽、publish、跟刀單；Claude 小助手。旁白、畫面、`anim/`、模型都沒改）：
+  - 總覽：`ref/overview/` 9 張（片頭、第 1–7 章、參考文獻；1920×1080＝影片解析度），從 commit 2f61d98 的乾淨 worktree 截（主目錄的模型同時有人在改），每章挑最有資訊的一刻、放大自檢；`overview-notes.md` 加總覽表、流體數字的原則（照文獻講的只有 Quesada 2022、Choi 2026、Soule 2026、Scarfone 2026，其餘「示意，依院內機器設定」）、案例 A 摘要（OD、zonule 弱 → 後來放 CTR、前半是 D&C、第二道分核看不清楚）與跟刀單說明。
+  - 逐句截圖對照旁白與錄影（1-2、1-3、3-2、3-3、4-2、4-3、5-2、5-4），發現的問題列在 `overview-notes.md`「上傳前可以再看的」：5-2 第 5 句「大塊的核由 chopper 推到中央」比錄影的大塊早一句（錄影當時是第 3 塊）、5-2 停格標籤讀成「red reflex reflex」、5-2 面板標題「約 7 點」vs 旁白「6 點那一側」、5-1「phaco 口」標籤指在 sleeve 的灌流孔、3-3 第 3 句「越來越清楚」只配 6:06 一格、4-2 模型器械交叉 vs 錄影不交叉（已標「不是這一格」）。
+  - `publish/`：`youtube-description.txt`（說明、去識別、流體數字示意、章節、17 篇參考文獻含 DOI［PubMed 逐篇對過 PMID 與 DOI］、製作）、`chapters.txt` 與 `captions.srt`（從 `out/` 複製）、`website-entry-draft.txt`（`yt:'TBD'`、`dur:0` 等 ffprobe；章節秒數照 `chapters.txt`）。
+  - 跟刀單 `print/`（LSs 三張：跟刀清單 8 項、手術步驟圖 8 格、關鍵解剖與數字速查）：狀態照 `anim/draw.js` 同名複製；`print.js --gray` 三張 PASS、`--selftest` PASS；彩色與灰階全頁、密的格子放大自檢。列印工具：`print-kit.js` 的 `csec` 加選用的 `off`、`cut`（垂直槽的橫切面）；`numcheck.js` 讀帳本時一併讀 `...PED`、selftest 在沒有「院內常規」數字的影片改用「示意」；README 補；範例 `upper-lid-levator-rotation-brow`、`cataract-1-wound-ccc` 重跑 PASS。
+  - `check-all` 全部 PASS（2f61d98 的 worktree，加上這次的檔案；參考圖 0.000%）。

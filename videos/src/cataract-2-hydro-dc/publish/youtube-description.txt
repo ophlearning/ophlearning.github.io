@@ -1,0 +1,35 @@
+白內障手術系列的第二支：hydrodissection 與 divide and conquer。每一步先看做完的樣子，再看真實手術錄影與同步的機轉切面，最後看出錯的線索與當下的第一步；一半以上的時間花在刻槽、分核和移除核塊。內容：hydrodissection（cannula 尖端在撕囊邊緣下、慢而連續地打 BSS、越過後囊的波、每打一處就壓中央排液、確認核轉得動；打太多的 capsular block 與第一步）、phaco 腳踏 0 到 3 段與機器面板、刻槽（從切口下方往對側、長到撕囊邊緣內；槽底的 red reflex 越亮表示剩的核越薄；刻太深的線索）、分核（兩支器械放到槽底往兩側推，裂縫貫穿後板再裂到周邊；轉 90° 再刻、再分）、移除核塊（吸住、拉到中央再乳化；occlusion 與 post-occlusion surge）、surge、wound burn 與 zonule 弱的線索和第一步，最後是 wet lab 練習清單。
+
+左邊是右眼 OD、術者坐 12 點的手術錄影，已去識別：只裁出眼睛範圍，畫面上沒有任何文字或病人資訊，也不用聲音；慢放、加速與停格都標在畫面上。右邊是以 mm 建模的機轉切面，和錄影用同一組事件時間同步；示意的部分畫面上有標。這一眼 zonule 弱（後來放了 capsular tension ring），routine 的樣子用模型示範。本例 hydrodissection 從主切口進 3 次，錄影上看得到金色的環（hydrodelineation 的徵象），看不出壓中央與轉核；前半是刻槽＋分核的 divide and conquer，之後第二道槽看不清楚，標準的步驟用模型示範。腳踏與機器面板以 Veritas 為例，面板的數字是示意，請依院內機器設定；照文獻講的只有 Advanced Infusion 加壓 22 mmHg、實驗台的四象限 vacuum 450 mmHg 與 surge 持續時間。刻槽的寬度與深度、槽底亮度沒有文獻數字，畫面標示意。
+
+章節
+0:00 片頭
+0:16 1 Hydrodissection
+1:53 2 腳踏與面板
+2:24 3 刻槽
+4:16 4 分核
+5:44 5 移除核塊
+7:45 6 出錯的線索與第一步
+8:50 7 練習清單
+9:23 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Fine 1992. J Cataract Refract Surg 18:508-12. doi:10.1016/s0886-3350(13)80108-3
+2. Taş 2017. Clin Ophthalmol 12:1-5. doi:10.2147/OPTH.S152227
+3. Blumenthal 2020. Eur J Ophthalmol 30:209-211. doi:10.1177/1120672119827774
+4. Miyake 1998. J Cataract Refract Surg 24:1230-4. doi:10.1016/s0886-3350(98)80017-5
+5. Yeoh 2000. J Cataract Refract Surg 26:1082-4. doi:10.1016/s0886-3350(99)00366-1
+6. Yip 2002. Eur J Ophthalmol 12:333-5. doi:10.1177/112067210201200416
+7. Quesada 2022. Clin Ophthalmol 16:2441-2451. doi:10.2147/OPTH.S363061
+8. Choi 2026. Korean J Ophthalmol 40:505-512. doi:10.3341/kjo.2025.0196
+9. Gimbel 1991. J Cataract Refract Surg 17:281-91. doi:10.1016/s0886-3350(13)80824-3
+10. Fairaq 2025. Saudi J Ophthalmol 39:354-360. doi:10.4103/sjopt.sjopt_96_24
+11. Scarfone 2026. Medicina (Kaunas) 62:298. doi:10.3390/medicina62020298
+12. Soule 2026. J Cataract Refract Surg 52:498-502. doi:10.1097/j.jcrs.0000000000001899
+13. Ernest 2001. J Cataract Refract Surg 27:1829-39. doi:10.1016/s0886-3350(01)00908-7
+14. Sugar 1999. J Cataract Refract Surg 25:688-92. doi:10.1016/s0886-3350(99)00021-8
+15. Wong 2000. J Cataract Refract Surg 26:1374-8. doi:10.1016/s0886-3350(00)00538-1
+16. Dooley 2006. J Cataract Refract Surg 32:604-8. doi:10.1016/j.jcrs.2006.01.045
+17. Suryawanshi 2016. Middle East Afr J Ophthalmol 23:163-7. doi:10.4103/0974-9233.175886
+
+製作　張博淳
