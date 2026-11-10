@@ -64,6 +64,24 @@ const CATARACT_FOOTAGE = {
       { t: 560, cornea: [565, 276], incision: [656, 501] },   // r 256
       { t: 590, cornea: [543, 327], incision: [632, 548] },   // r 251
       { t: 620, cornea: [458, 356], incision: [545, 571] },   // r 244
+      // 2026-11-10 for video ③ (cataract-3-ia-iol), 11:03–19:36: the same ray search + RANSAC circle, each fit overlaid and checked by eye (fits that
+      // locked onto the pupil or the optic were dropped); 1176 s read by eye on a gridded frame (the microscope zoomed out, a swab covers the lower
+      // limbus). The incision is put on the measured bearing (22° temporal of straight down, at 0.95 r); on these frames the I/A handpiece (663–812 s,
+      // 1140–1150 s), the OVD cannula (878 s) and the injector (998 s) cross the limbus at or within ~30 px of that point.
+      { t: 663, cornea: [404, 393], incision: [488, 601] },   // r 236
+      { t: 704, cornea: [424, 366], incision: [509, 577] },   // r 239
+      { t: 748, cornea: [548, 393], incision: [632, 602] },   // r 237
+      { t: 790, cornea: [506, 336], incision: [596, 558] },   // r 252
+      { t: 812, cornea: [581, 426], incision: [661, 624] },   // r 225
+      { t: 826, cornea: [433, 435], incision: [521, 653] },   // r 248
+      { t: 830, cornea: [525, 468], incision: [613, 686] },   // r 247
+      { t: 878, cornea: [371, 307], incision: [462, 533] },   // r 257
+      { t: 998, cornea: [400, 411], incision: [491, 636] },   // r 255
+      { t: 1004, cornea: [424, 440], incision: [521, 681] },  // r 273
+      { t: 1118, cornea: [522, 384], incision: [618, 621] },  // r 269
+      { t: 1140, cornea: [515, 394], incision: [610, 629] },  // r 267
+      { t: 1150, cornea: [556, 416], incision: [648, 644] },  // r 259
+      { t: 1176, cornea: [505, 428], incision: [551, 541] },  // r 128 (zoomed out)
     ],
   },
 };
