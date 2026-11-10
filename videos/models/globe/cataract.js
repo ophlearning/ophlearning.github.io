@@ -51,6 +51,10 @@ function CATARACT_MAKE(G) {
     //   the anterior sheet starts antIn inside the rhexis edge and is full antOut beyond it, the posterior sheet runs from post[0] (clear centre) to
     //   post[1] mm out; hydro-dispersion (Miyoshi 2022) lifts the subincisional part off the capsule by disp mm
     ia: { tipOD: 0.9, portD: 0.3, portBack: 0.45, sleeveOD: 1.5, sleeveBack: 1.6, pivotF: 0.5 },   // coaxial I/A: closed rounded tip, one side port, silicone sleeve
+    iaAng: { ang: 90, L: 1.8, sleeveBack: 0.5, portRoll: -90, play: 0.45 },
+    //   angled coaxial I/A tip (optional, inst.ang): bend angle and bent length (case A 13:34.5 freeze: the bent end ≈ 85–90° to the sleeve, about twice
+    //   the tip's diameter long), sleeve end behind the bend, port turned about the bent part from the convex side (−90: the face toward the cornea when
+    //   the bend points to the surgeon's left, as case A's did), lateral play of the 1.5 mm sleeve in the 2.4 mm main incision ((2.4 − 1.5) / 2): all 示意
     bim: { od: 0.9, bend: 2.0, ang: 30, portBack: 0.35 },          // bimanual I/A handpieces (Colvard 1997 technique; sizes 示意): the aspirator's distal 2 mm is angled
     caught: { sigma: 1.0 },                                         // posterior capsule caught in the port: half-width of the tent (mm)
     iol: { optic: 6.0, overall: 13.0, tc: 0.8, te: 0.3, hw: 0.45, ht: 0.4, sweepFree: 95, sweepBag: 125, root: -35, fold: 80, trailTilt: 12, trailShift: 0.5, sulcusR: 5.6 },
@@ -735,6 +739,26 @@ function CATARACT_MAKE(G) {
       const P = CN.chopper, dn = inst.tipDir ? unit(inst.tipDir) : [0, 0, -1], bend = add(tip, dn, -P.tipL), axis = unit(sub(piv, bend));
       return { kind: 'chopper', via, tn, tip, bend, axis, rr: P.d / 2, pivot: piv, segs: [{ a: tip, b: bend, r: P.d * 0.35 }, { a: bend, b: add(bend, axis, 30), r: P.d / 2 }] };
     }
+    if (inst.kind === 'ia' && inst.ang) {
+      // ③ angled coaxial I/A tip (optional; case A used one for all the cortex, 錄影 11:00.3–14:08.2): the distal A.L mm bent `ang`° off the shaft
+      // (true = A.ang); the handpiece turned `roll`° about its own axis (0 = the bend toward the posterior capsule, + = toward the surgeon's left looking
+      // along the shaft, i.e. the main.h + 3 side; 90 = sideways). The shape is rigid: the shaft direction is solved so that it runs through the
+      // main tunnel pivot with the tip at p (inst.lat: the sleeve off-centre in the incision, ±A.play). The port sits on the bent part portBack behind
+      // the tip, on the convex side of the bend turned by portRoll° about the bent part (default A.portRoll −90: the face toward the cornea when the
+      // bend points to the surgeon's left; inst.port 'in' = the concave side; 示意) — it turns with the handpiece. Sleeve on the shaft from
+      // A.sleeveBack behind the bend. Always through the main incision (the 1.5 mm sleeve does not fit the side port). Sizes 示意 (CARD.md 白內障 ③).
+      const P = CN.ia, A = CN.iaAng, be = (inst.ang === true ? A.ang : inst.ang) * D2R, ph = (inst.roll || 0) * D2R, tm = tunnelOf(c.main || CN.main);   // the sleeve fits the main incision only
+      const piv2 = tm.to3(tm.at(P.pivotF), clamp(inst.lat || 0, -A.play, A.play));                                // lateral play of the sleeve in the incision
+      const shape = d => { const dn = portDir(d, 'down'), sd = unit(G.cross(d, dn)), b = add(dn.map(v => v * Math.cos(ph)), sd, Math.sin(ph)), u = add(d.map(v => v * Math.cos(be)), b, Math.sin(be));
+        return { u, bend: add(tip, u, -A.L) }; };
+      let d = unit(sub(tip, piv2)), res = Infinity, a = 1;   // fixed point d = unit(bend(d) − pivot), damped when it oscillates
+      for (let k = 0; k < 400; k++) { const d2 = unit(sub(shape(d).bend, piv2)), e = len(sub(d2, d)); if (e < 1e-14) break; if (e >= res) a = Math.max(0.02, a * 0.5); res = e; d = unit(add(d, sub(d2, d), a)); }
+      const { u, bend } = shape(d), axis = unit(sub(piv2, bend)), rn = P.tipOD / 2, rs = P.sleeveOD / 2, sEnd = add(bend, axis, A.sleeveBack);
+      const ps = (inst.portRoll ?? (inst.port === 'in' ? 180 : A.portRoll)) * D2R, nO = unit(sub(d, u.map(v => v * Math.cos(be)))), pdir = add(nO.map(v => v * Math.cos(ps)), G.cross(u, nO), Math.sin(ps));
+      const d0 = u.map(v => -v), port = add(add(tip, d0, P.portBack), pdir, rn), pn = pdir[2] > 0.5 ? 'up' : pdir[2] < -0.5 ? 'down' : 'side';
+      return { kind: 'ia', ang: be / D2R, roll: ph / D2R, via: 'main', tn: tm, tip, bend, u, axis, rn, rs, rr: rs, sEnd, port, pdir, portName: pn, occl: inst.occl ?? 0, pivot: piv2,
+        segs: [{ a: tip, b: bend, r: rn }, { a: bend, b: sEnd, r: rn }, { a: sEnd, b: add(bend, axis, 30), r: rs }] };
+    }
     if (inst.kind === 'ia' || inst.kind === 'iaIrr') {
       // ③ coaxial I/A tip (main incision): closed rounded metal tip, one aspiration port portBack behind the tip on the side named by inst.port
       // ('up' toward the cornea, 'side', 'down' toward the posterior capsule), silicone sleeve behind it (holds the incision like the phaco sleeve).
@@ -1250,11 +1274,14 @@ function CATARACT_MAKE(G) {
   // cortex when occluded); the injector nozzle with its bevel
   function drawIaSec(g, P2, pl, seg) {
     const o = [];
-    if (g.kind === 'ia') { const E = P2(g.sEnd), FAR = P2(add(g.tip, g.axis, 30));
+    if (g.kind === 'ia' && g.ang) { const E = P2(g.sEnd), FAR = P2(add(g.bend, g.axis, 30));   // ③ angled tip: sleeve on the shaft, metal shaft to the bend, bent part
+      o.push(`<path d="M${F(E)}L${F(FAR)}" stroke="#6f7f8b" stroke-width="${(2 * g.rs + 0.06).toFixed(3)}"/><path d="M${F(E)}L${F(FAR)}" stroke="${C.sleeve}" stroke-width="${(2 * g.rs).toFixed(3)}"/>`);
+      o.push(seg(g.bend, add(g.sEnd, g.axis, 0.3), g.rn), seg(g.tip, g.bend, g.rn)); }
+    else if (g.kind === 'ia') { const E = P2(g.sEnd), FAR = P2(add(g.tip, g.axis, 30));
       o.push(`<path d="M${F(E)}L${F(FAR)}" stroke="#6f7f8b" stroke-width="${(2 * g.rs + 0.06).toFixed(3)}"/><path d="M${F(E)}L${F(FAR)}" stroke="${C.sleeve}" stroke-width="${(2 * g.rs).toFixed(3)}"/>`);
       o.push(seg(g.tip, add(g.sEnd, g.axis, 0.3), g.rn)); }
     else for (const s of g.segs) o.push(seg(s.a, s.b, s.r));
-    if (g.port) { const nrm = [pl.U[1], -pl.U[0], 0], inPl = Math.abs(dot(g.pdir, nrm)) < 0.5, q = P2(g.port), ax = g.kind === 'iaAsp' ? unit(sub(g.bend, g.tip)) : g.axis, a2 = P2(add(g.port, ax, 0.1));
+    if (g.port) { const nrm = [pl.U[1], -pl.U[0], 0], inPl = Math.abs(dot(g.pdir, nrm)) < 0.5, q = P2(g.port), ax = g.kind === 'iaAsp' || g.ang ? unit(sub(g.bend, g.tip)) : g.axis, a2 = P2(add(g.port, ax, 0.1));
       const ang = Math.atan2(a2[1] - q[1], a2[0] - q[0]) * 180 / Math.PI, ry = inPl ? 0.07 : CN.ia.portD * 0.4;
       o.push(`<ellipse cx="${q[0].toFixed(4)}" cy="${q[1].toFixed(4)}" rx="${(CN.ia.portD / 2).toFixed(3)}" ry="${ry.toFixed(3)}" transform="rotate(${ang.toFixed(2)} ${q[0].toFixed(4)} ${q[1].toFixed(4)})" fill="${g.occl > 0.5 ? C.cortex : '#1c232a'}" stroke="#1c232a" stroke-width="0.8" ${NS}/>`); }
     return o.join('');
@@ -1511,10 +1538,12 @@ function CATARACT_MAKE(G) {
         o.push(`<ellipse cx="${cx.toFixed(4)}" cy="${cy.toFixed(4)}" rx="${(Math.hypot(b[0] - a[0], b[1] - a[1]) / 2).toFixed(4)}" ry="${(g.rn * 0.7).toFixed(4)}" transform="rotate(${ang.toFixed(3)} ${cx.toFixed(4)} ${cy.toFixed(4)})" fill="#2b3640" opacity="0.8"/>`); }
       return o.join(''); }
     if (g.kind === 'ia' || g.kind === 'iaAsp') {   // ③ I/A: the port shows only when it faces up (toward the surgeon); 'side' shows half of it at the edge; 'down' is hidden
-      if (g.kind === 'ia') o.push(band(g.segs[1].a, g.segs[1].b, g.rs, C.sleeve), band(g.tip, add(g.sEnd, g.axis, 0.15), g.rn));
+      if (g.kind === 'ia' && g.ang) { const j = M(g.bend);   // ③ angled tip: sleeve, metal shaft to the bend (rounded joint), bent part
+        o.push(band(g.segs[2].a, g.segs[2].b, g.rs, C.sleeve), band(g.bend, add(g.sEnd, g.axis, 0.15), g.rn), `<circle cx="${j[0].toFixed(4)}" cy="${j[1].toFixed(4)}" r="${g.rn.toFixed(3)}" fill="${C.metal}" stroke="${C.metalS}" stroke-width="0.9" ${NS}/>`, band(g.tip, g.bend, g.rn)); }
+      else if (g.kind === 'ia') o.push(band(g.segs[1].a, g.segs[1].b, g.rs, C.sleeve), band(g.tip, add(g.sEnd, g.axis, 0.15), g.rn));
       else for (const s of g.segs.slice().reverse()) o.push(band(s.a, s.b, s.r));
       const t = M(g.tip); o.push(`<circle cx="${t[0].toFixed(4)}" cy="${t[1].toFixed(4)}" r="${g.rn.toFixed(3)}" fill="${C.metal}" stroke="${C.metalS}" stroke-width="0.9" ${NS}/>`);
-      if (g.portName !== 'down') { const ax = g.kind === 'iaAsp' ? unit(sub(g.bend, g.tip)) : g.axis, side = g.portName === 'side', q = M(side ? add(g.port, g.pdir, -0.05) : g.port), a2 = M(add(g.port, ax, 0.1));
+      if (g.portName !== 'down') { const ax = g.kind === 'iaAsp' || g.ang ? unit(sub(g.bend, g.tip)) : g.axis, side = g.portName === 'side', q = M(side ? add(g.port, g.pdir, -0.05) : g.port), a2 = M(add(g.port, ax, 0.1));
         const ang = Math.atan2(a2[1] - q[1], a2[0] - q[0]) * 180 / Math.PI, ry = side ? 0.05 : CN.ia.portD / 2 * 0.85;
         o.push(`<ellipse cx="${q[0].toFixed(4)}" cy="${q[1].toFixed(4)}" rx="${(CN.ia.portD / 2).toFixed(3)}" ry="${ry.toFixed(3)}" transform="rotate(${ang.toFixed(2)} ${q[0].toFixed(4)} ${q[1].toFixed(4)})" fill="${g.occl > 0.5 ? C.cortex : '#1c232a'}" stroke="#1c232a" stroke-width="0.8" ${NS}/>`); }
       return o.join(''); }
