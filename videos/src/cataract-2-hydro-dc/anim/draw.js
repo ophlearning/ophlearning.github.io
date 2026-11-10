@@ -31,19 +31,30 @@ const CCC = { ...CASE.ccc, cut: 1, prog: 1, fold: 1, out: 1 };
 const BASE = { main: MAIN, side: SIDE, ccc: CCC };
 const W_CAT = { x: -8.6, y: -14.5, w: 17.2 }, W_LENS = { x: -6.4, y: -12.7, w: 12.8 }, W_X = { x: -4.5, y: -11.0, w: 9.0 }, W_TUN = { x: -8.3, y: -13.3, w: 6.2 };
 const W_SCOPE = { x: -6.0, y: -4.06, w: 12 }, W_SCOPE_N = { x: -4.6, y: -3.11, w: 9.2 };
+// hydrodissection microscope view: wide enough (14 mm) to show the main incision the cannula comes through and the rim opposite it
+const W_SCOPE_H = { x: -7.0, y: -3.5, w: 14 };
+// cross-section of the main tunnel (plane across the main-incision meridian, 4.75 mm from the centre: half way along the tunnel)
+const TUN_OFF = 4.75, W_TUNX = { x: -3.2, y: -12.75, w: 6.4 };
 const CAT_T = { title: '經主切口的切面（模型）', orient: '左＝主切口（11 點多）　上＝前' };
 const SYNC_T = { title: '經主切口的切面（模型，依錄影時間）', orient: '左＝主切口　上＝前' };
 const X_T = { title: '垂直槽的橫切面（模型）', orient: '從切口看　右＝temporal　上＝前' };
 const XSYNC_T = { title: '垂直槽的橫切面（模型，依錄影時間）', orient: '從切口看　右＝temporal' };
 const SCOPE_T = { title: '術者視角　右眼 OD（模型）', orient: '下＝12 點　右＝temporal' };
 const SCOPE_SYNC_T = { title: '術者視角（模型，依錄影時間）', orient: '下＝12 點　右＝temporal' };
-const TUN_T = { title: '主切口隧道放大（模型）', orient: '左＝周邊　上＝前' };
+const TUN_T = { title: '主切口隧道的橫切面（模型）', orient: '從切口看　右＝temporal　上＝前' };
+const SCOPE_DEMO_T = { title: '術者視角　右眼 OD（模型示範）', orient: '下＝12 點　右＝temporal' };
+const X2_T = { title: '垂直第二道槽的橫切面（模型）', orient: '從切口看　右＝temporal' };
+const X2SYNC_T = { title: '垂直第二道槽的橫切面（模型，依錄影時間）', orient: '從切口看　右＝temporal' };
 const HYT = h => ({ title: `經注水點的切面（模型）`, orient: `右＝注水點（約 ${Math.round(h)} 點）　上＝前` });
+const PCT = (n, h) => ({ title: `經第 ${n} 塊的切面（模型，依錄影時間）`, orient: `右＝第 ${n} 塊原本的位置（約 ${Math.round(h) || 12} 點）` });
 const MACH_T = { title: '腳踏與機器（示意）', orient: '數字依院內機器設定' };
-window.PRELOAD_EXTRA = JSON.stringify([CAT_T, SYNC_T, X_T, XSYNC_T, SCOPE_T, SCOPE_SYNC_T, TUN_T, HYT(8), HYT(2), MACH_T]) +
-  '經注水點的切面右＝注水點約點上＝前0123456789切面不畫cannula經主切口不在這個切面上俯視模型虛線＝切面腳踏灌流抽吸流量vacuum超音波前房深度不動＋示意依動作推定刻槽移除核塊';
+window.PRELOAD_EXTRA = JSON.stringify([CAT_T, SYNC_T, X_T, XSYNC_T, SCOPE_T, SCOPE_SYNC_T, TUN_T, SCOPE_DEMO_T, X2_T, X2SYNC_T, HYT(8), HYT(2), PCT(1, 6), MACH_T]) +
+  '經注水點的切面右＝注水點約點上＝前0123456789切面不畫cannula經主切口不在這個切面上俯視模型虛線＝切面腳踏灌流抽吸流量vacuum超音波前房深度不動＋示意依動作推定刻槽移除核塊' +
+  '第塊原本的位置大塊看不清楚側鼻溫器械姿勢標準遠端近端這一格錄影推核轉了方向往前推進再分開一次熱水流有沒有堵住針頭矽膠套切口唇變熱帶走往眼內外';
 
-const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') r[n] = P(v); return r; };
+const isPt = v => Array.isArray(v) && v.length === 2 && typeof v[0] === 'number';
+// anchors to panel px: points, and pairs of points (e.g. a crack line [top, bottom] in a section)
+const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (isPt(v)) r[n] = P(v); else if (Array.isArray(v) && v.length === 2 && isPt(v[0]) && isPt(v[1])) r[n] = v.map(P); return r; };
 function sec(st, win, id, o = {}) {
   const W = o.W || PW, H = o.H || PH, c = VIEWS.cam(win, W, H), h = win.w * H / W;
   const r = K.section({ st, h: o.hp ?? HP, off: o.off || 0, cut: !!o.cut, win: { x: win.x, y: win.y, w: win.w, h }, step: o.step || +(win.w / 260).toFixed(4), id });
@@ -61,20 +72,40 @@ function scopeBox(st, win, id, box) {
     A: mapA(r.A, P), P, k: c.k, r, Q: p3 => P(r.M(p3)) };
 }
 const L0 = K.LENS;
+// a point on an instrument's shaft d mm behind its tip (panel px of view v): a label anchor beside the instrument, not at its far end
+const shaftPt = (v, g, d) => v.Q([g.tip[0] + g.axis[0] * d, g.tip[1] + g.axis[1] * d, g.tip[2] + g.axis[2] * d]);
 const onShaft = (v, st, i, yT) => { const c = K.norm(st), g = K.instGeom(c, c.inst[i]), o = g.bend || g.tip; let best = null;
   for (let s = 0; s <= 14; s += 0.1) { const q = v.Q([o[0] + g.axis[0] * s, o[1] + g.axis[1] * s, o[2] + g.axis[2] * s]); if (q[0] > 20 && q[0] < PW - 20 && q[1] > 20 && q[1] < PH - 20 && (!best || Math.abs(q[1] - yT) < Math.abs(best[1] - yT))) best = q; }
   return best; };
 // an inset microscope view (top left of a section panel) with the section's footprint (dashed) — the instruments are drawn here when the
 // section does not contain the incision they come through
 const BOX_TL = { x: 10, y: 10, w: 150, h: 150 }, W_INSET = { x: -6.6, y: -6.6, w: 13.2 };
-function inset(st, hp, u0, u1, box, id, cap = '虛線＝切面') {
-  const v = scopeBox(st, W_INSET, id, box), d = G.clockDir(hp), q = u => v.Q([d[0] * u, d[1] * u, L0.zAnt(Math.min(Math.abs(u), L0.Req - 1e-6))]), a = q(u0), b = q(u1);
+function inset(st, hp, u0, u1, box, id, cap = '虛線＝切面', off = 0) {
+  // off: the section plane's offset (GLOBE meridian(h, off): along [cy, −cx] of clockDir(h))
+  const v = scopeBox(st, W_INSET, id, box), d = G.clockDir(hp), sd = [d[1], -d[0]], q = u => { const x = d[0] * u + sd[0] * off, y = d[1] * u + sd[1] * off;
+    return v.Q([x, y, L0.zAnt(Math.min(Math.hypot(x, y), L0.Req - 1e-6))]); }, a = q(u0), b = q(u1);
   let o = `<rect x="${box.x - 2}" y="${box.y - 2}" width="${box.w + 4}" height="${box.h + 4}" rx="4" fill="#fff"/>` + v.svg;
   o += `<g clip-path="url(#${id}_bx)"><path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="#fff" stroke-width="4.5" opacity="0.85"/>` +
     `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}" stroke="#1d2733" stroke-width="2" stroke-dasharray="5 3"/></g>`;
   o += `<rect x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" fill="none" stroke="#9aa6b1" stroke-width="1.2"/>`;
   o += htext(box.x + 6, box.y + 16, '俯視（模型）', { size: 12, bold: true, color: '#1d2733' }) + htext(box.x + 6, box.y + box.h - 7, cap, { size: 12, bold: true, color: '#1d2733' });
   return o;
+}
+// a point on the hydrodissection wave front in the microscope view: along the injection meridian, the first crossing seen from the far side
+// (the same arrival order the model's front contour is drawn from)
+function waveAt(v, st) {
+  const c = K.norm(st), H = K.hydroOf(c); if (!H || !(H.hy.prog > 0)) return null; const a = G.clockDir(H.hy.h + 2); let prev = null;
+  for (let u = -L0.Req + 0.02; u < L0.Req - 0.02; u += 0.02) { const f = H.tau(K.postIdx(Math.abs(u)), H.phiOf(a[0] * u, a[1] * u)) - H.hy.prog;
+    if (prev !== null && isFinite(f) && isFinite(prev) && (prev > 0) !== (f > 0)) return v.Q([a[0] * u, a[1] * u, 0]); prev = f; }
+  return null;
+}
+// a light streak along each straight part of a fine round instrument in the microscope view: the model draws its true width (27G = 0.41 mm),
+// the streak makes it read as a thin tube rather than a flat bar
+function tubeHL(v, st, i) {
+  const c = K.norm(st), g = K.instGeom(c, c.inst[i]); let s = '';
+  for (const sg of g.segs) { const a = v.Q(sg.a), b = v.Q(sg.b), l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, n = [-(b[1] - a[1]) / l, (b[0] - a[0]) / l], w = 2 * sg.r * v.k, o = w * 0.2;
+    s += `<path d="M${(a[0] + n[0] * o).toFixed(1)} ${(a[1] + n[1] * o).toFixed(1)}L${(b[0] + n[0] * o).toFixed(1)} ${(b[1] + n[1] * o).toFixed(1)}" stroke="#fff" stroke-width="${(w * 0.26).toFixed(2)}" stroke-linecap="round" opacity="0.8"/>`; }
+  return s;
 }
 
 // ---------------------------------------------------------------- the machine panel (globe/fluidics.js; 示意，依院內機器設定)
@@ -101,6 +132,8 @@ const nucS = o => ({ groove: { h: CASE.grooveH, dep: o.dep ?? CASE.groove.dep, o
 const DIVIDED = q => nucS({ crack: { prog: 1, sep: 0.5 }, dep2: CASE.groove.dep, crack2: { prog: 1, sep: 0.5 }, rot: q.rot, quads: q.quads });
 // the phaco needle at a point of groove 1 (a mm along the axis, + toward the incision), hz mm above the floor
 const gPt = (st, a, b = 0, hz = 0, k = 1) => K.groovePt(st, k, a, b, hz);
+// the cracking pose in groove k: phaco and chopper on opposite walls at the groove's far end (where the chopper reaches the floor; 示意)
+const crackTools = (st, k = 1) => { const N = K.nucOf(K.norm(st)), G0 = k === 2 ? N.g2 : N.g1; return [gPt(st, -1.0, G0.hw - 0.47, 0.45, k), gPt(st, -1.0, -(G0.hw - 0.2), 0.4, k)]; };
 // phaco state: bevel up, occlusion
 const PHACO = (p, o = {}) => ({ kind: 'phaco', via: 'main', p, bevel: o.bevel || 'up', occl: o.occl || 0 });
 const CHOP = p => ({ kind: 'chopper', via: 'side', p });
@@ -116,14 +149,17 @@ function hydroAt(s) {
       return { pass: H.pass, h: H.h, prog: ss(p0, p1, s), inEye: s >= a && s <= b }; } }
   return null;
 }
-// quadrant removal of case A (model order and turns: 示意; the times are the footage's piece events)
-const PIECES = [1, 2, 3, 4].map(i => ev(`piece${i}`));
-const QORDER = [0, 3, 2, 1];
+// quadrant removal of case A, tied to the footage (anim/footage.js 'quads'): piece n starts at the footage's piece<n> event and is gone when the
+// footage shows the red reflex where it was (reflex-<n>; piece 3: one second before piece 4 starts — its reflex is not readable). Each piece
+// comes out where it lies (no turning between pieces): CASE.pieceQ maps it to the model quadrant whose clock position matches the footage
+// (pieces 1, 2, 4 measured; piece 3 not readable → the remaining quadrant; check.js compares them). Quadrant q's clock in the eye after the 90° turn:
+const ROT_Q = 90, qHour = q => ((CASE.grooveH + 1.5 + 3 * q + ROT_Q / 30) % 12 + 12) % 12;
+const PIECES = [1, 2, 3, 4].map(i => ({ n: i, t0: ev(`piece${i}`), tg: EVS[`reflex-${i}`] ?? (i < 4 ? ev(`piece${i + 1}`) - 1 : ev('chopper-out') - 6), q: CASE.pieceQ[i - 1] }));
 function quadsAt(s) {
-  const quads = [], end = ev('chopper-out') - 6; let rot = 90, cur = -1;
-  PIECES.forEach((t0, i) => { const t1 = i < 3 ? PIECES[i + 1] - 1 : end; rot += (i === 0 ? 45 : 90) * ss(t0 - 1, t0, s);
-    const pull = ss(t0, t0 + 4, s), eat = ss(t0 + 4, t1, s); if (pull > 0 || eat > 0) quads.push({ q: QORDER[i], pull, eat }); if (s >= t0 - 1 && s < t1) cur = i; });
-  return { quads, rot, cur };
+  const quads = []; let cur = -1, last = -1;
+  PIECES.forEach((P, i) => { const pull = ss(P.t0, P.t0 + 3, s), eat = ss(P.t0 + 3, P.tg, s); if (pull > 0 || eat > 0) quads.push({ q: P.q, pull, eat });
+    if (s >= P.t0) last = i; if (s >= P.t0 && s < P.tg) cur = i; });
+  return { quads, rot: ROT_Q, cur, last };
 }
 // model state of case A at source time s; view: which panel the moment needs
 function caseAt(s) {
@@ -145,18 +181,33 @@ function caseAt(s) {
   c.nuc = nuc;
   const phIn = s >= ev('phaco-in') && s <= ev('phaco-out'), chIn = s >= ev('chopper-in') && s <= ev('chopper-out');
   const st = { cat: c };
+  const rest = K.capPt(K.norm(st), 1.5, CASE.main.h, 0.6), lerp3 = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)];
+  const crackPose = k => crackTools(st, k);
+  const stroke = (k, t0) => { const ph = 0.5 - 0.5 * Math.cos(2 * Math.PI * (s - t0) / 4); return lerp3(gPt(st, 1.2, 0, 0.9, k), K.grooveTip(st, k), ph); };   // strokes every 4 s from the proximal end (示意)
+  const Q = s >= ev('piece1') - 1 ? quadsAt(s) : null;
   if (phIn) {
     let p;
-    if (s < ev('sculpt-start')) p = K.capPt(K.norm(st), 1.5, CASE.main.h, 0.6);
-    else if (s <= ev('sculpt-end') + 1) { const tip = K.grooveTip(st), ph = 0.5 - 0.5 * Math.cos(2 * Math.PI * (s - ev('sculpt-start')) / 4), up = gPt(st, 0.6, 0, 0.9);   // strokes every 4 s (示意)
-      p = [lerp(up[0], tip[0], ph), lerp(up[1], tip[1], ph), lerp(up[2], tip[2], ph)]; }
-    else if (s < ev('piece1') - 1) { const N = K.nucOf(K.norm(st)); p = gPt(st, -1.0, N.g1.hw - 0.47, 0.45); }
-    else { const Q = quadsAt(s); const q = Q.cur >= 0 ? QORDER[Q.cur] : null, cq = q !== null ? c.nuc.quads.find(e => e.q === q) : null;
-      p = cq && cq.eat < 1 ? K.quadTip(st, q) : K.capPt(K.norm(st), 0.5, CASE.main.h, -0.8); }
-    if (s >= ev('phaco-out') - 1.5) { const k = ss(ev('phaco-out') - 1.5, ev('phaco-out'), s), q = K.capPt(K.norm(st), 3.8, CASE.main.h, 1.0); p = [lerp(p[0], q[0], k), lerp(p[1], q[1], k), lerp(p[2], q[2], k)]; }
+    if (s < ev('sculpt-start')) p = rest;
+    else if (s <= ev('sculpt-end') + 1) p = stroke(1, ev('sculpt-start'));
+    else if (s < ev('turn-end')) p = crackPose(1)[0];                                   // cracking, then holding while the nucleus turns
+    else if (s < ev('groove2-start')) p = rest;
+    else if (s <= ev('groove2-end') + 1) p = stroke(2, ev('groove2-start'));            // the second groove (not clearly visible in the footage: 示意)
+    else if (s < ev('piece1') - 1) p = s >= ev('crack2-start') ? crackPose(2)[0] : rest;
+    else { const P = Q.cur >= 0 ? PIECES[Q.cur] : null, cq = P ? c.nuc.quads.find(e => e.q === P.q) : null;
+      p = cq && cq.eat < 1 ? K.quadTip(st, P.q) : K.capPt(K.norm(st), 0.5, CASE.main.h, -0.8); }
+    if (s >= ev('phaco-out') - 1.5) p = lerp3(p, K.capPt(K.norm(st), 3.8, CASE.main.h, 1.0), ss(ev('phaco-out') - 1.5, ev('phaco-out'), s));
     c.inst.push(PHACO(p, { bevel: s >= ev('piece1') - 1 ? 'down' : 'up', occl: s >= ev('piece1') - 1 ? 1 : 0 }));
   }
-  if (chIn && s < ev('piece1') - 1 && c.nuc.groove) { const N = K.nucOf(K.norm(st)); if (N) c.inst.push(CHOP(gPt(st, -1.0, -(N.g1.hw - 0.2), 0.4))); }
+  if (chIn) {   // the chopper: cracking pose in the groove; resting above the nasal half; beside the piece being removed, pushing it in (示意)
+    const restC = K.capPt(K.norm(st), 1.8, CASE.side.h, 0.8);
+    let p = null;
+    if (s < ev('turn-end')) p = crackPose(1)[1];
+    else if (s < ev('crack2-start')) p = restC;
+    else if (s < ev('piece1') - 1) p = crackPose(2)[1];
+    else { const P = Q.cur >= 0 ? PIECES[Q.cur] : null, cq = P ? c.nuc.quads.find(e => e.q === P.q) : null;
+      p = cq && cq.eat < 1 ? K.capPt(K.norm(st), lerp(2.6, 1.6, cq.pull), qHour(P.q), 0.4) : restC; }
+    if (p) c.inst.push(CHOP(p));
+  }
   return { cat: c, hy };
 }
 // footage panel + the synced model state; at0 = when the clip starts in the segment
@@ -178,21 +229,23 @@ DRAW2['title'] = T => {
 
 // ---------------------------------------------------------------- 1 Hydrodissection
 // model demonstration: injected opposite the main incision, so the cannula lies in the main-incision section
-const hyDemo = (prog, o = {}) => ({ cat: { ...BASE, ovd: 1, hydro: { h: CASE.hydroDemo, prog, press: o.press || 0, block: o.block || 0 },
-  inst: o.noInst ? [] : [{ kind: 'cannula', via: 'main', at: { h: CASE.hydroDemo, r: 2.95, lift: -0.03 }, bend: true }] } });
+const hyDemo = (prog, o = {}) => { const h = o.h ?? CASE.hydroDemo; return { cat: { ...BASE, ovd: 1, hydro: { h, prog, press: o.press || 0, block: o.block || 0 },
+  inst: o.noInst ? [] : [{ kind: 'cannula', via: 'main', at: o.at || { h, r: 2.95, lift: -0.03 }, bend: true }] } }; };
 DRAW2['1-1'] = T => {
   const prog = 0.08 + 0.5 * T.p(2, 0, 1) + 0.3 * T.p(3, 0, 0.8), st = hyDemo(prog);
-  const sv = scope(st, W_SCOPE, 'sL'), A = sv.A;
-  let ex = lab('cannula（經主切口）', '', PW - 12, YB, onShaft(sv, st, 0, PH - 70), { side: 'R', color: '#3c4a57', op: T.on(1) });
-  if (A.waveFront && prog > 0.12) ex += labNear('波前', 'fluid wave', A.waveFront, -30, -70, { bold: true, color: WARN, lc: WARN, op: T.on(3) });
-  ex += note('波的速度為示意', 1);
+  // the 14 mm window shows the main incision; the cannula is drawn at its true width (27G, 0.41 mm: compare the 1 mm bar)
+  const sv = scope(st, W_SCOPE_H, 'sL'), A = sv.A;
+  let ex = labNear('cannula 經主切口', '', A.mainInt, 40, -36, { color: '#3c4a57', op: T.on(1) });
+  const wf = prog > 0.12 ? waveAt(sv, st) : null;
+  if (wf) ex += labNear('波前', 'fluid wave', wf, -40, wf[1] < 150 ? 60 : -50, { bold: true, color: WARN, lc: WARN, op: T.on(3) });
+  ex += VIEWS.sbar(sv.k, 1, 1) + note('波的速度為示意', 1);
   const cv = sec(st, W_LENS, 'cR'), B = cv.A;
   let rx = lab('cannula 在撕囊邊緣下', '', PW - 12, 64, B.tip0, { side: 'R', bold: true, color: '#3c4a57', op: T.on(1) });
-  if (B.fluidEq) rx += lab('BSS 在囊與皮質之間', '', PW - 12, YB, B.fluidEq, { side: 'R', bold: true, color: BSS, lc: BSS, op: T.on(2) });
-  rx += lab('核', 'nucleus', 14, 200, cv.P([-1.4, -L0.zMid]), {});
+  if (B.fluidEq) rx += labNear('BSS 在囊與皮質之間', '', B.fluidEq, -30, 70, { bold: true, color: BSS, lc: BSS, op: T.on(2) });
+  rx += labNear('核', 'nucleus', cv.P([-2.2, -L0.zMid]), -40, -40, {});
   rx += lab('後囊', 'posterior capsule', 14, YB - 30, B.postPole, { color: CAP, lc: CAP, op: T.on(2) });
   rx += VIEWS.sbar(cv.k, 1, 1) + note('液體層畫成 0.15 mm（示意）', 1);
-  return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: CAT_T } };
+  return { L: { svg: sv.svg + tubeHL(sv, st, 0), extra: ex, P: SCOPE_T }, R: { svg: cv.svg, extra: rx, P: CAT_T } };
 };
 // right panel during a footage hydrodissection pass: the section through the injection site (the cannula comes through the main incision,
 // which is not in that plane: it is drawn in the inset only)
@@ -201,8 +254,8 @@ function hydroR(f, o = {}) {
   const cv = sec(st, W_LENS, 'cR', { hp: h }), B = cv.A;
   let svg = cv.svg + inset(f.st.cat.hydro ? { cat: f.st.cat } : st, h, W_LENS.x, W_LENS.x + W_LENS.w, BOX_TL, 'iR');
   let ex = '';
-  if (B.fluidEq && f.st.cat.hydro && f.st.cat.hydro.prog > 0.05) ex += lab('BSS 在囊與皮質之間', '', PW - 12, YB, B.fluidEq, { side: 'R', bold: true, color: BSS, lc: BSS });
-  ex += lab('核', 'nucleus', PW - 12, 64, cv.P([1.2, -L0.zMid]), { side: 'R' });
+  if (B.fluidEq && f.st.cat.hydro && f.st.cat.hydro.prog > 0.05) ex += labNear('BSS 在囊與皮質之間', '', B.fluidEq, -30, 70, { bold: true, color: BSS, lc: BSS });
+  ex += labNear('核', 'nucleus', cv.P([-2.2, -L0.zMid]), -40, -40, {});
   ex += VIEWS.sbar(cv.k, 1, 1, PH) + note(o.note || '切面不畫 cannula（經主切口，不在這個切面上）', 1);
   return { svg, extra: ex + (o.extra || ''), P: HYT(h) };
 }
@@ -215,24 +268,38 @@ DRAW2['1-2'] = T => {
   L.extra = ex;
   return { L, R: hydroR(f, { note: '模型畫 hydrodissection 的液體層；切面不畫 cannula' }) };
 };
+// lines 1–3 of 1-3: the standard steps on the model (示意; the footage cannot show them): the tip goes from under the rim to the centre and
+// presses (fluid released over the rhexis rim), a second injection under the rim elsewhere (where case A's third pass was), then the tip pushes
+// the nucleus edge round. Both panels draw this same state (left: microscope view; right: the main-incision section).
+function demo13(T) {
+  const kIn = T.p(1, 0.0, 0.3), press = T.p(1, 0.35, 0.95), k2 = T.p(2, 0.05, 0.45), kR = T.p(2, 0.5, 0.95), H2 = CASE.hydro[2].h;
+  if (T.u < T.st(2)) return { ph: 1, press, st: hyDemo(1, { press, at: { h: CASE.hydroDemo, r: lerp(2.95, 0.15, kIn), lift: lerp(-0.03, 0, kIn) } }) };
+  if (kR <= 0) return { ph: 2, st: hyDemo(k2, { h: H2, at: { h: H2, r: 2.95, lift: -0.03 } }) };
+  return { ph: 3, kR, st: hyDemo(1, { h: H2, at: { h: lerp(2.9, 3.9, kR), r: 2.2, lift: 0 } }) };
+}
 DRAW2['1-3'] = T => {
-  const f = footSeg(T, 'hydro23'), L = f.L, k1 = T.on(1, 0.8, -0.3);
-  if (k1 < 0.5) return { L, R: hydroR(f) };
-  // lines 1–3: the model demonstration — inject, press the centre (fluid released over the rhexis rim), then nudge the nucleus round (示意)
-  const press = T.p(1, 0.35, 0.95), st = hyDemo(1, { press, noInst: T.u > T.en(1) });
-  const cv = sec(st, W_LENS, 'cR'), B = cv.A;
+  const f = footSeg(T, 'hydro23'), k1 = T.on(1, 0.8, -0.3), tEnd = 0.3 + FOOTAGE.videoTime('hydro23', FOOTAGE_DEF.clips.hydro23.out);
+  if (k1 < 0.5) return { L: f.L, R: hydroR(f) };
+  const D = demo13(T), st = D.st;
+  // left: the footage until the clip ends (no long freeze), then the model's microscope view of the same demonstration
+  let L = f.L;
+  if (T.u >= tEnd) { const sv = scope(st, W_SCOPE_H, 'sL'), A = sv.A; let svg = sv.svg + tubeHL(sv, st, 0), ex = '';
+    if (D.ph === 1) ex += labNear('輕壓中央', 'press', A.tip0, -50, -50, { bold: true, color: COL.accent, lc: COL.accent, op: ss(0.3, 0.6, D.press) });
+    if (D.ph === 2) ex += labNear('換一處再打', '', A.tip0, 40, 50, { bold: true, color: BSS, lc: BSS });
+    if (D.ph === 3) { const pts = []; for (let h = 2.5; h <= 2.5 + 1.7 * D.kR + 1e-6; h += 0.1) { const d = G.clockDir(h); pts.push(sv.Q([d[0] * 2.75, d[1] * 2.75, 0])); }
+      if (pts.length > 1) svg += `<path d="${pathOf(pts)}" fill="none" stroke="#fff" stroke-width="6" opacity="0.7"/><path d="${pathOf(pts)}" fill="none" stroke="#ffd34d" stroke-width="3.2" marker-end="url(#arrM)"/>`;
+      ex += labNear('推核：轉得動', 'rotate', pts[0], 30, 60, { bold: true, color: '#7a4b00', lc: '#b86e00' }); }
+    ex += tag('模型示範：標準做法', 1, COL.accent) + VIEWS.sbar(sv.k, 1, 1) + note('壓與推的力量為示意', 1);
+    L = { svg, extra: ex, P: SCOPE_DEMO_T }; }
+  // right: the main-incision section; the cannula is in this plane only while it presses the centre (line 1)
+  const stR = D.ph === 1 ? st : { cat: { ...st.cat, inst: [] } }, cv = sec(stR, W_LENS, 'cR'), B = cv.A;
   let svg = cv.svg, ex = '';
-  if (press > 0.05) { const c0 = cv.P([0, -(L0.za + 1.4)]), c1 = cv.P([0, -(L0.za + 0.25)]); svg += `<g opacity="${(T.on(1) * (1 - T.on(2, 0.5))).toFixed(2)}">${arrowH(c0, c1, COL.accent, 'arrA', 3.4)}</g>`;
-    ex += lab('輕壓中央', 'press', 14, 64, c0, { bold: true, color: COL.accent, lc: COL.accent, op: T.on(1) * (1 - T.on(2, 0.5)) }); }
-  if (B['release+']) ex += lab('液體排到前房', '', PW - 12, 64, cv.P(B['release+'] ? cv.r.A['release+'] : [0, 0]), { side: 'R', bold: true, color: BSS, lc: BSS, op: ss(0.3, 0.7, press) });
-  // line 2: a curved arrow round the nucleus on an inset microscope view (示意)
-  const k2 = T.on(2, 0.8);
-  if (k2 > 0) { const box = { x: PW - 170, y: PH - 210, w: 160, h: 160 }, v = scopeBox(st, W_INSET, 'iR3', box), c = v.P([0, 0]), r = 3.1 * v.k, pts = [];
-    for (let a = -150; a <= 60; a += 8) { const t = a * Math.PI / 180; pts.push([c[0] + r * Math.cos(t), c[1] + r * Math.sin(t)]); }
-    svg += `<g opacity="${k2.toFixed(2)}"><rect x="${box.x - 2}" y="${box.y - 2}" width="${box.w + 4}" height="${box.h + 4}" rx="4" fill="#fff"/>${v.svg}<path d="${pathOf(pts)}" fill="none" stroke="#ffd34d" stroke-width="3.2" marker-end="url(#arrM)"/>` +
-      htext(box.x + 6, box.y + 16, '俯視（模型）', { size: 12, bold: true, color: '#1d2733' }) + `</g>`;
-    ex += lab('推核：確認轉得動', 'rotate', box.x - 16, box.y + 40, [c[0] - r, c[1]], { side: 'R', bold: true, color: '#7a4b00', lc: '#b86e00', op: k2 }); }
-  ex += tag('模型示範：標準做法', 1, COL.accent, 34, PW / 2 + 40) + VIEWS.sbar(cv.k, 1, 1) + note('壓的力量與液體的路徑為示意', 1);
+  const opP = D.ph === 1 ? ss(0.0, 0.25, D.press) : 0;
+  if (opP > 0 && B.tip0) { const c1 = [B.tip0[0], B.tip0[1] - 14], c0 = [B.tip0[0], B.tip0[1] - 74]; svg += `<g opacity="${opP.toFixed(2)}">${arrowH(c0, c1, COL.accent, 'arrA', 3.4)}</g>`;
+    ex += labNear('輕壓中央', 'press', c0, -40, -10, { bold: true, color: COL.accent, lc: COL.accent, op: opP }); }
+  if (D.ph === 1 && cv.r.A['release+']) ex += lab('液體排到前房', '', PW - 12, 64, cv.P(cv.r.A['release+']), { side: 'R', bold: true, color: BSS, lc: BSS, op: ss(0.3, 0.7, D.press) });
+  if (D.ph >= 2 && B.fluidEq && st.cat.hydro.prog > 0.1) ex += labNear('第二處：液體再繞一圈', '', B.fluidEq, -30, 70, { bold: true, color: BSS, lc: BSS });
+  ex += tag('模型示範：標準做法', 1, COL.accent, 34, PW / 2 + 40) + VIEWS.sbar(cv.k, 1, 1) + note(D.ph === 1 ? '壓的力量與液體的路徑為示意' : '切面不畫 cannula（不在這個切面上）', 1);
   return { L, R: { svg, extra: ex, P: CAT_T } };
 };
 DRAW2['1-4'] = T => {
@@ -240,13 +307,13 @@ DRAW2['1-4'] = T => {
   const k = T.on(0, 2.0, 0.3), stN = hyDemo(1, { press: k, noInst: true }), stB = hyDemo(1, { block: k, noInst: true });
   const lv = sec(stN, W_LENS, 'sL'), rv = sec(stB, W_LENS, 'cR'), A = lv.A, B = rv.A;
   const s0 = sec(hyDemo(0, { noInst: true }), W_LENS, 'x0');
-  let ex = tag('壓中央：液體排出', 1, COL.accent) + lab('核在原位', '', 14, 64, A.antPole, {});
+  let ex = tag('壓中央：液體排出', 1, COL.accent) + labNear('核在原位', '', A.antPole, -40, -60, {});
   if (A['release+']) ex += lab('液體排到前房', '', PW - 12, 64, lv.P(lv.r.A['release+']), { side: 'R', color: BSS, lc: BSS, bold: true, op: ss(0.4, 0.9, k) });
   ex += VIEWS.sbar(lv.k, 1, 1) + note('壓的力量為示意', 1);
   const post0 = s0.A.postPole;
   let rsv = rv.svg + `<path d="M${(post0[0] - 70).toFixed(1)} ${post0[1].toFixed(1)}H${(post0[0] + 70).toFixed(1)}" stroke="${WARN}" stroke-width="1.6" stroke-dasharray="5 4" opacity="${k.toFixed(2)}"/>`;
   let rx = tag('打太多：capsular block', 1, WARN);
-  rx += lab('核往前頂住撕囊口', '', 14, 64, B.antPole, { bold: true, color: WARN, lc: WARN, op: ss(0.3, 0.8, k) });
+  rx += labNear('核往前頂住撕囊口', '', B.antPole, -40, 60, { bold: true, color: WARN, lc: WARN, op: ss(0.3, 0.8, k) });
   if (B.fluidMax) rx += lab('水困在核後面', 'trapped', PW - 12, YB, B.fluidMax, { side: 'R', bold: true, color: BSS, lc: BSS, op: ss(0.3, 0.8, k) });
   rx += lab('後囊原本的位置', '', 14, YB, [post0[0] - 60, post0[1]], { color: WARN, lc: WARN, op: ss(0.3, 0.8, k) });
   rx += `<g opacity="${(T.on(3, 0.6) * (1 - T.on(4, 0.4))).toFixed(2)}"><rect x="10" y="86" width="${PW - 20}" height="36" rx="8" fill="#fff" stroke="${COL.accent}" stroke-width="1.6"/>${text(PW / 2, 110, '第一步：停止打水；每打一處就壓中央', { size: 16, bold: true, color: COL.accent, anchor: 'middle' })}</g>`;
@@ -271,8 +338,8 @@ DRAW2['2-1'] = T => {
   const st0 = { cat: { ...BASE, nuc: nucS({ dep: 0.35 }) } }, tip = K.grooveTip(st0), st = { cat: { ...st0.cat, inst: [PHACO(tip)] } };
   const cv = sec(st, W_LENS, 'sL'), g = K.instGeom(K.norm(st), K.norm(st).inst[0]);
   let svg = cv.svg + flows(cv, g, F);
-  let ex = lab('phaco（經主切口）', '', 14, 64, cv.Q(g.sEnd), { color: '#3c4a57' });
-  ex += lab('灌流', 'irrigation', PW - 12, 64, cv.Q(g.ports[0]), { side: 'R', bold: true, color: BSS, lc: BSS, op: F.irr ? 1 : 0 });
+  let ex = labNear('phaco（經主切口）', '', shaftPt(cv, g, 5.0), 10, -55, { color: '#3c4a57' });
+  ex += labNear('灌流', 'irrigation', cv.Q(g.ports[0]), 50, -70, { bold: true, color: BSS, lc: BSS, op: F.irr ? 1 : 0 });
   ex += lab('抽吸', 'aspiration', PW - 12, 112, cv.Q(g.tip), { side: 'R', bold: true, color: OVDC, lc: OVDC, op: F.asp ? 1 : 0 });
   ex += lab('超音波', 'ultrasound', PW - 12, 160, cv.Q(g.tip), { side: 'R', bold: true, color: '#c46a12', lc: '#c46a12', op: F.us > 0 ? 1 : 0 });
   ex += VIEWS.sbar(cv.k, 1, 1) + note('流向為示意', 1);
@@ -328,11 +395,11 @@ DRAW2['3-2'] = T => {
   const st = { cat: f.st.cat }, cv = sec(st, W_CAT, 'cR'), B = cv.A;
   let rx = '';
   const g0 = (st.cat.inst || []).find(i => i.kind === 'phaco');
-  if (g0) { const g = K.instGeom(K.norm(st), g0); rx += lab('phaco', '', 14, 64, cv.Q(g.sEnd), { color: '#3c4a57' }); }
-  if (B.grooveFloor && st.cat.nuc.groove.dep > 0.15) rx += lab('槽底', 'floor', PW - 12, YB, B.grooveFloor, { side: 'R', bold: true, color: BROWN, lc: BROWN });
+  if (g0) { const g = K.instGeom(K.norm(st), g0); rx += labNear('phaco', '', shaftPt(cv, g, 4.0), -10, -50, { color: '#3c4a57' }); }
+  if (B.grooveFloor && st.cat.nuc.groove.dep > 0.15) rx += labNear('槽底', 'floor', B.grooveFloor, 40, 80, { bold: true, color: BROWN, lc: BROWN });
   const F = FL.state({ pedal: g0 && f.s >= ev('sculpt-start') ? 2.5 : g0 ? 1 : 0, occl: 0, set: 'sculpt' });
   rx += machine(PW - 232, 8, 222, F, { title: '腳踏（依動作推定，示意）', rows: ['irr', 'flow', 'vac', 'us'] });
-  rx += note('深度依錄影時間重建（示意）', 1);
+  rx += note('深度依錄影時間重建；phaco 的來回為示意', 1);
   return { L, R: { svg: cv.svg, extra: rx, P: SYNC_T } };
 };
 DRAW2['3-3'] = T => {
@@ -355,8 +422,8 @@ DRAW2['3-3'] = T => {
   // line 3: the 12–6 section with the needle at its deepest stroke: the ramp under the incision
   const k3 = T.on(4, 0.6);
   if (k3 > 0.5) { const st3 = { cat: { ...st.cat, nuc: nucS({ dep: CASE.groove.dep }) } }, st3i = { cat: { ...st3.cat, inst: [PHACO(K.grooveTip(st3))] } }, cv = sec(st3i, W_LENS, 'cR3'), B = cv.A;
-    svg = cv.svg; rx = lab('近切口：斜坡，刻不深', 'ramp', 14, YB, cv.P([-1.6, -(L0.zMid + 0.6)]), { bold: true, color: WARN, lc: WARN }) +
-      (B.grooveFloor ? lab('最深在對側', 'deepest', PW - 12, YB, B.grooveFloor, { side: 'R', bold: true, color: BROWN, lc: BROWN }) : '') + lab('phaco（經主切口）', '', 14, 64, cv.Q(K.instGeom(K.norm(st3i), K.norm(st3i).inst[0]).sEnd), { color: '#3c4a57' });
+    svg = cv.svg; rx = lab('近切口：斜坡，刻不深', 'ramp', 14, 310, cv.P([-1.6, -(L0.zMid + 0.6)]), { bold: true, color: WARN, lc: WARN }) +
+      (B.grooveFloor ? lab('最深在對側', 'deepest', PW - 12, YB, B.grooveFloor, { side: 'R', bold: true, color: BROWN, lc: BROWN }) : '') + labNear('phaco（經主切口）', '', shaftPt(cv, K.instGeom(K.norm(st3i), K.norm(st3i).inst[0]), 3.6), -10, -60, { color: '#3c4a57' });
     rx += VIEWS.sbar(cv.k, 1, 1) + note('模型推得（沒有出處）', 1);
     return { L: Lp, R: { svg, extra: rx, P: CAT_T } }; }
   rx += VIEWS.sbar(xv.k, 1, 1) + note('亮度與厚度為示意', 1);
@@ -386,10 +453,11 @@ DRAW2['4-1'] = T => {
   const xv = sec(st, W_X, 'cR', { hp: XH, off: -0.85, cut: true, step: 0.02 }), B = xv.A;
   let svg = xv.svg;
   if (B.tip0 && B.tip1) { const k = T.on(1); svg += `<g opacity="${k.toFixed(2)}">${arrowH(B.tip0, [B.tip0[0] + (B.tip0[0] > B.tip1[0] ? 40 : -40), B.tip0[1]], COL.accent, 'arrA')}${arrowH(B.tip1, [B.tip1[0] + (B.tip1[0] > B.tip0[0] ? 40 : -40), B.tip1[1]], COL.accent, 'arrA')}</g>`; }
-  let rx = lab('phaco', '', B.tip0 && B.tip0[0] > PW / 2 ? PW - 12 : 14, 64, B.tip0, { side: B.tip0 && B.tip0[0] > PW / 2 ? 'R' : undefined, color: '#3c4a57' });
-  rx += lab('chopper', '', B.tip1 && B.tip1[0] > PW / 2 ? PW - 12 : 14, 112, B.tip1, { side: B.tip1 && B.tip1[0] > PW / 2 ? 'R' : undefined, color: '#3c4a57' });
-  rx += lab('往兩側推', 'push apart', PW / 2 - 70, PH - 70, null, { bold: true, color: COL.accent, op: T.on(1) });
-  if (B.crack) rx += lab('裂縫貫穿後板', 'crack', 14, YB, B.crack[1], { bold: true, color: BROWN, lc: BROWN, op: T.on(2) });
+  const sgn = B.tip0 && B.tip1 && B.tip0[0] < B.tip1[0] ? -1 : 1;
+  let rx = B.tip0 ? labNear('phaco', '', B.tip0, sgn * 50, -90, { color: '#3c4a57' }) : '';
+  if (B.tip1) rx += labNear('chopper', '', B.tip1, -sgn * 50, -90, { color: '#3c4a57' });
+  rx += tag('往兩側推 push apart', T.on(1), COL.accent);
+  if (B.crack) rx += labNear('裂縫貫穿後板', 'crack', B.crack[1], -40, -30, { bold: true, color: BROWN, lc: BROWN, op: T.on(2) });
   rx += VIEWS.sbar(xv.k, 1, 1) + note('力的方向與裂縫的路徑為示意', 1);
   return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg, extra: rx, P: X_T } };
 };
@@ -400,24 +468,58 @@ DRAW2['4-2'] = T => {
   const st = { cat: f.st.cat }, xv = sec(st, W_X, 'cR', { hp: XH, off: -0.85, cut: true, step: 0.02 }), B = xv.A;
   let rx = '';
   const leftOf = (a, b) => a && b && a[0] < b[0];
-  if (B.tip0) rx += leftOf(B.tip0, B.tip1) || !B.tip1 ? lab('phaco', '', 14, 64, B.tip0, { color: '#3c4a57' }) : lab('phaco', '', PW - 12, 64, B.tip0, { side: 'R', color: '#3c4a57' });
-  if (B.tip1) rx += leftOf(B.tip1, B.tip0) ? lab('chopper', '', 14, 64, B.tip1, { color: '#3c4a57' }) : lab('chopper（側切口）', '', PW - 12, 64, B.tip1, { side: 'R', color: '#3c4a57' });
-  if (B.crack) rx += lab('裂縫', 'crack', 14, YB, B.crack[1], { bold: true, color: BROWN, lc: BROWN });
-  rx += VIEWS.sbar(xv.k, 1, 1) + note('裂縫進度依錄影時間重建；器械位置示意', 1);
+  if (B.tip0) rx += labNear('phaco', '', B.tip0, leftOf(B.tip0, B.tip1) || !B.tip1 ? -50 : 50, -90, { color: '#3c4a57' });
+  if (B.tip1) rx += labNear(leftOf(B.tip1, B.tip0) ? 'chopper' : 'chopper（側切口）', '', B.tip1, leftOf(B.tip1, B.tip0) ? -50 : 50, -90, { color: '#3c4a57' });
+  if (B.crack) rx += labNear('裂縫', 'crack', B.crack[1], -40, -30, { bold: true, color: BROWN, lc: BROWN });
+  // the model's cracking pose is at the far end of the groove (the only place the chopper reaches the floor from the side port); in the footage the
+  // halves part with both instruments near the incision — the model frame is labelled as the standard pose, not this moment
+  if (f.s >= ev('chopper-in')) rx += tag('器械姿勢：模型示意（不是這一格）', 1, COL.sub, 34);
+  rx += VIEWS.sbar(xv.k, 1, 1) + note('裂縫進度依錄影時間重建；器械在槽的遠端（示意）', 1);
   return { L, R: { svg: xv.svg, extra: rx, P: XSYNC_T } };
 };
+// lines 0–1 of 4-3: the standard steps on the model (示意): turn 90°, sculpt the second groove (12–6 again), crack it → four pieces
+function std43(T) {
+  const rot = 90 * T.p(0, 0.05, 0.5), on1 = T.u >= T.st(1), kG = T.p(1, 0, 0.5), cr = T.p(1, 0.55, 0.85), sep = 0.5 * T.p(1, 0.85, 1);
+  const st = { cat: { ...BASE, nuc: nucS({ crack: { prog: 1, sep: 0.5 }, rot, dep2: on1 ? CASE.groove.dep * kG : undefined, crack2: cr > 0 ? { prog: cr, sep } : null }) } };
+  let inst = [];
+  if (on1 && kG < 1) { const ph = 0.5 - 0.5 * Math.cos(2 * Math.PI * 2 * kG), a = gPt(st, 0.6, 0, 0.9, 2), b = K.grooveTip(st, 2); inst = [PHACO([lerp(a[0], b[0], ph), lerp(a[1], b[1], ph), lerp(a[2], b[2], ph)])]; }
+  else if (on1) { const [p, q] = crackTools(st, 2); inst = [PHACO(p), CHOP(q)]; }
+  return { st: { cat: { ...st.cat, inst } }, rot, on1, kG, cr, sep };
+}
+// the plane sits 1.6 mm toward the far end: clear of groove 1, which now runs parallel to it (3–9) through the centre
+const X2OFF = -1.6, X2 = (st, id) => sec(st, W_X, id, { hp: XH, off: X2OFF, cut: true, step: 0.02 });
+// labels of the cross-section across groove 2: the groove floor while it deepens, the crack while it runs down, the posterior capsule
+function x2labels(xv, st) {
+  const X = xv.r.A.grooveX2, n = st.cat.nuc, cr2 = n.crack2; let o = '';
+  if (X && n.groove2 && n.groove2.dep > 0.15 && !(cr2 && cr2.prog > 0)) o += labNear('第二道槽', 'groove 2', xv.P(X.floor), -70, 60, { bold: true, color: BROWN, lc: BROWN });
+  if (xv.A.crack2 && cr2 && cr2.prog > 0) o += labNear('第二道裂縫', 'crack 2', xv.A.crack2[1], -50, -40, { bold: true, color: BROWN, lc: BROWN });
+  return o + lab('後囊', 'posterior capsule', PW - 12, YB, xv.A.postPole, { side: 'R', color: CAP, lc: CAP });
+}
 DRAW2['4-3'] = T => {
-  const f = footSeg(T, 'divide'), L = f.L;
-  const st = { cat: { ...f.st.cat, inst: [] } }, sv = scope(st, W_SCOPE_N, 'cR'), A = sv.A, s = f.s;
-  let rx = '';
-  const kT = ss(ev('turn-start'), ev('turn-end'), s);
-  if (kT > 0 && kT < 1) { const c = sv.P([0, 0]), r = 3.4 * sv.k, a0 = -120, pts = []; for (let a = a0; a <= a0 + 90 * kT + 1; a += 6) { const t = a * Math.PI / 180; pts.push([c[0] + r * Math.cos(t), c[1] + r * Math.sin(t)]); }
-    if (pts.length > 1) rx += `<path d="${pathOf(pts)}" fill="none" stroke="#ffd34d" stroke-width="3.2" marker-end="url(#arrM)"/>`; }
-  if (A.crackEnds && kT >= 1) { const e = A.crackEnds[0][0] > A.crackEnds[1][0] ? A.crackEnds[0] : A.crackEnds[1]; rx += lab('第一道裂縫（轉了 90°）', 'crack 1', PW - 12, Math.min(PH - 60, e[1] + 90), e, { side: 'R', bold: true, color: BROWN, lc: BROWN }); }
-  if (A.grooveC2 && s >= ev('groove2-start')) rx += lab('第二道槽', 'groove 2', 14, 112, A.grooveC2, { bold: true, color: BROWN, lc: BROWN });
-  rx += tag(s < ev('turn-start') ? '模型：分開的兩半' : s < ev('groove2-start') ? '轉 90°' : s < ev('crack2-start') ? '第二道槽' : '第二次分核 → 四塊', 1, COL.accent);
-  rx += note('依錄影時間；轉的角度與第二道槽為示意', 1);
-  return { L, R: { svg: sv.svg, extra: rx, P: SCOPE_SYNC_T } };
+  // lines 0–1: the standard steps, both panels on the model; lines 2–4: the footage (turn 7:04–7:11 at the start of line 2) and the model on its clock
+  const at0 = T.st(2) - 0.5 - FOOTAGE.videoTime('divide', ev('turn-start')), useF = T.u >= T.st(2) - 0.35;
+  if (!useF) {
+    const D = std43(T), st = D.st, sv = scope(st, W_SCOPE_N, 'sL'), A = sv.A;
+    let svg = sv.svg, ex = tag('模型示範：標準做法', 1, COL.accent);
+    if (!D.on1) { const c = sv.P([0, 0]), r = 2.55 * sv.k, pts = []; for (let a = 15; a <= 15 + D.rot + 1; a += 6) { const t = a * Math.PI / 180; pts.push([c[0] + r * Math.cos(t), c[1] + r * Math.sin(t)]); }
+      if (pts.length > 1) svg += `<path d="${pathOf(pts)}" fill="none" stroke="#fff" stroke-width="6" opacity="0.7"/><path d="${pathOf(pts)}" fill="none" stroke="#ffd34d" stroke-width="3.2" marker-end="url(#arrM)"/>`;
+      if (pts.length > 1) ex += labNear('轉 90°', 'rotate', pts[0], 40, 40, { bold: true, color: '#7a4b00', lc: '#b86e00' }); }
+    if (D.on1 && A.grooveC2) ex += labNear('第二道槽', 'groove 2', A.grooveC2, -50, -80, { bold: true, color: BROWN, lc: BROWN });
+    ex += note('轉的角度與時間為示意', 1);
+    const xv = X2(st, 'cR');
+    let rx = x2labels(xv, st) + tag(D.cr >= 1 && D.sep > 0.2 ? '四塊' : D.on1 ? '第二道槽 → 第二次分核' : '轉 90° 之後，第二道槽在這裡', 1, COL.accent);
+    rx += VIEWS.sbar(xv.k, 1, 1) + note('模型示範；深度與裂縫的路徑為示意', 1);
+    return { L: { svg, extra: ex, P: SCOPE_DEMO_T }, R: { svg: xv.svg, extra: rx, P: X2_T } };
+  }
+  const f = footSeg(T, 'divide', { at0 }), L = f.L, s = f.s;
+  // what the footage shows (captions keyed to its events; no anchored labels on a moving picture)
+  const cap = s >= ev('crack2-start') ? '再一次分開' : s >= ev('groove2-start') ? 'phaco 沿新的方向往前推進（第二道槽看不清楚）' : s >= ev('turn-start') ? 'chopper 推核的周邊：核轉了方向' : '';
+  if (cap) L.extra = wtext(14, PH - 14, cap, { size: 14.5 });
+  const st = { cat: f.st.cat }, xv = X2(st, 'cR');
+  let svg = xv.svg + inset(st, XH, -4.5, 4.5, BOX_TL, 'iR', '虛線＝切面', X2OFF);
+  let rx = x2labels(xv, st) + tag(s < ev('turn-start') ? '分開的兩半' : s < ev('groove2-start') ? '轉 90°（模型）' : s < ev('crack2-start') ? '第二道槽（模型）' : '第二次分核 → 四塊', 1, COL.accent, 34, PW / 2 + 60);
+  rx += VIEWS.sbar(xv.k, 1, 1) + note('依錄影時間；轉的角度與第二道槽為示意', 1);
+  return { L, R: { svg, extra: rx, P: X2SYNC_T } };
 };
 
 // ---------------------------------------------------------------- 5 移除核塊
@@ -428,8 +530,8 @@ DRAW2['5-1'] = T => {
   const pull = T.p(3, 0.05, 0.6), eat = T.p(3, 0.65, 1) * 0.6 + 0.4 * T.p(4, 0, 1), st = QSTATE(pull, eat);
   const cv = sec(st, W_CAT, 'sL'), B = cv.A;
   let ex = '';
-  if (B.tip0) ex += lab('phaco 口吸住核塊', 'occlusion', 14, 64, B.tip0, { bold: true, color: '#3c4a57', op: T.on(1) });
-  if (B.quadApex0) ex += lab('核塊拉到中央', 'quadrant', PW - 12, 64, B.quadApex0, { side: 'R', bold: true, color: NUC, lc: NUC, op: T.on(3) });
+  if (B.tip0) ex += labNear('phaco 口吸住核塊', 'occlusion', shaftPt(cv, cv.r.A.inst0, 1.6), 30, -60, { bold: true, color: '#3c4a57', op: T.on(1) });
+  if (B.quadApex0) ex += lab('核塊拉到中央', 'quadrant', PW - 30, 244, B.quadApex0, { side: 'R', bold: true, color: NUC, lc: NUC, op: T.on(3) });
   ex += lab('後囊', 'posterior capsule', PW - 12, YB, cv.P([2.4, -(L0.zPost(2.4) - 0.0)]), { side: 'R', color: CAP, lc: CAP });
   ex += lab('皮質留在囊袋', 'cortex', 14, YB, cv.P([-3.8, -(L0.zMid)]), {});
   ex += VIEWS.sbar(cv.k, 1, 1) + note('核塊的位置與角度為示意', 1);
@@ -440,16 +542,25 @@ DRAW2['5-1'] = T => {
     `${text(54, 284, '刻槽：低（模型 80 mmHg）', { size: 13.5 })}${text(54, 304, '移除核塊：高（Veritas 實驗台 450 mmHg）', { size: 13.5 })}</g>`;
   return { L: { svg: cv.svg, extra: ex, P: CAT_T }, R: { svg: `<rect width="${PW}" height="${PH}" fill="#fff"/>` + r, extra: '', P: MACH_T } };
 };
+const PIECE_CAP = ['第 1 塊：從 6 點側', '第 2 塊：從 temporal 側', '第 3 塊：從哪裡來看不清楚', '第 4 塊（大塊）：從 nasal 側偏上'];
 DRAW2['5-2'] = T => {
-  const f = footSeg(T, 'quads', { at0: T.st(1) + 0.3 - FOOTAGE.videoTime('quads', 476.0) }), L = f.L, op = frozenOp('quads', f.tau, 476.0);
-  if (op > 0) L.extra = labNear('露出更紅的 red reflex', 'reflex', fpt('quads', 'reflex', f.tau), 40, -10, { bold: true, color: '#7a4b00', lc: '#ffd34d', op }) +
+  const f = footSeg(T, 'quads', { at0: T.st(1) + 0.3 - FOOTAGE.videoTime('quads', 476.0) }), L = f.L, op = frozenOp('quads', f.tau, 476.0), s = f.s;
+  let ex = '';
+  if (op > 0) ex += labNear('露出更紅的 red reflex', 'reflex', fpt('quads', 'reflex', f.tau), 40, -10, { bold: true, color: '#7a4b00', lc: '#ffd34d', op }) +
     labNear('chopper', '', fpt('quads', 'chopper-tip', f.tau), -20, 90, { bold: true, op });
-  const st = { cat: f.st.cat }, cv = sec(st, W_CAT, 'cR'), B = cv.A;
+  // the piece the footage is on (its clock position as read on the footage; draw.js PIECES = the model's piece removals on the same clock)
+  const Q = quadsAt(s), i = Q.cur, P = PIECES[Math.max(0, Q.cur >= 0 ? Q.cur : Q.last)], h = qHour(P.q);
+  if (i >= 0 && op < 0.5) ex += wtext(14, PH - 14, PIECE_CAP[i], { size: 14.5 });
+  L.extra = ex;
+  // right: the section through the piece's original clock position (it moves to the next piece as the footage does), instruments in the inset only
+  const stS = { cat: { ...f.st.cat, inst: [] } }, cv = sec(stS, W_LENS, 'cR', { hp: h }), B = cv.A, cq = f.st.cat.nuc.quads.find(e => e.q === P.q);
+  const svg = cv.svg + inset({ cat: f.st.cat }, h, -W_INSET.w / 2, W_INSET.w / 2, BOX_TL, 'iR');
   let rx = '';
-  if (B.tip0) rx += lab('phaco', '', 14, 64, B.tip0, { color: '#3c4a57' });
-  const Q = quadsAt(f.s); if (Q.cur >= 0 && B['quadApex' + QORDER[Q.cur]]) rx += lab(`第 ${Q.cur + 1} 塊`, '', PW - 12, 64, B['quadApex' + QORDER[Q.cur]], { side: 'R', bold: true, color: NUC, lc: NUC });
-  rx += note('核塊的時間依錄影、順序與位置為示意', 1);
-  return { L, R: { svg: cv.svg, extra: rx, P: SYNC_T } };
+  if (cq && cq.eat < 1 && B['quadApex' + P.q]) rx += labNear(`第 ${P.n} 塊：拉到中央`, '', B['quadApex' + P.q], 40, -80, { bold: true, color: NUC, lc: NUC });
+  else if (cq && cq.eat >= 1) rx += tag(`第 ${P.n} 塊已清掉`, 1, NUC, 34, PW / 2 + 60);
+  rx += lab('後囊', 'posterior capsule', PW - 12, YB, B.postPole, { side: 'R', color: CAP, lc: CAP });
+  rx += VIEWS.sbar(cv.k, 1, 1) + note('時間與位置依錄影；分成四塊為示意', 1);
+  return { L, R: { svg, extra: rx, P: PCT(P.n, h) } };
 };
 DRAW2['5-3'] = T => {
   // left: the quadrant held at the periphery near the posterior capsule (pull small) — the break there; right: the timeline (vacuum, chamber)
@@ -458,10 +569,10 @@ DRAW2['5-3'] = T => {
   const st0 = QSTATE(pull, kC > 0.5 ? 0.2 : eat, { surge: kC > 0.5 ? 0 : dip });
   const cv = sec(st0, W_CAT, 'sL'), B = cv.A;
   let ex = '';
-  if (kC <= 0.5) { if (B.tip0) ex += lab('在周邊吸住', 'periphery', 14, 64, B.tip0, { bold: true, color: WARN, lc: WARN });
+  if (kC <= 0.5) { if (B.tip0) ex += labNear('在周邊吸住', 'periphery', B.tip0, -40, -80, { bold: true, color: WARN, lc: WARN });
     ex += lab('後囊離口近', 'posterior capsule', PW - 12, YB, cv.P([2.6, -L0.zPost(2.6)]), { side: 'R', bold: true, color: CAP, lc: CAP });
     if (dip > 0.02) ex += tag('surge：前房變淺', 1, WARN); }
-  else { if (B.tip0) ex += lab('拉到中央再乳化', 'safe', 14, 64, B.tip0, { bold: true, color: COL.accent, lc: COL.accent }); ex += tag('離後囊遠', 1, COL.accent); }
+  else { if (B.tip0) ex += labNear('拉到中央再乳化', 'safe', B.tip0, -40, 90, { bold: true, color: COL.accent, lc: COL.accent }); ex += tag('離後囊遠', 1, COL.accent); }
   ex += VIEWS.sbar(cv.k, 1, 1) + note('前房變淺的量為示意（surge 體積依綜論的範圍）', 1);
   // right: vacuum and chamber depth against time around the break
   const x0 = 60, x1 = PW - 30, t0 = -3, t1 = 4, X = t => x0 + (t - t0) / (t1 - t0) * (x1 - x0), yV = 150, yA = 320;
@@ -481,7 +592,7 @@ DRAW2['5-4'] = T => {
   if (f.s >= ev('phaco-out')) L.extra = wtext(14, PH - 14, 'phaco 退出', {});
   const st = { cat: f.st.cat }, cv = sec(st, W_CAT, 'cR'), B = cv.A;
   let rx = lab('皮質留在囊袋', 'cortex', PW - 12, YB, cv.P([3.8, -L0.zMid]), { side: 'R', op: T.on(2) });
-  if (B.tip0) rx += lab('phaco', '', 14, 64, B.tip0, { color: '#3c4a57' });
+  if (B.tip0) rx += labNear('phaco', '', B.tip0, -40, -70, { color: '#3c4a57' });
   rx += note('依錄影時間', 1);
   return { L, R: { svg: cv.svg, extra: rx, P: SYNC_T } };
 };
@@ -500,22 +611,59 @@ DRAW2['6-1'] = T => {
   r += `<g opacity="${T.on(2, 0.6).toFixed(2)}"><rect x="40" y="294" width="${PW - 80}" height="40" rx="8" fill="#fff" stroke="#c9d2db"/>${text(PW / 2, 320, '預防：vacuum、流量別太高；拉到中央再吃', { size: 15, bold: true, anchor: 'middle' })}</g>`;
   return { L: { svg, extra: ex, P: CAT_T }, R: { svg: `<rect width="${PW}" height="${PH}" fill="#fff"/>` + r, extra: '', P: MACH_T } };
 };
+// where an instrument's shaft crosses a section plane (panel px), with its cut ellipse for radius r mm (as the model's drawInstCut)
+function crossCut(v, g, r) {
+  const pl = v.r.pl, nrm = [pl.U[1], -pl.U[0], 0], sd = p => (p[0] - pl.O[0]) * nrm[0] + (p[1] - pl.O[1]) * nrm[1] + (p[2] - pl.O[2]) * nrm[2];
+  const a = g.tip, b = [g.tip[0] + g.axis[0] * 30, g.tip[1] + g.axis[1] * 30, g.tip[2] + g.axis[2] * 30], da = sd(a), db = sd(b); if (da * db > 0) return null;
+  const t = da / (da - db), q = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t], cs = Math.abs(g.axis[0] * nrm[0] + g.axis[1] * nrm[1] + g.axis[2] * nrm[2]);
+  const dn = g.axis[0] * nrm[0] + g.axis[1] * nrm[1] + g.axis[2] * nrm[2], ad = [g.axis[0] - nrm[0] * dn, g.axis[1] - nrm[1] * dn, g.axis[2] - nrm[2] * dn];
+  const Q = v.Q(q), A2 = v.Q([q[0] + ad[0], q[1] + ad[1], q[2] + ad[2]]), ang = Math.atan2(A2[1] - Q[1], A2[0] - Q[0]);
+  const pt = (rr, th) => { const ex = rr / Math.max(0.25, cs) * v.k * Math.cos(th), ey = rr * v.k * Math.sin(th); return [Q[0] + ex * Math.cos(ang) - ey * Math.sin(ang), Q[1] + ex * Math.sin(ang) + ey * Math.cos(ang)]; };
+  return { q, Q, ang, cs, pt, rx: r / Math.max(0.25, cs) * v.k, ry: r * v.k, mm: G.toPlane(pl, q) };
+}
 DRAW2['6-2'] = T => {
-  // left: the microscope view with the phaco in the main incision and a whitened patch of cornea there (示意); right: the tunnel with the
-  // needle in it and the heat (示意)
+  // left: the microscope view with the phaco in the main incision and a whitened patch of cornea there (示意). right: the main tunnel cut across
+  // (half way along it): the sleeve in the tunnel and the needle inside it; irrigation (into the eye, ⊗) between them and aspiration (out, ⊙) in
+  // the needle when there is flow; heat at the wound lips when there is none (Ernest 2001: no flow → the wound heats; OVD at the tip → hotter).
+  // Sequence (示意): line 0 burn; line 1 flow → no flow → OVD at the tip; line 2 3 released (ultrasound off), then flow first; line 3 flow.
   const st0 = { cat: { ...BASE, nuc: nucS({ dep: 0.5 }) } }, st = { cat: { ...st0.cat, inst: [PHACO(K.grooveTip(st0))] } };
   const sv = scope(st, { x: -6.0, y: -2.2, w: 12 }, 'sL'), A = sv.A, k0 = T.on(0, 1.4);
   const m = A.mainExt, mi = A.mainInt, c = [(m[0] + mi[0]) / 2, (m[1] + mi[1]) / 2];
-  let svg = sv.svg + `<g opacity="${(0.85 * k0).toFixed(2)}"><ellipse cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" rx="${(1.9 * sv.k).toFixed(1)}" ry="${(1.2 * sv.k).toFixed(1)}" fill="#f4f6f7" opacity="0.85"/></g>`;
-  let ex = labNear('切口附近角膜變白', 'wound burn', c, -60, -40, { bold: true, color: WARN, lc: WARN, op: k0 }) + note('變白的範圍為示意', 1);
-  const tv = sec(st, W_TUN, 'cR'), B = tv.A, tn = K.tunnelOf(CASE.main), mid = tv.Q(tn.to3(tn.at(0.5)));
-  let rsv = tv.svg + `<g opacity="${(0.55 * T.on(1, 1.0)).toFixed(2)}"><ellipse cx="${mid[0].toFixed(1)}" cy="${mid[1].toFixed(1)}" rx="120" ry="60" fill="url(#heatG)"/></g>` +
-    `<defs><radialGradient id="heatG"><stop offset="0" stop-color="#ff5a2a" stop-opacity="0.9"/><stop offset="1" stop-color="#ff5a2a" stop-opacity="0"/></radialGradient></defs>`;
-  let rx = labNear('phaco 在主切口隧道裡', '', mid, 40, -90, { color: '#3c4a57' });
-  rx += labNear('沒有水流 → 熱帶不走', 'heat', mid, -40, 80, { bold: true, color: WARN, lc: WARN, op: T.on(1) });
+  const svgL = sv.svg + `<g opacity="${(0.85 * k0).toFixed(2)}"><ellipse cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" rx="${(1.9 * sv.k).toFixed(1)}" ry="${(1.2 * sv.k).toFixed(1)}" fill="#f4f6f7" opacity="0.85"/></g>`;
+  const exL = labNear('切口附近角膜變白', 'wound burn', c, -60, -40, { bold: true, color: WARN, lc: WARN, op: k0 }) + note('變白的範圍為示意', 1);
+  const u = T.u, s1 = T.st(1), e1 = T.en(1), s2 = T.st(2), tOff = lerp(s1, e1, 0.4), tOVD = lerp(s1, e1, 0.7), tBack = lerp(s2, T.en(2), 0.5);
+  const flow = (u >= s1 && u < tOff) || u >= tBack, ovd = u >= tOVD && u < tBack, us = u < s2 + 0.3;
+  const heat = u < s1 ? 1 : u < tOff ? 1 - 0.85 * ss(s1, s1 + 1.2, u) : u < tOVD ? 0.15 + 0.5 * ss(tOff, tOVD, u) : u < s2 ? 0.65 + 0.35 * ss(tOVD, e1, u) : 1 - 0.85 * ss(s2, s2 + 2.5, u);
+  const tv = sec(st, W_TUNX, 'cR', { hp: XH, off: TUN_OFF, cut: true, step: 0.02 }), g = K.instGeom(K.norm(st), K.norm(st).inst[0]);
+  const S = crossCut(tv, g, g.rs), N = crossCut(tv, g, g.rn), cam = VIEWS.cam(W_TUNX, PW, PH);
+  let svg = tv.svg, rx = '';
+  if (S && N) {
+    // heat: a glow round the sleeve clipped to the corneal tissue (the opened tunnel is not tissue), strongest at the lips
+    const R = (CATARACT.CN.phaco.sleeveOD / 2 + 0.55).toFixed(3);
+    svg += `<g transform="${cam.tf}"><defs><radialGradient id="heatG" gradientUnits="userSpaceOnUse" cx="${S.mm[0].toFixed(3)}" cy="${S.mm[1].toFixed(3)}" r="${R}"><stop offset="0.55" stop-color="#ff4a1a" stop-opacity="0.95"/><stop offset="1" stop-color="#ff4a1a" stop-opacity="0"/></radialGradient>` +
+      `<clipPath id="heatC"><path d="${tv.r.outline.cornea}" clip-rule="evenodd"/></clipPath></defs><g clip-path="url(#heatC)" opacity="${(0.85 * heat).toFixed(3)}"><circle cx="${S.mm[0].toFixed(3)}" cy="${S.mm[1].toFixed(3)}" r="${R}" fill="url(#heatG)"/></g></g>`;
+    // the needle inside the sleeve (coaxial), its lumen; OVD in it when occluded
+    const deg = (S.ang * 180 / Math.PI).toFixed(2), el = (C, a, b, fill, extra = '') => `<ellipse cx="${C[0].toFixed(1)}" cy="${C[1].toFixed(1)}" rx="${a.toFixed(1)}" ry="${b.toFixed(1)}" transform="rotate(${deg} ${C[0].toFixed(1)} ${C[1].toFixed(1)})" fill="${fill}" ${extra}/>`;
+    svg += el(N.Q, N.rx, N.ry, '#c9d1d8', 'stroke="#6f7f8b" stroke-width="1.2"') + el(N.Q, N.rx * 0.7, N.ry * 0.7, ovd ? OVDC : '#56606b', `opacity="${ovd ? 0.9 : 0.6}"`);
+    // flow: irrigation into the eye between needle and sleeve (⊗), aspiration out through the needle (⊙)
+    if (flow) { for (let i = 0; i < 6; i++) { const p = S.pt((g.rs + g.rn) / 2, i * Math.PI / 3), r0 = 7;
+        svg += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${r0}" fill="#fff" stroke="${BSS}" stroke-width="1.8"/><path d="M${(p[0] - 4.5).toFixed(1)} ${(p[1] - 4.5).toFixed(1)}l9 9M${(p[0] + 4.5).toFixed(1)} ${(p[1] - 4.5).toFixed(1)}l-9 9" stroke="${BSS}" stroke-width="1.8"/>`; }
+      svg += `<circle cx="${N.Q[0].toFixed(1)}" cy="${N.Q[1].toFixed(1)}" r="8" fill="#fff" stroke="${OVDC}" stroke-width="1.8"/><circle cx="${N.Q[0].toFixed(1)}" cy="${N.Q[1].toFixed(1)}" r="3" fill="${OVDC}"/>`; }
+    if (us) svg += [1, 2].map(i => `<ellipse cx="${N.Q[0].toFixed(1)}" cy="${N.Q[1].toFixed(1)}" rx="${(S.rx + 8 * i).toFixed(1)}" ry="${(S.ry + 8 * i).toFixed(1)}" transform="rotate(${deg} ${N.Q[0].toFixed(1)} ${N.Q[1].toFixed(1)})" fill="none" stroke="#e07a1f" stroke-width="1.6" stroke-dasharray="4 4" opacity="${(0.7 / i).toFixed(2)}"/>`).join('');
+    // labels: short, in a column beside the cut, leaders to what they name (left: sleeve, irrigation; right: needle, heat)
+    const side = (C, r, sg) => { let b = null; for (let i = 0; i < 72; i++) { const p = C.pt(r, i * Math.PI / 36); if (!b || sg * (p[0] - b[0]) > 0) b = p; } return b; };   // left- / rightmost point of a cut
+    rx += lab('矽膠套', 'sleeve', 14, 150, side(S, g.rs, -1), { color: '#3c4a57' });
+    const ports = [0, 1, 2, 3, 4, 5].map(i => S.pt((g.rs + g.rn) / 2, i * Math.PI / 3)).filter(p => p[1] > S.Q[1]).sort((a, b) => a[0] - b[0]);   // the lower-left ⊗
+    if (flow) rx += lab('灌流（往眼內）', 'irrigation', 14, 250, ports[0], { bold: true, color: BSS, lc: BSS });
+    const nTop = [...Array(24).keys()].map(i => N.pt(g.rn, i * Math.PI / 12)).sort((a, b) => (b[0] - b[1]) - (a[0] - a[1]))[0];   // the needle's upper-right edge (between two ⊗)
+    rx += labNear(flow ? '針頭（抽吸）' : '針頭', 'needle', nTop, 70, -36, { color: flow ? OVDC : '#3c4a57', lc: flow ? OVDC : undefined });
+    const lip = [S.Q[0] + 1.25 * tv.k, S.Q[1]];
+    if (heat > 0.3) rx += lab('切口唇變熱', 'heat', PW - 12, 250, lip, { side: 'R', bold: true, color: WARN, lc: WARN, op: ss(0.3, 0.5, heat) });
+  }
+  rx += tag(flow ? '有水流：熱被帶走' : ovd ? 'OVD 堵住針頭：更熱' : '沒有水流：熱帶不走', 1, flow ? BSS : WARN, 374);
   rx += `<g opacity="${T.on(2, 0.6).toFixed(2)}"><rect x="10" y="10" width="${PW - 20}" height="36" rx="8" fill="#fff" stroke="${COL.accent}" stroke-width="1.6"/>${text(PW / 2, 34, '第一步：放開 3 段；踩 3 段前先確定有水流', { size: 15.5, bold: true, color: COL.accent, anchor: 'middle' })}</g>`;
-  rx += VIEWS.sbar(tv.k, 1, 1) + note('熱的範圍為示意', 1);
-  return { L: { svg, extra: ex, P: SCOPE_T }, R: { svg: rsv, extra: rx, P: TUN_T } };
+  rx += VIEWS.sbar(tv.k, 1, 1) + note('熱的範圍與流向為示意', 1);
+  return { L: { svg: svgL, extra: exL, P: SCOPE_T }, R: { svg, extra: rx, P: TUN_T } };
 };
 DRAW2['6-3'] = T => {
   const L = FOOTAGE.panel('hydro1', FOOTAGE.videoTime('hydro1', 323.9) + 1.0, { badge: false });

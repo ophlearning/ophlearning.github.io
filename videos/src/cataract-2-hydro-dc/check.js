@@ -35,7 +35,7 @@ const LEDGER = {
   '4-2': { '20': '錄影', '1.5': '錄影', '12': '結構', '1': '結構' },
   '4-3': { '90': '結構', '12': '結構', '6': '結構', '2': '錄影', '1': '結構' },
   '5-1': { ...PED, '450': 'Soule 2026', '11': '結構', '80': '示意' },
-  '5-2': { '5': '錄影', '2': '錄影', '6': '錄影', '12': '結構', '1': '結構', '3': '結構', '4': '結構' },
+  '5-2': { '5': '錄影', '2': '錄影', '6': '錄影', '12': '結構', '1': '結構', '3': '結構', '4': '結構', '7': '錄影', '10': '錄影' },
   '5-3': { '450': 'Soule 2026', '1.6': 'Soule 2026', '2.9': 'Soule 2026', '11': '結構', '1': '結構' },
   '5-4': { '4': '錄影', '50': '錄影', '12': '結構' },
   '6-1': { ...PED, '11': '結構' },
@@ -112,7 +112,7 @@ function modelChecks(ctx) {
       `hydrodissection sites ${h1}/${h2}/${h3} o'clock = 右上方 / 左下方 / 右側 of the picture (narration)`); }
   // every label on the footage is measured on a frozen frame of its clip
   { const bad = []; for (const [id, c] of Object.entries(D.clips)) for (const [n, ks] of Object.entries(c.points || {})) for (const q of ks) {
-      const frozen = (c.freeze || []).some(f => f.at === q.t), labelled = !/^pass\d-tip$/.test(n); if (labelled && !frozen) bad.push(`${id}.${n}@${q.t}`); }
+      const frozen = (c.freeze || []).some(f => f.at === q.t), labelled = !/^(pass\d-tip|m-.+)$/.test(n); if (labelled && !frozen) bad.push(`${id}.${n}@${q.t}`); }
     ok(!bad.length, `footage labels only on frozen frames where their points were measured${bad.length ? '; not frozen: ' + bad.join(', ') : ''}`); }
   // instruments enter through their own incision: the cannula and the phaco through the main incision (bottom of the picture, 22° temporal),
   // the chopper through the side port (left of the picture: nasal); in the model, via 'main' / 'side' and the side port left of the centre
@@ -137,6 +137,22 @@ function modelChecks(ctx) {
     ok(r1 && r1.hy && near(r1.hy.prog, 1, 0.02) && g1 && near(g1.dep, P.groove.dep, 1e-6) && c1 && c1.crack && c1.crack.prog >= 0.999,
       `model at the footage's key frames: the wave complete when the golden ring is (${r1 && r1.hy ? f2(r1.hy.prog) : '—'}), groove at full depth after sculpting (${g1 ? f2(g1.dep) : '—'}), crack through when the halves part (${c1 && c1.crack ? f2(c1.crack.prog) : '—'})`);
     ok(end && end.quads.length === 4 && end.quads.every(q => q.eat >= 0.999) && new Set(end.quads.map(q => q.q)).size === 4, `every model quadrant is removed before the chopper leaves (${end ? end.quads.map(q => q.q + ':' + f2(q.eat)).join(' ') : '—'})`); }
+  // the pieces (5-2): the model takes each piece out when and where the footage shows it. Which model quadrant moves at each footage piece<n>
+  // event (sampled page state), that it is gone when the footage shows the red reflex where the piece was (reflex-<n>; piece 3: when piece 4
+  // starts), and, where the footage position was measured (m-piece<n> against m-centre<n> on the same frame: pieces 1, 2, 4), that the measured
+  // clock hour lies inside that quadrant (±1.5 h of its centre). Narration: the first piece from the 6 o'clock side.
+  { const fq = D.clips.quads, at = s => S.reduce((a, b) => Math.abs(b.s - s) < Math.abs(a.s - s) ? b : a), bad = [], seen = [];
+    const st0 = { cat: { main: { ...P.main, cut: 1 }, side: { ...P.side, cut: 1 }, ccc: { ...P.ccc, cut: 1, prog: 1, fold: 1, out: 1 },
+      nuc: { groove: { h: P.grooveH, dep: P.groove.dep }, crack: { prog: 1, sep: 0.5 }, groove2: { dep: P.groove.dep }, crack2: { prog: 1, sep: 0.5 }, rot: 0, quads: [] } } };
+    const QD = K.nucOf(K.norm(st0)).QD, eyeH = (q, rot) => m12(QD.find(e => e.q === q).hq + rot / 30);
+    const hrs = {}; for (const n of [1, 2, 4]) { const pc = fq.points[`m-piece${n}`], cc = fq.points[`m-centre${n}`]; if (pc && cc) hrs[n] = hourPx(pc[0].p, cc[0].p); }
+    for (const n of [1, 2, 3, 4]) { const t0 = E[`piece${n}`], a = at(t0 - 0.5), b = at(t0 + 2), was = new Set(a.quads.filter(q => q.pull > 0 || q.eat > 0).map(q => q.q));
+      const now = b.quads.filter(q => q.pull > 0 && !was.has(q.q)); if (now.length !== 1) { bad.push(`piece ${n}: ${now.length} model quadrants start at ${t0} s`); continue; }
+      const q = now[0].q, tg = E[`reflex-${n}`] ?? E[`piece${n + 1}`], g = at(tg).quads.find(e => e.q === q), h = eyeH(q, b.rot); seen.push(`${n}→q${q} ${h.toFixed(1)} h${hrs[n] !== undefined ? ' (footage ' + hrs[n].toFixed(1) + ')' : ''}`);
+      if (!g || g.eat < 0.999) bad.push(`piece ${n}: model quadrant ${q} not gone at ${tg} s`);
+      if (hrs[n] !== undefined && dH(hrs[n], h) > 1.5) bad.push(`piece ${n}: footage ${hrs[n].toFixed(1)} h, model quadrant at ${h.toFixed(1)} h`); }
+    ok(!bad.length && Object.keys(hrs).length === 3 && dH(hrs[1], 6) <= 1 && line(ctx, '5-2', 2).includes('6 點那一側'),
+      `pieces: the model takes each out at the footage's piece event, gone by its reflex, inside the measured clock position (${seen.join('; ')})${bad.length ? '; ' + bad.join(', ') : ''}`); }
   // machine and model numbers said in the narration
   { const d41 = FL.NUM.surgeDur.venturi[0][1], d81 = FL.NUM.surgeDur.peri[1][1];
     ok(FL.NUM.advInf === 22 && line(ctx, '2-1', 4).includes('再加壓') && ctx.text['2-1'].keys.some(k => k[1].includes('22 mmHg')), `Advanced Infusion ${FL.NUM.advInf} mmHg (Quesada 2022; key 22 mmHg)`);
@@ -216,6 +232,8 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['a quadrant left at the end', c => { const z = c.sync.find(q => Math.abs(q.s - 587.5) < 0.26); if (z && z.quads[3]) z.quads[3].eat = 0.5; }],
       ['surge duration said 3.9 s', c => { c.text['5-3'].lines[3] = c.text['5-3'].lines[3].replace('2.9', '3.9'); }],
       ['groove not on the incision meridian', c => { c.P.grooveH = 9; }],
+      ['piece 1 taken from the temporal quadrant (pieces 1 and 2 swapped)', c => { for (const z of c.sync) for (const q of z.quads) q.q = q.q === 1 ? 2 : q.q === 2 ? 1 : q.q; }],
+      ['piece 2 still there when the footage shows its reflex', c => { for (const z of c.sync) if (z.s >= 500 && z.s <= 523) { const q = z.quads.find(e => e.q === 2); if (q) q.eat = Math.min(q.eat, 0.6); } }],
     ];
     let bad = 0;
     for (const [name, mut] of M) { const c = baseCtx(screen); mut(c); const n = runAll(c).filter(r => !r[0]).length; console.log(`${n ? 'PASS' : 'FAIL'} selftest: breaking 「${name}」 → ${n} check(s) fail`); if (!n) bad++; }

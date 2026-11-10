@@ -13,6 +13,7 @@
 //   turn-start / -end, groove2-start / -end, crack2-start / -end   after the first crack (the nucleus turned, sculpted and parted again; the
 //                            second groove itself is not clearly visible: the narration says so and the model shows the standard steps)
 //   piece<n>                 a piece of nucleus is pulled to the centre and emulsified (start), reflex-<n> red reflex shows where it was
+//                            (the model's piece n is gone by then: draw.js PIECES, check.js)
 // ============================================================================
 const FOOTAGE_DEF = {
   sources: typeof CATARACT_FOOTAGE !== 'undefined' ? CATARACT_FOOTAGE : require('../../cataract-series/footage-sources.js'),   // eslint-disable-line no-undef
@@ -67,17 +68,24 @@ const FOOTAGE_DEF = {
         { t: 463.0, cx: 525, cy: 430, w: 500 }, { t: 466.0, cx: 527, cy: 430, w: 500 }],
       events: { 'turn-start': 424.0, 'turn-end': 431.0, 'groove2-start': 440.0, 'groove2-end': 455.0, 'crack2-start': 458.0, 'crack2-end': 464.0 },
     },
-    // 7:44–9:48.5 pieces pulled to the centre and emulsified, the chopper helping (5×); frozen at 7:56 where the red reflex shows above
+    // 7:32.5–9:48.5 the second division ends (the same frames as the end of 'divide'), then the pieces are pulled to the centre and emulsified, the
+    // chopper helping (5×); frozen at 7:56 where the red reflex shows above. Where each piece was (2026-11-10, read on gridded full-resolution
+    // frames; the cornea centre from a limbus-circle fit on the same frame, overlaid and checked): piece 1 from the 6 o'clock side (reflex 7:54–7:56,
+    // ≈ 6.4 o'clock), piece 2 from the temporal side next to the phaco (reflex by 8:36, ≈ 10.7 o'clock), piece 3 not readable (it is already at the
+    // phaco tip when it can be seen), piece 4 the large piece pushed in by the chopper (9:06–9:24; reflex by 9:26 at ≈ 4.7 o'clock, upper left).
+    // m-* points are measurements only (check.js reads them), not labels.
     'quads': {
-      src: 'case-a', in: 464.0, out: 588.5, rate: 5,
+      src: 'case-a', in: 452.5, out: 588.5, rate: 5,
       freeze: [{ at: 476.0, dur: 5 }],
-      crop: [{ t: 464.0, cx: 525, cy: 425, w: 500 }, { t: 468.0, cx: 551, cy: 419, w: 500 }, { t: 472.0, cx: 517, cy: 259, w: 500 }, { t: 476.0, cx: 500, cy: 262, w: 500 },
+      crop: [{ t: 452.5, cx: 553, cy: 463, w: 500 }, { t: 459.0, cx: 547, cy: 463, w: 500 }, { t: 463.0, cx: 525, cy: 430, w: 500 }, { t: 464.0, cx: 525, cy: 425, w: 500 }, { t: 468.0, cx: 551, cy: 419, w: 500 }, { t: 472.0, cx: 517, cy: 259, w: 500 }, { t: 476.0, cx: 500, cy: 262, w: 500 },
         { t: 480.0, cx: 498, cy: 272, w: 500 }, { t: 484.0, cx: 522, cy: 300, w: 500 }, { t: 490.0, cx: 540, cy: 310, w: 500 }, { t: 496.0, cx: 528, cy: 260, w: 500 },
         { t: 504.0, cx: 523, cy: 276, w: 500 }, { t: 512.0, cx: 551, cy: 298, w: 500 }, { t: 520.0, cx: 595, cy: 352, w: 500 }, { t: 528.0, cx: 590, cy: 379, w: 500 },
         { t: 536.0, cx: 579, cy: 329, w: 500 }, { t: 544.0, cx: 600, cy: 329, w: 500 }, { t: 552.0, cx: 534, cy: 288, w: 500 }, { t: 560.0, cx: 554, cy: 281, w: 500 },
         { t: 568.0, cx: 530, cy: 274, w: 500 }, { t: 576.0, cx: 508, cy: 315, w: 500 }, { t: 584.0, cx: 510, cy: 301, w: 500 }, { t: 588.5, cx: 512, cy: 297, w: 500 }],
-      events: { 'piece1': 465.0, 'reflex-1': 474.0, 'freeze': 476.0, 'piece2': 494.0, 'piece3': 524.0, 'piece4': 546.0, 'reflex-4': 566.0, 'chopper-out': 587.7 },
-      points: { 'reflex': [{ t: 476.0, p: [505, 225] }], 'chopper-tip': [{ t: 476.0, p: [432, 298] }] },
+      events: { 'piece1': 465.0, 'reflex-1': 474.0, 'freeze': 476.0, 'piece2': 494.0, 'reflex-2': 516.0, 'piece3': 524.0, 'piece4': 546.0, 'reflex-4': 566.0, 'chopper-out': 587.7 },
+      points: { 'reflex': [{ t: 476.0, p: [505, 225] }], 'chopper-tip': [{ t: 476.0, p: [432, 298] }],
+        'm-piece1': [{ t: 476.0, p: [505, 225] }], 'm-centre1': [{ t: 476.0, p: [497, 267] }], 'm-piece2': [{ t: 516.0, p: [595, 390] }], 'm-centre2': [{ t: 516.0, p: [557, 343] }],
+        'm-piece4': [{ t: 566.0, p: [490, 195] }], 'm-centre4': [{ t: 566.0, p: [536, 253] }] },
     },
     // 9:47–10:42 the chopper is out; the phaco alone aspirates the remaining pieces and leaves (640.5 s) (4×)
     'cleanup': {

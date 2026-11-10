@@ -13,7 +13,10 @@ const CASE = {
   hydroDemo: 12 - 22 / 30 + 6,                                      // model-only demonstration: injected opposite the main incision (in its section)
   // the groove is sculpted from the main incision toward the opposite side: its axis is the main-incision meridian (錄影：沿 12→6 點)
   groove: { dep: 0.9 },                                             // final depth as a share of the way to the planned plate (示意)
-  quadOrder: [2, 1, 0, 3],                                          // model quadrants removed in this order (each turned to the far side first; 示意)
+  // the four pieces of the footage (anim/footage.js 'quads', piece1–piece4) → model quadrants (quadrant q is centred at grooveH + 1.5 + 3q o'clock
+  // in the nucleus frame, + 3 h after the 90° turn: q0 ≈ 3.8, q1 ≈ 6.8, q2 ≈ 9.8, q3 ≈ 0.8 o'clock). Pieces 1, 2, 4: the quadrant that holds the red
+  // reflex measured where the piece was (≈ 6.4, 10.7, 4.7 o'clock); piece 3: not readable on the footage → the remaining quadrant (示意).
+  pieceQ: [1, 2, 3, 0],
 };
 CASE.grooveH = CASE.main.h;
 if (typeof module !== 'undefined') module.exports = { CASE };
