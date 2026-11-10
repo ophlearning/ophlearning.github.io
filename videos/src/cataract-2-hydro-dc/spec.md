@@ -60,3 +60,13 @@
   - 檢查：`globe/check.js` 第 12 節 43 條，35 個故意改錯全部抓到；① 與 open globe 的參考圖 0.000%。樣本 `globe/sample-cataract2.html` Claude 自檢，參考圖登記在 `ref/manifest.json`（page: null）。
   - 做的時候發現（寫進模型卡）：① 的隧道往中央上升 18°，直的 phaco 從 12 點切口到不了槽的近端深處，所以槽最深在遠端、近端是斜坡；phaco 在最深點時 sleeve 會壓到近端撕囊緣（≤ 0.5 mm，示意）。chopper 從 2 點 side port 只在槽的遠端（離中心 1 mm）才放得到槽底。
   - 下一步：從案例 A 5:15–10:40 挑 clip（`anim/footage.js`，補定位點），寫 `segments.js`、`draw.js`；面板接 `FLUIDICS`；拿到 Veritas 院內設定的照片就換數字。
+- 2026-11-10（第 1 版：文獻、錄影事件、旁白、錄影片段、影片頁與檢查；Claude 小助手。模型 `globe/` 沒改）：
+  - 文獻（PubMed，細節與證據等級在 `script-draft.md`）：17 篇進參考文獻。新加 Taş 2017（轉述 Fine 的做法：撕囊邊緣下、慢而連續、壓中央、換處、推核轉核；打太多 → capsular block、掉核；先放掉一點 OVD）、Blumenthal 2020（越過後囊的波＝hydrodissection、金色的環＝hydrodelineation）、Ernest 2001（wound burn：沒有水流時發熱、OVD 堵住更熱、先確定有水流）、Suryawanshi 2016（訓練中移除核塊時 PCR 1.7%）、Dooley 2006（phaco 自評最難）。Fine 1992 只有摘要，細節改用 Taş 2017。Fairaq 2025 全文：zonule 弱時 hydrodissection 做足、低流量慢動作、chop 類對 zonule 壓力小於 D&C、轉核分核較難。Koch 1994（stop and chop）讀過摘要沒引用；Vasavada 2004、Haripriya 2025、Kato 2018 這一版沒用。刻槽深度靠 red reflex、槽寬、槽底到後囊的毫米數查不到出處 → 示意；surge 與 wound burn 的「第一步」依腳踏的機轉推得，重點框註明。
+  - 錄影（案例 A 5:00–10:45，事件表在 `script-draft.md`）：
+    - Hydrodissection 從**主切口**進 3 次（尖端約 7.9、1.6、8.3 點）；5:22.75–5:23.75 瞳孔邊緣出現**金色的環**（約 1 秒繞滿）；看不到越過後囊的波，也看不出壓中央、轉核。
+    - Phaco 5:52.5 進、刻槽 5:54–6:38（槽底一條比兩側更紅的溝）；chopper 6:39.3 從側切口進；兩支器械先推中段、移到近端，6:57.5 兩半分開。
+    - 7:00–7:45 chopper 伸到核周邊推核、核轉了方向、phaco 往前推進、再分開：第二道槽看不清楚，也可能是 chop 類動作（stop and chop 就是刻槽分兩半再 chop）。所以**前半確定是 divide and conquer（刻槽＋分核）**，後半旁白照實說看不清楚，第二道槽與第二次分核用模型示範。
+    - 7:45–9:47.7 核塊一塊一塊拉到中央乳化（chopper 輔助），每拿走一塊露出更紅的 red reflex；9:47.7 chopper 出、10:40.5 phaco 出。沒有看到切口變白、明顯的 surge、清楚的 zonule 受力線索。
+    - `footage-sources.js` 加 19 個定位點（角膜緣：放射狀邊緣搜尋＋RANSAC 圓；鎖到金色環的時段改用格線讀圖），`anim/footage.js` 9 個 clip（0.5×、2×、原速→3×、1.5×、2×、5×、4×；5 個停格），裁切跟著眼睛、離燒進去的文字 ≥ 4 px。
+  - 影片頁 `anim/video.html`（22 段）：右邊的模型由 `caseAt(錄影的原始時間)` 決定（注水的鐘點與液體層、槽深、裂縫、轉核、第二道槽、四塊依錄影時間），注水時右邊是經注水點的切面（cannula 經主切口、不在這個切面上，只畫在俯視小圖）；刻槽、移除核塊是經主切口的切面，分核是垂直槽的橫切面。腳踏與機器面板（`globe/fluidics.js`）出現在 2-1、3-2、5-1、6-1，數字標「示意，依院內機器設定」。
+  - 檢查 `check.js`：數字帳本＋旁白↔錄影↔模型（播放速度、注水次數與鐘點、金色環 1 秒、刻槽 45 秒、分核 20 秒、核塊 2 分鐘、phaco 4 分 50 秒、事件順序、器械只從自己的切口、標籤只在停格、模型每 0.5 秒跟著錄影事件、四塊在 chopper 退出前清完、Advanced Infusion 22、vacuum 450、surge 1.6–2.9 秒、腳踏 1／2／3、槽的後板與方向）；17 個故意改錯全部抓到。
