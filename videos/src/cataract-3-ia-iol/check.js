@@ -38,7 +38,7 @@ const LEDGER = {
   '4-3': { '6': '錄影', '0.5': '錄影', '12': '結構', '1': '結構' },
   '4-4': { '1': '錄影', '360': '結構', '6.0': '示意', '5.25': '示意', '12': '結構' },
   '4-5': { '30': 'Chang 2009', '93': 'Chang 2009', '0.8': '示意', '12': '結構', '1': '結構' },
-  '5-1': { '118': 'Biro 2006', '2': 'Biro 2006', '3': 'Biro 2006', '6': 'Biro 2006', '8': 'Biro 2006', '22': 'Biro 2006', '24': 'Biro 2006', '11': '結構', '1': '結構' },
+  '5-1': { '118': 'Biro 2006', '2': 'Biro 2006', '3': 'Biro 2006', '6': 'Biro 2006', '8': 'Biro 2006', '22': 'Biro 2006', '24': 'Biro 2006', '11': '結構', '12': '結構', '1': '結構' },
   '5-2': { '2': '錄影', '12': '結構', '1': '結構' },
   '5-3': { '126': 'Liu 2023', '96.8': 'Liu 2023', '93.7': 'Liu 2023', '0': 'Liu 2023', '35': 'Liu 2023', '1': '結構' },
   '5-4': { '12': '結構', '1': '結構' },
@@ -135,7 +135,7 @@ function modelChecks(ctx) {
       `CTR ${P.skipped.ctr.join('–')} s, adjustment ${P.skipped.adjust.join('–')} s and suturing from ${P.skipped.suture} s are in no clip${ctr.length + adj.length + sut.length ? ' (overlap: ' + [...ctr, ...adj, ...sut].join(', ') + ')' : ''}; the narration says the case had a CTR and sutures that routine cases do not need`); }
   // order of the events of the recording
   { const order = ['ia-in', 'freeze-in', 'centre', 'sheet-start', 'sheet-freeze', 'sheet-end', 'nasal-start', 'nasal-end', 'sub-start', 'freeze-sub', 'sub-end', 'freeze-clear', 'ia-out',
-      'ovd-in', 'ovd-inject', 'ovd-freeze', 'ovd-out', 'inj-in', 'iol-out', 'iol-freeze1', 'unfold-start', 'unfold-end', 'inj-out', 'iol-freeze2', 'iol-centred', 'ia2-in', 'ia2-out', 'swab-on', 'swab-freeze', 'swab-off'];
+      'ovd-in', 'ovd-pause', 'ovd-in2', 'ovd-inject', 'ovd-freeze', 'ovd-out', 'inj-in', 'iol-out', 'iol-freeze1', 'unfold-start', 'unfold-end', 'inj-out', 'iol-freeze2', 'iol-centred', 'ia2-in', 'ia2-out', 'swab-on', 'swab-freeze', 'swab-off'];
     const bad = order.filter((n, i) => i > 0 && !(E[n] > E[order[i - 1]]));
     ok(!bad.length && E['unfold-end'] < E['inj-out'] && line(ctx, '4-3', 3).indexOf('打開') < line(ctx, '4-3', 3).indexOf('injector 退出'),
       `footage events in the order the narration tells them (${order.length}; the optic opens before the injector leaves)${bad.length ? '; out of order: ' + bad.join(', ') : ''}`); }
@@ -158,7 +158,7 @@ function modelChecks(ctx) {
     for (const z of S) { const s = z.s, c = z.cat, ia = (s >= E['ia-in'] && s <= E['ia-out']) || (s >= E['ia2-in'] && s <= E['ia2-out']);
       if ((has(z, 'ia') || has(z, 'iaAsp')) !== ia) bad.push(`${s}s I/A ${ia ? 'missing' : 'drawn'}`);
       if ((c.inst || []).some(i => (i.kind === 'ia' && !i.ang) || i.kind === 'iaAsp' || i.kind === 'iaIrr')) bad.push(`${s}s an I/A other than the case's angled tip`);
-      if (has(z, 'cannula') !== (s >= E['ovd-in'] && s <= E['ovd-out'])) bad.push(`${s}s OVD cannula`);
+      if (has(z, 'cannula') !== ((s >= E['ovd-in'] && s <= E['ovd-pause']) || (s >= E['ovd-in2'] && s <= E['ovd-out']))) bad.push(`${s}s OVD cannula`);   // out of the eye in between (錄影)
       if (has(z, 'injector') !== (s >= E['inj-in'] && s <= E['inj-out'])) bad.push(`${s}s injector`);
       if (c.bag && c.bag.strip && (s < E['sheet-start'] || s >= E['sheet-end'] || dH(c.bag.strip.h, 6) > 1)) bad.push(`${s}s strip`);
       if (z.phase === 'ia') { const cx = c.bag.cortex;
@@ -292,6 +292,7 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['the IOL drawn half out (out 0.5)', c => { for (const z of c.sync) if (z.cat.iol && z.cat.iol.out === 0.3) z.cat.iol.out = 0.5; }],
       ['cortex cleared before the I/A', c => { c.sync[0].cat.bag.cortex[5] = 0.5; }],
       ['OVD in front cleared first', c => { for (const z of c.sync) if (z.cat.ovdOut) { const b = z.cat.ovdOut.behind; z.cat.ovdOut.behind = z.cat.ovdOut.front; z.cat.ovdOut.front = b; } }],
+      ['the OVD cannula drawn while it is out of the eye (14:33–14:37.5)', c => { const z = c.sync.find(q => Math.abs(q.s - 875) < 0.1); z.cat.inst = [{ kind: 'cannula', via: 'main', p: [0, -1, 9.6] }]; }],
       ['an I/A pose that hits the iris', c => { const z = c.sync.find(q => (q.cat.inst || []).some(i => i.kind === 'ia')); z.cat.inst[0].p = under(CASE.main.h, 3.3, 0.7); }],
       ['the bimanual tip moved over the rim', c => { c.P.bimanual.r = 2.4; }],
       ['IOL said 12.5 mm', c => { c.text['4-2'].lines[3] = c.text['4-2'].lines[3].replace('13.0', '12.5'); }],

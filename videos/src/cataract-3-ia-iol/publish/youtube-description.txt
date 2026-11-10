@@ -1,0 +1,37 @@
+白內障手術系列的第三支：I/A、放 IOL 與收尾。每一步先看做完的樣子，再看真實手術錄影與同步的機轉切面，最後看出錯的線索與當下的第一步；三分之一以上的時間花在 I/A 和主切口下方的皮質。內容：I/A 的原則（吸口開在 tip 的側面，隨時知道朝哪裡；常用吸口朝上；腳踏 1 段灌流、2 段才吸；在前囊邊緣下夾住皮質、拉到中央再吸，一區接一區繞一圈）、主切口下方的皮質為什麼最難與換角度的做法（雙手 I/A、hydro-dispersion；本例用彎頭 tip 轉向側邊）、吸到後囊的線索（放射狀皺褶匯向吸口）與第一步（腳退回 1 段、有 reflux 就 reflux）、OVD 撐開囊袋與 one-piece IOL 進囊袋的順序（前導 haptic 先進囊袋、optic 在囊袋裡打開、後 haptic 用 hook 壓進）、目標（置中、CCC 一圈蓋住 optic）與偏位、haptic 在 sulcus 的錯誤、IOL 前後的 OVD 都要清、切口密閉（stromal hydration 與 swab pressing），最後是 wet lab 練習清單。
+
+左邊是右眼 OD、術者坐 12 點的手術錄影，已去識別：只裁出眼睛範圍，畫面上沒有任何文字或病人資訊，也不用聲音；慢放、加速與停格都標在畫面上。右邊是以 mm 建模的機轉切面或術者視角，和錄影用同一組事件時間同步；示意的部分畫面上有標。這一眼 zonule 弱：放 IOL 前另放了 capsular tension ring、最後縫合了主切口，routine 不需要，這兩段都略過；IOL 打進去之後約 1 分半的調整細節看不清楚，也略過。本例從頭到尾用同一支彎頭 coaxial I/A tip、經主切口吸（沒有換手、沒有用雙手 I/A）；剛性的彎頭伸不到主切口正下方，那一區的皮質在模型上怎麼被吸掉是示意。I/A 一退出就用棉棒壓在主切口那一側的角膜上；錄影上沒有看到 stromal hydration。吸口方向、後囊皺褶、injector 斜面朝下、IOL 轉正置中的做法用模型示範（示意）。IOL 型號、I/A tip 與 injector、收尾用 stromal hydration 或 swab pressing，依院內常規。
+
+章節
+0:00 片頭
+0:15 1 I/A 的原則
+1:59 2 主切口下方的皮質
+3:24 3 出錯的線索與第一步
+4:15 4 撐開囊袋、放 IOL
+6:15 5 移除 OVD 與收尾
+7:40 6 練習清單
+8:18 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Kanclerz 2019. Semin Ophthalmol 34:409-419. doi:10.1080/08820538.2019.1640750
+2. Suryawanshi 2016. Middle East Afr J Ophthalmol 23:163-7. doi:10.4103/0974-9233.175886
+3. Hagan 1987. Ophthalmic Surg 18:906-7. PMID 3444605
+4. Quesada 2022. Clin Ophthalmol 16:2441-2451. doi:10.2147/OPTH.S363061
+5. Colvard 1997. J Cataract Refract Surg 23:707-9. doi:10.1016/s0886-3350(97)80277-5
+6. Sakamoto 2002. Ophthalmic Surg Lasers 33:337-9. PMID 12134999
+7. Miyoshi 2022. BMC Ophthalmol 22:81. doi:10.1186/s12886-022-02314-0
+8. Lockington 2021. Eye (Lond) 35:1915-1921. doi:10.1038/s41433-020-01181-7
+9. Rai 2015. J Clin Diagn Res 9:NC05-7. doi:10.7860/JCDR/2015/10425.6999
+10. Osawa 2021. PLoS One 16:e0247844. doi:10.1371/journal.pone.0247844
+11. Vass 1999. J Cataract Refract Surg 25:1376-81. doi:10.1016/s0886-3350(99)00204-7
+12. Hollick 1999. Am J Ophthalmol 128:271-9. doi:10.1016/s0002-9394(99)00157-9
+13. Haripriya 2025. Am J Ophthalmol 278:337-345. doi:10.1016/j.ajo.2025.06.043
+14. Chang 2009. J Cataract Refract Surg 35:1445-58. doi:10.1016/j.jcrs.2009.04.027
+15. Biro 2006. J Cataract Refract Surg 32:573-6. doi:10.1016/j.jcrs.2005.12.105
+16. Auffarth 2004. J Cataract Refract Surg 30:879-83. doi:10.1016/j.jcrs.2003.08.031
+17. Liu 2023. JAMA Ophthalmol 141:574-581. doi:10.1001/jamaophthalmol.2023.1491
+18. McDonnell 2003. Ophthalmology 110:2342-8. doi:10.1016/S0161-6420(03)00733-4
+19. Mifflin 2012. J Cataract Refract Surg 38:933-7. doi:10.1016/j.jcrs.2012.04.019
+20. Dooley 2006. J Cataract Refract Surg 32:604-8. doi:10.1016/j.jcrs.2006.01.045
+
+製作　張博淳

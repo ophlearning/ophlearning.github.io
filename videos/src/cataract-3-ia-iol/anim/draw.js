@@ -105,8 +105,8 @@ function caseAt(s) {
     return { cat: c, phase: 'ia' };
   }
   if (s < ev('inj-in') - 1) {                                                    // OVD into the bag
-    c.bag = { ...CLEAN }; c.ovd = ss(ev('ovd-in'), ev('ovd-inject'), s); c.ovdBag = ss(ev('ovd-inject'), ev('ovd-out') - 1, s);
-    if (s >= ev('ovd-in') && s <= ev('ovd-out')) c.inst.push(OVDCAN);
+    c.bag = { ...CLEAN }; c.ovd = ss(ev('ovd-inject') - 0.3, ev('ovd-inject') + 2, s); c.ovdBag = ss(ev('ovd-inject'), ev('ovd-out') - 3, s);
+    if ((s >= ev('ovd-in') && s <= ev('ovd-pause')) || (s >= ev('ovd-in2') && s <= ev('ovd-out'))) c.inst.push(OVDCAN);   // out of the eye in between (錄影)
     return { cat: c, phase: 'ovd' };
   }
   if (s < ev('ia2-in') - 0.5) {                                                  // IOL: model only at out ≤ 0.3 and ≥ 0.8 (CARD.md 白內障 ③ 已知的坑)
@@ -195,6 +195,7 @@ function iaSyncR(f, o = {}) {
   const st = f.st, c = K.norm(st), g = c.inst[0];
   const { cv, ex } = iaSection(st, 'cR', { tipLab: g && g.ang ? '彎頭 I/A tip（示意）' : 'I/A tip' });
   let rx = ex + VIEWS.sbar(cv.k, 1, 1) + note(o.note || '依錄影時間；吸的範圍為示意', 1);
+  if (g && o.portOp > 0) rx += labNear('吸口朝上', 'port up', cv.Q(K.instGeom(c, g).port), 50, -60, { bold: true, color: INK2, op: o.portOp });
   return { svg: cv.svg, extra: rx + (o.extra || ''), P: g && Math.abs(K.dH(G.clockOf(g.p[0], g.p[1]), HP)) > 0.6 && Math.abs(K.dH(G.clockOf(g.p[0], g.p[1]), CASE.main.h)) > 0.6 ? SYNCP_T : SYNC_T };
 }
 DRAW2['1-3'] = T => {
@@ -205,12 +206,12 @@ DRAW2['1-3'] = T => {
   else { const op = frozenOp('ia-strip', f.tau, 748.0);
     if (op > 0) L.extra = labNear('整片皮質', 'cortex sheet', fpt('ia-strip', 'sheet', f.tau), 40, -12, { bold: true, color: '#7a4b00', lc: '#ffd34d', op }) +
       labNear('I/A tip', '', fpt('ia-strip', 'strip-tip', f.tau), -70, 80, { bold: true, op }); }
-  return { L, R: iaSyncR(f, { note: '依錄影時間；吸的範圍與 tip 的位置為示意' }) };
+  return { L, R: iaSyncR(f, { note: '依錄影時間；吸的範圍與 tip 的位置為示意', portOp: T.on(5) }) };   // line 5: 吸口的方向，看右邊的模型
 };
 DRAW2['1-4'] = T => {
   const f = footSeg(T, 'ia-mid'), L = f.L, st = { cat: { ...f.st.cat } };
   const sv = scope(st, W_SCOPE, 'cR'), A = sv.A;
-  let rx = labNear('還有皮質', 'cortex', sv.Q(under(10.85, 3.1, 0)), 40, 40, { bold: true, color: CORT, lc: CORT });
+  let rx = labNear('還有皮質', 'cortex', sv.Q(under(10.85, 3.1, 0)), 40, -45, { bold: true, color: CORT, lc: CORT });
   rx += labNear('吸過的區塊', 'cleared', sv.Q(under(5.5, 3.1, 0)), 50, 20, {});
   if (A.tip0) rx += labNear('I/A tip', '', A.tip0, -60, 40, { color: INK2 });
   rx += tag('一區一區變乾淨', 1, COL.accent, 34, PW / 2 + 30);
@@ -277,7 +278,7 @@ DRAW2['2-3'] = T => {
   let svg = sv.svg, rx = '';
   const subA = sv.Q(under(10.9, 3.15, 0));   // the subincisional cortex right of the sleeve (the thick part, 示意)
   if (!end) rx += lab('主切口下方較厚的皮質', 'subincisional', PW - 12, 300, subA, { side: 'R', bold: true, color: CORT, lc: CORT, op: ss(0.08, 0.3, sub) });
-  else rx += lab('主切口下方的皮質：吸掉了', '', PW - 12, 300, subA, { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.on(4) });
+  else rx += lab('主切口下方的皮質：吸掉了', '', PW - 12, 300, sv.Q(under(10.2, 3.15, 0)), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.on(4) });   // beside the handpiece (the freeze holds the tip in)
   if (g && g.ang && !end) {
     rx += labNear('彎頭轉向側邊（示意）', '', sv.Q(g.bend), -30, -70, { bold: true, color: INK2 });
     const hp = G.clockOf(g.tip[0], g.tip[1]), IW = 232, IH = 140, X = PW - 12 - IW, Y = 46, I = inset(st, hp, { x: 0.4, y: -10.75, w: 5.2 }, X, Y, IW, IH, 'cI');
@@ -285,6 +286,7 @@ DRAW2['2-3'] = T => {
     rx += htext(X + 8, Y + 17, '經 tip 的切面（右＝周邊）', { size: 12, bold: true, color: INK2 });
     rx += lab('tip 在前囊邊緣下', 'under the rim', PW - 12, Y + IH + 24, I.Q(g.tip), { side: 'R', bold: true, color: INK2 });
   }
+  if (g && end) rx += labNear('彎頭 tip（示意）', '', sv.Q(g.bend), -30, -70, { bold: true, color: INK2, op: T.on(4) });
   rx += note('依錄影時間；彎頭 tip 與皮質厚度為示意', 1);
   return { L, R: { svg, extra: rx, P: SCOPE_SYNC_T } };
 };
@@ -449,18 +451,27 @@ DRAW2['5-1'] = T => {
   const lv = sec(st, W_LENS, 'sL'), A = lv.A, c = K.norm(st);
   let ex = '';
   if (b < 0.9) ex += labNear('IOL 後面的 OVD', 'behind the optic', secPt(lv, -2.3, -0.55), 20, 70, { bold: true, color: OVDC, lc: OVDC });
-  if (f < 0.9) ex += lab('前房的 OVD', 'in front', PW - 12, 64, secPt(lv, 1.6, 1.5), { side: 'R', color: OVDC, lc: OVDC });
+  if (f < 0.9) ex += lab('前房的 OVD', 'in front', PW - 12, 64, secPt(lv, 3.0, 2.0), { side: 'R', color: OVDC, lc: OVDC });
   if (A.tip0) ex += labNear('I/A', '', A.tip0, -40, -60, { color: INK2, bold: true });
   if (b > 0.95 && T.on(3) > 0.5) ex += labNear('囊袋貼回 IOL', 'bag closed', A.iolC ? [A.iolC[0] + 60, A.iolC[1] + 10] : secPt(lv, 1, 0), 20, 70, { bold: true, color: COL.accent, lc: COL.accent });
   ex += VIEWS.sbar(lv.k, 1, 1) + note('清的順序與量為示意', 1);
   // right: the numbers (Biro 2006: 118 eyes; Auffarth 2004: laboratory)
   const rbox = (y, h, title, rows, op, col = COL.accent) => `<g opacity="${op.toFixed(2)}"><rect x="14" y="${y}" width="${PW - 28}" height="${h}" rx="10" fill="#f7f9fa" stroke="${col}" stroke-width="1.5"/>${text(30, y + 28, title, { size: 16.5, bold: true, color: col })}` +
     rows.map((r, i) => text(30, y + 56 + i * 24, r[0], { size: 14.5, bold: r[1], color: r[2] || COL.ink })).join('') + `</g>`;
-  let r = `<rect width="${PW}" height="${PH}" fill="#fff"/>`;
+  // line 0: the same state in the surgeon's view (機轉切面＋術者視角), cross-fading to the evidence boxes from line 1
+  const kB = T.on(1, 0.5);
+  let r = '', rx = '';
+  if (kB < 1) { const sv = scope(st, W_SCOPE_N, 'cR'), B = sv.A, IO = K.iolOf(c), oL = 1 - kB;
+    r += sv.svg;
+    if (B.tip0) rx += labNear('I/A（主切口）', '', B.tip0, 60, -25, { bold: true, color: INK2, op: oL });
+    const oe = IO.ring.map(p => sv.Q(p)).reduce((a, q) => Math.hypot(q[0] - PW * 0.2, q[1] - PH * 0.72) < Math.hypot(a[0] - PW * 0.2, a[1] - PH * 0.72) ? q : a);   // the optic edge, lower left
+    rx += lab('optic 邊緣', 'optic edge', 14, PH - 64, oe, { bold: true, color: IOLC, lc: IOLC, op: oL });
+    rx += note('俯視看不出前後：IOL 後面的 OVD 看左邊切面', oL); }
+  r += `<rect width="${PW}" height="${PH}" fill="#fff" opacity="${kB.toFixed(3)}"/>`;
   r += rbox(14, 118, '只清前房 vs 連 IOL 後面一起清（118 眼）', [['術後 2–3、6–8、22–24 小時：'], ['只清前房的那組眼壓較高', true], ['（Biro 2006）', false, COL.sub]], T.on(1));
   r += rbox(146, 94, '實驗台（屍眼）', [['壓克力 IOL：optic 後面容易留下 OVD', true], ['（Auffarth 2004）', false, COL.sub]], T.on(2), '#2463eb');
   r += rbox(254, 94, '後面清掉之後', [['囊袋貼回 IOL、前房變深（模型示意）']], T.on(3), INK2);
-  return { L: { svg: lv.svg, extra: ex, P: CAT_T }, R: { svg: r, extra: '', P: { title: '為什麼要清 IOL 後面', orient: '' } } };
+  return { L: { svg: lv.svg, extra: ex, P: CAT_T }, R: { svg: r, extra: rx, P: kB < 0.5 ? SCOPE_T : { title: '為什麼要清 IOL 後面', orient: '' } } };
 };
 DRAW2['5-2'] = T => {
   const f = footSeg(T, 'ovdout'), L = f.L, st = f.st, cv = sec(st, W_LENS, 'cR'), A = cv.A, c = K.norm(st);
