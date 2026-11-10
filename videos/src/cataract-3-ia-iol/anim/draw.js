@@ -177,7 +177,7 @@ DRAW2['1-2'] = T => {
   const st = { cat: { ...BASE, bag: { cortex: K.cortexSweep(T.on(4, 2.5) * 5 / 12, 2, 1), sub: 1, strip: { h: HP, prog } }, inst: [tip] } };
   const sv = scope(st, W_SCOPE_N, 'sL'), A = sv.A;
   let ex = '';
-  if (A.tip0) ex += labNear('看得到吸口', 'port up', A.tip0, 50, -70, { bold: true, color: INK2, op: T.on(1) });
+  if (A.tip0) ex += lab('看得到吸口', 'port up', PW - 12, 112, A.tip0, { side: 'R', bold: true, color: INK2, op: T.on(1) });
   if (A.strandAtt && prog > 0.15) ex += lab('剝下的皮質', 'cortex', 14, 64, [(A.strandAtt[0] + A.strandEnd[0]) / 2, (A.strandAtt[1] + A.strandEnd[1]) / 2], { bold: true, color: CORT, lc: CORT });
   if (T.on(4) > 0.5) ex += lab('已吸乾淨', 'clear', 14, YB, sv.Q(under(3.6, 3.3, 0)), { op: T.on(4) });
   ex += note('吸口方向、皮質條為示意', 1);
@@ -376,7 +376,7 @@ DRAW2['4-3'] = T => {
 DRAW2['4-4'] = T => {
   const f = footSeg(T, 'iol-final', { at0: T.st(1) - FOOTAGE.videoTime('iol-final', 1118.0) }), L = f.L, op = frozenOp('iol-final', f.tau, 1118.0, 0.35);
   if (T.u < T.st(1)) L.extra = wtext(14, PH - 14, '略過約 1 分半的調整', { size: 14 });
-  else L.extra = labNear('optic 邊緣', 'optic edge', fpt('iol-final', 'optic-edge', f.tau), -10, -110, { bold: true, color: '#7a4b00', lc: '#ffd34d', op: Math.max(op, T.u > T.st(1) + 2 ? 1 : 0) });
+  else L.extra = lab('optic 邊緣', 'optic edge', 14, 64, fpt('iol-final', 'optic-edge', f.tau), { bold: true, color: '#7a4b00', lc: '#ffd34d', op: Math.max(op, T.u > T.st(1) + 2 ? 1 : 0) });
   const st = FIN({}), sv = scope(st, W_SCOPE_N, 'cR'), A = sv.A;
   let rx = '';
   rx += lab('CCC 邊緣', 'rhexis', 14, 64, sv.Q(under(4.6, CN.cccD / 2, 0)), { bold: true, color: '#8a3b12', lc: '#8a3b12', op: T.on(2) });
