@@ -500,6 +500,63 @@ const finalOK = st => { const X = iolClash(st), IO = X.IO, c = X.c, X0 = CAT.rhe
 { const all = [S1, S2, S3, S4, FIN, cat3({ bag: {}, inst: [IA6] }), cat3({ bag: { ...CLEAN, caught: 1 }, inst: [CAUGHT] }), cat3({ bag: {}, inst: [ASP, IRR] }), cat3({ ...FIN.cat, seal: { gape: 1, hydr: 0.5 }, inst: [{ kind: 'hcan', side: 1 }] })]
     .map(st => CAT.section({ st, h: 6, win: W12, step: 0.2 }).svg + CAT.section({ st, h: 9, cut: true, win: W12, step: 0.2 }).svg + CAT.enface({ st }).svg).join('');
   ok(!/NaN|undefined|Infinity/.test(all), `③ views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
+// 13.16 angled coaxial I/A tip (optional inst.ang; case A used one angled tip for all of the cortex). CN.iaAng: bend 90°, bent part 1.8 mm, sleeve from
+//       0.5 mm behind the bend, port on the face toward the cornea when the bend points to the surgeon's left, ±0.45 mm play of the sleeve in the
+//       incision (示意; the bend and length read on the 13:34.5 freeze). Clearance as 13.4 (iris, cornea outside the tunnel, a cross-section straddling the
+//       anterior capsule, behind the posterior capsule) plus a stricter capsule test: a sign change of (z − anterior capsule) along any of 13 lines
+//       parallel to the shaft where the capsule is still there — a steep shaft piercing the capsule never shows up as one horizontal cross-section
+//       straddling it. Incision at 12 here (the video's is 11.3: the same reach turned by the difference).
+const AG = CN.iaAng;
+function clear3(st, i) {
+  const c = CAT.norm(st), g = CAT.instGeom(c, c.inst[i]), f = CAT.layersFn(Object.assign({}, st, { cat: Object.assign({}, st.cat, { inst: [] }) })), Bb = CAT.bagOf(c);
+  const piv = g.pivot, segs = g.bend ? [[g.tip, g.bend], [g.bend, piv]] : [[g.tip, piv]], R = { iris: 0, cornea: 0, antCap: 0, pierce: 0, postCap: 0, g }, prev = new Array(13).fill(null);
+  for (const [a, b] of segs) { const L3 = G.len(G.sub(b, a)), ax = G.unit(G.sub(b, a)), side = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(side, ax));
+    for (let t = 0; t <= L3; t += 0.03) { const q = G.add(a, ax, t), rr = g.ang ? (a === g.bend && t > AG.sleeveBack ? g.rs : g.rn) : g.kind === 'ia' && a === g.tip && t > CN.ia.sleeveBack ? g.rs : (g.rn || g.rr || 0.2); let above = 0, below = 0;
+      for (let k = 0; k < 13; k++) { const an = 2 * Math.PI * k / 12, p = k === 12 ? q : G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), rr - 0.01), o = f(p), w = wallOf(G.mer(p).z, G.mer(p).rho);
+        if (o.iris < 0) R.iris++; if (w.d < T(w.s) && w.d > -0.01 && w.s < g.tn.sI - 0.3) R.cornea++;
+        const r = Math.hypot(p[0], p[1]);
+        if (Bb && r < L.Req && !CAT.bare(c.ccc, r, G.clockOf(p[0], p[1]))) { const sg = p[2] > Bb.zA(r); if (sg) above++; else below++; if (prev[k] !== null && prev[k] !== sg) R.pierce++; prev[k] = sg; } else prev[k] = null;
+        if (Bb && r < L.Req && p[2] < Bb.zP(r, p[0], p[1])) R.postCap++; }
+      if (above && below) R.antCap++; } }
+  R.n = R.iris + R.cornea + R.antCap + R.pierce + R.postCap; return R; }
+const ANGT = (h, la, r, dep, roll, o = {}) => Object.assign({ kind: 'ia', ang: true, roll, lat: la, p: tipUnder(h, RIM + r, dep), occl: 1 }, o);
+const angSt = (...a) => cat3({ bag: {}, inst: [ANGT(...a)] });
+// poses found by a search on the model (2026-11-10): [clock hour, lateral play mm, mm beyond the rim, mm under the capsule, handpiece turn °]
+const REACH = [[1, -0.45, 0.15, 0.8, 40], [1.5, -0.45, 0.25, 0.69, 50], [2, -0.45, 0.25, 0.58, 60], [2.5, -0.45, 0.4, 0.58, 70], [3, -0.45, 0.4, 0.47, 80], [3.5, -0.45, 0.55, 0.47, 90],
+  [4, -0.45, 0.4, 0.47, 90], [4.5, 0, 0.55, 0.47, 90], [5, -0.45, 0.15, 0.47, 90], [5.5, 0.45, 0.15, 0.47, 90], [6, 0.45, 0.25, 0.47, 100], [6.5, 0.45, 0.4, 0.47, 110],
+  [7, 0.45, 0.55, 0.58, -110], [7.5, 0.45, 0.55, 0.47, -110], [8, 0, 0.55, 0.8, -70], [8.5, 0.45, 0.55, 0.69, -90], [9, -0.45, 0.25, 0.8, -50], [9.5, -0.45, 0.15, 0.8, -50],
+  [10, 0, 0.15, 0.8, -40], [10.5, -0.45, 0.15, 0.8, -40], [11, 0.45, 0.15, 0.8, -40]];
+// rigid shape through the main incision: the bend angle and length as made, the shaft through the main tunnel pivot (within the play), the sleeve in the eye
+{ let worst = 0, piv = 0, via = 0; for (const q of REACH) { const c = CAT.norm(angSt(...q)), g = CAT.instGeom(c, c.inst[0]), tn = CAT.tunnelOf(c.main), pv = tn.to3(tn.at(CN.ia.pivotF), q[1]);
+    worst = Math.max(worst, Math.abs(Math.acos(-G.dot(g.axis, g.u)) / D2R - AG.ang), Math.abs(G.len(G.sub(g.tip, g.bend)) - AG.L)); piv = Math.max(piv, G.len(G.cross(G.sub(pv, g.bend), g.axis))); if (g.via !== 'main' || g.tn !== tn) via++; }
+  const gS = CAT.instGeom(CAT.norm(angSt(3, 0, 0.4, 0.47, 80)), Object.assign(ANGT(3, 0, 0.4, 0.47, 80), { via: 'side' })), gL = CAT.instGeom(CAT.norm(angSt(3, 2, 0.4, 0.47, 80)), ANGT(3, 2, 0.4, 0.47, 80)), tn = CAT.tunnelOf(CN.main);
+  const off = G.len(G.sub(gL.pivot, tn.to3(tn.at(CN.ia.pivotF)))), sideFit = CN.ia.sleeveOD > CN.side.w && CN.ia.sleeveOD + 2 * AG.play <= CN.main.w + 1e-9;
+  const sPiv = G.len(G.sub(gS.pivot, tn.to3(tn.at(CN.ia.pivotF))));
+  ok(worst < 1e-6 && piv < 1e-9 && via === 0 && gS.via === 'main' && gS.tn === tn && sPiv < 1e-9 && near(off, AG.play, 1e-9) && sideFit,
+    `angled I/A tip: rigid (bend ${AG.ang}°, ${AG.L} mm; worst error ${worst.toExponential(1)}), shaft through the main tunnel pivot (${piv.toExponential(1)} mm off) in all ${REACH.length} poses; asked through the side port it still goes through the main incision (sleeve ${CN.ia.sleeveOD} mm > side port ${CN.side.w} mm); play clamped to ±${AG.play} mm (asked 2 → ${off.toFixed(2)})`); }
+// reach: under the rim at every half hour from 1 to 11 o'clock (the incision at 12), nothing touched; the straight tip only reaches 4–8 (13.6); directly
+// under the incision (11.5–0.5) no pose of a coarse search clears — there the cortex is engaged from the side (case A: the bend turned sideways to 1.6 h)
+{ const bad = []; for (const q of REACH) { const R = clear3(angSt(...q), 0), g = R.g, rT = Math.hypot(g.tip[0], g.tip[1]), Bb = CAT.bagOf(CAT.norm(angSt(...q)));
+    if (R.n || !(rT > RIM + 0.1) || !(g.tip[2] + g.rn < Bb.zA(rT)) || Math.abs(CAT.dH(G.clockOf(g.tip[0], g.tip[1]), q[0])) > 0.01) bad.push(`${q[0]}h (${['iris', 'cornea', 'antCap', 'pierce', 'postCap'].map(k => k + ' ' + R[k]).join(', ')})`); }
+  ok(!bad.length, `angled tip under the rim (≥ 0.1 mm beyond it, below the capsule) at ${REACH.length} clock positions 1–11 o'clock, nothing touched${bad.length ? '; failed: ' + bad.join('; ') : ''}`);
+  let found = 0, tried = 0; for (const h of [11.5, 12, 0.5]) for (const la of [-AG.play, 0, AG.play]) for (const r of [0.15, 0.3]) for (const dep of [0.3, 0.55, 0.8]) for (let roll = -180; roll < 180; roll += 15) { tried++; if (!clear3(angSt(h, la, r, dep, roll), 0).n) found++; }
+  const R6 = clear3(cat3({ bag: {}, inst: [IA6] }), 0);
+  ok(found === 0 && R6.n === 0, `directly under the incision (11.5, 12, 0.5 o'clock): 0 of ${tried} angled-tip poses clear (found ${found}); the straight tip under the 6 o'clock rim passes the stricter test too (${R6.n})`); }
+// the port turns with the handpiece: in the handpiece's own frame (shaft, bend direction, their normal) it stays put whatever the turn; it faces the cornea
+// when the bend points to the surgeon's left (1–6.5 o'clock) and the posterior capsule when it points right (7–11); on the bent part's surface
+{ const fr = g => { const d = G.unit(g.axis.map(v => -v)), b = G.unit(G.sub(g.u, d.map(v => v * G.dot(g.u, d)))), n = G.cross(d, b); return [G.dot(g.pdir, d), G.dot(g.pdir, b), G.dot(g.pdir, n)]; };
+  const F = [-90, 0, 90, 180].map(roll => fr(CAT.instGeom(CAT.norm(angSt(4, 0, 0.4, 0.47, roll)), ANGT(4, 0, 0.4, 0.47, roll)))), spread = Math.max(...[0, 1, 2].map(k => Math.max(...F.map(f => f[k])) - Math.min(...F.map(f => f[k]))));
+  let up = 0, down = 0, surf = 0; for (const q of REACH) { const g = CAT.instGeom(CAT.norm(angSt(...q)), ANGT(...q)), sb = G.add(g.tip, g.u, -CN.ia.portBack);
+    if (q[4] > 0 ? g.pdir[2] > 0.5 : g.pdir[2] < 0) (q[4] > 0 ? up++ : down++); surf = Math.max(surf, Math.abs(G.len(G.sub(g.port, sb)) - g.rn), Math.abs(G.dot(g.pdir, g.u))); }
+  const nU = REACH.filter(q => q[4] > 0).length, nD = REACH.length - nU;
+  ok(spread < 1e-9 && up === nU && down === nD && surf < 1e-9, `angled-tip port fixed on the handpiece (spread ${spread.toExponential(1)} over four turns); faces the cornea in ${up}/${nU} poses with the bend to the left, the posterior capsule in ${down}/${nD} with it to the right; on the tip's surface`); }
+// both views: the port shows in the microscope only when it faces the cornea; tip and port at the same place in the 12–6 section and the microscope view
+{ const sU = angSt(5.5, 0.45, 0.15, 0.47, 90), sD = angSt(7.5, 0.45, 0.55, 0.47, -110), n = s => (s.match(/<ellipse [^>]*fill="(#1c232a|#f4efe0)"/g) || []).length;
+  const eU = CAT.enface({ st: sU, id: 'u' }), eD = CAT.enface({ st: sD, id: 'u' }), s = sec6(sU, 0.2), g = CAT.instGeom(CAT.norm(sU), CAT.norm(sU).inst[0]);
+  ok(n(eU.svg) === 1 && n(eD.svg) === 0 && near(s.A.tip0[0], -eU.A.tip0[1], 1e-6) && near(s.A.tip0[1], -g.tip[2], 1e-6) && near(eU.A.tip0[0], -g.tip[0], 1e-6),
+    `angled tip in both views: port drawn when it faces the cornea (${n(eU.svg)}), hidden when it faces down (${n(eD.svg)}); tip the same in the section and the microscope (u = −y)`);
+  const all = REACH.filter((_, i) => i % 4 === 0).map(q => { const st = angSt(...q); return CAT.section({ st, h: 6, win: W12, step: 0.2 }).svg + CAT.section({ st, h: 9, cut: true, win: W12, step: 0.2 }).svg + CAT.enface({ st }).svg; }).join('');
+  ok(!/NaN|undefined|Infinity/.test(all), `angled-tip views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
 
 // =====================================================================================================================
 // 14. ④ PCR and the left eye (cataract.js; sources and the 示意 list: CARD.md 白內障 ④). States as in sample-cataract4.html: OS, surgeon at 12,

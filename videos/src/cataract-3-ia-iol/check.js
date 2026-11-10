@@ -7,7 +7,9 @@
 //    panel's model state is sampled on the page (window.CASE_AT, the same function the drawing uses) every 0.5 s of source time and compared
 //    with the footage events: instruments only while they are in the eye, only through the main incision, never touching iris, cornea or the
 //    anterior capsule; cortex cleared only in the recording's phases; OVD in the bag only after the cannula; the IOL never drawn in the stretch the
-//    model cannot show (out 0.3–0.8); OVD behind the optic cleared first; the wound closing only after the swab.
+//    model cannot show (out 0.3–0.8); OVD behind the optic cleared first; the wound closing only after the swab. Since 2026-11-10 every synced I/A
+//    is the case's one angled tip (globe/cataract.js inst.ang) whose clock hour follows the tip measured on the recording (params.js tipSeen,
+//    footage points), the OVD-removal tip clears the IOL, and the 4-4 finishing demonstration (window.DIAL_AT) is checked the same way.
 // --selftest breaks each check once on purpose and fails unless every check then reports the error. --list prints the numbers per segment.
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
 const path = require('path');
@@ -65,24 +67,37 @@ async function screenText() {   // all text drawn on screen per segment (60 % an
     for (let s = 655; s <= 1181.001; s += 0.5) { const z = CASE_AT(s), c = z.cat;
       r.push({ s, phase: z.phase, hold: !!z.hold, cat: JSON.parse(JSON.stringify(c)) }); }
     return r; });
+  const dial = await p.evaluate(() => { const r = []; for (let i = 0; i <= 10; i++) r.push(JSON.parse(JSON.stringify(DIAL_AT(i / 10).cat))); return r; });
   await b.close();
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
-  return { out, sync };
+  return { out, sync, dial };
 }
 
 // ---------------------------------------------------------------- geometry helpers (as globe/check.js 13: instrument clearance, IOL clash)
 const RIM = CN.cccD / 2;
 const under = (h, r, dep) => { const d = G.clockDir(h); return [r * d[0], r * d[1], L.zAnt(r) - dep]; };
+// (anterior capsule: a cross-section straddling it, or — for a steep shaft, whose horizontal cross-sections never straddle — a sign change of
+// z − capsule along any of 13 lines parallel to the shaft where the capsule is still there, as globe/check.js 13.16; the angled tip's sleeve from
+// CN.iaAng.sleeveBack behind the bend)
 function shaft(st, i) {
   const c = K.norm(st), g = K.instGeom(c, c.inst[i]), f = K.layersFn({ cat: { ...st.cat, inst: [] } }), Bb = K.bagOf(c);
-  const piv = g.pivot || g.tn.to3(g.tn.pivot), segs = g.bend ? [[g.tip, g.bend], [g.bend, piv]] : [[g.tip, piv]], R = { iris: 0, cornea: 0, antCap: 0, postCap: 0, g };
+  const piv = g.pivot || g.tn.to3(g.tn.pivot), segs = g.bend ? [[g.tip, g.bend], [g.bend, piv]] : [[g.tip, piv]], R = { iris: 0, cornea: 0, antCap: 0, pierce: 0, postCap: 0, g }, prev = new Array(13).fill(null);
   for (const [a, b] of segs) { const L3 = G.len(G.sub(b, a)), ax = G.unit(G.sub(b, a)), side = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(side, ax));
-    for (let t = 0; t <= L3; t += 0.05) { const q = G.add(a, ax, t), rr = g.kind === 'ia' && a === g.tip && t > CN.ia.sleeveBack ? g.rs : (g.rn || g.ro || g.rr || 0.2); let above = 0, below = 0;
-      for (let k = 0; k < 12; k++) { const an = 2 * Math.PI * k / 12, p = G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), rr - 0.01), o = f(p), w = G.wallOf(G.mer(p).z, G.mer(p).rho);
+    for (let t = 0; t <= L3; t += 0.05) { const q = G.add(a, ax, t), rr = g.ang ? (a === g.bend && t > CN.iaAng.sleeveBack ? g.rs : g.rn) : g.kind === 'ia' && a === g.tip && t > CN.ia.sleeveBack ? g.rs : (g.rn || g.ro || g.rr || 0.2); let above = 0, below = 0;
+      for (let k = 0; k < 13; k++) { const an = 2 * Math.PI * k / 12, p = k === 12 ? q : G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), rr - 0.01), o = f(p), w = G.wallOf(G.mer(p).z, G.mer(p).rho);
         if (o.iris < 0) R.iris++; if (w.d < G.T(w.s) && w.d > -0.01 && w.s < g.tn.sI - 0.3) R.cornea++;
-        const r = Math.hypot(p[0], p[1]); if (Bb && r < L.Req) { if (!K.bare(c.ccc, r, G.clockOf(p[0], p[1]))) { if (p[2] > Bb.zA(r)) above++; else below++; } if (p[2] < Bb.zP(r, p[0], p[1])) R.postCap++; } }
+        const r = Math.hypot(p[0], p[1]);
+        if (Bb && r < L.Req && !K.bare(c.ccc, r, G.clockOf(p[0], p[1]))) { const sg = p[2] > Bb.zA(r); if (sg) above++; else below++; if (prev[k] !== null && prev[k] !== sg) R.pierce++; prev[k] = sg; } else prev[k] = null;
+        if (Bb && r < L.Req && p[2] < Bb.zP(r, p[0], p[1])) R.postCap++; }
       if (above && below) R.antCap++; } }
-  R.axisOK = G.len(G.cross(G.sub(piv, g.bend || g.tip), g.axis)) < 1e-9; R.n = R.iris + R.cornea + R.antCap + R.postCap; return R; }
+  R.axisOK = G.len(G.cross(G.sub(piv, g.bend || g.tip), g.axis)) < 1e-9 && (!g.ang || Math.abs(Math.acos(-G.dot(g.axis, g.u)) * 180 / Math.PI - CN.iaAng.ang) < 1e-6);
+  R.n = R.iris + R.cornea + R.antCap + R.pierce + R.postCap; return R; }
+// the nearest approach of an instrument (bent part, metal shaft, sleeve) to the IOL (optic faces on a 0.25 mm grid, haptic centrelines), mm
+const segD = (p, a, b) => { const ab = G.sub(b, a), t = Math.max(0, Math.min(1, G.dot(G.sub(p, a), ab) / G.dot(ab, ab))); return G.len(G.sub(p, G.add(a, ab, t))); };
+function iolGap(st, i) { const c = K.norm(st), g = K.instGeom(c, c.inst[i]), IO = K.iolOf(c), RO = CN.iol.optic / 2, segs = g.segs.map(q => [q.a, q.b, q.r]); let m = 1e9;
+  for (let u = -RO; u <= RO; u += 0.25) for (let v = -RO; v <= RO; v += 0.25) { const rho = Math.hypot(u, v); if (rho > RO) continue; for (const sg of [1, -1]) { const p = IO.toEye(u, v, sg * K.optHalf(rho)); for (const [a, b, r] of segs) m = Math.min(m, segD(p, a, b) - r); } }
+  for (const H of IO.haps) for (const p of H) for (const [a, b, r] of segs) m = Math.min(m, segD(p, a, b) - r - CN.iol.hw / 2);
+  return m; }
 function iolClash(st) {
   const c = K.norm(st), IO = K.iolOf(c), Bb = K.bagOf(c), f = K.layersFn(st), Lf = K.liftZ(c, 0), RO = CN.iol.optic / 2; let iris = 0, cornea = 0, post = 0, straddle = 0;
   const pts = []; for (let u = -RO; u <= RO + 1e-9; u += 0.3) for (let v = -RO; v <= RO + 1e-9; v += 0.3) { const rho = Math.hypot(u, v); if (rho > RO) continue; for (const sg of [1, -1]) pts.push(IO.toEye(u, v, sg * K.optHalf(rho) * 0.98)); }
@@ -132,7 +147,8 @@ function modelChecks(ctx) {
   { const sh = D.clips['ia-strip'].points.sheet[0], hs = hourPx(sh.p, lmAt(sh.t).cornea), bt = D.clips['ia-sub'].points['bent-tip'][0], hb = hourPx(bt.p, lmAt(bt.t).cornea);
     const fo = D.clips.iol.points['iol-folded'][0], hf = hourPx(fo.p, lmAt(fo.t).cornea);
     ok(dH(hs, 6) < 1.5 && dH(CASE.HP, 6) < 1 && line(ctx, '1-3', 3).includes('6 點那一側'), `stripped sheet at ${hs.toFixed(1)} o'clock on the recording, the model strips it at ${f2(CASE.HP)} h (narration 6 點那一側)`);
-    ok(dH(hb, P.bentSub.h) < 0.8 && dH(hb, P.main.h) < 3 && line(ctx, '2-3', 1).includes('主切口這一側'), `angled tip at ${hb.toFixed(1)} o'clock on the recording (model ${P.bentSub.h} h; within 3 h of the main incision ${f2(P.main.h)} h)`);
+    const zS = ctx.sync.find(z => Math.abs(z.s - bt.t) < 0.26), gS = zS && zS.cat.inst[0], hm = gS ? G.clockOf(gS.p[0], gS.p[1]) : NaN;
+    ok(gS && gS.ang && dH(hb, hm) < 0.5 && dH(hb, P.main.h) < 3 && line(ctx, '2-3', 1).includes('主切口這一側'), `angled tip at ${hb.toFixed(1)} o'clock on the recording when frozen, the model's tip at ${f2(hm)} h (within 3 h of the main incision ${f2(P.main.h)} h)`);
     ok(dH(hf, 6) < 2.5 && line(ctx, '4-3', 1).includes('往 6 點'), `folded IOL at ${hf.toFixed(1)} o'clock of the cornea centre when frozen (narration 往 6 點那一側)`); }
   // instruments enter through the main incision only (the narration: 同一支彎頭 tip，從頭到尾走主切口；沒有換手，也沒有用雙手 I/A)
   { const vias = new Set(), kinds = new Set(); for (const z of S) for (const i of z.cat.inst || []) { vias.add(i.via || 'main'); kinds.add(i.kind); }
@@ -141,7 +157,7 @@ function modelChecks(ctx) {
   { const has = (z, k) => (z.cat.inst || []).some(i => i.kind === k), bad = []; let prev = null;
     for (const z of S) { const s = z.s, c = z.cat, ia = (s >= E['ia-in'] && s <= E['ia-out']) || (s >= E['ia2-in'] && s <= E['ia2-out']);
       if ((has(z, 'ia') || has(z, 'iaAsp')) !== ia) bad.push(`${s}s I/A ${ia ? 'missing' : 'drawn'}`);
-      if (has(z, 'iaAsp') !== (s >= E['sub-start'] && s < E['sub-end'])) bad.push(`${s}s angled tip outside its phase`);
+      if ((c.inst || []).some(i => (i.kind === 'ia' && !i.ang) || i.kind === 'iaAsp' || i.kind === 'iaIrr')) bad.push(`${s}s an I/A other than the case's angled tip`);
       if (has(z, 'cannula') !== (s >= E['ovd-in'] && s <= E['ovd-out'])) bad.push(`${s}s OVD cannula`);
       if (has(z, 'injector') !== (s >= E['inj-in'] && s <= E['inj-out'])) bad.push(`${s}s injector`);
       if (c.bag && c.bag.strip && (s < E['sheet-start'] || s >= E['sheet-end'] || dH(c.bag.strip.h, 6) > 1)) bad.push(`${s}s strip`);
@@ -170,7 +186,31 @@ function modelChecks(ctx) {
     // the IOL of the synced model and of the demonstration never touches iris or cornea, never crosses a capsule, never goes behind the posterior capsule
     const iols = new Map(); for (const z of S) if (z.cat.iol) { const k = JSON.stringify(z.cat.iol) + JSON.stringify(z.cat.ovdOut || {}); if (!iols.has(k)) iols.set(k, z); }
     const bad2 = []; for (const z of [...iols.values()].filter((_, i, a) => i % Math.max(1, Math.floor(a.length / 25)) === 0)) { const x = iolClash({ cat: z.cat }); if (x.n) bad2.push(`${z.s}s ${JSON.stringify(x)}`); }
-    ok(iols.size > 5 && !bad2.length, `IOL of the synced model (${iols.size} poses, sampled): no contact with iris or cornea, no capsule crossing${bad2.length ? '; ' + bad2.slice(0, 2).join(', ') : ''}`); }
+    ok(iols.size > 5 && !bad2.length, `IOL of the synced model (${iols.size} poses, sampled): no contact with iris or cornea, no capsule crossing${bad2.length ? '; ' + bad2.slice(0, 2).join(', ') : ''}`);
+    // the I/A over the IOL (OVD removal) stays clear of the optic and the haptics
+    const ov = new Map(); for (const z of S) if (z.cat.iol && (z.cat.inst || []).some(i => i.kind === 'ia')) { const k = JSON.stringify(z.cat.inst[0]); if (!ov.has(k)) ov.set(k, z); }
+    let gap = 1e9; for (const z of [...ov.values()].filter((_, i, a) => i % Math.max(1, Math.floor(a.length / 12)) === 0)) gap = Math.min(gap, iolGap({ cat: z.cat }, 0));
+    ok(ov.size > 5 && gap >= 0.1, `I/A over the IOL (OVD removal, ${ov.size} poses, sampled): ${gap.toFixed(2)} mm from the optic and haptics at the closest`); }
+  // the model's tip follows where the tip is on the recording (params.js tipSeen, read on gridded frames; footage.js strip-tip at the sheet freeze,
+  // bent-tip at the turn): the same clock hour within 0.75 h (under the rim there), near the centre when the recording's tip is; during the 3 o'clock
+  // phase always on the 3 o'clock half and under the rim at its measured moments; turned sideways to the incision side when frozen on the turn
+  { const at = s => S.find(z => Math.abs(z.s - s) < 0.26), tipOf = z => z && (z.cat.inst || []).find(i => i.kind === 'ia'), hr = t => { const p = t.p; return { h: G.clockOf(p[0], p[1]), r: Math.hypot(p[0], p[1]) }; };
+    const bad = [], seen = [...P.tipSeen, { t: D.clips['ia-strip'].points['strip-tip'][0].t, c: 1 }];
+    for (const q of seen) { const t = tipOf(at(q.t)); if (!t) { bad.push(`${q.t}s no tip`); continue; } const m = hr(t);
+      if (q.c ? m.r > RIM - 0.4 : !(dH(m.h, q.h) < 0.75 && m.r > RIM + 0.15 && t.p[2] < L.zAnt(m.r))) bad.push(`${q.t}s model ${m.h.toFixed(1)} h r ${m.r.toFixed(2)} vs recording ${q.c ? 'centre' : q.h + ' h'}`); }
+    for (const z of S) if (z.s >= E['nasal-start'] && z.s <= E['nasal-end']) { const t = tipOf(z), m = t && hr(t); if (!m || !(m.r < 1.2 || (m.h > 1.5 && m.h < 4.8))) bad.push(`${z.s}s 3 o'clock phase: tip at ${m ? m.h.toFixed(1) : '-'} h`); }
+    const bt = D.clips['ia-sub'].points['bent-tip'][0], tb = tipOf(at(bt.t)), gB = tb && K.instGeom(K.norm({ cat: at(bt.t).cat }), tb), side = gB && gB.u ? G.dot(gB.u, [...G.clockDir(P.main.h + 3), 0]) : NaN;
+    ok(!bad.length && tb && tb.ang && side > 0.5 && hr(tb).r > RIM + 0.15, `model tip sector follows the recording at ${seen.length} measured moments and through the 3 o'clock phase; at the turn (${bt.t} s) the bend points sideways toward the incision's 3 o'clock side (${side ? side.toFixed(2) : '-'}) with the tip under the rim${bad.length ? '; ' + bad.slice(0, 3).join(', ') : ''}`); }
+  // 4-4: the finishing demonstration (常用做法, 示意; the case's own adjustment cannot be read): a hook through the side port resting on the optic inside
+  // the rhexis, clear of iris, cornea and capsule; the IOL in the bag all along (no contact, no capsule crossing); it starts turned and decentred and
+  // ends at the target pose of lines 2–3 with the hook gone; the screen says 示意
+  { const Dl = ctx.dial, bad = []; let gmin = 1e9, gmax = -1e9;
+    for (const [i, c] of Dl.entries()) { const X = iolClash({ cat: c }); if (X.n) bad.push(`k${i / 10} IOL ${JSON.stringify(X)}`);
+      if (c.inst.length) { const R = shaft({ cat: c }, 0), g = R.g, rT = Math.hypot(g.tip[0], g.tip[1]), gp = iolGap({ cat: c }, 0); gmin = Math.min(gmin, gp); gmax = Math.max(gmax, gp);
+        if (R.n || !R.axisOK || g.via !== 'side' || c.inst[0].via !== 'side') bad.push(`k${i / 10} hook (iris ${R.iris}, cornea ${R.cornea}, capsule ${R.antCap}/${R.pierce}, via ${c.inst[0].via})`); if (rT > RIM - 0.2) bad.push(`k${i / 10} hook outside the rhexis`); } }
+    const a = Dl[0].iol, z = Dl[Dl.length - 1].iol;
+    ok(!bad.length && gmin >= 0 && gmax <= 0.3 && Math.abs(a.rot - P.iolRot) >= 45 && Math.hypot(a.dx, a.dy) >= 0.4 && z.rot === P.iolRot && !z.dx && !z.dy && !Dl[Dl.length - 1].inst.length && ctx.screen['4-4'].some(t => t.includes('示意')),
+      `4-4 finishing demonstration (示意): hook through the side port clear and resting on the optic (${f2(gmin)}–${f2(gmax)} mm) inside the rhexis, the IOL in the bag throughout; from ${Math.abs(a.rot - P.iolRot)}° and ${f2(Math.hypot(a.dx, a.dy))} mm off to the target pose${bad.length ? '; ' + bad.slice(0, 3).join(', ') : ''}`); }
   // model claims of the narration
   { const BASE = { main: { ...P.main, cut: 1 }, side: { ...P.side, cut: 1 }, ccc: { ...P.ccc, cut: 1, prog: 1, fold: 1, out: 1 } }, st = inst => ({ cat: { ...BASE, bag: { cortex: new Array(12).fill(1) }, inst: [inst] } });
     const bad = shaft(st({ kind: 'ia', p: under(P.main.h, 3.3, 0.7), port: 'up' }), 0), good = shaft(st({ kind: 'ia', p: under(P.HP, 3.0, 0.55), port: 'up' }), 0);
@@ -180,8 +220,10 @@ function modelChecks(ctx) {
     const irr = shaft(st({ kind: 'iaIrr', p: [2.4 * d[0] + 2.2 * l[0], 2.4 * d[1] + 2.2 * l[1], 10.2] }), 0), hdc = shaft(st({ kind: 'cannula', via: 'side', p: [2.2 * d[0], 2.2 * d[1], L.zAnt(2.2) + 0.05] }), 0);
     ok(B.n === 0 && B.g.via === 'side' && P.bimanual.r > RIM + 0.3 && B.g.pdir[2] > 0.5 && irr.n === 0 && hdc.n === 0 && line(ctx, '2-2', 0).includes('側切口') && line(ctx, '2-2', 3).includes('側切口'),
       `bimanual aspirator via the side port reaches under the subincisional rim (r ${P.bimanual.r}, port up, clear), irrigation via the main incision clear; hydro-dispersion cannula via the side port clear`);
-    const bent = { kind: 'iaAsp', via: 'main', p: under(P.bentSub.h, P.bentSub.r, P.bentSub.dep), tipDir: (() => { const q = G.clockDir(P.bentSub.toward), ee = P.bentSub.el * Math.PI / 180; return [q[0] * Math.cos(ee), q[1] * Math.cos(ee), -Math.sin(ee)]; })(), port: 'up' };
-    ok(shaft(st(bent), 0).n === 0 && P.bentSub.r > RIM, `angled tip (示意) via the main incision under the rim at ${P.bentSub.h} o'clock: clear`);
+    const angU = (h, roll) => ({ kind: 'ia', ang: true, roll, p: under(h, RIM + P.ia.rimR, P.ia.dep) }), A16 = shaft(st(angU(1.6, P.ia.roll0 + P.ia.rollK * 1.6)), 0);
+    let subOK = 0; for (const roll of [-90, -45, 0, 45, 90, 135, 180]) if (!shaft(st(angU(P.main.h, roll)), 0).n) subOK++;
+    ok(A16.n === 0 && A16.axisOK && A16.g.pdir[2] > 0.5 && subOK === 0 && line(ctx, '2-3', 1).includes('轉向側邊'),
+      `the case's angled tip (示意): turned sideways under the rim at 1.6 o'clock, clear, port toward the cornea; straight under the incision (${f2(P.main.h)} h) no turn clears (${subOK} of 7)`);
     // IOL numbers: optic 6.0, overall 13.0 (Osawa 2021), the bag 10.37 (Vass 1999) shorter than the IOL; the model bag 9.6 as drawn
     ok(CN.iol.optic === 6.0 && CN.iol.overall === 13.0 && line(ctx, '4-2', 3).includes('6.0 mm') && line(ctx, '4-2', 3).includes('13.0 mm') && line(ctx, '4-2', 4).includes('10.4 mm') && 10.37 < CN.iol.overall && L.LED.toFixed(1) === '9.6',
       `IOL optic ${CN.iol.optic} / overall ${CN.iol.overall} mm (Osawa 2021) > bag 10.37 mm (Vass 1999; model ${L.LED.toFixed(2)})`);
@@ -219,15 +261,15 @@ function ledgerChecks(ctx) {
 const clone = o => JSON.parse(JSON.stringify(o));
 function baseCtx(screen) {
   const text = {}; for (const s of SEGS) text[s.id] = clone(s);
-  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(screen), ledger: clone(LEDGER), sync: clone(SYNC) };
+  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(screen), ledger: clone(LEDGER), sync: clone(SYNC), dial: clone(DIAL) };
 }
-let SYNC = null;
+let SYNC = null, DIAL = null;
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
 (async () => {
-  const { out: screen, sync } = await screenText();
+  const { out: screen, sync, dial } = await screenText();
   if (process.argv.includes('--list')) { for (const s of SEGS) if (!s.chapterCard && s.layout !== 'refs') { const t = [s.title || '', ...(s.lines || []), ...(s.keys || []).map(k => k[1]), ...(screen[s.id] || [])];
     console.log(s.id, [...new Set(t.flatMap(numbers))].join(' '), '|', [...new Set(t.flatMap(x => cites(x).map(c => c.all)))].join(', ')); } return; }
-  SYNC = sync;
+  SYNC = sync; DIAL = dial;
   const res = runAll(baseCtx(screen));
   let fail = 0; const shown = new Set();
   for (const [c, m] of res) { if (!c) fail++; const key = (c ? 'PASS ' : 'FAIL ') + m; if (!c || !/ledger|has a source|is a reference|citation|is cited in a segment/.test(m)) console.log(key); else shown.add(m); }
@@ -242,7 +284,7 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['narrated speed wrong', c => { c.foot.clips['ia-end'].rate = 4; }],
       ['I/A said 3 minutes but lasted 4', c => { c.foot.clips['ia-end'].events['ia-out'] = 900; }],
       ['a clip overlapping the CTR', c => { c.foot.clips.ovd.out = 895; }],
-      ['events out of order (injector out before the optic opens)', c => { c.foot.clips.iol.events['inj-out'] = 1001; }],
+      ['events out of order (injector out before the optic opens)', c => { c.foot.clips['iol-b'].events['inj-out'] = 1001; }],
       ['a footage label on a moving frame', c => { c.foot.clips['ia-strip'].points.sheet[0].t = 745; }],
       ['the sheet put at 12 o\'clock', c => { c.foot.clips['ia-strip'].points.sheet[0].p = [560, 600]; }],
       ['an instrument through the side port in the synced model', c => { for (const z of c.sync) for (const i of z.cat.inst || []) if (i.kind === 'cannula') i.via = 'side'; }],
@@ -253,6 +295,14 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['an I/A pose that hits the iris', c => { const z = c.sync.find(q => (q.cat.inst || []).some(i => i.kind === 'ia')); z.cat.inst[0].p = under(CASE.main.h, 3.3, 0.7); }],
       ['the bimanual tip moved over the rim', c => { c.P.bimanual.r = 2.4; }],
       ['IOL said 12.5 mm', c => { c.text['4-2'].lines[3] = c.text['4-2'].lines[3].replace('13.0', '12.5'); }],
+      ['the recording\'s tip read 3 h further round (the model no longer follows it)', c => { for (const q of c.P.tipSeen) if (q.h) q.h = (q.h + 3) % 12; }],
+      ['the synced I/A drawn as a straight tip', c => { for (const z of c.sync) for (const i of z.cat.inst || []) if (i.kind === 'ia') delete i.ang; }],
+      ['the angled tip not turned sideways at the turn', c => { const z = c.sync.find(q => Math.abs(q.s - 814.5) < 0.1); z.cat.inst[0].roll = 0; }],
+      ['the OVD-removal tip pushed 0.4 mm down into the optic', c => { for (const z of c.sync) if (z.cat.iol) for (const i of z.cat.inst || []) if (i.kind === 'ia') i.p = [i.p[0], i.p[1], i.p[2] - 0.4]; }],
+      ['the angled tip sent through the side port', c => { for (const z of c.sync) for (const i of z.cat.inst || []) if (i.kind === 'ia') i.via = 'side'; }],
+      ['the 4-4 hook sent through the main incision', c => { for (const d of c.dial) for (const i of d.inst) i.via = 'main'; }],
+      ['the 4-4 demonstration ending decentred', c => { c.dial[c.dial.length - 1].iol.dy = -0.3; }],
+      ['the 4-4 hook pressed 0.3 mm into the optic', c => { for (const d of c.dial) for (const i of d.inst) i.p = [i.p[0], i.p[1], i.p[2] - 0.3]; }],
     ];
     let bad = 0;
     for (const [name, mut] of M) { const c = baseCtx(screen); mut(c); const n = runAll(c).filter(r => !r[0]).length; console.log(`${n ? 'PASS' : 'FAIL'} selftest: breaking 「${name}」 → ${n} check(s) fail`); if (!n) bad++; }
