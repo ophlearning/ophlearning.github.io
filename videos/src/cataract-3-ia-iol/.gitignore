@@ -1,0 +1,11 @@
+# 語音模型（連結）、合成的中間檔、出片與手術錄影的影格不進 git（錄影影格另由根目錄 .gitignore 的 videos/src/*/footage/ 擋）
+# anim/timeline.js 要進 git：參考圖、檢查和影片都用同一條真實時間軸
+tts/vits-melo-tts-zh_en
+tts/wav/
+tts/lexicon_custom.txt
+tts/lines.json
+tts/lines_tts.json
+tts/segs.json
+out/
+*.mp4
+*.wav

@@ -1,0 +1,22 @@
+{
+  "about": "白內障系列 ④（PCR：怎麼認、當下第一步、之後怎麼處理）的檢查：還沒有影片頁（page: null），目前只有模型樣本 globe/sample-cataract4.html（左眼 OS、術者坐 12 點、主切口 11 點、side port 2 點）。改了 globe/cataract.js 或樣本頁後跑 node videos/tools/check-all.js videos/src/cataract-4-pcr；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": null,
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
+  "items": [
+    {
+      "page": "../../../models/globe/sample-cataract4.html",
+      "ref": "../../../models/globe/sample-cataract4.jpg",
+      "dpr": 1,
+      "crop": null,
+      "approved": "2026-11-10",
+      "note": "Claude 自檢（dpr 1 看全圖；dpr 2–3 裁切放大三列：OS 術者視角與方位標籤、破口＋前玻璃體面凸出＋核塊一端歪進破口、玻璃體到 tip、核塊掉落、清亮區線索、第一步 tip 不退＋dispersive OVD 對照先退出、核塊托到前房＋下墊器械（切面與俯視）、pars plana、雙手前段玻璃體切除＋TA（切面與俯視）、IOL in the bag／one-piece sulcus／3-piece optic capture；shot-model.js 加 1 mm 格線放大破口、玻璃體與 sulcus；方位、數字、兩圖一致、器械與 IOL 位置由 globe/check.js 第 14 節檢查）"
+    }
+  ]
+}

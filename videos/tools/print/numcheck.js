@@ -12,13 +12,15 @@ const cites = s => [...s.matchAll(CITE)].map(m => ({ who: m[1], year: m[2], all:
 const numbers = s => s.replace(/https?:\/\/\S+/g, ' ').replace(CITE, ' ').match(/(?<![A-Za-z0-9.])\d+(?:\.\d+)?(?:-\d+)?(?![A-Za-z0-9.])/g) || [];
 const FREE = ['院內常規', '示意', '結構'];
 
-// the video's ledger, read from check.js without running it (check.js starts a browser when required)
+// the video's ledger, read from check.js without running it (check.js starts a browser when required). An object the ledger spreads in
+// (「...PED」, a shared set of entries; video ②) is read the same way from its own 「const PED = {…}」 in check.js.
 function videoLedger(dir) {
-  const src = fs.readFileSync(path.join(dir, 'check.js'), 'utf8'), i = src.indexOf('const LEDGER = {');
-  if (i < 0) throw new Error('no LEDGER in ' + dir + '/check.js');
-  let d = 0, j = src.indexOf('{', i);
-  for (let k = j; k < src.length; k++) { if (src[k] === '{') d++; else if (src[k] === '}' && --d === 0) { j = [j, k + 1]; break; } }
-  return Function('"use strict"; return (' + src.slice(j[0], j[1]) + ')')();
+  const src = fs.readFileSync(path.join(dir, 'check.js'), 'utf8');
+  const objAt = name => { const i = src.indexOf(`const ${name} = {`); if (i < 0) throw new Error(`no ${name} in ${dir}/check.js`);
+    let d = 0, j = src.indexOf('{', i);
+    for (let k = j; k < src.length; k++) { if (src[k] === '{') d++; else if (src[k] === '}' && --d === 0) return src.slice(j, k + 1); } };
+  const led = objAt('LEDGER'), spread = [...new Set([...led.matchAll(/\.\.\.([A-Za-z_$][\w$]*)/g)].map(m => m[1]))];
+  return Function('"use strict"; ' + spread.map(n => `const ${n} = ${objAt(n)};`).join(' ') + ' return (' + led + ')')();
 }
 function videoRefs(dir) { global.document = global.document || {}; return require(path.join(dir, 'anim', 'segments.js')).REFS; }
 
@@ -58,13 +60,13 @@ function selftest(dir) {
   const L = videoLedger(dir), REFS = videoRefs(dir), all = Object.values(L).flatMap(o => Object.entries(o));
   const split = s => String(s).split('；').map(x => x.trim());
   const free = n => all.some(([m, s]) => m === n && split(s).some(x => x === '院內常規' || x === '示意'));
-  const cited = all.find(([n, s]) => split(s).some(x => cites(x).length) && !free(n)), local = all.find(([n, s]) => split(s).includes('院內常規'));
+  const cited = all.find(([n, s]) => split(s).some(x => cites(x).length) && !free(n)), local = all.find(([n, s]) => split(s).includes('院內常規')) || all.find(([n, s]) => split(s).includes('示意'));   // a video without 院內常規 numbers (②): a 示意 one
   const structOnly = all.map(([n]) => n).find(n => all.filter(([m]) => m === n).every(([, s]) => split(s).every(x => x === '結構')));
   const unknown = ['3.7', '13.13', '987'].find(n => !all.some(([m]) => m === n));
   const src = cited && split(cited[1]).find(x => cites(x).length), ref = REFS[0].match(/^([^\s,]+)/)[1];
   const meta = (o = {}) => ({ sources: [], ledger: {}, steps: 8, ...o }), T = (t, struct = null) => ({ t, struct });
   const cases = [
-    ['院內常規 number passes', true, [T(`${local[0]} mm`)], meta()],
+    [`${split(local[1]).includes('院內常規') ? '院內常規' : '示意'} number passes`, true, [T(`${local[0]} mm`)], meta()],
     ['cited number with its source in the footer passes', true, [T(`${cited[0]} mm`)], meta({ sources: [src] })],
     ['number not in the ledger fails', false, [T(`${unknown} mm`)], meta()],
     ['cited number without its source in the footer fails', false, [T(`${cited[0]} mm`)], meta()],

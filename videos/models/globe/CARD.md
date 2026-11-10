@@ -15,6 +15,9 @@
   - Zone III：直肌、直肌附著後變薄的鞏膜、肌肉暫時剪下（disinsertion）。
   - 玻璃體脫出、hyphema、星狀或斜切（shelved）傷口。
 - 2026-11-09 白內障系列 ①（主切口、side port、OVD、CCC）：選用式狀態 `st.cat`，見下面「白內障」一節。
+- 2026-11-10 白內障系列 ②（hydrodissection、divide and conquer、phaco 與 chopper、流體面板）：同樣放在 `st.cat`，見「白內障 ②」一節。
+- 2026-11-10 白內障系列 ③（I/A、IOL 植入、移除 OVD、切口密閉）：同樣放在 `st.cat`，見「白內障 ③」一節。
+- 2026-11-10 白內障系列 ④（PCR、左眼 OS）：`st.eye`＋`st.cat.pcr`、IOL 放 sulcus／optic capture，見「白內障 ④」一節。
 - 之後可用：trabeculectomy、PK 等前段手術。眼球只建一次，後段和眼外肌模型也用這顆。
 
 ## 兩個同步視角與方位慣例
@@ -24,7 +27,7 @@
 - **術者視角**：顯微鏡俯視（`scope`），右眼，正像。
   - 術者預設坐 12 點（病人頭側）：畫面下方＝12 點，右＝temporal（9 點），左＝nasal（3 點）。
   - 術者換位置時，`surgeon` 參數給鐘點，那個鐘點就轉到畫面下方。
-- **鐘點**：照檢查者面對病人的慣例。12 點 superior；右眼 3 點 nasal、9 點 temporal。模型目前只有右眼，左眼的鐘點方向相反。
+- **鐘點**：照檢查者面對病人的慣例。12 點 superior；右眼 3 點 nasal、9 點 temporal；左眼 3 點 temporal、9 點 nasal。鐘點在兩眼是同一個物理方向，只有名稱對調；左眼用 `st.eye: 'OS'`（2026-11-10 加，見「白內障 ④」）。
 - **換算**：三個畫面是同一顆 3D 眼球。兩種切面用同一組組織函數取樣（等高線，marching squares）；俯視圖用同一組 3D 座標投影。所以同一針縫線在三個畫面的位置一定一致，`check.js` 也有檢查。
 
 ## 座標（手術的語言）
@@ -271,10 +274,328 @@
 - **皺褶伸進隧道會讓點跑到隧道另一側**：皺褶只放在內口中央側、在內口處為 0；權重在角膜後表面不能突然歸零（場會不連續），改成往前房漸淡。
 - **小比例尺下沒有標示的皺褶看起來像鋸齒**：第 4–6 章的切面（35 px/mm）不打開 `folds`；只在有「角膜皺褶（示意）」標籤的畫面打開。
 
+## 白內障 ②（2026-11-10 建立；系列 ②：hydrodissection、divide and conquer）
+規格見 `videos/src/cataract-2-hydro-dc/spec.md`。沿用 ① 的水晶體、囊袋、切口與方位。新狀態都是選用式：沒給就和 ① 逐字相同（① 與 open globe 的參考圖 0.000%）。
+
+### 適用的步驟與做法
+- Hydrodissection（cortical cleaving，Fine 1992）：
+  - cannula 從 side port 進，彎的尖端放在撕囊邊緣下。
+  - BSS 走在前囊與皮質之間：往外、繞過赤道、越過後囊。切面上是藍色的一層；術者視角是 red reflex 上移動的亮線（波前）。
+  - 壓中央：液體從撕囊口排到前房。
+  - 打太多：capsular block（動畫示意）。
+- Divide and conquer（Gimbel 1991）：
+  - 刻槽：寬、長、深；槽底 red reflex 變亮（亮度示意）。
+  - 分核：phaco 與 chopper 在槽底、兩側推開；裂縫先往下貫穿後板，再往周邊跑到核的邊緣。
+  - 轉 90°，刻第二道槽、分第二次，得到四個象限。
+  - 四象限移除：occlude 吸住、拉到中央（虹膜平面）、乳化。
+  - 錯誤示範：刻太深（槽底穿過後囊）。
+- 器械：phaco（針頭、bevel、silicone sleeve、灌流孔）經主切口；chopper 經 side port；hydrodissection cannula 的彎尖。
+- 流體面板：`globe/fluidics.js`（純函式，不畫圖；面板由影片畫）。
+
+### 視角與方位
+- `cat`：12–6 切面（同 ①，左＝12 點）。槽沿 12–6 時看得到槽的縱切面（近端的斜坡）與 phaco。
+  - 裂縫沿 12–6 時，這個切面剛好落在裂縫裡，看起來核不見了；這時改用 `cross` 或別的鐘點。
+- `cross`（新）：3–9 切面，從 12 點（術者那側）看，右＝9 點 temporal，和術者視角的左右相同。
+  - `view.off` 把切面往 12（＋）或 6（−）平移，用來切過器械尖端。
+  - 器械畫成「切口」：器械和切面相交的橢圓，不投影（投影會變成一根直立的棒）。
+- 經注水點的切面：`CATARACT.section({ h: 注水鐘點 })`，右＝注水點（樣本用 7 點，side port 在 2 點的對側）。
+- `cscope`：同 ①，多畫波前、槽、裂縫、被拉起的象限。
+- 換算：12–6 切面 u＝−Y；3–9 切面 u＝−X；俯視 x＝−X、y＝Y。
+
+### 狀態（`st.cat`）
+- `hydro: { h, prog, press, block }`：注水的鐘點（預設 6）、波前進度 0→1、壓中央 0→1（液體排出）、capsular block 0→1。
+- `nuc`：核的狀態，依序：
+  - `groove: { h, dep, w, len, over, tipA, rotAt }`：
+    - 槽軸的鐘點 `h`（核自己的座標，預設 12–6）。
+    - `dep` 0→1：從前極刻到「預定後板」。槽底淺時順著前表面，深時順著後表面。
+    - `over` 0→1：刻太深，從預定後板一路到穿過後囊 0.1 mm。
+    - 寬 `w`、長 `len`（預設到撕囊緣內 0.3 mm 為止）。
+    - 近主切口那一段是 phaco 從主切口轉動點到最深點（`tipA`，預設遠端）掃過的斜坡。只有刻的時候槽軸對著主切口才有（`rotAt`：那時核轉了幾度）。
+  - `crack: { prog, sep }`：0→0.4 從槽底往下貫穿後板，0.4→1 往周邊跑到核邊緣（`crackExt`）。prog 1 之後 `sep` 把兩半推開：中間開 sep、赤道不動，兩半都留在囊袋裡。
+  - `rot`：核轉幾度（＋＝術者看順時針＝鐘點變大）。
+  - `groove2`、`crack2`：在核座標 h＋3（轉 90° 後又在 12–6）。
+  - `quads: [{ q, pull, eat }]`：第 q 個象限（核座標的中心在 h＋1.5＋3q）。
+    - 只動核：皮質殼留在囊袋，③ 再吸。
+    - `pull`：頂點拉到中央、前極後 0.6 mm（虹膜平面），外側往下傾 22°，留在囊袋裡。
+    - `eat`：往 phaco 口送，過了口的平面就消失。
+- `surge`：前房深度少了幾成（由 `FLUIDICS.surge` 給），整個水晶體–虹膜隔膜往前。0 就是原狀。
+- `inst`：
+  - `{ kind: 'phaco', p 或 at, bevel: 'up' | 'down', occl }`。
+  - `{ kind: 'chopper', via: 'side', p, tipDir }`。
+  - `{ kind: 'cannula', via, at, bend: true }`：hydrodissection 的彎尖 cannula。
+- 輔助函式：`grooveTip`（phaco 在最深點）、`groovePt`（槽裡的點）、`quadTip`（拉起象限時的 phaco 口）、`hydroOf`、`nucOf`、`grooveGlow`、`crackExt`。
+
+### 數值與出處
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| Hydrodissection 的做法 | 液體在囊與皮質之間分開，之後不必另外吸皮質 | Fine 1992 cortical cleaving hydrodissection（doi:10.1016/s0886-3350(13)80108-3；只看到摘要，cannula 位置、壓中央等細節 [待核對全文]） |
+| 液體層畫的厚度 | 0.15 mm | 示意（真實的分離面更薄，影片解析度看不到） |
+| 波前的路徑與速度 | 沿水晶體表面的路徑長，正規化成 0→1 | 示意 |
+| Capsular block | 核往前頂住撕囊口、液體困在核後、後囊被推後 | Miyake 1998 分類：術中型發生在 hydrodissection 之後，核堵住 CCC 開口（doi:10.1016/s0886-3350(98)80017-5）；術中前房變淺、眼球變硬，像 expulsive hemorrhage（Yeoh 2000，doi:10.1016/s0886-3350(99)00366-1；Yip 2002，doi:10.1177/112067210201200416）；hydrodissection 造成的後囊破是它的一型（Yeoh 2000） |
+| Capsular block 的量 | 水晶體往前 0.3 mm、後極的液袋 1.0 mm（後囊比原位後退 0.7 mm） | 示意 |
+| 手打 hydrodissection 的眼壓 | 模型沒用 | Kato 2018 豬眼：manual 8/20 眼峰值 > 75 mmHg（doi:10.1007/s10384-018-00646-3），旁白可用 |
+| Divide and conquer | 刻槽、分核、四象限 | Gimbel 1991（doi:10.1016/s0886-3350(13)80824-3） |
+| D&C 與 chop 的能量 | 模型沒用 | Wong 2000 RCT：phaco time 2.4 vs 1.2 min、equivalent phaco time 0.84 vs 0.29 min（doi:10.1016/s0886-3350(00)00538-1），旁白可用 |
+| 槽寬、槽端距撕囊緣、槽壁外張 | 1.6 mm、0.3 mm、10° | 示意 |
+| 預定後板（`dep` 1 時槽底到後囊） | 1.0 mm | 示意（查不到出處） |
+| 刻太深 | 穿過後囊 0.1 mm | 示意 |
+| 槽底 red reflex 的亮度 | (1 − 剩下的厚度／4.56)² | 示意（「槽底變亮＝接近後板」是臨床常用的判斷，查不到出處） |
+| 裂縫往下佔的進度 | 40 % | 示意 |
+| 核的大小 | 水晶體的 66 %／68 % | 同 ①，示意 |
+| 象限：頂點位置、傾角 | 前極後 0.6 mm、22° | 示意 |
+| phaco 針頭與 sleeve | 針外徑 0.9、bevel 30°、針露出 1.0、sleeve 外徑 1.5 mm、灌流孔 0.3 mm 在 sleeve 端後 0.45 mm | 示意（院內 tip 型號待確認）。sleeve 外徑由切口推算：2.4 mm 切口張開的周長 4.8 mm＝π×1.53 mm，切口包住 sleeve 才不漏 |
+| phaco 的轉動點 | 隧道 50 % 處 | 示意（① 的器械 35 %；35 % 時深刻槽會把後唇壓到碰虹膜） |
+| chopper | 桿 0.5 mm、彎尖 1.5 mm | 示意 |
+| hydrodissection cannula 的彎尖 | 1.0 mm、往下 35° | 示意 |
+| Wound burn | 模型還沒畫 | Sugar 1999：3 例、切口軸 +7 到 +15 D 散光，輕的數月內減少（doi:10.1016/s0886-3350(99)00021-8）；Giglio 2024 個案（doi:10.1159/000537741） |
+
+### 流體（`fluidics.js`）
+機器是 J&J Veritas（站長確認），院內設定沒有提供。這個環境只能查 PubMed；Veritas 的 FDA 510(k) 與廠商手冊沒查到。面板上的數字一律標「示意，依院內機器設定」，拿到設定畫面再換。
+
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| Veritas 的流體構造 | peristaltic＋venturi 兩種幫浦、dual-durometer 管、variable venting、Advanced Infusion 在瓶上加 22 mmHg（30 cmH2O） | Quesada 2022 first-in-human（doi:10.2147/OPTH.S363061） |
+| 腳踏 | 0 不動、1 灌流、2 灌流＋抽吸、3 再加超音波（第 3 段裡 power 線性增加） | 第 3 段＝超音波：Choi 2026（ultrasound time 定義為腳踏在第 3 段的時間，doi:10.3341/kjo.2025.0196）；1、2 段：Quesada 2022（variable venting 描述從抽吸位置回到灌流位置）。power 隨踩深線性增加：示意 |
+| 四象限 preset | vacuum 450 mmHg、瓶高 81 cm | Soule 2026 Veritas 實驗台的標準 quadrant preset，瓶高測了 41 與 81 cm（doi:10.1097/j.jcrs.0000000000001899）；摘要寫的「aspiration 60 mm Hg」單位不對，[待核對全文]，模型沒用 |
+| surge 持續時間 | peristaltic 2.25／2.90 s、venturi 1.56／2.27 s（瓶高 41／81 cm），中間線性內插 | Soule 2026 |
+| 前房體積、surge 與 vacuum | 250 µL；surge 體積和 vacuum 上限成正比 | Scarfone 2026 綜論（doi:10.3390/medicina62020298） |
+| surge 體積 | 450 mmHg 時 60 µL（前房 24 %） | 示意，落在 Scarfone 2026 整理的 WhiteStar Signature Pro（Veritas 的前一代）30–103 µL 之內 |
+| 前房深度的減少 | ＝surge 體積／前房體積；0.15 s 最淺，持續時間結束時回到 0 | 示意 |
+| 灌流壓 | 瓶高 × 0.7356 mmHg/cm（＋Advanced Infusion 22） | 物理（靜水壓）；Quesada 2022 |
+| 其他設定 | 流量 sculpt 24／quadrant 30 mL/min、sculpt vacuum 80 mmHg、US 50／40 %、不灌流時 15 mmHg、流量壓降 0.25 mmHg/(mL/min)、passive vacuum 1 mmHg/(mL/min)、occlude 後 vacuum 上升時間常數 0.4 s | 示意，依院內機器設定 |
+
+其他出處（旁白用）：Scarfone 2026 也整理了「傳統灌流需要 60–80 mmHg、active fluidics 可在 20–40 mmHg 運作」與「降低 vacuum 與流量可減少 surge」。
+
+### 物理與器械
+- phaco 只經主切口、chopper 只經 side port：軸一定通過各自隧道上的轉動點（phaco 用 50 %，示意）。
+- 隧道的「彎模式」（只用在 phaco 與 chopper；① 的器械照舊）：
+  - 角膜壁跟著器械彎：彎的量＝器械中心線減隧道線，開口外 0.6 mm 高斯衰減，再 0.25 mm 平滑。
+  - 開口張開器械的半徑（sleeve 0.75 mm）。
+  - 只有角膜、角膜緣跟著動；水晶體、虹膜、前房內容取原位置。
+  - 上下的衰減 σb ≥ 3 × 彎的量、σv ≥ 3 × 張開量，對高度單調，牛頓法精確反推。
+- 刻槽的幾何（2026-11-10 做的時候發現）：
+  - ① 的隧道往中央上升 18°、轉動點只比前極高 1.2 mm，直的 phaco 從 12 點切口到不了槽的近端深處。
+  - 所以槽的近端是 phaco 掃過的斜坡，最深處在遠端（6 點側）。
+  - phaco 在最深點時，sleeve 會壓到近端撕囊緣（≤ 0.5 mm，示意；囊沒有畫成被壓變形）。
+  - 和臨床「切口下方最難刻」一致，但沒有出處，旁白不講數字。
+- 分核：chopper 從 2 點的 side port 斜跨過槽。只有在槽的遠端（離中心 1 mm）它才能放到槽底而桿不穿過核；模型的分核姿勢就放在那裡。
+- 推開的兩半留在囊袋裡：囊外的水晶體一律切掉。
+- 象限只有核：皮質殼留在囊袋。整塊（含皮質）抬起會穿過虹膜。
+
+### 必寫的檢查（`check.js` 第 12 節，43 條）
+- Hydrodissection：BSS 只在水晶體表面與囊之間、撕囊口內沒有；波前隨進度擴大、從注水點開始、越過後極；兩圖的波前在注水子午線上同一半徑；壓中央後沒有液體、排出的箭頭停在前房；capsular block 的水晶體前移 0.3、前房 2.42、後囊後退、液袋只在後面。
+- 刻槽：所有深度的槽底都在後囊前（後板 ≥ 0.9 × 預定），只有刻太深會穿過，切面上那裡的後囊也不見；槽不超過撕囊緣內 0.3 mm、寬 1.6；橫切面畫出的槽底到後囊等於標的數字；亮度隨後板變薄、隨深度增加。
+- 器械：phaco（三個姿勢）與 chopper 的軸通過各自的轉動點；中心線不在水晶體裡、表面不碰虹膜、不穿過隧道外的角膜；sleeve 壓到軟的水晶體與撕囊緣 ≤ 0.5 mm；兩圖的尖端位置相同。
+- 隧道彎模式：每條垂直線最多兩塊角膜、場連續、反推 2 µm 內、彎得平滑、彎下的角膜離虹膜 ≥ 0.03 mm。
+- 分核：兩支器械在槽的兩壁、離槽底 < 0.6 mm；裂縫在切面與俯視的範圍相同；推開後中間的縫等於 sep、水晶體不出囊袋；轉 90° 後槽從 12–6 到 3–9。
+- 象限：只有核離開、皮質留下；頂點在中央、離後囊 ≥ 2.5 mm、不超過前極；不碰虹膜；外側比頂點低（往下傾）；phaco 口貼著核塊（occlude）。
+- 流體：腳踏 0–3；靜水壓、Advanced Infusion 22、preset 450／81 cm；occlude 後流量 0、vacuum 上升到上限；surge 的體積在 30–103 µL、持續 2.9 s、平滑、結束後回到 0；切面上前房在 surge 最低點變淺、結束後回到原深度。沒有 NaN。
+- 故意改錯（2026-11-10）：35 個改法，全部會報錯。用 `CATARACT_PATH=<檔案>` 或 `FLUIDICS_PATH=<檔案>` 跑。改法：撕囊口內也有液體、波前反向、俯視的波前放錯子午線、壓中央不排液、排液箭頭進水晶體、液袋跑到前面、block 不前移、預定後板 −0.2、刻太深不切後囊、槽超出撕囊緣、槽寬 ×1.2、標的後板 +0.2、亮度反向、phaco 軸偏離轉動點、sleeve 3 mm、chopper 走主切口、俯視尖端偏 0.2、彎的衰減太短、不平滑、chopper 放同一壁、俯視裂縫範圍用錯、不切囊外、縫只開一半、轉動方向反了、皮質跟著動、傾斜方向反了、頂點太低、腳踏 2 就有超音波、Advanced Infusion 30、surge 120 µL、surge 不結束、持續時間 3.9 s、切面不跟 surge、occlude 仍有流量、注入 NaN。
+
+### 已知的坑（2026-11-10 做的時候踩到的）
+- **切面落在裂縫裡**：12–6 切面＋沿 12–6 的裂縫，切面上整片核不見。分核與四象限改用 `cross`，或選穿過象限中線的鐘點。
+- **投影的器械在橫切面上變成直立的棒**：phaco 從 12 點來，投影到 3–9 切面只剩上下。改成畫器械與切面相交的切口（`cut`）。
+- **偏移切面的水晶體座標**：① 的 `capsuleCut` 用 `x = U·along + nrm·e`，偏移切面要用 `− nrm·e`。② 的新判斷（液體、刻太深）用正確的座標，① 的式子沒改（改了會動到 ① 的畫面）。
+- **phaco 轉動點 35 % 時**，深刻槽會把隧道後唇壓到碰虹膜；phaco 改用 50 %。
+- **整個象限（含皮質）抬起會穿過虹膜**；改成只有核。
+- **推開的兩半凸出囊袋**：只往側邊推，前後表面就跑出去；用囊袋切掉。
+- **樣本的 phaco 擋住槽**：俯視圖上 sleeve 和槽一樣寬；槽的亮度另外畫一張沒有器械的。
+
+## 白內障 ③（2026-11-10 建立；系列 ③：I/A、IOL 植入、移除 OVD、切口密閉）
+規格見 `videos/src/cataract-3-ia-iol/spec.md`。沿用 ①、② 的水晶體、囊袋、切口與方位。新狀態都是選用式：沒給就和 ①、② 逐字相同（①、② 樣本與 open globe 的參考圖 0.000%）。
+
+### 適用的步驟與做法
+- 核拿掉後的囊袋（`bag`）：囊袋保持原來水晶體的形狀（灌流或 OVD 撐著，示意），裡面剩皮質：前囊邊緣下、赤道、周邊後囊上的一層，主切口下方（11–1 點）較厚。
+- I/A：
+  - coaxial（主切口）：圓頭金屬 tip、側面一個吸口、矽膠 sleeve。吸口方向 `port`：`up`（朝角膜，術者看得到）、`side`、`down`（朝後囊，看不到）。
+  - 在前囊邊緣下夾住皮質（occlude）、往中央剝（`strip`）、再吸；每個鐘點扇形的進度（`cortex` 12 個值）。
+  - subincisional：主切口的直 tip 到不了 12 點邊緣下（檢查證明會撞到前囊或虹膜）；改用雙手 I/A（Colvard 1997）：aspiration 從 side port 進、遠端 2 mm 彎 30°（示意）越過撕囊口伸到 12 點邊緣下，irrigation 從主切口進；或 hydro-dispersion（Miyoshi 2022）：27G 鈍針從 side port 對著主切口下方的 fornix 打 BSS，把皮質沖鬆，再用 coaxial 吸。
+  - 錯誤示範（動畫示意）：吸口朝下吸到後囊，後囊被吸成一個尖帳篷到吸口，術者視角看到放射狀皺褶匯向吸口。第一步：停、reflux（旁白依規格書）。
+- OVD 撐開囊袋（`ovdBag`，cohesive，示意）；injector 斜面朝下經主切口；one-piece IOL：前導 haptic 先進囊袋、optic 展開、後 haptic 用 hook（side port）壓進囊袋、轉到位置；最後置中、optic 邊緣 360° 被 CCC 蓋住。錯誤（示意）：偏位、後 haptic 在 sulcus。
+- 移除 OVD：IOL 後方與前方（`ovdOut`）；後方清掉後囊袋才閉合在 IOL 上（`collapse`），前房變深。
+- 收尾：未癒合的切口在低眼壓時從內口開始張開（`seal.gape`，McDonnell 2003）；stromal hydration（`seal.hydr`、器械 `hcan`）：在切口兩側壁的基質打水，基質變白（Mifflin 2012）、腫脹讓兩唇貼合（示意）。本例另縫合主切口（影片說明 routine 不需要）。
+
+### 視角與方位
+- 沿用 `cat`（12–6 切面，左＝12 點）、`tunnel`、`cross`、`cscope`（下＝12 點、右＝temporal），沒有新視角。
+- 器械或 IOL 不在切面上時畫投影（同 ①），面板標題註明「投影」。
+- 換算：同 ①（切面 u＝−Y、v＝−Z；俯視 x＝−X、y＝Y），檢查確認 I/A tip、吸口、皮質條、IOL 中心與 haptic 尖端在兩圖同一位置。
+
+### 狀態（`st.cat`）
+- `bag: { cortex, sub, disp, strip, caught, collapse }`：
+  - `cortex`：12 個鐘點扇形剩下的皮質（1→0，索引＝鐘點 mod 12），邊界 ±0.15 h 平滑；`CATARACT.cortexSweep(prog, h0, dir)` 產生「從 h0 往 dir 方向吸了 prog 圈」的值。
+  - `sub`：主切口下方多出來的皮質（1→0）；`disp`：hydro-dispersion，把這一區的皮質沖離囊 0.3 mm（示意）。
+  - `strip: { h, prog }`：0→0.1 在邊緣下吸住；0.1→0.55 前面那片從邊緣往赤道剝；0.55→1 赤道與後囊那片剝下。剝下的部分畫成一條從還連著的地方到吸口的皮質條（`stripStrand`）。
+  - `caught`：吸口吸到後囊（需要一支有 `port` 的 I/A）。
+  - `collapse`：囊袋閉合在 IOL 上（前囊邊緣貼 optic 前面、後囊貼 optic 後面、赤道夾著 haptic）。有 OVD 在 optic 後面時，`norm` 把它限制在 `ovdOut.behind` 以下。
+- `ovdBag` 0→1：囊袋裡的 OVD（後囊往後撐 0.25 mm，示意）；`ovdOut: { behind, front }` 0→1：optic 平面後方／前方的 OVD 從中央往外清掉。前房的 OVD 仍是 `ovd`，不進囊袋。
+- `iol: { out, unfold, lead, trail, rot, dx, dy, sulcus }`：
+  - `out` 0→1 從 nozzle 出來的程度（nozzle 裡的部分不畫）；`unfold` 0→1 taco 折（80°，邊緣朝上）打開；`lead` 前導 haptic 從直的（剛出 nozzle）到囊袋裡；`trail` 後 haptic 從前房（在虹膜上方、前囊前面）到囊袋裡（同時 optic 從「後緣翹起 12°、往 6 點偏 0.5 mm」放平置中）；`rot` 轉 IOL（度，＋＝術者看順時針）；`dx`、`dy` 偏位；`sulcus` 錯誤：後 haptic 在 sulcus。
+  - 形狀：optic 雙凸圓盤；haptic 是 32 點的中心線（管徑＝haptic 厚），在 EXT（直）、FREE（出廠的 C-loop，尖端距中心 6.5 mm）、BAG（從根部到赤道、再沿赤道內側）、ABOVE（前房裡）、SULC 之間內插。根部還在前囊上方時，BAG 的曲線先經撕囊口往下再往外。
+- `seal: { gape, hydr }`：內口張開 0→1；hydration 0→1（同時把 gape 關掉）。
+- `inst` 新種類：
+  - `{ kind: 'ia', p 或 at, port, occl }`（coaxial，主切口）；`{ kind: 'iaIrr', p }`（雙手 irrigation，主切口）；`{ kind: 'iaAsp', via: 'side', p, tipDir, port, occl }`（雙手 aspiration，`tipDir`＝彎的那段從彎點到尖端的方向）。
+  - `{ kind: 'injector', p, bevel }`（`p`＝斜面中心，預設斜面朝下）；`{ kind: 'hcan', side: ±1, f }`（stromal hydration，尖端在切口側壁的基質、隧道 f 處）；hook 用 ② 的 `chopper`（`via: 'side'`）。
+  - sleeve、injector、雙手 I/A 都用 ② 的隧道「彎模式」；`hcan` 不撐開隧道。
+- 輔助函式：`bagOf`（囊袋表面、帳篷）、`iolOf`（IOL 姿勢、haptic、field）、`cortexT`、`cortexField`、`cortexSweep`、`stripFront`、`stripStrand`、`portDir`、`optHalf`。
+
+### 數值與出處
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| 雙手 I/A 處理 subincisional cortex | 做法 | Colvard 1997：bimanual I/A 比標準 I/A 更容易處理 subincisional cortex、前房較穩（doi:10.1016/s0886-3350(97)80277-5；PMID 9278789，只看到摘要） |
+| Hydro-dispersion | 27G 鈍針經 side port，對著主切口下方的 fornix 打 BSS，再用 coaxial I/A 吸 | Miyoshi 2022：60 眼中 56 眼（93.3%）成功，沒有相關併發症（doi:10.1186/s12886-022-02314-0；PMID 35177028）。沖離 0.3 mm 是示意 |
+| one-piece IOL 大小 | optic 6.0、overall 13.0 mm | Osawa 2021：一款疏水性壓克力 IOL（HOYA XY-1）optic 6.0、overall 13.0 mm，2.4 mm 切口、injector 放入囊袋（doi:10.1371/journal.pone.0247844；PMID 33647069）。**依院內 IOL 型號**；optic 和 ① 的 6.0 一致 |
+| 囊袋直徑 | 模型 9.64 mm（＝水晶體赤道，① 的值） | Vass 1999 放 CTR 後量的 in vivo 囊袋直徑 10.37 ± 0.25 mm（doi:10.1016/s0886-3350(99)00204-7；PMID 10511938）；Kurz 2005 術中中位數 10.5 mm（doi:10.1016/j.jcrs.2005.06.046）。模型比這小約 0.7 mm（① 的 CASIA2 推算值），haptic 壓縮量因此是示意；13.0 mm 比兩者都大，haptic 一定被壓縮 |
+| 切口在低眼壓時的形態 | 內口先張開（模型 0.12 mm，示意） | McDonnell 2003 屍眼 OCT：高眼壓時兩唇貼合，低眼壓時從內側開始張開；India ink 進到切口 3/4 深（doi:10.1016/S0161-6420(03)00733-4；PMID 14644716） |
+| Stromal hydration | 切口兩側壁打水、基質變白 | Mifflin 2012：conventional hydration＝hydrate 主切口的 lateral walls，看得到基質變白（doi:10.1016/j.jcrs.2012.04.019；PMID 22624890）。變白範圍、腫脹量示意 |
+| Swab pressing vs stromal hydration | 模型沒用（旁白可用） | Liu 2023 RCT 126 眼：iOCT 判定切口閉合 96.8% vs 93.7%（不劣），術中前房塌陷 0/63 vs 35/63（55.6%）；單一術者、未遮盲（doi:10.1001/jamaophthalmol.2023.1491；PMID 37166786） |
+| 收尾的眼壓 | 模型沒用（旁白可用） | Hayashi 2014：以 stromal hydration 把眼壓調到 15–40 mmHg，9 分鐘內回到術前（doi:10.1007/s10384-014-0331-7） |
+| one-piece 放 sulcus | 錯誤狀態的形狀示意 | Chang 2009：single-piece acrylic IOL 放 sulcus 的併發症（色素散播、出血、CME 等），只為 in the bag 設計的 IOL 不應放 sulcus（doi:10.1016/j.jcrs.2009.04.027）；細節在 ④ 講 |
+| optic 被 CCC 360° 蓋住 | 重疊 ≥ 0.25 mm（置中時 0.375） | 同 ①：Hollick 1999、Haripriya 2025 |
+| 殘留皮質的分布與厚度 | 片 0.2 mm、主切口下方多 0.45 mm（±1.3 h）、後囊中央 2.2 mm 內乾淨 | 示意（「主切口下方最難吸」是 Colvard 1997、Miyoshi 2022 的前提，沒有厚度數字） |
+| 剝皮質的順序 | 邊緣下 → 赤道 → 周邊後囊 | 示意 |
+| coaxial I/A tip | 外徑 0.9、吸口 0.3 mm 在 tip 後 0.45 mm、sleeve 外徑 1.5、離 tip 1.6 mm | 示意（院內 tip 型號待確認） |
+| 雙手 I/A | 外徑 0.9、aspirator 遠端 2.0 mm 彎 30° | 示意（1.2 mm 彎 35° 時從 2 點 side port 伸不到 12 點邊緣下，檢查會擋） |
+| 吸到後囊 | 後囊被吸成高斯形帳篷（σ 1.0 mm）頂到吸口下緣；14 條放射狀皺褶 | 示意（查不到出處；「出現放射狀皺褶 → 停、reflux」依規格書，旁白要標動畫示意） |
+| 囊袋 OVD 撐開 | 後囊往後 0.25 mm | 示意 |
+| IOL 厚度、haptic | optic 中央 0.8、邊緣 0.3 mm；haptic 寬 0.45、厚 0.4 mm；C-loop 掃 95°（出廠）／125°（囊袋裡） | 示意（依院內 IOL 型號） |
+| injector | nozzle 外徑 1.8 mm、斜面 45°、轉動點在隧道 50 % | 示意 |
+| 植入路徑 | 從 nozzle 沿它的方向到中央、taco 折 80°、後 haptic 還在外面時 optic 後緣翹 12°、往 6 點偏 0.5 mm | 示意 |
+| 偏位、sulcus | 偏 0.8 mm；sulcus 半徑 5.6 mm、optic 往該側偏 0.6、傾 5° | 示意 |
+| 最後位置 | optic 在原來水晶體赤道平面；囊袋閉合、虹膜跟著往後 | 示意（前房 2.72 → 約 3.9 mm，從內皮量到 optic 前面） |
+| 收尾 | 內口張開 0.12 mm；hydration 的變白帶寬 0.3 mm；cannula 尖端在切口兩側外 0.12 mm 的基質 | 示意 |
+
+### 物理與器械
+- 器械只從切口進出：coaxial I/A、irrigation、injector 走主切口；aspiration、hook、hydro-dispersion cannula 走 side port；軸都通過各自隧道的轉動點。hydration cannula 從外口側邊進到側壁基質，不進前房。
+- 器械經過的地方：不碰虹膜、不穿過隧道外的角膜、不穿過前囊（前囊只在撕囊口才能通過；檢查看器械截面在前囊兩側都有點）、不到後囊後面。
+- subincisional 的幾何：主切口的隧道往中央上升 18°，直的 coaxial tip 要伸到 12 點邊緣下，必須從前囊外面往下穿過去，所以一定會撞到前囊或虹膜；side port 的 aspirator 要先越過撕囊口再彎下去。
+- IOL：任何階段都不碰虹膜、角膜，不穿過前囊（optic 用 0.15 mm 的格子看同一位置有沒有前後兩邊；haptic 沿中心線看 z − 前囊 的正負號有沒有在前囊還在的地方改變），不到後囊後面。
+- 最後位置：IOL 所有點都在閉合的囊袋裡、haptic 在赤道內、optic 置中、CCC 邊緣 360° 落在 optic 上 ≥ 0.25 mm。
+- OVD：囊袋的 OVD 只在囊袋裡，前房的 OVD 不進囊袋；後方的 OVD 清掉前，囊袋不能閉合。
+
+### 必寫的檢查（`check.js` 第 13 節，37 條）
+- IOL：出廠 13.0／6.0 mm（Osawa 2021）且和 ① 的 optic 相同；在囊袋裡被壓縮（13.0 大於 Vass 1999 的 10.37 ± 0.25 與模型 9.64），haptic 邊緣在赤道內。
+- 囊袋：沒有核；皮質只是貼著囊的一層，撕囊口內前面沒有；12 點下方比 6 點厚 2 倍以上；吸過的扇形在俯視與切面都沒有皮質、沒吸的還在。
+- coaxial I/A（6 點）：經主切口轉動點、路上不碰任何組織；tip 在邊緣下；吸口朝上、在皮質裡；吸口朝上時俯視看得到、朝下看不到；tip 在兩圖同一位置。
+- 剝皮質：6 點那片隨進度變少、剝離前緣往外移；皮質條的端點就是吸口，兩圖同一點。
+- Subincisional：主切口的直 tip 到 12 點邊緣下會撞到；雙手 I/A 兩支都不碰組織、aspirator 在 12 點邊緣下、吸口朝上在皮質裡；hydro-dispersion 的 cannula 經 side port 到 12 點邊緣、皮質被沖離 ≥ 0.25 mm。
+- 吸到後囊：吸口朝下；帳篷頂點就在吸口正下方、碰到吸口下緣；沒吸到時沒有帳篷；俯視的皺褶都指向吸口；切面畫出的後囊在吸口下方升高。
+- OVD：囊袋的 OVD 不在囊袋外、optic 後面也有；前房的 OVD 不在囊袋裡；兩邊清掉後一點都不剩；先清後面；後面沒清完囊袋不閉合。
+- 植入：injector 經主切口、斜面朝下、nozzle 比切口窄；五個階段（前導 haptic 進去、optic 展開、後 haptic 在外、OVD 裡的最後位置、囊袋閉合）IOL 都不碰虹膜角膜、不穿過囊；前導 haptic 尖端在囊袋裡；後 haptic 在階段 3 在前囊前面、壓進去後在囊袋裡；hook 經 side port 不碰組織。
+- 最後位置：全部在囊袋裡、置中、CCC 重疊 ≥ 0.25 mm、haptic 在赤道；偏位 0.8 mm 與 sulcus 兩種錯誤都會被這條擋下。
+- 囊袋閉合：後囊貼 optic 後面（< 10 µm）、前囊邊緣在 optic 前面一個囊厚；前房 > 2.72 + 1.0 mm；前房塌 40 % 時整個 IOL 往前同樣的量，回到 0 時恢復。
+- IOL 中心與兩個 haptic 尖端在兩圖同一位置（展開中、最後位置）。
+- 收尾：內口張開、hydration 後關上；兩支 hydration cannula 尖端在切口兩側外的基質裡、不在前房、握柄往上；俯視的變白在切口兩端；切面的變白用角膜輪廓裁切。沒有 NaN。
+- 故意改錯（2026-11-10）：37 個改法，全部會報錯（`CATARACT_PATH=<檔案>`；一個改 check.js 自己的輸入）：overall 12.5、haptic 超出赤道、核留在囊袋、皮質伸進撕囊口 0.8 mm、主切口下方的皮質放到 6 點、不看扇形進度、I/A 軸偏離轉動點、吸口朝上變朝下、朝下也畫吸口、俯視 tip 位置偏 0.2、剝離前緣反向、皮質條接到 tip 而不是吸口、coaxial 改指向到得了的地方、雙手彎頭縮成 1.2 mm、aspirator 吸口朝下、不做 hydro-dispersion、帳篷偏 0.3 mm、皺褶不是放射狀、切面不畫帳篷、前房 OVD 進囊袋、OVD 還在就閉合、injector 預設斜面朝上、nozzle 裡的部分照畫（碰角膜）、IOL 傾斜方向反了、後 haptic 躺在虹膜下、optic 平面往前 1 mm、閉合的囊袋不留 haptic 厚度、階段 3 後 haptic 已在囊袋裡、hook 軸偏離 side port、optic 5.0 mm、忽略 sulcus 錯誤、囊離 optic 0.1 mm、IOL 不跟前房深度動、俯視 IOL 中心偏 0.1、hydration 後內口仍張開、hydration cannula 在隧道裡、注入 NaN。
+
+### 已知的坑（2026-11-10 做的時候踩到的）
+- **主切口的直 tip 到不了 12 點邊緣下**：寫成會失敗的檢查（教學重點本身）。雙手 aspirator 的彎頭 1.2 mm 時也到不了（彎點還在前囊下），要 2 mm 才能從撕囊口內彎下去。
+- **吸到後囊的帳篷很高**：囊袋保持水晶體的形狀，後囊離 I/A tip 2–3 mm；tip 放在 6 點 fornix（r 3.8、前囊下 0.9 mm）時帳篷約 1.4 mm。標「動畫示意」。吸口被 tip 擋住，俯視只看得到皺褶匯過去。
+- **剛出 nozzle 的 optic 會碰角膜**：taco 折的兩半在 nozzle 口外直接張開到 2–3 mm 高，`out` 0.35–0.75 之間碰到角膜後面。模型沒有做「邊出邊打開」，影片用 `out` ≤ 0.3（只有前導 haptic 出來）和 ≥ 0.8（optic 已在中央），中間用錄影。
+- **後 haptic 躺在前囊上會鑽進虹膜下**：瞳孔外的前囊上方就是虹膜，改成瞳孔外那段在虹膜上方（前房裡）。
+- **囊袋閉合時 optic 邊緣只有 0.3 mm 厚**：haptic 0.4 mm，閉合的囊會穿過 haptic 根部；閉合的高度改成 optic 與 haptic 厚度取大。
+- **haptic 穿過前囊用「同一格有前後兩邊的點」抓不到**：中心線 0.3 mm 一點、斜穿時同一格只有一邊；改成沿中心線看正負號。
+- **12–6 切面上的前導 haptic 是斜切的一小段**：標籤要指在它和切面相交的地方，不能指投影的尖端（投影在囊袋中央的空白處）。
+
+## 白內障 ④（2026-11-10 建立；系列 ④：PCR 怎麼認、當下第一步、之後怎麼處理）
+規格見 `videos/src/cataract-4-pcr/spec.md`。病例（站長 2026-11-10 確認）：**左眼 OS**、術者坐 superior、主切口約 11 點、side port 約 2 點；phaco 中 PCR；OVD 把剩下的核托起；經角膜緣雙手前段玻璃體切除；AAB00（one-piece）放 sulcus；白色懸浮物推測是 TA。新狀態都是選用式：沒給 `pcr`、`eye`、`iol.pos` 就和 ①–③ 逐字相同（①–③ 樣本的 SVG 逐位元相同；①、②、③、open globe 的參考圖 0.000%）。
+
+### 左眼（OS）
+- `st.eye`（或 `st.cat.eye`）：`'OD'`（預設）或 `'OS'`。
+- **鐘點是檢查者面對病人的鐘點，兩眼的物理方向相同**（3 點＝病人的左側）；只有名稱對調：OD 3 點 nasal、9 點 temporal；**OS 3 點 temporal、9 點 nasal**。
+- 術者坐 12 點時，兩眼的顯微鏡畫面都是下＝12 點、右＝9 點；OS 的右邊因此是 nasal（錄影判讀：caruncle 在畫面右邊）。
+- 模型的解剖沒有鼻顳側差異（角膜、角膜緣、睫狀體的數值四周相同），所以**同樣鐘點的 OS 狀態畫出來和 OD 完全一樣**；變的是畫面怎麼標（`CATARACT.orient`）和一個鐘點叫什麼（`CATARACT.anat`）。檢查證明 OD／OS／不給三種畫法逐位元相同。
+- 切口跟著術者的手，不跟著眼別鏡像：本例主切口 11 點（OS＝superonasal，畫面右下）、side port 2 點（OS＝superotemporal，畫面左下）；同一位置在 OD 是 1 點（`CATARACT.mirrorH`）。把 OS 畫面左右翻轉是錯的：主切口會跑到左下，和錄影（右偏 31–38°）相反，檢查會擋。
+- `orient({ eye, surgeon })`：下、右、上、左各是幾點與 nasal／temporal，`text` 例「左眼 OS　術者坐 12 點：下＝12 點　右＝9 點 nasal」。`orient({ eye, view: 'section', h })`：切面左右各幾點、從哪一側看（OD 12–6 切面從 9 點 temporal 看＝① 的說法；OS 11–5 切面從 inferonasal 看）。
+- 切面：`views.js` 的 `pcr` 視角＝經主切口的子午切面（左＝主切口，本例 11–5 點）；`pp` 視角＝經 pars plana 切口的子午切面（右＝切口）。
+
+### 適用的步驟與做法
+- **認出 PCR**（Rajan 2025 的線索）：後囊破口（位置、大小、往赤道的放射狀撕裂）；前房突然變深、瞳孔瞬間放大（`deep`）；核塊一端歪進破口（`frag.sink`）、核塊不跟 tip（tip 留在原處、核塊掉開）；red reflex 出現有邊緣的清亮區（俯視的破口區比周圍亮、邊緣清楚）；完整的前玻璃體面從破口凸出（`vit.bulge`）、破了就有玻璃體經破口、囊袋、撕囊口跑到 tip 或切口（`vit.prolapse`、`to`）；核塊掉進前段玻璃體（`frag.drop`）。
+- **第一步**：tip 不退、經 side port 打 dispersive OVD 封住破口再退（Rajan 2025）：`ovdD.tamp` 讓玻璃體留在後面（模型裡是因果：有 tamp 時 `prolapse` 不會往前）；對照「先退出」（`collapse`）：前房塌、整個隔膜往前、玻璃體自動跑到主切口（Rajan 2025：突然退出→前房不穩、破口變大、碎片掉落；Arbisser 2006：維持壓力關係）。壓力、流量的大小示意。
+- **剩下的核**：OVD 把核塊托到前房（`frag.float`；`ovdD.fill` 囊袋與撕囊口上方一個圓頂、`ovdD.coat` 內皮塗一層，Rajan 2025：dispersive OVD 保護內皮與後囊、低能量乳化）、side port 的直器械墊在下面（`spatula`）、phaco 從主切口吃核塊的直邊（`frag.eat`）。核塊放的方向可以和認出時不同（托起時轉過，示意）。
+- **前段玻璃體切除**：雙手、經角膜緣：vitrector 經主切口、切割口在破口（後囊高度），irrigation 經 side port、高在前房、側孔水平出水、遠離破口（Rajan 2025：雙手、灌流與切割分開較能控制；流向示意，`pcrFlows`）；切除進度 `vit.cut`；**TA**（`vit.ta`）白點只黏在玻璃體上與裡面（Burk 2003）。Pars plana 做法（`pp`）：23G 經 pars plana、角膜緣後 3.5–4 mm（Rajan 2025），切口位置（本樣本 11 點）示意。
+- **IOL 位置**：in the bag（③）、**one-piece 放 sulcus**（`iol.pos: 'sulcus'`；optic 在前囊前、haptic 在虹膜後到 sulcus，厚 haptic 貼近虹膜後面＝摩擦風險，示意；Chang 2009 列的併發症：色素散播、透照缺損、眼壓高、出血、CME，只為囊袋設計的 IOL 不應放 sulcus）、**3-piece 放 sulcus＋optic capture**（`kind: '3pc', capture: 1`：haptic 在 sulcus、optic 從 CCC 壓到後面，撕囊邊緣蓋在 optic 前面、只在兩個 haptic 接點被撐開；Rajan 2025）。sulcus 的 ELP 與度數：Suto 2003。
+
+### 狀態（`st.cat`）
+- `pcr: { rent, deep, collapse, vit, frag, ovdD, pp }`：
+  - `rent: { h, r, a, b, size, ext }`：破口中心（水晶體座標的鐘點、離軸半徑）、半軸 a（徑向）× b（切向）× `size`、`ext` 0→1 往赤道的放射狀撕裂（`ext` 1 到赤道內 0.15 mm）。
+  - `deep` 0→1：前房變深（隔膜往後 0.45 mm）、瞳孔放大 0.8 mm；`collapse` 0→1：先退出，前房塌（隔膜往前 1.0 mm）。量都是示意。
+  - `vit: { bulge, prolapse, to, cut, ta }`：`bulge` 完整的前玻璃體面從破口凸出（0.9 mm 圓頂）；`prolapse` 玻璃體沿樣條（破口後 0.6 mm → 破口 → 囊袋 → 撕囊口上 0.25 mm → 目標）往前的程度，管徑從 0.75 mm 漸細到 0.12 mm 的條；`to`：`'main'`（主切口內口）、`'side'`、`'tip'`（器械尖端或 vitrector 的切割口）或座標；`cut` 切掉的比例；`ta` TA 的量。前玻璃體面在後囊後 0.06 mm（Berger's space，示意）。
+  - `frag: { h, sink, drop, float, eat, at }`：剩下的核塊（橢球 5.2 × 4.8 × 2.0 mm 切掉一側，剩 5.2 × 2.7 × 2.0 mm；直邊在中央，圓邊朝 `h`；示意）。休息時在囊袋中、離後囊 1.0 mm；`sink`：最近破口的那一端轉 40°、0.3 mm 穿進破口（足跡置中在破口裡）；`drop`：整塊穿過（破口要先變大）到後極後 3.4 mm；`float`：托到撕囊口平面上 0.1 mm、重心在軸上；`eat`：從直邊吃到圓邊。
+  - `ovdD: { tamp, coat, fill, at }`：破口上的 dispersive OVD（最多塞進破口 0.15 mm）、內皮塗層 0.25 mm、囊袋＋撕囊口上的圓頂（高 `fill` mm）。只在囊袋與前房，不進水晶體物質、核塊、IOL、虹膜。
+  - `pp: { h, s }`：pars plana 切口（預設 9 點、3.5 mm）。
+- `iol: { pos: 'sulcus', kind: '1pc' | '3pc', capture, chafe }`：sulcus／optic capture（③ 的植入過程參數不用，直接是最後位置）；`chafe` 畫出 haptic 與虹膜後面距離 < 0.1 mm 的地方（紅，示意）。capture 時撕囊口在兩個 haptic 接點被撐到 optic 邊緣外 0.35 mm（±0.6 個鐘點，示意）；sulcus／capture 時虹膜停在原來的高度（囊袋塌了，示意）。
+- `inst` 新種類：`{ kind: 'vitrector', p, port, via }`（23G，切割口在尖端後 0.35 mm，`via: 'pp'` 走 pars plana）、`{ kind: 'irrig', via: 'side', p }`（閉口、兩個側孔水平出水）、`{ kind: 'spatula', via: 'side', p }`（直器械）。都用 ② 的隧道彎模式；pars plana 的不碰角膜隧道。
+- 輔助函式：`pcrOf`（破口、玻璃體路徑與場、核塊、OVD、TA 點、pars plana 切口）、`chafeOf`、`pcrFlows`、`orient`、`anat`、`mirrorH`。
+
+### 數值與出處
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| PCR 的線索 | 前房突然變深＋瞳孔瞬間放大、red reflex 變清亮、核轉不動、核不跟 tip、核或 IOL 一端歪、核部分掉進前段玻璃體；I/A 吸到後囊時破口區 red reflex 更清亮更亮、瞳孔 peaking | Rajan 2025 綜論（doi:10.4103/tjo.TJO-D-25-00059；PMID 41523115，PMC 全文） |
+| 前房變深、瞳孔放大的量 | 0.45 mm、0.8 mm | 示意 |
+| 第一步 | 不要突然退出器械；phaco 留在原位、經 side port 打高分子量或 dispersive OVD 封住破口、擋住玻璃體，前房穩定後再慢慢退；不追掉下去的碎片 | Rajan 2025 |
+| 壓力關係 | 前後壓力差把玻璃體推進前房；維持壓力關係限制玻璃體脫出 | Rajan 2025；Arbisser 2006（doi:10.1016/j.ohc.2006.07.002；PMID 17067904，摘要） |
+| 先退出時前房塌的量 | 隔膜往前 1.0 mm | 示意 |
+| 剩下的核 | 前房裡較小的核塊：低能量 phaco，用 dispersive OVD 保護內皮與後囊；鈍的第二支器械把核托離後囊 | Rajan 2025 |
+| 核塊大小、休息位置、下沉與掉落的姿勢、托起的高度 | 5.2 × 2.7 × 2.0 mm；離後囊 1.0；轉 40°、穿進 0.3；後極後 3.4；撕囊口平面上 0.1 | 示意 |
+| 前段玻璃體切除 | 雙手（一手 vitrector、一手灌流）較能控制、不把更多玻璃體拉出；TA 染出玻璃體條；vitrector 低切速可清皮質 | Rajan 2025 |
+| Pars plana 前段玻璃體切除 | 23 或 25G vitrector，角膜緣後 3.5–4 mm；模型 3.5 mm | Rajan 2025；Arbisser 2006：pars plana＋染色最有效 |
+| Pars plana 切口的鐘點 | 樣本 11 點 | 示意 |
+| 23G 外徑 | 0.64 mm | 針規（0.6414 mm）；切割口位置與大小示意 |
+| TA | Kenalog 顆粒卡在玻璃體上與裡面，讓玻璃體看得見（0.2 mL 40 mg/mL 過濾洗過、2 mL BSS、27G 打進前房） | Burk 2003（doi:10.1016/s0886-3350(03)00016-6；PMID 12686230，摘要）；Wu 2008 也提 TA 染色（doi:10.1097/ICU.0b013e3282f2a9d5） |
+| TA 點的數量、大小 | 240、半徑 0.045 mm | 示意（真的顆粒遠小於影片解析度） |
+| 破口大小、撕裂、前玻璃體面的凸起、Berger's space、玻璃體的形狀與管徑 | — | 示意 |
+| one-piece 放 sulcus | 併發症：色素散播、虹膜透照缺損、dysphotopsia、眼壓高、出血、CME；30 例中 28 例要再手術；只為囊袋設計的 IOL 不應放 sulcus、每台刀要備 backup IOL | Chang 2009（doi:10.1016/j.jcrs.2009.04.027；PMID 19631134，摘要） |
+| sulcus 的選擇 | 後囊破、前囊完整可放 sulcus；建議 3-piece PMMA haptic；one-piece acrylic 通常不放 sulcus（偏位、磨虹膜）；optic capture：haptic 在 sulcus、optic 經前囊 CCC capture | Rajan 2025 |
+| sulcus 的 ELP 與度數 | optic 比 in the bag 往前 0.63 mm（模型）；度數減 1.00 D | Suto 2003：ELP 短 0.62–0.75 mm、正常眼軸減 1.00 D（doi:10.1016/s0886-3350(03)00250-5；PMID 14604710，摘要）。模型位置由解剖擺、再檢查落在 Suto 範圍內 |
+| ciliary sulcus 的位置 | 半徑 5.95、haptic 平面 8.80 mm（虹膜根部與睫狀體的夾角） | 示意（從模型的虹膜與睫狀體讀出；查到的 UBM sulcus-to-sulcus 研究都是年輕高度近視的 ICL 病人，沒有用） |
+| AAB00 | one-piece 疏水性壓克力、6 mm optic、C-loop | Wakili 2026（doi:10.1007/s00417-026-07340-y）；overall 用 ③ 的 13.0 mm [待核對：廠商規格] |
+| 3-piece IOL | haptic 0.15 mm、後傾 5° | 示意 |
+| haptic 磨虹膜的門檻 | 距離 < 0.1 mm 畫紅 | 示意 |
+| optic capture 撐開撕囊口 | 到 optic 邊緣外 0.35 mm、±0.6 個鐘點 | 示意 |
+| 錄影的切口位置（給檢查用） | 主切口在正下方偏右 31–38°、side port 偏左 59–68° | `videos/src/cataract-4-pcr/footage-notes.md` 2.2（Claude 判讀錄影） |
+
+### 物理與器械
+- 玻璃體只在後囊後面，或經破口往前：沿玻璃體的中心線，穿過後囊的地方整個截面都在破口裡、穿過前囊只在撕囊口；不進角膜、虹膜、核塊、OVD、IOL。
+- OVD 推開玻璃體（兩者不重疊）；有 `tamp` 時前面沒有玻璃體。
+- 核塊穿過後囊只在破口裡；掉落後全部在前玻璃體面後、玻璃體腔裡；托起時離內皮 ≥ 0.5 mm、不碰虹膜，下面有器械、上面 phaco 貼著吃的那一面。
+- 器械只從切口進出：軸通過各自隧道的轉動點；路上不碰虹膜、隧道外的角膜、撕囊口外的前囊、核塊；後囊只能在破口穿過。pars plana 的 vitrector 從切口（牆的中間）進去後只走玻璃體。
+- **囊袋要塌，角膜緣的直 vitrector 才到得了破口**（2026-11-10 做的時候發現）：囊袋還撐著水晶體的形狀時，從 11 點主切口到後囊高度的直線一定從 11 點那側的前囊邊緣下穿過；核與皮質清掉、囊袋塌了（`bag.collapse` 1，示意）才過得去。和 ③「主切口下方到不了」是同一個幾何。
+- sulcus：haptic 在前囊前、虹膜後、不進睫狀體，尖端離睫狀體 < 0.35 mm；optic 在前囊前。one-piece 厚 haptic 會貼近虹膜後面（< 0.1 mm）、3-piece 細 haptic 不會。optic capture：撕囊邊緣在 optic 前面（重疊 ≥ 0.25 mm），只在 haptic 接點撐開到接點外。
+
+### 必寫的檢查（`check.js` 第 14 節，41 條）
+- 方位（通用原則 6）：OS／OD 的顯微鏡方位（下 12、右 9、右邊是 nasal／temporal）；四個鐘點的名稱（OS 3 temporal、9 nasal；本例 11＝superonasal、2＝superotemporal；OD 的同一處是 1 點）；切面從哪一側看。
+- 本例切口和錄影一致：OS 顯微鏡上主切口在正下方偏右 30°（錄影 31–38°）、side port 偏左 60°（錄影 59–68°）。
+- 兩圖同一鐘點：主切口在俯視是 11 點、在 11–5 切面在左；切口、破口中心、vitrector 尖端、平面附近的 TA 點在兩圖的 u 相同。
+- OD／OS／不給：10 張圖逐位元相同；眼別有回報。
+- 有出處的數字：pars plana 3.5–4 mm 且在 pars plana；23G 0.64；sulcus 的 optic 比囊袋往前 0.62–0.75 mm、度數 −1.00 D；前房變深與瞳孔放大在兩圖一致。
+- 破口：切面上破口裡沒有後囊、兩端在破口邊上；俯視的邊緣是同一條 3D 邊；放射狀撕裂往赤道走。
+- 玻璃體：五個狀態沿中心線檢查穿過後囊與前囊的位置；格點上不在角膜、虹膜、核塊、OVD、IOL 裡；到 tip、先退出時到主切口、前房變淺；tip 不退＋OVD 時前面沒有玻璃體、OVD 封住破口、只在囊袋與前房。
+- 核塊：休息時在囊袋裡；一端穿過破口只在破口裡；核不跟 tip（休息時貼著、PCR 時離開 ≥ 0.3 mm）；掉落後全在玻璃體腔；托起的高度、離內皮、不碰虹膜；下面的器械經 side port、在核塊下面、離後囊；phaco 貼著吃的面；吃掉的量遞減到 0。
+- 器械：六支器械經各自切口、路上不碰組織；雙手：切割口在破口裡、後囊高度，灌流高在前房、離破口 ≥ 1.5 mm、水平出水、偏離破口；切除進度遞減到 0。
+- Pars plana：切口在 3.5 mm、11 點、牆裡；桿子只走玻璃體；尖端在破口後。
+- TA：都在玻璃體裡；沒打 TA 沒有點；玻璃體切光沒有點。
+- IOL：one-piece 放 sulcus 的 haptic 與 optic 位置、磨虹膜風險（3-piece 較少）；optic capture 的撕囊邊緣與 haptic。沒有 NaN。
+- 故意改錯（2026-11-10）：39 個改法，41 條每條至少被一個擋下（`CATARACT_PATH=<檔案>`；6 個改 check.js 自己的輸入）：OS 的 nasal 放錯邊、對側眼鐘點不鏡像、切面看的方向反了、OS 顯微鏡整張左右翻（同時擋下錄影角度、兩圖鐘點、OD／OS 相同三條）、TA 點在俯視偏 0.1 mm、pars plana 3.0 mm、sulcus optic 再往前 0.35 mm、變深變成變淺、破口裡照畫後囊、撕裂只走 30 %、玻璃體從破口旁邊穿過、玻璃體從前囊穿過、玻璃體可以進虹膜與核塊、先退出前房不塌、OVD 擋不住玻璃體、足跡不置中、phaco 跟著核塊下去、掉落只往下 1.2 mm、托起的核塊低 0.5 mm、器械墊在核塊上面、吃核沒有效果、vitrector 軸偏離轉動點、灌流貼著角膜、灌流往下沖破口、切除沒有效果、pars plana 切在 pars plicata、TA 點在玻璃體外、sulcus haptic 進虹膜、one-piece haptic 和 PMMA 一樣細、capture 不撐開撕囊口、capture 的 haptic 留在囊袋、注入 NaN、PCR 那一刻 phaco 伸到邊緣下、OVD cannula 穿過虹膜、托起時 phaco 貼角膜、器械穿過核塊、撕裂的破口玻璃體從旁邊出來。
+
+### 已知的坑（2026-11-10 做的時候踩到的）
+- **切面快取沒包含新狀態**：`section` 的快取鍵沒有 `pcr` 時，兩個只差 PCR 的狀態共用同一張組織圖（第二張畫成第一張的玻璃體）。新狀態一定要加進快取鍵。
+- **玻璃體和皮質同色**：用 C.vit（近白）時看不出來；改成淡灰綠，並畫纖維虛線與前玻璃體面的外框。
+- **前玻璃體面的外框符號寫反**：「後面＝負」寫成正，畫出來是一條橫跨破口的線；外框是「前玻璃體面後的玻璃體 ∪ 跑出來的玻璃體」的邊。
+- **核塊比破口大**：5.2 mm 長的核塊整條直邊壓進 2–3 mm 的破口不可能；改成最低點那一端（極）進去，並把足跡置中在破口裡（核塊在最低點的圓邊那側）。
+- **PCR 那一刻 tip 碰不到歪掉的核塊**：核塊一端沉下去，另一端在主切口下方的前囊下；tip 留在核塊原來的位置（核塊離開 tip＝核不跟 tip）反而是對的畫面。
+- **灌流開口朝前會沖向破口**：直的灌流管從 side port 往下伸，開口方向就是往破口；改成閉口、側孔水平出水（示意）。
+- **pars plana 的桿子斜度不夠會穿過睫狀體或囊袋**：尖端要在破口後 2.4 mm（前段玻璃體）才從 11 點切口一路只走玻璃體。
+- **OVD 圓頂畫成方塊**：前房的 OVD 用垂直的柱子看起來像積木；改成撕囊口上的圓頂。
+- **切面外的器械投影成直立的棒**：2 點的灌流管投影到 11–5 切面會變成穿過角膜的直棒；雙手玻璃體切除與 pars plana 的切面改畫器械與切面相交的切口（`cut`），灌流只畫投影的側孔與水流。
+
 ## 檔案
 - `globe.js`：模型本體。內容有外表面與牆厚、組織函數、切面（等高線）、俯視圖、縫線路徑、錨點。
 - `views.js`：向登記處（`videos/models/registry.js`）報到，提供三個視角：`mer` 子午切面、`across` 垂直傷口切面、`scope` 顯微鏡俯視。
 - `check.js`：自我檢查。`GLOBE_PATH=<檔案>` 可以拿另一份 `globe.js` 來跑，用在故意改錯的測試。
 - `sample.html`、`sample.jpg`：模型樣本，內容是修補前的子午切面、顯微鏡俯視、角膜一針的垂直切面。參考圖由影片的 `ref/manifest.json` 比對。
-- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角。
+- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角，② 加 `cross`（3–9 切面），④ 加 `pcr`（經主切口的子午切面）、`pp`（經 pars plana 切口）。
 - `sample-cataract.html`、`sample-cataract.jpg`：白內障樣本（keratome 在隧道裡的切面與俯視、撕囊進行中的 12–6 切面、run-out 的前緣切面、正常／run-out／zonule 弱三張俯視）。參考圖由 `videos/src/cataract-1-wound-ccc/ref/manifest.json` 比對。
+- `fluidics.js`：② 的流體面板資料（`FLUIDICS`；node 裡是 `require('./fluidics.js')`）：腳踏、occlusion、設定 → 灌流、流量、vacuum、US、IOP；`surge(t)` 給前房深度的減少。
+- `sample-cataract2.html`、`sample-cataract2.jpg`：② 樣本（hydrodissection 切面與俯視、capsular block、槽底亮度、刻槽深度、刻太深、分核、四象限＋流體面板）。參考圖由 `videos/src/cataract-2-hydro-dc/ref/manifest.json` 比對。
+- `sample-cataract3.html`、`sample-cataract3.jpg`：③ 樣本（I/A 在 6 點邊緣下的切面與俯視、subincisional 雙手 I/A、吸到後囊的俯視與切面、OVD 撐開囊袋＋injector、IOL 植入三個階段、最後位置的切面與俯視、stromal hydration）。參考圖由 `videos/src/cataract-3-ia-iol/ref/manifest.json` 比對。
+- `sample-cataract4.html`、`sample-cataract4.jpg`：④ 樣本（左眼 OS、術者坐 12 點、主切口 11 點）：OS 術者視角與方位標籤、破口＋前玻璃體面凸出＋核塊一端歪、玻璃體到 tip、核塊掉落、俯視線索、第一步 tip 不退＋OVD 對照先退出、核塊托到前房＋下墊器械（切面與俯視）、pars plana、雙手前段玻璃體切除＋TA（切面與俯視）、IOL in the bag／one-piece sulcus／3-piece optic capture。參考圖由 `videos/src/cataract-4-pcr/ref/manifest.json` 比對。
