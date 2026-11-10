@@ -80,19 +80,23 @@ const PCR_T = { title: 'PCR（動畫示意）', orient: '左＝11 點（主切�
 const SCOPE_T = { title: '術者視角　左眼 OS（模型）', orient: '下＝12 點　右＝9 點 nasal' };
 const SCOPEN_T = { title: '正常：術者視角（模型）', orient: '左眼 OS　右＝nasal' };
 const SCOPEP_T = { title: 'PCR：術者視角（動畫示意）', orient: '左眼 OS　右＝nasal' };
+const SCOPE2_T = { title: '術者視角：正常 vs PCR', orient: '左眼 OS　右＝nasal' };
+const SEC2_T = { title: '經主切口的切面：正常 vs PCR', orient: '左＝11 點（主切口）　上＝前' };
 const TXT_T = (t) => ({ title: t, orient: '' });
-window.PRELOAD_EXTRA = JSON.stringify([SEC_T, SECX_T, SYNC_T, NORM_T, PCR_T, SCOPE_T, SCOPEN_T, SCOPEP_T]) +
+window.PRELOAD_EXTRA = JSON.stringify([SEC_T, SECX_T, SYNC_T, NORM_T, PCR_T, SCOPE_T, SCOPEN_T, SCOPEP_T, SCOPE2_T, SEC2_T]) +
   '經主切口的切面模型依錄影時間器械為投影術者視角左眼正常動畫示意下點右上前左主切口停格看得到看不清楚看不出可能不確定0123456789.–→✓✗×△';
 
 const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') r[n] = P(v); return r; };
+// every model view says what it shows (view type, eye, rent or not, px per mm): check.js reads it to verify each PCR cue has a normal view beside it
+const vtag = (kind, st, k) => { const P = K.pcrOf(st); return ` data-view="${kind}" data-eye="${K.norm(st).eye}" data-rent="${P && P.R ? 1 : 0}" data-k="${k.toFixed(3)}"`; };
 function sec(st, win, id, o = {}) {
   const W = o.W || PW, H = o.H || PH, c = VIEWS.cam(win, W, H), h = win.w * H / W;
   const r = K.section({ st, h: o.hp ?? HP, off: o.off || 0, cut: !!o.cut, win: { x: win.x, y: win.y, w: win.w, h }, step: o.step || +(win.w / 260).toFixed(4), id });
-  return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A: mapA(r.A, c.P), P: c.P, k: c.k, r, Q: p3 => c.P(G.toPlane(r.pl, p3)) };
+  return { svg: `<g transform="${c.tf}"${vtag('sec', st, c.k)}>${r.svg}</g>`, A: mapA(r.A, c.P), P: c.P, k: c.k, r, Q: p3 => c.P(G.toPlane(r.pl, p3)) };
 }
 function scope(st, win, id, o = {}) {
   const W = o.W || PW, H = o.H || PH, c = VIEWS.cam(win, W, H), r = K.enface({ st, id, surgeon: 12 }), A = mapA(r.A, c.P);
-  return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A, P: c.P, k: c.k, r, tf: c.tf, Q: p3 => c.P(r.M(p3)) };
+  return { svg: `<g transform="${c.tf}"${vtag('scope', st, c.k)}>${r.svg}</g>`, A, P: c.P, k: c.k, r, tf: c.tf, Q: p3 => c.P(r.M(p3)) };
 }
 // a point of the remaining piece: the end nearest the rent (sinking pole) or its round side away from the tip (label anchors, panel px)
 const fragPt = (v, st, which) => { const P = K.pcrOf(st), F = P.FR; if (!F) return null; let best = null;
@@ -123,6 +127,15 @@ function miniScope(st, x0, y0, w, h, cx, wmm, id) {
   const win = { x: cx[0] - wmm / 2, y: cx[1] - wmm * h / w / 2, w: wmm }, v = scope(st, win, id, { W: w, H: h }), at = a => a ? [x0 + a[0], y0 + a[1]] : null;
   return { v, at, svg: `<svg x="${x0}" y="${y0}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" overflow="hidden"><g>${v.svg}</g></svg><rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="6" fill="none" stroke="#d3dae1"/>` };
 }
+// the same for the 11–5 section (cx = [mm toward 5 o'clock, −eye z] at the box centre)
+function miniSec(st, x0, y0, w, h, cx, wmm, id) {
+  const win = { x: cx[0] - wmm / 2, y: cx[1] - wmm * h / w / 2, w: wmm }, v = sec(st, win, id, { W: w, H: h }), at = a => a ? [x0 + a[0], y0 + a[1]] : null;
+  return { v, at, svg: `<svg x="${x0}" y="${y0}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" overflow="hidden"><g>${v.svg}</g></svg><rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="6" fill="none" stroke="#d3dae1"/>` };
+}
+// cues three and four: normal | PCR as two small views of one panel, same window and scale (MW × MH px each, under their headers)
+const MW = 292, MH = 300, MY = 38, MXN = 8, MXP = PW - 8 - MW;
+const pairHead = (n, p) => text(MXN + 4, 27, n, { size: 16, bold: true, color: COL.accent }) + text(MXP + 4, 27, p, { size: 16, bold: true, color: WARN });
+const pairNote = (x, s) => htext(x + MW - 8, MY + MH - 10, s, { size: 13, color: COL.sub, anchor: 'end' });
 // a checklist of what the recording shows: rows [mark, cue, status, opacity, colour]; ✓ seen, △ seen but uncertain, ✗ not seen
 function seenRows(x, y, w, rows, rh = 58, gap = 6) {
   return rows.map(([m, a, b, o, col], i) => { const yy = y + i * (rh + gap), c = col || (m === '✗' ? COL.sub : m === '△' ? '#c4561c' : COL.accent);
@@ -274,30 +287,40 @@ DRAW2['2-2'] = T => {
   return { L: { svg: lv.svg, extra: ex, P: SCOPEN_T }, R: { svg: rv.svg, extra: rx, P: SCOPEP_T } };
 };
 DRAW2['2-3'] = T => {
-  const sv = scope(REC, W_SCOPE_N, 'sL'), c = clearPt(sv);
-  let ex = '';
-  if (c) ex += labNear('特別清亮的區域', 'clear area', clearIn(sv), 100, 36, { bold: true, color: WARN, lc: WARN });
-  ex += box(PH - 110, 'I/A 吸到後囊：皺褶匯向吸口、紅光更亮、瞳孔拉尖', T.on(2, 0.6), WARN, 36, 14.5);
-  ex += note('左眼 OS　動畫示意', 1);
+  // left: the microscope view, normal (capsule intact, the piece under the tip) | PCR (the rent's clear area), one window and scale for both
+  const C = [-0.3, -0.7], WM = 7.2, mn = miniScope(NORM, MXN, MY, MW, MH, C, WM, 'nL'), mp = miniScope(REC, MXP, MY, MW, MH, C, WM, 'sL');
+  let l = `<rect width="${PW}" height="${PH}" fill="#fff"/>` + mn.svg + mp.svg + pairNote(MXN, '模型示意') + pairNote(MXP, '動畫示意');
+  let ex = pairHead('正常（模型）', 'PCR（動畫示意）');
+  const ca = clearIn(mp.v);
+  // both labels on one line over the top of their views; leaders to the clear area and, in the normal eye, to the red reflex one clock hour from the rent's place (clear of the piece)
+  if (ca) ex += lab('清亮區', 'clear area', MXP + MW - 8, MY + 44, mp.at(ca), { side: 'R', bold: true, color: WARN, lc: WARN });
+  ex += lab('沒有清亮區', 'no clear area', MXN + MW - 8, MY + 44, mn.at(mn.v.Q(under(RENT.h - 1, 2.2, 0))), { side: 'R', bold: true, color: COL.accent, lc: COL.accent });
+  ex += box(PH - 62, 'I/A 吸到後囊：皺褶匯向吸口、紅光更亮、瞳孔拉尖', T.on(2, 0.6), WARN, 36, 14.5);
   const cv = sec(REC, W_SEC, 'cR');
   let rx = '';
   const re = rentEnd(cv); if (re) rx += lab('破口：前面沒有後囊', 'rent', PW - 12, YB, re, { side: 'R', bold: true, color: CAP, lc: CAP });
   if (cv.A.rentC) { const a = cv.A.rentC, y0 = Math.min(PH - 20, a[1] + 40); rx += arrowPath([[a[0] + 20, y0], [a[0] + 20, a[1] - 150]], '#e26b2c', 3, T.on(1)) + htext(a[0] - 200, a[1] - 160, '紅光直接透出（示意）', { size: 14, bold: true, color: '#c4561c', op: T.on(1) }); }
   rx += sbar(cv) + note('動畫示意', 1);
-  return { L: { svg: sv.svg, extra: ex, P: SCOPEP_T }, R: { svg: cv.svg, extra: rx, P: PCR_T } };
+  return { L: { svg: l, extra: ex, P: SCOPE2_T }, R: { svg: cv.svg, extra: rx, P: PCR_T } };
 };
 DRAW2['2-4'] = T => {
-  const k = T.p(0, 0.2, 1) * 0.5 + T.p(1, 0, 0.9) * 0.5, st = PRO(k), lv = sec(st, W_SEC, 'sL'), rv = scope(st, W_SCOPE_N, 'cR');
-  let ex = tag('玻璃體跑到前面（動畫示意）', 1, WARN);
-  if (lv.A.vitMid && k > 0.4) ex += labNear('玻璃體', 'vitreous', lv.A.vitMid, 60, 80, { bold: true, color: VITC, lc: VITC });
-  if (lv.A.tip0) ex += labNear('tip', '', lv.A.tip0, -40, -70, { color: INK2 });
-  const re = rentEnd(lv); if (re) ex += lab('破口', 'rent', PW - 12, YB, re, { side: 'R', color: CAP, lc: CAP });
-  ex += sbar(lv) + note('形狀為示意', 1);
+  const k = T.p(0, 0.2, 1) * 0.5 + T.p(1, 0, 0.9) * 0.5, st = PRO(k), rv = scope(st, W_SCOPE_N, 'cR');
+  // left: the 11–5 section, normal (posterior capsule intact, the gel behind it) | PCR (the gel through the rent to the tip), one window and scale
+  const C = [0.9, -6.9], WM = 7.6, mn = miniSec(NORM, MXN, MY, MW, MH, C, WM, 'nL'), mp = miniSec(st, MXP, MY, MW, MH, C, WM, 'sL'), lv = mp.v;
+  let l = `<rect width="${PW}" height="${PH}" fill="#fff"/>` + mn.svg + mp.svg;
+  let ex = pairHead('正常（模型）', 'PCR：玻璃體跑到前面（動畫示意）');
+  // normal: the capsule where PCR has its rent, the gel behind it; PCR: the rent, the gel, the tip
+  ex += labNear('後囊完整', 'intact', mn.at(postQ(mn.v, 2.4, HP)), -24, 34, { bold: true, color: CAP, lc: CAP });
+  ex += labNear('玻璃體在後面', 'vitreous', mn.at(secPt(mn.v, -0.6, L0.zPost(0.6) - 0.9)), 18, 44, { bold: true, color: VITC, lc: VITC });
+  const re = rentEnd(lv); if (re) { const a = mp.at(re); ex += lab('破口', 'rent', MXP + MW - 8, a[1] + 50, a, { side: 'R', color: CAP, lc: CAP }); }
+  if (lv.A.vitMid && k > 0.4) ex += labNear('玻璃體', 'vitreous', mp.at(lv.A.vitMid), 20, -50, { bold: true, color: VITC, lc: VITC });
+  if (lv.A.tip0) ex += labNear('tip', '', mp.at(lv.A.tip0), -30, -50, { color: INK2 });
+  ex += VIEWS.sbar(lv.k, 1, 1) + htext(80, PH - 22, '兩圖同一比例', { size: 13, color: COL.sub }) + note('模型示意', 1, PH - 22, MXN + MW + 4) + note('形狀為示意', 1, PH - 22);
   let rx = '';
   if (rv.A.vitMid && k > 0.6) rx += labNear('玻璃體條（透明）', 'strand', rv.A.vitMid, 60, -64, { bold: true, color: VITC, lc: VITC });
   rx += box(PH - 110, '玻璃體本身看不到：看到的是核塊跑不動、轉不動', T.on(2, 0.6), INK2, 36, 14.5);
   rx += note('動畫示意', 1);
-  return { L: { svg: lv.svg, extra: ex, P: PCR_T }, R: { svg: rv.svg, extra: rx, P: SCOPEP_T } };
+  return { L: { svg: l, extra: ex, P: SEC2_T }, R: { svg: rv.svg, extra: rx, P: SCOPEP_T } };
 };
 DRAW2['2-5'] = T => {
   const st = pcrSt({ vit: { prolapse: 0.6, to: 'tip' } }), sv = scope(st, W_SCOPE_N, 'sL'), cv = sec(st, W_SEC, 'cR');

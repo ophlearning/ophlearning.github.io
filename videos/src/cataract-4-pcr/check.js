@@ -13,6 +13,9 @@
 // 3. Wording rules of this case (the user's answers, 2026-11-10): the PCR moment is never stated as seen; triamcinolone is 「看起來是…（術者推測）」;
 //    the IOL position comes from the surgeon; nothing is said about lens fragments in the vitreous, a VR referral or the 29:40–31:45 injections
 //    for this case; no line about this case judges it.
+// 4. Normal vs PCR (spec acceptance): at 60 % of every line of the four cue segments (2-1–2-4) a model view of a normal eye (no rent) is on screen
+//    beside a PCR view (rent) of the same view type, the left eye OS and the same px per mm, with 「正常」 and 「動畫示意」 written. The views say
+//    what they draw (data-view / data-eye / data-rent / data-k, set by draw.js from the state each view is drawn from).
 // --selftest breaks each check once on purpose and fails unless every check then reports the error. --list prints the numbers per segment.
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
 const path = require('path');
@@ -87,9 +90,30 @@ async function screenText() {   // all text drawn on screen per segment (60 % an
     for (const [fn, clips] of Object.entries(runs)) { r[fn] = [];
       for (const id of clips) for (let s = C[id].in; s <= C[id].out + 1e-9; s += 0.5) r[fn].push({ s, cat: JSON.parse(JSON.stringify(A[fn](s).cat)) }); }
     return r; });
+  // the cue segments: the model views on screen at 60 % of every line (view type, eye, rent, px per mm, opacity) and whether 正常 / 動畫示意 are written
+  const cues = await p.evaluate(ids => { const r = {};
+    const op = el => { let o = 1; for (let x = el; x && x.id !== 'stage'; x = x.parentElement) { const v = x.getAttribute('opacity'); if (v !== null) o *= parseFloat(v); } return o; };
+    for (const id of ids) { const s = TL_EXPORT.find(x => x.id === id);
+      r[id] = s.lines.map(([a, e]) => { renderAt(a + (e - a) * 0.6);
+        const txt = [...document.querySelectorAll('#stage text')].filter(t => op(t) > 0.5).map(t => t.textContent).join('|');
+        const views = [...document.querySelectorAll('#stage [data-view]')].map(g => ({ view: g.getAttribute('data-view'), eye: g.getAttribute('data-eye'), rent: +g.getAttribute('data-rent'), k: +g.getAttribute('data-k'), op: op(g) }));
+        return { views, normal: /正常/.test(txt), anim: /動畫示意/.test(txt) }; }); }
+    return r; }, CUE_SEGS);
   await b.close();
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
-  return { out, foot, sync };
+  return { out, foot, sync, cues };
+}
+// ---------------------------------------------------------------- 4. normal vs PCR side by side for every cue
+const CUE_SEGS = ['2-1', '2-2', '2-3', '2-4'];
+function cueChecks(ctx) {
+  const R = [], ok = (c, m) => R.push([!!c, m]), bad = [], seen = [];
+  for (const id of CUE_SEGS) { const F = ctx.cues[id] || [];
+    if (F.length !== ctx.text[id].lines.length) bad.push(`${id}: ${F.length} of ${ctx.text[id].lines.length} lines sampled`);
+    F.forEach((f, i) => { const v = f.views.filter(x => x.op > 0.5);
+      const pair = v.find(n => !n.rent && v.some(q => q.rent && q.view === n.view && q.eye === n.eye && Math.abs(q.k - n.k) <= 0.01 * n.k));
+      if (!pair || !v.every(x => x.eye === 'OS') || !f.normal || !f.anim) bad.push(`${id} line ${i}`); else if (!i) seen.push(`${id} ${pair.view}`); }); }
+  ok(!bad.length, `every PCR cue shows a normal model view beside a PCR one at every line — same view type, left eye OS, same px per mm; 「正常」 and 「動畫示意」 written (${seen.join(', ')})${bad.length ? '; missing: ' + bad.join(', ') : ''}`);
+  return R;
 }
 
 // ---------------------------------------------------------------- geometry: instrument clearance (as globe/check.js; the posterior capsule may be crossed only inside the rent)
@@ -233,14 +257,14 @@ function ledgerChecks(ctx) {
   return R;
 }
 const clone = o => JSON.parse(JSON.stringify(o));
-let SCREEN = null, FOOTON = null, SYNC = null;
+let SCREEN = null, FOOTON = null, SYNC = null, CUES = null;
 function baseCtx() {
   const text = {}; for (const s of SEGS) text[s.id] = clone(s);
-  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(SCREEN), ledger: clone(LEDGER), footOn: clone(FOOTON), sync: clone(SYNC) };
+  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(SCREEN), ledger: clone(LEDGER), footOn: clone(FOOTON), sync: clone(SYNC), cues: clone(CUES) };
 }
-const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChecks(ctx)];
+const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChecks(ctx), ...cueChecks(ctx)];
 (async () => {
-  const { out, foot, sync } = await screenText(); SCREEN = out; FOOTON = foot; SYNC = sync;
+  const { out, foot, sync, cues } = await screenText(); SCREEN = out; FOOTON = foot; SYNC = sync; CUES = cues;
   if (process.argv.includes('--list')) { for (const s of SEGS) if (!s.chapterCard && s.layout !== 'refs') { const t = [s.title || '', ...(s.lines || []), ...(s.keys || []).map(k => k[1]), ...(out[s.id] || [])];
     console.log(s.id, [...new Set(t.flatMap(numbers))].join(' '), '|', [...new Set(t.flatMap(x => cites(x).map(c => c.all)))].join(', ')); } return; }
   const res = runAll(baseCtx());
@@ -274,6 +298,8 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChec
       ['TA stated as certain', c => { c.text['5-5'].lines[1] = c.text['5-5'].lines[1].replace('看起來是 triamcinolone（術者推測）', '這是 triamcinolone'); }],
       ['the case judged', c => { c.text['3-3'].lines[3] += '本例應該先打 OVD。'; }],
       ['the case\'s dropped fragment narrated', c => { c.text['4-4'].lines[2] = '本例的核塊掉進玻璃體腔，轉給 VR。'; }],
+      ['cue three (2-3) drawn without its normal view', c => { for (const f of c.cues['2-3']) f.views = f.views.filter(v => v.rent); }],
+      ['cue four (2-4): the normal view at another scale', c => { for (const f of c.cues['2-4']) for (const v of f.views) if (!v.rent) v.k *= 0.6; }],
     ];
     let bad = 0;
     for (const [name, mut] of M) { const c = baseCtx(); mut(c); const n = runAll(c).filter(r => !r[0]).length; console.log(`${n ? 'PASS' : 'FAIL'} selftest: breaking 「${name}」 → ${n} check(s) fail`); if (!n) bad++; }
