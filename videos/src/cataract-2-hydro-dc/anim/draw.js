@@ -211,9 +211,19 @@ function caseAt(s) {
   return { cat: c, hy };
 }
 // footage panel + the synced model state; at0 = when the clip starts in the segment
+// for check.js: every footage frame a drawing puts on screen (clip, source time, frozen) — check.js resets window.FOOT_SEEN before each sample
+const seen = (clip, L) => { if (window.FOOT_SEEN) window.FOOT_SEEN.push({ clip, s: L.s, frozen: !!L.frozen }); };
 function footSeg(T, clip, o = {}) {
   const tau = T.u - (o.at0 ?? 0.3), L = FOOTAGE.panel(clip, tau, { badge: o.badge }), st = caseAt(L.s);
+  seen(clip, L);
   return { tau, L, st, s: L.s };
+}
+// a still of a clip seen through a window of the panel (box px): the panel-sized frame shifted so its x = vx sits at the window's left edge;
+// map(p) takes a panel point of the full frame (FOOTAGE.point) into the window
+function footWin(clip, tau, vx, box) {
+  const f = FOOTAGE.panel(clip, tau, { badge: false }); seen(clip, f);
+  return { svg: `<svg x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" viewBox="${vx} ${box.y} ${box.w} ${box.h}"><image href="${FOOTAGE.href(clip, f.frame)}" x="0" y="0" width="${PW}" height="${PH}" preserveAspectRatio="none"/></svg>`,
+    map: p => [p[0] - vx + box.x, p[1]], P: f.P, s: f.s };
 }
 const fpt = (clip, name, tau) => FOOTAGE.point(clip, name, tau);
 const frozenOp = (clip, tau, at, d = 0.35) => { const f = (FOOTAGE_DEF.clips[clip].freeze || []).find(z => z.at === at); if (!f) return 0; const a = FOOTAGE.videoTime(clip, at); return ss(a, a + d, tau) * (1 - ss(a + f.dur - d, a + f.dur, tau)); };
@@ -412,8 +422,15 @@ DRAW2['3-3'] = T => {
   const sw = [3, 2, 1].map((r, i) => { const x = 20 + i * 92, gl = K.grooveGlow(r); return `<rect x="${x}" y="${PH - 70}" width="28" height="24" rx="4" fill="#c4542a"/><rect x="${x}" y="${PH - 70}" width="28" height="24" rx="4" fill="#ffc48a" opacity="${(0.15 + 0.8 * gl).toFixed(3)}"/>` + text(x + 34, PH - 52, `${r} mm`, { size: 14, bold: true }); }).join('');
   ex += `<rect x="10" y="${PH - 94}" width="290" height="58" rx="6" fill="#fff" opacity="0.92"/>` + text(20, PH - 78, '剩的厚度與槽底亮度（示意）', { size: 12.5, color: COL.sub }) + sw;
   let Lp = { svg: sv.svg, extra: ex, P: SCOPE_T };
-  if (T.on(2, 0.5) > 0.5 && T.u < T.st(3)) { const tau = FOOTAGE.videoTime('groove-a', 366.0) + 1; Lp = FOOTAGE.panel('groove-a', tau, { badge: false });
-    Lp.extra = labNear('槽底的紅溝', 'red channel', fpt('groove-a', 'groove-floor', tau), 40, -40, { bold: true, color: '#7a4b00', lc: '#ffd34d' }) + wtext(14, PH - 14, '案例 A（錄影 6:06）', { size: 14 }); }
+  // line 2 (「刻到後面，槽底那條紅色的溝越來越清楚」): the same groove early (6:06 freeze) and late (6:31, groove-late) side by side, each half a
+  // window on its frame with the groove at its left and the label right of it
+  if (T.on(2, 0.5) > 0.5 && T.u < T.st(3)) {
+    const tA = FOOTAGE.videoTime('groove-a', 366.0) + 1, tL = FOOTAGE.videoTime('groove-late', 391.5) + 1, HW = (PW - 6) / 2;
+    const A = footWin('groove-a', tA, 230, { x: 0, y: 0, w: HW, h: PH }), B = footWin('groove-late', tL, 160, { x: HW + 6, y: 0, w: HW, h: PH });
+    Lp = { svg: `<rect width="${PW}" height="${PH}" fill="#1d2733"/>` + A.svg + B.svg, P: A.P,
+      extra: wtext(14, 30, '6:06　刻槽前段', { size: 15 }) + wtext(HW + 20, 30, '6:31　刻槽後段', { size: 15 }) +
+        labNear('槽底的紅溝', 'red channel', A.map(fpt('groove-a', 'groove-floor', tA)), 34, 44, { bold: true, color: '#7a4b00', lc: '#ffd34d' }) +
+        labNear('紅溝更長、更清楚', 'clearer', B.map(fpt('groove-late', 'groove-floor', tL)), 34, 44, { bold: true, color: '#7a4b00', lc: '#ffd34d', size: 14 }) }; }
   const xv = xsec(st, 'cR'), X = xv.r.A.grooveX;
   let rx = '';
   if (X) rx += lab(`槽底到後囊 約 ${Math.round(X.rem)} mm`, 'plate', PW - 12, 300, [xv.P(X.floor)[0] + 58, (xv.P(X.floor)[1] + xv.P(X.post)[1]) / 2], { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.on(3) });
@@ -530,7 +547,7 @@ DRAW2['5-1'] = T => {
   const pull = T.p(3, 0.05, 0.6), eat = T.p(3, 0.65, 1) * 0.6 + 0.4 * T.p(4, 0, 1), st = QSTATE(pull, eat);
   const cv = sec(st, W_CAT, 'sL'), B = cv.A;
   let ex = '';
-  if (B.tip0) ex += labNear('phaco 口吸住核塊', 'occlusion', shaftPt(cv, cv.r.A.inst0, 1.6), 30, -60, { bold: true, color: '#3c4a57', op: T.on(1) });
+  if (B.tip0) ex += labNear('phaco 口吸住核塊', 'occlusion', B.tip0, 30, -60, { bold: true, color: '#3c4a57', op: T.on(1) * (1 - ss(0.85, 1, eat)) });   // the needle's mouth (the sleeve's irrigation port is 1.45 mm behind it), until the piece is gone
   if (B.quadApex0) ex += lab('核塊拉到中央', 'quadrant', PW - 30, 244, B.quadApex0, { side: 'R', bold: true, color: NUC, lc: NUC, op: T.on(3) });
   ex += lab('後囊', 'posterior capsule', PW - 12, YB, cv.P([2.4, -(L0.zPost(2.4) - 0.0)]), { side: 'R', color: CAP, lc: CAP });
   ex += lab('皮質留在囊袋', 'cortex', 14, YB, cv.P([-3.8, -(L0.zMid)]), {});
@@ -543,20 +560,34 @@ DRAW2['5-1'] = T => {
   return { L: { svg: cv.svg, extra: ex, P: CAT_T }, R: { svg: `<rect width="${PW}" height="${PH}" fill="#fff"/>` + r, extra: '', P: MACH_T } };
 };
 const PIECE_CAP = ['第 1 塊：從 6 點側', '第 2 塊：從 temporal 側', '第 3 塊：從哪裡來看不清楚', '第 4 塊（大塊）：從 nasal 側偏上'];
+// where each piece was, read on the footage (m-piece<n> against m-centre<n> on the same frame: pieces 1, 2, 4 ≈ 6.4, 10.7, 4.7 o'clock); piece 3
+// is not readable → the model quadrant's centre (示意). The right panel's section and its title use this hour (check.js: title = footage).
+const hourPx = (p, c) => ((12 - Math.atan2(p[0] - c[0], p[1] - c[1]) * 180 / Math.PI / 30) % 12 + 12) % 12;
+const PIECE_H = [1, 2, 3, 4].map(n => { const P = FOOTAGE_DEF.clips.quads.points, a = P[`m-piece${n}`], c = P[`m-centre${n}`]; return a && c ? hourPx(a[0].p, c[0].p) : qHour(CASE.pieceQ[n - 1]); });
+// 5-2 plays 'quads' at 5× with one jump: from just after piece 2's reflex (8:37.5) to the start of piece 4 (9:06), so the large piece is pushed to
+// the centre while line 4 says so (without the jump it came a line late). Skipped: piece 3, not readable where it comes from; a note on the
+// footage says so, and the right panel jumps with the footage. check.js checks what each line shows.
+const Q_SKIP = [517.5, 546.0];
+window.FOOT_SKIP = { '5-2': { clip: 'quads', from: Q_SKIP[0], to: Q_SKIP[1] } };   // for check.js
 DRAW2['5-2'] = T => {
-  const f = footSeg(T, 'quads', { at0: T.st(1) + 0.3 - FOOTAGE.videoTime('quads', 476.0) }), L = f.L, op = frozenOp('quads', f.tau, 476.0), s = f.s;
+  const at0 = T.st(1) + 0.3 - FOOTAGE.videoTime('quads', 476.0), tCut = at0 + FOOTAGE.videoTime('quads', Q_SKIP[0]), jump = (Q_SKIP[1] - Q_SKIP[0]) / FOOTAGE_DEF.clips.quads.rate;
+  const f = footSeg(T, 'quads', { at0: T.u < tCut ? at0 : at0 - jump }), L = f.L, op = frozenOp('quads', f.tau, 476.0), s = f.s;
   let ex = '';
-  if (op > 0) ex += labNear('露出更紅的 red reflex', 'reflex', fpt('quads', 'reflex', f.tau), 40, -10, { bold: true, color: '#7a4b00', lc: '#ffd34d', op }) +
+  if (op > 0) ex += labNear('露出更紅的紅光', 'red reflex', fpt('quads', 'reflex', f.tau), 40, -10, { bold: true, color: '#7a4b00', lc: '#ffd34d', op }) +
     labNear('chopper', '', fpt('quads', 'chopper-tip', f.tau), -20, 90, { bold: true, op });
+  const kJ = T.u >= tCut ? 1 - ss(tCut + 2.6, tCut + 3.0, T.u) : 0;
+  if (kJ > 0) ex += wtext(14, 30, `略過約 ${Math.round((Q_SKIP[1] - Q_SKIP[0]) / 5) * 5} 秒（第 3 塊，看不清楚）`, { size: 14.5, op: kJ });
   // the piece the footage is on (its clock position as read on the footage; draw.js PIECES = the model's piece removals on the same clock)
-  const Q = quadsAt(s), i = Q.cur, P = PIECES[Math.max(0, Q.cur >= 0 ? Q.cur : Q.last)], h = qHour(P.q);
+  const Q = quadsAt(s), i = Q.cur, P = PIECES[Math.max(0, Q.cur >= 0 ? Q.cur : Q.last)], h = PIECE_H[P.n - 1];
   if (i >= 0 && op < 0.5) ex += wtext(14, PH - 14, PIECE_CAP[i], { size: 14.5 });
   L.extra = ex;
-  // right: the section through the piece's original clock position (it moves to the next piece as the footage does), instruments in the inset only
+  // right: the section through the piece's position (it moves to the next piece as the footage does), instruments in the inset only
   const stS = { cat: { ...f.st.cat, inst: [] } }, cv = sec(stS, W_LENS, 'cR', { hp: h }), B = cv.A, cq = f.st.cat.nuc.quads.find(e => e.q === P.q);
   const svg = cv.svg + inset({ cat: f.st.cat }, h, -W_INSET.w / 2, W_INSET.w / 2, BOX_TL, 'iR');
   let rx = '';
-  if (cq && cq.eat < 1 && B['quadApex' + P.q]) rx += labNear(`第 ${P.n} 塊：拉到中央`, '', B['quadApex' + P.q], 40, -80, { bold: true, color: NUC, lc: NUC });
+  // the label fades before the piece is gone: the section runs through the footage's clock hour, up to 0.9 h off the quadrant's centre, and the last
+  // of the shrinking piece (eat > 0.8) lies outside it
+  if (cq && cq.eat < 0.8 && B['quadApex' + P.q]) rx += labNear(`第 ${P.n} 塊：拉到中央`, '', B['quadApex' + P.q], 40, -80, { bold: true, color: NUC, lc: NUC, op: 1 - ss(0.7, 0.8, cq.eat) });
   else if (cq && cq.eat >= 1) rx += tag(`第 ${P.n} 塊已清掉`, 1, NUC, 34, PW / 2 + 60);
   rx += lab('後囊', 'posterior capsule', PW - 12, YB, B.postPole, { side: 'R', color: CAP, lc: CAP });
   rx += VIEWS.sbar(cv.k, 1, 1) + note('時間與位置依錄影；分成四塊為示意', 1);

@@ -50,6 +50,16 @@ const FOOTAGE_DEF = {
         { t: 394.0, cx: 455, cy: 380, w: 540 }, { t: 399.0, cx: 480, cy: 440, w: 540 }],
       events: { 'sculpt-end': 398.0 },
     },
+    // 6:30–6:32 late in the groove (still; 3-3 shows it next to the 6:06 freeze): the channel runs from the phaco up to the 6 o'clock rim, redder
+    // between grey walls than at 6:06 (read 2026-11-10 on the panel frames 6:24–6:38 at 0.5 s and gridded at full size). The crop is groove-b's
+    // (same keyframes interpolated), so the picture is the frame 3-2 plays; the clip starts at 390 s for the orientation landmark there.
+    'groove-late': {
+      src: 'case-a', in: 390.0, out: 392.0, rate: 1,
+      freeze: [{ at: 391.5, dur: 6 }],
+      crop: [{ t: 390.0, cx: 458, cy: 340, w: 540 }, { t: 392.0, cx: 457, cy: 360, w: 540 }],
+      events: { 'freeze-late': 391.5 },
+      points: { 'groove-floor': [{ t: 391.5, p: [396, 306] }] },
+    },
     // 6:38.5–6:59 the chopper comes in through the side port (399.3 s); phaco and chopper in the groove push apart; the halves part (417.5 s) (1.5×)
     'crack1': {
       src: 'case-a', in: 398.5, out: 419.0, rate: 1.5,

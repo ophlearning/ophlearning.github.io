@@ -98,3 +98,9 @@
   - `publish/`：`youtube-description.txt`（說明、去識別、流體數字示意、章節、17 篇參考文獻含 DOI［PubMed 逐篇對過 PMID 與 DOI］、製作）、`chapters.txt` 與 `captions.srt`（從 `out/` 複製）、`website-entry-draft.txt`（`yt:'TBD'`、`dur:0` 等 ffprobe；章節秒數照 `chapters.txt`）。
   - 跟刀單 `print/`（LSs 三張：跟刀清單 8 項、手術步驟圖 8 格、關鍵解剖與數字速查）：狀態照 `anim/draw.js` 同名複製；`print.js --gray` 三張 PASS、`--selftest` PASS；彩色與灰階全頁、密的格子放大自檢。列印工具：`print-kit.js` 的 `csec` 加選用的 `off`、`cut`（垂直槽的橫切面）；`numcheck.js` 讀帳本時一併讀 `...PED`、selftest 在沒有「院內常規」數字的影片改用「示意」；README 補；範例 `upper-lid-levator-rotation-brow`、`cataract-1-wound-ccc` 重跑 PASS。
   - `check-all` 全部 PASS（2f61d98 的 worktree，加上這次的檔案；參考圖 0.000%）。
+- 2026-11-10（上傳前修正：總覽時發現的五個問題；Claude 小助手。旁白文字、重點框、來源與時間軸沒動，沒重新合成語音；模型 `globe/` 與 video-kit 沒改；細節在 `overview-notes.md`「上傳前可以再看的」）：
+  - 5-2 第 5 句「大塊的核由 chopper 推到中央」：片段（5×、停格照舊）在第 2 塊的紅光之後跳過第 3 塊（原始 8:37.5–9:06，左上註明「略過約 30 秒」），大塊整句都在畫面上；停格標籤改成「露出更紅的紅光 red reflex」；右邊切面與標題改用錄影量到的鐘點（第 1 塊「約 6 點」，原本「約 7 點」）。
+  - 5-1「phaco 口吸住核塊」改指針頭的口（原本在 sleeve 的灌流孔），核塊吃完後淡出。
+  - 3-3 第 3 句「刻到後面，紅溝越來越清楚」：6:06（前段）與 6:31（後段，新 clip `groove-late`）兩格並排。另一個 checkout 出片前先跑 `node videos/tools/video-kit/footage-cli.js extract videos/src/cataract-2-hydro-dc`（只會抽新的 `groove-late`，61 格）。
+  - `check.js` 加 1 條：5-2 第 2–5 句、3-3 第 3 句畫面上的錄影時間＝旁白說的那一刻（頁面逐句取樣 `FOOT_SEEN`）、跳接只跳過第 3 塊且註明秒數、右邊標題的鐘點＝錄影量到的；selftest 加 4 個故意改錯都抓到，另把跳接真的拿掉跑一次 → FAIL，再改回。
+  - 參考圖：更新 5-1-L5、5-2-L1，新增 3-3-L2、5-1-L2、5-2-L4（Claude 自檢）；總覽 `ref/overview/5-quadrant-removal.jpg` 重截（第 3 章那張的時刻沒變，比對 0 像素差）。`check-all` 全部 PASS。

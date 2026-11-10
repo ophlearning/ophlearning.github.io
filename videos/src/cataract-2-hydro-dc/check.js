@@ -29,13 +29,13 @@ const LEDGER = {
   '2-1': { ...PED, '22': 'Quesada 2022', '11': '結構', '80': '示意', '450': 'Soule 2026' },
   '3-1': { '3': '結構', '12': '結構', '1': '結構' },
   '3-2': { ...PED, '12': '錄影', '6': '錄影', '2': '錄影', '45': '錄影' },
-  '3-3': { '3': '示意', '2': '示意', '1': '示意', '12': '結構', '11': '結構', '6': '錄影', '06': '錄影' },
+  '3-3': { '3': '示意', '2': '示意', '1': '示意', '12': '結構', '11': '結構', '6': '錄影', '06': '錄影', '31': '錄影' },
   '3-4': { '3': '結構', '12': '結構', '1': '結構' },
   '4-1': { '12': '結構', '1': '結構' },
   '4-2': { '20': '錄影', '1.5': '錄影', '12': '結構', '1': '結構' },
   '4-3': { '90': '結構', '12': '結構', '6': '結構', '2': '錄影', '1': '結構' },
   '5-1': { ...PED, '450': 'Soule 2026', '11': '結構', '80': '示意' },
-  '5-2': { '5': '錄影', '2': '錄影', '6': '錄影', '12': '結構', '1': '結構', '3': '結構', '4': '結構', '7': '錄影', '10': '錄影' },
+  '5-2': { '5': '錄影', '2': '錄影', '6': '錄影', '12': '結構', '1': '結構', '3': '結構', '4': '結構', '11': '錄影', '30': '錄影' },
   '5-3': { '450': 'Soule 2026', '1.6': 'Soule 2026', '2.9': 'Soule 2026', '11': '結構', '1': '結構' },
   '5-4': { '4': '錄影', '50': '錄影', '12': '結構' },
   '6-1': { ...PED, '11': '結構' },
@@ -68,9 +68,15 @@ async function screenText() {   // all text drawn on screen per segment (60 % an
         dep: n && n.groove ? n.groove.dep : 0, crack: n && n.crack ? { prog: n.crack.prog, sep: n.crack.sep } : null, rot: n ? n.rot || 0 : 0,
         dep2: n && n.groove2 ? n.groove2.dep : 0, crack2: n && n.crack2 ? n.crack2.prog : 0, quads: n && n.quads ? n.quads.map(q => ({ q: q.q, pull: q.pull, eat: q.eat })) : [] }); }
     return r; });
+  // the footage frames on screen at 10–90 % of every line of the segments whose narration says what the recording shows at that moment
+  // (draw.js records every footage frame it draws in window.FOOT_SEEN; no reuse of an earlier drawing while sampling)
+  const seen = await p.evaluate(ids => { window.KIT_NO_REUSE = true; const r = {};
+    for (const s of TL_EXPORT) { if (!ids.includes(s.id)) continue;
+      r[s.id] = s.lines.map(([a, e]) => [0.1, 0.3, 0.5, 0.7, 0.9].map(f => { window.FOOT_SEEN = []; renderAt(a + (e - a) * f); const z = window.FOOT_SEEN; window.FOOT_SEEN = null; return z; })); }
+    window.KIT_NO_REUSE = false; return { seen: r, skip: window.FOOT_SKIP || {} }; }, ['3-3', '5-2']);
   await b.close();
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
-  return { out, sync };
+  return { out, sync, seen };
 }
 
 // ---------------------------------------------------------------- 2. narration ↔ model ↔ footage
@@ -153,6 +159,32 @@ function modelChecks(ctx) {
       if (hrs[n] !== undefined && dH(hrs[n], h) > 1.5) bad.push(`piece ${n}: footage ${hrs[n].toFixed(1)} h, model quadrant at ${h.toFixed(1)} h`); }
     ok(!bad.length && Object.keys(hrs).length === 3 && dH(hrs[1], 6) <= 1 && line(ctx, '5-2', 2).includes('6 點那一側'),
       `pieces: the model takes each out at the footage's piece event, gone by its reflex, inside the measured clock position (${seen.join('; ')})${bad.length ? '; ' + bad.join(', ') : ''}`); }
+  // what the recording shows while the narration says it (footage frames on screen at 10–90 % of each line, sampled on the page). 5-2 plays the
+  // 'quads' clip at 5× with one jump (draw.js Q_SKIP) so that the large piece is on screen while line 4 says it is pushed to the centre:
+  // line 1 「停格」 = the freeze where the reflex label was measured; line 2 (the first piece, from the 6 o'clock side) = after piece 1's reflex,
+  // before piece 2 starts (the caption cannot say 第 2 塊); line 3 (每拿走一塊，紅光就多露出一片) = piece 2 being taken out, up to its reflex (shown
+  // at the end of the line);
+  // line 4 (大塊的核由 chopper 推到中央) = piece 4 (the large piece pushed in by the chopper) up to its reflex. The jump skips only piece 3 (not
+  // readable) and the note on screen gives its length. The right panel's title gives the clock hour read on the footage (pieces 1, 2, 4; piece 1 =
+  // the narration's 6 o'clock). 3-3 line 2 (刻到後面，槽底那條紅色的溝越來越清楚) = the 6:06 freeze next to a frame from the last quarter of the groove.
+  { const fq = D.clips.quads, Lq = i => (ctx.seen['5-2'] || [])[i] || [], sq = i => Lq(i).map(z => z.find(e => e.clip === 'quads')), bad = [];
+    const all = (i, f, what) => { const z = sq(i); if (!z.length || z.some(e => !e || !f(e))) bad.push(`line ${i}: ${what} (shown ${z.map(e => e ? f2(e.s) + (e.frozen ? 'f' : '') : '—').join(' ')})`); };
+    const fr = (fq.freeze || [])[0];
+    all(1, e => e.frozen && fr && e.s === fr.at && fq.points.reflex[0].t === fr.at, 'frozen where the reflex label was measured');
+    all(2, e => e.s >= E['reflex-1'] && e.s < E.piece2, 'after piece 1 is out, before piece 2');
+    all(3, e => e.s >= E.piece2 - 1 && e.s <= E['reflex-2'] + 1, 'piece 2 being taken out (from 1 s of source before it starts)');
+    all(4, e => e.s >= E.piece4 && e.s <= E['reflex-4'], 'the large piece (piece 4) pushed in and eaten');
+    const k = (ctx.skip || {})['5-2'], scr = (ctx.screen['5-2'] || []).join('|'), nm = scr.match(/略過約 (\d+) 秒/);
+    if (k && !(k.from >= E['reflex-2'] && k.from < E.piece3 && k.to > E.piece3 && k.to <= E.piece4)) bad.push(`the jump ${k.from}→${k.to} s is not a jump over piece 3 alone`);
+    if (k && !(nm && Math.abs(+nm[1] - (k.to - k.from)) <= 2.5 && scr.includes('第 3 塊'))) bad.push(`no note giving the jump (${k ? f2(k.to - k.from) : '—'} s): ${nm ? nm[0] : 'none'}`);
+    const hrs = {}; for (const n of [1, 2, 4]) hrs[n] = hourPx(fq.points[`m-piece${n}`][0].p, fq.points[`m-centre${n}`][0].p);
+    const tt = [...scr.matchAll(/第 (\d) 塊原本的位置（約 (\d+) 點）/g)].map(m => [+m[1], +m[2]]);
+    for (const [n, h] of tt) if (hrs[n] !== undefined && dH(h, hrs[n]) > 0.5) bad.push(`title: piece ${n} at ${h} o'clock, footage ${hrs[n].toFixed(1)}`);
+    if (!tt.some(([n, h]) => n === 1 && h === 6) || !line(ctx, '5-2', 2).includes('6 點那一側')) bad.push('title of piece 1 is not 約 6 點 (narration 6 點那一側)');
+    const s3 = ((ctx.seen['3-3'] || [])[2] || []), late = E['sculpt-start'] + 0.75 * (E['sculpt-end'] - E['sculpt-start']);
+    if (!s3.length || s3.some(z => !z.some(e => e.clip === 'groove-a' && e.s <= 366.5) || !z.some(e => e.s >= late && e.s <= E['sculpt-end']))) bad.push(`3-3 line 2: not the 6:06 frame next to one after ${f2(late)} s`);
+    ok(!bad.length && line(ctx, '5-2', 1).startsWith('停格') && line(ctx, '5-2', 4).includes('大塊的核由 chopper 推到中央') && line(ctx, '3-3', 2).includes('越來越清楚'),
+      `footage on screen = narration: 5-2 lines 1–4 (freeze, after piece 1, piece 2, the large piece; one jump over piece 3 with a note), panel titles at the footage's clock hours (${tt.map(([n, h]) => n + ':' + h).join(' ')}), 3-3 line 2 early + late groove${bad.length ? '; ' + bad.slice(0, 4).join('; ') : ''}`); }
   // machine and model numbers said in the narration
   { const d41 = FL.NUM.surgeDur.venturi[0][1], d81 = FL.NUM.surgeDur.peri[1][1];
     ok(FL.NUM.advInf === 22 && line(ctx, '2-1', 4).includes('再加壓') && ctx.text['2-1'].keys.some(k => k[1].includes('22 mmHg')), `Advanced Infusion ${FL.NUM.advInf} mmHg (Quesada 2022; key 22 mmHg)`);
@@ -200,15 +232,16 @@ function ledgerChecks(ctx) {
 const clone = o => JSON.parse(JSON.stringify(o));
 function baseCtx(screen) {
   const text = {}; for (const s of SEGS) text[s.id] = clone(s);
-  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(screen), ledger: clone(LEDGER), sync: clone(SYNC) };
+  return { P: clone(CASE), foot: { sources: FOOT.sources, clips: clone(FOOT.clips) }, text, segs: clone(SEGS), screen: clone(screen), ledger: clone(LEDGER), sync: clone(SYNC),
+    seen: clone(SEEN.seen), skip: clone(SEEN.skip) };
 }
-let SYNC = null;
+let SYNC = null, SEEN = null;
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
 (async () => {
-  const { out: screen, sync } = await screenText();
+  const { out: screen, sync, seen } = await screenText();
   if (process.argv.includes('--list')) { for (const s of SEGS) if (!s.chapterCard && s.layout !== 'refs') { const t = [s.title || '', ...(s.lines || []), ...(s.keys || []).map(k => k[1]), ...(screen[s.id] || [])];
     console.log(s.id, [...new Set(t.flatMap(numbers))].join(' '), '|', [...new Set(t.flatMap(x => cites(x).map(c => c.all)))].join(', ')); } return; }
-  SYNC = sync;
+  SYNC = sync; SEEN = seen;
   const res = runAll(baseCtx(screen));
   let fail = 0; const shown = new Set();
   for (const [c, m] of res) { if (!c) fail++; const key = (c ? 'PASS ' : 'FAIL ') + m; if (!c || !/ledger|has a source|is a reference|citation|is cited in a segment/.test(m)) console.log(key); else shown.add(m); }
@@ -233,6 +266,10 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['surge duration said 3.9 s', c => { c.text['5-3'].lines[3] = c.text['5-3'].lines[3].replace('2.9', '3.9'); }],
       ['groove not on the incision meridian', c => { c.P.grooveH = 9; }],
       ['piece 1 taken from the temporal quadrant (pieces 1 and 2 swapped)', c => { for (const z of c.sync) for (const q of z.quads) q.q = q.q === 1 ? 2 : q.q === 2 ? 1 : q.q; }],
+      ['5-2 line 4 shows piece 3 again (the large piece a line late, no jump)', c => { for (const z of c.seen['5-2'][4]) for (const e of z) if (e.clip === 'quads') e.s -= 25; }],
+      ['5-2 panel title says piece 1 is at 7 o\'clock', c => { c.screen['5-2'] = c.screen['5-2'].map(t => t.replace('第 1 塊原本的位置（約 6 點）', '第 1 塊原本的位置（約 7 點）')); }],
+      ['3-3 line 2 shows only the 6:06 frame', c => { c.seen['3-3'][2] = c.seen['3-3'][2].map(z => z.filter(e => e.clip !== 'groove-late')); }],
+      ['the jump also skips piece 4\'s start', c => { c.skip['5-2'].to = 552; }],
       ['piece 2 still there when the footage shows its reflex', c => { for (const z of c.sync) if (z.s >= 500 && z.s <= 523) { const q = z.quads.find(e => e.q === 2); if (q) q.eat = Math.min(q.eat, 0.6); } }],
     ];
     let bad = 0;
