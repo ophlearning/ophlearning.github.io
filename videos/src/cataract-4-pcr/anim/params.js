@@ -14,7 +14,8 @@ const CASE = {
   piece: { h: 8 },                                                  // the remaining piece: its round side toward 8 o'clock (poles at 11 and 5; 示意)
   // what the recording shows and when (source s; footage.js events): read frame by frame, script-draft.md 「本例的錄影事件」
   noInstGap: [778.4, 788.5],                                        // no instrument in the chamber between withdrawal and the side-port cannula (≈ 10 s)
-  emulMin: 120, emulMax: 180,                                       // the remaining nucleus: phaco in → out lasted "兩分多鐘"
+  phacoOut: 1023.8,                                                 // 17:03.8 the phaco leaves after the remaining nucleus (錄影實測; after the emul clip)
+  emulMin: 120, emulMax: 180,                                       // the remaining nucleus: phaco in (14:44.5) → out lasted "兩分多鐘"
   iol: { model: 'AAB00', optic: 6, pos: 'sulcus' },                 // the surgeon (2026-11-10): AAB00 in the sulcus; optic 6 mm, C-loop (Wakili 2026), one-piece (Zhao 2018)
 };
 CASE.HP = (CASE.main.h + 6) % 12;                                  // the section through the main incision: left = 11 o'clock (main), right = 5

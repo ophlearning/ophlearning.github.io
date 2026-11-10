@@ -117,11 +117,11 @@ function modelChecks(ctx) {
     const bad = say.filter(([id, i, c, w, r]) => !(line(ctx, id, i).includes(w) && (D.clips[c].rate || 1) === r));
     ok(!bad.length, `narrated speeds match the clip rates (${say.length} statements${bad.length ? '; wrong: ' + bad.map(b => b[0] + ' ' + b[2]).join(', ') : ''})`); }
   // durations said in the narration
-  { const gap = E['can-in'] - E['out'], em = E['ph-out'] - E['ph-in'];
+  { const gap = E['can-in'] - E['out'], em = P.phacoOut - E['ph-in'];
     ok(near(gap, 10, 2) && line(ctx, '3-3', 1).includes('約 10 秒') && near(P.noInstGap[1] - P.noInstGap[0], gap, 0.01), `no instrument from withdrawal to the side-port cannula: ${f2(gap)} s (narration 約 10 秒)`);
-    ok(em >= P.emulMin && em <= P.emulMax && line(ctx, '4-3', 1).includes('兩分多鐘'), `remaining nucleus: phaco in → out ${f2(em)} s (narration 兩分多鐘: ${P.emulMin}–${P.emulMax} s)`); }
+    ok(em >= P.emulMin && em <= P.emulMax && P.phacoOut > ctx.foot.clips.emul.out && line(ctx, '4-3', 1).includes('兩分多鐘'), `remaining nucleus: phaco in → out ${f2(em)} s (17:03.8, after the clip; narration 兩分多鐘: ${P.emulMin}–${P.emulMax} s)`); }
   // order of the events of the recording
-  { const order = ['orange', 'phaco-out', 'out', 'can-in', 'can-out', 'lev-in', 'lev-out', 'ph-in', 'ph-out', 'ia', 'two-in', 'unfold', 'inj-out', 'hook-in', 'ta-in', 'ta-white', 'ta-out', 'clear'];
+  { const order = ['orange', 'wd', 'chop-out', 'out', 'can-in', 'can-out', 'lev-in', 'lev-out', 'ph-in', 'ia', 'two-in', 'unfold', 'inj-out', 'hook-in', 'ta-in', 'ta-white', 'ta-out', 'clear'];
     const bad = order.filter((n, i) => i > 0 && !(E[n] > E[order[i - 1]]));
     ok(!bad.length && D.clips.moment.freeze[0].at > E['out'], `footage events in the recording's order (${order.length}; the 12:59 freeze after both instruments are out)${bad.length ? '; out of order: ' + bad.join(', ') : ''}`); }
   // every label on the footage is measured on a frozen frame of its clip
@@ -131,9 +131,9 @@ function modelChecks(ctx) {
   { const st = (id, i) => F[id][i][0], en = (id, i) => F[id][i][F[id][i].length - 1], during = (id, i, f) => F[id][i].some(f), all = (id, i, f) => F[id][i].every(f);
     const T = [
       ['2-6 line 1 starts after the orange reflex appears (瞳孔左下方，出現之前沒有的橘紅色反光)', () => st('2-6', 1).s >= E.orange],
-      ['2-6 line 2 starts while phaco and chopper are still in and they are both out by its end (一起退出)', () => st('2-6', 2).s <= E['phaco-out'] + 0.3 && en('2-6', 2).s >= E.out],
+      ['2-6 line 2 starts while phaco and chopper are still in and they are both out by its end (一起退出)', () => st('2-6', 2).s <= E.wd + 0.3 && en('2-6', 2).s >= E.out],
       ['2-6 line 3 (停格) shows the frozen 12:59 frame', () => during('2-6', 3, z => z.frozen && z.s === 779.0)],
-      ['3-3 line 0 starts with the instruments in (withdraw clip) and they are out by its end', () => st('3-3', 0).clip === 'withdraw' && st('3-3', 0).s < E['phaco-out'] && en('3-3', 0).s >= E.out],
+      ['3-3 line 0 starts with the instruments in (withdraw clip) and they are out by its end', () => st('3-3', 0).clip === 'withdraw' && st('3-3', 0).s < E.wd && en('3-3', 0).s >= E.out],
       ['3-3 line 1 (約 10 秒沒有器械): no instrument on screen', () => all('3-3', 1, z => z.s >= E.out && z.s < E['can-in'])],
       ['3-3 line 2 starts as the cannula enters through the side port', () => st('3-3', 2).clip === 'ovd1' && near(st('3-3', 2).s, E['can-in'], 0.6)],
       ['4-2 line 0 starts as the cannula comes in through the main incision', () => st('4-2', 0).s <= E['lev-in'] + 0.8 && en('4-2', 0).s >= E['lev-in']],
@@ -163,12 +163,12 @@ function modelChecks(ctx) {
   // the right panel follows the recording (sampled every 0.5 s): instruments only while shown, through the incision the recording shows
   { const bad = [], kinds = (z, k) => (z.cat.inst || []).filter(i => i.kind === k), via = i => i.via || 'main';
     for (const z of S.firstAt) { const s = z.s, ph = kinds(z, 'phaco').length, ch = kinds(z, 'chopper'), ca = kinds(z, 'cannula');
-      if (!!ph !== (s < E['phaco-out'])) bad.push(`${s}s phaco`); if (!!ch.length !== (s < E.out)) bad.push(`${s}s chopper`); if (!!ca.length !== (s >= E['can-in'] && s <= E['can-out'])) bad.push(`${s}s cannula`);
+      if (!!ph !== (s < E.out)) bad.push(`${s}s phaco`); if (!!ch.length !== (s < E['chop-out'])) bad.push(`${s}s chopper`); if (!!ca.length !== (s >= E['can-in'] && s <= E['can-out'])) bad.push(`${s}s cannula`);
       if (ch.some(i => via(i) !== 'side') || ca.some(i => via(i) !== 'side')) bad.push(`${s}s via`); if (z.cat.pcr.collapse || z.cat.pcr.deep) bad.push(`${s}s chamber change drawn (the recording cannot show it)`);
       if (s < E['can-in'] && z.cat.pcr.ovdD.tamp > 0) bad.push(`${s}s OVD before the cannula`); }
     for (const z of S.levAt) { const s = z.s, ca = kinds(z, 'cannula'); if (!!ca.length !== (s >= E['lev-in'] && s <= E['lev-out']) || ca.some(i => via(i) !== 'main')) bad.push(`${s}s lev cannula`); if (s < E['lev-in'] && z.cat.pcr.frag.float > 0) bad.push(`${s}s floated before the cannula`); }
-    for (const z of S.emulAt) { const s = z.s, ph = kinds(z, 'phaco'), sp = kinds(z, 'spatula'); if ((!!ph.length !== (s >= E['ph-in'] && s < E['ph-out'])) || (!!sp.length !== !!ph.length) || sp.some(i => via(i) !== 'side')) bad.push(`${s}s emul instruments`);
-      if (s >= E['ph-out'] && z.cat.pcr.frag) bad.push(`${s}s piece left after the phaco leaves`); }
+    for (const z of S.emulAt) { const s = z.s, ph = kinds(z, 'phaco'), sp = kinds(z, 'spatula'); if ((!!ph.length !== (s >= E['ph-in'] && s < P.phacoOut)) || (!!sp.length !== !!ph.length) || sp.some(i => via(i) !== 'side')) bad.push(`${s}s emul instruments`);
+      if (s >= P.phacoOut && z.cat.pcr.frag) bad.push(`${s}s piece left after the phaco leaves`); }
     for (const z of S.iaAt) if (kinds(z, 'ia').length !== 1 || kinds(z, 'ia').some(i => via(i) !== 'main')) bad.push(`${z.s}s I/A`);
     for (const z of S.vitAt) { const s = z.s, v = kinds(z, 'vitrector'), ir = kinds(z, 'irrig'); if ((!!v.length !== (s >= E['two-in'])) || (!!ir.length !== !!v.length) || v.some(i => via(i) !== 'main') || ir.some(i => via(i) !== 'side')) bad.push(`${s}s vit instruments`); }
     const n = Object.values(S).reduce((a, v) => a + v.length, 0);
@@ -256,7 +256,8 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChec
       ['citation not in REFS', c => { c.screen['5-2'].push('Smith 2020'); }],
       ['narrated speed wrong', c => { c.foot.clips.ovd1.rate = 4; }],
       ['10 s said but 15 s on the recording', c => { c.foot.clips.ovd1.events['can-in'] = 793.5; }],
-      ['the remaining nucleus said 兩分多鐘 but 4 minutes', c => { c.foot.clips.emul.events['ph-out'] = 1124; }],
+      ['the remaining nucleus said 兩分多鐘 but 4 minutes', c => { c.P.phacoOut = 1124; }],
+      ['the phaco drawn leaving before the chopper', c => { for (const z of c.sync.firstAt) if (z.s >= 777.5 && z.s < 778.4) z.cat.inst = (z.cat.inst || []).filter(i => i.kind !== 'phaco'); }],
       ['events out of order (withdrawal before the orange reflex)', c => { c.foot.clips.moment.events.orange = 777.5; }],
       ['a footage label on a moving frame', c => { c.foot.clips.ta.points.clump[0].t = 2700; }],
       ['「一起退出」 said before the instruments move', c => { c.footOn['2-6'][2] = c.footOn['2-6'][2].map(z => ({ ...z, s: 775 })); }],

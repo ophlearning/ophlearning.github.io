@@ -136,8 +136,8 @@ const rbox = (x, y, w, h, title, rows, op, col = COL.accent, ts = 18, rs = 16.5)
 // parts: [{ clip, ev, line, dt }]: event `ev` of `clip` lands at the start of narration line `line` (+dt s); the last part already started is shown
 // (the first one is shown from the segment start). The source time on screen is kept in window.LAST_FOOT for check.js.
 const FOOT_PARTS = {
-  '2-6': [{ clip: 'moment', ev: 'phaco-out', line: 2, dt: -0.2 }, { clip: 'moment', ev: 'm-frz', line: 3, from: 'line' }],
-  '3-3': [{ clip: 'withdraw', ev: 'phaco-out', line: 0, dt: 0.6 }, { clip: 'ovd1', ev: 'can-in', line: 2 }],
+  '2-6': [{ clip: 'moment', ev: 'wd', line: 2, dt: 0 }, { clip: 'moment', ev: 'm-frz', line: 3, from: 'line' }],
+  '3-3': [{ clip: 'withdraw', ev: 'wd', line: 0, dt: 0.8 }, { clip: 'ovd1', ev: 'can-in', line: 2 }],
   '4-2': [{ clip: 'lev', ev: 'lev-in', line: 0, dt: 0.3 }, { clip: 'lev', ev: 'lev-frz', line: 2, from: 'line' }],
   '4-3': [{ clip: 'emul', ev: 'ph-in', line: 0, dt: 0.3 }],
   '5-1': [{ clip: 'ia', ev: 'ia', line: 1, dt: 0.3 }],
@@ -162,11 +162,12 @@ const frozenOp = (clip, tau, at, d = 0.35) => { const f = (FOOTAGE_DEF.clips[cli
 const flab = (zh, en, a, dx, dy, op) => labNear(zh, en, a, dx, dy, { bold: true, color: YEL, lc: YELL, op });
 
 // ---------------------------------------------------------------- footage clock → model state (the right panel of footage segments)
-// 3-3 (withdraw, ovd1): phaco + chopper until they leave; nothing for ≈ 10 s; the side-port cannula; OVD over the rent (amount 示意). The rent is
-// drawn as 示意 (the recording does not show it); the chamber is not drawn collapsing (the recording cannot show its depth either).
+// 3-3 (withdraw, ovd1): phaco + chopper until they leave (the chopper first, chop-out; the phaco by out); nothing for ≈ 10 s; the side-port
+// cannula; OVD over the rent (amount 示意). The rent is drawn as 示意 (the recording does not show it); the chamber is not drawn collapsing (the
+// recording cannot show its depth either).
 function firstAt(s) {
   const inst = [], k = ss(ev('can-in') + 1, ev('can-out'), s);
-  if (s < ev('phaco-out')) inst.push(PHC, CHOP); else if (s < ev('out')) inst.push(CHOP);
+  if (s < ev('out')) inst.push(PHC); if (s < ev('chop-out')) inst.push(CHOP);
   if (s >= ev('can-in') && s <= ev('can-out')) inst.push(OVDCAN);
   return cat({ bag: {}, pcr: { rent: RENT, ovdD: { tamp: k }, frag: PIECE }, inst });
 }
@@ -180,10 +181,11 @@ function levAt(s) {
   const fl = ss(ev('lev-in') + 2, ev('lev-in') + 12, s), st = FLOAT(fl, 0);
   return s >= ev('lev-in') && s <= ev('lev-out') ? cat({ ...st.cat, inst: [LEVCAN(st)] }) : st;
 }
-// 4-3 (emul): phaco on the straight edge, the straight instrument under the piece; eaten from ph-in to ph-out
+// 4-3 (emul): phaco on the straight edge, the straight instrument under the piece; eaten from ph-in to 6.5 s before the clip's end (the pace is 示意);
+// both instruments stay to the clip's end (the phaco leaves at 17:03.8, after it: CASE.phacoOut)
 function emulAt(s) {
-  const e = lerp(0.05, 0.95, ss(ev('ph-in') + 3, ev('ph-out') - 6, s));
-  if (s >= ev('ph-out')) return cat({ bag: {}, pcr: { rent: RENT, ovdD: { tamp: 1, coat: 1, fill: CN.pcr.frag.cushion + 0.25 } } });
+  const e = lerp(0.05, 0.95, ss(ev('ph-in') + 3, FOOTAGE_DEF.clips.emul.out - 6.5, s));
+  if (s >= CASE.phacoOut) return cat({ bag: {}, pcr: { rent: RENT, ovdD: { tamp: 1, coat: 1, fill: CN.pcr.frag.cushion + 0.25 } } });
   const st = FLOAT(1, e); return s >= ev('ph-in') ? cat({ ...st.cat, inst: [phacoAt(st), spatAt(st)] }) : st;
 }
 // 5-1 (ia): coaxial I/A under the rim on the 5 o'clock side, cortex cleared over the clip (sectors 示意), OVD over the rent

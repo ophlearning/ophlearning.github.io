@@ -1,0 +1,32 @@
+白內障手術系列的第四支：後囊破裂（posterior capsule rupture, PCR）。目標是早一點認出後囊破了、做對當下的第一個動作，並知道之後核、皮質、玻璃體與 IOL 的處理順序；認出與第一步占全片四成的時間。內容：PCR 最常發生在哪一步、晚認出的代價；四組線索（前房突然變深、瞳孔一下子變大；核塊不跟 tip、轉不動、一端歪下去；red reflex 出現特別清亮的區域；玻璃體被前後的壓力差推到前面），每組都是正常與 PCR 並排的動畫示意，並整理紅光弱的眼睛還看得到哪些；第一步（不要突然抽出器械、停止乳化、phaco 留在原位、從 side port 打 dispersive OVD 蓋住破口、前房穩了再慢慢退、掉下去的核塊不要追）與為什麼不能直接退；I/A 時破了一樣先打 OVD 再退；第一步之後評估破口、剩下的核與皮質、玻璃體；剩下的核（OVD 墊著、鈍器械墊在下面、低能量乳化；太大的改 ECCE／SICS；掉進玻璃體腔不撈、交給 VR）；皮質與前段玻璃體切除（雙手、灌流與切割分開；經 pars plana 的做法；triamcinolone 讓玻璃體看得見）；IOL 依囊袋的支撐放哪裡（in the bag、3-piece 放 sulcus、optic capture、其他固定方式；one-piece 壓克力放 sulcus 的文獻與度數調整）；收尾、術後追蹤與轉 VR 的時機；最後是 wet lab 練習清單。
+
+左邊是一台左眼 OS、術者坐 12 點（superior）的手術錄影，已去識別：只裁出眼睛範圍，畫面上沒有任何文字或病人資訊，也不用聲音；慢放、加速與停格都標在畫面上。左眼的畫面右邊是 9 點（nasal），主切口約 11 點、side port 約 2 點。右邊是以 mm 建模的機轉切面或術者視角，和錄影用同一組事件時間同步；示意的部分畫面上有標。本例 red reflex 很弱：錄影看不出後囊確切在什麼時候破（術者推測是在刻槽或移除核塊時），所以 PCR 的經典線索用動畫示意教；錄影上唯一可能的線索是瞳孔左下方出現的橘紅色反光，而且不確定。本例的做法只描述、不評斷，建議的做法都附出處：本例是還剩一大塊核時器械先退出、約 10 秒後經 side port 補 OVD，綜論建議的順序是 tip 留著、先打 OVD 再退（錄影看不出術者退出的那一刻是否已知道後囊破了）；前段玻璃體切除看起來是雙手、經角膜緣；白色顆粒看起來是 triamcinolone（術者推測）；IOL 依術者說明是 AAB00（one-piece 壓克力）放在 sulcus，錄影上看不出最後在哪一層。破口、玻璃體與核塊的形狀和量都是示意；前段玻璃體切除的機器設定沒有講數字，請依院內機器設定。
+
+章節
+0:00 片頭
+0:18 1 為什麼要早認出
+1:23 2 認出 PCR 的線索
+3:59 3 當下第一步
+5:56 4 剩下的核
+7:03 5 皮質與玻璃體
+8:33 6 IOL 放哪裡
+9:44 7 收尾與轉診
+10:26 8 練習清單
+10:58 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Rajan 2025. Taiwan J Ophthalmol 15:549-558. doi:10.4103/tjo.TJO-D-25-00059
+2. Barraquer 2006. Invest Ophthalmol Vis Sci 47:2053-60. doi:10.1167/iovs.05-1002
+3. Suryawanshi 2016. Middle East Afr J Ophthalmol 23:163-7. doi:10.4103/0974-9233.175886
+4. Burk 2003. J Cataract Refract Surg 29:645-51. doi:10.1016/s0886-3350(03)00016-6
+5. Arbisser 2006. Ophthalmol Clin North Am 19:495-506. doi:10.1016/j.ohc.2006.07.002
+6. Chang 2009. J Cataract Refract Surg 35:1445-58. doi:10.1016/j.jcrs.2009.04.027
+7. Suto 2003. J Cataract Refract Surg 29:1913-7. doi:10.1016/s0886-3350(03)00250-5
+8. Wakili 2026. Graefes Arch Clin Exp Ophthalmol (online). doi:10.1007/s00417-026-07340-y
+9. Zhao 2018. Int Ophthalmol 38:1169-1175. doi:10.1007/s10792-017-0578-3
+10. Rothman 2026. Ophthalmology 133:368-377. doi:10.1016/j.ophtha.2025.10.008
+11. Vanner 2011. Am J Ophthalmol 152:345-357. doi:10.1016/j.ajo.2011.02.010
+12. Vanner 2014. Clin Ophthalmol 8:2261-76. doi:10.2147/OPTH.S71494
+13. Ferris 2020. Br J Ophthalmol 104:324-329. doi:10.1136/bjophthalmol-2018-313817
+
+製作　張博淳

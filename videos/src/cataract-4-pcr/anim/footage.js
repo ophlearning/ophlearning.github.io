@@ -12,11 +12,14 @@
 // from 46:35 (the globe is rotated; the narration only says the case was sutured).
 // Event names used by draw.js and check.js:
 //   orange                     12:54: an orange-red reflex appears in the lower left of the pupil (not seen before)
-//   phaco-out / out            12:57.0 the phaco starts to leave; 12:58.4 phaco and chopper are both out (a large piece of nucleus is left)
+//   wd / chop-out / out        12:57.1 the withdrawal starts: the chopper's shaft leaves the chamber first (its tip at the side port by 12:57.3,
+//                              chop-out); the phaco follows (12:57.4 → at the main incision 12:58.4, out); both are out by 12:58.5 (a large piece
+//                              of nucleus is left). Re-read at 0.1 s on 2026-11-10 (pre-render review); before, 12:57.0 was read as the phaco first
 //   can-in / can-out           a thin cannula through the side port (bottom left) pushes something into the chamber (looks like OVD)
 //   lev-in / lev-out           a curved cannula through the main incision under and beside the large piece; the piece moves to the pupil centre
-//   ph-in / ph-out             the phaco through the main incision with a STRAIGHT thin instrument through the side port (the left hand held a curved
-//                              chopper before 12:58); the remaining nucleus is emulsified
+//   ph-in                      the phaco through the main incision with a STRAIGHT thin instrument through the side port (the left hand held a curved
+//                              chopper before 12:58); the remaining nucleus is emulsified. The phaco leaves at 17:03.8, after the clip (params.js
+//                              CASE.phacoOut; re-read 2026-11-10: it is still in at 17:02.5, the clip's last frame; the video shows the clip only to 16:01)
 //   ia                         a coaxial I/A (yellow sleeve) through the main incision (cortex)
 //   two-in                     two instruments: through the left incision (irrigation, looks like) and the main incision (vitrector, looks like)
 //   unfold / inj-out           the folded IOL opens in the chamber; the injector leaves the main incision
@@ -38,21 +41,21 @@ const FOOTAGE_DEF = {
       src: 'case-pcr', in: 760.4, out: 760.6, rate: 1,
       crop: [{ t: 760.4, cx: 709, cy: 250, w: 600, rot: 8 }, { t: 760.6, cx: 709, cy: 250, w: 600, rot: 8 }],
     },
-    // 12:50–12:59.4 (0.5×): phaco + chopper on the remaining nucleus; from 12:54 an orange-red reflex in the lower left of the pupil; 12:57.0–12:58.4 phaco
-    // and chopper leave together with a large piece left. Freeze 12:59 (no instrument, the orange reflex)
+    // 12:50–12:59.4 (0.5×): phaco + chopper on the remaining nucleus; from 12:54 an orange-red reflex in the lower left of the pupil; 12:57.1–12:58.4 phaco
+    // and chopper leave together (the chopper first) with a large piece left. Freeze 12:59 (no instrument, the orange reflex)
     'moment': {
       src: 'case-pcr', in: 770.0, out: 779.4, rate: 0.5,
       freeze: [{ at: 779.0, dur: 4 }],
       crop: [{ t: 770.0, cx: 710, cy: 250, w: 600, rot: 8 }, { t: 774.0, cx: 722, cy: 250, w: 600, rot: 8 }, { t: 778.0, cx: 729, cy: 250, w: 600, rot: 8 },
         { t: 779.0, cx: 728, cy: 250, w: 600, rot: 8 }, { t: 779.4, cx: 727, cy: 250, w: 600, rot: 8 }],
-      events: { 'orange': 774.0, 'phaco-out': 777.0, 'out': 778.4, 'm-frz': 779.0 },
+      events: { 'orange': 774.0, 'wd': 777.1, 'chop-out': 777.3, 'out': 778.4, 'm-frz': 779.0 },
       points: { 'orange': [{ t: 779.0, p: [602, 257] }] },
     },
     // 12:55–12:59.4 (0.5×): the same withdrawal, without the freeze (first step, 3-3)
     'withdraw': {
       src: 'case-pcr', in: 775.0, out: 779.4, rate: 0.5,
       crop: [{ t: 775.0, cx: 724, cy: 250, w: 600, rot: 8 }, { t: 778.0, cx: 729, cy: 250, w: 600, rot: 8 }, { t: 779.4, cx: 727, cy: 250, w: 600, rot: 8 }],
-      events: { 'phaco-out': 777.0, 'out': 778.4 },
+      events: { 'wd': 777.1, 'chop-out': 777.3, 'out': 778.4 },
     },
     // 12:59.4–13:23 (2×): no instrument for about 10 s (13:03.5–13:04.5 something wipes the corneal surface); 13:08.5 a thin cannula through the side
     // port, moving in the chamber (pushing something: looks like OVD); out 13:21.5. Freeze 13:15 (the cannula in the chamber)
@@ -79,7 +82,7 @@ const FOOTAGE_DEF = {
       points: { 'piece': [{ t: 830.0, p: [705, 215] }], 'lev-can': [{ t: 830.0, p: [820, 315] }] },
     },
     // 14:44–17:02.5 (6×): 14:44.5 the phaco through the main incision and a straight thin instrument through the side port beside the piece; the piece
-    // is emulsified; the phaco leaves 17:02. Freeze 14:52 (both instruments at the piece)
+    // is emulsified; both are still in at the clip's end (the phaco leaves 17:03.8: CASE.phacoOut). Freeze 14:52 (both instruments at the piece)
     'emul': {
       src: 'case-pcr', in: 884.0, out: 1022.5, rate: 6,
       freeze: [{ at: 892.0, dur: 3.5 }],
@@ -92,7 +95,7 @@ const FOOTAGE_DEF = {
         { t: 994.0, cx: 771, cy: 325, w: 640, rot: 8 }, { t: 1000.0, cx: 794, cy: 317, w: 640, rot: 8 }, { t: 1006.0, cx: 812, cy: 302, w: 640, rot: 8 },
         { t: 1012.0, cx: 751, cy: 334, w: 640, rot: 8 }, { t: 1018.0, cx: 720, cy: 339, w: 640, rot: 8 }, { t: 1022.0, cx: 670, cy: 281, w: 640, rot: 8 },
         { t: 1022.5, cx: 670, cy: 281, w: 640, rot: 8 }],
-      events: { 'ph-in': 884.5, 'ph-out': 1022.0 },
+      events: { 'ph-in': 884.5 },
       points: { 'phaco': [{ t: 892.0, p: [690, 330] }], 'straight': [{ t: 892.0, p: [561, 317] }] },
     },
     // 19:20–20:06 (4×): coaxial I/A (yellow sleeve) through the main incision, cortex; contrast is poor
