@@ -16,6 +16,7 @@
   - 玻璃體脫出、hyphema、星狀或斜切（shelved）傷口。
 - 2026-11-09 白內障系列 ①（主切口、side port、OVD、CCC）：選用式狀態 `st.cat`，見下面「白內障」一節。
 - 2026-11-10 白內障系列 ②（hydrodissection、divide and conquer、phaco 與 chopper、流體面板）：同樣放在 `st.cat`，見「白內障 ②」一節。
+- 2026-11-10 白內障系列 ③（I/A、IOL 植入、移除 OVD、切口密閉）：同樣放在 `st.cat`，見「白內障 ③」一節。
 - 之後可用：trabeculectomy、PK 等前段手術。眼球只建一次，後段和眼外肌模型也用這顆。
 
 ## 兩個同步視角與方位慣例
@@ -399,6 +400,101 @@
 - **推開的兩半凸出囊袋**：只往側邊推，前後表面就跑出去；用囊袋切掉。
 - **樣本的 phaco 擋住槽**：俯視圖上 sleeve 和槽一樣寬；槽的亮度另外畫一張沒有器械的。
 
+## 白內障 ③（2026-11-10 建立；系列 ③：I/A、IOL 植入、移除 OVD、切口密閉）
+規格見 `videos/src/cataract-3-ia-iol/spec.md`。沿用 ①、② 的水晶體、囊袋、切口與方位。新狀態都是選用式：沒給就和 ①、② 逐字相同（①、② 樣本與 open globe 的參考圖 0.000%）。
+
+### 適用的步驟與做法
+- 核拿掉後的囊袋（`bag`）：囊袋保持原來水晶體的形狀（灌流或 OVD 撐著，示意），裡面剩皮質：前囊邊緣下、赤道、周邊後囊上的一層，主切口下方（11–1 點）較厚。
+- I/A：
+  - coaxial（主切口）：圓頭金屬 tip、側面一個吸口、矽膠 sleeve。吸口方向 `port`：`up`（朝角膜，術者看得到）、`side`、`down`（朝後囊，看不到）。
+  - 在前囊邊緣下夾住皮質（occlude）、往中央剝（`strip`）、再吸；每個鐘點扇形的進度（`cortex` 12 個值）。
+  - subincisional：主切口的直 tip 到不了 12 點邊緣下（檢查證明會撞到前囊或虹膜）；改用雙手 I/A（Colvard 1997）：aspiration 從 side port 進、遠端 2 mm 彎 30°（示意）越過撕囊口伸到 12 點邊緣下，irrigation 從主切口進；或 hydro-dispersion（Miyoshi 2022）：27G 鈍針從 side port 對著主切口下方的 fornix 打 BSS，把皮質沖鬆，再用 coaxial 吸。
+  - 錯誤示範（動畫示意）：吸口朝下吸到後囊，後囊被吸成一個尖帳篷到吸口，術者視角看到放射狀皺褶匯向吸口。第一步：停、reflux（旁白依規格書）。
+- OVD 撐開囊袋（`ovdBag`，cohesive，示意）；injector 斜面朝下經主切口；one-piece IOL：前導 haptic 先進囊袋、optic 展開、後 haptic 用 hook（side port）壓進囊袋、轉到位置；最後置中、optic 邊緣 360° 被 CCC 蓋住。錯誤（示意）：偏位、後 haptic 在 sulcus。
+- 移除 OVD：IOL 後方與前方（`ovdOut`）；後方清掉後囊袋才閉合在 IOL 上（`collapse`），前房變深。
+- 收尾：未癒合的切口在低眼壓時從內口開始張開（`seal.gape`，McDonnell 2003）；stromal hydration（`seal.hydr`、器械 `hcan`）：在切口兩側壁的基質打水，基質變白（Mifflin 2012）、腫脹讓兩唇貼合（示意）。本例另縫合主切口（影片說明 routine 不需要）。
+
+### 視角與方位
+- 沿用 `cat`（12–6 切面，左＝12 點）、`tunnel`、`cross`、`cscope`（下＝12 點、右＝temporal），沒有新視角。
+- 器械或 IOL 不在切面上時畫投影（同 ①），面板標題註明「投影」。
+- 換算：同 ①（切面 u＝−Y、v＝−Z；俯視 x＝−X、y＝Y），檢查確認 I/A tip、吸口、皮質條、IOL 中心與 haptic 尖端在兩圖同一位置。
+
+### 狀態（`st.cat`）
+- `bag: { cortex, sub, disp, strip, caught, collapse }`：
+  - `cortex`：12 個鐘點扇形剩下的皮質（1→0，索引＝鐘點 mod 12），邊界 ±0.15 h 平滑；`CATARACT.cortexSweep(prog, h0, dir)` 產生「從 h0 往 dir 方向吸了 prog 圈」的值。
+  - `sub`：主切口下方多出來的皮質（1→0）；`disp`：hydro-dispersion，把這一區的皮質沖離囊 0.3 mm（示意）。
+  - `strip: { h, prog }`：0→0.1 在邊緣下吸住；0.1→0.55 前面那片從邊緣往赤道剝；0.55→1 赤道與後囊那片剝下。剝下的部分畫成一條從還連著的地方到吸口的皮質條（`stripStrand`）。
+  - `caught`：吸口吸到後囊（需要一支有 `port` 的 I/A）。
+  - `collapse`：囊袋閉合在 IOL 上（前囊邊緣貼 optic 前面、後囊貼 optic 後面、赤道夾著 haptic）。有 OVD 在 optic 後面時，`norm` 把它限制在 `ovdOut.behind` 以下。
+- `ovdBag` 0→1：囊袋裡的 OVD（後囊往後撐 0.25 mm，示意）；`ovdOut: { behind, front }` 0→1：optic 平面後方／前方的 OVD 從中央往外清掉。前房的 OVD 仍是 `ovd`，不進囊袋。
+- `iol: { out, unfold, lead, trail, rot, dx, dy, sulcus }`：
+  - `out` 0→1 從 nozzle 出來的程度（nozzle 裡的部分不畫）；`unfold` 0→1 taco 折（80°，邊緣朝上）打開；`lead` 前導 haptic 從直的（剛出 nozzle）到囊袋裡；`trail` 後 haptic 從前房（在虹膜上方、前囊前面）到囊袋裡（同時 optic 從「後緣翹起 12°、往 6 點偏 0.5 mm」放平置中）；`rot` 轉 IOL（度，＋＝術者看順時針）；`dx`、`dy` 偏位；`sulcus` 錯誤：後 haptic 在 sulcus。
+  - 形狀：optic 雙凸圓盤；haptic 是 32 點的中心線（管徑＝haptic 厚），在 EXT（直）、FREE（出廠的 C-loop，尖端距中心 6.5 mm）、BAG（從根部到赤道、再沿赤道內側）、ABOVE（前房裡）、SULC 之間內插。根部還在前囊上方時，BAG 的曲線先經撕囊口往下再往外。
+- `seal: { gape, hydr }`：內口張開 0→1；hydration 0→1（同時把 gape 關掉）。
+- `inst` 新種類：
+  - `{ kind: 'ia', p 或 at, port, occl }`（coaxial，主切口）；`{ kind: 'iaIrr', p }`（雙手 irrigation，主切口）；`{ kind: 'iaAsp', via: 'side', p, tipDir, port, occl }`（雙手 aspiration，`tipDir`＝彎的那段從彎點到尖端的方向）。
+  - `{ kind: 'injector', p, bevel }`（`p`＝斜面中心，預設斜面朝下）；`{ kind: 'hcan', side: ±1, f }`（stromal hydration，尖端在切口側壁的基質、隧道 f 處）；hook 用 ② 的 `chopper`（`via: 'side'`）。
+  - sleeve、injector、雙手 I/A 都用 ② 的隧道「彎模式」；`hcan` 不撐開隧道。
+- 輔助函式：`bagOf`（囊袋表面、帳篷）、`iolOf`（IOL 姿勢、haptic、field）、`cortexT`、`cortexField`、`cortexSweep`、`stripFront`、`stripStrand`、`portDir`、`optHalf`。
+
+### 數值與出處
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| 雙手 I/A 處理 subincisional cortex | 做法 | Colvard 1997：bimanual I/A 比標準 I/A 更容易處理 subincisional cortex、前房較穩（doi:10.1016/s0886-3350(97)80277-5；PMID 9278789，只看到摘要） |
+| Hydro-dispersion | 27G 鈍針經 side port，對著主切口下方的 fornix 打 BSS，再用 coaxial I/A 吸 | Miyoshi 2022：60 眼中 56 眼（93.3%）成功，沒有相關併發症（doi:10.1186/s12886-022-02314-0；PMID 35177028）。沖離 0.3 mm 是示意 |
+| one-piece IOL 大小 | optic 6.0、overall 13.0 mm | Osawa 2021：一款疏水性壓克力 IOL（HOYA XY-1）optic 6.0、overall 13.0 mm，2.4 mm 切口、injector 放入囊袋（doi:10.1371/journal.pone.0247844；PMID 33647069）。**依院內 IOL 型號**；optic 和 ① 的 6.0 一致 |
+| 囊袋直徑 | 模型 9.64 mm（＝水晶體赤道，① 的值） | Vass 1999 放 CTR 後量的 in vivo 囊袋直徑 10.37 ± 0.25 mm（doi:10.1016/s0886-3350(99)00204-7；PMID 10511938）；Kurz 2005 術中中位數 10.5 mm（doi:10.1016/j.jcrs.2005.06.046）。模型比這小約 0.7 mm（① 的 CASIA2 推算值），haptic 壓縮量因此是示意；13.0 mm 比兩者都大，haptic 一定被壓縮 |
+| 切口在低眼壓時的形態 | 內口先張開（模型 0.12 mm，示意） | McDonnell 2003 屍眼 OCT：高眼壓時兩唇貼合，低眼壓時從內側開始張開；India ink 進到切口 3/4 深（doi:10.1016/S0161-6420(03)00733-4；PMID 14644716） |
+| Stromal hydration | 切口兩側壁打水、基質變白 | Mifflin 2012：conventional hydration＝hydrate 主切口的 lateral walls，看得到基質變白（doi:10.1016/j.jcrs.2012.04.019；PMID 22624890）。變白範圍、腫脹量示意 |
+| Swab pressing vs stromal hydration | 模型沒用（旁白可用） | Liu 2023 RCT 126 眼：iOCT 判定切口閉合 96.8% vs 93.7%（不劣），術中前房塌陷 0/63 vs 35/63（55.6%）；單一術者、未遮盲（doi:10.1001/jamaophthalmol.2023.1491；PMID 37166786） |
+| 收尾的眼壓 | 模型沒用（旁白可用） | Hayashi 2014：以 stromal hydration 把眼壓調到 15–40 mmHg，9 分鐘內回到術前（doi:10.1007/s10384-014-0331-7） |
+| one-piece 放 sulcus | 錯誤狀態的形狀示意 | Chang 2009：single-piece acrylic IOL 放 sulcus 的併發症（色素散播、出血、CME 等），只為 in the bag 設計的 IOL 不應放 sulcus（doi:10.1016/j.jcrs.2009.04.027）；細節在 ④ 講 |
+| optic 被 CCC 360° 蓋住 | 重疊 ≥ 0.25 mm（置中時 0.375） | 同 ①：Hollick 1999、Haripriya 2025 |
+| 殘留皮質的分布與厚度 | 片 0.2 mm、主切口下方多 0.45 mm（±1.3 h）、後囊中央 2.2 mm 內乾淨 | 示意（「主切口下方最難吸」是 Colvard 1997、Miyoshi 2022 的前提，沒有厚度數字） |
+| 剝皮質的順序 | 邊緣下 → 赤道 → 周邊後囊 | 示意 |
+| coaxial I/A tip | 外徑 0.9、吸口 0.3 mm 在 tip 後 0.45 mm、sleeve 外徑 1.5、離 tip 1.6 mm | 示意（院內 tip 型號待確認） |
+| 雙手 I/A | 外徑 0.9、aspirator 遠端 2.0 mm 彎 30° | 示意（1.2 mm 彎 35° 時從 2 點 side port 伸不到 12 點邊緣下，檢查會擋） |
+| 吸到後囊 | 後囊被吸成高斯形帳篷（σ 1.0 mm）頂到吸口下緣；14 條放射狀皺褶 | 示意（查不到出處；「出現放射狀皺褶 → 停、reflux」依規格書，旁白要標動畫示意） |
+| 囊袋 OVD 撐開 | 後囊往後 0.25 mm | 示意 |
+| IOL 厚度、haptic | optic 中央 0.8、邊緣 0.3 mm；haptic 寬 0.45、厚 0.4 mm；C-loop 掃 95°（出廠）／125°（囊袋裡） | 示意（依院內 IOL 型號） |
+| injector | nozzle 外徑 1.8 mm、斜面 45°、轉動點在隧道 50 % | 示意 |
+| 植入路徑 | 從 nozzle 沿它的方向到中央、taco 折 80°、後 haptic 還在外面時 optic 後緣翹 12°、往 6 點偏 0.5 mm | 示意 |
+| 偏位、sulcus | 偏 0.8 mm；sulcus 半徑 5.6 mm、optic 往該側偏 0.6、傾 5° | 示意 |
+| 最後位置 | optic 在原來水晶體赤道平面；囊袋閉合、虹膜跟著往後 | 示意（前房 2.72 → 約 3.9 mm，從內皮量到 optic 前面） |
+| 收尾 | 內口張開 0.12 mm；hydration 的變白帶寬 0.3 mm；cannula 尖端在切口兩側外 0.12 mm 的基質 | 示意 |
+
+### 物理與器械
+- 器械只從切口進出：coaxial I/A、irrigation、injector 走主切口；aspiration、hook、hydro-dispersion cannula 走 side port；軸都通過各自隧道的轉動點。hydration cannula 從外口側邊進到側壁基質，不進前房。
+- 器械經過的地方：不碰虹膜、不穿過隧道外的角膜、不穿過前囊（前囊只在撕囊口才能通過；檢查看器械截面在前囊兩側都有點）、不到後囊後面。
+- subincisional 的幾何：主切口的隧道往中央上升 18°，直的 coaxial tip 要伸到 12 點邊緣下，必須從前囊外面往下穿過去，所以一定會撞到前囊或虹膜；side port 的 aspirator 要先越過撕囊口再彎下去。
+- IOL：任何階段都不碰虹膜、角膜，不穿過前囊（optic 用 0.15 mm 的格子看同一位置有沒有前後兩邊；haptic 沿中心線看 z − 前囊 的正負號有沒有在前囊還在的地方改變），不到後囊後面。
+- 最後位置：IOL 所有點都在閉合的囊袋裡、haptic 在赤道內、optic 置中、CCC 邊緣 360° 落在 optic 上 ≥ 0.25 mm。
+- OVD：囊袋的 OVD 只在囊袋裡，前房的 OVD 不進囊袋；後方的 OVD 清掉前，囊袋不能閉合。
+
+### 必寫的檢查（`check.js` 第 13 節，37 條）
+- IOL：出廠 13.0／6.0 mm（Osawa 2021）且和 ① 的 optic 相同；在囊袋裡被壓縮（13.0 大於 Vass 1999 的 10.37 ± 0.25 與模型 9.64），haptic 邊緣在赤道內。
+- 囊袋：沒有核；皮質只是貼著囊的一層，撕囊口內前面沒有；12 點下方比 6 點厚 2 倍以上；吸過的扇形在俯視與切面都沒有皮質、沒吸的還在。
+- coaxial I/A（6 點）：經主切口轉動點、路上不碰任何組織；tip 在邊緣下；吸口朝上、在皮質裡；吸口朝上時俯視看得到、朝下看不到；tip 在兩圖同一位置。
+- 剝皮質：6 點那片隨進度變少、剝離前緣往外移；皮質條的端點就是吸口，兩圖同一點。
+- Subincisional：主切口的直 tip 到 12 點邊緣下會撞到；雙手 I/A 兩支都不碰組織、aspirator 在 12 點邊緣下、吸口朝上在皮質裡；hydro-dispersion 的 cannula 經 side port 到 12 點邊緣、皮質被沖離 ≥ 0.25 mm。
+- 吸到後囊：吸口朝下；帳篷頂點就在吸口正下方、碰到吸口下緣；沒吸到時沒有帳篷；俯視的皺褶都指向吸口；切面畫出的後囊在吸口下方升高。
+- OVD：囊袋的 OVD 不在囊袋外、optic 後面也有；前房的 OVD 不在囊袋裡；兩邊清掉後一點都不剩；先清後面；後面沒清完囊袋不閉合。
+- 植入：injector 經主切口、斜面朝下、nozzle 比切口窄；五個階段（前導 haptic 進去、optic 展開、後 haptic 在外、OVD 裡的最後位置、囊袋閉合）IOL 都不碰虹膜角膜、不穿過囊；前導 haptic 尖端在囊袋裡；後 haptic 在階段 3 在前囊前面、壓進去後在囊袋裡；hook 經 side port 不碰組織。
+- 最後位置：全部在囊袋裡、置中、CCC 重疊 ≥ 0.25 mm、haptic 在赤道；偏位 0.8 mm 與 sulcus 兩種錯誤都會被這條擋下。
+- 囊袋閉合：後囊貼 optic 後面（< 10 µm）、前囊邊緣在 optic 前面一個囊厚；前房 > 2.72 + 1.0 mm；前房塌 40 % 時整個 IOL 往前同樣的量，回到 0 時恢復。
+- IOL 中心與兩個 haptic 尖端在兩圖同一位置（展開中、最後位置）。
+- 收尾：內口張開、hydration 後關上；兩支 hydration cannula 尖端在切口兩側外的基質裡、不在前房、握柄往上；俯視的變白在切口兩端；切面的變白用角膜輪廓裁切。沒有 NaN。
+- 故意改錯（2026-11-10）：37 個改法，全部會報錯（`CATARACT_PATH=<檔案>`；一個改 check.js 自己的輸入）：overall 12.5、haptic 超出赤道、核留在囊袋、皮質伸進撕囊口 0.8 mm、主切口下方的皮質放到 6 點、不看扇形進度、I/A 軸偏離轉動點、吸口朝上變朝下、朝下也畫吸口、俯視 tip 位置偏 0.2、剝離前緣反向、皮質條接到 tip 而不是吸口、coaxial 改指向到得了的地方、雙手彎頭縮成 1.2 mm、aspirator 吸口朝下、不做 hydro-dispersion、帳篷偏 0.3 mm、皺褶不是放射狀、切面不畫帳篷、前房 OVD 進囊袋、OVD 還在就閉合、injector 預設斜面朝上、nozzle 裡的部分照畫（碰角膜）、IOL 傾斜方向反了、後 haptic 躺在虹膜下、optic 平面往前 1 mm、閉合的囊袋不留 haptic 厚度、階段 3 後 haptic 已在囊袋裡、hook 軸偏離 side port、optic 5.0 mm、忽略 sulcus 錯誤、囊離 optic 0.1 mm、IOL 不跟前房深度動、俯視 IOL 中心偏 0.1、hydration 後內口仍張開、hydration cannula 在隧道裡、注入 NaN。
+
+### 已知的坑（2026-11-10 做的時候踩到的）
+- **主切口的直 tip 到不了 12 點邊緣下**：寫成會失敗的檢查（教學重點本身）。雙手 aspirator 的彎頭 1.2 mm 時也到不了（彎點還在前囊下），要 2 mm 才能從撕囊口內彎下去。
+- **吸到後囊的帳篷很高**：囊袋保持水晶體的形狀，後囊離 I/A tip 2–3 mm；tip 放在 6 點 fornix（r 3.8、前囊下 0.9 mm）時帳篷約 1.4 mm。標「動畫示意」。吸口被 tip 擋住，俯視只看得到皺褶匯過去。
+- **剛出 nozzle 的 optic 會碰角膜**：taco 折的兩半在 nozzle 口外直接張開到 2–3 mm 高，`out` 0.35–0.75 之間碰到角膜後面。模型沒有做「邊出邊打開」，影片用 `out` ≤ 0.3（只有前導 haptic 出來）和 ≥ 0.8（optic 已在中央），中間用錄影。
+- **後 haptic 躺在前囊上會鑽進虹膜下**：瞳孔外的前囊上方就是虹膜，改成瞳孔外那段在虹膜上方（前房裡）。
+- **囊袋閉合時 optic 邊緣只有 0.3 mm 厚**：haptic 0.4 mm，閉合的囊會穿過 haptic 根部；閉合的高度改成 optic 與 haptic 厚度取大。
+- **haptic 穿過前囊用「同一格有前後兩邊的點」抓不到**：中心線 0.3 mm 一點、斜穿時同一格只有一邊；改成沿中心線看正負號。
+- **12–6 切面上的前導 haptic 是斜切的一小段**：標籤要指在它和切面相交的地方，不能指投影的尖端（投影在囊袋中央的空白處）。
+
 ## 檔案
 - `globe.js`：模型本體。內容有外表面與牆厚、組織函數、切面（等高線）、俯視圖、縫線路徑、錨點。
 - `views.js`：向登記處（`videos/models/registry.js`）報到，提供三個視角：`mer` 子午切面、`across` 垂直傷口切面、`scope` 顯微鏡俯視。
@@ -408,3 +504,4 @@
 - `sample-cataract.html`、`sample-cataract.jpg`：白內障樣本（keratome 在隧道裡的切面與俯視、撕囊進行中的 12–6 切面、run-out 的前緣切面、正常／run-out／zonule 弱三張俯視）。參考圖由 `videos/src/cataract-1-wound-ccc/ref/manifest.json` 比對。
 - `fluidics.js`：② 的流體面板資料（`FLUIDICS`；node 裡是 `require('./fluidics.js')`）：腳踏、occlusion、設定 → 灌流、流量、vacuum、US、IOP；`surge(t)` 給前房深度的減少。
 - `sample-cataract2.html`、`sample-cataract2.jpg`：② 樣本（hydrodissection 切面與俯視、capsular block、槽底亮度、刻槽深度、刻太深、分核、四象限＋流體面板）。參考圖由 `videos/src/cataract-2-hydro-dc/ref/manifest.json` 比對。
+- `sample-cataract3.html`、`sample-cataract3.jpg`：③ 樣本（I/A 在 6 點邊緣下的切面與俯視、subincisional 雙手 I/A、吸到後囊的俯視與切面、OVD 撐開囊袋＋injector、IOL 植入三個階段、最後位置的切面與俯視、stromal hydration）。參考圖由 `videos/src/cataract-3-ia-iol/ref/manifest.json` 比對。

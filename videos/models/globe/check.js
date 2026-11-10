@@ -346,5 +346,160 @@ for (const [nm, st, i] of [['phaco in the groove (deepest stroke)', PH, 0], ['ph
 { const all = [HY, PH, CR, QU, cat2({ hydro: { h: 7, prog: 1, block: 1 } }), cat2({ nuc: { groove: { dep: 1, over: 1 } } })].map(st => CAT.section({ st, h: 6, win: W12, step: 0.15 }).svg + CAT.section({ st, h: 9, off: -0.85, cut: true, win: W12, step: 0.15 }).svg + CAT.enface({ st }).svg).join('');
   ok(!/NaN|undefined|Infinity/.test(all), `② views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
 
+// =====================================================================================================================
+// 13. ③ I/A, IOL, closure (cataract.js; sources and the 示意 list: CARD.md 白內障 ③). States as in sample-cataract3.html.
+const B3 = { main: { cut: 1 }, side: { cut: 1 }, ccc: { prog: 1, fold: 1, out: 1 } }, cat3 = x => ({ cat: Object.assign({}, B3, x) }), CLEAN = { cortex: new Array(12).fill(0), sub: 0 };
+const RIM = CN.cccD / 2, LI = CN.iol, RO = LI.optic / 2;
+const tipUnder = (h, r, dep) => { const d = G.clockDir(h); return [r * d[0], r * d[1], L.zAnt(r) - dep]; };
+const IA6 = { kind: 'ia', p: tipUnder(6, 3.0, 0.55), port: 'up', occl: 1 };
+const SUBT = tipUnder(12, 3.3, 0.7), ASP = { kind: 'iaAsp', via: 'side', p: SUBT, tipDir: [0, 0.866, -0.5], port: 'up', occl: 1 }, IRR = { kind: 'iaIrr', p: [-2.2, 2.4, 10.2] };
+const CAUGHT = { kind: 'ia', p: tipUnder(6, 3.8, 0.9), port: 'down', occl: 1 };
+const INJ = { kind: 'injector', p: [0, 3.5, 10.6] };
+const OVDB = { bag: CLEAN, ovdBag: 1, ovd: 1 };
+const S1 = cat3({ ...OVDB, inst: [INJ], iol: { out: 0.3, unfold: 0.15, lead: 1, trail: 0 } }), S2 = cat3({ ...OVDB, inst: [INJ], iol: { out: 0.8, unfold: 0.5, lead: 1, trail: 0 } });
+const S3 = cat3({ ...OVDB, iol: { out: 1, unfold: 1, lead: 1, trail: 0 } }), S4 = cat3({ ...OVDB, iol: { rot: -50 } });
+const FIN = cat3({ bag: Object.assign({}, CLEAN, { collapse: 1 }), ovdBag: 1, ovdOut: { behind: 1, front: 1 }, iol: { rot: -50 } });
+// clearance of an instrument shaft (tip → bend → its tunnel pivot): iris, cornea outside the tunnel, the anterior capsule sheet (a cross-section of the
+// shaft with points on both sides of it where the capsule is still there), behind the posterior capsule
+function shaft3(st, i) {
+  const c = CAT.norm(st), g = CAT.instGeom(c, c.inst[i]), f = CAT.layersFn(Object.assign({}, st, { cat: Object.assign({}, st.cat, { inst: [] }) })), Bb = CAT.bagOf(c);
+  const piv = g.pivot || g.tn.to3(g.tn.pivot), segs = g.bend ? [[g.tip, g.bend], [g.bend, piv]] : [[g.tip, piv]], R = { iris: 0, cornea: 0, antCap: 0, postCap: 0, g, piv };
+  for (const [a, b] of segs) { const L3 = G.len(G.sub(b, a)), ax = G.unit(G.sub(b, a)), side = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(side, ax));
+    for (let t = 0; t <= L3; t += 0.03) { const q = G.add(a, ax, t), rr = g.kind === 'ia' && a === g.tip && t > CN.ia.sleeveBack ? g.rs : (g.rn || g.ro || g.rr || 0.2); let above = 0, below = 0;
+      for (let k = 0; k < 12; k++) { const an = 2 * Math.PI * k / 12, p = G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), rr - 0.01), o = f(p), w = wallOf(G.mer(p).z, G.mer(p).rho);
+        if (o.iris < 0) R.iris++; if (w.d < T(w.s) && w.d > -0.01 && w.s < g.tn.sI - 0.3) R.cornea++;
+        const r = Math.hypot(p[0], p[1]); if (Bb && r < L.Req) { if (!CAT.bare(c.ccc, r, G.clockOf(p[0], p[1]))) { if (p[2] > Bb.zA(r)) above++; else below++; } if (p[2] < Bb.zP(r, p[0], p[1])) R.postCap++; } }
+      if (above && below) R.antCap++; } }
+  R.axisOK = G.len(G.cross(G.sub(piv, g.bend || g.tip), g.axis)) < 1e-9; return R; }
+// the IOL against the eye: sample points on the optic (both faces) and round each haptic; hidden ones (still in the nozzle) skipped
+function iolPts(IO) { const pts = [], hr = IO.hr;
+  for (let u = -RO; u <= RO + 1e-9; u += 0.25) for (let v = -RO; v <= RO + 1e-9; v += 0.25) { const rho = Math.hypot(u, v); if (rho > RO) continue; for (const sg of [1, -1]) pts.push({ p: IO.toEye(u, v, sg * CAT.optHalf(rho) * 0.98), part: 'optic' }); }
+  IO.haps.forEach((H, j) => { for (let i = 0; i < H.length; i++) { const a = H[Math.max(0, i - 1)], b = H[Math.min(H.length - 1, i + 1)], ax = G.unit(G.sub(b, a)), side = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(side, ax));
+    for (let k = 0; k < 8; k++) { const an = 2 * Math.PI * k / 8; pts.push({ p: G.add(H[i], G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), hr * 0.95), part: 'hap' + j, i }); } } });
+  return pts.filter(q => !(IO.hid(q.p) > 0)); }
+function iolClash(st) {
+  const c = CAT.norm(st), IO = CAT.iolOf(c), Bb = CAT.bagOf(c), f = CAT.layersFn(st), Lf = CAT.liftZ(c, 0), pts = iolPts(IO), bins = new Map(); let iris = 0, cornea = 0, post = 0, outBag = { optic: 0, hap0: 0, hap1: 0 };
+  for (const q of pts) { const p = q.p, o = f(p), r = Math.hypot(p[0], p[1]), z = p[2] - Lf; if (o.iris < 0) iris++; if (o.cornea < 0) cornea++;
+    if (r < L.Req && z < Bb.zP(r, p[0], p[1])) post++; if (Bb.g(r, z, p[0], p[1]) > 0) outBag[q.part]++;
+    if (r > RIM + 0.02 && r < L.Req - 0.05 && !CAT.bare(c.ccc, r, G.clockOf(p[0], p[1]))) { const k = Math.round(p[0] / 0.15) + ',' + Math.round(p[1] / 0.15), e = bins.get(k) || [0, 0]; e[z > Bb.zA(r) ? 0 : 1]++; bins.set(k, e); } }
+  let straddle = 0; for (const e of bins.values()) if (e[0] && e[1]) straddle++;
+  // a haptic centreline passing through the anterior capsule sheet (not through the rhexis opening): sign change of z − zA along it where the capsule is
+  for (const H of IO.haps) { let prev = null; for (let i = 1; i < H.length; i++) for (let t = 0; t < 1; t += 0.05) { const p = H[i - 1].map((v, j) => v + (H[i][j] - v) * t);
+    if (IO.hid(p) > 0) { prev = null; continue; } const r = Math.hypot(p[0], p[1]); if (!(r > RIM + 0.02 && r < L.Req - 0.05) || CAT.bare(c.ccc, r, G.clockOf(p[0], p[1]))) { prev = null; continue; }
+    const sg = p[2] - Lf > Bb.zA(r); if (prev !== null && prev !== sg) straddle++; prev = sg; } }
+  return { iris, cornea, post, straddle, outBag, n: pts.length, IO, c, Bb }; }
+// 13.1 IOL sizes (Osawa 2021: a one-piece hydrophobic acrylic IOL with a 6.0 mm optic and 13.0 mm overall; 院內型號待確認), the ① optic agrees
+{ const IO = CAT.iolOf(CAT.norm(S4)), [F0, F1] = IO.shapes.map(H => H.free), span = G.len(G.sub(F0[F0.length - 1], F1[F1.length - 1]));
+  const ring = IO.ring, dia = Math.max(...ring.map(p => G.len(G.sub(p, IO.O)))) * 2;
+  ok(near(span, 13.0, 0.05) && near(dia, 6.0, 0.01) && LI.optic === CN.optic, `IOL as made: overall ${span.toFixed(2)} mm (haptic tip to tip), optic ${dia.toFixed(2)} mm = 13.0 / 6.0 (Osawa 2021), same optic as ① (${CN.optic})`);
+  // in the bag the haptics are compressed: 13.0 is wider than the bag (model 9.64; Vass 1999 in vivo 10.37 ± 0.25 with a ring), the centrelines stay inside the equator
+  let rMax = 0; for (const H of IO.haps) for (const p of H) rMax = Math.max(rMax, Math.hypot(p[0], p[1]));
+  ok(LI.overall > 10.37 + 3 * 0.25 && rMax + LI.hw / 2 <= L.Req - 0.02, `haptics compressed in the bag: 13.0 mm > bag diameter (Vass 1999 10.37 ± 0.25; model ${L.LED.toFixed(2)}); haptic edge ${(rMax + LI.hw / 2).toFixed(2)} mm ≤ equator ${L.Req.toFixed(2)} − capsule`); }
+// 13.2 the emptied bag: no nucleus; cortex only as a sheet on the capsule (none inside the rhexis in front), thicker under the main incision (12 o'clock)
+{ const f = CAT.layersFn(cat3({ bag: {} })); let nuc = 0, deep = 0, inRhexis = 0, n = 0;
+  for (let x = -4.8; x <= 4.8; x += 0.2) for (let z = L.zp - 0.1; z <= L.za + 0.1; z += 0.05) { const p = [x, 0.07, z], o = f(p); if (o.nuc < 0) nuc++; if (o.lens < 0) { n++; if (-o.bag > CN.cortex.sheet + CN.cortex.sub + 0.02) deep++; if (Math.abs(x) < RIM - 0.1 && z > L.zc) inRhexis++; } }
+  const thick = h => { const d = G.clockDir(h), r = RIM + 0.6; let t = 0; for (let z = L.zAnt(r); z > L.zAnt(r) - 1.2; z -= 0.005) if (f([r * d[0], r * d[1], z]).lens < 0) t += 0.005; return t; };
+  const t12 = thick(12), t6 = thick(6);
+  ok(nuc === 0 && n > 50 && deep === 0 && inRhexis === 0, `emptied bag: no nucleus (${nuc}); cortex only within ${(CN.cortex.sheet + CN.cortex.sub).toFixed(2)} mm of the capsule (${deep} deeper of ${n}); none in front more than 0.1 mm inside the rhexis edge (${inRhexis})`);
+  ok(t12 > 2 * t6 && t6 > 0.1, `subincisional cortex: ${t12.toFixed(2)} mm thick under the 12 o'clock rim vs ${t6.toFixed(2)} at 6 o'clock (示意)`); }
+// 13.3 aspiration progress by clock sector: the sweep clears the sectors it has passed; the microscope haze and the section follow the same sector values
+{ const sw = CAT.cortexSweep(4 / 12, 2, 1), st = cat3({ bag: { cortex: sw } }), e = CAT.enface({ st, id: 'w' }), f = CAT.layersFn(st);
+  const cleared = [2, 3, 4, 5], kept = [7, 8, 9, 10, 11, 0], opC = cleared.map(k => e.A.cortexOp[k]), opK = kept.map(k => e.A.cortexOp[k]);
+  const sec = h => { const d = G.clockDir(h), r = RIM + 0.6; let n = 0; for (let z = L.zAnt(r); z > L.zAnt(r) - 0.6; z -= 0.01) if (f([r * d[0], r * d[1], z]).lens < 0) n++; return n; };
+  ok(cleared.every(k => sw[k] < 1e-9) && kept.every(k => sw[k] > 1 - 1e-9) && Math.max(...opC) < 0.02 && Math.min(...opK) > 0.2 && sec(3) === 0 && sec(9) > 5,
+    `sweep 2→5 o'clock: those sectors cleared (haze ${Math.max(...opC).toFixed(2)}, section ${sec(3)}), the rest kept (haze ≥ ${Math.min(...opK).toFixed(2)}, section ${sec(9)} samples)`); }
+// 13.4 coaxial I/A under the 6 o'clock rim: through the main incision, nothing touched on the way; the tip under the rim; port up, in the cortex, seen in the microscope
+{ const st = cat3({ bag: {}, inst: [IA6] }), R = shaft3(st, 0), g = R.g, f = CAT.layersFn(cat3({ bag: {} })), rT = Math.hypot(g.tip[0], g.tip[1]);
+  ok(R.axisOK && g.via === 'main' && R.iris + R.cornea + R.antCap + R.postCap === 0, `coaxial I/A (6 o'clock): axis through the main tunnel pivot; iris ${R.iris}, cornea ${R.cornea}, anterior capsule ${R.antCap}, posterior capsule ${R.postCap}`);
+  ok(rT > RIM + 0.2 && g.tip[2] + g.rn < L.zAnt(rT) && g.pdir[2] > 0.9 && f(G.add(g.port, g.pdir, 0.05)).lens < 0, `tip ${(rT - RIM).toFixed(2)} mm under the rim, below the capsule; port faces up (${g.pdir[2].toFixed(2)}) into the cortex`);
+  const eU = CAT.enface({ st, id: 'u' }), eD = CAT.enface({ st: cat3({ bag: {}, inst: [Object.assign({}, IA6, { port: 'down' })] }), id: 'u' }), n = s => (s.match(/<ellipse [^>]*fill="(#1c232a|#f4efe0)"/g) || []).length;
+  ok(n(eU.svg) === 1 && n(eD.svg) === 0, `microscope: the port shows when it faces up (${n(eU.svg)}), not when it faces down (${n(eD.svg)})`);
+  const s = sec6(st, 0.2); ok(near(s.A.tip0[0], -eU.A.tip0[1], 1e-6) && near(s.A.tip0[1], -g.tip[2], 1e-6), `I/A tip at the same place in both views (u ${s.A.tip0[0].toFixed(2)} = −y)`); }
+// 13.5 centripetal stripping: the sheet peels from the rim outward as the strip goes on; the strand hangs from the port (both views)
+{ const vol = p => { const f = CAT.layersFn(cat3({ bag: { strip: { h: 6, prog: p } }, inst: [IA6] })); let n = 0; for (let r = 2.4; r < 4.85; r += 0.05) for (let z = L.zp; z < L.za; z += 0.03) if (f([0, -r, z]).lens < 0) n++; return n; };
+  const V = [0, 0.3, 0.6, 0.9].map(vol), st = cat3({ bag: { strip: { h: 6, prog: 0.35 } }, inst: [IA6] }), c = CAT.norm(st), S = CAT.stripStrand(c), g = CAT.instGeom(c, c.inst[0]);
+  const F1 = CAT.stripFront(c, 0.2), F2 = CAT.stripFront(c, 0.5), e = CAT.enface({ st }), s = sec6(st, 0.2);
+  ok(V.every((v, i) => i === 0 || v < V[i - 1]) && F2.rA > F1.rA, `stripping: the 6 o'clock sheet shrinks ${V.join(' → ')} samples; the peel front moves out ${F1.rA.toFixed(2)} → ${F2.rA.toFixed(2)} mm`);
+  ok(G.len(G.sub(S.end, g.port)) < 1e-9 && near(e.A.strandEnd[0], -g.port[0], 1e-6) && s.A.strand && near(s.A.strand.end[0], -e.A.strandEnd[1], 1e-6), 'stripped strand ends at the port, the same point in the section and the microscope'); }
+// 13.6 subincisional cortex (Colvard 1997; 示意 geometry): a straight coaxial tip from the 12 o'clock incision cannot get under the 12 o'clock rim (it runs
+//      into the iris or the anterior capsule); the bimanual aspirator through the side port reaches it, port up in the thick subincisional cortex
+{ const R0 = shaft3(cat3({ bag: {}, inst: [{ kind: 'ia', p: SUBT, port: 'up' }] }), 0), st = cat3({ bag: {}, inst: [ASP, IRR] }), R1 = shaft3(st, 0), R2 = shaft3(st, 1), g = R1.g, f = CAT.layersFn(cat3({ bag: {} }));
+  ok(R0.iris + R0.antCap > 0, `coaxial from the main incision to the subincisional cortex: blocked (iris ${R0.iris}, anterior capsule ${R0.antCap})`);
+  ok(R1.axisOK && g.via === 'side' && R1.iris + R1.cornea + R1.antCap + R1.postCap === 0 && R2.axisOK && R2.g.via === 'main' && R2.iris + R2.cornea + R2.antCap === 0,
+    `bimanual: aspirator through the side port (iris ${R1.iris}, cornea ${R1.cornea}, anterior capsule ${R1.antCap}), irrigation through the main incision (iris ${R2.iris}, cornea ${R2.cornea})`);
+  const hT = G.clockOf(g.tip[0], g.tip[1]), rT = Math.hypot(g.tip[0], g.tip[1]);
+  ok(Math.abs(CAT.dH(hT, 12)) < 0.3 && rT > RIM + 0.3 && g.pdir[2] > 0.8 && f(G.add(g.port, g.pdir, 0.05)).lens < 0, `aspirator tip at ${hT.toFixed(1)} o'clock, ${(rT - RIM).toFixed(2)} mm under the rim, port up in the subincisional cortex`); }
+// 13.7 hydro-dispersion (Miyoshi 2022: 27G blunt cannula through the side port, BSS toward the fornix under the incision): the subincisional cortex is lifted off
+{ const HD = { kind: 'cannula', via: 'side', p: [0, 2.2, L.zAnt(2.2) + 0.05] }, st = cat3({ bag: { disp: 1 }, inst: [HD] }), R = shaft3(st, 0), f0 = CAT.layersFn(cat3({ bag: {} })), f1 = CAT.layersFn(st);
+  const col = f => { const r = 3.4, z0 = L.zAnt(r) - 0.03, out = []; for (let z = z0; z > z0 - 0.9; z -= 0.01) out.push(f([0, r, z]).lens < 0 ? 1 : 0); return out; }, c0 = col(f0), c1 = col(f1);
+  const gap = c1.indexOf(1) * 0.01;
+  ok(R.axisOK && R.g.via === 'side' && R.iris + R.cornea + R.antCap === 0 && near(G.clockOf(R.g.tip[0], R.g.tip[1]) % 12, 0, 0.05) && c0[0] === 1 && gap >= CN.cortex.disp - 0.05, `hydro-dispersion: 27G cannula via the side port, tip at the 12 o'clock rim aimed at the fornix (clear); the subincisional cortex lifted ${gap.toFixed(2)} mm off the capsule (示意)`); }
+// 13.8 posterior capsule caught in the port (動畫示意): the capsule tents up to the port's lower edge right under it, only when caught; radial striae converge on it
+{ const st = cat3({ bag: { ...CLEAN, caught: 1 }, inst: [CAUGHT] }), c = CAT.norm(st), Bb = CAT.bagOf(c), g = CAT.instGeom(c, c.inst[0]), R = shaft3(cat3({ bag: CLEAN, inst: [CAUGHT] }), 0);
+  let best = null; for (let x = -1.5; x <= 1.5; x += 0.02) for (let y = -4.5; y <= -1.5; y += 0.02) { const t = Bb.tent(x, y); if (!best || t > best[2]) best = [x, y, t]; }
+  const rp = Math.hypot(g.port[0], g.port[1]), zTop = Bb.zP(rp, g.port[0], g.port[1]), B0 = CAT.bagOf(CAT.norm(cat3({ bag: CLEAN, inst: [CAUGHT] })));
+  ok(R.iris + R.cornea + R.antCap + R.postCap === 0 && g.pdir[2] < -0.9 && Math.hypot(best[0] - g.port[0], best[1] - g.port[1]) < 0.03 && near(zTop, g.port[2] - CN.ia.portD / 2, 0.02) && B0.amp === 0,
+    `caught: port down (${g.pdir[2].toFixed(2)}); the posterior capsule peaks ${Math.hypot(best[0] - g.port[0], best[1] - g.port[1]).toFixed(3)} mm from under the port and reaches its lower edge (${zTop.toFixed(2)} vs ${(g.port[2] - CN.ia.portD / 2).toFixed(2)}); not caught → no tent`);
+  const e = CAT.enface({ st }), C0 = e.A.striaeC, L0 = e.A.striaeLines || []; let worst = 0;
+  for (const [a, b] of L0) { const d = [b[0] - a[0], b[1] - a[1]], l = Math.hypot(...d), n = [-d[1] / l, d[0] / l]; worst = Math.max(worst, Math.abs((C0[0] - a[0]) * n[0] + (C0[1] - a[1]) * n[1])); }
+  const pE = [-g.port[0], g.port[1]];
+  ok(L0.length >= 10 && worst < 1e-6 && Math.hypot(C0[0] - pE[0], C0[1] - pE[1]) < 1e-6, `microscope: ${L0.length} radial striae all point at the port (worst ${worst.toExponential(1)} mm off), the port's place in both views`);
+  const s = sec6(st, 0.1), run = s.A.capRuns.find(Rr => Rr.pts.some(q => q[0] > 2.5 && -q[1] < L.zc)), q = run && run.pts.reduce((b, q) => Math.abs(q[0] - rp) < Math.abs(b[0] - rp) ? q : b);
+  ok(!!q && near(-q[1], zTop, 0.05), `section: the drawn posterior capsule rises to ${q ? (-q[1]).toFixed(2) : '?'} mm under the port (${zTop.toFixed(2)})`); }
+// 13.9 OVD compartments: cohesive OVD in the bag only inside the bag, the chamber's OVD only in front of it; removal behind and in front of the optic
+//      empties both; the bag cannot close on the IOL while OVD is still behind the optic
+{ const st = cat3({ bag: CLEAN, ovdBag: 1, ovd: 1, iol: { rot: -50 } }), f = CAT.layersFn(st); let outB = 0, inBag = 0, nB = 0, nA = 0, behind = 0;
+  for (let x = -6; x <= 6; x += 0.15) for (let z = 5; z <= 12; z += 0.1) { const o = f([x, 0.05, z]); if (o.ovdb < 0) { nB++; if (o.bag > 0) outB++; if (z < L.zc - 0.5) behind++; } if (o.ovd < 0) { nA++; if (o.bag < 0) inBag++; } }
+  const fR = CAT.layersFn(cat3({ bag: CLEAN, ovdBag: 1, ovd: 0, ovdOut: { behind: 1, front: 1 }, iol: { rot: -50 } })), fH = CAT.layersFn(cat3({ bag: CLEAN, ovdBag: 1, ovd: 1, ovdOut: { behind: 1 }, iol: { rot: -50 } }));
+  let left = 0, behindH = 0, frontH = 0; for (let x = -6; x <= 6; x += 0.15) for (let z = 5; z <= 12; z += 0.1) { const o = fR([x, 0.05, z]); if (o.ovdb < 0 || o.ovd < 0) left++; const h = fH([x, 0.05, z]); if (h.ovdb < 0) { if (z < L.zc) behindH++; else frontH++; } }
+  const cl = CAT.norm(cat3({ bag: Object.assign({}, CLEAN, { collapse: 1 }), ovdBag: 1, ovdOut: { behind: 0.3 } })).bag.collapse;
+  ok(nB > 100 && outB === 0 && behind > 20 && nA > 100 && inBag === 0, `OVD: in the bag ${nB} samples (outside the bag ${outB}, behind the optic ${behind}); in the chamber ${nA} (inside the bag ${inBag})`);
+  ok(left === 0 && behindH === 0 && frontH > 20 && near(cl, 0.3, 1e-12), `OVD removal: none left after both (${left}); behind the optic cleared first (${behindH} behind, ${frontH} in front); the bag closes no further than the OVD behind is out (${cl})`); }
+// 13.10 IOL insertion stages: the injector through the main incision, bevel down; at every stage the IOL touches neither iris nor cornea and never passes
+//       through a capsule; the leading haptic goes into the bag first; the trailing haptic lies outside the bag until it is tucked
+{ const R = shaft3(S1, 0), g = R.g; ok(R.axisOK && g.via === 'main' && R.iris + R.cornea + R.antCap === 0 && g.pdir[2] < -0.8 && CN.inj.od < CN.main.w, `injector: through the main incision (iris ${R.iris}, cornea ${R.cornea}), bevel down (${g.pdir[2].toFixed(2)}), nozzle ${CN.inj.od} mm < incision ${CN.main.w} mm (示意)`);
+  for (const [nm, st] of [['1 leading haptic in', S1], ['2 optic unfolding', S2], ['3 trailing haptic out', S3], ['4 in the bag (OVD)', S4], ['final (bag closed)', FIN]]) { const X = iolClash(st);
+    ok(X.n > 200 && X.iris === 0 && X.cornea === 0 && X.straddle === 0 && X.post === 0, `IOL stage ${nm}: ${X.n} points — iris ${X.iris}, cornea ${X.cornea}, through the anterior capsule ${X.straddle}, behind the posterior capsule ${X.post}`); }
+  const Rt = CAT.iolOf(CAT.norm(S3)).roots[1], RH = shaft3(cat3({ ...S3.cat, inst: [{ kind: 'chopper', via: 'side', p: [Rt[0], Rt[1], Rt[2] + 0.3] }] }), 0);
+  ok(RH.axisOK && RH.g.via === 'side' && RH.iris + RH.cornea + RH.antCap === 0, `hook through the side port onto the trailing optic–haptic junction: clear (iris ${RH.iris}, cornea ${RH.cornea}, anterior capsule ${RH.antCap})`);
+  const X1 = iolClash(S1), lt = X1.IO.tips[0], Bb = X1.Bb, X3 = iolClash(S3), X4 = iolClash(S4), t3 = X3.IO.haps[1];
+  const outside = t3.filter(p => { const r = Math.hypot(p[0], p[1]); return r > RIM + 0.1 && r < L.Req && p[2] > X3.Bb.zA(r); }).length;
+  ok(Bb.g(Math.hypot(lt[0], lt[1]), lt[2], lt[0], lt[1]) < -0.1 && outside > 8 && X4.outBag.hap1 === 0, `leading haptic tip inside the bag at stage 1; trailing haptic over the anterior capsule (outside the bag) at stage 3 (${outside} points), inside after the tuck`); }
+// 13.11 final IOL (Hollick 1999 / Haripriya 2025: optic edge covered by the CCC all round): every IOL point inside the closed bag, haptics at the equator,
+//       optic centred, overlap ≥ 0.25 mm at every clock hour; the decentred and the sulcus errors (示意) fail these tests
+const finalOK = st => { const X = iolClash(st), IO = X.IO, c = X.c, X0 = CAT.rhex(c.ccc); let ov = 1e9; for (let k = 0; k < 120; k++) { const t = 12 * k / 120, h = (c.ccc.h0 + c.ccc.dir * t + 12) % 12, d = G.clockDir(h), Rr = X0.R(t);
+    ov = Math.min(ov, RO - Math.hypot(Rr * d[0] - IO.O[0], Rr * d[1] - IO.O[1])); }
+  let rH = 0; for (const H of IO.haps) for (const p of H.slice(-10)) rH = Math.max(rH, Math.hypot(p[0], p[1]));
+  return { inBag: X.outBag.optic + X.outBag.hap0 + X.outBag.hap1 === 0, ov, centred: Math.hypot(IO.O[0], IO.O[1]), rH, X }; };
+{ const A = finalOK(FIN), D = finalOK(cat3({ ...FIN.cat, iol: { rot: -50, dx: 0.8 } })), Sl = finalOK(cat3({ ...FIN.cat, bag: CLEAN, ovdOut: { behind: 1, front: 1 }, iol: { rot: -50, sulcus: 1 } }));
+  ok(A.inBag && A.centred < 1e-9 && A.ov >= 0.25 && A.rH <= L.Req && A.rH > L.Req - 0.6, `final IOL: all inside the bag, centred, optic edge under the CCC by ≥ ${A.ov.toFixed(3)} mm all round, haptics at the equator (r ${A.rH.toFixed(2)} ≤ ${L.Req.toFixed(2)})`);
+  ok(D.ov < 0 && !Sl.inBag && Sl.X.outBag.hap1 > 0, `errors fail the test: decentred 0.8 mm → overlap ${D.ov.toFixed(2)} mm (edge exposed); sulcus → trailing haptic outside the bag (${Sl.X.outBag.hap1} points)`); }
+// 13.12 the bag closed on the IOL after the OVD behind it is out: posterior capsule on the optic's back, the rim on its front; the chamber is deeper than before
+//       (示意 amount); a shallow chamber (surge-like collapse, Liu 2023) and its restoration move the whole diaphragm
+{ const c = CAT.norm(FIN), Bb = CAT.bagOf(c), IO = CAT.iolOf(c), rR = RIM + 0.05, back = IO.O[2] - CAT.optHalf(0), front = IO.O[2] + CAT.optHalf(rR);
+  const gB = back - Bb.zP(0, 0, 0), gF = Bb.zA(rR) - front, endo = ENDO, acd = endo - (IO.O[2] + CAT.optHalf(0));
+  ok(gB > 0 && gB < 0.01 && gF > 0 && gF < CN.cap.antMax + 0.005, `closed bag: posterior capsule ${(gB * 1000).toFixed(0)} µm behind the optic, rim ${(gF * 1000).toFixed(0)} µm in front of it (one capsule thickness)`);
+  const sh = CAT.iolOf(CAT.norm(cat3({ ...FIN.cat, surge: 0.4 }))), acdS = endo - (sh.O[2] + CAT.optHalf(0));
+  ok(acd > 2.72 + 1.0 && near(acd - acdS, 0.4 * 2.72, 1e-6), `pseudophakic chamber ${acd.toFixed(2)} mm (phakic 2.72; 示意 position); shallowed by 40 % → ${acdS.toFixed(2)} mm, restored at 0`); }
+// 13.13 cross-view: IOL centre and haptic tips at the same place in the 12–6 section and the microscope view
+{ for (const st of [S2, FIN]) { const s = sec6(st, 0.3), e = CAT.enface({ st }), IO = CAT.iolOf(CAT.norm(st));
+    ok(near(s.A.iolC[0], -e.A.iolC[1], 1e-6) && near(e.A.iolC[0], -IO.O[0], 1e-6) && near(s.A.hapTip0[0], -e.A.hapTip0[1], 1e-6) && near(s.A.hapTip1[0], -e.A.hapTip1[1], 1e-6) && near(e.A.hapTip0[0], -IO.tips[0][0], 1e-6) && near(s.A.iolC[1], -IO.O[2], 1e-6),
+      `IOL (${st === FIN ? 'final' : 'unfolding'}): centre and haptic tips the same in both views (u = −y)`); } }
+// 13.14 closure: the unhealed wound gapes at its inner aspect (McDonnell 2003; size 示意) and stromal hydration closes it; the hydration cannula's tip is in the
+//       stroma of the lateral wall (Mifflin 2012: hydrate the lateral walls; the stroma whitens), the whitening stays in the cornea, at both lateral ends
+{ const sG = CAT.section({ st: cat3({ ...FIN.cat, seal: { gape: 1 } }), h: 6, win: { x: -7.4, y: -12.7, w: 5, h: 5.7 }, step: 0.05, id: 'g' }), tn = CAT.tunnelOf(CN.main);
+  const sH = CAT.section({ st: cat3({ ...FIN.cat, seal: { gape: 1, hydr: 1 } }), h: 6, win: { x: -7.4, y: -12.7, w: 5, h: 5.7 }, step: 0.05, id: 'h' }), inn = [-tn.int[0], -tn.int[1]];
+  ok(sG.A.gape > 0 && Math.hypot(sG.A.gapeAt[0] - inn[0], sG.A.gapeAt[1] - inn[1]) < 0.15 && sH.A.gape === 0, `wound: gapes ${(sG.A.gape * 1000).toFixed(0)} µm at the inner opening (示意); closed after stromal hydration`);
+  const st = cat3({ ...FIN.cat, seal: { hydr: 1 }, inst: [{ kind: 'hcan', side: 1, f: 0.3 }, { kind: 'hcan', side: -1, f: 0.3 }] }), c = CAT.norm(st), f = CAT.layersFn(cat3({ ...FIN.cat })); let bad = 0;
+  for (const i of [0, 1]) { const g = CAT.instGeom(c, c.inst[i]), w = wallOf(G.mer(g.tip).z, G.mer(g.tip).rho), lat = g.tip[0] * G.clockDir(15)[0] + g.tip[1] * G.clockDir(15)[1];
+    if (!(w.d > 0.05 && w.d < T(w.s) - 0.05 && Math.abs(lat) > CN.main.w / 2 && f(g.tip).cornea < 0 && f(g.tip).aqueous > 0 && G.add(g.tip, g.axis, 3)[2] > g.tip[2])) bad++; }
+  const e = CAT.enface({ st }), ends = [e.A.mainExt], wE = CN.main.w / 2, blobs = e.A.sealBlobs || [], dist = blobs.map(b => Math.abs(Math.abs(b[0] - e.A.mainExt[0]) - wE));
+  const clip = /clipPath id="h_sealc"><path d="[^"]+" clip-rule="evenodd"\/><\/clipPath><path d="[^"]+" fill="#ffffff"[^>]*clip-path="url\(#h_sealc\)"/.test(sH.svg);
+  ok(bad === 0 && blobs.length === 2 && Math.max(...dist) < 1e-6 && clip, `stromal hydration: both cannula tips in the lateral walls' stroma (${bad} off); whitening at both incision ends (${blobs.length}) and, in the section, clipped to the cornea`); }
+// 13.15 the ③ views draw without NaN
+{ const all = [S1, S2, S3, S4, FIN, cat3({ bag: {}, inst: [IA6] }), cat3({ bag: { ...CLEAN, caught: 1 }, inst: [CAUGHT] }), cat3({ bag: {}, inst: [ASP, IRR] }), cat3({ ...FIN.cat, seal: { gape: 1, hydr: 0.5 }, inst: [{ kind: 'hcan', side: 1 }] })]
+    .map(st => CAT.section({ st, h: 6, win: W12, step: 0.2 }).svg + CAT.section({ st, h: 9, cut: true, win: W12, step: 0.2 }).svg + CAT.enface({ st }).svg).join('');
+  ok(!/NaN|undefined|Infinity/.test(all), `③ views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
+
 console.log(fail ? `\n${fail} check(s) FAILED` : '\nall globe checks passed');
 process.exit(fail ? 1 : 0);

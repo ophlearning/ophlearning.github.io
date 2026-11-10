@@ -7,7 +7,7 @@
 //   section(opt)  meridional section through the optical axis at clock hp (default 6: screen right = 6 o'clock, left = 12 o'clock,
 //                 anterior up — seen from the temporal side for OD). Lens, capsule, zonules, dilated iris, tunnels, OVD, instruments.
 //   enface(opt)   microscope view (surgeon at 12: 12 o'clock at the bottom, temporal on the right), dilated pupil with red reflex.
-// State: st.cat = { pupil, ovd, ovdAt, main, side, ccc, inst, zonule, push, folds } (see DEF below).
+// State: st.cat = { pupil, ovd, ovdAt, main, side, ccc, inst, zonule, push, folds } (see DEF below); ② hydro, nuc, surge; ③ bag, ovdBag, ovdOut, iol, seal.
 // ============================================================================
 function CATARACT_MAKE(G) {
   const { D2R, NS, lerp, clamp, ss, add, sub, dot, len, unit } = G;
@@ -44,6 +44,20 @@ function CATARACT_MAKE(G) {
     phaco: { needleOD: 0.9, bevel: 30, needleL: 1.0, sleeveOD: 1.5, portBack: 0.45, portD: 0.3, pivotF: 0.5 },   // needle, bevel angle, exposed needle, silicone sleeve, irrigation ports
     chopper: { d: 0.5, tipL: 1.5 },                                // second instrument through the side port: shaft diameter, bent tip length
     hcannula: { bend: 1.0, ang: 35 },                              // hydrodissection cannula: angled distal 1.0 mm, 35° down
+    // ---- video ③ (I/A, IOL, closure). Every value here is 示意 unless CARD.md 白內障 ③ gives a source.
+    cortex: { sheet: 0.2, sub: 0.45, subH: 1.3, antIn: 0.05, antOut: 0.45, post: [2.2, 3.4], disp: 0.3 },
+    //   residual cortex once the nucleus is out: peripheral sheet (mm), extra subincisional thickness (within subH clock hours of the main incision),
+    //   the anterior sheet starts antIn inside the rhexis edge and is full antOut beyond it, the posterior sheet runs from post[0] (clear centre) to
+    //   post[1] mm out; hydro-dispersion (Miyoshi 2022) lifts the subincisional part off the capsule by disp mm
+    ia: { tipOD: 0.9, portD: 0.3, portBack: 0.45, sleeveOD: 1.5, sleeveBack: 1.6, pivotF: 0.5 },   // coaxial I/A: closed rounded tip, one side port, silicone sleeve
+    bim: { od: 0.9, bend: 2.0, ang: 30, portBack: 0.35 },          // bimanual I/A handpieces (Colvard 1997 technique; sizes 示意): the aspirator's distal 2 mm is angled
+    caught: { sigma: 1.0 },                                         // posterior capsule caught in the port: half-width of the tent (mm)
+    iol: { optic: 6.0, overall: 13.0, tc: 0.8, te: 0.3, hw: 0.45, ht: 0.4, sweepFree: 95, sweepBag: 125, root: -35, fold: 80, trailTilt: 12, trailShift: 0.5, sulcusR: 5.6 },
+    //   one-piece hydrophobic acrylic IOL: optic Ø 6.0, overall 13.0 (Osawa 2021, one such model; 院內型號待確認); centre / edge thickness, haptic width /
+    //   thickness, haptic sweep free / compressed in the bag, root angle, taco fold, the pose while the trailing haptic is still out, sulcus radius: 示意
+    ovdBag: { inflate: 0.25 },                                      // cohesive OVD in the bag pushes the posterior capsule back (mm at the pole)
+    inj: { od: 1.8, bevel: 45, pivotF: 0.5 },                       // injector cartridge nozzle (outer Ø, bevel angle) through the main incision
+    seal: { gape: 0.12, band: 0.3 },                               // inner wound gape at low pressure (McDonnell 2003: the internal aspect gapes first), stromal hydration band
   };
 
   // ---------------------------------------------------------------- lens: two spheres (central radii, thickness) joined by an equatorial fillet
@@ -84,7 +98,8 @@ function CATARACT_MAKE(G) {
   })();
 
   // ---------------------------------------------------------------- state
-  const DEF = { pupil: CN.pupil, ovd: 0, ovdAt: null, main: null, side: null, ccc: null, inst: [], zonule: null, push: 0, folds: 0, hydro: null, nuc: null, surge: 0 };
+  const DEF = { pupil: CN.pupil, ovd: 0, ovdAt: null, main: null, side: null, ccc: null, inst: [], zonule: null, push: 0, folds: 0, hydro: null, nuc: null, surge: 0,
+    bag: null, ovdBag: 0, ovdOut: null, iol: null, seal: null };
   const norm = st => { st = st || {}; const c = Object.assign({}, DEF, st.cat || {});
     c.main = c.main ? Object.assign({}, CN.main, { cut: 1 }, c.main) : null;
     c.side = c.side ? Object.assign({}, CN.side, { cut: 1 }, c.side) : null;
@@ -96,6 +111,15 @@ function CATARACT_MAKE(G) {
     if (c.nuc) { const n = c.nuc, g = x => x ? Object.assign({ dep: 0, w: CN.groove.w, len: null, over: 0 }, x) : null, k = x => x ? Object.assign({ prog: 0, sep: 0 }, x) : null;
       c.nuc = { groove: n.groove ? Object.assign({ h: 12 }, g(n.groove)) : null, crack: k(n.crack), rot: n.rot || 0, groove2: g(n.groove2), crack2: k(n.crack2),
         quads: (n.quads || []).map(q => Object.assign({ pull: 0, eat: 0 }, q)) }; }
+    // ③ the emptied bag { cortex: 12 values 1→0 (clock-hour sectors, index = hour % 12), sub 1→0 (extra subincisional cortex), disp 0→1 (hydro-dispersion),
+    //   strip: { h, prog } (a sheet engaged under the rim at clock h and pulled to the centre), caught 0→1 (posterior capsule in the port), collapse 0→1
+    //   (bag closed on the IOL) }; ovdBag 0→1 OVD in the bag; ovdOut { behind, front } 0→1 removed behind / in front of the optic plane;
+    //   iol { out, unfold, lead, trail, rot, dx, dy, sulcus }; seal { gape, hydr }
+    if (c.bag) { const b = c.bag; c.bag = Object.assign({ sub: 1, disp: 0, strip: null, caught: 0, collapse: 0 }, b, { cortex: b.cortex ? b.cortex.slice() : new Array(12).fill(1) }); c.nuc = null; c.hydro = null; }
+    c.ovdOut = Object.assign({ behind: 0, front: 0 }, c.ovdOut || {});
+    if (c.bag && c.ovdBag > 0) c.bag.collapse = Math.min(c.bag.collapse, c.ovdOut.behind);   // the bag cannot close on the IOL while OVD is still behind it
+    c.iol = c.iol ? Object.assign({ out: 1, unfold: 1, lead: 1, trail: 1, rot: 0, dx: 0, dy: 0, sulcus: 0 }, c.iol) : null;
+    c.seal = c.seal ? Object.assign({ gape: 0, hydr: 0 }, c.seal) : null;
     return c; };
 
   // ---------------------------------------------------------------- 3D helpers
@@ -169,6 +193,133 @@ function CATARACT_MAKE(G) {
   }
   const capPt = (c, r, h, lift = 0) => { const S = lensShift(c), d = cd(h), x = r * d[0], y = r * d[1];
     return [x + S.LO[0], y + S.LO[1], LENS.zAnt(r) + striae(c, x, y) + lift + S.LO[2] + liftZ(c, r)]; };
+
+  // ================================================================ ③ the emptied capsular bag (示意 shape; CARD.md 白內障 ③)
+  // Once the nucleus is out the bag keeps the lens's shape (held open by the infusion or OVD). Residual cortex lines it: a peripheral sheet under the rhexis
+  // rim, round the equator and onto the peripheral posterior capsule, thicker under the main incision. Bag surfaces (outer capsule, lens-local z): anterior
+  // zA(r), posterior zP(r, x, y). OVD in the bag pushes the posterior capsule back (inflate); a port that has caught the posterior capsule tents it up to
+  // the port (Gaussian, σ CN.caught.sigma); collapse 0→1 closes the bag on the IOL (the rim onto the optic, the posterior capsule onto its back).
+  const optHalf = rho => { const I = CN.iol, Ro = I.optic / 2; return I.te / 2 + (I.tc - I.te) / 2 * Math.max(0, 1 - (rho / Ro) ** 2); };
+  const HC = (r, front) => { const I = CN.iol, Ro = I.optic / 2, s0 = LENS.Req - LENS.re;
+    let h = Math.max(optHalf(Math.min(r, Ro)), (I.ht / 2 + 0.02) * ss(Ro - 0.6, Ro - 0.2, r)) + (front ? CN.cap.antMax : CN.cap.postPeriph);   // the optic, then the haptics' thickness
+    if (r > s0) h *= Math.sqrt(Math.max(0, 1 - ((r - s0) / LENS.re) ** 2));
+    return front ? h : -h; };
+  const BAGM = new WeakMap();
+  function bagOf(c) {
+    if (!c.bag) return null; if (BAGM.has(c)) return BAGM.get(c);
+    const b = c.bag, k = clamp(b.collapse, 0, 1), inf = clamp(c.ovdBag, 0, 1) * (1 - clamp(c.ovdOut.behind, 0, 1)) * (1 - k) * CN.ovdBag.inflate;
+    const zA = r => r >= LENS.Req ? LENS.zc : (k > 0 ? lerp(LENS.zAnt(r), LENS.zc + HC(r, true), k) : LENS.zAnt(r));
+    const zP0 = r => (r >= LENS.Req ? LENS.zc : (k > 0 ? lerp(LENS.zPost(r), LENS.zc + HC(r, false), k) : LENS.zPost(r))) - inf * Math.max(0, 1 - (r / LENS.Req) ** 2);
+    // the port that caught the posterior capsule (lens-local) and how far the capsule is pulled up to touch the port's lower edge
+    let port = null, amp = 0; const S = lensShift(c);
+    if (b.caught > 0) { const g = (c.inst || []).map(i => instGeom(c, i)).find(g => g.port); if (g) { const r = Math.hypot(g.port[0] - S.LO[0], g.port[1] - S.LO[1]);
+      port = [g.port[0] - S.LO[0], g.port[1] - S.LO[1], g.port[2] - S.LO[2] - liftZ(c, r)]; amp = Math.max(0, port[2] - CN.ia.portD / 2 - zP0(r)) * clamp(b.caught, 0, 1); } }
+    const tent = (x, y) => port ? amp * Math.exp(-(((x - port[0]) ** 2 + (y - port[1]) ** 2) / CN.caught.sigma ** 2)) : 0;
+    const zP = (r, x, y) => zP0(r) + (amp > 0 && x !== undefined ? tent(x, y) : 0);
+    const B = { b, k, inf, zA, zP0, zP, port, amp, tent, g: (r, z, x, y) => Math.max(z - zA(r), zP(r, x, y) - z, r - LENS.Req) };
+    BAGM.set(c, B); return B;
+  }
+  const dH = (a, b) => ((a - b) % 12 + 18) % 12 - 6;              // signed clock-hour difference in [−6, 6)
+  // residual cortex left in sector h (the 12 sector values blended over ±0.15 h at the sector borders)
+  const leftAt = (b, h) => { let v = 0; for (let k = 0; k < 12; k++) { const a = Math.abs(dH(h, k)); if (a < 0.65) v += b.cortex[k] * (1 - ss(0.35, 0.65, a)); } return v; };
+  const rcOf = c => c.ccc ? c.ccc.r : CN.cccD / 2;
+  // where the sheet lies (0→1): under the rim (anterior), the peripheral posterior capsule (posterior), all round near the equator
+  const cShape = (c, r, front) => { const C = CN.cortex, rc = rcOf(c), a = front ? ss(rc - C.antIn, rc + C.antOut, r) : ss(C.post[0], C.post[1], r);
+    return lerp(a, 1, ss(LENS.Req - 0.8, LENS.Req - 0.3, r)); };
+  // a sheet being stripped (strip { h, prog }): engaged under the rim (prog 0→0.1), the anterior part peels off out to the equator (→0.55), then the
+  // equatorial and posterior part (→1); the peeled cortex hangs from the port (drawn as a strand)
+  const stripFront = (c, p) => { const rc = rcOf(c); return { rA: lerp(rc - 0.2, LENS.Req + 0.1, ss(0.1, 0.55, p)), rP: lerp(LENS.Req + 0.1, CN.cortex.post[0] - 0.2, ss(0.55, 1, p)) }; };
+  const peelAt = (c, r, front, h) => { const s = c.bag.strip; if (!s || !(s.prog > 0)) return 0; const w = 1 - ss(0.35, 0.5, Math.abs(dH(h, s.h))); if (!(w > 0)) return 0;
+    const F = stripFront(c, clamp(s.prog, 0, 1)); return w * ((front ? r < F.rA : r > F.rP) ? 1 : 0); };
+  const subBump = (c, h) => 1 - ss(CN.cortex.subH * 0.6, CN.cortex.subH, Math.abs(dH(h, (c.main || CN.main).h)));
+  // cortex thickness (mm) at radius r, front / back, clock h: the sheet and the extra subincisional cortex (and its lift-off by hydro-dispersion)
+  const cortexT = (c, r, front, h) => { const C = CN.cortex, b = c.bag, sh = cShape(c, r, front), pe = 1 - peelAt(c, r, front, h);
+    return { sheet: C.sheet * leftAt(b, h) * sh * pe, sub: C.sub * clamp(b.sub, 0, 1) * subBump(c, h) * sh * pe, off: C.disp * clamp(b.disp, 0, 1) }; };
+  // lens-local field of the cortex (negative inside) and of the bag
+  function cortexField(c, B, r, z, x, y) {
+    const bg = B.g(r, z, x, y); if (bg > 0.8) return { cx: bg, bag: bg };
+    const d = -bg, t = cortexT(c, r, z >= LENS.zc, hOf(x, y) || 12);
+    const oS = t.off * subBump(c, hOf(x, y) || 12);                 // hydro-dispersion lifts the whole subincisional cortex off the capsule
+    let cx = t.sheet > 1e-4 ? Math.max(bg, oS - d, d - oS - t.sheet) : 1;
+    if (t.sub > 1e-4) cx = Math.min(cx, Math.max(bg, t.off - d, d - t.off - t.sub));
+    return { cx, bag: bg };
+  }
+  // sector values for an aspiration that has gone round prog (0→1) of the circle from clock h0 in direction dir (−1 = counter-clockwise as seen)
+  const cortexSweep = (prog, h0 = 6, dir = -1, keep = []) => { const v = new Array(12).fill(1);
+    for (let k = 0; k < 12; k++) { if (keep.includes(k) || keep.includes(k || 12)) continue; const t = fwdH(h0, k, dir) / 12; v[k] = 1 - clamp((prog - t) * 12, 0, 1); } return v; };
+
+  // ================================================================ ③ one-piece IOL (CARD.md 白內障 ③): optic Ø 6.0, overall 13.0 mm (Osawa 2021, one hydrophobic acrylic
+  // model; 院內型號待確認); thickness, haptic shape and the insertion path 示意. Frame: ea = the injection direction (from the main incision across the
+  // centre, turned by iol.rot° toward higher clock hours), eb = ea turned −90° (toward 9 o'clock for a 12 o'clock incision), en = up. The optic is a
+  // biconvex disc (taco-folded about ea by fold·(1 − unfold), edges up); each haptic is a 32-point centreline (tube r = ht/2) blended between shapes:
+  //   EXT   straight out of the cartridge (lead ahead of the optic, trail behind it);  FREE the C-loop as made (tips 6.5 mm from the centre: 13.0 overall);
+  //   BAG   compressed in the bag: a curve from the root to the equator, then along the equator inside the capsule (Rin);  ABOVE  the trailing haptic before
+  //   it is tucked: a C-loop lying on the anterior capsule outside the bag;  SULC  the error: the trailing haptic in the ciliary sulcus.
+  const IOLM = new WeakMap(), NH = 32;
+  function iolOf(c) {
+    const io = c.iol; if (!io) return null; if (IOLM.has(c)) return IOLM.get(c);
+    const I = CN.iol, Ro = I.optic / 2, S = lensShift(c), L = liftZ(c, 0), tn = tunnelOf(c.main || CN.main), B = bagOf(c);
+    const a0 = cd(tn.h), e2 = rotH(-a0[0], -a0[1], io.rot || 0), ea0 = [e2[0], e2[1], 0], eb = [e2[1], -e2[0], 0];
+    const zI = LENS.zc + L, Of = [io.dx + S.LO[0], io.dy + S.LO[1], zI + S.LO[2]];
+    const inj = (c.inst || []).map(i => instGeom(c, i)).find(g => g.kind === 'injector');
+    const E = inj ? inj.tip : tn.to3(tn.int), din = inj ? [-inj.axis[0], -inj.axis[1], -inj.axis[2]] : unit(sub(Of, E));
+    const tiltIn = Math.atan2(-din[2], Math.hypot(din[0], din[1]));
+    const out = clamp(io.out, 0, 1), tr = clamp(io.trail, 0, 1), sul = clamp(io.sulcus, 0, 1), ld = clamp(io.lead, 0, 1);
+    const Ost = add(Of, ea0, I.trailShift * (1 - tr) * (1 - sul)), tiltSt = I.trailTilt * D2R * (1 - tr) * (1 - sul);
+    const O0 = add(E, din, -(Ro + 0.3)), sO = ss(0.15, 0.95, out);
+    let O = out < 1 ? [lerp(O0[0], Ost[0], sO), lerp(O0[1], Ost[1], sO), lerp(O0[2], Ost[2], sO)] : Ost.slice();
+    let tilt = out < 1 ? lerp(tiltIn, tiltSt, ss(0.3, 1, out)) : tiltSt;
+    if (sul > 0) { O = add(O, ea0, -0.6 * sul); O[2] += 0.25 * sul; tilt += 5 * D2R * sul; }   // sulcus error (示意): optic pulled toward the sulcus haptic, tilted
+    const ea = [ea0[0] * Math.cos(tilt), ea0[1] * Math.cos(tilt), -Math.sin(tilt)], en = unit(G.cross(eb, ea));
+    const fa = I.fold * D2R * (1 - clamp(io.unfold, 0, 1)), cf = Math.cos(fa), sf = Math.sin(fa);
+    const toEye = (u, v, w) => { const sg = u >= 0 ? 1 : -1, u2 = u * cf - sg * w * sf, w2 = Math.abs(u) * sf + w * cf; return [O[0] + eb[0] * u2 + ea[0] * v + en[0] * w2, O[1] + eb[1] * u2 + ea[1] * v + en[1] * w2, O[2] + eb[2] * u2 + ea[2] * v + en[2] * w2]; };
+    const Rin = LENS.Req - 0.03 - I.hw / 2, Cb = [S.LO[0], S.LO[1]], hr = I.ht / 2, rc = rcOf(c);
+    const dirH = phi => [ea0[0] * Math.cos(phi) + eb[0] * Math.sin(phi), ea0[1] * Math.cos(phi) + eb[1] * Math.sin(phi)];
+    const capTop = r => (B ? B.zA(Math.min(r, LENS.Req)) : LENS.zAnt(Math.min(r, LENS.Req))) + L + hr + 0.03;
+    const Ir = irisOf(c), pr = c.pupil / 2, overIris = r => lerp(capTop(r), irisZ(Ir, Math.max(r, pr)) + 0.42 + hr, ss(pr - 0.7, pr - 0.15, r));
+    const shapes = j => { const th = (I.root + 180 * j) * D2R, ur = (Ro - 0.12) * Math.sin(th), vr = (Ro - 0.12) * Math.cos(th), root = toEye(ur, vr, 0), T = k => k / (NH - 1);
+      const ext = [], free = [], bag = [], above = [], sulc = [];
+      for (let k = 0; k < NH; k++) { const t = T(k); ext.push(toEye(ur, vr + (j ? -3.4 : 3.6) * t, 0));
+        const thF = th + I.sweepFree * D2R * Math.pow(t, 0.9), rho = Ro - 0.12 + (I.overall / 2 - Ro + 0.12) * Math.pow(Math.sin(Math.PI * t / 2), 0.8);
+        free.push(toEye(rho * Math.sin(thF), rho * Math.cos(thF), 0)); }
+      // BAG: Bezier from the root (tangent of the free C-loop there) to the equator, then along the equator
+      const nB = 13, phq = th + 50 * D2R, pht = th + I.sweepBag * D2R, Q = (() => { const d = dirH(phq); return [Cb[0] + Rin * d[0], Cb[1] + Rin * d[1], zI + S.LO[2]]; })();
+      const t0 = unit(sub(free[1], free[0])), dq = dirH(phq + Math.PI / 2), c1 = add(root, t0, 1.2), c2 = [Q[0] - dq[0] * 1.3, Q[1] - dq[1] * 1.3, Q[2]];
+      const bez = (a, b, e, d, t) => { const u = 1 - t; return [0, 1, 2].map(i => u * u * u * a[i] + 3 * u * u * t * b[i] + 3 * u * t * t * e[i] + t * t * t * d[i]); };
+      // a root still above the anterior capsule (coming out of the nozzle): the haptic first dips through the rhexis opening (waypoint W, 1.2 mm from the
+      // centre toward Q, 0.3 mm above the optic plane), then runs out under the rim to the equator
+      const rR = Math.hypot(root[0] - Cb[0], root[1] - Cb[1]), rootUp = root[2] - L > LENS.zAnt(Math.min(rR, LENS.Req)) - 0.3;
+      if (rootUp) { const dw = dirH(phq), W = [Cb[0] + dw[0] * 1.2, Cb[1] + dw[1] * 1.2, zI + S.LO[2] + 0.3], tw = unit(sub(Q, W)), h1 = Math.ceil(nB / 2);
+        for (let k = 0; k < h1; k++) bag.push(bez(root, add(root, t0, 0.8), add(W, tw, -0.8), W, k / h1));
+        for (let k = 0; k < nB - h1; k++) bag.push(bez(W, add(W, tw, 0.9), c2, Q, k / (nB - h1 - 1))); }
+      else for (let k = 0; k < nB; k++) bag.push(bez(root, c1, c2, Q, k / (nB - 1)));
+      for (let k = 1; k < NH - nB + 1; k++) { const ph = phq + (pht - phq) * k / (NH - nB), d = dirH(ph); bag.push([Cb[0] + Rin * d[0], Cb[1] + Rin * d[1], zI + S.LO[2]]); }
+      // ABOVE / SULC: the free C-loop shrunk to lie over the capsule (or reach the sulcus), lifted over the rim onto the anterior capsule
+      for (const [arr, Rt] of [[above, LENS.Req - 0.35], [sulc, I.sulcusR]]) for (let k = 0; k < NH; k++) { const t = T(k), thF = th + I.sweepFree * D2R * Math.pow(t, 0.9);
+        const rho = Ro - 0.12 + (Rt - Ro + 0.12) * Math.pow(Math.sin(Math.PI * t / 2), 0.8), p = toEye(rho * Math.sin(thF), rho * Math.cos(thF), 0), r = Math.hypot(p[0] - Cb[0], p[1] - Cb[1]);
+        const w = ss(rc - 0.5, rc - 0.25, r), zc2 = Rt > LENS.Req ? capTop(Math.max(r, rc)) : overIris(Math.max(r, rc)), zs = LENS.zc + L + 0.55;
+        let z = Math.max(p[2], lerp(p[2], zc2, w)); if (Rt > LENS.Req) z = Math.max(z, lerp(z, zs, ss(LENS.Req - 0.6, LENS.Req + 0.2, r)));
+        arr.push([p[0], p[1], z]); }
+      return { root, ext, free, bag, above, sulc }; };
+    const mix = (A, Bv, k) => A.map((p, i) => [lerp(p[0], Bv[i][0], k), lerp(p[1], Bv[i][1], k), lerp(p[2], Bv[i][2], k)]);
+    const H0 = shapes(0), H1 = shapes(1);
+    const lead = mix(H0.ext, H0.bag, ss(0, 1, ld));
+    let trail = mix(mix(H1.ext, H1.above, ss(0.75, 1, out)), H1.bag, tr); if (sul > 0) trail = mix(trail, H1.sulc, sul);
+    const haps = [lead, trail];
+    // parts still inside the cartridge (behind the nozzle's end) are not drawn
+    const hid = inj ? p => -dot(sub(p, E), din) : () => -1;
+    const optFlat = (u, v, w) => Math.max(Math.hypot(u, v) - Ro, Math.abs(w) - optHalf(Math.hypot(u, v)));
+    const optField = p => { const q = sub(p, O), u2 = dot(q, eb), v = dot(q, ea), w2 = dot(q, en); let f = 1e9;
+      for (const sg of [1, -1]) { const u = u2 * cf + sg * w2 * sf, w = -sg * u2 * sf + w2 * cf; f = Math.min(f, Math.max(optFlat(u, v, w), -sg * u - 0.02)); } return f; };
+    const bb = haps.map(H => { let lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9]; for (const p of H) for (let i = 0; i < 3; i++) { lo[i] = Math.min(lo[i], p[i]); hi[i] = Math.max(hi[i], p[i]); } return [lo, hi]; });
+    const hapField = p => { let f = 1e9; haps.forEach((H, j) => { const [lo, hi] = bb[j]; if (p[0] < lo[0] - 0.5 || p[0] > hi[0] + 0.5 || p[1] < lo[1] - 0.5 || p[1] > hi[1] + 0.5 || p[2] < lo[2] - 0.5 || p[2] > hi[2] + 0.5) return;
+      for (let i = 1; i < H.length; i++) { const a = H[i - 1], e = sub(H[i], a), l2 = dot(e, e) || 1, t = clamp(dot(sub(p, a), e) / l2, 0, 1); f = Math.min(f, len(sub(p, add(a, e, t))) - hr); } }); return f; };
+    const field = p => Math.max(Math.min(optField(p), hapField(p)), hid(p));
+    const ring = []; for (let k = 0; k <= 96; k++) { const t = 2 * Math.PI * k / 96; ring.push(toEye(Ro * Math.sin(t), Ro * Math.cos(t), 0)); }
+    const crease = fa > 0.05 ? [toEye(0, -Ro, 0), toEye(0, Ro, 0)] : null;
+    const R = { io, O, Of, ea, eb, en, ea0, fa, toEye, haps, shapes: [H0, H1], tips: haps.map(H => H[H.length - 1]), roots: [H0.root, H1.root], ring, crease, field, optField, hapField, hid, E, din, inj, Rin, Cb, hr, zI, tilt };
+    IOLM.set(c, R); return R;
+  }
 
   // ================================================================ ② hydrodissection (示意 geometry; CARD.md 白內障 ②)
   // BSS injected under the rhexis rim at clock hy.h runs between the capsule and the cortex: out under the anterior capsule, round the equator and across
@@ -323,6 +474,9 @@ function CATARACT_MAKE(G) {
   // ---------------------------------------------------------------- instruments (3D): tip, axis (unit, tip → hand), segments for drawing
   // inst: { kind: 'keratome' | 'sideblade' | 'cannula' | 'cystotome' | 'forceps', via: 'main' | 'side', adv (blades: 0→1 along the tunnel, >1 into the AC),
   //         at: { h, r, lift } (tip relative to the anterior capsule, lens-local) or p: [x, y, z], open (forceps, mm) }
+  // ③ unit vector across an instrument's axis for its port / bevel: 'up' (toward the cornea), 'down' (toward the posterior capsule), 'side' (horizontal)
+  const portDir = (axis, name) => { if (name === 'side') { const s = [-axis[1], axis[0], 0]; return unit(len(s) > 1e-9 ? s : [1, 0, 0]); }
+    const k = axis[2], v = unit([-axis[0] * k, -axis[1] * k, 1 - axis[2] * k]); return name === 'down' ? [-v[0], -v[1], -v[2]] : v; };
   function instGeom(c, inst) {
     const via = inst.via || (inst.kind === 'sideblade' ? 'side' : 'main'), cfg = via === 'side' ? (c.side || CN.side) : (c.main || CN.main), tn = tunnelOf(cfg);
     const r27 = CN.gauge27 / 2;
@@ -331,6 +485,12 @@ function CATARACT_MAKE(G) {
       const d2 = tn.dirAt(Math.min(adv, 1)), tip = tn.to3(rz), back = tn.to3([rz[0] - d2[0], rz[1] - d2[1]]), axis = unit(sub(back, tip));
       const W = inst.kind === 'keratome' ? cfg.w : 1.0, tipL = inst.kind === 'keratome' ? 1.6 : 1.8, L = inst.kind === 'keratome' ? 3.4 : 3.2;
       return { kind: inst.kind, via, tn, tip, axis, lat: [...latDir(cfg.h), 0], blade: { W, tipL, L, th: 0.15 }, segs: [{ a: add(tip, axis, L), b: add(tip, axis, 30), r: inst.kind === 'keratome' ? 0.45 : 0.35 }], adv };
+    }
+    if (inst.kind === 'hcan') {
+      // ③ stromal hydration: a 27G cannula entering the outer opening at one lateral end (side ±1) with its tip in the wall's stroma at tunnel fraction f
+      const sd = inst.side ?? 1, f = inst.f ?? 0.3, off = sd * (cfg.w / 2 + 0.12), tipH = tn.to3(tn.at(f), off), ent = tn.to3(tn.ext, off);
+      const ax0 = unit(sub(ent, tipH)), axis = unit(add(ax0, [0, 0, 0.55]));
+      return { kind: 'hcan', via, tn, tip: tipH, axis, side: sd, f, segs: [{ a: tipH, b: add(tipH, axis, 30), r: r27 }], stromal: true };
     }
     const S = lensShift(c);
     const tip = inst.p ? inst.p : capPt(c, inst.at.r, inst.at.h, inst.at.lift ?? 0);
@@ -364,6 +524,27 @@ function CATARACT_MAKE(G) {
       const P = CN.chopper, dn = inst.tipDir ? unit(inst.tipDir) : [0, 0, -1], bend = add(tip, dn, -P.tipL), axis = unit(sub(piv, bend));
       return { kind: 'chopper', via, tn, tip, bend, axis, rr: P.d / 2, pivot: piv, segs: [{ a: tip, b: bend, r: P.d * 0.35 }, { a: bend, b: add(bend, axis, 30), r: P.d / 2 }] };
     }
+    if (inst.kind === 'ia' || inst.kind === 'iaIrr') {
+      // ③ coaxial I/A tip (main incision): closed rounded metal tip, one aspiration port portBack behind the tip on the side named by inst.port
+      // ('up' toward the cornea, 'side', 'down' toward the posterior capsule), silicone sleeve behind it (holds the incision like the phaco sleeve).
+      // ③ bimanual irrigation handpiece ('iaIrr', Colvard 1997): a plain 0.9 mm tube through the main incision. Sizes 示意 (CARD.md 白內障 ③).
+      const P = CN.ia, irr = inst.kind === 'iaIrr', piv2 = tn.to3(tn.at(P.pivotF)), axis = unit(sub(piv2, tip)), rn = (irr ? CN.bim.od : P.tipOD) / 2, rs = irr ? rn : P.sleeveOD / 2;
+      const sEnd = add(tip, axis, irr ? 30 : P.sleeveBack), pn = inst.port || 'up', pdir = portDir(axis, pn), port = irr ? null : add(add(tip, axis, P.portBack), pdir, rn);
+      return { kind: inst.kind, via, tn, tip, axis, rn, rs, rr: rs, sEnd, port, pdir, portName: pn, occl: inst.occl ?? 0, pivot: piv2,
+        segs: irr ? [{ a: tip, b: add(tip, axis, 30), r: rn }] : [{ a: tip, b: sEnd, r: rn }, { a: sEnd, b: add(tip, axis, 30), r: rs }] };
+    }
+    if (inst.kind === 'iaAsp') {
+      // ③ bimanual aspiration handpiece through the side port (Colvard 1997): the distal bend mm angled ang° down so the port reaches under the rim
+      // (inst.tipDir: the bent tip's direction bend → tip, when the handpiece is turned so the tip reaches across the rhexis, e.g. under the subincisional rim)
+      const B = CN.bim, b0 = B.ang * D2R, h0 = u2([piv[0] - tip[0], piv[1] - tip[1]]), bend = inst.tipDir ? add(tip, unit(inst.tipDir), -B.bend) : add(tip, [h0[0] * Math.cos(b0), h0[1] * Math.cos(b0), Math.sin(b0)], B.bend);
+      const axis = unit(sub(piv, bend)), d0 = unit(sub(bend, tip)), rn = B.od / 2, pn = inst.port || 'up', pdir = portDir(d0, pn), port = add(add(tip, d0, B.portBack), pdir, rn);
+      return { kind: 'iaAsp', via, tn, tip, bend, axis, rn, rr: rn, port, pdir, portName: pn, occl: inst.occl ?? 0, pivot: piv, segs: [{ a: tip, b: bend, r: rn }, { a: bend, b: add(bend, axis, 30), r: rn }] };
+    }
+    if (inst.kind === 'injector') {
+      // ③ injector cartridge nozzle through the main incision; tip = centre of the bevelled end; the bevel's opening faces inst.bevel ('down' default)
+      const P = CN.inj, piv2 = tn.to3(tn.at(P.pivotF)), axis = unit(sub(piv2, tip)), ro = P.od / 2, pdir = portDir(axis, inst.bevel === 'up' ? 'up' : 'down');
+      return { kind: 'injector', via, tn, tip, axis, ro, rr: ro, pdir, bevel: inst.bevel || 'down', pivot: piv2, segs: [{ a: tip, b: add(tip, axis, 30), r: ro }] };
+    }
     if (inst.bend) {
       // ② hydrodissection cannula: angled distal part (bend mm, ang° below the shaft's horizontal heading; 示意) so the tip slips under the rhexis rim
       const L = inst.bend === true ? CN.hcannula.bend : inst.bend, b0 = CN.hcannula.ang * D2R, h0 = u2([piv[0] - tip[0], piv[1] - tip[1]]);
@@ -387,14 +568,14 @@ function CATARACT_MAKE(G) {
   function deformer(c) {
     const out = [];
     for (const inst of c.inst || []) { const g = instGeom(c, inst), tn = g.tn, cfg = tn.cfg;
-      if (g.blade) continue;                                                                      // a blade's cut is a zero-width slit (drawn as the tunnel line)
+      if (g.blade || g.stromal) continue;                                                         // a blade's cut is a zero-width slit (drawn as the tunnel line); ③ hydration cannula sits in the wall
       if (!(((g.via === 'side' ? c.side : c.main)?.cut ?? 0) > 0)) continue;
       const a = cd(cfg.h), toRZ = p => [p[0] * a[0] + p[1] * a[1], p[2]];
       const A = toRZ(g.bend || g.tip), B = toRZ(add(g.bend || g.tip, g.axis, 10)), dl = u2([B[0] - A[0], B[1] - A[1]]);
       const zLine = r => A[1] + (r - A[0]) * dl[1] / (dl[0] || 1e-9);                          // instrument centre line, height at r
       // ② bend mode (phaco sleeve, chopper): the tunnel follows the straight instrument (the corneal wall bends with it, fading away from the tunnel),
       // and the slit gapes by the instrument's own half-thickness. The ① instruments keep the open-only mode below.
-      const bendMode = g.kind === 'phaco' || g.kind === 'chopper';
+      const bendMode = g.kind === 'phaco' || g.kind === 'chopper' || g.kind === 'ia' || g.kind === 'iaIrr' || g.kind === 'iaAsp' || g.kind === 'injector';
       const rr = bendMode ? g.rr + 0.01 : (g.kind === 'forceps' ? 0.16 : CN.gauge27 / 2) + 0.01;   // what lies in the tunnel: the two arms, or a 27G shaft (+ 10 µm)
       const P = tn.pts, rOut = P[0][0], rIn = P[P.length - 1][0];
       const zTun = r => { r = clamp(r, rIn, rOut); for (let i = 1; i < P.length; i++) if ((P[i - 1][0] - r) * (P[i][0] - r) <= 0) { const k = (r - P[i - 1][0]) / ((P[i][0] - P[i - 1][0]) || 1e-9); return lerp(P[i - 1][1], P[i][1], k); } return P[0][1]; };
@@ -471,7 +652,7 @@ function CATARACT_MAKE(G) {
   // ---------------------------------------------------------------- dilated iris (shape 示意): pupil margin resting on the anterior capsule
   function irisOf(c) {
     const root = G.inner({}).root, pr = c.pupil / 2, th = t => 0.2 + 0.55 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.25)), 0.8) * (t < 0.8 ? 1 : 1 - ss(0.8, 1, t) * 0.5);
-    const pm = [LENS.zAnt(pr) + th(0) / 2 + 0.01 + liftZ(c, pr), pr], ctl = [lerp(pm[0], root[0], 0.5) + 0.18, lerp(pm[1], root[1], 0.5)], L = [];
+    const pm = [(c.bag ? bagOf(c).zA(pr) : LENS.zAnt(pr)) + th(0) / 2 + 0.01 + liftZ(c, pr), pr], ctl = [lerp(pm[0], root[0], 0.5) + 0.18, lerp(pm[1], root[1], 0.5)], L = [];
     for (let k = 0; k <= 40; k++) { const t = k / 40, u = 1 - t; L.push([u * u * pm[0] + 2 * u * t * ctl[0] + t * t * root[0], u * u * pm[1] + 2 * u * t * ctl[1] + t * t * root[1]]); }
     return { L, th, pm, root };
   }
@@ -487,26 +668,28 @@ function CATARACT_MAKE(G) {
     const cil = s => { const x = s - N.spur, th = x < N.plicata ? lerp(0.35, 1.05, ss(0, 0.6, x)) * (1 - ss(N.plicata - 0.6, N.plicata + 0.4, x) * 0.7) : lerp(0.32, 0.22, ss(N.plicata, N.ora - N.spur, x));
       const f = G.surfAt(s), d = G.T(s) + th - 0.02; return [f.rho - f.nr * d, f.z - f.nz * d]; };
     const ins = [];
-    for (let k = 0; k <= 5; k++) { const r = lerp(R_AZI, LENS.Req - 0.12, k / 5); ins.push([r + off, LENS.zAnt(r) + liftZ(c, r)]); }      // anterior: from the AZI to the equator
+    const Bz = c.bag ? bagOf(c) : null, zAn = r => Bz ? Bz.zA(r) : LENS.zAnt(r), zPo = r => Bz ? Bz.zP0(r) : LENS.zPost(r);
+    for (let k = 0; k <= 5; k++) { const r = lerp(R_AZI, LENS.Req - 0.12, k / 5); ins.push([r + off, zAn(r) + liftZ(c, r)]); }      // anterior: from the AZI to the equator
     ins.push([LENS.Req + off, LENS.zc + liftZ(c, LENS.Req)]);
-    for (let k = 1; k <= 4; k++) { const r = lerp(LENS.Req - 0.12, LENS.Req - CN.postZon, k / 4); ins.push([r + off, LENS.zPost(r) + liftZ(c, r)]); }   // posterior (示意 extent)
+    for (let k = 1; k <= 4; k++) { const r = lerp(LENS.Req - 0.12, LENS.Req - CN.postZon, k / 4); ins.push([r + off, zPo(r) + liftZ(c, r)]); }   // posterior (示意 extent)
     ins.forEach((p, i) => { const s = N.spur + lerp(2.6, 0.7, i / (ins.length - 1)); fib.push([cil(s), p]); });
     return fib;
   }
 
   // ---------------------------------------------------------------- section: meridional plane at clock hp (screen right = toward hp)
-  const C = Object.assign({}, G.C, { cortex: '#f4efe0', cortexS: '#bfb08a', nuc: '#e6c983', nucS: '#c8a457', cap: '#2f78b7', zon: '#b39a6a', ovd: '#9cc6ee', tunnel: '#3c4a57', metal: '#c3cad2', metalD: '#8e98a3', metalS: '#4c5560', bss: '#c9ecfb', bssS: '#2a8fc7', sleeve: '#dfe7ec' });
+  const C = Object.assign({}, G.C, { cortex: '#f4efe0', cortexS: '#bfb08a', nuc: '#e6c983', nucS: '#c8a457', cap: '#2f78b7', zon: '#b39a6a', ovd: '#9cc6ee', tunnel: '#3c4a57', metal: '#c3cad2', metalD: '#8e98a3', metalS: '#4c5560', bss: '#c9ecfb', bssS: '#2a8fc7', sleeve: '#dfe7ec', iol: '#f6f1cf', iolS: '#a8963c' });
   const SEC = new Map();
   // per-point tissue values (negative inside), shared by the section and the checks
-  const LAYERS = ['interior', 'aqueous', 'ovd', 'lens', 'nuc', 'retina', 'choroid', 'ciliary', 'iris', 'sclera', 'limbus', 'cornea', 'conj'];
-  const fieldCtx = (c, def) => ({ c, fd: G.makeField({}), I: irisOf(c), S: lensShift(c), ovdC: c.ovdAt || [0, 0, LENS.za + 0.9], ovdR: 9.5 * clamp(c.ovd, 0, 1), def, N: nucOf(c) });
+  const LAYERS = ['interior', 'aqueous', 'ovd', 'lens', 'nuc', 'ovdb', 'iol', 'retina', 'choroid', 'ciliary', 'iris', 'sclera', 'limbus', 'cornea', 'conj'];
+  const fieldCtx = (c, def) => ({ c, fd: G.makeField({}), I: irisOf(c), S: lensShift(c), ovdC: c.ovdAt || [0, 0, LENS.za + 0.9], ovdR: 9.5 * clamp(c.ovd, 0, 1), def, N: nucOf(c), B: bagOf(c), IOL: iolOf(c) });
   function fieldAt(X, p0) {
     let p = p0, gap = -1, bend = false; if (X.def) { const w = X.def(p0); p = w.q; gap = w.gap; bend = !!w.bend; }
     // ② bend mode moves only the wall (cornea, limbus): lens, iris and chamber contents are taken at the unmoved point
     const pin = bend ? p0 : p;
     const { fd, I, S } = X, W = fd.wall(p), m = W.m, mi = bend ? fd.wall(p0).m : m, lr = Math.hypot(pin[0] - S.LO[0], pin[1] - S.LO[1]), lz = pin[2] - S.LO[2] - liftZ(X.c, lr), o = {};
-    let lensG, nucG; const above = lr < LENS.Req ? lz - LENS.zAnt(lr) : lz - LENS.zc;
-    if (X.N) { const q = X.N.toContent(pin[0] - S.LO[0], pin[1] - S.LO[1]), r = X.N.at(q[0], q[1], lz); lensG = r.lens; nucG = r.nuc; }   // ② grooves, cracks, quadrants
+    let lensG, nucG, bagG = 1; const above = lr < LENS.Req ? lz - LENS.zAnt(lr) : lz - LENS.zc;
+    if (X.B) { const q = cortexField(X.c, X.B, lr, lz, pin[0] - S.LO[0], pin[1] - S.LO[1]); lensG = q.cx; nucG = 1; bagG = q.bag; }   // ③ the emptied bag: cortex only
+    else if (X.N) { const q = X.N.toContent(pin[0] - S.LO[0], pin[1] - S.LO[1]), r = X.N.at(q[0], q[1], lz); lensG = r.lens; nucG = r.nuc; }   // ② grooves, cracks, quadrants
     else {
       lensG = LENS.g(lr, lz);
       // where the anterior capsule is gone, the cortex surface is the capsule's inner surface (one capsule thickness lower)
@@ -514,9 +697,15 @@ function CATARACT_MAKE(G) {
     o.interior = fd.g.interior(W);
     o.aqueous = Math.max(o.interior, Math.min(-above, lr < LENS.Req && lz > LENS.zc ? -lensG : 1), -lensG);   // −lensG: ends exactly where the lens begins   // in front of the lens (incl. where the capsule is gone)
     if (X.N) o.aqueous = Math.min(o.aqueous, Math.max(LENS.g(lr, lz), -lensG));   // ② the emptied part of the capsular bag holds chamber fluid (BSS)
+    if (X.B) { const aB = lr < LENS.Req ? lz - X.B.zA(lr) : lz - LENS.zc; o.aqueous = Math.max(o.interior, Math.min(-aB, bagG), -lensG); }   // ③ in front of the bag, or inside it
     if (X.def) o.aqueous = Math.min(o.aqueous, -gap);              // the gaping tunnel is open to the chamber: chamber fluid (and OVD) fills it
     o.ovd = X.ovdR > 0 ? Math.max(o.aqueous, Math.hypot(pin[0] - X.ovdC[0], pin[1] - X.ovdC[1], pin[2] - X.ovdC[2]) - X.ovdR, mi.rho > I.pm[1] ? irisZ(I, mi.rho) - mi.z : -1) : 1;   // anterior chamber only
-    o.lens = lensG; o.nuc = X.N ? nucG : (Math.hypot(lr / (LENS.Req * CN.nucK[0]), (lz - LENS.zMid - 0.15) / (LENS.T * CN.nucK[1] / 2)) - 1) * 1.5;
+    if (X.B) o.ovd = Math.max(o.ovd, -bagG);                         // ③ the chamber's OVD stays out of the bag (the bag's own OVD is ovdb)
+    o.ovdb = 1; o.iol = X.IOL ? X.IOL.field(pin) : 1; o.bag = bagG;
+    if (X.B && X.c.ovdBag > 0) { const zI = (X.IOL ? X.IOL.zI - liftZ(X.c, 0) : LENS.zc), oo = X.c.ovdOut, Rb = 6 * clamp(X.c.ovdBag, 0, 1), d = Math.hypot(lr, lz - LENS.zMid);
+      const gone = lz < zI ? (LENS.Req + 0.3) * clamp(oo.behind, 0, 1) - lr - 1e-3 : (LENS.Req + 0.3) * clamp(oo.front, 0, 1) - lr - 1e-3;   // removed from the centre outward
+      o.ovdb = Math.max(bagG, d - Rb, -lensG, -o.iol, gone); }
+    o.lens = lensG; o.nuc = X.N ? nucG : X.B ? 1 : (Math.hypot(lr / (LENS.Req * CN.nucK[0]), (lz - LENS.zMid - 0.15) / (LENS.T * CN.nucK[1] / 2)) - 1) * 1.5;
     o.retina = fd.g.retina(W); o.choroid = fd.g.choroid(W); o.ciliary = fd.g.ciliary(W);
     if (mi.rho < 2 || mi.rho > I.root[1] + 0.8 || mi.z < I.root[0] - 0.9 || mi.z > I.pm[0] + 1.2) o.iris = 1;
     else { const [d, t] = distPoly([mi.z, mi.rho], I.L); o.iris = d - I.th(t) / 2; }
@@ -538,6 +727,7 @@ function CATARACT_MAKE(G) {
     const o = [`<rect x="${win.x}" y="${win.y}" width="${win.w}" height="${win.h}" fill="#f4f7f9"/>`];
     o.push(layer('interior', C.vit), layer('aqueous', C.aq), layer('ovd', '#e4ddf4', null, 0, `opacity="${(0.55 + 0.45 * clamp(c.ovd, 0, 1)).toFixed(2)}"`));
     o.push(layer('lens', C.cortex, C.cortexS, 0.7), layer('nuc', C.nuc, C.nucS, 0.6, 'opacity="0.85"'));
+    o.push(layer('ovdb', '#e4ddf4', '#9a8cc8', 0.5), layer('iol', C.iol, C.iolS, 0.9));   // ③ OVD in the bag, the IOL (both empty strings before ③)
     o.push(layer('retina', C.ret), layer('choroid', C.chor), layer('ciliary', C.cil, C.cilS, 0.6));
     return { pre: o.join(''), post: [layer('iris', C.iris, C.irisS, 0.6), layer('sclera', C.sclera, C.scleraS), layer('limbus', C.limb, null), layer('cornea', C.cornea, C.corneaS), layer('conj', C.conj, C.conjS, 0.6)].join(''), pl,
       outline: { cornea: loopsD('cornea') } };   // outline (path data, mm) of the cornea, e.g. drawn dashed as the rest state under a deformed one
@@ -546,7 +736,7 @@ function CATARACT_MAKE(G) {
   function capsuleCut(c, pl, hp) {
     const S = lensShift(c), U = pl.U, nrm = [U[1], -U[0]], LX = S.LO[0] - pl.O[0], LY = S.LO[1] - pl.O[1], e = LX * nrm[0] + LY * nrm[1], uc = LX * U[0] + LY * U[1], runs = [];
     // ② fluid under the capsule (hydrodissection wave, capsular-block pocket) and an over-deep groove through the posterior capsule
-    const H = hydroOf(c), N = nucOf(c), OG = N && N.overG, fl = [], fronts = [];
+    const H = hydroOf(c), N = nucOf(c), OG = N && N.overG, fl = [], fronts = [], Bc = bagOf(c);
     for (const sg of [1, -1]) {
       let run = [], band = [], frun = [], prevF = null;
       const flush = () => { if (run.length > 1) runs.push({ pts: run, band }); run = []; band = []; };
@@ -557,7 +747,8 @@ function CATARACT_MAKE(G) {
         let gone = ant && bare(c.ccc, r, h);
         if (OG && !ant) { const q = N.toContent(xr, yr); if (OG.field(q[0], q[1], z) < 0 || OG.field(q[0], q[1], z - 0.004) < 0) gone = true; }
         if (gone) { flush(); fflush(); continue; }
-        const zz = z + (ant ? striae(c, x, y) : 0) + liftZ(c, r), u = uc + along, t = capT(LENS.S[i]), nn = LENS.N[i];
+        const zb = Bc ? (ant ? Bc.zA(r) : Bc.zP(r, xr, yr)) : z;
+        const zz = zb + (ant ? striae(c, x, y) : 0) + liftZ(c, r), u = uc + along, t = capT(LENS.S[i]), nn = LENS.N[i];
         const f = H ? H.thick(i, H.phiOf(xr, yr)) : 0;
         if (f > 0) { run.push([u + sg * nn[0] * f, -(zz + nn[1] * f)]); band.push([u + sg * nn[0] * (f - t), -(zz + nn[1] * (f - t))]); frun.push([[u, -zz], [u + sg * nn[0] * f, -(zz + nn[1] * f)], i, f]); }
         else { run.push([u, -zz]); band.push([u - sg * nn[0] * t, -(zz - nn[1] * t)]); fflush(); }
@@ -572,7 +763,7 @@ function CATARACT_MAKE(G) {
   }
   function section(opt) {
     const st = opt.st || {}, c = norm(st), hp = opt.h ?? 6, win = opt.win, step = opt.step || 0.03, id = opt.id || 'cs', off = opt.off || 0;
-    const def = deformer(c), key = JSON.stringify([hp, win, step, c.pupil, c.ovd, c.ovdAt, c.zonule, c.ccc && lensShift(c).LO, def ? c.inst : null, c.main, c.side, c.push, c.folds, c.hydro, c.nuc, c.surge, off]);
+    const def = deformer(c), key = JSON.stringify([hp, win, step, c.pupil, c.ovd, c.ovdAt, c.zonule, c.ccc && lensShift(c).LO, def ? c.inst : null, c.main, c.side, c.push, c.folds, c.hydro, c.nuc, c.surge, off, c.bag, c.ovdBag, c.ovdOut, c.iol, c.bag || c.iol ? c.inst : null]);
     let tis = SEC.get(key); if (!tis) { tis = sectionTissue(c, hp, win, step, def, off); if (SEC.size > 40) SEC.delete(SEC.keys().next().value); SEC.set(key, tis); }
     const pl = tis.pl, P2 = p3 => G.toPlane(pl, p3), o = [tis.pre], A = {};
     // zonules (both sides), under the iris
@@ -609,8 +800,9 @@ function CATARACT_MAKE(G) {
       const inPlane = [hp, hp + 6].some(h => { const dh = ((cfg.h - h + 18) % 12) - 6; return Math.abs(tn.ext[0] * Math.sin(dh * H2R)) < cfg.w / 2; });
       const blade = (c.inst || []).map(i => instGeom(c, i)).find(g => g.tn === tn && (g.kind === 'keratome' || g.kind === 'sideblade'));
       const upto = Math.max(cfg.cut, blade ? Math.min(1, blade.adv) : 0); if (!(upto > 0)) continue;
-      const held = (c.inst || []).some(i => { const g = instGeom(c, i); return g.tn === tn && !g.blade; });   // an instrument holds the tunnel open: the slit shows it
+      const held = (c.inst || []).some(i => { const g = instGeom(c, i); return g.tn === tn && !g.blade && !g.stromal; });   // an instrument holds the tunnel open: the slit shows it
       if (inPlane) { const pts = []; for (let k = 0; k <= 40; k++) pts.push(P2(tn.to3(tn.at(upto * k / 40))));
+        if (!held && nm === 'main' && c.seal) o.push(sectionSeal(c, tn, P2, A, tis, id));   // ③ inner gape / stromal hydration around the closed tunnel
         if (!held) o.push(`<path d="M${pts.map(F).join('L')}" fill="none" stroke="${C.tunnel}" stroke-width="1.3" opacity="0.9" ${NS}/>`);
         A[nm + 'Ext'] = P2(tn.to3(tn.ext)); A[nm + 'Int'] = P2(tn.to3(tn.int)); A[nm + 'Pivot'] = P2(tn.to3(tn.pivot)); } }
     // a tunnel held open by an instrument (deformer): anchors on the lifted roof (front surface, 0.45 mm inside the outer opening), the pressed lip
@@ -622,6 +814,10 @@ function CATARACT_MAKE(G) {
       A[nm + 'Folds'] = Pm(rF, D.fwd(rF, wallZ(rF, true) + 0.005)); A[nm + 'Lift'] = D.maxUp; A[nm + 'Push'] = D.maxDn; A[nm + 'Fold'] = D.fold; }
     // ② nucleus: crack lines in this plane, groove floor and remaining plate, quadrant apex
     const NU = nucOf(c); if (NU) o.push(sectionNuc(c, NU, pl, P2, A));
+    // ③ the stripped cortex strand, IOL anchors
+    if (c.bag) o.push(sectionBag(c, pl, hp, P2, A));
+    const IO = iolOf(c); if (IO) { A.iolC = P2(IO.O); A.hapTip0 = P2(IO.tips[0]); A.hapTip1 = P2(IO.tips[1]); A.iol = IO;
+      for (const sg of [1, -1]) A['optEdge' + (sg > 0 ? '+' : '-')] = P2(add(IO.O, [pl.U[0] * sg, pl.U[1] * sg, 0], CN.iol.optic / 2 - 0.05)); }
     // instruments, projected onto the plane (true size)
     (c.inst || []).forEach((inst, i) => { const g = instGeom(c, inst); o.push(opt.cut ? drawInstCut(g, P2, pl) : drawInstSec(g, P2, pl)); A['tip' + i] = P2(g.tip); A['inst' + i] = g; });
     // pupil margins
@@ -680,6 +876,61 @@ function CATARACT_MAKE(G) {
     if (NU.QD) for (const Q of NU.QD) if (Q.moved && !Q.gone) A['quadApex' + Q.q] = P2(eye3(Q.An[0], Q.An[1], Q.An[2]));
     return o.join('');
   }
+  // ③ the closed main tunnel in a section: its inner aspect gaping at low pressure (McDonnell 2003; size 示意) and the stroma whitened by stromal hydration
+  // around it (Mifflin 2012: hydrating the lateral walls whitens the stroma; the band's size 示意), clipped to the cornea; hydration closes the gape
+  function sectionSeal(c, tn, P2, A, tis, id) {
+    const s = c.seal, o = [], hy = clamp(s.hydr, 0, 1), gp = clamp(s.gape, 0, 1) * (1 - hy), Q = f => P2(tn.to3(tn.at(clamp(f, 0, 1))));
+    const nrm = f => { const a = Q(f - 0.01), b = Q(f + 0.01), d = u2([b[0] - a[0], b[1] - a[1]]); return [-d[1], d[0]]; };
+    const band = (f0, w) => { const top = [], bot = []; for (let k = 0; k <= 40; k++) { const f = lerp(f0, 1, k / 40), q = Q(f), n = nrm(f), h = w(f); top.push([q[0] + n[0] * h, q[1] + n[1] * h]); bot.push([q[0] - n[0] * h, q[1] - n[1] * h]); }
+      return 'M' + [...top, ...bot.reverse()].map(F).join('L') + 'Z'; };
+    if (hy > 0) { const d = band(0, f => CN.seal.band * hy * (0.55 + 0.45 * Math.sin(Math.PI * f)));
+      o.push(`<clipPath id="${id}_sealc"><path d="${tis.outline.cornea}" clip-rule="evenodd"/></clipPath><path d="${d}" fill="#ffffff" opacity="${(0.8 * hy).toFixed(3)}" clip-path="url(#${id}_sealc)"/>`);
+      A.sealWhite = Q(0.35); A.sealBand = CN.seal.band * hy; }
+    if (gp > 0) { const d = band(0.4, f => 0.5 * gp * CN.seal.gape * ss(0.4, 1, f));
+      o.push(`<path d="${d}" fill="${C.aq}" stroke="${C.tunnel}" stroke-width="0.9" ${NS}/>`); A.gape = gp * CN.seal.gape; A.gapeAt = Q(0.97); }
+    else A.gape = 0;
+    return o.join('');
+  }
+  // ③ emptied bag in a section: the stripped cortex strand (from where the sheet still holds on to the port) and anchors
+  function stripStrand(c) {
+    const s = c.bag && c.bag.strip; if (!s || !(s.prog > 0)) return null;
+    const Bb = bagOf(c), S = lensShift(c), L = liftZ(c, 0), F = stripFront(c, clamp(s.prog, 0, 1)), front = s.prog < 0.55, r = Math.min(front ? F.rA : F.rP, LENS.Req - 0.05), d = cd(s.h);
+    const att = [S.LO[0] + r * d[0], S.LO[1] + r * d[1], (front ? Bb.zA(r) - 0.06 : Bb.zP0(r) + 0.06) + L];
+    const gI = (c.inst || []).map(i => instGeom(c, i)).find(g => g.port), end = gI ? gI.port : att;
+    const mid = [(att[0] + end[0]) / 2 * 0.85, (att[1] + end[1]) / 2 * 0.85, (att[2] + end[2]) / 2 - 0.15], pts = [];
+    for (let k = 0; k <= 16; k++) { const t = k / 16, u = 1 - t; pts.push([0, 1, 2].map(i => u * u * att[i] + 2 * u * t * mid[i] + t * t * end[i])); }
+    return { att, end, pts, h: s.h };
+  }
+  function sectionBag(c, pl, hp, P2, A) {
+    const o = [], Bb = bagOf(c), S = lensShift(c), L = liftZ(c, 0);
+    A.bagPost = P2([S.LO[0], S.LO[1], Bb.zP(0, 0, 0) + L]); A.bagAmp = Bb.amp;
+    if (Bb.port) A.caughtPort = P2([Bb.port[0] + S.LO[0], Bb.port[1] + S.LO[1], Bb.port[2] + S.LO[2] + L]);
+    const st = stripStrand(c);
+    if (st && [hp, hp + 6].some(h => Math.abs(dH(st.h, h)) < 0.6)) { const d = 'M' + st.pts.map(p => F(P2(p))).join('L');
+      o.push(`<path d="${d}" fill="none" stroke="${C.cortexS}" stroke-width="0.27" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${C.cortex}" stroke-width="0.19" stroke-linecap="round"/>`);
+      A.strand = { att: P2(st.att), end: P2(st.end) }; }
+    return o.join('');
+  }
+  // ③ I/A handpieces in a section: sleeve and rounded metal tip (coaxial), plain tubes (bimanual); the aspiration port as a dark opening (plugged with
+  // cortex when occluded); the injector nozzle with its bevel
+  function drawIaSec(g, P2, pl, seg) {
+    const o = [];
+    if (g.kind === 'ia') { const E = P2(g.sEnd), FAR = P2(add(g.tip, g.axis, 30));
+      o.push(`<path d="M${F(E)}L${F(FAR)}" stroke="#6f7f8b" stroke-width="${(2 * g.rs + 0.06).toFixed(3)}"/><path d="M${F(E)}L${F(FAR)}" stroke="${C.sleeve}" stroke-width="${(2 * g.rs).toFixed(3)}"/>`);
+      o.push(seg(g.tip, add(g.sEnd, g.axis, 0.3), g.rn)); }
+    else for (const s of g.segs) o.push(seg(s.a, s.b, s.r));
+    if (g.port) { const nrm = [pl.U[1], -pl.U[0], 0], inPl = Math.abs(dot(g.pdir, nrm)) < 0.5, q = P2(g.port), ax = g.kind === 'iaAsp' ? unit(sub(g.bend, g.tip)) : g.axis, a2 = P2(add(g.port, ax, 0.1));
+      const ang = Math.atan2(a2[1] - q[1], a2[0] - q[0]) * 180 / Math.PI, ry = inPl ? 0.07 : CN.ia.portD * 0.4;
+      o.push(`<ellipse cx="${q[0].toFixed(4)}" cy="${q[1].toFixed(4)}" rx="${(CN.ia.portD / 2).toFixed(3)}" ry="${ry.toFixed(3)}" transform="rotate(${ang.toFixed(2)} ${q[0].toFixed(4)} ${q[1].toFixed(4)})" fill="${g.occl > 0.5 ? C.cortex : '#1c232a'}" stroke="#1c232a" stroke-width="0.8" ${NS}/>`); }
+    return o.join('');
+  }
+  function drawInjSec(g, P2) {
+    const b = Math.tan(CN.inj.bevel * D2R) * g.ro, up = [-g.pdir[0], -g.pdir[1], -g.pdir[2]];
+    const eT = add(add(g.tip, up, g.ro), g.axis, -b), eB = add(add(g.tip, g.pdir, g.ro), g.axis, b), fT = add(eT, g.axis, 30 + b), fB = add(eB, g.axis, 30 - b);
+    const iT = add(add(g.tip, up, g.ro - 0.15), g.axis, -b + 0.15), iB = add(add(g.tip, g.pdir, g.ro - 0.15), g.axis, b - 0.15), jT = add(iT, g.axis, 30), jB = add(iB, g.axis, 30);
+    return `<path d="M${[eT, fT, fB, eB].map(p => F(P2(p))).join('L')}Z" fill="#e3ebf1" opacity="0.95" stroke="${C.metalS}" stroke-width="0.9" stroke-linejoin="round" ${NS}/>` +
+      `<path d="M${[iT, jT, jB, iB].map(p => F(P2(p))).join('L')}Z" fill="#f7fafc" opacity="0.9"/><path d="M${F(P2(eT))}L${F(P2(eB))}" stroke="#2f3a44" stroke-width="1.2" ${NS}/>`;
+  }
   // ② phaco handpiece in a section: silicone sleeve (with an irrigation port), metal needle with its bevel and lumen
   function drawPhacoSec(g, P2, seg) {
     const o = [], T0 = P2(g.tip), E = P2(g.sEnd), FAR = P2(add(g.tip, g.axis, 30)), d = u2([E[0] - T0[0], E[1] - T0[1]]), up = d[0] >= 0 ? [d[1], -d[0]] : [-d[1], d[0]];
@@ -714,6 +965,8 @@ function CATARACT_MAKE(G) {
       return `<path d="M${F(A)}L${F(B)}" stroke="${C.metalS}" stroke-width="${(2 * r + 0.05).toFixed(3)}" stroke-linecap="round"/><path d="M${F(A)}L${F(B)}" stroke="${C.metal}" stroke-width="${(2 * r).toFixed(3)}" stroke-linecap="round"/>` +
         `<path d="M${F([A[0] + hl[0], A[1] + hl[1]])}L${F([B[0] + hl[0], B[1] + hl[1]])}" stroke="#f3f6f8" stroke-width="${(0.55 * r).toFixed(3)}" stroke-linecap="round" opacity="0.85"/>`; };
     if (g.kind === 'phaco') return drawPhacoSec(g, P2, seg);
+    if (g.kind === 'ia' || g.kind === 'iaAsp' || g.kind === 'iaIrr') return drawIaSec(g, P2, pl, seg);
+    if (g.kind === 'injector') return drawInjSec(g, P2);
     for (const s of g.segs) o.push(seg(s.a, s.b, s.r));
     if (g.blade) { const b = g.blade, ax2 = (() => { const A = P2(g.tip), B = P2(add(g.tip, g.axis, 1)); return u2([B[0] - A[0], B[1] - A[1]]); })(), nn = [-ax2[1], ax2[0]], T0 = P2(g.tip), pts = [], back = [];
       for (let x = 0; x <= b.L + 1e-9; x += b.L / 24) { const t = Math.min(b.th, x * b.th / 1.2) / 2, q = [T0[0] + ax2[0] * x, T0[1] + ax2[1] * x]; pts.push([q[0] + nn[0] * t, q[1] + nn[1] * t]); back.push([q[0] - nn[0] * t, q[1] - nn[1] * t]); }
@@ -738,7 +991,7 @@ function CATARACT_MAKE(G) {
     // ---- inside the pupil: red reflex, nucleus haze, capsule, rhexis, flap, striae (clipped to the pupil: nothing red outside it)
     const L = [], Mx = (x, y, z = 0) => M([x, y, z]);
     L.push(`<circle cx="${ctr[0]}" cy="${ctr[1]}" r="${pr}" fill="url(#${id}_rr)"/>`);
-    L.push(`<circle cx="${ctr[0] + 0}" cy="${ctr[1]}" r="${(LENS.Req * CN.nucK[0]).toFixed(3)}" fill="url(#${id}_nu)" transform="translate(${(M(S.LO)[0] - ctr[0]).toFixed(3)} ${(M(S.LO)[1] - ctr[1]).toFixed(3)})"/>`);
+    if (!c.bag) L.push(`<circle cx="${ctr[0] + 0}" cy="${ctr[1]}" r="${(LENS.Req * CN.nucK[0]).toFixed(3)}" fill="url(#${id}_nu)" transform="translate(${(M(S.LO)[0] - ctr[0]).toFixed(3)} ${(M(S.LO)[1] - ctr[1]).toFixed(3)})"/>`);   // ③ nucleus gone: no haze
     const cc = c.ccc;
     if (cc) { const X = rhex(cc);
       // opening (capsule gone): the reflex looks a shade clearer there; intact capsule a faint sheen
@@ -772,6 +1025,8 @@ function CATARACT_MAKE(G) {
     // ② hydrodissection wave and nucleus (groove, cracks, quadrants), seen through the pupil
     const HY = hydroOf(c); if (HY) L.push(enfaceHydro(c, HY, M, A));
     const NU = nucOf(c); if (NU) L.push(enfaceNuc(c, NU, M, A));
+    if (c.bag) L.push(enfaceBag(c, M, A, id));                      // ③ residual cortex, the stripped strand, posterior-capsule striae, OVD in the bag
+    const IO = iolOf(c), IOd = IO ? enfaceIol(c, IO, M, A) : null; if (IOd) L.push(IOd.pupil);
     if (c.ovd > 0 && c.ovd < 1) { const oc = c.ovdAt || [0, 0, 0]; L.push(`<path d="${ring(Math.min(rhoL, 9.5 * c.ovd), 120, oc[0], oc[1])}" fill="none" stroke="#e8f3ff" stroke-width="1" opacity="0.5" ${NS}/>`); }
     o.push(`<g clip-path="url(#${id}_pup)">${L.join('')}</g>`);
     A.reflexClipR = pr;
@@ -785,6 +1040,7 @@ function CATARACT_MAKE(G) {
     const rS = G.surfAt(G.N.spur).rho;
     o.push(`<path d="${ring(rhoL + 0.02)}${ring(rhoL - 0.45)}" fill="#c9d3d9" fill-rule="evenodd" opacity="0.55"/>`, `<path d="${ring(rS)}${ring(rhoL)}" fill="#eef2f4" fill-rule="evenodd" opacity="0.8"/>`, `<path d="${ring(rhoL)}" fill="none" stroke="#9fb1bd" stroke-width="1" ${NS}/>`);
     if (c.ovd >= 1) o.push(`<path d="${ring(rhoL - 0.1)}" fill="${C.ovd}" opacity="0.10"/>`);
+    if (IOd) o.push(IOd.over);                                       // ③ IOL parts in front of the iris (coming out of the nozzle, a haptic over the iris)
     // ---- incisions: outer opening (straight cut, width w), the tunnel seen through the cornea, the inner opening
     for (const [nm, cfg0] of [['main', c.main], ['side', c.side]]) {
       const cfg = cfg0 || ((c.inst || []).some(i => (i.kind === 'keratome' && nm === 'main') || (i.kind === 'sideblade' && nm === 'side')) ? Object.assign({}, CN[nm], { cut: 0 }) : null);
@@ -795,7 +1051,12 @@ function CATARACT_MAKE(G) {
       o.push(`<path d="M${F(e0)}L${F(e1)}L${F(i1)}L${F(i0)}Z" fill="#ffffff" opacity="0.28" stroke="#b7c3cc" stroke-width="0.6" ${NS}/>`);
       o.push(`<path d="M${F(e0)}L${F(e1)}" stroke="#f1f5f8" stroke-width="3" stroke-linecap="round" ${NS}/><path d="M${F(e0)}L${F(e1)}" stroke="#6f808d" stroke-width="1.2" stroke-linecap="round" ${NS}/>`);
       if (upto >= 1) o.push(`<path d="M${F(i0)}L${F(i1)}" stroke="#7d8d99" stroke-width="1" opacity="0.7" stroke-dasharray="2 1.5" ${NS}/>`);
-      A[nm + 'Ext'] = Q(tn.ext, 0); A[nm + 'Int'] = Q(tn.int, 0); A[nm + 'W'] = Math.hypot(e1[0] - e0[0], e1[1] - e0[1]); }
+      A[nm + 'Ext'] = Q(tn.ext, 0); A[nm + 'Int'] = Q(tn.int, 0); A[nm + 'W'] = Math.hypot(e1[0] - e0[0], e1[1] - e0[1]);
+      if (nm === 'main' && c.seal && c.seal.hydr > 0) {            // ③ stromal hydration: the stroma at both lateral ends whitens, spreading along the tunnel (示意 size)
+        const hy = clamp(c.seal.hydr, 0, 1), m0 = Q(tn.at(0.4), -w2), m1 = Q(tn.at(0.4), w2), R0 = 0.35 + 0.35 * hy;
+        o.push(`<path d="M${F(e0)}L${F(e1)}L${F(i1)}L${F(i0)}Z" fill="#ffffff" opacity="${(0.35 * hy).toFixed(3)}"/>`);
+        for (const q of [m0, m1]) o.push(`<circle cx="${q[0].toFixed(4)}" cy="${q[1].toFixed(4)}" r="${R0.toFixed(3)}" fill="#ffffff" opacity="${(0.65 * hy).toFixed(3)}"/>`);
+        A.sealBlobs = [m0, m1]; A.sealR = R0; } }
     // ---- instruments (above the iris)
     (c.inst || []).forEach((inst, i) => { const g = instGeom(c, inst); o.push(drawInstTop(g, M)); A['tip' + i] = M(g.tip); });
     o.push(`<ellipse cx="${ctr[0] - 0.35}" cy="${ctr[1] - 0.25}" rx="0.09" ry="0.065" fill="#fff" opacity="0.8"/><ellipse cx="${ctr[0] + 0.35}" cy="${ctr[1] - 0.25}" rx="0.09" ry="0.065" fill="#fff" opacity="0.8"/>`);
@@ -852,6 +1113,47 @@ function CATARACT_MAKE(G) {
       A['crackEnds' + k] = [P(-Le, 0), P(Le, 0)]; A['crackLe' + k] = Le; A['crackGap' + k] = op.s; });
     return o.join('');
   }
+  // ③ the emptied bag through the pupil: residual cortex as a white haze from under the rhexis rim outward (a quarter clock hour per wedge, opacity from
+  // the cortex left there), the strand being stripped, radial striae converging on a port that has caught the posterior capsule (示意), OVD in the bag
+  function enfaceBag(c, M, A, id) {
+    const o = [], S = lensShift(c), Rq = LENS.Req, rc = rcOf(c), Bb = bagOf(c), L = liftZ(c, 0), cx = M(S.LO), C3 = CN.cortex;
+    o.push(`<defs><radialGradient id="${id}_cx" cx="${cx[0].toFixed(4)}" cy="${cx[1].toFixed(4)}" r="${Rq.toFixed(4)}" gradientUnits="userSpaceOnUse"><stop offset="${(C3.post[0] / Rq).toFixed(3)}" stop-color="#fff6e6" stop-opacity="0"/>` +
+      `<stop offset="${((rc - 0.1) / Rq).toFixed(3)}" stop-color="#fff6e6" stop-opacity="0.45"/><stop offset="${((rc + 0.3) / Rq).toFixed(3)}" stop-color="#fffaf0" stop-opacity="1"/><stop offset="1" stop-color="#fffaf0" stop-opacity="1"/></radialGradient></defs>`);
+    const opAt = h => { const a = cortexT(c, rc + 0.4, true, h), p = cortexT(c, 3.4, false, h); return clamp((a.sheet + a.sub + p.sheet) / 0.75, 0, 1) * 0.85; };
+    for (let k = 0; k < 48; k++) { const h0 = k / 4, op = opAt(h0 + 0.125); if (op < 0.01) continue;
+      const pts = [cx]; for (let j = 0; j <= 3; j++) { const d = cd(h0 + j / 12); pts.push(M([S.LO[0] + (Rq + 0.05) * d[0], S.LO[1] + (Rq + 0.05) * d[1], 0])); }
+      o.push(`<path d="M${pts.map(F).join('L')}Z" fill="url(#${id}_cx)" opacity="${op.toFixed(3)}"/>`); }
+    A.cortexOp = Array.from({ length: 12 }, (_, k) => opAt(k || 12));
+    const st = stripStrand(c);
+    if (st) { const d = 'M' + st.pts.map(p => F(M(p))).join('L');
+      o.push(`<path d="${d}" fill="none" stroke="#b9a983" stroke-width="0.3" stroke-linecap="round" opacity="0.9"/><path d="${d}" fill="none" stroke="#fffaf0" stroke-width="0.22" stroke-linecap="round"/>`);
+      A.strandAtt = M(st.att); A.strandEnd = M(st.end); }
+    if (Bb.amp > 0) { const pc = [Bb.port[0] + S.LO[0], Bb.port[1] + S.LO[1]], k = clamp(c.bag.caught, 0, 1), lines = [];
+      for (let j = 0; j < 14; j++) { const a = 2 * Math.PI * (j + 0.3 * G.hash(j, 9)) / 14, r0 = 0.32, r1 = 0.9 + 1.2 * k * (0.75 + 0.5 * G.hash(j, 8)), u = [Math.cos(a), Math.sin(a)];
+        const a3 = [pc[0] + u[0] * r0, pc[1] + u[1] * r0, 0], b3 = [pc[0] + u[0] * r1, pc[1] + u[1] * r1, 0], P0 = M(a3), P1 = M(b3); lines.push([P0, P1]);
+        o.push(`<path d="M${F(P0)}L${F(P1)}" stroke="#fff0dc" stroke-width="1.1" opacity="${(0.85 * k).toFixed(3)}" ${NS}/><path d="M${F([P0[0] + 0.04, P0[1] + 0.04])}L${F([P1[0] + 0.04, P1[1] + 0.04])}" stroke="#4a1206" stroke-width="0.8" opacity="${(0.7 * k).toFixed(3)}" ${NS}/>`); }
+      A.striaeC = M([pc[0], pc[1], 0]); A.striaeLines = lines; }
+    const ob = clamp(c.ovdBag, 0, 1) * (1 - 0.5 * clamp(c.ovdOut.behind, 0, 1) - 0.5 * clamp(c.ovdOut.front, 0, 1));
+    if (ob > 0) o.push(`<circle cx="${cx[0].toFixed(4)}" cy="${cx[1].toFixed(4)}" r="${Rq.toFixed(3)}" fill="${C.ovd}" opacity="${(0.14 * ob).toFixed(3)}"/>`);
+    return o.join('');
+  }
+  // ③ the IOL in the microscope view: optic edge (a fine bright line with a dark shadow, as the edge catches the light), the fold crease while it is
+  // folded, haptics as bands. Inside the pupil everything shows (`pupil`); beyond the pupil only what lies in front of the iris (`over`); parts still
+  // inside the nozzle never show.
+  function enfaceIol(c, IO, M, A) {
+    const I = irisOf(c), pr = c.pupil / 2, rhoL = G.surfAt(0).rho, S = lensShift(c);
+    const vis = p => !(IO.hid(p) > 0), over = p => { const r = Math.hypot(p[0] - S.LO[0], p[1] - S.LO[1]); return r > pr && r < rhoL && p[2] > irisZ(I, r) + 0.03; };
+    const runs = (pts, keep) => { const R = []; let cur = []; for (const p of pts) { if (vis(p) && keep(p)) cur.push(p); else { if (cur.length > 1) R.push(cur); cur = []; } } if (cur.length > 1) R.push(cur); return R; };
+    const edge = R => R.map(r => { const d = 'M' + r.map(p => F(M(p))).join('L'); return `<path d="${d}" fill="none" stroke="#3a2a10" stroke-width="1.5" opacity="0.45" ${NS}/><path d="${d}" fill="none" stroke="#fff4d0" stroke-width="0.8" opacity="0.95" ${NS}/>`; }).join('');
+    const hap = R => R.map(r => { const d = 'M' + r.map(p => F(M(p))).join('L'); return `<path d="${d}" fill="none" stroke="#8a7a30" stroke-width="${(CN.iol.hw + 0.06).toFixed(3)}" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><path d="${d}" fill="none" stroke="#f4ecc0" stroke-width="${CN.iol.hw.toFixed(3)}" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>`; }).join('');
+    const all = () => true, ringV = IO.ring.filter(vis);
+    let pupil = ringV.length > 2 ? `<path d="M${ringV.map(p => F(M(p))).join('L')}Z" fill="#fffbe8" opacity="0.13"/>` : '';
+    pupil += hap(IO.haps.flatMap(H => runs(H, all))) + edge(runs(IO.ring, all));
+    if (IO.crease) pupil += edge(runs(Array.from({ length: 21 }, (_, k) => [0, 1, 2].map(i => lerp(IO.crease[0][i], IO.crease[1][i], k / 20))), all));
+    const ov = hap(IO.haps.flatMap(H => runs(H, over))) + edge(runs(IO.ring, over));
+    A.iolC = M(IO.O); A.hapTip0 = M(IO.tips[0]); A.hapTip1 = M(IO.tips[1]); A.iolEdgeR = CN.iol.optic / 2;
+    return { pupil, over: ov };
+  }
   function drawInstTop(g, M) {
     const o = [], band = (a, b, r, fill = C.metal) => { const A = M(a), B = M(b), d = u2([B[0] - A[0], B[1] - A[1]]), n = [-d[1] * r, d[0] * r];
       return `<path d="M${F([A[0] + n[0], A[1] + n[1]])}L${F([B[0] + n[0], B[1] + n[1]])}L${F([B[0] - n[0], B[1] - n[1]])}L${F([A[0] - n[0], A[1] - n[1]])}Z" fill="${fill}" stroke="${C.metalS}" stroke-width="0.9" stroke-linejoin="round" ${NS}/>`; };
@@ -864,6 +1166,18 @@ function CATARACT_MAKE(G) {
       for (const pp of g.ports) { const q = M(pp); o.push(`<circle cx="${q[0].toFixed(4)}" cy="${q[1].toFixed(4)}" r="${(CN.phaco.portD / 2).toFixed(3)}" fill="#33414c" opacity="0.85"/>`); }
       if (g.bevel !== 'down') { const a = M(g.tip), b = M(add(g.tip, g.axis, 2 * g.rn * Math.tan(CN.phaco.bevel * D2R) + 0.25)), cx = (a[0] + b[0]) / 2, cy = (a[1] + b[1]) / 2, ang = Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI;
         o.push(`<ellipse cx="${cx.toFixed(4)}" cy="${cy.toFixed(4)}" rx="${(Math.hypot(b[0] - a[0], b[1] - a[1]) / 2).toFixed(4)}" ry="${(g.rn * 0.7).toFixed(4)}" transform="rotate(${ang.toFixed(3)} ${cx.toFixed(4)} ${cy.toFixed(4)})" fill="#2b3640" opacity="0.8"/>`); }
+      return o.join(''); }
+    if (g.kind === 'ia' || g.kind === 'iaAsp') {   // ③ I/A: the port shows only when it faces up (toward the surgeon); 'side' shows half of it at the edge; 'down' is hidden
+      if (g.kind === 'ia') o.push(band(g.segs[1].a, g.segs[1].b, g.rs, C.sleeve), band(g.tip, add(g.sEnd, g.axis, 0.15), g.rn));
+      else for (const s of g.segs.slice().reverse()) o.push(band(s.a, s.b, s.r));
+      const t = M(g.tip); o.push(`<circle cx="${t[0].toFixed(4)}" cy="${t[1].toFixed(4)}" r="${g.rn.toFixed(3)}" fill="${C.metal}" stroke="${C.metalS}" stroke-width="0.9" ${NS}/>`);
+      if (g.portName !== 'down') { const ax = g.kind === 'iaAsp' ? unit(sub(g.bend, g.tip)) : g.axis, side = g.portName === 'side', q = M(side ? add(g.port, g.pdir, -0.05) : g.port), a2 = M(add(g.port, ax, 0.1));
+        const ang = Math.atan2(a2[1] - q[1], a2[0] - q[0]) * 180 / Math.PI, ry = side ? 0.05 : CN.ia.portD / 2 * 0.85;
+        o.push(`<ellipse cx="${q[0].toFixed(4)}" cy="${q[1].toFixed(4)}" rx="${(CN.ia.portD / 2).toFixed(3)}" ry="${ry.toFixed(3)}" transform="rotate(${ang.toFixed(2)} ${q[0].toFixed(4)} ${q[1].toFixed(4)})" fill="${g.occl > 0.5 ? C.cortex : '#1c232a'}" stroke="#1c232a" stroke-width="0.8" ${NS}/>`); }
+      return o.join(''); }
+    if (g.kind === 'injector') { const tA = M(g.tip), tB = M(add(g.tip, g.axis, 30)), d = u2([tB[0] - tA[0], tB[1] - tA[1]]), n = [-d[1] * g.ro, d[0] * g.ro], b = Math.tan(CN.inj.bevel * D2R) * g.ro;
+      const ext = [tA[0] - d[0] * b * 0.6, tA[1] - d[1] * b * 0.6];   // the long (upper) lip of the bevel reaches beyond the centre of the end
+      o.push(`<path d="M${F([tA[0] + n[0], tA[1] + n[1]])}L${F([tB[0] + n[0], tB[1] + n[1]])}L${F([tB[0] - n[0], tB[1] - n[1]])}L${F([tA[0] - n[0], tA[1] - n[1]])}Q${F(ext)} ${F([tA[0] + n[0], tA[1] + n[1]])}Z" fill="#e3ebf1" opacity="0.9" stroke="${C.metalS}" stroke-width="0.9" stroke-linejoin="round" ${NS}/>`);
       return o.join(''); }
     if (g.kind === 'chopper') { for (const s of g.segs.slice().reverse()) o.push(band(s.a, s.b, s.r)); const t = M(g.tip); o.push(`<circle cx="${t[0].toFixed(3)}" cy="${t[1].toFixed(3)}" r="${(CN.chopper.d * 0.35).toFixed(3)}" fill="${C.metal}" stroke="${C.metalS}" stroke-width="0.9" ${NS}/>`); return o.join(''); }
     if (g.kind === 'forceps') { for (const s of g.segs) o.push(band(s.a, s.b, s.r));
@@ -879,7 +1193,8 @@ function CATARACT_MAKE(G) {
   const keyPts = st => { const c = norm(st), I = irisOf(c);
     return { LENS, AZI, R_AZI, capT, I, c, rhex: c.ccc ? rhex(c.ccc) : null, main: c.main ? tunnelOf(c.main) : null, side: c.side ? tunnelOf(c.side) : null }; };
   return { CN, LENS, AZI, R_AZI, capT, norm, tunnel: tunnelOf, rhex, bare, flapMesh, instGeom, deformer, wallZ, FOLD, liftZ, irisOf, zonules, lensShift, striae, capPt, graspAt, tearPlane, section, enface, keyPts, layersAt, layersFn, tunnelOf, C,
-    hydroOf, postIdx, nucOf, grooveGeo, groovePt, grooveTip, quadTip, crackExt, grooveGlow, NUCR, rotH, capsuleCut };
+    hydroOf, postIdx, nucOf, grooveGeo, groovePt, grooveTip, quadTip, crackExt, grooveGlow, NUCR, rotH, capsuleCut,
+    bagOf, iolOf, cortexField, cortexT, cortexSweep, leftAt, stripFront, stripStrand, dH, HC, optHalf, portDir, rcOf };
 }
 const CATARACT = typeof GLOBE !== 'undefined' ? CATARACT_MAKE(GLOBE) : null;
 if (typeof module !== 'undefined') module.exports = CATARACT_MAKE;

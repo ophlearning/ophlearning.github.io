@@ -42,3 +42,9 @@
 
 ## 進度
 - 2026-11-10：規格書訂好章節；② 的模型完成後接著做 ③ 的模型（I/A tip、皮質、one-piece IOL 與 injector、囊袋內 OVD）。
+- 2026-11-10：③ 的模型完成（`videos/models/globe/cataract.js`，選用式 `st.cat` 的 `bag`、`ovdBag`、`ovdOut`、`iol`、`seal`；細節、出處與示意清單見 `globe/CARD.md`「白內障 ③」）。
+  - PubMed 查證：Colvard 1997（bimanual，subincisional cortex）、Miyoshi 2022（hydro-dispersion：27G 鈍針經 side port，56/60 眼成功）、Liu 2023（swab pressing 不劣於 stromal hydration；術中前房塌陷 0/63 vs 35/63）、McDonnell 2003（低眼壓時切口從內口開始張開）、Mifflin 2012（hydrate 切口兩側壁，基質變白）、Osawa 2021（一款疏水性壓克力 IOL：optic 6.0、overall 13.0 mm）、Vass 1999（in vivo 囊袋直徑 10.37 ± 0.25 mm）、Chang 2009（one-piece 放 sulcus 的併發症，留給 ④）。
+  - 狀態：核拿掉後的囊袋與殘留皮質（主切口下方較厚）、coaxial I/A（吸口朝上／側／下、occlude、往中央剝、扇形進度）、雙手 I/A（aspiration 經 side port、irrigation 經主切口）、hydro-dispersion、吸到後囊（帳篷＋放射狀皺褶，動畫示意）、囊袋內 OVD、injector（斜面朝下）、IOL 植入（前導 haptic、optic 展開、後 haptic 用 hook 壓進）、最後位置（囊袋閉合、CCC 360° 蓋住 optic）、偏位與 sulcus 錯誤（示意）、移除 IOL 後方與前方的 OVD、內口張開與 stromal hydration。
+  - `globe/check.js` 第 13 節 37 條，37 個故意改錯全部抓到；①、② 樣本與 open globe 參考圖 0.000% 不變。樣本 `globe/sample-cataract3.html` Claude 自檢，參考圖登記在 `ref/manifest.json`（page: null）。
+  - 做影片時注意：IOL 剛出 nozzle 的一段（`out` 0.35–0.75）模型會碰角膜，動畫只用 `out` ≤ 0.3 與 ≥ 0.8，中間用錄影；吸到後囊的帳篷高約 1.4 mm（囊袋保持水晶體形狀），旁白標動畫示意。
+  - 待確認：院內 IOL 型號（optic、overall、haptic 形狀）、I/A tip 與 injector 型號、是否用雙手 I/A 或 hydro-dispersion、收尾用 stromal hydration 或 swab pressing。
