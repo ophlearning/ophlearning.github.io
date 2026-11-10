@@ -501,5 +501,181 @@ const finalOK = st => { const X = iolClash(st), IO = X.IO, c = X.c, X0 = CAT.rhe
     .map(st => CAT.section({ st, h: 6, win: W12, step: 0.2 }).svg + CAT.section({ st, h: 9, cut: true, win: W12, step: 0.2 }).svg + CAT.enface({ st }).svg).join('');
   ok(!/NaN|undefined|Infinity/.test(all), `③ views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
 
+// =====================================================================================================================
+// 14. ④ PCR and the left eye (cataract.js; sources and the 示意 list: CARD.md 白內障 ④). States as in sample-cataract4.html: OS, surgeon at 12,
+//     main incision 11 o'clock, side port 2 o'clock (the case, 2026-11-10); sections through 11–5 (left = 11).
+const P4 = CN.pcr, HP4 = 5, U4 = G.clockDir(HP4);
+const B4 = { main: { h: 11, cut: 1 }, side: { h: 2, cut: 1 }, ccc: { prog: 1, fold: 1, out: 1 } }, cat4 = x => ({ eye: 'OS', cat: Object.assign({}, B4, x) });
+const RENT4 = { h: 5, r: 1.6, size: 1.4 }, PIECE4 = { h: 8 }, pc4 = st => CAT.pcrOf(st);
+const REC40 = cat4({ bag: {}, pcr: { rent: RENT4, deep: 1, vit: { bulge: 1 }, frag: Object.assign({ sink: 1 }, PIECE4) } });
+const onTop4 = (FR, a, b) => { let n = 0; while (FR.fld(FR.at3(a, b, n)) < 0 && n < 2) n += 0.005; const q = FR.at3(a, b, n); return [q[0], q[1], q[2] + 0.47]; };
+const REST4 = cat4({ bag: {}, pcr: { rent: RENT4, frag: PIECE4 } }), PH4 = { kind: 'phaco', p: onTop4(pc4(REST4).FR, 0.4, 0.1), bevel: 'up' }, REC4 = cat4({ ...REC40.cat, inst: [PH4] });
+const PRO4 = cat4({ bag: {}, pcr: { rent: RENT4, deep: 1, vit: { prolapse: 1, to: 'tip' }, frag: Object.assign({ sink: 1 }, PIECE4) }, inst: [PH4] });
+const DROP4 = cat4({ bag: {}, pcr: { rent: Object.assign({}, RENT4, { size: 2.4, ext: 0.5 }), vit: { prolapse: 0.35, to: 'main' }, frag: Object.assign({ drop: 1 }, PIECE4) } });
+const OC4 = (() => { const P = pc4(REC40); return [P.R.c3[0] * 0.6, P.R.c3[1] * 0.6, pc4(REST4).zRim3 - 0.6]; })();
+const FIRST4 = cat4({ bag: {}, pcr: { rent: RENT4, vit: { prolapse: 1 }, ovdD: { tamp: 1 }, frag: Object.assign({ sink: 1 }, PIECE4) }, inst: [PH4, { kind: 'cannula', via: 'side', p: OC4 }] });
+const WITH4 = cat4({ bag: {}, pcr: { rent: Object.assign({}, RENT4, { ext: 0.6 }), collapse: 1, frag: Object.assign({ sink: 1 }, PIECE4) } });
+const FL40 = cat4({ bag: {}, pcr: { rent: RENT4, ovdD: { tamp: 1, coat: 1, fill: P4.frag.cushion + 0.25 }, frag: { h: 5, float: 1, eat: 0.25 } } }), FR40 = pc4(FL40).FR;
+const FLT4 = cat4({ ...FL40.cat, inst: [{ kind: 'phaco', p: FR40.at3(0, FR40.bE - 0.42, -0.6), bevel: 'down', occl: 1 }, { kind: 'spatula', via: 'side', p: FR40.under(0.8) }] });
+const CLEAN4 = { cortex: new Array(12).fill(0), sub: 0 }, BAGC4 = Object.assign({}, CLEAN4, { collapse: 1 });
+const PV4 = pc4(cat4({ bag: BAGC4, pcr: { rent: RENT4 } })), CUT4 = { kind: 'vitrector', p: [PV4.R.c3[0], PV4.R.c3[1], PV4.R.c3[2] - 0.25], port: 'up' };
+const IRR4 = { kind: 'irrig', via: 'side', p: (() => { const d = G.clockDir(2); return [d[0] * 3.0, d[1] * 3.0, 9.9]; })() };
+const VITX = cut => cat4({ bag: BAGC4, pcr: { rent: RENT4, vit: { prolapse: 1, to: 'main', cut, ta: 1 } }, inst: [CUT4, IRR4] }), VIT4 = VITX(0.45);
+const P04 = pc4(cat4({ bag: {}, pcr: { rent: RENT4 } }));
+const PPS4 = cat4({ bag: {}, pcr: { rent: RENT4, vit: { prolapse: 0.55, to: 'main', cut: 0.2, ta: 1 }, pp: { h: 11, s: P4.pp.s } }, inst: [{ kind: 'vitrector', via: 'pp', p: [P04.R.c3[0], P04.R.c3[1], P04.zHy3(P04.R.c0[0], P04.R.c0[1]) - 2.4], port: 'up' }, IRR4] });
+const BAGIOL4 = cat4({ bag: Object.assign({}, CLEAN4, { collapse: 1 }), ovdBag: 1, ovdOut: { behind: 1, front: 1 }, iol: { rot: -35 } });
+const SUL14 = cat4({ bag: Object.assign({}, CLEAN4, { collapse: 1 }), pcr: { rent: RENT4, vit: { cut: 1 } }, iol: { pos: 'sulcus', rot: -35, chafe: 1 } });
+const CAPT4 = cat4({ bag: Object.assign({}, CLEAN4, { collapse: 1 }), pcr: { rent: RENT4, vit: { cut: 1 } }, iol: { pos: 'sulcus', kind: '3pc', capture: 1, rot: -35, chafe: 1 } });
+const W4 = { x: -6.3, y: -12.9, w: 12.7, h: 9.7 }, sec4 = (st, step = 0.1, h = HP4) => CAT.section({ st, h, win: W4, step, id: 'q' });
+const toU = (p, h = HP4) => p[0] * G.clockDir(h)[0] + p[1] * G.clockDir(h)[1];          // 3D → section u (meridional plane through the axis)
+const scopeU = (s, h = HP4) => -s[0] * G.clockDir(h)[0] + s[1] * G.clockDir(h)[1];       // microscope (surgeon at 12: x = −X, y = Y) → the same u
+const zA4 = (c, r) => { const Bb = CAT.bagOf(c); return (Bb ? Bb.zA(Math.min(r, L.Req)) : L.zAnt(Math.min(r, L.Req))) + CAT.liftZ(c, r); };
+const fragGrid = (PC, f) => { const FR = PC.FR, out = []; let lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9]; for (const q of FR.pts) for (let i = 0; i < 3; i++) { lo[i] = Math.min(lo[i], q[i]); hi[i] = Math.max(hi[i], q[i]); }
+  for (let x = lo[0]; x <= hi[0]; x += 0.08) for (let y = lo[1]; y <= hi[1]; y += 0.08) for (let z = lo[2]; z <= hi[2]; z += 0.05) { const q = [x, y, z]; if (FR.fld(q) < 0) out.push(f ? f(q) : q); } return out; };
+// 14.1 laterality (principle 6): clock hours are the examiner's in both eyes; OS 3 o'clock temporal, 9 nasal; the microscope with the surgeon at 12 has 12 at the
+//      bottom and 9 on the right (nasal for OS); a 12–6 section of OD is seen from the temporal side (①), an 11–5 section of OS from the inferonasal side
+{ const O = CAT.orient({ eye: 'OS', surgeon: 12 }), D = CAT.orient({ eye: 'OD', surgeon: 12 }), S5 = CAT.orient({ eye: 'OS', view: 'section', h: 5 }), S6 = CAT.orient({ eye: 'OD', view: 'section', h: 6 });
+  const a = (e, h) => CAT.anat(e, h).en;
+  ok(O.bottom === 12 && O.right === 9 && O.top === 6 && O.rightAnat.horiz === 'nasal' && O.leftAnat.horiz === 'temporal' && D.right === 9 && D.rightAnat.horiz === 'temporal',
+    `microscope, surgeon at 12: bottom ${O.bottom}, right ${O.right} o'clock = ${O.rightAnat.horiz} (OS) / ${D.rightAnat.horiz} (OD), top ${O.top}`);
+  ok(a('OS', 3) === 'temporal' && a('OS', 9) === 'nasal' && a('OD', 3) === 'nasal' && a('OD', 9) === 'temporal' && a('OS', 11) === 'superonasal' && a('OS', 2) === 'superotemporal' && a('OD', 11) === 'superotemporal' && CAT.mirrorH(11) === 1 && a('OD', CAT.mirrorH(11)) === a('OS', 11),
+    `clock hours: OS 3 ${a('OS', 3)}, 9 ${a('OS', 9)}; case main 11 = ${a('OS', 11)}, side port 2 = ${a('OS', 2)} (OD 11 would be ${a('OD', 11)}; the same place in OD is ${CAT.mirrorH(11)} o'clock)`);
+  ok(S6.from === 9 && S6.fromAnat.horiz === 'temporal' && S5.left === 11 && S5.right === 5 && S5.leftAnat.en === 'superonasal' && S5.fromAnat.en === 'inferonasal',
+    `sections: OD 12–6 seen from ${S6.from} o'clock (${S6.fromAnat.en}); OS 11–5 left = ${S5.left} (${S5.leftAnat.en}), seen from ${S5.fromAnat.en}`); }
+// 14.2 the OS case's incisions land where the footage shows them (footage-notes 2.2: main incision 31–38° right of straight down, side port 59–68° left)
+{ const e = CAT.enface({ st: cat4({}) }), ang = q => Math.atan2(q[0] - e.A.centre[0], q[1] - e.A.centre[1]) / D2R, am = ang(e.A.mainExt), as = ang(e.A.sideExt);
+  ok(e.A.mainExt[0] > 0 && Math.abs(am - 34.5) <= 10 && e.A.sideExt[0] < 0 && Math.abs(as + 63.5) <= 10, `OS microscope: main incision ${am.toFixed(0)}° right of straight down (footage 31–38°), side port ${(-as).toFixed(0)}° left (footage 59–68°)`); }
+// 14.3 OS: the same structure on the same clock hour in both views (11–5 section and the microscope): main incision, rent, gel tip, TA particles, the piece
+{ const s = sec4(VIT4, 0.2), e = CAT.enface({ st: VIT4 }), c = CAT.norm(VIT4), PC = pc4(VIT4), tn = CAT.tunnelOf(c.main), m3 = tn.to3(tn.ext);
+  const hS = G.clockOf(-e.A.mainExt[0], e.A.mainExt[1]); let worst = 0; const pairs = [[s.A.mainExt, e.A.mainExt], [s.A.rentC, e.A.rentC], [s.A.tip0, e.A.tip0]];
+  for (const [a, b] of pairs) worst = Math.max(worst, Math.abs(a[0] - scopeU(b)));
+  let taW = 0, taN = 0; for (const q of PC.ta) { const d = Math.abs(q[0] * G.clockDir(HP4 + 3)[0] + q[1] * G.clockDir(HP4 + 3)[1]); if (d < 0.15) { taN++; const sq = G.toPlane(G.planes.meridian(HP4), q), mq = e.M(q); taW = Math.max(taW, Math.abs(sq[0] - scopeU(mq)), Math.abs(sq[1] + q[2])); } }
+  ok(near(hS, 11, 0.01) && s.A.mainExt[0] < 0 && near(s.A.mainExt[0], toU(m3), 1e-9) && worst < 1e-6, `OS: main incision at ${hS.toFixed(2)} o'clock in the microscope and on the left of the 11–5 section; incision, rent centre, cutter tip agree (u off ≤ ${worst.toExponential(1)} mm)`);
+  ok(taN > 5 && taW < 1e-6, `OS: ${taN} TA particles near the plane sit at the same u in the section and the microscope (worst ${taW.toExponential(1)} mm)`); }
+// 14.4 OS draws exactly like OD with the same clock hours (the anatomy has no nasal–temporal difference); only the names change. OD output is the old output
+//      (the ①–③ reference images, 0.000 %); st.eye 'OD' changes nothing
+{ let same = 0, n = 0; for (const st of [HY, PH, FIN, REC4, SUL14]) for (const v of [s => CAT.enface({ st: s, id: 'x' }).svg, s => CAT.section({ st: s, h: 6, win: W12, step: 0.2, id: 'x' }).svg]) {
+    const base = v(st), od = v(Object.assign({}, st, { eye: 'OD' })), os = v(Object.assign({}, st, { eye: 'OS' })); n++; if (base === od && od === os) same++; }
+  const eD = CAT.enface({ st: PH }), eS = CAT.enface({ st: Object.assign({}, PH, { eye: 'OS' }) });
+  ok(same === n && eD.A.eye === 'OD' && eS.A.eye === 'OS', `OD / OS / no eye: ${same} of ${n} drawings byte-identical; the eye is reported (${eD.A.eye} / ${eS.A.eye})`); }
+// 14.5 sourced numbers: pars plana 3.5–4 mm behind the limbus (Rajan 2025), in the pars plana (spur + plicata .. ora); 23G = 0.6414 mm; Suto 2003 (sulcus ELP
+//      0.62–0.75 mm shorter, power 1.00 D less); Rajan 2025 sign: the chamber deepens and the pupil widens (amounts 示意), the same in both views
+{ const s = P4.pp.s, cOn = CAT.norm(SUL14), cB = CAT.norm(BAGIOL4), dElp = CAT.iolOf(cOn).O[2] - CAT.iolOf(cB).O[2];
+  ok(s >= 3.5 && s <= 4.0 && s > G.N.spur + G.N.plicata && s < G.N.ora && near(P4.vitrector.od, 0.6414, 0.005), `sclerotomy ${s} mm behind the limbus (Rajan 2025: 3.5–4), in the pars plana (${(G.N.spur + G.N.plicata).toFixed(2)}–${G.N.ora}); 23G probe ${P4.vitrector.od} mm`);
+  ok(dElp >= P4.elp[0] && dElp <= P4.elp[1] && P4.elp[0] === 0.62 && P4.elp[1] === 0.75 && P4.dD === -1.0, `sulcus one-piece optic ${dElp.toFixed(2)} mm in front of the in-the-bag position (Suto 2003: ELP 0.62–0.75 mm shorter; power ${P4.dD.toFixed(2)} D)`);
+  const n0 = cat4({ bag: {}, pcr: { rent: RENT4 } }), n1 = cat4({ bag: {}, pcr: { rent: RENT4, deep: 1 } }), s0 = sec4(n0, 0.2), s1 = sec4(n1, 0.2), e0 = CAT.enface({ st: n0 }), e1 = CAT.enface({ st: n1 });
+  const acd = s => ENDO + s.A.antPole[1];
+  ok(near(acd(s1) - acd(s0), P4.deep, 1e-6) && e1.A.pupilR > e0.A.pupilR && near(e1.A.pupilR, s1.A['pm+'][0], 1e-6) && near(e0.A.pupilR, s0.A['pm+'][0], 1e-6),
+    `PCR sign (Rajan 2025): chamber ${acd(s0).toFixed(2)} → ${acd(s1).toFixed(2)} mm, pupil ${(2 * e0.A.pupilR).toFixed(1)} → ${(2 * e1.A.pupilR).toFixed(1)} mm, the same margin in both views (amounts 示意)`); }
+// 14.6 the rent: the posterior capsule drawn in the section stops at its edges (nothing drawn inside it), the microscope's edge is the same 3D edge; a radial
+//      tear carries it toward the equator
+{ const c = CAT.norm(REC4), PC = pc4(REC4), s = sec4(REC4, 0.05), e = CAT.enface({ st: REC4 }); let inside = 0, post = 0;
+  for (const run of s.A.capRuns) for (const q of run.pts) { const lx = q[0] * U4[0], ly = q[0] * U4[1]; if (-q[1] < L.zc && Math.hypot(lx, ly) < L.Req - 0.3) { post++; if (PC.R.f(lx, ly) < -0.02) inside++; } }
+  const endsOK = s.A.rentEnds.length === 2 && s.A.rentEnds.every(p => Math.abs(PC.R.f(p[0] * U4[0], p[0] * U4[1])) < 0.02);
+  let edgeW = 0; PC.R.edge3.forEach((q, i) => { edgeW = Math.max(edgeW, Math.hypot(e.M(q)[0] - e.A.rentEdge[i][0], e.M(q)[1] - e.A.rentEdge[i][1]), Math.abs(PC.R.f(q[0], q[1]))); });
+  const rMax = st => Math.max(...pc4(st).R.edge.map(q => Math.hypot(q[0], q[1])));
+  ok(post > 50 && inside === 0 && endsOK && edgeW < 0.01, `rent: section shows no capsule inside it (${inside} of ${post} posterior points), ends on its edge (${s.A.rentEnds.length}); microscope edge = the same 3D edge (${edgeW.toFixed(3)} mm)`);
+  ok(rMax(WITH4) > rMax(REC4) + 0.5 && rMax(cat4({ bag: {}, pcr: { rent: Object.assign({}, RENT4, { ext: 1 }) } })) >= L.Req - 0.2, `radial tear: reaches ${rMax(REC4).toFixed(2)} → ${rMax(WITH4).toFixed(2)} mm (ext 0.6) → equator at ext 1`); }
+// 14.7 vitreous only behind the posterior capsule or through the rent: along the gel the posterior capsule is crossed only inside the rent (the whole cross-section),
+//      the anterior capsule only through the rhexis; no gel in the cornea, iris, piece or OVD. Withdrawing first brings it to the main incision and shallows the
+//      chamber; with the tip kept in and dispersive OVD on the rent none comes forward (Rajan 2025)
+// visit grid points (step d, z step 0.6·d) in the box around a state's full gel path (± its radius + 0.2 mm)
+const gelBox = (st, d, fn) => { const V = pc4(st).V, P = V.P, lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9], m = V.r0 + 0.2; for (const q of P) for (let i = 0; i < 3; i++) { lo[i] = Math.min(lo[i], q[i] - m); hi[i] = Math.max(hi[i], q[i] + m); }
+  for (let x = lo[0]; x <= hi[0]; x += d) for (let y = lo[1]; y <= hi[1]; y += d) for (let z = lo[2]; z <= hi[2]; z += 0.6 * d) fn([x, y, z]); };
+const gelPath = st => { const c = CAT.norm(st), PC = pc4(st), V = PC.V, rcap = r => r; let badP = 0, badA = 0, crossP = 0;
+  for (let i = 1; i < V.seg.length; i++) { const a = V.seg[i - 1], b = V.seg[i], la = PC.toL(a), lb = PC.toL(b), ra = Math.hypot(...la), rb = Math.hypot(...lb);
+    const sa = a[2] - PC.zPost3(la[0], la[1]), sb = b[2] - PC.zPost3(lb[0], lb[1]); if (ra < L.Req && sa * sb <= 0) { crossP++; const t = sa / (sa - sb || 1), q = [la[0] + (lb[0] - la[0]) * t, la[1] + (lb[1] - la[1]) * t]; if (!(PC.R.f(q[0], q[1]) < -V.rad(V.sSeg[i]) * 0.95)) badP++; }
+    const ta = a[2] - zA4(c, ra), tb = b[2] - zA4(c, rb); if (ra < L.Req && ta * tb <= 0) { const t = ta / (ta - tb || 1), q = [la[0] + (lb[0] - la[0]) * t, la[1] + (lb[1] - la[1]) * t]; if (!CAT.bare(c.ccc, Math.hypot(...q) + V.rad(V.sSeg[i]), G.clockOf(q[0], q[1]))) badA++; } }
+  return { badP, badA, crossP }; };
+{ for (const [nm, st] of [['to the tip', PRO4], ['withdrawn first', WITH4], ['vitrectomy 45 %', VIT4], ['dropped piece', DROP4], ['pars plana', PPS4]]) { const g = gelPath(st);
+    ok(g.crossP >= 1 && g.badP === 0 && g.badA === 0, `gel ${nm}: crosses the posterior capsule ${g.crossP}× inside the rent (outside ${g.badP}), the anterior capsule only through the rhexis (${g.badA} off)`); }
+  let bad = 0, n = 0; for (const st of [PRO4, WITH4, VIT4, DROP4]) { const f = CAT.layersFn(st); gelBox(st, 0.16, q => { const o = f(q); if (o.vitp < 0) { n++; if (o.cornea < 0 || o.iris < 0 || o.frag < 0 || o.ovdd < 0 || o.iol < 0) bad++; } }); }
+  ok(n > 300 && bad === 0, `gel: ${n} samples, none in the cornea, iris, piece, OVD or IOL (${bad})`);
+  const tipE = G.len(G.sub(pc4(PRO4).V.tip, CAT.instGeom(CAT.norm(PRO4), CAT.norm(PRO4).inst[0]).tip)), tn = CAT.tunnelOf(CAT.norm(WITH4).main), wE = G.len(G.sub(pc4(WITH4).V.tip, tn.to3(tn.int)));
+  const acd = st => ENDO + sec4(st, 0.25).A.antPole[1];
+  ok(tipE < 1e-9 && wE < 0.2 && acd(WITH4) < acd(REC4) - 0.5, `gel reaches the phaco tip (${tipE.toFixed(3)} mm); withdrawn first: to the main incision (${wE.toFixed(2)} mm), chamber ${acd(REC4).toFixed(2)} → ${acd(WITH4).toFixed(2)} mm (示意)`);
+  const f = CAT.layersFn(FIRST4), PC = pc4(FIRST4); let fwd = 0, plug = 0, ovB = 0, ovN = 0;
+  for (let x = -5; x <= 5; x += 0.1) for (let y = -5; y <= 5; y += 0.25) for (let z = 4; z <= 12.7; z += 0.06) { const o = f([x, y, z]), l = PC.toL([x, y, z]), r = Math.hypot(...l), zp = PC.zPost3(l[0], l[1]);
+    if (o.vitp < 0 && z > zp + 0.02) fwd++; if (o.ovdd < 0) { ovN++; if (r < L.Req && z < zp - 0.35 || o.iris < 0 || o.cornea < 0 || o.lens < 0 || o.frag < 0) ovB++; if (PC.R.f(l[0], l[1]) < -0.2 && Math.abs(z - zp - 0.1) < 0.06) plug++; } }
+  ok(fwd === 0 && plug > 5 && ovN > 200 && ovB === 0, `tip kept in + dispersive OVD on the rent: no gel in front of the capsule (${fwd}), OVD over the rent (${plug}) and only in the bag / chamber (${ovB} of ${ovN} off)`); }
+// 14.8 the remaining piece: at rest inside the bag; one pole tilted through the rent only inside it (Rajan 2025: tilting of one pole); dropped: all behind the
+//      hyaloid in the vitreous cavity; floated: on a cushion over the rim plane, ≥ 0.5 mm off the endothelium, clear of the iris, a second instrument under it,
+//      the phaco on its eaten edge; eating takes it away
+{ const st0 = cat4({ bag: {}, pcr: { rent: RENT4, frag: PIECE4 } }), P0 = pc4(st0), c0 = CAT.norm(st0), Bb = CAT.bagOf(c0); let outBag = 0;
+  for (const q of fragGrid(P0)) { const l = P0.toL(q), r = Math.hypot(...l), z = q[2] - CAT.liftZ(c0, r); if (Bb.g(r, z, l[0], l[1]) > 0) outBag++; }
+  const PC = pc4(REC4); let thr = 0, bad = 0, deep = 0; for (const q of fragGrid(PC)) { const l = PC.toL(q), zp = PC.zPost3(l[0], l[1]); if (Math.hypot(...l) < L.Req && q[2] < zp) { thr++; deep = Math.max(deep, zp - q[2]); if (!(PC.R.f(l[0], l[1]) < 0)) bad++; } }
+  ok(outBag === 0 && thr > 5 && bad === 0 && deep >= 0.1, `piece: at rest inside the bag (${outBag} out); tilted, its pole is ${deep.toFixed(2)} mm through the posterior capsule, all ${thr} samples there inside the rent (${bad} outside)`);
+  const gap = st => { let d = 1e9; const tip = CAT.instGeom(CAT.norm(st), CAT.norm(st).inst[0]).tip; for (const q of fragGrid(pc4(st))) d = Math.min(d, G.len(G.sub(q, tip))); return d - CN.phaco.needleOD / 2; };
+  const g0 = gap(cat4({ ...REST4.cat, inst: [PH4] })), g1 = gap(REC4);
+  ok(g0 <= 0.1 && g1 >= 0.3, `loss of followability (Rajan 2025): the phaco on the piece (${g0.toFixed(2)} mm) stays where it was while the piece drops away (${g1.toFixed(2)} mm)`);
+  const PD = pc4(DROP4), fD = CAT.layersFn(DROP4); let front = 0, notVit = 0, nD = 0; for (const q of fragGrid(PD)) { nD++; const l = PD.toL(q), o = fD(q); if (q[2] > PD.zHy3(l[0], l[1]) - 0.05) front++; if (!(o.interior < 0) || o.retina < 0 || o.ciliary < 0) notVit++; }
+  ok(nD > 100 && front === 0 && notVit === 0, `dropped piece: all ${nD} samples behind the hyaloid (${front} in front), in the vitreous cavity (${notVit} off)`);
+  const PF = pc4(FLT4), cF = CAT.norm(FLT4), fF = CAT.layersFn(cat4({ ...FL40.cat })); let lo = 1e9, hi = -1e9, iris = 0, endo = 1e9;
+  for (const q of fragGrid(PF)) { lo = Math.min(lo, q[2]); hi = Math.max(hi, q[2]); if (fF(q).iris < 0.02) iris++; endo = Math.min(endo, CAT.wallZ(Math.hypot(q[0], q[1]), true) - q[2]); }
+  ok(lo >= PF.zRim3 + P4.frag.cushion - 0.01 && endo >= 0.5 && iris === 0, `floated piece: bottom ${(lo - PF.zRim3).toFixed(2)} mm over the rim plane (OVD cushion), ${endo.toFixed(2)} mm off the endothelium, clear of the iris (${iris})`);
+  const gS = CAT.instGeom(cF, cF.inst[1]), gP = CAT.instGeom(cF, cF.inst[0]), l = PF.toL(gS.tip), zp = PF.zPost3(l[0], l[1]); let above = -1e9; for (let z = gS.tip[2]; z < gS.tip[2] + 3; z += 0.01) if (PF.FR.fld([gS.tip[0], gS.tip[1], z]) < 0) { above = z; break; }
+  let dmin = 1e9; for (const q of PF.FR.pts) dmin = Math.min(dmin, G.len(G.sub(q, gP.tip)));
+  ok(gS.via === 'side' && above > gS.tip[2] + gS.rn && gS.tip[2] > zp + 0.5 && dmin <= gP.rn + 0.15, `second instrument under the piece (${(above - gS.tip[2]).toFixed(2)} mm below it, ${(gS.tip[2] - zp).toFixed(2)} mm over the posterior capsule) through the side port; phaco on the eaten edge (${dmin.toFixed(2)} mm)`);
+  const vol = e => fragGrid(pc4(cat4({ ...FL40.cat, pcr: Object.assign({}, FL40.cat.pcr, { frag: { h: 5, float: 1, eat: e } }) }))).length, V = [0, 0.25, 0.6, 1].map(vol);
+  ok(V[0] > V[1] && V[1] > V[2] && V[3] === 0, `eating the piece: ${V.join(' → ')} samples`); }
+// 14.9 instruments only through their incisions (④): axis through the tunnel pivot, nothing touched on the way (iris, cornea outside the tunnel, the anterior
+//      capsule outside the rhexis, the piece), the posterior capsule crossed only inside the rent; bimanual: cutter through the main incision down at the rent,
+//      irrigation through the side port high and away from the rent (separated flows, 示意); vitrectomy progress removes the gel
+function shaft4(st, i) {
+  const c = CAT.norm(st), g = CAT.instGeom(c, c.inst[i]), PC = pc4(st), f = CAT.layersFn(Object.assign({}, st, { cat: Object.assign({}, st.cat, { inst: [] }) })), piv = g.pivot || g.tn.to3(g.tn.pivot);
+  const R = { g, iris: 0, cornea: 0, antCap: 0, postCap: 0, frag: 0, axisOK: G.len(G.cross(G.sub(piv, g.bend || g.tip), g.axis)) < 1e-9 }, rr = g.kind === 'phaco' ? g.rn : g.rr || g.rn || 0.2;
+  const segs = g.bend ? [[g.tip, g.bend], [g.bend, piv]] : [[g.tip, piv]];
+  for (const [a, b] of segs) { const L3 = G.len(G.sub(b, a)), ax = G.unit(G.sub(b, a)), side = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(side, ax));
+    for (let t = 0; t <= L3; t += 0.03) { const q = G.add(a, ax, t); let above = 0, below = 0; const rad = g.kind === 'phaco' && t > CN.phaco.needleL ? g.rs : rr;
+      for (let k = 0; k < 12; k++) { const an = 2 * Math.PI * k / 12, p = G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), rad - 0.01), o = f(p), w = wallOf(G.mer(p).z, G.mer(p).rho), l = PC.toL(p), r = Math.hypot(...l);
+        if (o.iris < 0) R.iris++; if (g.tn && w.d < T(w.s) && w.d > -0.01 && w.s < g.tn.sI - 0.3) R.cornea++; if (o.frag < 0) R.frag++;
+        if (r < L.Req) { if (!CAT.bare(c.ccc, r, G.clockOf(l[0], l[1]))) { if (p[2] > zA4(c, r)) above++; else if (p[2] > L.zc) below++; } if (p[2] < PC.zPost3(l[0], l[1]) && !(PC.R && PC.R.f(l[0], l[1]) < 0)) R.postCap++; } }
+      if (above && below) R.antCap++; } }
+  return R; }
+{ for (const [nm, st, i, via] of [['phaco at the PCR moment', REC4, 0, 'main'], ['OVD cannula (first step)', FIRST4, 1, 'side'], ['phaco on the floated piece', FLT4, 0, 'main'], ['second instrument under it', FLT4, 1, 'side'], ['vitrector', VIT4, 0, 'main'], ['irrigation', VIT4, 1, 'side']]) {
+    const R = shaft4(st, i); ok(R.axisOK && R.g.via === via && R.iris + R.cornea + R.antCap + R.postCap + R.frag === 0, `${nm}: through the ${via} incision; iris ${R.iris}, cornea ${R.cornea}, anterior capsule ${R.antCap}, posterior capsule outside the rent ${R.postCap}, piece ${R.frag}`); }
+  const c = CAT.norm(VIT4), PC = pc4(VIT4), gC = CAT.instGeom(c, c.inst[0]), gI = CAT.instGeom(c, c.inst[1]), lC = PC.toL(gC.cport), lI = PC.toL(gI.tip);
+  const toRent = G.unit(G.sub(PC.R.c3, gI.tip)), cosA = Math.max(...gI.flow.map(d => G.dot(d, toRent))), level = Math.max(...gI.flow.map(d => Math.abs(d[2]))), dR = Math.hypot(lI[0] - PC.R.c0[0], lI[1] - PC.R.c0[1]);
+  ok(PC.R.f(lC[0], lC[1]) < -0.2 && Math.abs(gC.cport[2] - PC.zPost3(lC[0], lC[1])) <= 0.3 && gI.tip[2] >= PC.zRim3 + 0.6 && dR >= 1.5 && cosA < 0.5 && level < 0.05,
+    `bimanual: cutter port inside the rent at the capsule (${(gC.cport[2] - PC.zPost3(lC[0], lC[1])).toFixed(2)} mm), irrigation ${(gI.tip[2] - PC.zRim3).toFixed(2)} mm over the rim plane, ${dR.toFixed(1)} mm from the rent, its flows level and ≥ ${(Math.acos(cosA) / D2R).toFixed(0)}° off the rent`);
+  const gelN = st => { const f = CAT.layersFn(st), P = pc4(st); let n = 0; gelBox(VITX(0), 0.16, q => { const l = P.toL(q); if (f(q).vitp < 0 && q[2] > P.zPost3(l[0], l[1])) n++; }); return n; };   // the same box (the uncut gel's) for all three
+  const Gn = [0, 0.45, 1].map(k => gelN(VITX(k)));
+  ok(Gn[0] > Gn[1] && Gn[1] > 0 && Gn[2] === 0, `vitrectomy progress: gel in front of the capsule ${Gn.join(' → ')} samples`); }
+// 14.10 pars plana option: the cutter enters through the sclerotomy (pivot in the wall at 3.5 mm) and runs only through vitreous to just behind the rent
+{ const c = CAT.norm(PPS4), PC = pc4(PPS4), g = CAT.instGeom(c, c.inst[0]), f = CAT.layersFn(cat4({ bag: {}, pcr: { rent: RENT4 } })), w = wallOf(G.mer(g.pivot).z, G.mer(g.pivot).rho);
+  let bad = 0, n = 0; const Lw = G.len(G.sub(g.pivot, g.tip)); for (let t = 0; t <= Lw - 0.8; t += 0.03) { const q = G.add(g.tip, g.axis, t); for (let k = 0; k < 8; k++) { const an = 2 * Math.PI * k / 8, side = G.unit(G.cross(g.axis, [0, 0, 1])), up = G.unit(G.cross(side, g.axis)), p = G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), g.rn), o = f(p); n++;
+      if (!(o.interior < 0) || o.lens < 0 || o.bag < 0 || o.iris < 0 || o.ciliary < 0 || o.retina < 0) bad++; } }
+  const l = PC.toL(g.tip);
+  ok(g.pp && near(w.s, P4.pp.s, 0.02) && w.d > 0 && w.d < T(w.s) && near(G.clockOf(g.pivot[0], g.pivot[1]), 11, 1e-6) && bad === 0 && n > 200 && PC.R.f(l[0], l[1]) < 0 && g.tip[2] < PC.zHy3(l[0], l[1]),
+    `pars plana: sclerotomy ${w.s.toFixed(2)} mm behind the limbus at 11 o'clock (site 示意); the shaft only in vitreous (${bad} of ${n} off); tip ${(PC.zHy3(l[0], l[1]) - g.tip[2]).toFixed(2)} mm behind the rent`); }
+// 14.11 triamcinolone (Burk 2003: trapped on and within the gel): every particle is in the gel; none without TA; none once the gel is cut away
+{ let bad = 0, n = 0; for (const st of [VIT4, PPS4]) { const f = CAT.layersFn(st); for (const q of pc4(st).ta) { n++; if (!(f(q).vitp < 0.01)) bad++; } }
+  ok(n > 150 && bad === 0 && pc4(cat4({ bag: {}, pcr: { rent: RENT4, vit: { prolapse: 1 } } })).ta.length === 0 && pc4(VITX(1)).ta.length === 0, `TA: ${n} particles, ${bad} outside the gel; none without TA, none after the gel is removed`); }
+// 14.12 one-piece IOL in the sulcus: haptics in front of the anterior capsule and behind the iris, out to the sulcus (the angle of the iris root and the ciliary
+//       body), not in the ciliary body; the optic in front of the capsule; thick haptics come within 0.1 mm of the posterior iris (contact risk, 示意; Chang 2009),
+//       the three-piece's thin ones less
+const hapPts = IO => { const out = []; IO.haps.forEach((H, j) => H.forEach((q, i) => { const a = H[Math.max(0, i - 1)], b = H[Math.min(H.length - 1, i + 1)], ax = G.unit(G.sub(b, a)), side = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(side, ax));
+  for (let k = 0; k < 8; k++) { const an = 2 * Math.PI * k / 8; out.push({ p: G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), IO.hr * 0.95), j, i }); } })); return out; };
+function sulcusOK(st) {
+  const c = CAT.norm(st), IO = CAT.iolOf(c), f = CAT.layersFn(st), R = { inCap: 0, iris: 0, cil: 0, behind: 0, n: 0, optic: 0 };
+  for (const { p } of hapPts(IO)) { const r = Math.hypot(p[0], p[1]), o = f(p); R.n++; if (r < L.Req && !CAT.bare(c.ccc, r, G.clockOf(p[0], p[1])) && p[2] < zA4(c, r) + 0.005) R.inCap++; if (o.iris < 0) R.iris++; if (o.ciliary < 0) R.cil++; }
+  for (const q of CAT.chafeOf(c, IO)) if (!q.below) R.behind++;
+  for (let rr = 0; rr <= CN.iol.optic / 2 - 0.05; rr += 0.1) for (let a = 0; a < 2 * Math.PI; a += 0.2) { const p = IO.toEye(rr * Math.sin(a), rr * Math.cos(a), -CAT.optHalf(rr)), r = Math.hypot(p[0], p[1]); if (!CAT.bare(c.ccc, r, G.clockOf(p[0], p[1])) && p[2] < zA4(c, r)) R.optic++; }
+  R.tips = IO.tips.map(t => { let k = 0; while (k < 1.2 && f(G.add(t, [t[0] / Math.hypot(t[0], t[1]), t[1] / Math.hypot(t[0], t[1]), 0], k)).ciliary > 0) k += 0.01; return k; });
+  R.minGap = Math.min(...CAT.chafeOf(c, IO).map(q => q.gap)); R.contact = CAT.chafeOf(c, IO).filter(q => q.gap < P4.chafe).length; return R; }
+{ const A = sulcusOK(SUL14), B = sulcusOK(CAPT4);
+  ok(A.n > 300 && A.inCap === 0 && A.iris === 0 && A.cil === 0 && A.behind === 0 && A.optic === 0 && A.tips.every(k => k < 0.35), `one-piece in the sulcus: haptics in front of the anterior capsule (${A.inCap}), behind the iris (${A.iris} in it, ${A.behind} in front), not in the ciliary body (${A.cil}), tips ${A.tips.map(k => k.toFixed(2)).join(' / ')} mm from it; optic in front of the capsule (${A.optic})`);
+  ok(A.contact > 0 && A.minGap >= 0 && B.contact < A.contact, `contact risk (示意): one-piece haptics within ${P4.chafe} mm of the posterior iris at ${A.contact} points (closest ${A.minGap.toFixed(2)} mm), three-piece ${B.contact}`); }
+// 14.13 three-piece with optic capture: the rhexis rim lies on the optic all round except where it is stretched over the two haptic–optic junctions, the optic
+//       behind the rim (captured), the haptics in front of the anterior capsule, behind the iris, out in the sulcus
+{ const c = CAT.norm(CAPT4), IO = CAT.iolOf(c), X = CAT.rhex(c.ccc), Ro = CN.iol.optic / 2, B = sulcusOK(CAPT4); let on = 0, jn = 0, bad = 0, behind = 0;
+  for (let k = 0; k < 240; k++) { const t = 12 * k / 240, h = (c.ccc.h0 + c.ccc.dir * t + 12) % 12, Rr = X.R(t), atJ = c.ccc.oval.hj.some(hj => Math.abs(CAT.dH(h, hj)) < P4.capW * 0.5);
+    if (atJ) { jn++; if (!(Rr >= Ro - 0.12 + IO.hr)) bad++; } else if (Rr <= Ro - 0.25) { on++; const z = zA4(c, Rr), zo = IO.O[2] + CAT.optHalf(Rr); if (z > zo) behind++; } else if (!(Math.abs(CAT.dH(h, c.ccc.oval.hj[0])) < P4.capW * 2.2 || Math.abs(CAT.dH(h, c.ccc.oval.hj[1])) < P4.capW * 2.2)) bad++; }
+  ok(on > 120 && behind === on && jn > 10 && bad === 0, `optic capture: rim on the optic (≥ 0.25 mm overlap) at ${on} of 240 points and in front of it (${behind}); stretched over the junctions at ${jn} (${bad} off)`);
+  ok(B.n > 100 && B.inCap === 0 && B.iris === 0 && B.cil === 0 && B.behind === 0 && B.tips.every(k => k < 0.35), `three-piece haptics: in front of the anterior capsule (${B.inCap}), behind the iris (${B.iris}), in the sulcus (tips ${B.tips.map(k => k.toFixed(2)).join(' / ')} mm from the ciliary body)`); }
+// 14.14 the ④ views draw without NaN
+{ const all = [REC4, PRO4, DROP4, FIRST4, WITH4, FLT4, VIT4, PPS4, SUL14, CAPT4].map(st => sec4(st, 0.25).svg + CAT.section({ st, h: 8, cut: true, win: W4, step: 0.25 }).svg + CAT.enface({ st }).svg).join('');
+  ok(!/NaN|undefined|Infinity/.test(all), `④ views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
+
 console.log(fail ? `\n${fail} check(s) FAILED` : '\nall globe checks passed');
 process.exit(fail ? 1 : 0);

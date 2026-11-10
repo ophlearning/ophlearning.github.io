@@ -82,3 +82,10 @@
 - 2026-11-10：Claude 判讀整部 PCR 錄影（`footage-notes.md`）：沒有燒進畫面的文字（只有上緣亮線、右緣暗線）；約 14:00 的「方向改變」實測是 14:08 的顯微鏡平移；眼別判讀 OS、術者坐 superior、主切口約 11 點、side port 約 2 點；時間軸、PCR 可能的時間與看得到的線索、處理流程、10 個可用片段。PubMed 確認待查證文獻存在（PMID／DOI 如上）。規格書草稿完成。
 - 下一步：站長回答上面 3 題後，把確認的病例摘要寫進「病例情境」；`footage-sources.js` 加 `case-pcr`（建議條目在 `footage-notes.md` 第 6 節）；模型加 PCR 狀態；查證文獻；寫旁白與錄影片段。
 - 2026-11-10：站長確認病例（OS、PCR 時機不確定［猜 sculpt 或 quadrant］、AAB00 放 sulcus、白色懸浮物猜是 TA 染玻璃體），原文寫進「病例情境」；PubMed 確認 AAB00＝Sensar One（one-piece）。下一步：模型（左眼 OS 鏡像、後囊破口、玻璃體、雙手前段玻璃體切除、TA、sulcus IOL）。
+- 2026-11-10：模型 ④ 完成（`videos/models/globe/`，模型卡「白內障 ④」）。
+  - 左眼：`st.eye: 'OS'`。鐘點是檢查者面對病人的鐘點，兩眼同一個物理方向；OS 3 點 temporal、9 點 nasal，術者坐 12 點時下＝12 點、右＝9 點 nasal。模型的解剖沒有鼻顳差異，所以同樣鐘點的 OS 畫面和 OD 一樣，只有方位名稱不同（`CATARACT.orient`、`anat`）；切口跟著術者的手，不跟著眼別鏡像（主切口 11 點＝superonasal、side port 2 點＝superotemporal，和錄影的 31–38°、59–68° 相符）。之前寫的「術者視角左右鏡像」不對：把畫面翻過來，主切口會跑到左下。
+  - 狀態（選用式：open globe 與 ①–③ 的樣本 SVG 逐位元相同，四支影片的參考圖都 0.000%）：後囊破口（位置、大小、往赤道撕裂）、前房變深＋瞳孔放大、前玻璃體面凸出、玻璃體經破口到 tip 或主切口、核塊一端歪進破口、核不跟 tip、核塊掉進玻璃體腔；第一步 tip 不退＋side port 打 dispersive OVD（玻璃體留在後面）對照先退出（前房塌、玻璃體到切口）；核塊托到前房、side port 的直器械墊在下面、phaco 從主切口吃；雙手經角膜緣前段玻璃體切除（切割在破口、灌流高在前房、側孔水平出水，流向示意）與切除進度、TA 白點只在玻璃體上；pars plana 做法（23G、3.5 mm）；IOL in the bag／one-piece 放 sulcus（厚 haptic 貼近虹膜，示意）／3-piece 放 sulcus＋optic capture。
+  - 出處：Rajan 2025（線索、第一步、核塊處理、雙手與 pars plana 3.5–4 mm、sulcus 與 optic capture）、Arbisser 2006、Burk 2003、Wu 2008、Chang 2009、Suto 2003（sulcus ELP 短 0.62–0.75 mm、度數減 1.00 D）。量、形狀、破口大小、核塊大小、pars plana 切口的鐘點、sulcus 位置、3-piece 尺寸都是示意（模型卡列表）。
+  - 檢查 `globe/check.js` 第 14 節 41 條，39 個故意改錯每條至少擋一次；樣本 `globe/sample-cataract4.html`／`.jpg`（Claude 自檢），參考圖由本資料夾 `ref/manifest.json`（`page: null`）比對。
+  - 做的時候發現的幾何：囊袋還撐著時，角膜緣的直 vitrector 到不了後囊高度（會從主切口那側的前囊下穿過），囊袋塌了才過得去；PCR 那一刻 tip 留在核塊原處（核塊離開 tip）。
+  - 下一步：`footage-sources.js` 加 `case-pcr`（建議條目在 `footage-notes.md` 第 6 節）、寫旁白與錄影片段、影片頁接上 `check-all`。

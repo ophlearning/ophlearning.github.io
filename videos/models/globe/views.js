@@ -29,9 +29,17 @@ MODEL_VIEWS.globe = {
   // Cuts across a 12–6 groove: its U-shaped floor, the plate left under it, a crack running down the axis, the two instruments at the floor
   cross: { title: '3–9 點切面（從 12 點看，右＝9 點 temporal）', win: [-6.5, -12.6, 13],
     draw: (state, id) => CATARACT.section({ st: state, h: 9, off: (state.view || {}).off || 0, cut: true, win: _cw(state, { x: -6.5, y: -12.6, w: 13, h: 8 }), step: (state.view || {}).step || 0.025, id }).svg },
+  // ④ PCR section through the main incision's meridian (left = the main incision, e.g. 11 o'clock in the OS case: an 11–5 section); state.view.hp overrides
+  // the clock hour on the right. Works for either eye: orient({ eye, view: 'section', h }) names the sides (CATARACT.orient)
+  pcr: { title: '④ 經主切口的子午切面（左＝主切口）', win: [-8.5, -14.6, 17],
+    draw: (state, id) => CATARACT.section({ st: state, h: _hm(state), win: _cw(state, { x: -8.5, y: -14.6, w: 17, h: 10.2 }), step: (state.view || {}).step || 0.03, id }).svg },
+  // ④ section through the pars plana sclerotomy's meridian (right = the sclerotomy)
+  pp: { title: '④ 經 pars plana 切口的子午切面（右＝切口）', win: [-6, -13.5, 16],
+    draw: (state, id) => CATARACT.section({ st: state, h: (((state.cat || {}).pcr || {}).pp || {}).h ?? 9, win: _cw(state, { x: -6, y: -13.5, w: 16, h: 9.6 }), step: (state.view || {}).step || 0.03, id }).svg },
   // microscope view for cataract states (dilated pupil, red reflex), surgeon at 12
   cscope: { title: '顯微鏡俯視（白內障，術者坐 12 點）', win: [-8, -4.5, 16],
     draw: (state, id) => CATARACT.enface({ st: state, id, surgeon: state.surgeon ?? 12 }).svg },
 };
 function _cw(state, def) { const v = state.view || {}; return { x: v.x ?? def.x, y: v.y ?? def.y, w: v.w ?? def.w, h: v.h ?? def.h }; }
+function _hm(state) { const v = state.view || {}; if (v.hp != null) return v.hp; const h = (((state.cat || {}).main) || {}).h ?? 12; return ((h + 6) % 12) || 12; }
 function _hf(state) { const c = CATARACT.norm(state); return (state.view || {}).hp ?? (c.ccc && c.ccc.prog > 0 ? CATARACT.tearPlane(c) : 6); }

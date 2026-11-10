@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="globe.js"></script>
+<script src="cataract.js"></script>
+<script>
+// Cataract model sample (video ④: posterior capsule rupture). LEFT eye (OS), surgeon at 12: main incision 11 o'clock, side port 2 o'clock (the case,
+// confirmed 2026-11-10). Every panel is the same 3D eye (sources and the 示意 list: CARD.md 白內障 ④). Sections run through the main incision's meridian
+// (11–5: left = 11 o'clock = superonasal for OS), anterior up.
+// Row 1: recognising PCR (microscope with the orientation tag; section: rent, hyaloid bulging, chamber deeper, one pole tilting; gel through the rent to the
+//        tip; a dropped piece; microscope cues). Row 2: first step (tip kept in, dispersive OVD through the side port) vs withdrawing first; the piece
+//        floated on OVD and emulsified over a second instrument (section + microscope); pars plana option. Row 3: bimanual limbal vitrectomy with
+//        triamcinolone (section + microscope); IOL in the bag (③) vs one-piece in the sulcus (contact with the iris, 示意) vs three-piece with optic capture.
+const G = GLOBE, K = CATARACT, L = K.LENS, CN = K.CN, esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 11, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 4 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 5 : tx + w + 5, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.3" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="4">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 12}" fill="${o.color || '#1d2733'}" font-weight="${o.bold ? 700 : 400}" text-anchor="${o.anchor || 'start'}" ${o.halo ? 'stroke="#fff" stroke-width="3.2" paint-order="stroke"' : ''}>${esc(s)}</text>`;
+const sbar = (x, y, k, txt = '1 mm') => `<rect x="${x - 6}" y="${y - 20}" width="${k + 12}" height="28" rx="5" fill="#fff" opacity="0.85"/><path d="M${x} ${y}h${k}" stroke="#1d2733" stroke-width="3"/>${T(x + k / 2, y - 7, txt, { size: 11, bold: true, anchor: 'middle' })}`;
+const arrowPath = (pts, col, w = 1.6) => { const a = pts[pts.length - 2], b = pts[pts.length - 1], d = [b[0] - a[0], b[1] - a[1]], l = Math.hypot(...d) || 1, u = [d[0] / l, d[1] / l], n = [-u[1], u[0]], h = 6;
+  const dd = 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L');
+  return `<path d="${dd}" fill="none" stroke="#fff" stroke-width="${w + 2.4}" opacity="0.8"/><path d="${dd}" fill="none" stroke="${col}" stroke-width="${w}"/><path d="M${b[0]} ${b[1]}L${b[0] - u[0] * h + n[0] * h * 0.55} ${b[1] - u[1] * h + n[1] * h * 0.55}L${b[0] - u[0] * h - n[0] * h * 0.55} ${b[1] - u[1] * h - n[1] * h * 0.55}Z" fill="${col}"/>`; };
+const o = [], HEAD = 28;
+function panel(id, PX, PY, PW, PH, title, note) {
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="9" fill="#fff" stroke="#d3dae1"/>`, `<clipPath id="c${id}"><rect x="${PX + 1}" y="${PY + HEAD}" width="${PW - 2}" height="${PH - HEAD - 1}" rx="7"/></clipPath>`);
+  o.push(T(PX + 9, PY + 19, title, { size: 12, bold: true }), T(PX + PW - 8, PY + 19, note || '', { size: 10, color: '#5b6878', anchor: 'end' }));
+}
+const clipG = (id, tf, svg) => `<g clip-path="url(#c${id})"><g transform="${tf}">${svg}</g></g>`;
+
+// ---------------------------------------------------------------- states (OS, surgeon at 12; main 11, side port 2; rhexis done; nucleus out except one piece)
+const EYE = 'OS', HP = 5;                                             // sections through 11–5 (left = 11, the main incision)
+const BASE = { main: { h: 11, cut: 1 }, side: { h: 2, cut: 1 }, ccc: { prog: 1, fold: 1, out: 1 } }, cat = x => ({ eye: EYE, cat: Object.assign({}, BASE, x) });
+const RENT = { h: 5, r: 1.6, size: 1.4 }, PIECE = { h: 8 };          // rent toward 5 o'clock; the piece's round side toward 8 (its poles at 11 and 5)
+const frag = st => K.pcrOf(st).FR;
+// A–C: the PCR moment. The phaco tip sits on the piece's 11 o'clock end; the 5 o'clock pole tilts into the rent; the chamber deepens, the pupil widens
+const REC0 = cat({ bag: {}, pcr: { rent: RENT, deep: 1, vit: { bulge: 1 }, frag: Object.assign({ sink: 1 }, PIECE) } });
+// the phaco tip stays where the piece's top was before the rent (on it, 0.4 mm toward 11 from its centre): the piece drops away from it (loss of followability)
+const onTop = (FR, a, b) => { let n = 0; while (FR.fld(FR.at3(a, b, n)) < 0 && n < 2) n += 0.005; const q = FR.at3(a, b, n); return [q[0], q[1], q[2] + 0.47]; };
+const REST = cat({ bag: {}, pcr: { rent: RENT, frag: PIECE } }), PH = { kind: 'phaco', p: onTop(frag(REST), 0.4, 0.1), bevel: 'up' };
+const REC = cat({ ...REC0.cat, inst: [PH] });
+const PRO = cat({ bag: {}, pcr: { rent: RENT, deep: 1, vit: { prolapse: 1, to: 'tip' }, frag: Object.assign({ sink: 1 }, PIECE) }, inst: [PH] });
+const DROP = cat({ bag: {}, pcr: { rent: Object.assign({}, RENT, { size: 2.4, ext: 0.5 }), vit: { prolapse: 0.35, to: 'main' }, frag: Object.assign({ drop: 1 }, PIECE) } });
+// E–F: first step: the tip stays in, dispersive OVD through the side port onto the rent (Rajan 2025) vs everything withdrawn first (chamber lost)
+const OC = (() => { const P = K.pcrOf(REC0); return [P.R.c3[0] * 0.6, P.R.c3[1] * 0.6, K.pcrOf(REST).zRim3 - 0.6]; })();
+const FIRST = cat({ bag: {}, pcr: { rent: RENT, vit: { prolapse: 1 }, ovdD: { tamp: 1 }, frag: Object.assign({ sink: 1 }, PIECE) }, inst: [PH, { kind: 'cannula', via: 'side', p: OC }] });
+const WITH = cat({ bag: {}, pcr: { rent: Object.assign({}, RENT, { ext: 0.6 }), collapse: 1, frag: Object.assign({ sink: 1 }, PIECE) } });
+// G–H: the piece floated into the chamber on dispersive OVD (bag and lower chamber filled, endothelium coated), a straight instrument under it through the
+// side port, the phaco on its straight edge (turned to face the main incision; Rajan 2025: low-energy phaco with dispersive OVD coating endothelium and PC)
+const FL0 = cat({ bag: {}, pcr: { rent: RENT, ovdD: { tamp: 1, coat: 1, fill: CN.pcr.frag.cushion + 0.25 }, frag: { h: 5, float: 1, eat: 0.25 } } });
+const FLT = cat({ ...FL0.cat, inst: [{ kind: 'phaco', p: frag(FL0).at3(0, frag(FL0).bE - 0.42, -0.6), bevel: 'down', occl: 1 }, { kind: 'spatula', via: 'side', p: frag(FL0).under(0.8) }] });
+// I–J: bimanual limbal anterior vitrectomy: cutter through the main incision down at the rent (port up), irrigation through the side port high in the chamber;
+// triamcinolone shows the gel left in front of the capsule (Burk 2003); the piece is out
+// the emptied bag has collapsed (示意), so a straight cutter from 11 o'clock reaches the rent through the rhexis
+const CLEAN = { cortex: new Array(12).fill(0), sub: 0 }, BAGC = Object.assign({}, CLEAN, { collapse: 1 });
+const PV = K.pcrOf(cat({ bag: BAGC, pcr: { rent: RENT } })), CUT = { kind: 'vitrector', p: [PV.R.c3[0], PV.R.c3[1], PV.R.c3[2] - 0.25], port: 'up' };
+const IRR = { kind: 'irrig', via: 'side', p: (() => { const d = G.clockDir(2); return [d[0] * 3.0, d[1] * 3.0, 9.9]; })() };
+const VIT = cat({ bag: BAGC, pcr: { rent: RENT, vit: { prolapse: 1, to: 'main', cut: 0.45, ta: 1 } }, inst: [CUT, IRR] });
+// K: pars plana option: 23G cutter through a sclerotomy 3.5 mm behind the limbus at 11 o'clock (Rajan 2025: 3.5–4 mm; site 示意), irrigation through the side port
+const P0 = K.pcrOf(cat({ bag: {}, pcr: { rent: RENT } })), PPT = [P0.R.c3[0], P0.R.c3[1], P0.zHy3(P0.R.c0[0], P0.R.c0[1]) - 2.4];
+const PPS = cat({ bag: {}, pcr: { rent: RENT, vit: { prolapse: 0.55, to: 'main', cut: 0.2, ta: 1 }, pp: { h: 11, s: CN.pcr.pp.s } }, inst: [{ kind: 'vitrector', via: 'pp', p: PPT, port: 'up' }, IRR] });
+// M–O: IOL. In the bag (③, no rent); one-piece (Sensar AAB00 in the case) in the sulcus: optic in front of the capsule, haptics behind the iris — contact
+// risk (示意; Chang 2009: pigment dispersion, UGH); three-piece in the sulcus with the optic captured behind the rhexis. Haptics turned onto 11–5.
+const BAGIOL = cat({ bag: Object.assign({}, CLEAN, { collapse: 1 }), ovdBag: 1, ovdOut: { behind: 1, front: 1 }, iol: { rot: -35 } });
+const SUL1 = cat({ bag: Object.assign({}, CLEAN, { collapse: 1 }), pcr: { rent: RENT, vit: { cut: 1 } }, iol: { pos: 'sulcus', rot: -35, chafe: 1 } });
+const CAPT = cat({ bag: Object.assign({}, CLEAN, { collapse: 1 }), pcr: { rent: RENT, vit: { cut: 1 } }, iol: { pos: 'sulcus', kind: '3pc', capture: 1, rot: -35, chafe: 1 } });
+
+const OR = K.orient({ eye: EYE, surgeon: 12 }), OS_ = K.orient({ eye: EYE, view: 'section', h: HP });
+o.push(T(16, 30, '白內障模型樣本（④ PCR）：左眼 OS、術者坐 12 點（主切口 11 點、side port 2 點）', { size: 19, bold: true }));
+o.push(T(1264, 30, `切面 ${OS_.left}–${OS_.right} 點（左＝主切口）；mm 建模；示意處見 CARD.md`, { size: 12, color: '#5b6878', anchor: 'end' }));
+const COLS = [12, 265, 518, 771, 1024], PW = 244, PH2 = 212, ROWS = [42, 260, 478], CH = PH2 - HEAD;
+const secPanel = (id, col, row, st, title, note, k, x0, y0, opt = {}) => { const PX = COLS[col], PY = ROWS[row], c = cam(PX, PY + HEAD, k, x0, y0);
+  const s = K.section(Object.assign({ st, h: HP, win: { x: x0, y: y0, w: (PW - 2) / k, h: CH / k }, step: 0.025, id }, opt)); panel(id, PX, PY, PW, PH2, title, note); o.push(clipG(id, c.tf, s.svg)); return { s, A: s.A, P: c.P, PX, PY, k }; };
+const scopePanel = (id, col, row, st, title, note, k = 19, cx = 0, cy = 0, extra = '') => { const PX = COLS[col], PY = ROWS[row], x0 = cx - (PW - 2) / k / 2, y0 = cy - CH / k / 2, c = cam(PX, PY + HEAD, k, x0, y0);
+  const e = K.enface({ st, id }); panel(id, PX, PY, PW, PH2, title, note); o.push(clipG(id, c.tf, e.svg + extra)); return { e, A: e.A, P: c.P, PX, PY, M: e.M }; };
+const Pp = (P, p3) => P(G.toPlane(G.planes.meridian(HP), p3));
+const SW = { x: -6.3, y: -12.9 }, SK = 19;                           // section window (most panels)
+
+// ================= A: OS microscope at the PCR moment, with the orientation tag (CATARACT.orient)
+{ const { A, P, PX, PY } = scopePanel('a', 0, 0, REC, '術者視角：PCR 那一刻', '左眼 OS');
+  const t1 = `${OR.eyeZh}　術者坐 ${OR.bottom} 點`, t2 = `下＝${OR.bottom} 點　右＝${OR.right} 點 ${OR.rightAnat.en}`, tw = Math.max(meas(t1, 10, true), meas(t2, 10, true)) + 10;
+  o.push(`<rect x="${PX + 6}" y="${PY + HEAD + 4}" width="${tw}" height="30" rx="4" fill="#1d2733" opacity="0.82"/>`, T(PX + 11, PY + HEAD + 16, t1, { size: 10, bold: true, color: '#fff' }), T(PX + 11, PY + HEAD + 29, t2, { size: 10, bold: true, color: '#fff' }));
+  o.push(T(PX + PW - 6, PY + 120, '鼻側 nasal →', { size: 10, anchor: 'end', color: '#3c4a57', halo: true }), T(PX + 6, PY + 120, '← 顳側 temporal', { size: 10, color: '#3c4a57', halo: true }));
+  const far = A.rentEdge.reduce((b, q) => Math.hypot(q[0] - A.frag[0], q[1] - A.frag[1]) > Math.hypot(b[0] - A.frag[0], b[1] - A.frag[1]) ? q : b);   // the rent's edge away from the piece
+  o.push(lab('有邊緣的清亮區', 'rent', PX + 8, PY + 196, P(far), { bold: true, color: '#b3262c', lc: '#b3262c' }));
+  o.push(lab('核塊一端下沉', '', PX + PW - 8, PY + 60, P(A.frag), { side: 'R', color: '#7a5418', lc: '#7a5418' })); }
+// ================= B: the same moment in the section: rent, the intact hyaloid bulging through it, the pole tilting in, the chamber deeper (Rajan 2025 signs)
+{ const { A, P, PX, PY, k } = secPanel('b', 1, 0, REC, '破口、前房變深、核塊歪', '左＝11 點', SK, SW.x, SW.y);
+  o.push(lab('後囊破口', 'rent', PX + PW - 8, PY + 196, A.rentEnds.length ? P(A.rentEnds[A.rentEnds.length - 1]) : null, { side: 'R', bold: true, color: '#b3262c', lc: '#b3262c' }));
+  o.push(lab('前玻璃體面凸出', '', PX + 8, PY + 196, P([A.rentC[0] - 0.3, A.rentC[1] - 0.25]), { color: '#4f6478', lc: '#4f6478' }));
+  o.push(lab('一端歪進破口', '', PX + PW - 8, PY + 52, P(A.frag), { side: 'R', color: '#7a5418', lc: '#7a5418' })); }
+// ================= C: hyaloid broken: gel through the rent, the bag and the rhexis to the phaco tip (示意 shape)
+{ const { A, P, PX, PY } = secPanel('c', 2, 0, PRO, '玻璃體經破口到 tip', '示意　左＝11 點', SK, SW.x, SW.y);
+  o.push(lab('玻璃體', 'vitreous', PX + PW - 8, PY + 52, P(A.vitMid), { side: 'R', bold: true, color: '#4f6478', lc: '#4f6478' }));
+  o.push(lab('phaco', '', PX + 8, PY + 52, P(A.tip0), { color: '#3c4a57' })); }
+// ================= D: a piece dropped through a grown rent into the anterior vitreous (do not chase it; Rajan 2025)
+{ const { A, P, PX, PY } = secPanel('d', 3, 0, DROP, '核塊掉進玻璃體腔', '示意　左＝11 點', 15, -7.9, -12.9);
+  o.push(lab('掉落的核塊', 'dropped', PX + PW - 8, PY + 150, P([A.frag[0] + 0.6, A.frag[1] - 0.4]), { side: 'R', bold: true, color: '#7a5418', lc: '#7a5418' }));
+  o.push(T(PX + 8, PY + 150, '不追，轉 VR', { size: 11, bold: true, color: '#b3262c', halo: true })); }
+// ================= E: microscope cues once the gel is out (示意 look): the clear area, the piece not following the tip, a strand toward the tip
+{ const { A, P, PX, PY } = scopePanel('e', 4, 0, PRO, '線索：清亮區、玻璃體', '示意　OS');
+  o.push(lab('玻璃體條', 'strand', PX + PW - 8, PY + 196, P(A.vitMid), { side: 'R', color: '#4f6478', lc: '#4f6478' }));
+  o.push(lab('清亮區', '', PX + 8, PY + 52, P(A.rentEdge.reduce((b, q) => Math.hypot(q[0] - A.frag[0], q[1] - A.frag[1]) > Math.hypot(b[0] - A.frag[0], b[1] - A.frag[1]) ? q : b)), { bold: true, color: '#b3262c', lc: '#b3262c' })); }
+
+// ================= F: first step: tip in place, dispersive OVD through the side port onto the rent; the gel stays behind it
+{ const { A, P, PX, PY } = secPanel('f', 0, 1, FIRST, '第一步：tip 不退、補 OVD', '左＝11 點', SK, SW.x, SW.y);
+  o.push(lab('dispersive OVD', '封住破口', PX + PW - 8, PY + 196, P(A.ovdd), { side: 'R', bold: true, color: '#5b4b9a', lc: '#5b4b9a' }));
+  o.push(lab('tip 留在原位', '', PX + 8, PY + 52, P(A.tip0), { color: '#3c4a57' })); }
+// ================= G: contrast: everything withdrawn first: the chamber collapses, gel to the main incision, the piece goes further down
+{ const { A, P, PX, PY } = secPanel('g', 1, 1, WITH, '對照：先退出', '示意　左＝11 點', SK, SW.x, SW.y);
+  o.push(lab('玻璃體到切口', '', PX + 8, PY + 52, P(A.vitTip), { bold: true, color: '#b3262c', lc: '#b3262c' }));
+  o.push(lab('前房變淺', '', PX + PW - 8, PY + 52, P([A.antPole[0] + 0.6, A.antPole[1] - 1.0]), { side: 'R', color: '#3c4a57' })); }
+// ================= H: the piece floated on dispersive OVD, a straight instrument under it, the phaco on its edge
+{ const { A, P, PX, PY } = secPanel('h', 2, 1, FLT, '核塊托到前房、下墊器械', '左＝11 點', SK, SW.x, SW.y, { cut: true });
+  o.push(lab('核塊', '', PX + PW - 8, PY + 52, P(A.frag), { side: 'R', bold: true, color: '#7a5418', lc: '#7a5418' }));
+  o.push(lab('器械墊在下面', '切口', PX + PW - 8, PY + 196, P(A.tip1), { side: 'R', color: '#3c4a57' }));
+  o.push(lab('dispersive OVD', '', PX + 8, PY + 196, P([A.rentC[0] - 1.2, A.rentC[1] - 1.6]), { color: '#5b4b9a', lc: '#5b4b9a' })); }
+{ const { A, P, PX, PY } = scopePanel('i', 3, 1, FLT, '在 OVD 上乳化', '下＝12 點');
+  o.push(lab('核塊在前房', '', PX + PW - 8, PY + 52, P(A.frag), { side: 'R', bold: true, color: '#7a5418', lc: '#7a5418' }));
+  o.push(lab('side port 的器械', '', PX + 8, PY + 196, P(A.tip1), { color: '#3c4a57' })); }
+// ================= K: pars plana option (section through 11–5; the sclerotomy behind the 11 o'clock limbus)
+{ const { A, P, PX, PY } = secPanel('k', 4, 1, PPS, 'Pars plana 做法', '左＝11 點', 13.5, -9.6, -13.2, { cut: true });
+  o.push(lab('距角膜緣 3.5 mm', 'sclerotomy', PX + 8, PY + 196, P(A.sclerotomy), { bold: true, color: '#3c4a57' }));
+  o.push(lab('切割頭在破口後', '', PX + PW - 8, PY + 196, P(A.tip0), { side: 'R', color: '#3c4a57' })); }
+
+// ================= I–J: bimanual limbal vitrectomy with TA, separated flows (示意)
+{ const { A, P, PX, PY } = secPanel('l', 0, 2, VIT, '雙手前段玻璃體切除', '流向示意', SK, SW.x, SW.y, { cut: true });
+  const gI = A.inst1; for (const pp of gI.ports) { const q = Pp(P, pp); o.push(`<circle cx="${q[0]}" cy="${q[1]}" r="3" fill="#c9ecfb" stroke="#2a8fc7" stroke-width="1.2"/>`); }
+  const F4 = K.pcrFlows(VIT); for (const k of [1, 4]) o.push(arrowPath(F4.irr[k].map(q => Pp(P, q)), '#2a8fc7', 1.4)); for (const pl of F4.asp) o.push(arrowPath(pl.map(q => Pp(P, q)), '#b3262c', 1.4));
+  o.push(lab('灌流（2 點，投影）', '', PX + PW - 8, PY + 52, Pp(P, gI.ports[0]), { side: 'R', color: '#2a8fc7', lc: '#2a8fc7', bold: true }));
+  o.push(lab('切割在破口', '主切口', PX + 8, PY + 196, P(A.tip0), { color: '#b3262c', lc: '#b3262c', bold: true }));
+  if (A.ta.length) o.push(lab('TA 白點', '', PX + 8, PY + 52, P(A.ta.reduce((b, q) => q[0] > b[0] ? q : b)), { color: '#4f6478', lc: '#4f6478' })); }   // the rightmost particle (clear of the cutter)
+{ const { A, P, PX, PY } = scopePanel('m', 1, 2, VIT, 'TA 讓玻璃體看得見', 'Burk 2003');
+  o.push(lab('TA 黏在玻璃體上', '', PX + PW - 8, PY + 196, P(A.ta[A.ta.length - 3]), { side: 'R', bold: true, color: '#4f6478', lc: '#4f6478' }));
+  o.push(lab('vitrector', '', PX + 8, PY + 52, P(A.tip0), { color: '#3c4a57' }));
+  o.push(lab('irrigation', '', PX + 8, PY + 196, P(A.tip1), { color: '#2a8fc7', lc: '#2a8fc7' })); }
+// ================= M–O: IOL positions (sections, zoomed on the posterior chamber)
+const IW = { x: -6.7, y: -12.9 }, IK = 18;
+{ const { A, P, PX, PY } = secPanel('n', 2, 2, BAGIOL, 'IOL in the bag（③）', '左＝11 點', IK, IW.x, IW.y);
+  o.push(lab('haptic 在赤道', '', PX + 8, PY + 196, P(A.hapTip1[0] < A.hapTip0[0] ? A.hapTip1 : A.hapTip0), { color: '#7a6a1e', lc: '#7a6a1e' })); }
+{ const { A, P, PX, PY } = secPanel('o', 3, 2, SUL1, 'one-piece 放 sulcus', 'Chang 2009', IK, IW.x, IW.y);
+  o.push(lab('optic 在前囊前', '', PX + PW - 8, PY + 196, P(A.iolC), { side: 'R', bold: true, color: '#7a6a1e', lc: '#7a6a1e' }));
+  if (A.chafe && A.chafe.length) o.push(lab('厚 haptic 磨虹膜', '示意', PX + 8, PY + 52, P(A.chafe[0]), { color: '#b3262c', lc: '#b3262c', bold: true })); }
+{ const { A, P, PX, PY } = secPanel('p', 4, 2, CAPT, '3-piece＋optic capture', '左＝11 點', IK, IW.x, IW.y);
+  o.push(lab('optic 在 CCC 後', '', PX + PW - 8, PY + 196, P(A.iolC), { side: 'R', bold: true, color: '#7a6a1e', lc: '#7a6a1e' }));
+  o.push(lab('haptic 在 sulcus', '', PX + 8, PY + 52, P(A.hapTip1[0] < A.hapTip0[0] ? A.hapTip1 : A.hapTip0), { color: '#7a6a1e', lc: '#7a6a1e' })); }
+document.getElementById('stage').innerHTML = o.join('');
+window.READY = true;
+</script></body></html>

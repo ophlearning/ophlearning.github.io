@@ -17,6 +17,7 @@
 - 2026-11-09 白內障系列 ①（主切口、side port、OVD、CCC）：選用式狀態 `st.cat`，見下面「白內障」一節。
 - 2026-11-10 白內障系列 ②（hydrodissection、divide and conquer、phaco 與 chopper、流體面板）：同樣放在 `st.cat`，見「白內障 ②」一節。
 - 2026-11-10 白內障系列 ③（I/A、IOL 植入、移除 OVD、切口密閉）：同樣放在 `st.cat`，見「白內障 ③」一節。
+- 2026-11-10 白內障系列 ④（PCR、左眼 OS）：`st.eye`＋`st.cat.pcr`、IOL 放 sulcus／optic capture，見「白內障 ④」一節。
 - 之後可用：trabeculectomy、PK 等前段手術。眼球只建一次，後段和眼外肌模型也用這顆。
 
 ## 兩個同步視角與方位慣例
@@ -26,7 +27,7 @@
 - **術者視角**：顯微鏡俯視（`scope`），右眼，正像。
   - 術者預設坐 12 點（病人頭側）：畫面下方＝12 點，右＝temporal（9 點），左＝nasal（3 點）。
   - 術者換位置時，`surgeon` 參數給鐘點，那個鐘點就轉到畫面下方。
-- **鐘點**：照檢查者面對病人的慣例。12 點 superior；右眼 3 點 nasal、9 點 temporal。模型目前只有右眼，左眼的鐘點方向相反。
+- **鐘點**：照檢查者面對病人的慣例。12 點 superior；右眼 3 點 nasal、9 點 temporal；左眼 3 點 temporal、9 點 nasal。鐘點在兩眼是同一個物理方向，只有名稱對調；左眼用 `st.eye: 'OS'`（2026-11-10 加，見「白內障 ④」）。
 - **換算**：三個畫面是同一顆 3D 眼球。兩種切面用同一組組織函數取樣（等高線，marching squares）；俯視圖用同一組 3D 座標投影。所以同一針縫線在三個畫面的位置一定一致，`check.js` 也有檢查。
 
 ## 座標（手術的語言）
@@ -495,13 +496,106 @@
 - **haptic 穿過前囊用「同一格有前後兩邊的點」抓不到**：中心線 0.3 mm 一點、斜穿時同一格只有一邊；改成沿中心線看正負號。
 - **12–6 切面上的前導 haptic 是斜切的一小段**：標籤要指在它和切面相交的地方，不能指投影的尖端（投影在囊袋中央的空白處）。
 
+## 白內障 ④（2026-11-10 建立；系列 ④：PCR 怎麼認、當下第一步、之後怎麼處理）
+規格見 `videos/src/cataract-4-pcr/spec.md`。病例（站長 2026-11-10 確認）：**左眼 OS**、術者坐 superior、主切口約 11 點、side port 約 2 點；phaco 中 PCR；OVD 把剩下的核托起；經角膜緣雙手前段玻璃體切除；AAB00（one-piece）放 sulcus；白色懸浮物推測是 TA。新狀態都是選用式：沒給 `pcr`、`eye`、`iol.pos` 就和 ①–③ 逐字相同（①–③ 樣本的 SVG 逐位元相同；①、②、③、open globe 的參考圖 0.000%）。
+
+### 左眼（OS）
+- `st.eye`（或 `st.cat.eye`）：`'OD'`（預設）或 `'OS'`。
+- **鐘點是檢查者面對病人的鐘點，兩眼的物理方向相同**（3 點＝病人的左側）；只有名稱對調：OD 3 點 nasal、9 點 temporal；**OS 3 點 temporal、9 點 nasal**。
+- 術者坐 12 點時，兩眼的顯微鏡畫面都是下＝12 點、右＝9 點；OS 的右邊因此是 nasal（錄影判讀：caruncle 在畫面右邊）。
+- 模型的解剖沒有鼻顳側差異（角膜、角膜緣、睫狀體的數值四周相同），所以**同樣鐘點的 OS 狀態畫出來和 OD 完全一樣**；變的是畫面怎麼標（`CATARACT.orient`）和一個鐘點叫什麼（`CATARACT.anat`）。檢查證明 OD／OS／不給三種畫法逐位元相同。
+- 切口跟著術者的手，不跟著眼別鏡像：本例主切口 11 點（OS＝superonasal，畫面右下）、side port 2 點（OS＝superotemporal，畫面左下）；同一位置在 OD 是 1 點（`CATARACT.mirrorH`）。把 OS 畫面左右翻轉是錯的：主切口會跑到左下，和錄影（右偏 31–38°）相反，檢查會擋。
+- `orient({ eye, surgeon })`：下、右、上、左各是幾點與 nasal／temporal，`text` 例「左眼 OS　術者坐 12 點：下＝12 點　右＝9 點 nasal」。`orient({ eye, view: 'section', h })`：切面左右各幾點、從哪一側看（OD 12–6 切面從 9 點 temporal 看＝① 的說法；OS 11–5 切面從 inferonasal 看）。
+- 切面：`views.js` 的 `pcr` 視角＝經主切口的子午切面（左＝主切口，本例 11–5 點）；`pp` 視角＝經 pars plana 切口的子午切面（右＝切口）。
+
+### 適用的步驟與做法
+- **認出 PCR**（Rajan 2025 的線索）：後囊破口（位置、大小、往赤道的放射狀撕裂）；前房突然變深、瞳孔瞬間放大（`deep`）；核塊一端歪進破口（`frag.sink`）、核塊不跟 tip（tip 留在原處、核塊掉開）；red reflex 出現有邊緣的清亮區（俯視的破口區比周圍亮、邊緣清楚）；完整的前玻璃體面從破口凸出（`vit.bulge`）、破了就有玻璃體經破口、囊袋、撕囊口跑到 tip 或切口（`vit.prolapse`、`to`）；核塊掉進前段玻璃體（`frag.drop`）。
+- **第一步**：tip 不退、經 side port 打 dispersive OVD 封住破口再退（Rajan 2025）：`ovdD.tamp` 讓玻璃體留在後面（模型裡是因果：有 tamp 時 `prolapse` 不會往前）；對照「先退出」（`collapse`）：前房塌、整個隔膜往前、玻璃體自動跑到主切口（Rajan 2025：突然退出→前房不穩、破口變大、碎片掉落；Arbisser 2006：維持壓力關係）。壓力、流量的大小示意。
+- **剩下的核**：OVD 把核塊托到前房（`frag.float`；`ovdD.fill` 囊袋與撕囊口上方一個圓頂、`ovdD.coat` 內皮塗一層，Rajan 2025：dispersive OVD 保護內皮與後囊、低能量乳化）、side port 的直器械墊在下面（`spatula`）、phaco 從主切口吃核塊的直邊（`frag.eat`）。核塊放的方向可以和認出時不同（托起時轉過，示意）。
+- **前段玻璃體切除**：雙手、經角膜緣：vitrector 經主切口、切割口在破口（後囊高度），irrigation 經 side port、高在前房、側孔水平出水、遠離破口（Rajan 2025：雙手、灌流與切割分開較能控制；流向示意，`pcrFlows`）；切除進度 `vit.cut`；**TA**（`vit.ta`）白點只黏在玻璃體上與裡面（Burk 2003）。Pars plana 做法（`pp`）：23G 經 pars plana、角膜緣後 3.5–4 mm（Rajan 2025），切口位置（本樣本 11 點）示意。
+- **IOL 位置**：in the bag（③）、**one-piece 放 sulcus**（`iol.pos: 'sulcus'`；optic 在前囊前、haptic 在虹膜後到 sulcus，厚 haptic 貼近虹膜後面＝摩擦風險，示意；Chang 2009 列的併發症：色素散播、透照缺損、眼壓高、出血、CME，只為囊袋設計的 IOL 不應放 sulcus）、**3-piece 放 sulcus＋optic capture**（`kind: '3pc', capture: 1`：haptic 在 sulcus、optic 從 CCC 壓到後面，撕囊邊緣蓋在 optic 前面、只在兩個 haptic 接點被撐開；Rajan 2025）。sulcus 的 ELP 與度數：Suto 2003。
+
+### 狀態（`st.cat`）
+- `pcr: { rent, deep, collapse, vit, frag, ovdD, pp }`：
+  - `rent: { h, r, a, b, size, ext }`：破口中心（水晶體座標的鐘點、離軸半徑）、半軸 a（徑向）× b（切向）× `size`、`ext` 0→1 往赤道的放射狀撕裂（`ext` 1 到赤道內 0.15 mm）。
+  - `deep` 0→1：前房變深（隔膜往後 0.45 mm）、瞳孔放大 0.8 mm；`collapse` 0→1：先退出，前房塌（隔膜往前 1.0 mm）。量都是示意。
+  - `vit: { bulge, prolapse, to, cut, ta }`：`bulge` 完整的前玻璃體面從破口凸出（0.9 mm 圓頂）；`prolapse` 玻璃體沿樣條（破口後 0.6 mm → 破口 → 囊袋 → 撕囊口上 0.25 mm → 目標）往前的程度，管徑從 0.75 mm 漸細到 0.12 mm 的條；`to`：`'main'`（主切口內口）、`'side'`、`'tip'`（器械尖端或 vitrector 的切割口）或座標；`cut` 切掉的比例；`ta` TA 的量。前玻璃體面在後囊後 0.06 mm（Berger's space，示意）。
+  - `frag: { h, sink, drop, float, eat, at }`：剩下的核塊（橢球 5.2 × 4.8 × 2.0 mm 切掉一側，剩 5.2 × 2.7 × 2.0 mm；直邊在中央，圓邊朝 `h`；示意）。休息時在囊袋中、離後囊 1.0 mm；`sink`：最近破口的那一端轉 40°、0.3 mm 穿進破口（足跡置中在破口裡）；`drop`：整塊穿過（破口要先變大）到後極後 3.4 mm；`float`：托到撕囊口平面上 0.1 mm、重心在軸上；`eat`：從直邊吃到圓邊。
+  - `ovdD: { tamp, coat, fill, at }`：破口上的 dispersive OVD（最多塞進破口 0.15 mm）、內皮塗層 0.25 mm、囊袋＋撕囊口上的圓頂（高 `fill` mm）。只在囊袋與前房，不進水晶體物質、核塊、IOL、虹膜。
+  - `pp: { h, s }`：pars plana 切口（預設 9 點、3.5 mm）。
+- `iol: { pos: 'sulcus', kind: '1pc' | '3pc', capture, chafe }`：sulcus／optic capture（③ 的植入過程參數不用，直接是最後位置）；`chafe` 畫出 haptic 與虹膜後面距離 < 0.1 mm 的地方（紅，示意）。capture 時撕囊口在兩個 haptic 接點被撐到 optic 邊緣外 0.35 mm（±0.6 個鐘點，示意）；sulcus／capture 時虹膜停在原來的高度（囊袋塌了，示意）。
+- `inst` 新種類：`{ kind: 'vitrector', p, port, via }`（23G，切割口在尖端後 0.35 mm，`via: 'pp'` 走 pars plana）、`{ kind: 'irrig', via: 'side', p }`（閉口、兩個側孔水平出水）、`{ kind: 'spatula', via: 'side', p }`（直器械）。都用 ② 的隧道彎模式；pars plana 的不碰角膜隧道。
+- 輔助函式：`pcrOf`（破口、玻璃體路徑與場、核塊、OVD、TA 點、pars plana 切口）、`chafeOf`、`pcrFlows`、`orient`、`anat`、`mirrorH`。
+
+### 數值與出處
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| PCR 的線索 | 前房突然變深＋瞳孔瞬間放大、red reflex 變清亮、核轉不動、核不跟 tip、核或 IOL 一端歪、核部分掉進前段玻璃體；I/A 吸到後囊時破口區 red reflex 更清亮更亮、瞳孔 peaking | Rajan 2025 綜論（doi:10.4103/tjo.TJO-D-25-00059；PMID 41523115，PMC 全文） |
+| 前房變深、瞳孔放大的量 | 0.45 mm、0.8 mm | 示意 |
+| 第一步 | 不要突然退出器械；phaco 留在原位、經 side port 打高分子量或 dispersive OVD 封住破口、擋住玻璃體，前房穩定後再慢慢退；不追掉下去的碎片 | Rajan 2025 |
+| 壓力關係 | 前後壓力差把玻璃體推進前房；維持壓力關係限制玻璃體脫出 | Rajan 2025；Arbisser 2006（doi:10.1016/j.ohc.2006.07.002；PMID 17067904，摘要） |
+| 先退出時前房塌的量 | 隔膜往前 1.0 mm | 示意 |
+| 剩下的核 | 前房裡較小的核塊：低能量 phaco，用 dispersive OVD 保護內皮與後囊；鈍的第二支器械把核托離後囊 | Rajan 2025 |
+| 核塊大小、休息位置、下沉與掉落的姿勢、托起的高度 | 5.2 × 2.7 × 2.0 mm；離後囊 1.0；轉 40°、穿進 0.3；後極後 3.4；撕囊口平面上 0.1 | 示意 |
+| 前段玻璃體切除 | 雙手（一手 vitrector、一手灌流）較能控制、不把更多玻璃體拉出；TA 染出玻璃體條；vitrector 低切速可清皮質 | Rajan 2025 |
+| Pars plana 前段玻璃體切除 | 23 或 25G vitrector，角膜緣後 3.5–4 mm；模型 3.5 mm | Rajan 2025；Arbisser 2006：pars plana＋染色最有效 |
+| Pars plana 切口的鐘點 | 樣本 11 點 | 示意 |
+| 23G 外徑 | 0.64 mm | 針規（0.6414 mm）；切割口位置與大小示意 |
+| TA | Kenalog 顆粒卡在玻璃體上與裡面，讓玻璃體看得見（0.2 mL 40 mg/mL 過濾洗過、2 mL BSS、27G 打進前房） | Burk 2003（doi:10.1016/s0886-3350(03)00016-6；PMID 12686230，摘要）；Wu 2008 也提 TA 染色（doi:10.1097/ICU.0b013e3282f2a9d5） |
+| TA 點的數量、大小 | 240、半徑 0.045 mm | 示意（真的顆粒遠小於影片解析度） |
+| 破口大小、撕裂、前玻璃體面的凸起、Berger's space、玻璃體的形狀與管徑 | — | 示意 |
+| one-piece 放 sulcus | 併發症：色素散播、虹膜透照缺損、dysphotopsia、眼壓高、出血、CME；30 例中 28 例要再手術；只為囊袋設計的 IOL 不應放 sulcus、每台刀要備 backup IOL | Chang 2009（doi:10.1016/j.jcrs.2009.04.027；PMID 19631134，摘要） |
+| sulcus 的選擇 | 後囊破、前囊完整可放 sulcus；建議 3-piece PMMA haptic；one-piece acrylic 通常不放 sulcus（偏位、磨虹膜）；optic capture：haptic 在 sulcus、optic 經前囊 CCC capture | Rajan 2025 |
+| sulcus 的 ELP 與度數 | optic 比 in the bag 往前 0.63 mm（模型）；度數減 1.00 D | Suto 2003：ELP 短 0.62–0.75 mm、正常眼軸減 1.00 D（doi:10.1016/s0886-3350(03)00250-5；PMID 14604710，摘要）。模型位置由解剖擺、再檢查落在 Suto 範圍內 |
+| ciliary sulcus 的位置 | 半徑 5.95、haptic 平面 8.80 mm（虹膜根部與睫狀體的夾角） | 示意（從模型的虹膜與睫狀體讀出；查到的 UBM sulcus-to-sulcus 研究都是年輕高度近視的 ICL 病人，沒有用） |
+| AAB00 | one-piece 疏水性壓克力、6 mm optic、C-loop | Wakili 2026（doi:10.1007/s00417-026-07340-y）；overall 用 ③ 的 13.0 mm [待核對：廠商規格] |
+| 3-piece IOL | haptic 0.15 mm、後傾 5° | 示意 |
+| haptic 磨虹膜的門檻 | 距離 < 0.1 mm 畫紅 | 示意 |
+| optic capture 撐開撕囊口 | 到 optic 邊緣外 0.35 mm、±0.6 個鐘點 | 示意 |
+| 錄影的切口位置（給檢查用） | 主切口在正下方偏右 31–38°、side port 偏左 59–68° | `videos/src/cataract-4-pcr/footage-notes.md` 2.2（Claude 判讀錄影） |
+
+### 物理與器械
+- 玻璃體只在後囊後面，或經破口往前：沿玻璃體的中心線，穿過後囊的地方整個截面都在破口裡、穿過前囊只在撕囊口；不進角膜、虹膜、核塊、OVD、IOL。
+- OVD 推開玻璃體（兩者不重疊）；有 `tamp` 時前面沒有玻璃體。
+- 核塊穿過後囊只在破口裡；掉落後全部在前玻璃體面後、玻璃體腔裡；托起時離內皮 ≥ 0.5 mm、不碰虹膜，下面有器械、上面 phaco 貼著吃的那一面。
+- 器械只從切口進出：軸通過各自隧道的轉動點；路上不碰虹膜、隧道外的角膜、撕囊口外的前囊、核塊；後囊只能在破口穿過。pars plana 的 vitrector 從切口（牆的中間）進去後只走玻璃體。
+- **囊袋要塌，角膜緣的直 vitrector 才到得了破口**（2026-11-10 做的時候發現）：囊袋還撐著水晶體的形狀時，從 11 點主切口到後囊高度的直線一定從 11 點那側的前囊邊緣下穿過；核與皮質清掉、囊袋塌了（`bag.collapse` 1，示意）才過得去。和 ③「主切口下方到不了」是同一個幾何。
+- sulcus：haptic 在前囊前、虹膜後、不進睫狀體，尖端離睫狀體 < 0.35 mm；optic 在前囊前。one-piece 厚 haptic 會貼近虹膜後面（< 0.1 mm）、3-piece 細 haptic 不會。optic capture：撕囊邊緣在 optic 前面（重疊 ≥ 0.25 mm），只在 haptic 接點撐開到接點外。
+
+### 必寫的檢查（`check.js` 第 14 節，41 條）
+- 方位（通用原則 6）：OS／OD 的顯微鏡方位（下 12、右 9、右邊是 nasal／temporal）；四個鐘點的名稱（OS 3 temporal、9 nasal；本例 11＝superonasal、2＝superotemporal；OD 的同一處是 1 點）；切面從哪一側看。
+- 本例切口和錄影一致：OS 顯微鏡上主切口在正下方偏右 30°（錄影 31–38°）、side port 偏左 60°（錄影 59–68°）。
+- 兩圖同一鐘點：主切口在俯視是 11 點、在 11–5 切面在左；切口、破口中心、vitrector 尖端、平面附近的 TA 點在兩圖的 u 相同。
+- OD／OS／不給：10 張圖逐位元相同；眼別有回報。
+- 有出處的數字：pars plana 3.5–4 mm 且在 pars plana；23G 0.64；sulcus 的 optic 比囊袋往前 0.62–0.75 mm、度數 −1.00 D；前房變深與瞳孔放大在兩圖一致。
+- 破口：切面上破口裡沒有後囊、兩端在破口邊上；俯視的邊緣是同一條 3D 邊；放射狀撕裂往赤道走。
+- 玻璃體：五個狀態沿中心線檢查穿過後囊與前囊的位置；格點上不在角膜、虹膜、核塊、OVD、IOL 裡；到 tip、先退出時到主切口、前房變淺；tip 不退＋OVD 時前面沒有玻璃體、OVD 封住破口、只在囊袋與前房。
+- 核塊：休息時在囊袋裡；一端穿過破口只在破口裡；核不跟 tip（休息時貼著、PCR 時離開 ≥ 0.3 mm）；掉落後全在玻璃體腔；托起的高度、離內皮、不碰虹膜；下面的器械經 side port、在核塊下面、離後囊；phaco 貼著吃的面；吃掉的量遞減到 0。
+- 器械：六支器械經各自切口、路上不碰組織；雙手：切割口在破口裡、後囊高度，灌流高在前房、離破口 ≥ 1.5 mm、水平出水、偏離破口；切除進度遞減到 0。
+- Pars plana：切口在 3.5 mm、11 點、牆裡；桿子只走玻璃體；尖端在破口後。
+- TA：都在玻璃體裡；沒打 TA 沒有點；玻璃體切光沒有點。
+- IOL：one-piece 放 sulcus 的 haptic 與 optic 位置、磨虹膜風險（3-piece 較少）；optic capture 的撕囊邊緣與 haptic。沒有 NaN。
+- 故意改錯（2026-11-10）：39 個改法，41 條每條至少被一個擋下（`CATARACT_PATH=<檔案>`；6 個改 check.js 自己的輸入）：OS 的 nasal 放錯邊、對側眼鐘點不鏡像、切面看的方向反了、OS 顯微鏡整張左右翻（同時擋下錄影角度、兩圖鐘點、OD／OS 相同三條）、TA 點在俯視偏 0.1 mm、pars plana 3.0 mm、sulcus optic 再往前 0.35 mm、變深變成變淺、破口裡照畫後囊、撕裂只走 30 %、玻璃體從破口旁邊穿過、玻璃體從前囊穿過、玻璃體可以進虹膜與核塊、先退出前房不塌、OVD 擋不住玻璃體、足跡不置中、phaco 跟著核塊下去、掉落只往下 1.2 mm、托起的核塊低 0.5 mm、器械墊在核塊上面、吃核沒有效果、vitrector 軸偏離轉動點、灌流貼著角膜、灌流往下沖破口、切除沒有效果、pars plana 切在 pars plicata、TA 點在玻璃體外、sulcus haptic 進虹膜、one-piece haptic 和 PMMA 一樣細、capture 不撐開撕囊口、capture 的 haptic 留在囊袋、注入 NaN、PCR 那一刻 phaco 伸到邊緣下、OVD cannula 穿過虹膜、托起時 phaco 貼角膜、器械穿過核塊、撕裂的破口玻璃體從旁邊出來。
+
+### 已知的坑（2026-11-10 做的時候踩到的）
+- **切面快取沒包含新狀態**：`section` 的快取鍵沒有 `pcr` 時，兩個只差 PCR 的狀態共用同一張組織圖（第二張畫成第一張的玻璃體）。新狀態一定要加進快取鍵。
+- **玻璃體和皮質同色**：用 C.vit（近白）時看不出來；改成淡灰綠，並畫纖維虛線與前玻璃體面的外框。
+- **前玻璃體面的外框符號寫反**：「後面＝負」寫成正，畫出來是一條橫跨破口的線；外框是「前玻璃體面後的玻璃體 ∪ 跑出來的玻璃體」的邊。
+- **核塊比破口大**：5.2 mm 長的核塊整條直邊壓進 2–3 mm 的破口不可能；改成最低點那一端（極）進去，並把足跡置中在破口裡（核塊在最低點的圓邊那側）。
+- **PCR 那一刻 tip 碰不到歪掉的核塊**：核塊一端沉下去，另一端在主切口下方的前囊下；tip 留在核塊原來的位置（核塊離開 tip＝核不跟 tip）反而是對的畫面。
+- **灌流開口朝前會沖向破口**：直的灌流管從 side port 往下伸，開口方向就是往破口；改成閉口、側孔水平出水（示意）。
+- **pars plana 的桿子斜度不夠會穿過睫狀體或囊袋**：尖端要在破口後 2.4 mm（前段玻璃體）才從 11 點切口一路只走玻璃體。
+- **OVD 圓頂畫成方塊**：前房的 OVD 用垂直的柱子看起來像積木；改成撕囊口上的圓頂。
+- **切面外的器械投影成直立的棒**：2 點的灌流管投影到 11–5 切面會變成穿過角膜的直棒；雙手玻璃體切除與 pars plana 的切面改畫器械與切面相交的切口（`cut`），灌流只畫投影的側孔與水流。
+
 ## 檔案
 - `globe.js`：模型本體。內容有外表面與牆厚、組織函數、切面（等高線）、俯視圖、縫線路徑、錨點。
 - `views.js`：向登記處（`videos/models/registry.js`）報到，提供三個視角：`mer` 子午切面、`across` 垂直傷口切面、`scope` 顯微鏡俯視。
 - `check.js`：自我檢查。`GLOBE_PATH=<檔案>` 可以拿另一份 `globe.js` 來跑，用在故意改錯的測試。
 - `sample.html`、`sample.jpg`：模型樣本，內容是修補前的子午切面、顯微鏡俯視、角膜一針的垂直切面。參考圖由影片的 `ref/manifest.json` 比對。
-- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角，② 加 `cross`（3–9 切面）。
+- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角，② 加 `cross`（3–9 切面），④ 加 `pcr`（經主切口的子午切面）、`pp`（經 pars plana 切口）。
 - `sample-cataract.html`、`sample-cataract.jpg`：白內障樣本（keratome 在隧道裡的切面與俯視、撕囊進行中的 12–6 切面、run-out 的前緣切面、正常／run-out／zonule 弱三張俯視）。參考圖由 `videos/src/cataract-1-wound-ccc/ref/manifest.json` 比對。
 - `fluidics.js`：② 的流體面板資料（`FLUIDICS`；node 裡是 `require('./fluidics.js')`）：腳踏、occlusion、設定 → 灌流、流量、vacuum、US、IOP；`surge(t)` 給前房深度的減少。
 - `sample-cataract2.html`、`sample-cataract2.jpg`：② 樣本（hydrodissection 切面與俯視、capsular block、槽底亮度、刻槽深度、刻太深、分核、四象限＋流體面板）。參考圖由 `videos/src/cataract-2-hydro-dc/ref/manifest.json` 比對。
 - `sample-cataract3.html`、`sample-cataract3.jpg`：③ 樣本（I/A 在 6 點邊緣下的切面與俯視、subincisional 雙手 I/A、吸到後囊的俯視與切面、OVD 撐開囊袋＋injector、IOL 植入三個階段、最後位置的切面與俯視、stromal hydration）。參考圖由 `videos/src/cataract-3-ia-iol/ref/manifest.json` 比對。
+- `sample-cataract4.html`、`sample-cataract4.jpg`：④ 樣本（左眼 OS、術者坐 12 點、主切口 11 點）：OS 術者視角與方位標籤、破口＋前玻璃體面凸出＋核塊一端歪、玻璃體到 tip、核塊掉落、俯視線索、第一步 tip 不退＋OVD 對照先退出、核塊托到前房＋下墊器械（切面與俯視）、pars plana、雙手前段玻璃體切除＋TA（切面與俯視）、IOL in the bag／one-piece sulcus／3-piece optic capture。參考圖由 `videos/src/cataract-4-pcr/ref/manifest.json` 比對。
