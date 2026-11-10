@@ -1,7 +1,7 @@
   {
-    id:'cataract-4-pcr', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'cataract-4-pcr', type:'youtube', yt:'gaLjjfhpbmU', cat:'surgery',
     zh:'白內障 ④：後囊破裂（PCR）——認出與第一步', en:'Cataract surgery ④: posterior capsule rupture — recognition and the first step',
-    dur:0,
+    dur:683,
     short:'白內障系列第四支，真實手術錄影（左眼 OS）＋同步的機轉切面：PCR 最常發生在哪一步、四組線索（前房突然變深與瞳孔變大、核塊不跟 tip 且一端歪、清亮的紅光、玻璃體跑到前面；正常 vs PCR 動畫示意）、第一步（phaco 留著、side port 打 dispersive OVD、穩了再退）、剩下的核、雙手前段玻璃體切除與 triamcinolone、IOL 放哪裡、術後追蹤與轉 VR，以及 wet lab 練習清單。',
     sum:'這支影片是白內障手術系列的第四支，四成的時間花在兩件事：認出後囊破了，和當下的第一個動作。後囊中央只有約 3.5 µm，後面緊貼著玻璃體；綜論指出 PCR 約六成發生在乳化核、約四分之一在 I/A，最常在吃最後一塊核時。早認出是為了不讓破口變大、核掉進玻璃體腔、玻璃體跑到前面。四組線索：前房突然變深、瞳孔一下子變大；核塊不跟 tip、轉不動、一端歪下去；red reflex 出現特別清亮的區域（I/A 吸到後囊時是匯向吸口的皺褶、紅光更亮、瞳孔拉尖）；玻璃體被前後的壓力差推進前房，本身透明，看到的是核塊跑不動。紅光弱的眼睛要靠前房深度與核塊的動作。第一步：不要突然抽出器械，停止乳化、phaco 留在原位，從 side port 打高分子量或 dispersive OVD 蓋住破口、把玻璃體擋在後面，前房穩了再慢慢退出；掉下去的核塊不要追。直接退出會讓前房變淺、玻璃體被推到切口、破口變大。I/A 時破了也一樣先打大量 OVD 再退。之後評估破口大小、剩下的核與皮質、玻璃體有沒有出來。前房裡的核塊用 dispersive OVD 墊著、鈍器械墊在下面、低能量乳化，太大的擴大切口改 ECCE 或 SICS；已掉進玻璃體腔的不撈，前段處理乾淨後交給 VR。剩下的皮質降低瓶高吸或用 vitrector 低切速吸；跑到前房的玻璃體用 vitrector 切，雙手（灌流與切割分開）比較好控制，也可以經 pars plana（角膜緣後 3.5–4 mm），triamcinolone 讓玻璃體看得見。IOL 依囊袋的支撐決定：in the bag、前囊完整時 3-piece 放 sulcus 或 optic capture、支撐不夠用其他固定；one-piece 壓克力放 sulcus 的文獻與 sulcus 度數要減 1.00 D。最後是收尾、術後追蹤（CME、RD、眼內炎、眼壓）與核碎片轉 VR 的時機，以及上刀前在 wet lab 要練的四件事。',
     note:'左邊是一台左眼 OS、術者坐 superior（12 點）的真實手術錄影，已去識別（只裁出眼睛範圍、畫面上沒有文字、不用聲音）；左眼的畫面右邊是 9 點 nasal，主切口約 11 點、side port 約 2 點。右邊是以 mm 建模的機轉切面或術者視角，和錄影同步，示意的部分畫面上有標。本例 red reflex 很弱，錄影看不出後囊確切在什麼時候破（術者推測在刻槽或移除核塊時），經典線索用動畫示意教。本例的做法只描述、不評斷：器械先退出、約 10 秒後經 side port 補 OVD（綜論建議 tip 留著、先打 OVD 再退）；白色顆粒看起來是 triamcinolone（術者推測）；IOL 依術者說明是 AAB00（one-piece 壓克力）放在 sulcus，錄影上看不出最後的位置。破口、玻璃體與核塊的形狀和量是示意；前段玻璃體切除的機器設定沒有講數字，依院內機器設定。',
