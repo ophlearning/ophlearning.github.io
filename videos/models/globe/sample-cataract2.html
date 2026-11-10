@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="globe.js"></script>
+<script src="cataract.js"></script>
+<script src="fluidics.js"></script>
+<script>
+// Cataract model sample (video ②: hydrodissection, divide and conquer). Right eye, surgeon at 12. Every panel is the same 3D eye (sources: CARD.md 白內障 ②).
+// Row 1: hydrodissection wave (section through the injection site + microscope), capsular block (示意), groove floor glow in the red reflex.
+// Row 2: groove depth (3–9 cut across the groove at the phaco tip), over-deep groove (error), crack with two instruments, quadrant removal + machine panel.
+const G = GLOBE, K = CATARACT, FL = FLUIDICS, L = K.LENS, CN = K.CN, esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 12, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 4 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 5 : tx + w + 5, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.3" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.4" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="4">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 12}" fill="${o.color || '#1d2733'}" font-weight="${o.bold ? 700 : 400}" text-anchor="${o.anchor || 'start'}" ${o.halo ? 'stroke="#fff" stroke-width="3.2" paint-order="stroke"' : ''}>${esc(s)}</text>`;
+const sbar = (x, y, k, txt = '1 mm') => `<rect x="${x - 6}" y="${y - 20}" width="${k + 12}" height="28" rx="5" fill="#fff" opacity="0.85"/><path d="M${x} ${y}h${k}" stroke="#1d2733" stroke-width="3"/>${T(x + k / 2, y - 7, txt, { size: 11, bold: true, anchor: 'middle' })}`;
+const arrow = (a, b, col, w = 2) => { const d = [b[0] - a[0], b[1] - a[1]], l = Math.hypot(...d), u = [d[0] / l, d[1] / l], n = [-u[1], u[0]], h = 7;
+  return `<path d="M${a[0]} ${a[1]}L${b[0] - u[0] * h * 0.8} ${b[1] - u[1] * h * 0.8}" stroke="#fff" stroke-width="${w + 2.5}" opacity="0.8"/><path d="M${a[0]} ${a[1]}L${b[0] - u[0] * h * 0.8} ${b[1] - u[1] * h * 0.8}" stroke="${col}" stroke-width="${w}"/><path d="M${b[0]} ${b[1]}L${b[0] - u[0] * h + n[0] * h * 0.55} ${b[1] - u[1] * h + n[1] * h * 0.55}L${b[0] - u[0] * h - n[0] * h * 0.55} ${b[1] - u[1] * h - n[1] * h * 0.55}Z" fill="${col}"/>`; };
+const dim = (a, b, txt, side, col = '#0e7c6b') => { const tx = side === 'R' ? a[0] + 8 : a[0] - 8, lines = [].concat(txt), y0 = (a[1] + b[1]) / 2 + 4 - (lines.length - 1) * 8;
+  return `<path d="M${a[0] - 5} ${a[1]}h10M${b[0] - 5} ${b[1]}h10M${a[0]} ${a[1]}L${b[0]} ${b[1]}" stroke="#fff" stroke-width="4" opacity="0.85"/><path d="M${a[0] - 5} ${a[1]}h10M${b[0] - 5} ${b[1]}h10M${a[0]} ${a[1]}L${b[0]} ${b[1]}" stroke="${col}" stroke-width="1.6"/>` +
+    lines.map((t, i) => T(tx, y0 + i * 16, t, { size: 12, bold: true, color: col, anchor: side === 'R' ? 'start' : 'end', halo: true })).join(''); };
+const o = [], HEAD = 30;
+function panel(id, PX, PY, PW, PH, title, note) {
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="9" fill="#fff" stroke="#d3dae1"/>`, `<clipPath id="c${id}"><rect x="${PX + 1}" y="${PY + HEAD}" width="${PW - 2}" height="${PH - HEAD - 1}" rx="7"/></clipPath>`);
+  o.push(T(PX + 10, PY + 20, title, { size: 13, bold: true }), T(PX + PW - 9, PY + 20, note || '', { size: 11, color: '#5b6878', anchor: 'end' }));
+}
+const clipG = (id, tf, svg) => `<g clip-path="url(#c${id})"><g transform="${tf}">${svg}</g></g>`;
+
+// ---------------------------------------------------------------- states (OD, surgeon at 12; rhexis done, disc out; side port 2 o'clock)
+const BASE = { main: { cut: 1 }, side: { cut: 1 }, ccc: { prog: 1, fold: 1, out: 1 } };
+const cat = x => ({ cat: Object.assign({}, BASE, x) });
+// hydrodissection: cannula through the side port, angled tip under the rhexis rim at 7 o'clock (opposite the port), wave 55 % of the way
+const HY = cat({ hydro: { h: 7, prog: 0.55 }, inst: [{ kind: 'cannula', via: 'side', at: { h: 7, r: 2.95, lift: -0.03 }, bend: true }] });
+const BLOCK = cat({ hydro: { h: 7, prog: 1, block: 1 } });
+// groove 85 % of the way to the planned plate, phaco at its deepest stroke point
+const G0 = cat({ nuc: { groove: { dep: 0.85 } } }), GR = cat({ nuc: G0.cat.nuc, inst: [{ kind: 'phaco', p: K.grooveTip(G0, 1) }] });
+const OVER = cat({ nuc: { groove: { dep: 1, over: 1 } } });
+// crack: phaco and chopper at the floor on opposite walls, 1 mm distal to the centre, crack 70 % (through the plate, running outward)
+const CR0 = cat({ nuc: { groove: { dep: 0.9 }, crack: { prog: 0.7 } } }), hw = K.nucOf(K.norm(CR0)).g1.hw;
+const CR = cat({ nuc: CR0.cat.nuc, inst: [{ kind: 'phaco', p: K.groovePt(CR0, 1, -1.0, hw - 0.47, 0.45) }, { kind: 'chopper', via: 'side', p: K.groovePt(CR0, 1, -1.0, -(hw - 0.2), 0.4) }] });
+// quadrants: both cracks done, turned 135° so a quadrant sits at 6; it is held (occluded), lifted to the centre and 35 % consumed
+const QN = { groove: { dep: 0.9 }, crack: { prog: 1, sep: 0.5 }, rot: 135, groove2: { dep: 0.9 }, crack2: { prog: 1, sep: 0.5 }, quads: [{ q: 0, pull: 1, eat: 0.35 }] };
+const Q0 = cat({ nuc: QN }), QU = cat({ nuc: QN, inst: [{ kind: 'phaco', p: K.quadTip(Q0, 0), bevel: 'down', occl: 1 }] });
+const FQ = FL.state({ pedal: 2.6, occl: 1, set: 'quad', tOcc: 5 });
+
+o.push(T(16, 32, '白內障模型樣本（② hydrodissection、divide and conquer）：右眼 OD、術者坐 12 點', { size: 20, bold: true }));
+o.push(T(1264, 32, 'mm 建模、同一顆 3D 眼球；示意處見 CARD.md', { size: 12, color: '#5b6878', anchor: 'end' }));
+const COLS = [12, 326, 640, 954], PW = 306, R1 = 48, H1 = 330, R2 = 386, H2 = 322;
+
+// ================= A: hydrodissection, section through the injection site (7 o'clock on the right)
+{ const PX = COLS[0], PY = R1, PH = H1, k = 33, x0 = -3.6, y0 = -12.3, c = cam(PX, PY + HEAD, k, x0, y0);
+  const s = K.section({ st: HY, h: 7, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.02, id: 'a' }), A = s.A, P = c.P;
+  panel('a', PX, PY, PW, PH, 'Hydrodissection', '經注水點切面　右＝7 點');
+  o.push(clipG('a', c.tf, s.svg));
+  const fr = (A.waveFronts || []).filter(f => f.sg > 0).sort((a, b) => a.p[0] - b.p[0])[0];
+  o.push(lab('cannula 在前囊邊緣下', '', PX + PW - 10, PY + 54, P(A.tip0), { side: 'R', bold: true, color: '#3c4a57' }));
+  o.push(lab('BSS 在囊與皮質之間', '', PX + PW - 10, PY + 300, P(A.fluidEq), { side: 'R', bold: true, color: '#1f6f9c', lc: '#1f6f9c' }));
+  if (fr) o.push(lab('波前 wave front', '', PX + 10, PY + 300, P(fr.p), { color: '#b3262c', lc: '#b3262c', bold: true }));
+  o.push(lab('核', 'nucleus', PX + 10, PY + 168, P([0.6, -7.4])));
+  o.push(sbar(PX + 18, PY + 66, k));
+}
+// ================= B: the same moment in the microscope: the front crossing the red reflex
+{ const PX = COLS[1], PY = R1, PH = H1, k = 34, x0 = -4.5, y0 = -4.1, c = cam(PX, PY + HEAD, k, x0, y0), P = c.P;
+  const e = K.enface({ st: HY, id: 'b' }), A = e.A;
+  panel('b', PX, PY, PW, PH, '術者視角：fluid wave', '動畫示意　下＝12 點');
+  o.push(clipG('b', c.tf, e.svg));
+  o.push(lab('波前越過 red reflex', 'fluid wave', PX + 10, PY + 54, P(A.waveFront), { bold: true, color: '#b3262c', lc: '#b3262c' }));
+  o.push(lab('cannula（side port）', '', PX + 10, PY + 300, P(A.tip0), { color: '#3c4a57' }));
+  o.push(sbar(PX + PW - 48, PY + 300, k));
+}
+// ================= C: capsular block (示意): the nucleus plugs the rhexis, BSS trapped behind it, posterior capsule pushed back
+{ const PX = COLS[2], PY = R1, PH = H1, k = 26, x0 = -5.7, y0 = -13.2, c = cam(PX, PY + HEAD, k, x0, y0);
+  const s = K.section({ st: BLOCK, h: 7, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.025, id: 'cc' }), A = s.A, P = c.P;
+  const s0 = K.section({ st: cat({}), h: 7, win: { x: -1, y: -6, w: 2, h: 1 }, step: 0.2 });
+  panel('cc', PX, PY, PW, PH, '打太多：capsular block', '動畫示意　右＝7 點');
+  o.push(clipG('cc', c.tf, s.svg));
+  o.push(`<path d="M${P([-2.2, s0.A.postPole[1]]).join(' ')}H${P([2.2, 0])[0]}" stroke="#b3262c" stroke-width="1.4" stroke-dasharray="4 3"/>`);
+  o.push(lab('液體困在核後', 'trapped BSS', PX + PW - 10, PY + 300, P(A.fluidMax), { side: 'R', bold: true, color: '#1f6f9c', lc: '#1f6f9c' }));
+  o.push(lab('後囊原來位置', '', PX + 10, PY + 300, P([-2.2, s0.A.postPole[1]]), { color: '#b3262c', lc: '#b3262c' }));
+  o.push(lab('核往前頂住撕囊口', '', PX + 10, PY + 54, P(A.antPole), { bold: true }));
+  o.push(sbar(PX + PW - 62, PY + 62, k));
+}
+// ================= E: groove in the red reflex: the floor brightens as it deepens
+{ const PX = COLS[3], PY = R1, PH = H1, k = 34, x0 = -4.5, y0 = -4.1, c = cam(PX, PY + HEAD, k, x0, y0), P = c.P;
+  const e = K.enface({ st: G0, id: 'e' }), A = e.A;
+  panel('e', PX, PY, PW, PH, '術者視角：刻槽', '亮度示意　下＝12 點');
+  o.push(clipG('e', c.tf, e.svg));
+  o.push(lab('槽底 red reflex 變亮', '', PX + 10, PY + 54, P(K.enface({ st: G0 }).M([0, -1.9, 0])), { bold: true, color: '#8a3b12', lc: '#8a3b12' }));
+  // brightness against what is left under the floor (示意): the same function the microscope view uses
+  const sw = [3.0, 2.0, A.grooveRem];
+  o.push(`<rect x="${PX + 8}" y="${PY + 258}" width="${PW - 16}" height="56" rx="6" fill="#fff" opacity="0.9"/>`, T(PX + 16, PY + 276, '槽底到後囊（mm）與亮度（示意）', { size: 11, color: '#5b6878' }));
+  sw.forEach((r, i) => { const x = PX + 18 + i * 92, g = K.grooveGlow(r); o.push(`<rect x="${x}" y="${PY + 284}" width="26" height="22" rx="4" fill="#c4542a"/><rect x="${x}" y="${PY + 284}" width="26" height="22" rx="4" fill="#ffc48a" opacity="${(0.15 + 0.8 * g).toFixed(3)}"/>`, T(x + 32, PY + 300, `${r.toFixed(1)} mm`, { size: 12, bold: i === 2 })); });
+}
+// ================= D: groove depth: 3–9 cut across the groove just behind the phaco tip (seen from 12)
+{ const PX = COLS[0], PY = R2, PH = H2, k = 44, x0 = -3.45, y0 = -11.0, c = cam(PX, PY + HEAD, k, x0, y0), Gg = K.nucOf(K.norm(G0)).g1;
+  const off = Gg.tipA + 0.15, s = K.section({ st: GR, h: 9, off, cut: true, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.012, id: 'd' }), A = s.A, P = c.P;
+  panel('d', PX, PY, PW, PH, '刻槽深度（3–9 切面，從 12 點看）', '右＝9 點');
+  o.push(clipG('d', c.tf, s.svg));
+  const X = A.grooveX;
+  o.push(dim(P([X.floor[0] + 1.25, X.floor[1]]), P([X.floor[0] + 1.25, X.post[1]]), ['槽底到後囊', `${X.rem.toFixed(1)} mm`], 'R'));
+  o.push(`<path d="M${P(X.floor).join(' ')}H${P([X.floor[0] + 1.3, 0])[0]}M${P(X.post).join(' ')}H${P([X.floor[0] + 1.3, 0])[0]}" stroke="#0e7c6b" stroke-width="1" stroke-dasharray="3 2"/>`);
+  o.push(lab('phaco 針頭', 'needle', PX + 10, PY + 54, P(A.tip0), { bold: true, color: '#3c4a57' }));
+  o.push(lab('後囊', 'posterior capsule', PX + 10, PY + 300, P([X.post[0] - 1.6, X.post[1] + 0.03 * 0]), { color: '#1d5d93', lc: '#1d5d93' }));
+  o.push(sbar(PX + PW - 62, PY + 62, k));
+}
+// ================= H: over-deep groove (error): the floor through the posterior capsule
+{ const PX = COLS[1], PY = R2, PH = H2, k = 44, x0 = -3.45, y0 = -11.0, c = cam(PX, PY + HEAD, k, x0, y0), Gg = K.nucOf(K.norm(OVER)).g1;
+  const s = K.section({ st: OVER, h: 9, off: Gg.aMin + 0.1, cut: true, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.012, id: 'h' }), A = s.A, P = c.P;
+  panel('h', PX, PY, PW, PH, '錯誤：刻太深', '動畫示意　同一切面');
+  o.push(clipG('h', c.tf, s.svg));
+  o.push(lab('槽底穿過後囊', 'posterior capsule breached', PX + 10, PY + 300, P(A.grooveX.floor), { bold: true, color: '#b3262c', lc: '#b3262c' }));
+  o.push(lab('沒有留後板', '', PX + 10, PY + 54, P([A.grooveX.floor[0], A.grooveX.floor[1] - 1.2])));
+}
+// ================= F: crack: phaco and chopper at the floor on opposite walls push apart; the crack runs down through the plate
+{ const PX = COLS[2], PY = R2, PH = H2, k = 44, x0 = -3.45, y0 = -11.0, c = cam(PX, PY + HEAD, k, x0, y0);
+  const s = K.section({ st: CR, h: 9, off: -0.85, cut: true, win: { x: x0, y: y0, w: (PW - 2) / k, h: (PH - HEAD) / k }, step: 0.012, id: 'f' }), A = s.A, P = c.P;
+  panel('f', PX, PY, PW, PH, '分核：兩支器械在槽底往兩側推', '右＝9 點');
+  o.push(clipG('f', c.tf, s.svg));
+  const tp = P(A.tip0), tc = P(A.tip1);
+  o.push(arrow(tp, [tp[0] - 34, tp[1]], '#0e7c6b'), arrow(tc, [tc[0] + 34, tc[1]], '#0e7c6b'));
+  o.push(lab('phaco', '', PX + 10, PY + 54, P([A.tip0[0], A.tip0[1] - 0.3])));
+  o.push(lab('chopper（side port）', '', PX + PW - 10, PY + 54, P([A.tip1[0], A.tip1[1] - 1.0]), { side: 'R' }));
+  if (A.crack) o.push(lab('裂縫往下貫穿後板', 'crack', PX + 10, PY + 300, P([A.crack[1][0], (A.crack[0][1] + A.crack[1][1]) / 2]), { bold: true, color: '#4a1606', lc: '#4a1606' }));
+}
+// ================= G: quadrant removal: occluded tip holds the quadrant, pulled up to the centre (safe zone) and consumed; machine panel
+{ const PX = COLS[3], PY = R2, PH = H2, k = 26, x0 = -5.85, y0 = -10.9, c = cam(PX, PY + HEAD, k, x0, y0);
+  const s = K.section({ st: QU, h: 6, win: { x: x0, y: y0, w: (PW - 2) / k, h: 6.4 }, step: 0.02, id: 'g' }), A = s.A, P = c.P;
+  panel('g', PX, PY, PW, PH, '四象限：吸住、拉到中央再乳化', '左＝12 點');
+  o.push(clipG('g', c.tf, s.svg));
+  o.push(lab('occlude：吸住核塊', '', PX + PW - 10, PY + 54, P(A.tip0), { side: 'R', bold: true, color: '#3c4a57' }));
+  o.push(lab('皮質留在囊袋', 'cortex', PX + PW - 10, PY + 186, P([3.6, -7.9]), { side: 'R' }));
+  o.push(lab('後囊', '', PX + 10, PY + 186, P(A.postPole), { color: '#1d5d93', lc: '#1d5d93' }));
+  // machine panel (FLUIDICS.state; all 示意，依院內機器設定 except vacuum 450 / bottle 81 cm: Soule 2026)
+  const by = PY + 200, rows = [['腳踏', '3（超音波）'], ['吸力流量', FQ.label.flow], ['vacuum', FQ.label.vac], ['US power', FQ.label.us], ['IOP', FQ.label.iop]];
+  o.push(`<rect x="${PX + 6}" y="${by}" width="${PW - 12}" height="${PH - (by - PY) - 6}" rx="6" fill="#f3f6f9" stroke="#cfd8e0"/>`);
+  rows.forEach(([a, b], i) => { const x = PX + 14 + (i % 3) * 98, y = by + 16 + Math.floor(i / 3) * 28; o.push(T(x, y, a, { size: 10, color: '#5b6878' }), T(x, y + 14, b, { size: 13, bold: true })); });
+  // surge after the occlusion breaks: share of the chamber depth (FLUIDICS.surge), back to baseline
+  // surge after the occlusion breaks (FLUIDICS.surge): chamber depth dips, then comes back to baseline
+  const sx = PX + 14, sy = by + 72, sw = 120, dur = FL.surgeDur('quad'), pts = [], pk = FL.surgePeak('quad');
+  for (let i = 0; i <= 90; i++) { const t = -0.3 + (dur + 0.8) * i / 90; pts.push([sx + sw * i / 90, sy + 60 * FL.surge(t, 'quad')]); }
+  o.push(`<path d="M${sx} ${sy}h${sw}" stroke="#9aa6b2" stroke-width="1" stroke-dasharray="3 2"/><path d="M${pts.map(p => p.map(v => v.toFixed(1)).join(' ')).join('L')}" fill="none" stroke="#b3262c" stroke-width="1.8"/>`,
+    T(sx + sw + 10, sy + 2, `surge：前房淺 ${Math.round(pk * 100)} %`, { size: 10, color: '#b3262c' }), T(sx + sw + 10, sy + 15, `${dur.toFixed(1)} s 回原深度`, { size: 10, color: '#b3262c' }));
+  o.push(T(PX + 14, PY + PH - 12, '數字示意，依院內機器設定', { size: 10, color: '#8a5a00' }));
+}
+document.getElementById('stage').innerHTML = o.join('');
+window.READY = true;
+</script></body></html>

@@ -49,3 +49,14 @@
 
 ## 進度
 - 2026-11-10：規格書訂好章節；下一步：模型（hydrodissection、核的刻槽與分核、phaco tip 與 chopper、腳踏與流體面板）。
+- 2026-11-10：模型做好（`videos/models/globe/cataract.js`＋新檔 `globe/fluidics.js`，選用式 `st.cat`；狀態、出處與示意清單見 `globe/CARD.md`「白內障 ②」）：
+  - Hydrodissection：`hydro { h, prog, press, block }`。液體走在囊與皮質之間、繞赤道、越過後囊；俯視是 red reflex 上移動的波前；壓中央排液；capsular block（動畫示意）。
+  - 核：`nuc { groove, crack, rot, groove2, crack2, quads }`。刻槽（寬、長、深，標槽底到後囊幾 mm）、槽底亮度（示意）、刻太深（錯誤示範）、分核（裂縫先往下貫穿後板再往周邊）、轉 90°、四象限（只動核，皮質留下；吸住、拉到中央、乳化）。
+  - 器械：phaco（針頭、bevel、sleeve、灌流孔）只經主切口、chopper 只經 side port、hydrodissection 的彎尖 cannula；隧道跟著 phaco 彎（示意）。
+  - 新視角 `cross`：3–9 切面，從 12 點看，可平移切過器械尖端，器械畫切口。
+  - 流體：`FLUIDICS.state({ pedal, occl, set, tOcc, tBreak })` 給灌流、流量、vacuum、US、IOP；`FLUIDICS.surge(t)` 給前房變淺的比例，切面用 `st.cat.surge`。
+  - PubMed 查證：Fine 1992（只有摘要）、Miyake 1998、Gimbel 1991、Wong 2000、Scarfone 2026、Sugar 1999、Giglio 2024；另找到 Veritas 的 Soule 2026（quadrant preset 450 mmHg、瓶高 41／81 cm、surge 持續時間）、Quesada 2022（Advanced Infusion＋22 mmHg、雙幫浦）、Choi 2026（腳踏 3＝超音波）、Kato 2018、Yeoh 2000、Yip 2002。
+  - 沒查到：Veritas 的 FDA 510(k) 與廠商手冊、院內設定；Vasavada 2004、Koch 1994、Fairaq 2025 這次沒查；槽底變亮與後板厚度、核的大小都沒有出處 → 示意。面板上的數字一律標「示意，依院內機器設定」。
+  - 檢查：`globe/check.js` 第 12 節 43 條，35 個故意改錯全部抓到；① 與 open globe 的參考圖 0.000%。樣本 `globe/sample-cataract2.html` Claude 自檢，參考圖登記在 `ref/manifest.json`（page: null）。
+  - 做的時候發現（寫進模型卡）：① 的隧道往中央上升 18°，直的 phaco 從 12 點切口到不了槽的近端深處，所以槽最深在遠端、近端是斜坡；phaco 在最深點時 sleeve 會壓到近端撕囊緣（≤ 0.5 mm，示意）。chopper 從 2 點 side port 只在槽的遠端（離中心 1 mm）才放得到槽底。
+  - 下一步：從案例 A 5:15–10:40 挑 clip（`anim/footage.js`，補定位點），寫 `segments.js`、`draw.js`；面板接 `FLUIDICS`；拿到 Veritas 院內設定的照片就換數字。

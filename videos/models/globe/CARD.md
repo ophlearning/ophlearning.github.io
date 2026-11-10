@@ -15,6 +15,7 @@
   - Zone III：直肌、直肌附著後變薄的鞏膜、肌肉暫時剪下（disinsertion）。
   - 玻璃體脫出、hyphema、星狀或斜切（shelved）傷口。
 - 2026-11-09 白內障系列 ①（主切口、side port、OVD、CCC）：選用式狀態 `st.cat`，見下面「白內障」一節。
+- 2026-11-10 白內障系列 ②（hydrodissection、divide and conquer、phaco 與 chopper、流體面板）：同樣放在 `st.cat`，見「白內障 ②」一節。
 - 之後可用：trabeculectomy、PK 等前段手術。眼球只建一次，後段和眼外肌模型也用這顆。
 
 ## 兩個同步視角與方位慣例
@@ -271,10 +272,139 @@
 - **皺褶伸進隧道會讓點跑到隧道另一側**：皺褶只放在內口中央側、在內口處為 0；權重在角膜後表面不能突然歸零（場會不連續），改成往前房漸淡。
 - **小比例尺下沒有標示的皺褶看起來像鋸齒**：第 4–6 章的切面（35 px/mm）不打開 `folds`；只在有「角膜皺褶（示意）」標籤的畫面打開。
 
+## 白內障 ②（2026-11-10 建立；系列 ②：hydrodissection、divide and conquer）
+規格見 `videos/src/cataract-2-hydro-dc/spec.md`。沿用 ① 的水晶體、囊袋、切口與方位。新狀態都是選用式：沒給就和 ① 逐字相同（① 與 open globe 的參考圖 0.000%）。
+
+### 適用的步驟與做法
+- Hydrodissection（cortical cleaving，Fine 1992）：
+  - cannula 從 side port 進，彎的尖端放在撕囊邊緣下。
+  - BSS 走在前囊與皮質之間：往外、繞過赤道、越過後囊。切面上是藍色的一層；術者視角是 red reflex 上移動的亮線（波前）。
+  - 壓中央：液體從撕囊口排到前房。
+  - 打太多：capsular block（動畫示意）。
+- Divide and conquer（Gimbel 1991）：
+  - 刻槽：寬、長、深；槽底 red reflex 變亮（亮度示意）。
+  - 分核：phaco 與 chopper 在槽底、兩側推開；裂縫先往下貫穿後板，再往周邊跑到核的邊緣。
+  - 轉 90°，刻第二道槽、分第二次，得到四個象限。
+  - 四象限移除：occlude 吸住、拉到中央（虹膜平面）、乳化。
+  - 錯誤示範：刻太深（槽底穿過後囊）。
+- 器械：phaco（針頭、bevel、silicone sleeve、灌流孔）經主切口；chopper 經 side port；hydrodissection cannula 的彎尖。
+- 流體面板：`globe/fluidics.js`（純函式，不畫圖；面板由影片畫）。
+
+### 視角與方位
+- `cat`：12–6 切面（同 ①，左＝12 點）。槽沿 12–6 時看得到槽的縱切面（近端的斜坡）與 phaco。
+  - 裂縫沿 12–6 時，這個切面剛好落在裂縫裡，看起來核不見了；這時改用 `cross` 或別的鐘點。
+- `cross`（新）：3–9 切面，從 12 點（術者那側）看，右＝9 點 temporal，和術者視角的左右相同。
+  - `view.off` 把切面往 12（＋）或 6（−）平移，用來切過器械尖端。
+  - 器械畫成「切口」：器械和切面相交的橢圓，不投影（投影會變成一根直立的棒）。
+- 經注水點的切面：`CATARACT.section({ h: 注水鐘點 })`，右＝注水點（樣本用 7 點，side port 在 2 點的對側）。
+- `cscope`：同 ①，多畫波前、槽、裂縫、被拉起的象限。
+- 換算：12–6 切面 u＝−Y；3–9 切面 u＝−X；俯視 x＝−X、y＝Y。
+
+### 狀態（`st.cat`）
+- `hydro: { h, prog, press, block }`：注水的鐘點（預設 6）、波前進度 0→1、壓中央 0→1（液體排出）、capsular block 0→1。
+- `nuc`：核的狀態，依序：
+  - `groove: { h, dep, w, len, over, tipA, rotAt }`：
+    - 槽軸的鐘點 `h`（核自己的座標，預設 12–6）。
+    - `dep` 0→1：從前極刻到「預定後板」。槽底淺時順著前表面，深時順著後表面。
+    - `over` 0→1：刻太深，從預定後板一路到穿過後囊 0.1 mm。
+    - 寬 `w`、長 `len`（預設到撕囊緣內 0.3 mm 為止）。
+    - 近主切口那一段是 phaco 從主切口轉動點到最深點（`tipA`，預設遠端）掃過的斜坡。只有刻的時候槽軸對著主切口才有（`rotAt`：那時核轉了幾度）。
+  - `crack: { prog, sep }`：0→0.4 從槽底往下貫穿後板，0.4→1 往周邊跑到核邊緣（`crackExt`）。prog 1 之後 `sep` 把兩半推開：中間開 sep、赤道不動，兩半都留在囊袋裡。
+  - `rot`：核轉幾度（＋＝術者看順時針＝鐘點變大）。
+  - `groove2`、`crack2`：在核座標 h＋3（轉 90° 後又在 12–6）。
+  - `quads: [{ q, pull, eat }]`：第 q 個象限（核座標的中心在 h＋1.5＋3q）。
+    - 只動核：皮質殼留在囊袋，③ 再吸。
+    - `pull`：頂點拉到中央、前極後 0.6 mm（虹膜平面），外側往下傾 22°，留在囊袋裡。
+    - `eat`：往 phaco 口送，過了口的平面就消失。
+- `surge`：前房深度少了幾成（由 `FLUIDICS.surge` 給），整個水晶體–虹膜隔膜往前。0 就是原狀。
+- `inst`：
+  - `{ kind: 'phaco', p 或 at, bevel: 'up' | 'down', occl }`。
+  - `{ kind: 'chopper', via: 'side', p, tipDir }`。
+  - `{ kind: 'cannula', via, at, bend: true }`：hydrodissection 的彎尖 cannula。
+- 輔助函式：`grooveTip`（phaco 在最深點）、`groovePt`（槽裡的點）、`quadTip`（拉起象限時的 phaco 口）、`hydroOf`、`nucOf`、`grooveGlow`、`crackExt`。
+
+### 數值與出處
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| Hydrodissection 的做法 | 液體在囊與皮質之間分開，之後不必另外吸皮質 | Fine 1992 cortical cleaving hydrodissection（doi:10.1016/s0886-3350(13)80108-3；只看到摘要，cannula 位置、壓中央等細節 [待核對全文]） |
+| 液體層畫的厚度 | 0.15 mm | 示意（真實的分離面更薄，影片解析度看不到） |
+| 波前的路徑與速度 | 沿水晶體表面的路徑長，正規化成 0→1 | 示意 |
+| Capsular block | 核往前頂住撕囊口、液體困在核後、後囊被推後 | Miyake 1998 分類：術中型發生在 hydrodissection 之後，核堵住 CCC 開口（doi:10.1016/s0886-3350(98)80017-5）；術中前房變淺、眼球變硬，像 expulsive hemorrhage（Yeoh 2000，doi:10.1016/s0886-3350(99)00366-1；Yip 2002，doi:10.1177/112067210201200416）；hydrodissection 造成的後囊破是它的一型（Yeoh 2000） |
+| Capsular block 的量 | 水晶體往前 0.3 mm、後極的液袋 1.0 mm（後囊比原位後退 0.7 mm） | 示意 |
+| 手打 hydrodissection 的眼壓 | 模型沒用 | Kato 2018 豬眼：manual 8/20 眼峰值 > 75 mmHg（doi:10.1007/s10384-018-00646-3），旁白可用 |
+| Divide and conquer | 刻槽、分核、四象限 | Gimbel 1991（doi:10.1016/s0886-3350(13)80824-3） |
+| D&C 與 chop 的能量 | 模型沒用 | Wong 2000 RCT：phaco time 2.4 vs 1.2 min、equivalent phaco time 0.84 vs 0.29 min（doi:10.1016/s0886-3350(00)00538-1），旁白可用 |
+| 槽寬、槽端距撕囊緣、槽壁外張 | 1.6 mm、0.3 mm、10° | 示意 |
+| 預定後板（`dep` 1 時槽底到後囊） | 1.0 mm | 示意（查不到出處） |
+| 刻太深 | 穿過後囊 0.1 mm | 示意 |
+| 槽底 red reflex 的亮度 | (1 − 剩下的厚度／4.56)² | 示意（「槽底變亮＝接近後板」是臨床常用的判斷，查不到出處） |
+| 裂縫往下佔的進度 | 40 % | 示意 |
+| 核的大小 | 水晶體的 66 %／68 % | 同 ①，示意 |
+| 象限：頂點位置、傾角 | 前極後 0.6 mm、22° | 示意 |
+| phaco 針頭與 sleeve | 針外徑 0.9、bevel 30°、針露出 1.0、sleeve 外徑 1.5 mm、灌流孔 0.3 mm 在 sleeve 端後 0.45 mm | 示意（院內 tip 型號待確認）。sleeve 外徑由切口推算：2.4 mm 切口張開的周長 4.8 mm＝π×1.53 mm，切口包住 sleeve 才不漏 |
+| phaco 的轉動點 | 隧道 50 % 處 | 示意（① 的器械 35 %；35 % 時深刻槽會把後唇壓到碰虹膜） |
+| chopper | 桿 0.5 mm、彎尖 1.5 mm | 示意 |
+| hydrodissection cannula 的彎尖 | 1.0 mm、往下 35° | 示意 |
+| Wound burn | 模型還沒畫 | Sugar 1999：3 例、切口軸 +7 到 +15 D 散光，輕的數月內減少（doi:10.1016/s0886-3350(99)00021-8）；Giglio 2024 個案（doi:10.1159/000537741） |
+
+### 流體（`fluidics.js`）
+機器是 J&J Veritas（站長確認），院內設定沒有提供。這個環境只能查 PubMed；Veritas 的 FDA 510(k) 與廠商手冊沒查到。面板上的數字一律標「示意，依院內機器設定」，拿到設定畫面再換。
+
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| Veritas 的流體構造 | peristaltic＋venturi 兩種幫浦、dual-durometer 管、variable venting、Advanced Infusion 在瓶上加 22 mmHg（30 cmH2O） | Quesada 2022 first-in-human（doi:10.2147/OPTH.S363061） |
+| 腳踏 | 0 不動、1 灌流、2 灌流＋抽吸、3 再加超音波（第 3 段裡 power 線性增加） | 第 3 段＝超音波：Choi 2026（ultrasound time 定義為腳踏在第 3 段的時間，doi:10.3341/kjo.2025.0196）；1、2 段：Quesada 2022（variable venting 描述從抽吸位置回到灌流位置）。power 隨踩深線性增加：示意 |
+| 四象限 preset | vacuum 450 mmHg、瓶高 81 cm | Soule 2026 Veritas 實驗台的標準 quadrant preset，瓶高測了 41 與 81 cm（doi:10.1097/j.jcrs.0000000000001899）；摘要寫的「aspiration 60 mm Hg」單位不對，[待核對全文]，模型沒用 |
+| surge 持續時間 | peristaltic 2.25／2.90 s、venturi 1.56／2.27 s（瓶高 41／81 cm），中間線性內插 | Soule 2026 |
+| 前房體積、surge 與 vacuum | 250 µL；surge 體積和 vacuum 上限成正比 | Scarfone 2026 綜論（doi:10.3390/medicina62020298） |
+| surge 體積 | 450 mmHg 時 60 µL（前房 24 %） | 示意，落在 Scarfone 2026 整理的 WhiteStar Signature Pro（Veritas 的前一代）30–103 µL 之內 |
+| 前房深度的減少 | ＝surge 體積／前房體積；0.15 s 最淺，持續時間結束時回到 0 | 示意 |
+| 灌流壓 | 瓶高 × 0.7356 mmHg/cm（＋Advanced Infusion 22） | 物理（靜水壓）；Quesada 2022 |
+| 其他設定 | 流量 sculpt 24／quadrant 30 mL/min、sculpt vacuum 80 mmHg、US 50／40 %、不灌流時 15 mmHg、流量壓降 0.25 mmHg/(mL/min)、passive vacuum 1 mmHg/(mL/min)、occlude 後 vacuum 上升時間常數 0.4 s | 示意，依院內機器設定 |
+
+其他出處（旁白用）：Scarfone 2026 也整理了「傳統灌流需要 60–80 mmHg、active fluidics 可在 20–40 mmHg 運作」與「降低 vacuum 與流量可減少 surge」。
+
+### 物理與器械
+- phaco 只經主切口、chopper 只經 side port：軸一定通過各自隧道上的轉動點（phaco 用 50 %，示意）。
+- 隧道的「彎模式」（只用在 phaco 與 chopper；① 的器械照舊）：
+  - 角膜壁跟著器械彎：彎的量＝器械中心線減隧道線，開口外 0.6 mm 高斯衰減，再 0.25 mm 平滑。
+  - 開口張開器械的半徑（sleeve 0.75 mm）。
+  - 只有角膜、角膜緣跟著動；水晶體、虹膜、前房內容取原位置。
+  - 上下的衰減 σb ≥ 3 × 彎的量、σv ≥ 3 × 張開量，對高度單調，牛頓法精確反推。
+- 刻槽的幾何（2026-11-10 做的時候發現）：
+  - ① 的隧道往中央上升 18°、轉動點只比前極高 1.2 mm，直的 phaco 從 12 點切口到不了槽的近端深處。
+  - 所以槽的近端是 phaco 掃過的斜坡，最深處在遠端（6 點側）。
+  - phaco 在最深點時，sleeve 會壓到近端撕囊緣（≤ 0.5 mm，示意；囊沒有畫成被壓變形）。
+  - 和臨床「切口下方最難刻」一致，但沒有出處，旁白不講數字。
+- 分核：chopper 從 2 點的 side port 斜跨過槽。只有在槽的遠端（離中心 1 mm）它才能放到槽底而桿不穿過核；模型的分核姿勢就放在那裡。
+- 推開的兩半留在囊袋裡：囊外的水晶體一律切掉。
+- 象限只有核：皮質殼留在囊袋。整塊（含皮質）抬起會穿過虹膜。
+
+### 必寫的檢查（`check.js` 第 12 節，43 條）
+- Hydrodissection：BSS 只在水晶體表面與囊之間、撕囊口內沒有；波前隨進度擴大、從注水點開始、越過後極；兩圖的波前在注水子午線上同一半徑；壓中央後沒有液體、排出的箭頭停在前房；capsular block 的水晶體前移 0.3、前房 2.42、後囊後退、液袋只在後面。
+- 刻槽：所有深度的槽底都在後囊前（後板 ≥ 0.9 × 預定），只有刻太深會穿過，切面上那裡的後囊也不見；槽不超過撕囊緣內 0.3 mm、寬 1.6；橫切面畫出的槽底到後囊等於標的數字；亮度隨後板變薄、隨深度增加。
+- 器械：phaco（三個姿勢）與 chopper 的軸通過各自的轉動點；中心線不在水晶體裡、表面不碰虹膜、不穿過隧道外的角膜；sleeve 壓到軟的水晶體與撕囊緣 ≤ 0.5 mm；兩圖的尖端位置相同。
+- 隧道彎模式：每條垂直線最多兩塊角膜、場連續、反推 2 µm 內、彎得平滑、彎下的角膜離虹膜 ≥ 0.03 mm。
+- 分核：兩支器械在槽的兩壁、離槽底 < 0.6 mm；裂縫在切面與俯視的範圍相同；推開後中間的縫等於 sep、水晶體不出囊袋；轉 90° 後槽從 12–6 到 3–9。
+- 象限：只有核離開、皮質留下；頂點在中央、離後囊 ≥ 2.5 mm、不超過前極；不碰虹膜；外側比頂點低（往下傾）；phaco 口貼著核塊（occlude）。
+- 流體：腳踏 0–3；靜水壓、Advanced Infusion 22、preset 450／81 cm；occlude 後流量 0、vacuum 上升到上限；surge 的體積在 30–103 µL、持續 2.9 s、平滑、結束後回到 0；切面上前房在 surge 最低點變淺、結束後回到原深度。沒有 NaN。
+- 故意改錯（2026-11-10）：35 個改法，全部會報錯。用 `CATARACT_PATH=<檔案>` 或 `FLUIDICS_PATH=<檔案>` 跑。改法：撕囊口內也有液體、波前反向、俯視的波前放錯子午線、壓中央不排液、排液箭頭進水晶體、液袋跑到前面、block 不前移、預定後板 −0.2、刻太深不切後囊、槽超出撕囊緣、槽寬 ×1.2、標的後板 +0.2、亮度反向、phaco 軸偏離轉動點、sleeve 3 mm、chopper 走主切口、俯視尖端偏 0.2、彎的衰減太短、不平滑、chopper 放同一壁、俯視裂縫範圍用錯、不切囊外、縫只開一半、轉動方向反了、皮質跟著動、傾斜方向反了、頂點太低、腳踏 2 就有超音波、Advanced Infusion 30、surge 120 µL、surge 不結束、持續時間 3.9 s、切面不跟 surge、occlude 仍有流量、注入 NaN。
+
+### 已知的坑（2026-11-10 做的時候踩到的）
+- **切面落在裂縫裡**：12–6 切面＋沿 12–6 的裂縫，切面上整片核不見。分核與四象限改用 `cross`，或選穿過象限中線的鐘點。
+- **投影的器械在橫切面上變成直立的棒**：phaco 從 12 點來，投影到 3–9 切面只剩上下。改成畫器械與切面相交的切口（`cut`）。
+- **偏移切面的水晶體座標**：① 的 `capsuleCut` 用 `x = U·along + nrm·e`，偏移切面要用 `− nrm·e`。② 的新判斷（液體、刻太深）用正確的座標，① 的式子沒改（改了會動到 ① 的畫面）。
+- **phaco 轉動點 35 % 時**，深刻槽會把隧道後唇壓到碰虹膜；phaco 改用 50 %。
+- **整個象限（含皮質）抬起會穿過虹膜**；改成只有核。
+- **推開的兩半凸出囊袋**：只往側邊推，前後表面就跑出去；用囊袋切掉。
+- **樣本的 phaco 擋住槽**：俯視圖上 sleeve 和槽一樣寬；槽的亮度另外畫一張沒有器械的。
+
 ## 檔案
 - `globe.js`：模型本體。內容有外表面與牆厚、組織函數、切面（等高線）、俯視圖、縫線路徑、錨點。
 - `views.js`：向登記處（`videos/models/registry.js`）報到，提供三個視角：`mer` 子午切面、`across` 垂直傷口切面、`scope` 顯微鏡俯視。
 - `check.js`：自我檢查。`GLOBE_PATH=<檔案>` 可以拿另一份 `globe.js` 來跑，用在故意改錯的測試。
 - `sample.html`、`sample.jpg`：模型樣本，內容是修補前的子午切面、顯微鏡俯視、角膜一針的垂直切面。參考圖由影片的 `ref/manifest.json` 比對。
-- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角。
+- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角，② 加 `cross`（3–9 切面）。
 - `sample-cataract.html`、`sample-cataract.jpg`：白內障樣本（keratome 在隧道裡的切面與俯視、撕囊進行中的 12–6 切面、run-out 的前緣切面、正常／run-out／zonule 弱三張俯視）。參考圖由 `videos/src/cataract-1-wound-ccc/ref/manifest.json` 比對。
+- `fluidics.js`：② 的流體面板資料（`FLUIDICS`；node 裡是 `require('./fluidics.js')`）：腳踏、occlusion、設定 → 灌流、流量、vacuum、US、IOP；`surge(t)` 給前房深度的減少。
+- `sample-cataract2.html`、`sample-cataract2.jpg`：② 樣本（hydrodissection 切面與俯視、capsular block、槽底亮度、刻槽深度、刻太深、分核、四象限＋流體面板）。參考圖由 `videos/src/cataract-2-hydro-dc/ref/manifest.json` 比對。

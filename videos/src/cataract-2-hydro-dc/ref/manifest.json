@@ -1,0 +1,22 @@
+{
+  "about": "白內障系列 ②（hydrodissection、divide and conquer）的檢查：還沒有影片頁（page: null），目前只有模型樣本 globe/sample-cataract2.html。改了 globe/cataract.js、globe/fluidics.js 或樣本頁後跑 node videos/tools/check-all.js videos/src/cataract-2-hydro-dc；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": null,
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
+  "items": [
+    {
+      "page": "../../../models/globe/sample-cataract2.html",
+      "ref": "../../../models/globe/sample-cataract2.jpg",
+      "dpr": 1,
+      "crop": null,
+      "approved": "2026-11-10",
+      "note": "Claude 自檢（dpr 1 看全圖；dpr 2 裁切放大 hydrodissection 切面與俯視、capsular block、槽底亮度、刻槽深度、刻太深、分核、四象限＋流體面板；cross 與 12–6 切面另用 shot-model.js 加 1 mm 格線放大看槽底、後板、裂縫、推開的兩半、液體層與液袋；數字、兩圖一致與器械路徑由 globe/check.js 第 12 節檢查）"
+    }
+  ]
+}

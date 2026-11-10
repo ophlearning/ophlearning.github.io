@@ -25,6 +25,10 @@ MODEL_VIEWS.globe = {
   // capsule at true thickness (µm) at the rhexis edge in the tear-front plane
   capzoom: { title: '前囊真實厚度放大（撕囊邊緣，5.25 mm 撕囊）', win: [2.475, -9.62, 0.3],
     draw: (state, id) => CATARACT.section({ st: state, h: _hf(state), win: _cw(state, { x: 2.475, y: -9.62, w: 0.3, h: 0.36 }), step: (state.view || {}).step || 0.0012, id }).svg },
+  // ② 3–9 section through the lens axis, seen from 12 o'clock (the surgeon's side): right = 9 o'clock (temporal, OD) as in the microscope view.
+  // Cuts across a 12–6 groove: its U-shaped floor, the plate left under it, a crack running down the axis, the two instruments at the floor
+  cross: { title: '3–9 點切面（從 12 點看，右＝9 點 temporal）', win: [-6.5, -12.6, 13],
+    draw: (state, id) => CATARACT.section({ st: state, h: 9, off: (state.view || {}).off || 0, cut: true, win: _cw(state, { x: -6.5, y: -12.6, w: 13, h: 8 }), step: (state.view || {}).step || 0.025, id }).svg },
   // microscope view for cataract states (dilated pupil, red reflex), surgeon at 12
   cscope: { title: '顯微鏡俯視（白內障，術者坐 12 點）', win: [-8, -4.5, 16],
     draw: (state, id) => CATARACT.enface({ st: state, id, surgeon: state.surgeon ?? 12 }).svg },
