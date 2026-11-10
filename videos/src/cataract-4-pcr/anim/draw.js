@@ -69,7 +69,7 @@ const IA = (p, o = {}) => ({ kind: 'ia', p, port: o.port || 'up', occl: o.occl |
 const P_RIM5 = under(HP, 3.0, 0.55);                                                       // I/A under the rim on the 5 o'clock side (straight tip reaches it)
 
 const W_DEEP = { x: -9.1, y: -12.6, w: 18.2 }, W_SEC = { x: -6.4, y: -12.7, w: 12.8 }, W_IOL = { x: -7.4, y: -10.9, w: 6.6 }, W_IOL3 = { x: -7.6, y: -11.1, w: 7.0 }, W_FRONT = { x: -6.6, y: -12.9, w: 11.6 };
-const W_SCOPE = { x: -6.0, y: -4.06, w: 12 }, W_SCOPE_N = { x: -4.8, y: -3.25, w: 9.6 }, W_SCOPE_W = { x: -10.5, y: -7.1, w: 21 };
+const W_SCOPE = { x: -6.0, y: -4.06, w: 12 }, W_SCOPE_N = { x: -4.8, y: -3.25, w: 9.6 }, W_SCOPE_W = { x: -12, y: -6.6, w: 24 };
 const SEC_T = { title: '經主切口的切面（模型）', orient: '左＝11 點（主切口）　上＝前' };
 const SECX_T = { title: '經主切口的切面（模型；IOL 為投影）', orient: '左＝11 點　上＝前' };
 const SYNC_T = { title: '經主切口的切面（模型，依錄影時間）', orient: '左＝11 點　上＝前' };
@@ -214,7 +214,7 @@ DRAW2['1-3'] = T => {
   let rx = `<rect x="10" y="8" width="252" height="54" rx="6" fill="#1d2733" opacity="0.85"/>` + text(20, 30, `${OR.eyeZh}　術者坐 ${OR.bottom} 點`, { size: 15, bold: true, color: '#fff' }) + text(20, 52, `下＝${OR.bottom} 點　右＝${OR.right} 點 ${OR.rightAnat.en}`, { size: 15, bold: true, color: '#fff' });
   rx += htext(PW - 12, PH / 2 - 60, '鼻側 nasal →', { size: 14, bold: true, color: INK2, anchor: 'end' }) + htext(12, PH / 2 - 60, '← 顳側 temporal', { size: 14, bold: true, color: INK2 });
   rx += labNear('主切口 11 點', 'main', main, 40, -40, { bold: true, color: INK2, op: T.on(1) });
-  rx += labNear('side port 2 點', '', side, -40, -40, { bold: true, color: INK2, op: T.on(1) });
+  rx += labNear('side port 2 點', '', side, 40, -60, { bold: true, color: INK2, op: T.on(1) });
   rx += note('模型：不鏡像，鐘點以病人為準', 1);
   return { L, R: { svg: sv.svg, extra: rx, P: SCOPE_T } };
 };
@@ -334,7 +334,7 @@ DRAW2['3-2'] = T => {
   const kw = T.p(1, 0, 0.8), lv = sec(WITH(kw), W_SEC, 'sL'), rv = sec(FIRST(1), W_SEC, 'cR', { cut: true });
   let ex = '';
   if (lv.A.vitTip && kw > 0.5) ex += labNear('玻璃體到切口', 'vitreous', lv.A.vitTip, 50, 90, { bold: true, color: WARN, lc: WARN });
-  ex += labNear('前房變淺', 'shallow', [lv.A.antPole[0] + 40, lv.A.antPole[1] - 40], 60, -40, { bold: true, color: WARN, lc: WARN, op: ss(0.3, 0.8, kw) });
+  ex += labNear('前房變淺', 'shallow', [lv.A.antPole[0] + 40, lv.A.antPole[1] - 20], 80, 40, { bold: true, color: WARN, lc: WARN, op: ss(0.3, 0.8, kw) });
   ex += box(10, '前房不穩 → 破口變大、核塊掉落', T.on(2, 0.6), WARN);
   ex += sbar(lv) + note('動畫示意；量為示意', 1);
   let rx = '';
@@ -457,7 +457,7 @@ DRAW2['5-2'] = T => {
     ex += box(10, 'pars plana＋染色最有效（綜論）', T.on(3, 0.6), INK2, 36, 15);
     ex += sbar(lv) + note('切口的鐘點為示意', 1);
     let rx = '';
-    if (rv.A.sclerotomy) rx += labNear('pars plana 切口', '11 點', rv.A.sclerotomy, -30, 40, { bold: true, color: INK2 });
+    if (rv.A.sclerotomy) rx += labNear('pars plana 切口', '11 點', rv.A.sclerotomy, -30, -70, { bold: true, color: INK2 });
     rx += note('模型示意', 1);
     return { L: { svg: lv.svg, extra: ex, P: { title: '經 pars plana 的前段玻璃體切除（模型）', orient: '左＝11 點　上＝前' } }, R: { svg: rv.svg, extra: rx, P: SCOPE_T } };
   }
