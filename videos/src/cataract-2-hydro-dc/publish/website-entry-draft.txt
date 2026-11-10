@@ -1,7 +1,7 @@
   {
-    id:'cataract-2-hydro-dc', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'cataract-2-hydro-dc', type:'youtube', yt:'TbwKQ93RaYQ', cat:'surgery',
     zh:'白內障 ②：Hydrodissection 與 divide and conquer', en:'Cataract surgery ②: hydrodissection and divide and conquer',
-    dur:0,   // TBD：出片後用 ffprobe 實測秒數四捨五入
+    dur:601,
     short:'白內障系列第二支，真實手術錄影＋同步的機轉切面＋腳踏與流體面板：hydrodissection（撕囊邊緣下、慢而連續、壓中央、確認轉得動；capsular block）、腳踏 0–3 段、刻槽（槽底 red reflex 變亮＝剩的核變薄）、兩支器械在槽底分核、核塊拉到中央再乳化（occlusion 與 surge）、surge／wound burn／zonule 弱的第一步，以及 wet lab 練習清單。',
     sum:'這支影片是白內障手術系列的第二支，一半以上的時間花在刻槽、分核和移除核塊。每一步先看做完的樣子，再看手術錄影與同步的機轉切面，最後看出錯的線索與當下的第一步。Hydrodissection 的目標是讓整顆核在囊袋裡鬆開、轉得動：cannula 尖端放在撕囊邊緣下，慢而連續地打 BSS，液體走在前囊與皮質之間、繞過赤道、從後囊前面越過去；每打一處就輕壓核的中央排出液體，最後推核確認轉得動。打太多、液體排不出去時核頂住撕囊口，就是術中的 capsular block（前房變淺、眼球變硬，像 expulsive hemorrhage），第一步是停止打水、壓中央排液。接著是 phaco 腳踏 0 到 3 段（1 段灌流、2 段加抽吸、3 段再加超音波）與機器面板。Divide and conquer 先從切口下方往對側刻一道槽，長到撕囊邊緣內、深到只剩薄的後板；槽越深，槽底的 red reflex 越亮。分核時兩支器械放到槽底往兩側推，裂縫要貫穿後板、裂到周邊才算分開，再轉 90° 刻第二道槽、再分一次。移除核塊時先 occlude 吸住，把核塊拉到中央、離後囊遠的地方再乳化；堵塞解除的那一刻會有 post-occlusion surge。最後是 surge（腳退回 1 段）、wound burn（放開 3 段、先確定有水流）與 zonule 弱（hydrodissection 做足、低流量、慢動作）的線索和第一步，以及上刀前在 wet lab 要練的四件事。',
     note:'左邊是右眼 OD、術者坐 superior（12 點）的真實手術錄影，已去識別（只裁出眼睛範圍、畫面上沒有文字、不用聲音）；右邊是以 mm 建模的機轉切面，和錄影同步，示意的部分畫面上有標。本例 zonule 弱（後來放了 CTR）；hydrodissection 從主切口進 3 次，錄影上看得到金色的環（hydrodelineation 的徵象），看不出壓中央與轉核；前半是刻槽＋分核，之後第二道槽看不清楚，標準的步驟用模型示範。腳踏與機器面板以 Veritas 為例，面板的數字是示意，依院內機器設定；刻槽的寬度、深度與槽底亮度沒有文獻數字，畫面標示意。',

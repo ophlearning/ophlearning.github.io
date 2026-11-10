@@ -104,3 +104,4 @@
   - 3-3 第 3 句「刻到後面，紅溝越來越清楚」：6:06（前段）與 6:31（後段，新 clip `groove-late`）兩格並排。另一個 checkout 出片前先跑 `node videos/tools/video-kit/footage-cli.js extract videos/src/cataract-2-hydro-dc`（只會抽新的 `groove-late`，61 格）。
   - `check.js` 加 1 條：5-2 第 2–5 句、3-3 第 3 句畫面上的錄影時間＝旁白說的那一刻（頁面逐句取樣 `FOOT_SEEN`）、跳接只跳過第 3 塊且註明秒數、右邊標題的鐘點＝錄影量到的；selftest 加 4 個故意改錯都抓到，另把跳接真的拿掉跑一次 → FAIL，再改回。
   - 參考圖：更新 5-1-L5、5-2-L1，新增 3-3-L2、5-1-L2、5-2-L4（Claude 自檢）；總覽 `ref/overview/5-quadrant-removal.jpg` 重截（第 3 章那張的時刻沒變，比對 0 像素差）。`check-all` 全部 PASS。
+- 2026-11-10（上線）：在固定於 `ccef102` 的乾淨工作樹出片（10:01，1080p30；共用模型同時有人在改，所以不在主工作樹出片），從 mp4 抽格確認上傳前的五處修正；上傳 YouTube 不公開（`TbwKQ93RaYQ`，privacy 回報 unlisted）；`videos/index.html` 條目放在最前面，瀏覽器開 `videos/#cataract-2-hydro-dc` 沒有 JS 錯誤、嵌入的是這支影片。下一步：PR 合併後把 `textBase` 改成 main 上的合併 commit。
