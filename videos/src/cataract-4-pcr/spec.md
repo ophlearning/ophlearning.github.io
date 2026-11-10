@@ -22,7 +22,7 @@
 - 整理後的病例摘要（以站長確認為準，錄影判讀補細節）：OS，術者坐 superior：主切口約 11 點＋side port 約 2 點；phaco 中發生 PCR（站長不確定時機，猜在 sculpt 或 quadrant 移除；錄影判讀最可能在 phaco 末段約 12:50–12:58，兩者相符）→ OVD 把剩下的核托到前房、在器械支撐下乳化 → coaxial I/A → 雙手、經角膜緣前段玻璃體切除 → AAB00 經 injector 植入 **sulcus** → 白色懸浮物（站長猜是 triamcinolone［TA］，用來染出玻璃體）→ 縫合切口。
 - AAB00＝Sensar One（one-piece 疏水性壓克力、6 mm optic、C-loop haptic；Wakili 2026，doi:10.1007/s00417-026-07340-y；Danzinger 2025，doi:10.3928/1081597X-20250307-01）。**本例把 one-piece 放在 sulcus**：旁白只描述本例做法，同時照文獻講 single-piece acrylic 放 sulcus 的風險與建議做法（Chang 2009），不評斷術者。
 - 旁白的措辭：PCR 時機說「錄影上看不出確切時間，術者推測在刻槽或移除核塊時」；白色懸浮物說「看起來是 triamcinolone（術者推測）」，不說成確定。
-- 和系列的 routine 病例（案例 A，OD）不同：錄影面板的方位要寫「左眼 OS」「右＝nasal」；模型的術者視角左右鏡像。
+- 和系列的 routine 病例（案例 A，OD）不同：錄影面板的方位要寫「左眼 OS」「右＝nasal」。模型不鏡像：鐘點以病人的臉為準，術者坐 12 點時兩眼都是下＝12 點、右＝9 點，OS 只是 9 點改叫 nasal、3 點改叫 temporal（`st.eye: 'OS'`；2026-11-10 更正，原本寫「左右鏡像」是錯的）。
 - 沒有手術日期（純學習用）：不做術前速讀包。
 - 錄影的限制，旁白要照實說：本例 red reflex 很弱，PCR 的經典線索在錄影上大多看不到 → **線索用模型動畫示範（標「動畫示意」）**，錄影用來看「真實畫面上能看到多少」與處理流程；本例術者的做法只描述、不評斷，建議做法一律標文獻。
 
@@ -63,7 +63,7 @@
 
 ## 模型需求（`videos/models/globe/`；另一個小助手正在改模型，這裡只列需求，開工時再對模型卡）
 - 狀態：後囊破口（大小、位置）、前部玻璃體面往前凸／玻璃體進前房、核塊下沉或歪斜、前房深度變化、OVD 封住破口、核塊被托到前房、雙手前段玻璃體切除（灌流經 side port、切割經主切口）、sulcus／in the bag／optic capture 三種 IOL 位置。
-- 鏡像：OS 的術者視角（右＝nasal）；切面經本例主切口（約 11 點）的子午線。
+- 左眼：`st.eye: 'OS'`，不鏡像（右＝9 點＝nasal）；切面經本例主切口（約 11 點）的子午線。
 - 沒有出處的幾何（破口形狀、玻璃體量）一律標「示意」。
 
 ## 驗收項目
@@ -81,7 +81,7 @@
 ## 進度
 - 2026-11-10：Claude 判讀整部 PCR 錄影（`footage-notes.md`）：沒有燒進畫面的文字（只有上緣亮線、右緣暗線）；約 14:00 的「方向改變」實測是 14:08 的顯微鏡平移；眼別判讀 OS、術者坐 superior、主切口約 11 點、side port 約 2 點；時間軸、PCR 可能的時間與看得到的線索、處理流程、10 個可用片段。PubMed 確認待查證文獻存在（PMID／DOI 如上）。規格書草稿完成。
 - 下一步：站長回答上面 3 題後，把確認的病例摘要寫進「病例情境」；`footage-sources.js` 加 `case-pcr`（建議條目在 `footage-notes.md` 第 6 節）；模型加 PCR 狀態；查證文獻；寫旁白與錄影片段。
-- 2026-11-10：站長確認病例（OS、PCR 時機不確定［猜 sculpt 或 quadrant］、AAB00 放 sulcus、白色懸浮物猜是 TA 染玻璃體），原文寫進「病例情境」；PubMed 確認 AAB00＝Sensar One（one-piece）。下一步：模型（左眼 OS 鏡像、後囊破口、玻璃體、雙手前段玻璃體切除、TA、sulcus IOL）。
+- 2026-11-10：站長確認病例（OS、PCR 時機不確定［猜 sculpt 或 quadrant］、AAB00 放 sulcus、白色懸浮物猜是 TA 染玻璃體），原文寫進「病例情境」；PubMed 確認 AAB00＝Sensar One（one-piece）。下一步：模型（左眼 OS、後囊破口、玻璃體、雙手前段玻璃體切除、TA、sulcus IOL）。
 - 2026-11-10：模型 ④ 完成（`videos/models/globe/`，模型卡「白內障 ④」）。
   - 左眼：`st.eye: 'OS'`。鐘點是檢查者面對病人的鐘點，兩眼同一個物理方向；OS 3 點 temporal、9 點 nasal，術者坐 12 點時下＝12 點、右＝9 點 nasal。模型的解剖沒有鼻顳差異，所以同樣鐘點的 OS 畫面和 OD 一樣，只有方位名稱不同（`CATARACT.orient`、`anat`）；切口跟著術者的手，不跟著眼別鏡像（主切口 11 點＝superonasal、side port 2 點＝superotemporal，和錄影的 31–38°、59–68° 相符）。之前寫的「術者視角左右鏡像」不對：把畫面翻過來，主切口會跑到左下。
   - 狀態（選用式：open globe 與 ①–③ 的樣本 SVG 逐位元相同，四支影片的參考圖都 0.000%）：後囊破口（位置、大小、往赤道撕裂）、前房變深＋瞳孔放大、前玻璃體面凸出、玻璃體經破口到 tip 或主切口、核塊一端歪進破口、核不跟 tip、核塊掉進玻璃體腔；第一步 tip 不退＋side port 打 dispersive OVD（玻璃體留在後面）對照先退出（前房塌、玻璃體到切口）；核塊托到前房、side port 的直器械墊在下面、phaco 從主切口吃；雙手經角膜緣前段玻璃體切除（切割在破口、灌流高在前房、側孔水平出水，流向示意）與切除進度、TA 白點只在玻璃體上；pars plana 做法（23G、3.5 mm）；IOL in the bag／one-piece 放 sulcus（厚 haptic 貼近虹膜，示意）／3-piece 放 sulcus＋optic capture。
