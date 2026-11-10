@@ -1,7 +1,7 @@
 {
   "about": "白內障系列 ④（PCR：怎麼認、當下第一步、之後怎麼處理）的檢查：模型樣本 globe/sample-cataract4.html 與影片頁 anim/video.html 每段一張參考圖（錄影只有裁切後的眼睛）。改了 globe/cataract.js、樣本頁或影片畫面後跑 node videos/tools/check-all.js videos/src/cataract-4-pcr；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。錄影不在這台機器上時，含錄影的項目報 SKIP。",
   "page": "../anim/video.html",
-  "textBase": "ab6691e",
+  "textBase": "3df4512",
   "textBaseNote": "旁白、重點、來源、章節與參考文獻第 1 版（2026-11-10）的 commit；check-video.js 以它比對文字。改旁白時：改 segments.js、重做語音與參考圖，commit 後把 textBase 換成那個 commit。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。anim/timeline.js 進 git，參考圖用真實語音時間軸",
   "threshold": 0.0002,
   "tol": 48,
