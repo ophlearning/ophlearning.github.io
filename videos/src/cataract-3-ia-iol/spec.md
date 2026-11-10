@@ -92,3 +92,4 @@
   - Publish：`publish/youtube-description.txt`（章節、20 篇參考文獻的 DOI 在 PubMed 再對一次，Hagan 1987、Sakamoto 2002 沒有 DOI 寫 PMID；去識別說明、本例差異、「製作　張博淳」）、`chapters.txt`、`captions.srt`（= `out/`）、`website-entry-draft.txt`（`yt:'TBD'`、`dur:0`，出片後填）。
   - 跟刀單：`print/`（video.js、checklist.js、steps.js、anatomy.js），LSs 三張 PASS，彩色與灰階放大自檢。
   - `check-all` 全部 PASS。下一步：主 session 出片（`build.sh`）→ 上傳不公開 → 照 `CLAUDE.md` 同步網站。
+- 2026-11-10（上線）：在主工作樹出片（8:55，1080p30；共用模型已穩定，④ 的小助手只動 ④ 的資料夾），從 mp4 抽格確認；上傳 YouTube 不公開（`QygPR3YDopA`，privacy 回報 unlisted）；`videos/index.html` 條目放在最前面，瀏覽器開 `videos/#cataract-3-ia-iol` 沒有 JS 錯誤、嵌入的是這支影片。下一步：PR 合併後把 `textBase` 改成 main 上的合併 commit。

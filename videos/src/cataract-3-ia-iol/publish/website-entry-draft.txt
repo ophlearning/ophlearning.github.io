@@ -1,7 +1,7 @@
   {
-    id:'cataract-3-ia-iol', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'cataract-3-ia-iol', type:'youtube', yt:'QygPR3YDopA', cat:'surgery',
     zh:'白內障 ③：I/A、IOL 植入與收尾', en:'Cataract surgery ③: I/A, IOL implantation and closure',
-    dur:0,   // TBD：出片後用 ffprobe 實測秒數四捨五入
+    dur:535,
     short:'白內障系列第三支，真實手術錄影＋同步的機轉切面：I/A 吸口朝上、在前囊邊緣下夾住皮質拉到中央再吸、主切口下方的皮質（雙手 I/A、hydro-dispersion、本例的彎頭 tip）、吸到後囊的放射狀皺褶與第一步、OVD 撐開囊袋、one-piece IOL 進囊袋的順序、置中與 CCC 一圈蓋住 optic、IOL 前後的 OVD 都要清、切口密閉（stromal hydration 與 swab pressing），以及 wet lab 練習清單。',
     sum:'這支影片是白內障手術系列的第三支，三分之一以上的時間花在 I/A 和主切口下方的皮質。每一步先看做完的樣子，再看手術錄影與同步的機轉切面，最後看出錯的線索與當下的第一步。核拿掉之後，囊袋裡還剩一層皮質，貼在前囊邊緣下、赤道和周邊的後囊上；I/A 的目標是把皮質吸乾淨、後囊保持完整。I/A 的吸口開在 tip 的側面，任何時候都要知道它朝哪裡；常用的做法是吸口朝上、朝著角膜，看得到吸口、也離後囊最遠。腳踏 1 段只灌流、2 段才吸：tip 伸到前囊邊緣下夾住皮質，往中央拉、剝下來，到中央離後囊遠的地方再吸進去，一區接一區繞一圈；吸過的地方紅光變得均勻。主切口下方的皮質最難吸：直的 tip 從主切口進來往中央是往上斜，伸不到那裡的邊緣下，要換一個角度，例如雙手 I/A（吸的那支走側切口）或 hydro-dispersion（27G 鈍針經側切口對著主切口下方打 BSS 沖鬆再吸）；本例用的是彎頭的 tip 轉向側邊。吸到後囊時，後囊會出現一條條放射狀的皺褶、指向吸口；第一步是腳退回 1 段停止吸，機器有 reflux 就 reflux，不要把 tip 往上拉。放 IOL 之前先用 OVD 撐開囊袋；IOL 摺在 injector 裡從主切口打進去，前導 haptic 先進囊袋，optic 在囊袋裡打開，後 haptic 最後用 hook 從側切口壓進去。目標是 IOL 在囊袋裡置中、CCC 的邊緣一圈都蓋在 optic 上；專為囊袋設計的 one-piece IOL 不要留在 sulcus。IOL 放好之後，連 IOL 後面的 OVD 都要吸乾淨，囊袋才會貼回 IOL。最後是切口密閉：器械一退出前房最容易變淺，可以在切口兩側的基質打水（stromal hydration），或用棉棒壓住切口（swab pressing）；收尾前確認前房深度回來、切口不漏水。片尾是上刀前在 wet lab 要練的四件事。',
     note:'左邊是右眼 OD、術者坐 superior（12 點）的真實手術錄影，已去識別（只裁出眼睛範圍、畫面上沒有文字、不用聲音）；右邊是以 mm 建模的機轉切面或術者視角，和錄影同步，示意的部分畫面上有標。本例 zonule 弱：放 IOL 前另放了 CTR、最後縫合了主切口，routine 不需要，這兩段略過；IOL 打進去之後約 1 分半的調整看不清楚，也略過。本例從頭到尾用同一支彎頭 coaxial I/A tip、經主切口吸；剛性的彎頭伸不到主切口正下方，那一區在模型上是示意。I/A 退出後用棉棒壓住主切口那一側，沒有看到 stromal hydration。吸口方向、後囊皺褶、injector 斜面朝下與 IOL 轉正置中的做法是模型示意；IOL 型號、I/A tip、收尾用哪一種方法依院內常規。',
