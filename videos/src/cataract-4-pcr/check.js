@@ -8,7 +8,8 @@
 //    (window.FOOT_AT, the drawing's own footage clock) must show what the line says, in the order it says it (e.g. the instruments are still in when
 //    「一起退出」 starts and out before 「停格」). The right panel's model state is sampled every 0.5 s of source time (window.CASE_AT, the same
 //    functions the drawing uses): instruments only while the recording shows them, through the incision the recording shows, never touching
-//    iris, cornea or a capsule (the posterior capsule only inside the rent). Model claims of the narration are checked on the globe model.
+//    iris, cornea, a capsule (the posterior capsule only inside the rent) or the nucleus piece; in 4-3 the straight instrument lies under the floated
+//    piece and crosses the section (as drawn and narrated). Model claims of the narration are checked on the globe model.
 // 3. Wording rules of this case (the user's answers, 2026-11-10): the PCR moment is never stated as seen; triamcinolone is 「看起來是…（術者推測）」;
 //    the IOL position comes from the surgeon; nothing is said about lens fragments in the vitreous, a VR referral or the 29:40–31:45 injections
 //    for this case; no line about this case judges it.
@@ -34,11 +35,11 @@ const LEDGER = {
   '2-3': { '11': '結構', '1': '結構' },
   '2-4': { '5': '結構', '11': '結構', '1': '結構' },
   '2-5': { '3': '結構', '11': '結構', '1': '結構' },
-  '2-6': { '12': '錄影', '58': '錄影', '9': '結構', '0.5': '錄影' },
+  '2-6': { '12': '錄影', '9': '結構', '0.5': '錄影' },
   '2-7': {},
   '3-1': { '11': '結構', '1': '結構' },
   '3-2': { '11': '結構', '1': '結構' },
-  '3-3': { '10': '錄影', '2': '錄影', '0.5': '錄影', '12': '結構', '9': '結構', '11': '結構', '1': '結構' },
+  '3-3': { '10': '錄影', '2': '錄影', '0.5': '錄影', '12': '結構', '9': '結構' },
   '3-4': { '5': '結構', '11': '結構', '1': '結構' },
   '3-5': { '1': '結構', '2': '結構', '3': '結構', '4': '結構', '5': '結構', '11': '結構' },
   '4-1': { '12': '結構', '9': '結構', '11': '結構', '1': '結構' },
@@ -49,7 +50,7 @@ const LEDGER = {
   '5-2': { '3.5': 'Rajan 2025', '4': 'Rajan 2025', '23': 'Rajan 2025', '2': '結構', '11': '結構', '12': '結構', '9': '結構', '1': '結構' },
   '5-4': { '2': '錄影', '12': '結構', '9': '結構', '11': '結構', '1': '結構' },
   '5-5': { '2': '錄影', '4': '錄影', '12': '結構', '9': '結構' },
-  '6-1': { '3': '結構', '11': '結構' },
+  '6-1': { '3': '結構', '11': '結構', '1': '結構' },
   '6-2': { '30': 'Chang 2009', '93': 'Chang 2009', '0.6': 'Suto 2003', '0.62': 'Suto 2003', '0.75': 'Suto 2003', '1.00': 'Suto 2003', '3': '結構', '11': '結構', '1': '結構' },
   '6-3': { '6': 'Wakili 2026', '2': '錄影', '12': '結構', '9': '結構', '11': '結構', '1': '結構' },
   '7-1': { '11': '結構', '1': '結構' },
@@ -94,15 +95,15 @@ async function screenText() {   // all text drawn on screen per segment (60 % an
 // ---------------------------------------------------------------- geometry: instrument clearance (as globe/check.js; the posterior capsule may be crossed only inside the rent)
 function shaft(st, i) {
   const c = K.norm(st), g = K.instGeom(c, c.inst[i]), f = K.layersFn({ ...st, cat: { ...st.cat, inst: [] } }), Bb = K.bagOf(c), PC = K.pcrOf(c);
-  const piv = g.pivot || g.tn.to3(g.tn.pivot), segs = g.bend ? [[g.tip, g.bend], [g.bend, piv]] : [[g.tip, piv]], R = { iris: 0, cornea: 0, antCap: 0, postCap: 0, g };
+  const piv = g.pivot || g.tn.to3(g.tn.pivot), segs = g.bend ? [[g.tip, g.bend], [g.bend, piv]] : [[g.tip, piv]], R = { iris: 0, cornea: 0, antCap: 0, postCap: 0, frag: 0, g }, FR = PC && PC.FR;
   for (const [a, b] of segs) { const L3 = G.len(G.sub(b, a)), ax = G.unit(G.sub(b, a)), side = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(side, ax));
     for (let t = 0; t <= L3; t += 0.05) { const q = G.add(a, ax, t), rr = (g.kind === 'ia' && a === g.tip && t > CN.ia.sleeveBack ? g.rs : (g.rn || g.ro || g.rr || 0.2)); let above = 0, below = 0;
       for (let k = 0; k < 12; k++) { const an = 2 * Math.PI * k / 12, p = G.add(q, G.add(side.map(v => v * Math.cos(an)), up, Math.sin(an)), rr - 0.01), o = f(p), w = G.wallOf(G.mer(p).z, G.mer(p).rho);
-        if (o.iris < 0) R.iris++; if (w.d < G.T(w.s) && w.d > -0.01 && g.tn && w.s < g.tn.sI - 0.3) R.cornea++;
+        if (o.iris < 0) R.iris++; if (w.d < G.T(w.s) && w.d > -0.01 && g.tn && w.s < g.tn.sI - 0.3) R.cornea++; if (FR && FR.fld(p) < 0) R.frag++;
         const r = Math.hypot(p[0], p[1]); if (Bb && r < L.Req) { if (!K.bare(c.ccc, r, G.clockOf(p[0], p[1]))) { if (p[2] > Bb.zA(r)) above++; else below++; }
           const l = PC ? PC.toL(p) : p; if (p[2] < Bb.zP(r, p[0], p[1]) && !(PC && PC.R && PC.R.f(l[0], l[1]) < 0)) R.postCap++; } }
       if (above && below) R.antCap++; } }
-  R.axisOK = G.len(G.cross(G.sub(piv, g.bend || g.tip), g.axis)) < 1e-9; R.n = R.iris + R.cornea + R.antCap + R.postCap; return R; }
+  R.axisOK = G.len(G.cross(G.sub(piv, g.bend || g.tip), g.axis)) < 1e-9; R.n = R.iris + R.cornea + R.antCap + R.postCap + R.frag; return R; }
 
 // ---------------------------------------------------------------- 2. narration ↔ footage ↔ model
 const near = (a, b, t) => Math.abs(a - b) <= t, f2 = v => (+v).toFixed(2);
@@ -174,8 +175,17 @@ function modelChecks(ctx) {
     ok(!bad.length && line(ctx, '5-4', 0).includes('左邊那支經左側的切口') && line(ctx, '5-4', 0).includes('右邊那支經主切口'), `right panel follows the footage at ${n} sampled moments (instruments only while shown; phaco, I/A, vitrector, cannula via the main incision; chopper, straight instrument, irrigation, OVD cannula via the side port)${bad.length ? '; ' + bad.slice(0, 4).join(', ') : ''}`);
     // every instrument pose of the synced model clears iris, cornea (outside its tunnel), anterior capsule, posterior capsule (rent excepted)
     const seen = new Map(); for (const arr of Object.values(S)) for (const z of arr) (z.cat.inst || []).forEach((ins, i) => { const k = JSON.stringify([ins, z.cat.pcr && z.cat.pcr.frag, z.cat.bag]); if (!seen.has(k)) seen.set(k, { st: { eye: 'OS', cat: z.cat }, i, s: z.s }); });
-    const hits = []; let n2 = 0; for (const [k, { st, i, s }] of seen) { if (n2++ % 3) continue; const r = shaft(st, i); if (r.n || !r.axisOK) hits.push(`${s}s ${st.cat.inst[i].kind} (iris ${r.iris}, cornea ${r.cornea}, capsule ${r.antCap}/${r.postCap})`); }
-    ok(seen.size > 10 && !hits.length, `${seen.size} instrument poses of the synced model (every third checked): axis through the tunnel pivot, nothing touched${hits.length ? '; ' + hits.slice(0, 3).join(', ') : ''}`); }
+    const hits = []; let n2 = 0; for (const [k, { st, i, s }] of seen) { if (n2++ % 3) continue; const r = shaft(st, i); if (r.n || !r.axisOK) hits.push(`${s}s ${st.cat.inst[i].kind} (iris ${r.iris}, cornea ${r.cornea}, capsule ${r.antCap}/${r.postCap}, piece ${r.frag})`); }
+    ok(seen.size > 10 && !hits.length, `${seen.size} instrument poses of the synced model (every third checked): axis through the tunnel pivot, nothing touched (iris, cornea, capsules, the nucleus piece)${hits.length ? '; ' + hits.slice(0, 3).join(', ') : ''}`);
+    // 4-3 (narration: 直器械…畫在核塊下面) and 4-2: every pose with the straight instrument has it under the piece — the piece right above its tip, with
+    // dispersive OVD between — and crossing the 11–5 section (the drawing shows its cross-section there); the 4-2 cannula never enters the piece
+    const lay = [], gaps = []; for (const arr of [S.emulAt, S.levAt]) for (const z of arr) { const st = { eye: 'OS', cat: z.cat }, c = K.norm(st), PC = K.pcrOf(c), F = PC && PC.FR;
+      (c.inst || []).forEach((ins, i) => { const g = K.instGeom(c, ins);
+        if (ins.kind === 'spatula') { const up = k => F.fld([g.tip[0], g.tip[1], g.tip[2] + k]) < 0;
+          const sideD = G.clockDir(CASE.side.h), across = (g.tip[0] * sideD[0] + g.tip[1] * sideD[1]) < 0, gap = (() => { for (let k = 0; k <= 2; k += 0.01) if (up(k)) return k; return 9; })();
+          gaps.push(gap); if (!(gap > g.rn + 0.05 && gap < 1.5 && across && c.pcr.ovdD.fill > 0)) lay.push(`${z.s}s spatula (gap ${gap.toFixed(2)} mm, across ${across})`); }
+        if (ins.kind === 'cannula' && ins.via === 'main' && F && F.fld(g.tip) < 0) lay.push(`${z.s}s cannula tip inside the piece`); }); }
+    ok(!lay.length && gaps.length > 10 && line(ctx, '4-3', 2).includes('畫在核塊下面'), `straight instrument under the floated piece at every synced 4-3 pose (${gaps.length}: the piece ${f2(Math.min(...gaps))}–${f2(Math.max(...gaps))} mm above its axis, never touching it, < 1.5 mm; OVD between; crossing the section); the 4-2 cannula never inside the piece${lay.length ? '; ' + lay.slice(0, 3).join(', ') : ''}`); }
   // model claims of the narration
   { ok(CN.cap.postPole === 0.0035 && line(ctx, '1-1', 0).includes('3.5 µm'), `posterior capsule at the pole ${CN.cap.postPole * 1000} µm in the model (Barraquer 2006; narration 約 3.5 µm)`);
     const pp = CN.pcr.pp.s; ok(pp >= 3.5 && pp <= 4 && line(ctx, '5-2', 2).includes('3.5–4 mm') && near(CN.pcr.vitrector.od, 0.64, 0.01), `pars plana sclerotomy ${pp} mm behind the limbus (Rajan 2025: 3.5–4 mm), 23G ${CN.pcr.vitrector.od} mm`);
@@ -256,6 +266,8 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChec
       ['the chopper drawn after the withdrawal', c => { const z = c.sync.firstAt.find(q => q.s > 779); z.cat.inst = [{ kind: 'chopper', via: 'side', p: [0, -1, 9.5] }]; }],
       ['the chamber drawn collapsing in the case', c => { c.sync.firstAt[3].cat.pcr.collapse = 1; }],
       ['the vitrector through the side port', c => { for (const z of c.sync.vitAt) for (const i of z.cat.inst || []) if (i.kind === 'vitrector') i.via = 'side'; }],
+      ['the straight instrument drawn above the piece', c => { for (const z of c.sync.emulAt) for (const i of z.cat.inst || []) if (i.kind === 'spatula') i.p = [i.p[0], i.p[1], i.p[2] + 2.6]; }],
+      ['the levitation cannula through the piece', c => { for (const z of c.sync.levAt) { const F = K.pcrOf(K.norm({ eye: 'OS', cat: z.cat })).FR; for (const i of z.cat.inst || []) if (i.kind === 'cannula') { i.p = F.cen; delete i.bend; } } }],
       ['an instrument pose through the iris', c => { const z = c.sync.iaAt[0]; z.cat.inst[0].p = [0, 3.6, 9.6]; for (const zz of c.sync.iaAt) zz.cat.inst[0].p = [0, 3.6, 9.6]; }],
       ['pars plana said 3.0 mm', c => { c.text['5-2'].lines[2] = c.text['5-2'].lines[2].replace('3.5–4', '3.0'); }],
       ['TA stated as certain', c => { c.text['5-5'].lines[1] = c.text['5-5'].lines[1].replace('看起來是 triamcinolone（術者推測）', '這是 triamcinolone'); }],

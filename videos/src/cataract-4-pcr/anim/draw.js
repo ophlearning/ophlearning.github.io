@@ -48,7 +48,9 @@ const WITH = k => cat({ bag: {}, pcr: { rent: { ...RENT, ext: 0.6 * k }, collaps
 // the piece floated on dispersive OVD (bag and lower chamber filled, endothelium coated), a straight instrument under it, the phaco on its straight edge
 const FLOAT = (fl, eat) => cat({ bag: {}, pcr: { rent: RENT, ovdD: { tamp: 1, coat: fl, fill: fl * (CN.pcr.frag.cushion + 0.25) }, frag: { h: 5, float: fl, eat } } });
 const phacoAt = st => { const F = frag(st); return { kind: 'phaco', p: F.at3(0, F.bE - 0.42, -0.6), bevel: 'down', occl: 1 }; };
-const spatAt = st => ({ kind: 'spatula', via: 'side', p: frag(st).under(0.8) });
+// the straight instrument through the side port, 0.55 mm under the piece's bottom (OVD between, 示意) and its tip 0.3 mm past the 11–5 section toward
+// 8 o'clock, so the section shows its cross-section under the piece (a = toward 8 o'clock: away from the side port at 2)
+const spatAt = st => { const F = frag(st); return { kind: 'spatula', via: 'side', p: F.at3(0.3, (F.bE + CN.pcr.frag.rb) / 2, -CN.pcr.frag.rn - 0.55) }; };
 const FLT = (eat = 0.25) => { const s0 = FLOAT(1, eat); return cat({ ...s0.cat, inst: [phacoAt(s0), spatAt(s0)] }); };
 // bimanual limbal anterior vitrectomy: cutter through the main incision at the rent (port up), irrigation through the side port high in the chamber;
 // the emptied bag has collapsed (示意: only then does a straight cutter from 11 o'clock reach the rent)
@@ -80,7 +82,7 @@ const SCOPEN_T = { title: '正常：術者視角（模型）', orient: '左眼 O
 const SCOPEP_T = { title: 'PCR：術者視角（動畫示意）', orient: '左眼 OS　右＝nasal' };
 const TXT_T = (t) => ({ title: t, orient: '' });
 window.PRELOAD_EXTRA = JSON.stringify([SEC_T, SECX_T, SYNC_T, NORM_T, PCR_T, SCOPE_T, SCOPEN_T, SCOPEP_T]) +
-  '經主切口的切面模型依錄影時間器械為投影術者視角左眼正常動畫示意下點右上前左主切口停格看得到看不清楚看不出可能不確定0123456789.–→✓✗×';
+  '經主切口的切面模型依錄影時間器械為投影術者視角左眼正常動畫示意下點右上前左主切口停格看得到看不清楚看不出可能不確定0123456789.–→✓✗×△';
 
 const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') r[n] = P(v); return r; };
 function sec(st, win, id, o = {}) {
@@ -90,7 +92,7 @@ function sec(st, win, id, o = {}) {
 }
 function scope(st, win, id, o = {}) {
   const W = o.W || PW, H = o.H || PH, c = VIEWS.cam(win, W, H), r = K.enface({ st, id, surgeon: 12 }), A = mapA(r.A, c.P);
-  return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A, P: c.P, k: c.k, r, Q: p3 => c.P(r.M(p3)) };
+  return { svg: `<g transform="${c.tf}">${r.svg}</g>`, A, P: c.P, k: c.k, r, tf: c.tf, Q: p3 => c.P(r.M(p3)) };
 }
 // a point of the remaining piece: the end nearest the rent (sinking pole) or its round side away from the tip (label anchors, panel px)
 const fragPt = (v, st, which) => { const P = K.pcrOf(st), F = P.FR; if (!F) return null; let best = null;
@@ -100,6 +102,9 @@ const fragPt = (v, st, which) => { const P = K.pcrOf(st), F = P.FR; if (!F) retu
 // a point on instrument i, d mm back from its tip along the shaft (label anchor on the visible metal)
 const instPt = (v, st, i, d = 0.6) => { const c = K.norm(st), g = K.instGeom(c, c.inst[i]), o = g.bend && d > G.len(G.sub(g.bend, g.tip)) ? g.bend : g.tip, ax = g.bend && o === g.tip ? G.unit(G.sub(g.bend, g.tip)) : g.axis; return v.Q([o[0] + ax[0] * d, o[1] + ax[1] * d, o[2] + ax[2] * d]); };
 const secPt = (v, r, z) => v.P([r, -z]);
+// where instrument i's shaft crosses the section plane (its drawn cross-section), panel px
+const crossPt = (v, i) => { const g = v.r.A['inst' + i], pl = v.r.pl, n = [pl.U[1], -pl.U[0], 0], d = G.dot(G.sub(g.tip, pl.O), n), k = G.dot(g.axis, n);
+  return Math.abs(k) < 1e-6 ? v.A['tip' + i] : v.Q(G.add(g.tip, g.axis, -d / k)); };
 const leftmost = (v, pts) => pts && pts.length ? v.P(pts.reduce((a, q) => q[0] < a[0] ? q : a)) : null;           // the 11 o'clock side of a list of plane points
 // where a haptic crosses this section on the 11 o'clock side (the projected tip is off the plane)
 const hapPt = (v, st) => { const IO = K.iolOf(K.norm(st)); if (!IO) return null; const n = [v.r.pl.U[1], -v.r.pl.U[0], 0]; let best = null;
@@ -108,9 +113,21 @@ const hapPt = (v, st) => { const IO = K.iolOf(K.norm(st)); if (!IO) return null;
 const inPanel = (q, m = 24) => q && q[0] > m && q[0] < PW - m && q[1] > m && q[1] < PH - m;
 // the rent's edge point farthest from the piece (where the clear area shows), in a microscope view
 const clearPt = v => { const E = v.r.A.rentEdge, F = v.r.A.frag; if (!E) return null; const f = F || E[0]; let b = E[0]; for (const q of E) if (Math.hypot(q[0] - f[0], q[1] - f[1]) > Math.hypot(b[0] - f[0], b[1] - f[1])) b = q; return v.P(b); };
+// a point inside the clear area: 30 % of the way from its far edge toward the rent's centre (label anchor)
+const clearIn = v => { const c = clearPt(v), rc = v.A.rentC; return c && rc ? [lerp(c[0], rc[0], 0.3), lerp(c[1], rc[1], 0.3)] : c; };
 const rentEnd = v => { const E = v.r.A.rentEnds || []; return E.length ? v.P(E[E.length - 1]) : null; };
 const postQ = (v, r, h) => { const d = G.clockDir(h); return v.Q([r * d[0], r * d[1], L0.zPost(r)]); };
 const sbar = v => VIEWS.sbar(v.k, 1, 1);
+// a microscope view of the model drawn into a box (x0, y0, w × h px) of a panel: clipped, with its anchors mapped to panel px
+function miniScope(st, x0, y0, w, h, cx, wmm, id) {
+  const win = { x: cx[0] - wmm / 2, y: cx[1] - wmm * h / w / 2, w: wmm }, v = scope(st, win, id, { W: w, H: h }), at = a => a ? [x0 + a[0], y0 + a[1]] : null;
+  return { v, at, svg: `<svg x="${x0}" y="${y0}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" overflow="hidden"><g>${v.svg}</g></svg><rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="6" fill="none" stroke="#d3dae1"/>` };
+}
+// a checklist of what the recording shows: rows [mark, cue, status, opacity, colour]; ✓ seen, △ seen but uncertain, ✗ not seen
+function seenRows(x, y, w, rows, rh = 58, gap = 6) {
+  return rows.map(([m, a, b, o, col], i) => { const yy = y + i * (rh + gap), c = col || (m === '✗' ? COL.sub : m === '△' ? '#c4561c' : COL.accent);
+    return `<g opacity="${(0.3 + 0.7 * o).toFixed(2)}"><rect x="${x}" y="${yy}" width="${w}" height="${rh}" rx="8" fill="#f7f9fa" stroke="${o > 0.5 ? c : '#d3dae1'}" stroke-width="${o > 0.5 ? 1.6 : 1}"/>` +
+      text(x + 12, yy + 24, a, { size: 15, bold: true }) + `<g opacity="${(+o).toFixed(2)}">${text(x + 12, yy + rh - 12, `${m}　${b}`, { size: 14.5, bold: true, color: c })}</g></g>`; }).join(''); }
 // text panel (full white, rows of cards)
 const rbox = (x, y, w, h, title, rows, op, col = COL.accent, ts = 18, rs = 16.5) => `<g opacity="${(+op).toFixed(2)}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="#f7f9fa" stroke="${col}" stroke-width="1.5"/>${text(x + 16, y + 28, title, { size: ts, bold: true, color: col })}` +
   rows.map((r, i) => text(x + 16, y + 60 + i * 28, r[0], { size: rs, bold: r[1], color: r[2] || COL.ink })).join('') + `</g>`;
@@ -153,11 +170,14 @@ function firstAt(s) {
   if (s >= ev('can-in') && s <= ev('can-out')) inst.push(OVDCAN);
   return cat({ bag: {}, pcr: { rent: RENT, ovdD: { tamp: k }, frag: PIECE }, inst });
 }
-// 4-2 (lev): a cannula through the main incision under the piece; the piece floated to the rhexis plane (height 示意) on OVD
-const LEVCAN = st => { const P = K.pcrOf(st), F = P.FR, q = F.under(0.15), rmax = CN.cccD / 2 - 0.6, r = Math.hypot(q[0], q[1]), k = r > rmax ? rmax / r : 1;
-  return { kind: 'cannula', via: 'main', p: [q[0] * k, q[1] * k, Math.max(q[2], P.zRim3 + 0.2)] }; };
+// 4-2 (lev): a bent cannula through the main incision beside the piece's straight edge while the piece rises on OVD, then with its bent tip under that
+// edge (the recording: under and beside the large piece; the piece is in the pupil centre by about 13:41). Never inside the piece (checked with
+// scratch geometry: iris, cornea, capsules and the piece clear at every float value). Height, OVD and the cannula's bend are 示意.
+const LEVCAN = st => { const P = K.pcrOf(st), F = P.FR, F4 = CN.pcr.frag, fl = F.fl;
+  const q = F.at3(0, lerp(-0.6, -0.2, ss(0.85, 1, fl)), lerp(-F4.rn * 0.5, -F4.rn - 0.45, ss(0.55, 0.85, fl)));
+  return { kind: 'cannula', via: 'main', p: [q[0], q[1], Math.max(q[2], P.zRim3 - 0.3)], bend: true }; };
 function levAt(s) {
-  const fl = ss(ev('lev-in') + 4, ev('lev-out') - 6, s), st = FLOAT(fl, 0);
+  const fl = ss(ev('lev-in') + 2, ev('lev-in') + 12, s), st = FLOAT(fl, 0);
   return s >= ev('lev-in') && s <= ev('lev-out') ? cat({ ...st.cat, inst: [LEVCAN(st)] }) : st;
 }
 // 4-3 (emul): phaco on the straight edge, the straight instrument under the piece; eaten from ph-in to ph-out
@@ -209,12 +229,14 @@ DRAW2['1-2'] = T => {
 DRAW2['1-3'] = T => {
   const L = FOOTAGE.panel('case', 0, { badge: false });
   L.extra = wtext(14, PH - 14, '錄影 12:40：硬核、red reflex 弱', { size: 14 });
-  const st = cat({ bag: {}, pcr: { frag: PIECE }, inst: [PHC, CHOP] }), sv = scope(st, { x: -7.5, y: -5.07, w: 15 }, 'cR'), OR = K.orient({ eye: 'OS', surgeon: 12 });
+  // the window sits 0.5 mm low so both incisions (11 and 2 o'clock, bottom of the picture) clear the panel's lower edge
+  const st = cat({ bag: {}, pcr: { frag: PIECE }, inst: [PHC, CHOP] }), sv = scope(st, { x: -8, y: -4.6, w: 16 }, 'cR'), OR = K.orient({ eye: 'OS', surgeon: 12 });
   const main = sv.Q(G.P3(CASE.main.h, -0.3, 0)), side = sv.Q(G.P3(CASE.side.h, -0.3, 0));
-  let rx = `<rect x="10" y="8" width="252" height="54" rx="6" fill="#1d2733" opacity="0.85"/>` + text(20, 30, `${OR.eyeZh}　術者坐 ${OR.bottom} 點`, { size: 15, bold: true, color: '#fff' }) + text(20, 52, `下＝${OR.bottom} 點　右＝${OR.right} 點 ${OR.rightAnat.en}`, { size: 15, bold: true, color: '#fff' });
-  rx += htext(PW - 12, PH / 2 - 60, '鼻側 nasal →', { size: 14, bold: true, color: INK2, anchor: 'end' }) + htext(12, PH / 2 - 60, '← 顳側 temporal', { size: 14, bold: true, color: INK2 });
-  rx += labNear('主切口 11 點', 'main', main, 40, -40, { bold: true, color: INK2, op: T.on(1) });
-  rx += labNear('side port 2 點', '', side, 40, -60, { bold: true, color: INK2, op: T.on(1) });
+  // one orientation tag (the panel header already gives 下＝12、右＝9 nasal); the nasal side as one arrow on the right edge (line 0); incisions (line 1)
+  let rx = `<rect x="10" y="8" width="214" height="32" rx="6" fill="#1d2733" opacity="0.85"/>` + text(20, 30, `${OR.eyeZh}　術者坐 ${OR.bottom} 點`, { size: 15, bold: true, color: '#fff' });
+  rx += htext(PW - 12, PH / 2 - 30, `${OR.right} 點 鼻側 ${OR.rightAnat.en} →`, { size: 14, bold: true, color: INK2, anchor: 'end', op: T.on(0) });
+  rx += labNear('主切口 11 點', 'main', main, 30, -34, { bold: true, color: INK2, op: T.on(1) });
+  rx += labNear('side port 2 點', '', side, 34, 56, { bold: true, color: INK2, op: T.on(1) });
   rx += note('模型：不鏡像，鐘點以病人為準', 1);
   return { L, R: { svg: sv.svg, extra: rx, P: SCOPE_T } };
 };
@@ -251,8 +273,8 @@ DRAW2['2-2'] = T => {
 };
 DRAW2['2-3'] = T => {
   const sv = scope(REC, W_SCOPE_N, 'sL'), c = clearPt(sv);
-  let ex = tag('動畫示意', 1, WARN);
-  if (c) ex += labNear('特別清亮的區域', 'clear area', c, 90, 40, { bold: true, color: WARN, lc: WARN });
+  let ex = '';
+  if (c) ex += labNear('特別清亮的區域', 'clear area', clearIn(sv), 100, 36, { bold: true, color: WARN, lc: WARN });
   ex += box(PH - 110, 'I/A 吸到後囊：皺褶匯向吸口、紅光更亮、瞳孔拉尖', T.on(2, 0.6), WARN, 36, 14.5);
   ex += note('左眼 OS　動畫示意', 1);
   const cv = sec(REC, W_SEC, 'cR');
@@ -270,7 +292,7 @@ DRAW2['2-4'] = T => {
   const re = rentEnd(lv); if (re) ex += lab('破口', 'rent', PW - 12, YB, re, { side: 'R', color: CAP, lc: CAP });
   ex += sbar(lv) + note('形狀為示意', 1);
   let rx = '';
-  if (rv.A.vitMid && k > 0.6) rx += labNear('玻璃體條（透明）', 'strand', rv.A.vitMid, 60, 80, { bold: true, color: VITC, lc: VITC });
+  if (rv.A.vitMid && k > 0.6) rx += labNear('玻璃體條（透明）', 'strand', rv.A.vitMid, 60, -64, { bold: true, color: VITC, lc: VITC });
   rx += box(PH - 110, '玻璃體本身看不到：看到的是核塊跑不動、轉不動', T.on(2, 0.6), INK2, 36, 14.5);
   rx += note('動畫示意', 1);
   return { L: { svg: lv.svg, extra: ex, P: PCR_T }, R: { svg: rv.svg, extra: rx, P: SCOPEP_T } };
@@ -278,7 +300,7 @@ DRAW2['2-4'] = T => {
 DRAW2['2-5'] = T => {
   const st = pcrSt({ vit: { prolapse: 0.6, to: 'tip' } }), sv = scope(st, W_SCOPE_N, 'sL'), cv = sec(st, W_SEC, 'cR');
   let ex = '';
-  const c = clearPt(sv); if (c) ex += labNear('清亮區', 'rent', c, 50, 90, { bold: true, color: WARN, lc: WARN, op: T.on(1) });
+  const c = clearIn(sv); if (c) ex += labNear('清亮區', 'rent', c, 70, -10, { bold: true, color: WARN, lc: WARN, op: T.on(1) });
   ex += labNear('核塊歪', 'tilt', fragPt(sv, st, 'pole'), -40, 80, { bold: true, color: NUC, lc: NUC, op: T.on(1) });
   ex += labNear('瞳孔變大', 'wider', sv.Q(under(9.5, K.norm(st).pupil / 2, 0)), -20, -60, { color: WARN, lc: WARN, op: T.on(1) });
   ex += note('動畫示意', 1);
@@ -293,14 +315,27 @@ DRAW2['2-6'] = T => {
   const f = fplay(T, '2-6'), L = f.L, s = f.s;
   const op = frozenOp('moment', f.tau, 779.0);
   if (op > 0) L.extra = flab('橘紅色反光', 'orange reflex', fpt('moment', 'orange', f.tau), 40, 110, op);
-  // right: the four cue groups and what this recording shows of them, revealed with the footage events and the narration
-  const rows = [['前房突然變深', '看不清楚', T.on(3)], ['瞳孔一下子變大', '看不清楚', T.on(3)], ['核塊不跟 tip、一端歪', '看不出來', T.on(4)], ['清亮的紅光', '左下的橘紅色反光（不確定）', s >= ev('orange') ? 1 : 0]];
-  let r = `<rect width="${PW}" height="${PH}" fill="#fff"/>` + text(20, 34, '四組線索：本例錄影看得到嗎？', { size: 17, bold: true, color: COL.accent });
-  rows.forEach(([a, b, o], i) => { const y = 64 + i * 72;
-    r += `<rect x="16" y="${y}" width="${PW - 32}" height="60" rx="8" fill="#f7f9fa" stroke="#d3dae1"/>` + text(32, y + 25, a, { size: 16, bold: true });
-    r += `<g opacity="${(+o).toFixed(2)}">${text(32, y + 49, b, { size: 15, bold: true, color: i === 3 ? '#c4561c' : COL.sub })}</g>`; });
-  r += `<g opacity="${(s >= ev('out') ? 1 : 0)}">${text(20, PH - 20, '器械退出：12:58（錄影）', { size: 14, color: INK2 })}</g>`;
-  return { L, R: { svg: r, extra: '', P: TXT_T('本例錄影上看得到的線索') } };
+  // right, left half: what the same moment shows when the red reflex is good (the model: rent, clear area, tilted piece, phaco and chopper still in;
+  // 動畫示意, not timed to the recording: when the capsule broke cannot be read from it). Right half: the four cue groups (chapter 2) and what this
+  // recording shows of them, revealed with the footage events and the narration; the one action it does show plainly (the withdrawal) is its own row.
+  const sg = pcrSt({ inst: [PHC, CHOP] }), ms = miniScope(sg, 8, 40, 286, 310, [0.1, 0.1], 8.0, 'cR');
+  let r = `<rect width="${PW}" height="${PH}" fill="#fff"/>` + text(14, 28, '對照：紅光好的眼睛', { size: 16, bold: true, color: WARN }) + ms.svg;
+  let rx = '';
+  const ca = clearIn(ms.v);
+  if (ca) rx += labNear('清亮區', 'rent', ms.at(ca), 60, -24, { bold: true, color: WARN, lc: WARN });
+  const pole = fragPt(ms.v, sg, 'pole'); if (pole) rx += labNear('核塊歪', 'tilt', ms.at(pole), 70, 26, { bold: true, color: NUC, lc: NUC });
+  r += htext(290, PH - 44, '動畫示意', { size: 13, color: COL.sub, anchor: 'end' });
+  r += text(306, 28, '本例錄影：看得到嗎？', { size: 16, bold: true, color: COL.accent });
+  const seenOut = s >= ev('out') ? 1 : 0;
+  r += seenRows(306, 40, 292, [
+    ['✗', '線索一　前房變深、瞳孔變大', '看不清楚', T.on(3)],
+    ['✗', '線索二　核塊不跟 tip、一端歪', '看不出來', T.on(4)],
+    ['△', '線索三　清亮的紅光', '左下的橘紅色反光（不確定）', s >= ev('orange') ? 1 : 0],
+    ['✗', '線索四　玻璃體', '透明：沒有打 TA，看不到', T.on(4)]], 56, 6);
+  r += `<g opacity="${(0.3 + 0.7 * seenOut).toFixed(2)}"><rect x="306" y="290" width="292" height="60" rx="8" fill="#fff" stroke="${seenOut ? COL.accent : '#d3dae1'}" stroke-width="2"/>` +
+    text(318, 313, '看得到的動作', { size: 14.5, bold: true, color: COL.accent }) + `<g opacity="${seenOut}">${text(318, 338, '✓　phaco 與 chopper 一起退出', { size: 15, bold: true })}</g></g>`;
+  r += htext(PW - 8, PH - 44, '依錄影時間出現', { size: 13, color: COL.sub, anchor: 'end' });
+  return { L, R: { svg: r, extra: rx, P: TXT_T('本例錄影上看得到的線索') } };
 };
 DRAW2['2-7'] = T => {
   let o = `<rect width="${FW}" height="${PH}" fill="#fff"/>`;
@@ -318,7 +353,7 @@ DRAW2['2-7'] = T => {
 DRAW2['3-1'] = T => {
   const k = T.p(2, 0.2, 1), st = FIRST(k), lv = sec(st, W_SEC, 'sL', { cut: true }), rv = scope(st, W_SCOPE_N, 'cR');
   let ex = '';
-  if (lv.A.tip0) ex += lab('phaco 留在原位', 'stay', 14, 64, lv.A.tip0, { bold: true, color: INK2, op: T.on(1) });
+  if (lv.A.tip0) ex += labNear('phaco 留在原位', 'stay', lv.A.tip0, -30, 70, { bold: true, color: INK2, op: T.on(1) });
   if (lv.A.ovdd && k > 0.3) ex += lab('dispersive OVD', '蓋住破口', PW - 12, YB, lv.A.ovdd, { side: 'R', bold: true, color: OVDC, lc: OVDC });
   ex += box(10, '不要突然抽出器械', T.on(0, 0.6) * (1 - T.on(1, 0.4)), WARN);
   ex += box(10, '前房穩了 → 慢慢退出', T.on(4, 0.6) * (1 - T.on(5, 0.4)));
@@ -347,24 +382,36 @@ DRAW2['3-3'] = T => {
   const f = fplay(T, '3-3'), L = f.L, s = f.s;
   if (f.clip === 'ovd1') { const op = frozenOp('ovd1', f.tau, 795.0); if (op > 0) L.extra = flab('side port 的 cannula', '', fpt('ovd1', 'cannula', f.tau), 60, 90, op); }
   if (f.clip === 'withdraw' && s >= ev('out')) L.extra = wtext(14, PH - 14, '前房裡沒有器械', { size: 14 });
-  const st = firstAt(s), cv = sec(st, W_SEC, 'cR', { cut: true }), c = K.norm(st), ki = k => (c.inst || []).some(g => g.kind === k);
+  // right, left half: the model's microscope view at the same source time (firstAt: instruments in and out as the recording shows, the side-port
+  // cannula, OVD spreading over the rent) as a good red reflex would show it — the rent's clear area and the OVD over it are 動畫示意 (the recording
+  // shows neither). Right half: what the recording does show, row by row as it happens, and (line 4) what it cannot tell.
+  const st = firstAt(s), c = K.norm(st), ms = miniScope(st, 8, 40, 286, 250, [0.1, -0.3], 8.0, 'cR');
+  let r = `<rect width="${PW}" height="${PH}" fill="#fff"/>` + text(14, 28, '對照：紅光好時會看到', { size: 16, bold: true, color: WARN }) + ms.svg;
   let rx = '';
-  if (ki('phaco') && cv.A.tip0) rx += labNear('phaco（主切口）', '', cv.A.tip0, -40, -80, { bold: true, color: INK2 });
-  const sideTxt = ki('chopper') ? 'chopper（side port；切面上是它的截面）' : ki('cannula') ? 'cannula（side port；切面上是它的截面）' : '';
-  if (sideTxt) rx += htext(PW - 12, 64, sideTxt, { size: 14, bold: true, color: INK2, anchor: 'end' });
-  if (!(c.inst || []).length) rx += tag('器械都退出了', 1, INK2, 64);
-  if (c.pcr.ovdD.tamp > 0.3 && cv.A.ovdd) rx += lab('OVD（範圍示意）', '', PW - 12, YB, cv.A.ovdd, { side: 'R', bold: true, color: OVDC, lc: OVDC });
-  const re = rentEnd(cv); if (re) rx += labNear('破口（示意）', '', re, -40, 50, { color: CAP, lc: CAP });
-  rx += box(PH - 110, '建議：tip 留著、先打 OVD 再退（綜論）', T.on(3, 0.6) * (1 - T.on(4, 0.4)));
-  rx += sbar(cv) + note('依錄影時間：器械進出與 OVD', 1);
-  return { L, R: { svg: cv.svg, extra: rx, P: SYNC_T } };
+  const ca = clearIn(ms.v);
+  if (ca && c.pcr.ovdD.tamp < 0.3) rx += labNear('清亮區＝破口', '', ms.at(ca), 64, -14, { bold: true, color: WARN, lc: WARN });
+  if (c.pcr.ovdD.tamp >= 0.3 && ms.v.r.A.ovddEdge) rx += labNear('OVD 蓋住破口', '', ms.at(ms.v.P(ms.v.r.A.ovddEdge)), 50, -30, { bold: true, color: OVDC, lc: OVDC });
+  r += htext(294, 306, '依錄影時間；動畫示意', { size: 13, color: COL.sub, anchor: 'end' });
+  const gone = s >= ev('out') ? 1 : 0, can = s >= ev('can-in') ? 1 : 0;
+  r += text(306, 28, '本例錄影：看得到的', { size: 16, bold: true, color: COL.accent });
+  r += seenRows(306, 40, 292, [
+    ['✓', '一　phaco 與 chopper 一起退出', '看得到', gone],
+    ['✓', '二　前房裡沒有器械', '約 10 秒', T.on(1) * gone],
+    ['✓', '三　side port 的 cannula 推注', '看起來是補 OVD', can],
+    ['✗', '術者那一刻是否已知道 PCR', '看不出來', T.on(4)]], 56, 6);
+  // line 3: the case's order beside the recommended order (Rajan 2025)
+  const o3 = T.on(3, 0.6);
+  r += `<g opacity="${o3.toFixed(2)}"><rect x="8" y="318" width="${PW - 16}" height="62" rx="8" fill="#fff" stroke="${COL.accent}" stroke-width="1.6"/>` +
+    text(20, 342, '本例：退出 → 約 10 秒 → side port 補 OVD', { size: 15, bold: true, color: INK2 }) +
+    text(20, 368, '綜論建議：tip 留著 → side port 打 OVD → 穩了再退', { size: 15, bold: true, color: COL.accent }) + `</g>`;
+  return { L, R: { svg: r, extra: rx, P: TXT_T('本例的第一個動作：錄影看得到的') } };
 };
 DRAW2['3-4'] = T => {
   const k = T.p(1, 0.1, 0.8), st = cat({ bag: { cortex: K.cortexSweep(0.5, HP, 1), sub: 1 }, pcr: { rent: RENT, ovdD: { tamp: k } }, inst: [IA(P_RIM5), OVDCAN] });
   const lv = sec(st, W_SEC, 'sL', { cut: true }), rv = scope(st, W_SCOPE_N, 'cR');
   let ex = '';
-  if (lv.A.tip0) ex += lab('I/A 留著', 'stay', 14, 64, lv.A.tip0, { bold: true, color: INK2 });
-  if (lv.A.ovdd && k > 0.3) ex += lab('大量 OVD', '', PW - 12, YB, lv.A.ovdd, { side: 'R', bold: true, color: OVDC, lc: OVDC });
+  if (lv.A.tip0) ex += labNear('I/A 留著', 'stay', lv.A.tip0, 30, 64, { bold: true, color: INK2 });
+  if (lv.A.ovdd && k > 0.3) ex += labNear('大量 OVD', '', lv.A.ovdd, 70, 40, { bold: true, color: OVDC, lc: OVDC });
   ex += sbar(lv) + note('動畫示意', 1);
   let rx = '';
   if (rv.A.tip1) rx += labNear('cannula（side port）', '', rv.A.tip1, -40, -90, { bold: true, color: INK2 });
@@ -381,8 +428,8 @@ DRAW2['3-5'] = T => {
   const st = cat({ bag: {}, pcr: { rent: RENT, vit: { prolapse: 1 }, ovdD: { tamp: 1 }, frag: { ...PIECE, sink: 1 } } }), cv = sec(st, W_SEC, 'cR');
   let rx = '';
   const re = rentEnd(cv); if (re) rx += lab('破口多大', 'rent', PW - 12, YB, re, { side: 'R', bold: true, color: CAP, lc: CAP, op: T.on(0) });
-  if (cv.A.frag) rx += lab('還剩多少核', 'piece', PW - 12, 64, cv.A.frag, { side: 'R', bold: true, color: NUC, lc: NUC, op: T.on(0) });
-  if (cv.A.rentC) rx += lab('玻璃體有沒有出來', 'vitreous', 14, YB, [cv.A.rentC[0] - 10, cv.A.rentC[1] + 24], { bold: true, color: VITC, lc: VITC, op: T.on(0) });
+  if (cv.A.frag) rx += labNear('還剩多少核', 'piece', cv.A.frag, 90, -70, { bold: true, color: NUC, lc: NUC, op: T.on(0) });
+  if (cv.A.rentC) rx += labNear('玻璃體有沒有出來', 'vitreous', [cv.A.rentC[0] - 10, cv.A.rentC[1] + 24], -110, -20, { bold: true, color: VITC, lc: VITC, op: T.on(0) });
   rx += sbar(cv) + note('動畫示意', 1);
   return { L: { svg: l, extra: '', P: TXT_T('第一步之後') }, R: { svg: cv.svg, extra: rx, P: PCR_T } };
 };
@@ -391,35 +438,42 @@ DRAW2['3-5'] = T => {
 DRAW2['4-1'] = T => {
   const st = FLT(0.25), lv = sec(st, W_SEC, 'sL', { cut: true }), rv = scope(st, W_SCOPE_N, 'cR');
   let ex = '';
-  if (lv.A.frag) ex += lab('核塊', 'piece', PW - 12, 64, lv.A.frag, { side: 'R', bold: true, color: NUC, lc: NUC });
-  if (lv.A.tip1) ex += lab('鈍器械墊在下面', '切口', PW - 12, YB, lv.A.tip1, { side: 'R', color: INK2, op: T.on(0) });
-  if (lv.A.rentC) ex += lab('dispersive OVD', '', 14, YB, [lv.A.rentC[0] - 50, lv.A.rentC[1] - 70], { color: OVDC, lc: OVDC });
+  if (lv.A.frag) ex += labNear('核塊', 'piece', lv.A.frag, 96, 8, { bold: true, color: NUC, lc: NUC });
+  if (lv.A.tip1) ex += labNear('鈍器械墊在下面', '示意', crossPt(lv, 1), 30, 56, { bold: true, color: INK2, op: T.on(0) });
+  ex += labNear('dispersive OVD', '墊著', lv.Q(frag(st).under(1.3)), -40, 56, { bold: true, color: OVDC, lc: OVDC });
   ex += sbar(lv) + note('高度與 OVD 範圍為示意', 1);
+  // the model draws instruments over everything; the floated piece is redrawn over them (translucent) so the instrument under it shows as under it
+  const H = rv.r.A.fragHull, cover = H ? `<g transform="${rv.tf}"><path d="M${H.map(q => q[0].toFixed(4) + ' ' + q[1].toFixed(4)).join('L')}Z" fill="#d9b25c" opacity="0.78" stroke="#7a5418" stroke-width="1" vector-effect="non-scaling-stroke"/></g>` : '';
   let rx = '';
   if (rv.A.frag) rx += labNear('核塊在前房', '', rv.A.frag, 60, -90, { bold: true, color: NUC, lc: NUC });
-  if (rv.A.tip1) rx += labNear('side port 的器械', '', rv.A.tip1, -40, 80, { color: INK2 });
+  if (rv.A.tip1) rx += lab('side port 的器械', '在核塊下', 14, 246, instPt(rv, st, 1, 3.4), { bold: true, color: INK2 });
   rx += note('模型示意', 1);
-  return { L: { svg: lv.svg, extra: ex, P: SEC_T }, R: { svg: rv.svg, extra: rx, P: SCOPE_T } };
+  return { L: { svg: lv.svg, extra: ex, P: SEC_T }, R: { svg: rv.svg + cover, extra: rx, P: SCOPE_T } };
 };
 DRAW2['4-2'] = T => {
   const f = fplay(T, '4-2'), L = f.L, op = frozenOp('lev', f.tau, 830.0);
   if (op > 0) L.extra = flab('核塊', 'piece', fpt('lev', 'piece', f.tau), -40, -60, op) + flab('cannula（主切口）', '', fpt('lev', 'lev-can', f.tau), 30, 80, op);
-  const st = levAt(f.s), cv = sec(st, W_SEC, 'cR', { cut: true }), c = K.norm(st);
+  // right: the piece rising on OVD from the bag to the rhexis plane, the bent cannula from the main incision beside and then under its straight edge
+  const st = levAt(f.s), cv = sec(st, W_SEC, 'cR', { cut: true }), c = K.norm(st), F = frag(st), inC = (c.inst || []).length > 0;
   let rx = '';
-  if (cv.A.frag) rx += labNear('核塊', 'piece', cv.A.frag, 80, -50, { bold: true, color: NUC, lc: NUC });
-  if (c.inst.length && cv.A.tip0) rx += labNear('cannula（主切口）', '', cv.A.tip0, -40, -80, { color: INK2 });
-  if (c.pcr.ovdD.fill > 0.1 && cv.A.rentC) rx += lab('OVD', '', 14, YB, [cv.A.rentC[0] - 50, cv.A.rentC[1] - 70], { color: OVDC, lc: OVDC });
-  rx += sbar(cv) + note('依錄影時間；高度為示意', 1);
+  if (cv.A.frag) rx += labNear('核塊', 'piece', cv.A.frag, 70, -56, { bold: true, color: NUC, lc: NUC });
+  if (inC) rx += labNear('彎 cannula（主切口）', '', instPt(cv, st, 0, 0.35), -30, 80, { bold: true, color: INK2 });
+  if (F.fl > 0.2) { const a = cv.Q(F.under(1.5)), b = cv.Q(F.under(0.12));
+    rx += arrowPath([a, b], OVDC, 2.4, ss(0.2, 0.5, F.fl)) + labNear('OVD 墊在核塊下面', '示意', cv.Q(F.under(0.9)), 60, 40, { bold: true, color: OVDC, lc: OVDC, op: ss(0.2, 0.5, F.fl) }); }
+  rx += sbar(cv) + note('依錄影時間；高度與 OVD 為示意', 1);
   return { L, R: { svg: cv.svg, extra: rx, P: SYNC_T } };
 };
 DRAW2['4-3'] = T => {
   const f = fplay(T, '4-3'), L = f.L, op = frozenOp('emul', f.tau, 892.0);
   if (op > 0) L.extra = flab('phaco', '', fpt('emul', 'phaco', f.tau), 50, 80, op) + flab('直的器械', 'side port', fpt('emul', 'straight', f.tau), 20, -110, op);
-  const st = emulAt(f.s), cv = sec(st, W_SEC, 'cR', { cut: true }), c = K.norm(st);
+  // right: three layers, top to bottom — the piece (the phaco from the main incision on its straight edge), the straight instrument from the side port
+  // under it (its cross-section: the shaft runs across this section), the dispersive OVD between them and the posterior capsule. Layers 示意.
+  const st = emulAt(f.s), cv = sec(st, W_SEC, 'cR', { cut: true }), c = K.norm(st), n = (c.inst || []).length;
   let rx = '';
-  if (cv.A.frag) rx += labNear('核塊', 'piece', cv.A.frag, 80, -50, { bold: true, color: NUC, lc: NUC });
-  if (c.inst.length > 1 && cv.A.tip1) rx += lab('直器械墊在下面（示意）', '', PW - 12, YB, cv.A.tip1, { side: 'R', color: INK2 });
-  if (c.inst.length && cv.A.tip0) rx += labNear('phaco（主切口）', '', cv.A.tip0, -40, -80, { color: INK2 });
+  if (cv.A.frag) rx += labNear('核塊', 'piece', cv.A.frag, 96, 8, { bold: true, color: NUC, lc: NUC });
+  if (n && cv.A.tip0) rx += labNear('phaco（主切口）吃核塊的邊', '', instPt(cv, st, 0, 1.2), 12, -62, { bold: true, color: INK2 });
+  if (n > 1) rx += labNear('直器械（side port）在核塊下面', '示意', crossPt(cv, 1), -24, 58, { bold: true, color: INK2 });
+  if (c.pcr.frag) rx += labNear('OVD 墊著', '示意', cv.Q(frag(st).under(1.3)), 40, 50, { bold: true, color: OVDC, lc: OVDC });
   rx += sbar(cv) + note('依錄影時間；器械的層次為示意', 1);
   return { L, R: { svg: cv.svg, extra: rx, P: SYNC_T } };
 };
@@ -430,7 +484,7 @@ DRAW2['4-4'] = T => {
   ex += box(46, '不要撈：拉扯玻璃體 → 巨大裂孔', T.on(1, 0.6), WARN);
   ex += sbar(lv) + note('動畫示意', 1);
   let rx = '';
-  if (rv.A.frag) rx += labNear('瞳孔裡看到的核塊（在後面）', '', rv.A.frag, 40, -100, { bold: true, color: NUC, lc: NUC });
+  if (rv.A.frag) rx += labNear('瞳孔裡看到的核塊（在後面）', '', rv.A.frag, 50, -44, { bold: true, color: NUC, lc: NUC });
   rx += box(PH - 110, '前段處理乾淨 → 轉 VR', T.on(2, 0.6));
   rx += note('動畫示意', 1);
   return { L: { svg: lv.svg, extra: ex, P: PCR_T }, R: { svg: rv.svg, extra: rx, P: SCOPEP_T } };
@@ -452,7 +506,7 @@ DRAW2['5-2'] = T => {
   if (pp) {   // pars plana option (lines 2–3)
     const lv = sec(PPS, { x: -9.6, y: -13.2, w: 17.6 }, 'sL', { cut: true }), rv = scope(PPS, W_SCOPE_W, 'cR');
     let ex = '';
-    if (lv.A.sclerotomy) ex += lab('角膜緣後 3.5 mm', 'sclerotomy', 14, YB, lv.A.sclerotomy, { bold: true, color: INK2 });
+    if (lv.A.sclerotomy) ex += lab('角膜緣後 3.5 mm', 'sclerotomy', 14 + lw('角膜緣後 3.5 mm', 'sclerotomy', { bold: true }), 290, lv.A.sclerotomy, { side: 'R', bold: true, color: INK2 });
     if (lv.A.tip0) ex += lab('切割頭在破口後', '23G', PW - 12, YB, lv.A.tip0, { side: 'R', color: INK2 });
     ex += box(10, 'pars plana＋染色最有效（綜論）', T.on(3, 0.6), INK2, 36, 15);
     ex += sbar(lv) + note('切口的鐘點為示意', 1);
@@ -492,28 +546,46 @@ DRAW2['5-4'] = T => {
 DRAW2['5-5'] = T => {
   const f = fplay(T, '5-5'), L = f.L, s = f.s;
   if (f.clip === 'ta') { const op = frozenOp('ta', f.tau, 2706.0); if (op > 0) L.extra = flab('白色顆粒', 'TA?', fpt('ta', 'clump', f.tau), 50, -90, op) + flab('往左側切口拉出細條', '', fpt('ta', 'streak', f.tau), 20, 100, op); }
-  // right: the model's TA on the gel (Burk 2003), following the footage (amounts 示意); the case's IOL is not drawn here (see 6-3)
+  // right: the model's TA on the gel (Burk 2003), following the footage (amounts 示意), with the case's IOL already in: one-piece in the sulcus, as the
+  // surgeon said (the same state as 6-3); the TA-coated gel is drawn in front of it (in the chamber, as the recording shows the white particles)
   const ta = f.clip === 'ta' ? ss(ev('ta-white'), ev('ta-out'), s) : 1, cut = f.clip === 'ta2' ? ss(FOOTAGE_DEF.clips.ta2.in, ev('clear'), s) : 0.3;
-  const st = VIT(Math.max(0.3, cut), cut >= 1 ? 0 : ta, [], 'side'), sv = scope(st, W_SCOPE_N, 'cR');
+  const st0 = VIT(Math.max(0.3, cut), cut >= 1 ? 0 : ta, [], 'side'), st = cat({ ...st0.cat, iol: { pos: 'sulcus', rot: -35 } }), sv = scope(st, W_SCOPE_N, 'cR');
   let rx = '';
-  if (sv.r.A.ta && sv.r.A.ta.length > 8) { const q = sv.P(sv.r.A.ta[sv.r.A.ta.length - 3]); rx += labNear('TA 黏在玻璃體上', 'Burk 2003', q, 50, 90, { bold: true, color: VITC, lc: VITC }); }
-  rx += note('依錄影時間；玻璃體往 side port（示意；模型未畫 IOL）', 1);
+  // the label points at a haptic where it shows inside the pupil margin (the rest of it lies behind the iris)
+  const IO = K.iolOf(K.norm(st)), pr = K.norm(st).pupil / 2; let hp = null;
+  if (IO) for (const H of IO.haps) for (const p of H) { const r = Math.hypot(p[0], p[1]), q = sv.Q(p); if (r > pr - 0.75 && r < pr - 0.35 && inPanel(q, 60) && (!hp || q[0] > hp[0])) hp = q; }
+  if (hp) rx += labNear('IOL（AAB00）在 sulcus', '術者說明', hp, -24, 92, { bold: true, color: IOLC, lc: IOLC });
+  if (sv.r.A.ta && sv.r.A.ta.length > 8) { const q = sv.P(sv.r.A.ta[sv.r.A.ta.length - 3]); rx += labNear('TA 黏在玻璃體上', 'Burk 2003', q, 50, -60, { bold: true, color: VITC, lc: VITC }); }
+  rx += note('依錄影時間；TA 與玻璃體的量為示意', 1);
   return { L, R: { svg: sv.svg, extra: rx, P: SCOPE_T } };
 };
 
 // ---------------------------------------------------------------- 6 IOL 放哪裡
+// 6-1 zoom: the 11 o'clock periphery of the section, from the pupil margin and the rhexis edge out to the bag equator and the ciliary sulcus
+const W_IOLZ = { x: -6.3, y: -10.15, w: 4.4 };
+// section points of the bag (lens-local radius r on the 11 o'clock side): the anterior capsule (rhexis rim at rcOf), the equator
+const capAt = (v, st, r, front = true) => { const c = K.norm(st), Bb = K.bagOf(c), S = K.lensShift(c), z = (front ? Bb.zA(r) : Bb.zP(r, 0, 0)) + K.liftZ(c, r) + S.LO[2];
+  const d = G.clockDir(CASE.main.h); return v.Q([S.LO[0] + d[0] * r, S.LO[1] + d[1] * r, z]); };
 DRAW2['6-1'] = T => {
-  const W3 = (FW - 20) / 3, H3 = 250, mk = (st, i, id, ttl, lbl, op) => { const c = VIEWS.cam(W_IOL3, W3 - 8, H3), h = W_IOL3.w * H3 / (W3 - 8);
-      const r = K.section({ st, h: HP, win: { x: W_IOL3.x, y: W_IOL3.y, w: W_IOL3.w, h }, step: 0.02, id }), x0 = 10 + i * W3, A = mapA(r.A, c.P);
-      let s = `<g opacity="${(0.25 + 0.75 * op).toFixed(2)}"><rect x="${x0}" y="10" width="${W3 - 8}" height="${H3 + 66}" rx="8" fill="#fff" stroke="${op > 0.5 ? COL.accent : '#d3dae1'}" stroke-width="${op > 0.5 ? 2 : 1}"/>` +
-        `<svg x="${x0}" y="46" width="${W3 - 8}" height="${H3}" viewBox="0 0 ${W3 - 8} ${H3}"><g transform="${c.tf}">${r.svg}</g></svg>` + text(x0 + 12, 34, ttl, { size: 16, bold: true, color: COL.accent }) + `</g>`;
-      const a = lbl && (lbl[1] === 'hap' ? hapPt({ r, P: c.P }, st) : A[lbl[1]]);
-      const ex = a ? lab(lbl[0], '', x0 + 12, 46 + H3 + 22, [x0 + a[0], 46 + a[1]], { bold: true, color: IOLC, lc: IOLC, op }) : '';
-      return { s, ex }; };
-  const p1 = mk(BAGIOL, 0, 'f1', '破口小：in the bag', ['haptic 在囊袋裡', 'hap'], T.on(0)), p2 = mk(SUL3, 1, 'f2', '前囊完整：sulcus（3-piece）', ['haptic 在 sulcus', 'hap'], T.on(1)), p3 = mk(CAPT, 2, 'f3', 'optic capture', ['haptic 在 sulcus、optic 在後', 'hap'], T.on(2));
+  // three zoomed sections, one per choice: short labels on the haptic, the optic and the one structure that decides it; the full sentence below
+  const W3 = (FW - 20) / 3, IW = W3 - 8, H3 = 236, win = W_IOLZ, cam = VIEWS.cam(win, IW, H3), h = win.w * H3 / IW;
+  const mk = (st, i, id, ttl, cap, labs, op) => {
+    const r = K.section({ st, h: HP, win: { x: win.x, y: win.y, w: win.w, h }, step: 0.01, id }), x0 = 10 + i * W3, A = mapA(r.A, cam.P), v = { r, A, P: cam.P, Q: p3 => cam.P(G.toPlane(r.pl, p3)) };
+    const s = `<g opacity="${(0.25 + 0.75 * op).toFixed(2)}"><rect x="${x0}" y="10" width="${IW}" height="${H3 + 72}" rx="8" fill="#fff" stroke="${op > 0.5 ? COL.accent : '#d3dae1'}" stroke-width="${op > 0.5 ? 2 : 1}"/>` +
+      `<svg x="${x0}" y="46" width="${IW}" height="${H3}" viewBox="0 0 ${IW} ${H3}"><g transform="${cam.tf}">${r.svg}</g></svg>` + text(x0 + 12, 34, ttl, { size: 16, bold: true, color: COL.accent }) +
+      `<g transform="translate(${(x0 + IW / 2 - cam.k / 2 - 20).toFixed(1)} 46)">${VIEWS.sbar(cam.k, 1, 1, H3)}</g>` + text(x0 + 12, 46 + H3 + 24, cap, { size: 14.5, bold: true, color: IOLC }) + `</g>`;
+    const ex = labs.map(([zh, en, a, dx, dy, col]) => { const q = typeof a === 'function' ? a(v, st) : A[a]; return q ? labNear(zh, en, [x0 + q[0], 46 + q[1]], dx, dy, { bold: true, color: col || IOLC, lc: col || IOLC, op }) : ''; }).join('');
+    return { s, ex }; };
+  const hap = (v, st) => hapPt(v, st), opt = (v, st) => v.A['optEdge-'], rim = (v, st) => capAt(v, st, K.rcOf(K.norm(st)) + 0.05), cap = (v, st) => capAt(v, st, 3.9);
+  const p1 = mk(BAGIOL, 0, 'f1', '破口小、囊袋完整：in the bag', 'haptic 撐在囊袋赤道；optic 在囊袋內',
+    [['虹膜', 'iris', (v, st) => v.A['pm-'], 16, -46, INK2], ['haptic', '', hap, -10, 46], ['optic', '', opt, 14, 46]], T.on(0));
+  const p2 = mk(SUL3, 1, 'f2', '前囊完整：sulcus（3-piece）', 'haptic 在 sulcus（虹膜後、前囊前）；optic 在前囊前',
+    [['haptic', '', hap, -10, 80], ['前囊', '', cap, 40, 58, CAP], ['optic', '', opt, 14, -52]], T.on(1));
+  const p3 = mk(CAPT, 2, 'f3', '撕囊口完整：optic capture', 'haptic 在 sulcus；optic 壓到撕囊口後',
+    [['haptic', '', hap, -10, 80], ['撕囊口', 'rim', rim, -16, -30, CAP], ['optic', '', opt, 14, 46]], T.on(2));
   let o = `<rect width="${FW}" height="${PH}" fill="#fff"/>` + p1.s + p2.s + p3.s;
   o += box(PH - 46, '支撐不夠：鞏膜固定、虹膜固定或前房 IOL', T.on(3, 0.6), INK2, 36, 15, FW);
-  return { F: { svg: o, extra: p1.ex + p2.ex + p3.ex, P: { title: 'IOL 放哪裡：經主切口的切面（模型）', orient: '左＝11 點　上＝前　位置為示意' } } };
+  return { F: { svg: o, extra: p1.ex + p2.ex + p3.ex, P: { title: 'IOL 放哪裡：經主切口的切面，放大 11 點周邊（模型）', orient: '左＝11 點　上＝前　位置為示意' } } };
 };
 DRAW2['6-2'] = T => {
   const lv = sec(SUL1, W_IOL, 'sL', { step: 0.02 }), rv = sec(SUL3, W_IOL, 'cR', { step: 0.02 });
@@ -545,7 +617,7 @@ DRAW2['6-3'] = T => {
 
 // ---------------------------------------------------------------- 7 收尾與轉診
 DRAW2['7-1'] = T => {
-  const lv = sec(cat({ bag: BAGC, pcr: { rent: RENT, vit: { prolapse: 1, to: 'main', cut: 0.2, ta: 1 } } }), W_FRONT, 'sL');
+  const lv = sec(cat({ bag: BAGC, pcr: { rent: RENT, vit: { prolapse: 1, to: 'main', cut: 0, ta: 1 } } }), W_FRONT, 'sL');
   let ex = tag('切口有玻璃體（示意）', 1, WARN);
   if (lv.A.vitTip) ex += labNear('TA 標出玻璃體條', 'strand', lv.A.vitTip, 60, 90, { bold: true, color: VITC, lc: VITC });
   ex += sbar(lv) + note('動畫示意', 1);
@@ -562,7 +634,10 @@ DRAW2['7-2'] = T => {
   o += rbox(16, 150, 590, 120, '核碎片留在玻璃體腔（登錄研究）', [['6105 眼：第一週 12.5% 眼壓飆高', true], ['（Rothman 2026）', false, COL.sub]], T.on(1), WARN);
   o += rbox(624, 14, 590, 120, '玻璃體切除的時機（統合分析）', [['越早做，視力、RD、眼壓、發炎越好', true], ['（Vanner 2011；回溯病例系列）', false, COL.sub]], T.on(2), '#2463eb');
   o += rbox(624, 150, 590, 120, '當天 vs 3–14 天內（統合分析）', [['結果沒有明顯差別', true], ['（Vanner 2014）', false, COL.sub]], T.on(3), '#2463eb');
-  o += box(PH - 110, '儘快轉給玻璃體視網膜醫師；不必為了當天手術而轉院', T.on(3, 0.6), COL.accent, 44, 18, FW);
+  // the referral line as the authors' own conclusion (Vanner 2014 abstract: "support referring … promptly to a vitreoretinal surgeon but do not
+  // support interfacility transport for SD-PPV"); the referral itself also from the two reviews (Rajan 2025; Arbisser 2006)
+  o += box(PH - 120, 'Vanner 2014 作者的結論：儘快轉給 VR；不支持為了當天手術而轉院', T.on(3, 0.6), COL.accent, 44, 18, FW);
+  o += box(PH - 64, '核塊掉進玻璃體腔 → 轉 VR（Rajan 2025；Arbisser 2006）', T.on(3, 0.6), INK2, 36, 15, FW);
   return { F: { svg: o, extra: '', P: TXT_T('術後追蹤與轉診') } };
 };
 
