@@ -61,6 +61,9 @@ function scopeBox(st, win, id, box) {
     A: mapA(r.A, P), P, k: c.k, r, Q: p3 => P(r.M(p3)) };
 }
 const L0 = K.LENS;
+const onShaft = (v, st, i, yT) => { const c = K.norm(st), g = K.instGeom(c, c.inst[i]), o = g.bend || g.tip; let best = null;
+  for (let s = 0; s <= 14; s += 0.1) { const q = v.Q([o[0] + g.axis[0] * s, o[1] + g.axis[1] * s, o[2] + g.axis[2] * s]); if (q[0] > 20 && q[0] < PW - 20 && q[1] > 20 && q[1] < PH - 20 && (!best || Math.abs(q[1] - yT) < Math.abs(best[1] - yT))) best = q; }
+  return best; };
 // an inset microscope view (top left of a section panel) with the section's footprint (dashed) — the instruments are drawn here when the
 // section does not contain the incision they come through
 const BOX_TL = { x: 10, y: 10, w: 150, h: 150 }, W_INSET = { x: -6.6, y: -6.6, w: 13.2 };
@@ -180,7 +183,7 @@ const hyDemo = (prog, o = {}) => ({ cat: { ...BASE, ovd: 1, hydro: { h: CASE.hyd
 DRAW2['1-1'] = T => {
   const prog = 0.08 + 0.5 * T.p(2, 0, 1) + 0.3 * T.p(3, 0, 0.8), st = hyDemo(prog);
   const sv = scope(st, W_SCOPE, 'sL'), A = sv.A;
-  let ex = lab('cannula（經主切口）', '', PW - 12, YB, A.mainExt, { side: 'R', color: '#3c4a57', op: T.on(1) });
+  let ex = lab('cannula（經主切口）', '', PW - 12, YB, onShaft(sv, st, 0, PH - 70), { side: 'R', color: '#3c4a57', op: T.on(1) });
   if (A.waveFront && prog > 0.12) ex += labNear('波前', 'fluid wave', A.waveFront, -30, -70, { bold: true, color: WARN, lc: WARN, op: T.on(3) });
   ex += note('波的速度為示意', 1);
   const cv = sec(st, W_LENS, 'cR'), B = cv.A;
@@ -304,14 +307,14 @@ DRAW2['3-1'] = T => {
   if (A.grooveEnd) { const [e0, e1] = A.grooveEnd, up = e0[1] < e1[1] ? e0 : e1; ex += `<g opacity="${T.on(1).toFixed(2)}">${VIEWS.dim(e0, e1, '#2463eb')}</g>` + labNear('長：到撕囊邊緣內', 'length', up, 40, 20, { bold: true, color: '#2463eb', lc: '#2463eb', op: T.on(1) }); }
   if (A.grooveC) ex += labNear('槽', 'groove', A.grooveC, -60, -60, { bold: true, color: BROWN, lc: BROWN });
   ex += lab('撕囊邊緣', 'CCC edge', 14, 112, A.edge3 || A.edge9, { color: CAP, lc: CAP });
-  ex += lab('主切口', 'main incision', PW - 12, YB - 24, A.mainExt, { side: 'R' }) + note('槽的寬、長為示意', 1);
+  ex += note('槽的寬、長為示意', 1);
   const xv = xsec(st, 'cR'), B = xv.A, X = xv.r.A.grooveX;
   let rx = '';
   if (X) { rx += labNear('槽底', 'floor', xv.P(X.floor), -70, 60, { bold: true, color: BROWN, lc: BROWN });
     rx += lab(`後板 約 ${Math.round(X.rem)} mm`, 'posterior plate', PW - 12, 300, [xv.P(X.floor)[0] + 58, (xv.P(X.floor)[1] + xv.P(X.post)[1]) / 2], { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.on(2) });
     const hw = X.hw, wa = xv.P([X.floor[0] - hw, X.floor[1] - 0.25]), wb = xv.P([X.floor[0] + hw, X.floor[1] - 0.25]);
     rx += `<g opacity="${T.on(2).toFixed(2)}">${VIEWS.dim(wa, wb, '#2463eb')}</g>` + labNear('寬：約 sleeve 寬', 'width', wa, -20, -80, { bold: true, color: '#2463eb', lc: '#2463eb', op: T.on(2) }); }
-  rx += lab('後囊', 'posterior capsule', 14, YB, B.postPole, { color: CAP, lc: CAP });
+  rx += lab('後囊', 'posterior capsule', PW - 12, YB, B.postPole, { side: 'R', color: CAP, lc: CAP });
   const svg = xv.svg + `<g opacity="${T.on(2).toFixed(2)}">${plateDim(xv)}</g>`;
   rx += VIEWS.sbar(xv.k, 1, 1) + note('數值為示意', 1);
   return { L: { svg: sv.svg, extra: ex, P: SCOPE_T }, R: { svg, extra: rx, P: X_T } };
@@ -410,8 +413,8 @@ DRAW2['4-3'] = T => {
   const kT = ss(ev('turn-start'), ev('turn-end'), s);
   if (kT > 0 && kT < 1) { const c = sv.P([0, 0]), r = 3.4 * sv.k, a0 = -120, pts = []; for (let a = a0; a <= a0 + 90 * kT + 1; a += 6) { const t = a * Math.PI / 180; pts.push([c[0] + r * Math.cos(t), c[1] + r * Math.sin(t)]); }
     if (pts.length > 1) rx += `<path d="${pathOf(pts)}" fill="none" stroke="#ffd34d" stroke-width="3.2" marker-end="url(#arrM)"/>`; }
-  if (A.crackEnds && kT >= 1) rx += labNear('第一道裂縫（轉了 90°）', 'crack 1', A.crackEnds[1], 40, 40, { bold: true, color: BROWN, lc: BROWN });
-  if (A.grooveC2 && s >= ev('groove2-start')) rx += labNear('第二道槽', 'groove 2', A.grooveC2, -50, -80, { bold: true, color: BROWN, lc: BROWN });
+  if (A.crackEnds && kT >= 1) { const e = A.crackEnds[0][0] > A.crackEnds[1][0] ? A.crackEnds[0] : A.crackEnds[1]; rx += lab('第一道裂縫（轉了 90°）', 'crack 1', PW - 12, Math.min(PH - 60, e[1] + 90), e, { side: 'R', bold: true, color: BROWN, lc: BROWN }); }
+  if (A.grooveC2 && s >= ev('groove2-start')) rx += lab('第二道槽', 'groove 2', 14, 112, A.grooveC2, { bold: true, color: BROWN, lc: BROWN });
   rx += tag(s < ev('turn-start') ? '模型：分開的兩半' : s < ev('groove2-start') ? '轉 90°' : s < ev('crack2-start') ? '第二道槽' : '第二次分核 → 四塊', 1, COL.accent);
   rx += note('依錄影時間；轉的角度與第二道槽為示意', 1);
   return { L, R: { svg: sv.svg, extra: rx, P: SCOPE_SYNC_T } };
@@ -501,7 +504,7 @@ DRAW2['6-2'] = T => {
   // left: the microscope view with the phaco in the main incision and a whitened patch of cornea there (示意); right: the tunnel with the
   // needle in it and the heat (示意)
   const st0 = { cat: { ...BASE, nuc: nucS({ dep: 0.5 }) } }, st = { cat: { ...st0.cat, inst: [PHACO(K.grooveTip(st0))] } };
-  const sv = scope(st, W_SCOPE, 'sL'), A = sv.A, k0 = T.on(0, 1.4);
+  const sv = scope(st, { x: -6.0, y: -2.2, w: 12 }, 'sL'), A = sv.A, k0 = T.on(0, 1.4);
   const m = A.mainExt, mi = A.mainInt, c = [(m[0] + mi[0]) / 2, (m[1] + mi[1]) / 2];
   let svg = sv.svg + `<g opacity="${(0.85 * k0).toFixed(2)}"><ellipse cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" rx="${(1.9 * sv.k).toFixed(1)}" ry="${(1.2 * sv.k).toFixed(1)}" fill="#f4f6f7" opacity="0.85"/></g>`;
   let ex = labNear('切口附近角膜變白', 'wound burn', c, -60, -40, { bold: true, color: WARN, lc: WARN, op: k0 }) + note('變白的範圍為示意', 1);
@@ -521,7 +524,7 @@ DRAW2['6-3'] = T => {
     rows.map((r, i) => text(x + 16, y + 56 + i * 24, r[0], { size: 14.5, bold: r[1], color: r[2] || COL.ink })).join('') + `</g>`;
   let r = `<rect width="${PW}" height="${PH}" fill="#fff"/>`;
   r += box(14, 14, PW - 28, 120, 'Zonule 弱：減少拉扯（綜論）', [['hydrodissection 做足：核鬆開，少硬轉'], ['低流量、慢動作'], ['囊袋不穩時，轉核、分核都較難', false, COL.sub]], T.on(1));
-  r += box(14, 146, PW - 28, 94, '技術的選擇（綜論）', [['chop 類對 zonule 的壓力小於 divide and conquer'], ['本片教 divide and conquer：住院醫師的第一個技術', false, COL.sub]], T.on(2));
+  r += box(14, 146, PW - 28, 94, '技術的選擇（綜論）', [['chop 類對 zonule 的壓力小於 divide and conquer'], ['本片的病例用 divide and conquer（院內確認）', false, COL.sub]], T.on(2));
   r += box(14, 252, PW - 28, 100, '隨機試驗（117 人）', [['phaco 時間：chop 1.2 分鐘、D&C 2.4 分鐘'], ['併發症與術後視力沒有差別'], ['', false]], T.on(3), '#2463eb');
   return { L, R: { svg: r, extra: '', P: { title: 'Zonule 弱時的做法', orient: '' } } };
 };
