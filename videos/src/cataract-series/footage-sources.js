@@ -84,5 +84,36 @@ const CATARACT_FOOTAGE = {
       { t: 1176, cornea: [505, 428], incision: [551, 541] },  // r 128 (zoomed out)
     ],
   },
+  // case B (PCR, video ④): LEFT eye OS (the user confirmed 2026-11-10), surgeon superior: 12 o'clock at the bottom of the frame, 9 o'clock (nasal for OS)
+  // on the right; main incision about 11 o'clock (bottom right), side port about 2 o'clock (bottom left). Another recording system: no burned-in text,
+  // logo or parameter column (videos/src/cataract-4-pcr/footage-notes.md §1), only two encoding edge lines, registered as overlays.
+  'case-pcr': {
+    file: 'videos/src/cataract-series/footage/case-pcr.mp4', w: 1280, h: 720, fps: 30, eye: 'OS',
+    tag: { title: '術者視角　左眼 OS　手術錄影', orient: '下＝12 點　右＝9 點 nasal' },
+    // measured 2026-11-10 (footage-notes §1): mean of 60 full-resolution frames over 0:01–50:11; the top row is bright, the right column dark
+    overlays: [
+      { name: 'top edge bright line', x: 0, y: 0, w: 1280, h: 2 },
+      { name: 'right edge dark column', x: 1279, y: 0, w: 1, h: 720 },
+    ],
+    // 2026-11-10 for video ④ (cataract-4-pcr): the limbus circle from a coarse ring search on 4x-downsampled frames refined by a ray search
+    // (strongest iris → sclera step on 240 rays, RANSAC circle fit), each fit overlaid and checked by eye. The main incision is put on the measured
+    // bearing, 31° right of straight down at 0.95 r: where the phaco, I/A, injector, hook, vitrector and cannulas cross the limbus (760.5–2722 s) read
+    // 25–40° (footage-notes §2.2: 31–38°). Clips turn the picture 8° clockwise (crop rot) so the incision falls 23° from straight down.
+    landmarks: [
+      { t: 760.5, cornea: [709, 175], incision: [800, 326] },    // r 185
+      { t: 776.0, cornea: [727, 193], incision: [822, 352] },    // r 195
+      { t: 778.0, cornea: [729, 183], incision: [823, 340] },    // r 193
+      { t: 791.0, cornea: [725, 251], incision: [823, 414] },    // r 200
+      { t: 830.0, cornea: [745, 227], incision: [841, 387] },    // r 197
+      { t: 952.0, cornea: [724, 280], incision: [819, 439] },    // r 195
+      { t: 1192.0, cornea: [782, 242], incision: [877, 400] },   // r 194
+      { t: 1464.0, cornea: [767, 354], incision: [864, 516] },   // r 199
+      { t: 1465.0, cornea: [768, 356], incision: [865, 517] },   // r 198
+      { t: 2604.0, cornea: [713, 256], incision: [796, 394] },   // r 169 (microscope zoomed out a little)
+      { t: 2633.0, cornea: [702, 299], incision: [785, 437] },   // r 170
+      { t: 2701.0, cornea: [660, 257], incision: [740, 390] },   // r 163
+      { t: 2731.0, cornea: [658, 253], incision: [742, 392] },   // r 171
+    ],
+  },
 };
 if (typeof module !== 'undefined') module.exports = CATARACT_FOOTAGE;
