@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–4.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–5.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -32,8 +32,9 @@ const LEDGER = {
   '3-2': { '11': '病例', '12': '結構', '5': '結構', '3': '結構', '6': '結構', '9': '結構', '2': '結構' },
   '4-1': { '110': 'Lai 2019', '10': '示意', '1': '示意', '4': '示意', '12': '結構', '3': '結構', '6': '結構', '9': '結構' },   // 10, 1, 4: trocar clock hours (依主刀決定)
   '4-2': { '1': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構' },
-  '5-1': { '106': 'Govetto 2024', '11': '病例', '1.2': 'Jackson 2013', '1.6': 'Jackson 2013' },
-  '5-2': { '1.9': 'Neffendorf 2017', '5.8': 'Neffendorf 2017' },
+  '5-1': { '106': 'Govetto 2024', '11': '病例', '1.2': 'Jackson 2013', '1.6': 'Jackson 2013', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構',
+           '10': '示意', '1': '示意' },   // 10, 1: the 10:30 port's section (trocar clock hours 依主刀決定)
+  '5-2': { '1.9': 'Neffendorf 2017', '5.8': 'Neffendorf 2017', '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構' },
   '6-1': { '11': '病例' },
   '6-2': { '4.5': 'Figueroa 2013', '10.3': 'Garg 2012' },
   '7-1': { '360': 'Wang 2020' },
@@ -320,6 +321,73 @@ function modelChecks(ctx) {
     ok('M24', line(ctx, '4-2', 1).includes('吸力越大、離視網膜越近，拉力越大') && line(ctx, '4-2', 1).includes('切速越快，拉力越小') && line(ctx, '4-2', 2).includes('高切速、低吸力')
       && mono && seq && bars && lowFlat && onScreen(ctx, '4-2', '拉力的方向（示意，豬眼實驗）') && onScreen(ctx, '4-2', '拉力（示意）traction') && onScreen(ctx, '4-2', '高切速、低吸力：視網膜不被吸起'),
       `4-2 pull (示意): monotone ${mono} (up with vacuum, up when closer, down with cut rate); line 1 ${[s.s0, s.s1, s.s2, s.s3].map(x => f2(T_(x))).join(' → ')}, line 2 ${f2(T_(s.low))}; tip ${dReal.map(f2).join(' → ')} mm from the retina (bars follow)`); }
+  // chapter 5. States from VP (shaveStep, ST.far5, ST.dep52 and depStep), the same functions draw.js calls for both panels of a frame.
+  const LIT5 = { vbWidth: [2, 6] };   // Sohn 2020: the vitreous base is 2–6 mm wide and straddles the ora; breaks at its posterior edge
+  const innerAt = (f, h, s) => f.interior(f.at(P.P3(h, s, 0)));   // depth of the eye wall's inner surface (ciliary epithelium or retina) at (h, s)
+  const gelOn = (f, h, s) => { const d0 = innerAt(f, h, s), nn = mul(P.N3(h, s), -1), q = P.P3(h, s, d0); let a = null, b = 0;   // [gap to the gel, gel thickness] along the inward normal
+    for (let d = 0.02; d <= 8; d += 0.02) { const g = f.gel(f.at(add(q, mul(nn, d)))) < 0; if (g && a === null) a = d; if (!g && a !== null) { b = d - a; break; } } return [a, b]; };
+  // M25 5-1 line 1: the vitreous base straddles the ora (Sohn 2020): on the drawn 11 o'clock meridian (before shaving) the vitreous-base field lies on the wall
+  // from in front of the ora (pars plana) to behind it, 2–6 mm wide, and the gel there touches the wall; the tear's hinge (its anterior edge) is at the base's
+  // back border and the U of the tear behind it (breaks at the posterior edge, Sohn 2020)
+  { const st = VP.shaveStep(0), Gm = P.geom(st), f = P.makeCtx(Gm), h = CASE.tear, ora = oraLit(h); let fr = null, bk = null;
+    for (let s = ora - 4; s <= ora + 5; s += 0.02) if (f.vb(f.at(P.P3(h, s, innerAt(f, h, s) + 0.15))) < 0) { if (fr === null) fr = s; bk = s; }
+    const touch = [ora - 1, ora + 1].every(s => gelOn(f, h, s)[0] <= 0.05), T = Gm.tear, hinge = sOf(T.fr0.Q), apex = P.onRetina(Gm, T.fr0, T.L, 0, 0, Gm.ret0).s;
+    ok('M25', line(ctx, '5-1', 1).includes('跨在 ora 上；裂孔通常就在它的後緣') && fr !== null && fr < ora - 0.5 && bk > ora + 0.5 && bk - fr >= LIT5.vbWidth[0] && bk - fr <= LIT5.vbWidth[1] && touch
+      && near(hinge, bk, 0.15) && apex > hinge + 1 && onScreen(ctx, '5-1', 'vitreous base：跨在 ora 上') && onScreen(ctx, '5-1', 'ora serrata') && onScreen(ctx, '5-1', '裂孔就在它的後緣HST'),
+      `5-1 vitreous base on the 11 o'clock meridian ${f2(fr - ora)} → +${f2(bk - ora)} mm about the ora (${f2(bk - fr)} mm wide; Sohn 2020: 2–6, across the ora), gel on the wall both sides; hinge ${f2(hinge - bk)} mm from its back border, tear apex ${f2(apex - hinge)} mm behind`); }
+  // M26 5-1 line 2: the flap pulled forward by the gel (Govetto 2024: traction at the anterior edge of all 106 tears): the hinge is the tear's anterior edge
+  // (toward the ora), the flap's free edge lifted into the cavity and in front of the hinge, gel on it; the drawn pull (the strand) points into the cavity and forward
+  { const st = VP.shaveStep(0), Gm = P.geom(st), f = P.makeCtx(Gm), T = Gm.tear, fe = P.flapPt(T, T.L, 0), d = sub(fe, T.fr.Q), fwd = -G.dot(d, T.fr.eu), up = G.dot(d, T.fr.en);
+    const cd = f.cord && G.unit(sub(f.cord.b, f.cord.a)), onFlap = f.gel(f.at(add(fe, mul(cd || [0, 0, 0], 0.15)))) < 0;
+    ok('M26', line(ctx, '5-1', 2).includes('瓣，被玻璃體往前拉著') && line(ctx, '5-1', 2).includes('106 個，前緣全都有玻璃體牽拉') && sOf(T.fr0.Q) > oraLit(CASE.tear) && fwd > 0 && up > 1 && onFlap && cd
+      && G.dot(cd, T.fr.en) > 0 && -G.dot(cd, T.fr.eu) > 0 && onScreen(ctx, '5-1', '玻璃體把瓣往前拉traction') && onScreen(ctx, '5-1', '106 個裂孔') && onScreen(ctx, '5-1', '前緣全都有玻璃體牽拉'),
+      `5-1 flap: free edge ${f2(fwd)} mm in front of the hinge, lifted ${f2(up)} mm; gel on it; the drawn pull points into the cavity (${f2(cd && G.dot(cd, T.fr.en))}) and forward (${f2(cd && -G.dot(cd, T.fr.eu))})`); }
+  // M27 5-1 line 3: shaving round the 11 o'clock tear in VP.SHAVE_STEPS steps (forward only): before, the strand pulls the flap and the gel covers the vitreous
+  // base; at the last step the strand is gone (the pull released) and only a thin layer is left on the base; the cutter works at the tear (within 2.5 mm of its
+  // hinge, in the cavity, not in the retina or the flap) and the wide view of the same state shows the tear and the cutter at 11 o'clock
+  { const n = VP.SHAVE_STEPS, ks = range(n + 1).map(i => VP.shaveStep(i / n).vit.shave), fwd = ks.every((v, i) => !i || v > ks[i - 1]) && ks[0] === 0 && ks[n] === 1;
+    const pull = st => { const Gm = P.geom(st), f = P.makeCtx(Gm), T = Gm.tear, fe = P.flapPt(T, T.L, 0), dir = G.unit(add(T.fr.en, mul(T.fr.eu, -0.35))); return f.gel(f.at(add(fe, mul(dir, 0.3)))) < 0; };
+    const thick = st => { const f = P.makeCtx(P.geom(st)); return gelOn(f, CASE.tear, oraLit(CASE.tear))[1]; }, s0 = VP.shaveStep(0), s1 = VP.shaveStep(1), t0 = thick(s0), t1 = thick(s1);
+    const Gm = P.geom(s1), f = P.makeCtx(Gm), I = P.instGeom(Gm, s1.inst[0]), c = f.at(I.tip), dH = G.len(sub(I.tip, Gm.tear.fr.Q));
+    const M = VP.wide(VP.on11(s1), W_, H_, VP.WIN.wide3, 'm27').M, ht = M.tear && clockSurg([M.tear[0] - M.pole[0], M.tear[1] - M.pole[1]]), hi = M.inst0 && clockSurg([M.inst0[0] - M.pole[0], M.inst0[1] - M.pole[1]]);
+    ok('M27', line(ctx, '5-1', 3).includes('尤其 11 點裂孔周圍的玻璃體清乾淨') && fwd && pull(s0) && !pull(s1) && t0 >= 2 && t1 <= 0.6 && dH <= 2.5 && f.cavity(c) < 0 && !(f.retina(c) < 0) && !(f.flap(c) < 0)
+      && s1.inst[0].port === 'sn' && near_h(ht, CASE.tear, 0.15) && near_h(hi, CASE.tear, 0.5) && onScreen(ctx, '5-1', '拉力解除：瓣不再被拉released'),
+      `5-1 shaving ${ks.join(' → ')}: strand on the flap ${pull(s0) ? 'pulls' : 'missing'} → ${pull(s1) ? 'still pulls' : 'released'}; gel on the base at the ora ${f2(t0)} → ${f2(t1)} mm; cutter ${f2(dH)} mm from the hinge; wide view: tear at ${ht && f2(ht)}, cutter at ${hi && f2(hi)} o'clock`); }
+  // M28 5-1 line 4 (and every chapter 5 state): instruments only through their trocars (vitrector superonasal, light pipe superotemporal), from the cannula to the
+  // tip in the cavity, and no shaft touches the phakic lens; reaching the far periphery (示意) the shaft passes behind the lens much closer than when working at 11
+  // (why clearing the periphery is harder with the lens in), in the drawn 10:30 section; the lens-touch numbers on screen (Jackson 2013)
+  { const states = [...range(VP.SHAVE_STEPS + 1).map(i => VP.shaveStep(i / VP.SHAVE_STEPS)), VP.ST.far5, ...range(VP.DEP_STEPS + 1).map(i => VP.depStep(VP.ST.dep52, i / VP.DEP_STEPS))];
+    const want = { vitrector: 'superonasal', light: 'superotemporal' }, bad = []; let minGap = 9;
+    for (const st of states) { const Gm = P.geom(st), f = P.makeCtx(Gm), T3 = P.troc(Gm);
+      for (const ins of st.inst) { const I = P.instGeom(Gm, ins), port = T3.find(t => t.id === ins.port), name = port && !port.inf ? sideName(port.h).en : 'infusion or none', miss = P.segDist(I.port.pivot, I.tip, I.out); let out = 0, lm = 9;
+        for (let t = 0; t <= 1; t += 0.01) { const cc = f.at(add(I.tip, mul(sub(I.port.tip, I.tip), t))); if (!(f.interior(cc) < 0) || f.lens(cc) < 0 || f.iris(cc) < 0 || f.retina(cc) < 0) out++; }
+        for (let t = 0; t <= 1; t += 0.0025) lm = Math.min(lm, f.lens(f.at(add(I.tip, mul(sub(I.port.pivot, I.tip), t)))) - P.N.shaft / 2);
+        minGap = Math.min(minGap, lm); if (name !== want[ins.kind] || miss > 0.02 || out || lm < 0.25) bad.push(`${ins.kind} via ${name} (miss ${f2(miss)}, ${out} out, lens ${f2(lm)})`); } }
+    const far = VP.lensNear(VP.ST.far5).gap, here = VP.lensNear(VP.shaveStep(0)).gap, S = VP.sec(VP.ST.far5, W_, H_, VP.WIN.sec, 'm28', { h: VP.SEC4_H, tw: VP.WIN.secT, noTissue: true }), pl = S.r.plane, nrm = G.unit(G.cross(pl.U, pl.V));
+    const I = P.instGeom(P.geom(VP.ST.far5), VP.ST.far5.inst[0]), inPl = Math.abs(G.dot(sub(I.tip, pl.O), nrm)) < 0.05 && Math.abs(G.dot(sub(I.port.pivot, pl.O), nrm)) < 0.05;
+    ok('M28', line(ctx, '5-1', 4).includes('有水晶體的眼，清周邊比較難') && line(ctx, '5-1', 4).includes('1.2 到 1.6%') && !bad.length && far >= 0.25 && far < here / 3 && inPl
+      && onScreen(ctx, '5-1', '碰到水晶體：約 1.2–1.6%') && onScreen(ctx, '5-1', '示意：清對側的周邊') && onScreen(ctx, '5-1', '器械從水晶體後方經過'),
+      `ch. 5: ${states.length} drawn states, instruments through their trocars, in the cavity, shafts ≥ ${f2(minGap)} mm from the lens${bad.length ? '; bad: ' + bad.slice(0, 3).join('; ') : ''}; far reach ${f2(far)} mm behind the lens vs ${f2(here)} mm at 11, its whole shaft in the 10:30 section`); }
+  // M29 5-2 lines 1, 3: the assistant presses at 11 (chapter 3's place): the same press in the section and the wide view at every step; the dent in the 11 o'clock
+  // plane, the mound at 11 o'clock and pushed toward the centre of the view; the cutter stays put and the pressed retina comes ≥ 1 mm closer to its port
+  // without touching it (the flap neither)
+  { const n = VP.DEP_STEPS, same = range(n + 1).every(i => JSON.stringify(VP.depStep(VP.ST.dep52, i / n).dep) === JSON.stringify(VP.depStep(VP.ST.dep52On, i / n).dep)), dp = VP.ST.dep52.dep;
+    const S = VP.sec(VP.ST.dep52, W_, H_, VP.WIN.depZ, 'm29', { tw: VP.WIN.depZT, noTissue: true }).M, M = wideM(VP.ST.dep52On), hw = M.dep && clockSurg([M.dep[0] - M.pole[0], M.dep[1] - M.pole[1]]);
+    const m = wideMap(VP.ST.dep52On), G0 = P.geom(VP.depStep(VP.ST.dep52, 0)), G1 = P.geom(VP.ST.dep52), b0 = m.beta(G0.ret(dp.h, dp.s, 1)), b1 = m.beta(G1.ret(dp.h, dp.s, 1));
+    const tips = range(n + 1).map(i => JSON.stringify(P.instGeom(P.geom(VP.depStep(VP.ST.dep52, i / n)), VP.ST.dep52.inst[0]).tip)), still = tips.every(t => t === tips[0]);
+    const I = P.instGeom(G1, VP.ST.dep52.inst[0]), dist = Gm => G.len(sub(I.portAt, Gm.ret(dp.h, dp.s, 1))), closer = dist(G0) - dist(G1);
+    let clear = 9; for (let i = 0; i <= n; i++) { const Gi = P.geom(VP.depStep(VP.ST.dep52, i / n)); for (let hh = dp.h - 0.4; hh <= dp.h + 0.4; hh += 0.1) for (let s = dp.s - 2; s <= dp.s + 2; s += 0.2) clear = Math.min(clear, P.segDist(Gi.ret(hh, s, 1), I.tip, I.out) - P.N.shaft / 2);
+      clear = Math.min(clear, P.segDist(P.flapPt(Gi.tear, Gi.tear.L, 0), I.tip, I.out) - P.N.shaft / 2); }
+    ok('M29', line(ctx, '5-2', 3).includes('周邊的視網膜被推進視野') && line(ctx, '5-2', 3).includes('在畫面上成為一個隆起') && dp.h === CASE.tear && VP.DEP_H === CASE.tear && same && S.dep_off < 0.02 && S.dep[0] > 0
+      && hw && near_h(hw, CASE.tear, 0.1) && b1 < b0 && b1 < m.bmax && still && closer >= 1 && clear > 0.1
+      && onScreen(ctx, '5-2', '11 點的隆起mound') && onScreen(ctx, '5-2', '周邊被推進視野') && onScreen(ctx, '5-2', '周邊被推向切割頭') && onScreen(ctx, '5-2', '壓之前的視網膜before'),
+      `5-2 press at ${dp.h} o'clock, same in both views (${n + 1} steps): dent in the plane (${f2(S.dep_off)} mm off), mound at ${hw && f2(hw)} o'clock, ${f2(b0 / D2R_)}° → ${f2(b1 / D2R_)}° from the view axis; cutter fixed, the retina ${f2(closer)} mm closer to its port, never nearer than ${f2(clear)} mm to the shaft`); }
+  // M30 5-2 lines 2, 4, 5: where, how deep, how long — the surgeon's call, no common method (示意 on screen); the iatrogenic break numbers (Neffendorf 2017) on screen;
+  // the call-out when a new break or bleeding is seen
+  { ok('M30', line(ctx, '5-2', 2).includes('都聽主刀的口令') && line(ctx, '5-2', 2).includes('文獻沒有統一的做法') && onScreen(ctx, '5-2', '壓哪裡、多深、多久：聽口令（示意）') && onScreen(ctx, '5-2', '文獻沒有統一的做法')
+      && line(ctx, '5-2', 4).includes('23G 約 1.9%，20G 是 5.8%') && ['23G', '20G', '1.9%', '5.8%'].every(t => onScreen(ctx, '5-2', t))
+      && line(ctx, '5-2', 5).includes('看到新的裂孔或出血，說出來') && onScreen(ctx, '5-2', '看到新的裂孔或出血') && onScreen(ctx, '5-2', '→ 說出來，讓主刀標記'),
+      '5-2: the press labelled 示意 (the surgeon\'s call, no common method), the break numbers by gauge on screen, the call-out to say it'); }
   return R;
 }
 const near_h = (a, b, t = 0.1) => a != null && b != null && Math.abs(hdiff(a, b)) <= t;
@@ -410,6 +478,13 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['PVD stops half way (4-1 line 3)', c => { c.VP = vpWith({ pvdStep: k => VP0.pvdStep(k * 0.5) }); }, 'M22'],
       ['sucked retina drawn 1 h off in the wide view (4-2)', c => { c.VP = vpWith({ wide: (st, ...a) => VP0.wide(st.suck ? Object.assign({}, st, { suck: Object.assign({}, st.suck, { h: st.suck.h + 1 }) }) : st, ...a) }); }, 'M23'],
       ['pull grows with the cut rate (4-2)', c => { c.VP = vpWith({ traction: (v, d, k) => VP0.traction(v, d, 1 - k) }); }, 'M24'],
+      ['tear 2 mm behind the vitreous base (5-1)', c => { c.VP = vpWith({ shaveStep: k => Object.assign({}, VP0.shaveStep(k), { tear: { h: 11, s: POSTERIOR.vbPostAt(11, 1) + 2 } }) }); }, 'M25'],
+      ['flap lying back, free edge behind its hinge (5-1)', c => { c.VP = vpWith({ shaveStep: k => Object.assign({}, VP0.shaveStep(k), { tear: { h: 11, flap: 40 } }) }); }, 'M26'],
+      ['shaving stops half way (5-1)', c => { c.VP = vpWith({ shaveStep: k => VP0.shaveStep(k * 0.5) }); }, 'M27'],
+      ['far reach through the lens (5-1 line 4)', c => { c.VP = stWith('far5', { inst: [{ kind: 'vitrector', port: 'sn', tip: { h: 4.5, s: 8.0, e: 1.0 } }, VP0.ST.far5.inst[1]] }); }, 'M28'],
+      ['cutter moves with the pressed retina (5-2)', c => { c.VP = stWith('dep52', { inst: [{ kind: 'vitrector', port: 'sn', tip: VP0.DEP_TIP }, VP0.ST.dep52.inst[1]] }); }, 'M29'],
+      ['mound at 10 o\'clock in the wide view, dent at 11 in the section (5-2)', c => { c.VP = stWith('dep52On', { dep: Object.assign({}, VP0.ST.dep52On.dep, { h: 10 }) }); }, 'M29'],
+      ['press drawn without 示意 (5-2)', c => { c.screen['5-2'] = c.screen['5-2'].map(t => t.replace('（示意）', '')); }, 'M30'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

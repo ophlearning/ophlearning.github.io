@@ -168,6 +168,30 @@ const VP = (() => {
     sec4: (() => { const o = P.orient.section(SEC4_H, 'OS'); return `左眼 OS　上＝前　右＝${P.clockName(o.right)}　從 ${P.clockName(o.from)}那側看`; })(),
     z42: '左眼 OS　上方偏顳側、赤道後　上＝玻璃體腔　下＝眼球壁',
   };
+  // chapter 5 (peripheral shaving; the assistant's scleral depression), after the core vitrectomy (cut 1, TA on the gel left). The vitrector in the
+  // superonasal 10:30 port, the light pipe in the superotemporal 1:30 port (PRESET.depress's tip). Tip positions, the shaving steps, the far reach
+  // and where and how deep the press goes (DEP, chapter 3's) are 示意. Tips are fixed in 3D from the state without the press, so the press brings
+  // the retina to the cutter instead of moving the cutter with it (CARD.md「器械尖端跟著視網膜動」).
+  const LIGHT5 = P.PRESET.depress.inst[1], SHAVE_STEPS = 5;
+  const st5 = o => Object.assign({}, P.CASE, { troc: true, ta: 1, vit: { cut: 1, shave: 0 } }, o);
+  const tip3 = (st, tip) => P.instTip(P.geom(Object.assign({}, st, { dep: null })), { kind: 'vitrector', port: 'sn', tip }).map(v => +v.toFixed(4));
+  const SHAVE_TIP = { h: 11, s: 9.6, e: 1.0 };   // 5-1: the cutter at the 11 o'clock tear, just behind its hinge (PRESET.depress's tip)
+  const FAR_TIP = { h: 4.5, s: 11.5, e: 1.0 };   // 5-1 line 4 (示意): the far periphery from the 10:30 port (180° away; in the 10:30 section), behind the lens
+  const DEP_TIP = { h: 11, s: 9.6, e: 2.6 };     // 5-2: the cutter held 2.6 mm in front of the retina at the 11 o'clock tear; the press brings the retina to it
+  const T_SHAVE = tip3(st5(), SHAVE_TIP), T_FAR = tip3(st5(), FAR_TIP), T_DEP = tip3(st5(), DEP_TIP);
+  const on11 = st => Object.assign({}, st, { surgeon: 12, inverter: true, look: LOOK_DEP });            // the wide view of a state, looking toward 11 (示意)
+  // 5-1 line 3: shaving k (0 → 1) of the way in SHAVE_STEPS steps (the gel at the vitreous base thinned to its last layer, the strand on the flap cut)
+  const shaveStep = k => st5({ vit: { cut: 1, shave: Math.round(c01(k) * SHAVE_STEPS) / SHAVE_STEPS }, inst: [vitr(T_SHAVE), LIGHT5] });
+  Object.assign(ST, {
+    far5: st5({ vit: { cut: 1, shave: 1 }, inst: [vitr(T_FAR), LIGHT5] }),                            // 5-1 line 4 (示意): reaching the far periphery
+    dep52: st5({ vit: { cut: 1, shave: 0.5 }, dep: DEP, inst: [vitr(T_DEP), LIGHT5] }),               // 5-2: pressing at 11 while shaving (depStep for the steps)
+  });
+  ST.far5On = Object.assign({}, ST.far5, { surgeon: 12, inverter: true, look: LOOK_INF });   // the far reach seen looking toward 4:30 (LOOK_INF, 示意 as in 2-2)
+  ST.dep52On = on11(ST.dep52);
+  // the point of a vitrector's shaft (from its tip to the trocar's pivot) nearest the lens: { p (3D), gap (mm to the lens surface) }
+  function lensNear(st) { const Gm = P.geom(st), f = P.makeCtx(Gm), I = P.instGeom(Gm, st.inst.find(x => x.kind === 'vitrector')); let best = { gap: 1e9 };
+    for (let t = 0; t <= 1.0001; t += 0.0025) { const p = G.add(I.tip, G.sub(I.port.pivot, I.tip).map(v => v * t)), g = f.lens(f.at(p)) - P.N.shaft / 2; if (g < best.gap) best = { p, gap: g }; } return best; }
+  Object.assign(OR, { w5: '左眼 OS　inverter 開：下＝12 點、temporal 在左　看向 11 點（示意）', w5far: '左眼 OS　inverter 開：下＝12 點、temporal 在左　看向對側周邊（示意）' });
 
   // ---------------------------------------------------------------- views
   function fundus(st, W, H, win, id) { const c = cam(win, W, H), r = P.fundus({ st, id }); return wrap(c, r); }
@@ -264,6 +288,7 @@ const VP = (() => {
   function tearChart(st, pts) { const Gm = P.geom(st), T = Gm.tear; return pts.map(([u, cc]) => chartXY(P.onRetina(Gm, T.fr0, u, cc, 1, Gm.ret0).p)); }
   return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
     portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT,
-    SEC4_H, inPl4, CUT4, CORE_STEPS, PVD_STEPS, coreStep, pvdStep, SUCK_AT, E42, SUCK_STEPS, st42, suckAt, traction, distOf, TR42, PLANE42, instSec };
+    SEC4_H, inPl4, CUT4, CORE_STEPS, PVD_STEPS, coreStep, pvdStep, SUCK_AT, E42, SUCK_STEPS, st42, suckAt, traction, distOf, TR42, PLANE42, instSec,
+    SHAVE_STEPS, SHAVE_TIP, FAR_TIP, DEP_TIP, shaveStep, on11, lensNear };
 })();
 if (typeof module !== 'undefined') module.exports = VP;

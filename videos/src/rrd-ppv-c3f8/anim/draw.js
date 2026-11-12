@@ -741,3 +741,134 @@ DRAW2['4-2'] = T => {
     text(bx + 170, 78, TX4.say.a, { size: 19, bold: true, anchor: 'middle' }) + text(bx + 170, 112, TX4.say.b, { size: 24, bold: true, color: COL.red, anchor: 'middle' }) + '</g>';
   return { L: { svg: sl, extra: el, P: PT.z42 }, R: { svg: sr, extra: er, P: PT.w4 } };
 };
+
+// ---------------------------------------------------------------- 5 周邊 shaving 與壓鞏膜
+// Chapter 5 (after the core vitrectomy; the vitrector in the 10:30 port, the light pipe in the 1:30 port). 5-1: the 11–5 section zoomed on the 11
+// o'clock periphery — the two principles (the tear; the gel pulling its flap), the vitreous base straddling the ora with the tear on its posterior
+// border (bracket outside the wall), the flap pulled forward by the gel (Govetto 2024), shaving in VP.SHAVE_STEPS steps (the gel at the vitreous
+// base thinned, the strand on the flap cut: the pull released); line 4 (示意) the 10:30 section with the cutter reaching the far periphery behind the
+// lens. Right: the surgeon's wide-angle view (inverter on, looking toward 11; line 4 toward 4:30) of the same states. 5-2: the assistant presses at
+// 11 (chapter 3's place and depth, 示意): the section with the depressor, the retina before the press (dashed) and the cutter it is pushed toward,
+// the mound in the wide-angle view (both views take the same VP.depStep), the iatrogenic break numbers (Neffendorf 2017) and the call-out.
+Object.assign(PT, {
+  sec5: { title: '經 11 點的子午切面：周邊放大', orient: VP.OR.sec },
+  sec5far: { title: '經 10 點半（器械孔）的子午切面', orient: VP.OR.sec4 },
+  w5: { title: '術者的廣角畫面', orient: VP.OR.w5 },
+  w5far: { title: '術者的廣角畫面', orient: VP.OR.w5far },
+  sec52: { title: '經 11 點的子午切面：助手壓鞏膜', orient: VP.OR.sec },
+  w52: { title: '廣角：壓 11 點', orient: VP.OR.w5 },
+});
+const TX5 = {   // texts drawn by helpers (listed for the font preload)
+  rule: { title: '修 RRD 的兩個原則', a: '① 處理所有的裂孔', b: '② 解除玻璃體的拉力' },
+  brk: { title: '清周邊時造成新的裂孔（修 RRD）', a: '23G', b: '20G' },
+  say: { a: '看到新的裂孔或出血', b: '→ 說出來，讓主刀標記' },
+  lens: { title: '有水晶體的眼：清周邊比較難', a: '碰到水晶體：約 1.2–1.6%', b: '（英國全國資料）' },
+};
+window.PRELOAD_EXTRA = JSON.stringify(PT) + JSON.stringify(TX3) + JSON.stringify(TX4) + JSON.stringify(TX5);
+const C_VB = '#4f6d3a', C_PULL = COL.amber;                      // vitreous base annotations; the pull on the flap
+// iatrogenic breaks in RRD repair by gauge (Neffendorf 2017: 23G 1.9%, 20G 5.8%) as two bars
+function breakBars(x, y, op) {
+  const W = 190, rows = [[TX5.brk.a, 1.9, COL.accent], [TX5.brk.b, 5.8, COL.red]];
+  let s = `<g opacity="${op}"><rect x="${x}" y="${y}" width="${W + 130}" height="98" rx="9" fill="#fff" stroke="#d3dae1"/>` + text(x + 12, y + 24, TX5.brk.title, { size: 14, bold: true });
+  rows.forEach(([t, v, c], i) => { const yy = y + 42 + i * 28, w = W * v / 6; s += text(x + 12, yy + 13, t, { size: 14, bold: true, color: COL.sub }) +
+    `<rect x="${x + 56}" y="${yy}" width="${F1(w)}" height="17" rx="3" fill="${c}" opacity="0.85"/>` + text(F1(x + 62 + w), yy + 14, v + '%', { size: 14, bold: true, color: c }); });
+  return s + '</g>';
+}
+// a call-out box (top of a panel): two lines, the second in red
+const callout = (x, y, w, a, b, op) => `<g opacity="${op}"><rect x="${x}" y="${y}" width="${w}" height="88" rx="10" fill="#fff" stroke="${COL.red}" stroke-width="3"/>` +
+  text(x + w / 2, y + 34, a, { size: 19, bold: true, anchor: 'middle' }) + text(x + w / 2, y + 68, b, { size: 22, bold: true, color: COL.red, anchor: 'middle' }) + '</g>';
+// the strand of gel on the flap (the model's cord) as an arrow from the flap's free edge, L mm long, in a view's coordinates (to: 3D → panel px)
+function pullArrow(st, to, L, op) { const c = POSTERIOR.makeCtx(POSTERIOR.geom(st)).cord, d = GLOBE.unit(GLOBE.sub(c.b, c.a)); if (!(GLOBE.len(GLOBE.sub(c.b, c.a)) > 0.05)) return '';
+  return arrowP([to(c.a), to(GLOBE.add(c.a, d.map(v => v * L)))], C_PULL, op, 'arrM', 4); }
+const wpx = (V, p3) => V.P(V.r.map.proj(p3));                     // a 3D point in panel px of a VP.wide view
+
+DRAW2['5-1'] = T => {
+  const P = POSTERIOR, G = GLOBE, h = VP.SEC_H;
+  // ---------------- the state of this frame (both panels): lines 0–2 before shaving; line 3 shaving (steps); line 4 the far reach (示意)
+  const kS = T.p(3, 0.12, 0.75), kF = T.on(4, 0.8, 0.2), st = VP.shaveStep(kS), done = kS >= 1;
+  const op0 = T.on(0) * (1 - T.on(1, 0.6)), op1 = T.on(1, 0.6) * (1 - T.on(3, 0.6)), op2 = T.on(2, 0.6) * (1 - T.p(3, 0.1, 0.2)), op3 = T.on(3, 0.6) * (1 - kF);
+  // ---------------- left: the 11 o'clock periphery of the 11–5 section (zoomed), then (line 4) the 10:30 section with the far reach
+  const S = VP.sec(st, PW, PH, VP.WIN.depZ, 's51', { tw: VP.WIN.depZT, step: 0.025 }), a = S.A, toS = p3 => S.P(G.toPlane(S.r.plane, p3)), ora = P.oraAt(h, 1);
+  let sl = S.svg, el = '';
+  // line 0: the two principles; ① the tear, ② the gel pulling its flap
+  sl += `<g opacity="${op0}">` + infoCard(14, 14, 240, [[TX5.rule.title, { bold: true, size: 15 }], [TX5.rule.a, { color: COL.accent, bold: true, size: 15, op: T.on(0, 0.5, 0.4) }], [TX5.rule.b, { color: C_PULL, bold: true, size: 15, op: T.p(0, 0.5, 0.6) }]], { lh: 32 }) + '</g>';
+  el += lab('① 裂孔', 'tear', 14, 330, a.tearMid, { bold: true, color: '#9c2a1a', lc: '#9c2a1a', op: op0 * T.on(0, 0.5, 0.4) });
+  el += lab('② 拉著瓣的玻璃體', 'traction', PW - 12, 160, a.flapEdge, { side: 'R', bold: true, color: C_PULL, lc: C_PULL, op: op0 * T.p(0, 0.5, 0.6) });
+  // line 1: the vitreous base straddles the ora (bracket outside the wall from its front to its back border, a tick at the ora); the tear on its back border
+  const vbA = P.vbAntAt(h, 1), vbP = P.vbPostAt(h, 1), oraT = [wallPx(S, h, ora, -0.45), wallPx(S, h, ora, -1.15)];
+  sl += arcDim(S, h, vbA, vbP, -0.8, C_VB, op1) + `<path d="M${F1(oraT[0][0])} ${F1(oraT[0][1])}L${F1(oraT[1][0])} ${F1(oraT[1][1])}" stroke="${RDC}" stroke-width="3" opacity="${op1}"/>`;
+  el += lab('vitreous base：跨在 ora 上', '', PW - 12, 40, wallPx(S, h, (vbA + vbP) / 2 - 0.9, -0.8), { side: 'R', bold: true, color: C_VB, lc: C_VB, op: op1 });
+  el += lab('ora', 'serrata', PW - 12, 92, oraT[1], { side: 'R', bold: true, color: RDC, lc: RDC, op: op1 });
+  el += lab('裂孔就在它的後緣', 'HST', 14, 330, a.hinge, Object.assign({ op: op1 * (1 - T.on(2, 0.5)) }, HST));
+  // line 2: the flap pulled forward by the gel (the strand on its free edge); Govetto 2024: traction at the anterior edge of all 106 tears
+  sl += pullArrow(st, toS, 2.6, op2);
+  el += lab('瓣', 'flap', 14, 260, a.flapEdge, { bold: true, op: op2 });
+  el += lab('玻璃體把瓣往前拉', 'traction', 14, 40, toS(P.makeCtx(P.geom(st)).cord.b), { bold: true, color: C_PULL, lc: C_PULL, op: op2 });
+  sl += `<g opacity="${op2}">` + infoCard(14, PH - 84, 300, [['widefield OCT：106 個裂孔', { bold: true, size: 15 }], ['前緣全都有玻璃體牽拉', { color: C_PULL, bold: true, size: 15 }]], { lh: 26, h: 70 }) + '</g>';
+  // line 3: shaving round the tear; the strand on the flap cut at the last step
+  el += lab('切割頭（切面）', 'vitrector', PW - 12, 330, a.inst0, { side: 'R', bold: true, op: T.on(3, 0.6) * (1 - kF) });
+  el += lab('shaving：切掉周邊的玻璃體', '', 14, 40, a.vbR, { bold: true, color: COL.accent, lc: COL.accent, op: op3 * (done ? 1 - T.p(3, 0.8, 0.86) : 1) });
+  el += lab('拉力解除：瓣不再被拉', 'released', 14, 40, a.flapEdge, { bold: true, color: COL.accent, lc: COL.accent, op: op3 * T.p(3, 0.8, 0.86) });
+  // line 4 (示意): the 10:30 section, the cutter reaching the far periphery behind the lens
+  let PL = PT.sec5;
+  if (kF > 0) { const F = VP.sec(VP.ST.far5, PW, PH, VP.WIN.sec, 's51f', { h: VP.SEC4_H, tw: VP.WIN.secT }), b = F.A, near = VP.lensNear(VP.ST.far5), q = F.P(G.toPlane(F.r.plane, near.p));
+    sl += `<g opacity="${kF.toFixed(3)}">${F.svg}<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="13" fill="none" stroke="${COL.red}" stroke-width="2.5"/></g>` + badge(14, PH - 44, '示意：清對側的周邊', COL.sub, kF);
+    sl += `<g opacity="${kF * T.on(4, 0.6, 1.2)}">` + infoCard(PW - 286, PH - 116, 272, [[TX5.lens.title, { bold: true, size: 15 }], [TX5.lens.a, { color: COL.red, bold: true, size: 15 }], [TX5.lens.b, { color: COL.sub, size: 13 }]], { lh: 26, h: 100 }) + '</g>';
+    el += lab('水晶體', 'lens', 14, 40, b.lensBack, { bold: true, op: kF });
+    el += lab('器械從水晶體後方經過', '', PW - 12, 40, q, { side: 'R', bold: true, color: COL.red, lc: COL.red, op: kF * T.on(4, 0.6, 0.6) });
+    el += lab('切割頭', 'vitrector', 14, 260, b.inst0, { bold: true, op: kF });
+    if (kF > 0.5) PL = PT.sec5far; }
+  // ---------------- right: the surgeon's wide-angle view of the same state (inverter on, looking toward 11; line 4 toward 4:30)
+  const Wv = wide4(VP.on11(st), 'w51', {}), Wt = Wv.Wt, A = Wv.V.A, Gm = P.geom(st);
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + Wv.svg + mark11(Wt, 1) + badge(12, 10, 'inverter 開', COL.accent), er = '';
+  er += lab('11 點裂孔', 'HST', PW - 12, 300, A.tear, Object.assign({ side: 'R', op: (1 - kF) * (1 - op1) }, HST));
+  // line 1: the vitreous base on the wide view (the model's tinted band; its back border dashed) beside the tear
+  const hb = h + 0.45, pB = wpx(Wv.V, Gm.ret(hb, vbP, 1)), pO = wpx(Wv.V, Gm.ret0(hb, ora, 0.5));
+  er += lab('vitreous base 後緣（虛線）', '', PW - 12, 64, pB, { side: 'R', bold: true, color: C_VB, lc: '#ffffff', op: op1 });
+  er += lab('ora', 'serrata', PW - 12, 120, pO, { side: 'R', bold: true, color: RDC, lc: '#ffffff', op: op1 });
+  er += lab('裂孔在後緣', 'HST', PW - 12, 300, A.tear, Object.assign({ side: 'R', op: op1 }, HST));
+  // line 2: the pull on the flap (示意 arrow along the strand); line 3: the TA specks on the gel go with the shaving
+  sr += pullArrow(st, p3 => wpx(Wv.V, p3), 2.6, op2);
+  er += lab('瓣被玻璃體往前拉', 'traction', 14, 64, A.flapEdge, { bold: true, color: C_PULL, lc: '#ffffff', op: op2 });
+  er += lab('切割頭', 'vitrector', 14, 352, A.inst0, { bold: true, op: T.on(3, 0.6) * (1 - kF) });
+  er += lab('沾了 TA 的周邊玻璃體被切掉', '', 14, 64, null, { bold: true, color: COL.accent, op: op3 * (done ? 1 - T.p(3, 0.8, 0.86) : 1) });
+  er += lab('拉力解除', 'released', 14, 64, A.flapEdge, { bold: true, color: COL.accent, lc: '#ffffff', op: op3 * T.p(3, 0.8, 0.86) });
+  let PR = PT.w5;
+  if (kF > 0) { const Wf = wide4(VP.ST.far5On, 'w51f', {});
+    sr += `<g opacity="${kF.toFixed(3)}"><rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>${Wf.svg}</g>` + badge(12, 10, 'inverter 開', COL.accent, kF) + badge(PW - 214, 10, '示意：清對側的周邊', COL.sub, kF);
+    er += lab('切割頭伸到對側周邊', 'vitrector', PW - 12, 352, Wf.V.A.inst0, { side: 'R', bold: true, op: kF });
+    er += lab('水晶體後方那段桿離焦，沒畫', '', 14, 396, null, { color: COL.sub, op: kF });
+    if (kF > 0.5) PR = PT.w5far; }
+  return { L: { svg: sl, extra: el, P: PL }, R: { svg: sr, extra: er, P: PR } };
+};
+
+DRAW2['5-2'] = T => {
+  const P = POSTERIOR, G = GLOBE, h = VP.DEP_H;
+  // ---------------- the state of this frame (both panels): line 1 the depressor goes in (VP.depStep, the same step in both views)
+  const kD = T.p(1, 0.15, 0.6), stS = VP.depStep(VP.ST.dep52, kD), stW = VP.depStep(VP.ST.dep52On, kD), dp = VP.ST.dep52.dep;
+  const op2 = T.on(2, 0.6) * (1 - T.on(3, 0.5)), op3 = T.on(3, 0.6), op4 = T.on(4, 0.6) * (1 - T.on(5, 0.5)), op5 = T.on(5, 0.6);
+  // ---------------- left: the 11 o'clock periphery (zoomed 11–5 section) with the depressor, the cutter, and (line 3) the retina before the press
+  const S = VP.sec(stS, PW, PH, VP.WIN.depZ, 's52', { tw: VP.WIN.depZT, step: 0.025 }), a = S.A, toS = p3 => S.P(G.toPlane(S.r.plane, p3));
+  let sl = S.svg, el = '';
+  const G0 = P.geom(VP.depStep(VP.ST.dep52, 0)), ghost = []; for (let s = dp.s - 3.2; s <= dp.s + 3.2; s += 0.1) ghost.push(toS(G0.ret(h, s, 1)));
+  sl += `<path d="${pth(ghost)}" fill="none" stroke="${COL.ink}" stroke-width="2" stroke-dasharray="6 5" opacity="${op3 * 0.85}"/>`;
+  const g0 = toS(G0.ret(h, dp.s, 1)), g1 = toS(P.geom(stS).ret(h, dp.s, 1));
+  sl += arrowP([g0, [lerp(g0[0], g1[0], 0.85), lerp(g0[1], g1[1], 0.85)]], COL.accent, op3 * (kD > 0.9 ? 1 : 0), 'arrA', 3.5);
+  el += lab('切割頭（切面）', 'vitrector', PW - 12, 40, a.inst0, { side: 'R', bold: true, op: T.on(0) });
+  el += lab('11 點裂孔', 'HST', 14, 330, a.tearMid, Object.assign({ op: T.on(0) * (1 - op3) }, HST));
+  el += lab('助手壓鞏膜', 'depressor', PW - 12, 330, a.depressor, { side: 'R', bold: true, op: T.p(1, 0.3, 0.4) * (1 - op2) });
+  el += lab('壓哪裡、多深、多久：聽口令', '（示意）', PW - 12, 330, a.depressor, { side: 'R', bold: true, color: COL.amber, lc: COL.amber, op: op2 });
+  el += lab('也有主刀用 chandelier 自己壓', '', 14, 40, null, { color: COL.sub, op: T.on(1, 0.6, 1.2) * (1 - T.on(2, 0.5)) });
+  el += lab('文獻沒有統一的做法', '', 14, 40, null, { bold: true, color: COL.amber, op: op2 * T.on(2, 0.6, 1.0) });
+  el += lab('壓之前的視網膜', 'before', 14, 330, ghost[Math.round(ghost.length * 0.2)], { op: op3 });
+  el += lab('周邊被推向切割頭', '', 14, 40, g1, { bold: true, color: COL.accent, lc: COL.accent, op: op3 * (1 - op4) * (1 - op5) });
+  sl += badge(14, PH - 44, '示意', COL.sub, op2) + breakBars(14, 14, op4);
+  // ---------------- right: the surgeon's wide-angle view of the same press (inverter on, looking toward 11): the mound; line 5 the call-out
+  const Wv = wide4(stW, 'w52', {}), Wt = Wv.Wt, A = Wv.V.A;
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + Wv.svg + mark11(Wt, 1) + badge(12, 10, 'inverter 開', COL.accent), er = '';
+  er += lab('切割頭', 'vitrector', PW - 12, 352, A.inst0, { side: 'R', bold: true, op: T.on(0) * (1 - op5) });
+  if (A.dep) { er += lab('11 點的隆起', 'mound', 14, 300, A.dep, { bold: true, op: T.p(1, 0.5, 0.6) * (1 - op5) });
+    er += lab('周邊被推進視野', '', 14, 352, A.dep, { bold: true, color: COL.accent, lc: '#ffffff', op: op3 * (1 - op5) }); }
+  sr += callout(PW - 352, 44, 340, TX5.say.a, TX5.say.b, op5);
+  return { L: { svg: sl, extra: el, P: PT.sec52 }, R: { svg: sr, extra: er, P: PT.w52 } };
+};

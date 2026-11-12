@@ -38,6 +38,7 @@ const POSTERIOR = (() => {
     vortex: 7.6,                                // vortex vein ampullae 7.6 mm behind the ora (Sohn 2020)
     pvdGap: 3.5,                                // detached posterior hyaloid in front of the retina (示意)
     pvdEnv: 3.4,                                // the hyaloid rides over a smooth envelope of the detachment: dilation radius on the fundus chart, mm (示意)
+    nearCut: 4.0,                               // wide-angle view: shaft within this distance of the viewpoint not drawn (out of focus, 示意)
   };
 
   // ---------------------------------------------------------------- outer profile 0–180° (globe/ stops at 150°): same formula and step
@@ -649,9 +650,11 @@ const POSTERIOR = (() => {
     // TA specks over the gel (sampled once in 3D, kept where the gel is)
     if (st.ta > 0) { const f = makeCtx(Gm); for (let k = 0; k < 900; k++) { if (hash(k, 11) > 0.6 * st.ta) continue; const p = [24 * hash(k, 12) - 12, 24 * hash(k, 13) - 12, 20 * hash(k, 14) - 12];
         if (len(p) > 12) continue; if (!(f.gel(f.at(p)) < 0)) continue; const q = W.proj(p); if (q) o.push(`<circle cx="${q[0].toFixed(3)}" cy="${q[1].toFixed(3)}" r="${(0.1 + 0.06 * hash(k, 15)).toFixed(3)}" fill="#fff" opacity="0.85"/>`); } }
-    // instruments seen through the pupil: shaft from the cannula to the tip, width from the distance to the viewpoint
+    // instruments seen through the pupil: shaft from the cannula to the tip, width from the distance to the viewpoint. A shaft that passes within
+    // N.nearCut of the viewpoint (right behind the lens: reaching the far periphery, 2026-11-12) is drawn from its tip up to there only (that part
+    // would fill the field and is far out of focus; 示意)
     for (const [i, ins] of (st.inst || []).entries()) { const I = instGeom(Gm, ins), pts = [];
-      for (let t = 0; t <= 1.0001; t += 0.02) { const p = add(I.tip, mul(sub(I.port.tip, I.tip), t)), q = W.proj(p); if (!q) continue; const w = K_W * N.shaft / len(sub(p, [0, 0, VZ])); pts.push([q, w]); }
+      for (let t = 0; t <= 1.0001; t += 0.02) { const p = add(I.tip, mul(sub(I.port.tip, I.tip), t)), q = W.proj(p), dv = len(sub(p, [0, 0, VZ])); if (dv < N.nearCut) break; if (!q) continue; pts.push([q, K_W * N.shaft / dv]); }
       if (pts.length > 1) { const L = [], Rr = []; for (let k = 0; k < pts.length; k++) { const [q, w] = pts[k], nb = pts[Math.min(pts.length - 1, k + 1)][0], pb = pts[Math.max(0, k - 1)][0], t = unit([nb[0] - pb[0], nb[1] - pb[1], 0]), nrm = [-t[1], t[0]];
           L.push([q[0] + nrm[0] * w / 2, q[1] + nrm[1] * w / 2]); Rr.push([q[0] - nrm[0] * w / 2, q[1] - nrm[1] * w / 2]); }
         o.push(`<path d="M${[...L, ...Rr.reverse()].map(F).join('L')}Z" fill="#b4bcc4" stroke="#4b545d" stroke-width="1" ${NS}/>`); }
