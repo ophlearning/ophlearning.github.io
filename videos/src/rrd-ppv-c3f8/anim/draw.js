@@ -872,3 +872,139 @@ DRAW2['5-2'] = T => {
   sr += callout(PW - 352, 44, 340, TX5.say.a, TX5.say.b, op5);
   return { L: { svg: sl, extra: el, P: PT.sec52 }, R: { svg: sr, extra: er, P: PT.w52 } };
 };
+
+// ---------------------------------------------------------------- 6 讓視網膜貼回
+// Chapter 6 (the patient supine: gravity toward the posterior pole = down in the 11–5 section, anterior up). 6-1: PFCL through a needle (示意) at the
+// pole in VP.PFCL_STEPS steps — its surface (a plane perpendicular to gravity) rises, the retina below it is flattened from behind forward, the surface
+// always below the 11 o'clock tear; the subretinal fluid pushed forward and out of the tear (arrows, 示意); line 3 a drainage retinotomy instead
+// (位置示意); line 4 the surgeon's choice. 6-2: air from the 4:30 infusion fills the top (anterior) and its surface goes down to the PFCL (VP.AIR_STEPS;
+// the detachment left above the PFCL comes down with it, 示意: the order is the surgeon's), then the PFCL out (VP.OUT_STEPS): the retina all flat;
+// lines 2–4 the macula zoomed: a PFCL bead left under the retina (place and size 示意), the outer retina over it gone (示意), only a subfoveal one
+// treated (Sigler 2013), the call-out. Right: the surgeon's wide view of the same state (inverter on, turned 16° toward 11, 示意).
+Object.assign(PT, {
+  sec61: { title: '經 11 點的子午切面（仰躺）', orient: VP.OR.sec },
+  w6: { title: '術者的廣角畫面', orient: VP.OR.w6 },
+  sec62z: { title: '子午切面：黃斑附近放大', orient: VP.OR.sec },
+  w62z: { title: '廣角：黃斑附近放大', orient: VP.OR.w6 },
+});
+const TX6 = {   // texts drawn by helpers (listed for the font preload)
+  dr: { title: '另一種做法：drainage retinotomy', a: '日本全國登錄的比較', b: '結果沒有變差' },
+  pick: { title: '用哪一種：依主刀決定', a: '① PFCL：經原本的裂孔排出', b: '② 另開 drainage retinotomy 排液' },
+  ret: { title: '視網膜下殘留 PFCL（23G 的系列）', a: '約 4.5%–10.3%', b: '作者：和 23G 套管水流較快有關' },
+  say: { a: '看到視網膜下可疑的小珠子', b: '→ 提出來讓主刀確認' },
+};
+window.PRELOAD_EXTRA = JSON.stringify(PT) + JSON.stringify(TX3) + JSON.stringify(TX4) + JSON.stringify(TX5) + JSON.stringify(TX6);
+const C_PF = '#5b4596';                                            // PFCL labels (the model draws PFCL lavender)
+const inField = (V, p3) => p3 && Math.hypot(...V.r.map.proj(p3)) < V.M.R * 0.97;   // a 3D point inside the wide view's field
+// a wide view (inverter on) in a window, with the clock numbers (op) round it; Wt-like { A, c, r } for the chapter 3 helpers
+function wide6(st, id, win, o, opC = 1) { const V = VP.wide(st, PW, PH, win, id, o), Wt = { A: V.A, c: V.P([0, 0]), r: V.M.R * V.k }; return { V, Wt, svg: V.svg + clockNums(Wt, opC) }; }
+
+DRAW2['6-1'] = T => {
+  const P = POSTERIOR, G = GLOBE;
+  // ---------------- the state of this frame (both panels): line 0 detached; line 1 the needle in, then PFCL in steps; line 3 the drainage retinotomy instead (no PFCL)
+  const kN = T.on(1, 0.01), kP = T.p(1, 0.15, 0.85), kR = T.on(3, 0.8), stP = kN > 0 ? VP.pfclStep(kP) : VP.ST.pre61, stR = VP.ST.pre61;
+  const op1 = T.on(1, 0.6) * (1 - kR), op2 = T.on(2, 0.6) * (1 - kR), kF = T.p(2, 0.1, 0.6), F = VP.flow61(stP), Rt = VP.rtomy(stR);
+  // ---------------- left: the 11–5 section (right = 11, left = 5; supine: gravity down)
+  const o = { tw: VP.WIN.secT }, S = VP.sec(stP, PW, PH, VP.WIN.sec, 's61', o), a = S.A, toS = p3 => S.P(G.toPlane(S.r.plane, p3));
+  let sl = S.svg, el = '';
+  if (kR > 0) sl += `<g opacity="${kR.toFixed(3)}">${VP.sec(stR, PW, PH, VP.WIN.sec, 's61r', o).svg}</g>`;
+  sl += arrowP([[40, 58], [40, 126]], COL.ink, op1, 'arrK', 5);                                     // gravity (supine): toward the posterior pole
+  // line 2: the fluid pushed forward under the retina and out of the 11 o'clock tear (示意)
+  sl += arrowP(cutPts(F.tear.map(toS), kF), C_PULL, op2, 'arrM', 3.5) + arrowP(cutPts(F.five.map(toS), kF), C_PULL, op2, 'arrM', 3.5);
+  // line 3: the drainage retinotomy (位置示意): a gap across the retina and the fluid out of it
+  if (kR > 0) { const q = toS(Rt.mid); sl += `<g opacity="${kR.toFixed(3)}"><path d="${pth(Rt.gap.map(toS), true)}" fill="${P.C.bss}"/><circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="9" fill="none" stroke="${COL.red}" stroke-width="2.2"/></g>`;
+    sl += arrowP(cutPts(Rt.path.map(toS), T.p(3, 0.3, 0.8)), C_PULL, kR, 'arrM', 3.5); }
+  sl += note('PFCL 的量為示意', T.on(1, 0.6) * (1 - kR), PH - 14, 14, 'start') + badge(14, PH - 44, '另一種做法（示意）', COL.sub, kR);
+  sl += `<g opacity="${(kR * T.on(3, 0.6, 1.0)).toFixed(3)}">` + infoCard(14, 14, 290, [[TX6.dr.title, { bold: true, size: 15 }], [TX6.dr.a, { size: 15 }], [TX6.dr.b, { bold: true, size: 15, color: COL.accent }]], { lh: 28, h: 104 }) + '</g>';
+  sl += `<g opacity="${T.on(4, 0.6).toFixed(3)}">` + infoCard(PW - 318, PH - 122, 304, [[TX6.pick.title, { bold: true, size: 15, color: COL.accent }], [TX6.pick.a, { size: 15 }], [TX6.pick.b, { size: 15 }]], { lh: 28, h: 104 }) + '</g>';
+  const pfL = a.pfclLineA && a.pfclLineB ? (a.pfclLineA[0] < a.pfclLineB[0] ? [a.pfclLineA, a.pfclLineB] : [a.pfclLineB, a.pfclLineA]) : null;
+  el += lab('11 點裂孔', 'HST', PW - 12, 40, a.tearMid, Object.assign({ side: 'R', op: T.on(0) * (1 - kR) }, HST));
+  el += lab('視網膜下液：要先排出去', 'SRF', 14, 160, toS(F.five[Math.round(F.five.length * 0.5)]), { bold: true, op: T.on(0) * (1 - T.on(1, 0.5)) });
+  el += lab('仰躺：重力朝後極', 'gravity', 14, 40, null, { bold: true, color: '#2b5a8a', op: op1 });
+  el += lab('PFCL 注射針（示意）', 'needle', PW - 12, 392, a.inst0, { side: 'R', bold: true, op: kN * (1 - kR) });
+  el += lab('PFCL', '', 14, 300, toS(VP.inPl(VP.SEC_H, -1.5, -9.6)), { bold: true, color: C_PF, lc: C_PF, op: T.p(1, 0.2, 0.3) * (1 - kR) });
+  if (pfL) el += lab('液面：垂直重力', 'interface', 14, 230, pfL[0], { bold: true, color: C_PF, lc: C_PF, op: T.p(1, 0.3, 0.4) * (1 - kR) });
+  el += lab('液面以下：視網膜壓平', 'flattened', 14, 350, a.macOff, { bold: true, color: COL.accent, lc: COL.accent, op: T.p(1, 0.45, 0.55) * (1 - kR) });
+  if (pfL) el += lab('液面低於 11 點裂孔', '', PW - 12, 200, pfL[1], { side: 'R', bold: true, color: C_PF, lc: C_PF, op: op2 });
+  el += lab('從 11 點裂孔排出', 'drainage', PW - 12, 120, toS(F.out), { side: 'R', bold: true, color: C_PULL, lc: C_PULL, op: op2 * T.p(2, 0.4, 0.5) });
+  el += lab('視網膜下液往前推', 'SRF', 14, 160, toS(F.five[Math.round(F.five.length * 0.5)]), { bold: true, color: C_PULL, lc: C_PULL, op: op2 });
+  el += lab('drainage retinotomy', '（位置示意）', 14, 230, toS(Rt.mid), { bold: true, color: COL.red, lc: COL.red, op: kR * T.on(3, 0.6, 0.4) });
+  // ---------------- right: the surgeon's wide view of the same state (inverter on, turned 16° toward 11, 示意); inside the PFCL's edge the retina is drawn flat
+  const WP = wide6(VP.w6(stP), 'w61', VP.WIN.wide3, { pfclFlat: true }), b = WP.V.A;
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + WP.svg, er = '';
+  if (kR > 0) sr += `<g opacity="${kR.toFixed(3)}">${wide6(VP.w6(stR), 'w61r', VP.WIN.wide3, {}).svg}</g>`;
+  sr += mark11(WP.Wt, 1) + badge(12, 10, 'inverter 開', COL.accent);
+  // line 2: the same 3D paths of the fluid, the parts inside the field
+  { const inF = pts => pts.filter(p => inField(WP.V, p)).map(p => wpx(WP.V, p)); sr += arrowP(cutPts(inF(F.st), kF), C_PULL, op2, 'arrM', 3.5) + arrowP(cutPts(inF(F.tear), kF), C_PULL, op2, 'arrM', 3.5); }
+  if (kR > 0) { const q = wpx(WP.V, Rt.top); sr += `<g opacity="${kR.toFixed(3)}"><circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="3.5" fill="#7e1c10"/><circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="11" fill="none" stroke="${COL.red}" stroke-width="2.4"/></g>`; }
+  er += lab('11 點裂孔', 'HST', PW - 12, 352, b.tear, Object.assign({ side: 'R', op: 1 - kR }, HST));
+  er += lab('光導管', 'light pipe（1 點半）', 14, 352, b.inst1, { bold: true, color: '#8a6d00', lc: '#e8c95a', op: T.on(0) * (1 - kR) });
+  er += lab('PFCL 注射針（示意）', 'needle（10 點半）', PW - 12, 64, b.inst0, { side: 'R', bold: true, lc: '#ffffff', op: kN * (1 - T.on(2, 0.5)) * (1 - kR) });
+  er += lab('PFCL 液面', 'interface', PW - 12, 300, b.pfclEdge, { side: 'R', bold: true, color: C_PF, lc: '#e6dcff', op: T.p(1, 0.4, 0.5) * (1 - kR) });
+  er += lab('液面以內：視網膜貼平', '', 14, 64, b.fovea, { bold: true, color: COL.accent, lc: '#ffffff', op: T.p(1, 0.5, 0.6) * (1 - T.on(2, 0.5)) * (1 - kR) });
+  er += lab('視網膜下液從裂孔排出', '', PW - 12, 64, wpx(WP.V, F.out), { side: 'R', bold: true, color: C_PULL, lc: '#ffd27a', op: op2 * T.p(2, 0.4, 0.5) });
+  er += lab('drainage retinotomy', '（位置示意）', 14, 130, wpx(WP.V, Rt.top), { bold: true, color: COL.red, lc: '#ff8f7a', op: kR * T.on(3, 0.6, 0.4) });
+  return { L: { svg: sl, extra: el, P: PT.sec61 }, R: { svg: sr, extra: er, P: PT.w6 } };
+};
+
+DRAW2['6-2'] = T => {
+  const P = POSTERIOR, G = GLOBE;
+  // ---------------- the state of this frame (both panels): line 0 air down to the PFCL (steps); line 1 the PFCL out (steps); line 2 on the macula, the bead fades in
+  const kA = T.p(0, 0.08, 0.85), kO = T.p(1, 0.1, 0.85), in1 = T.on(1, 0.01) > 0, stX = in1 ? VP.outStep(kO) : VP.airStep(kA);
+  const z = T.p(2, 0, 0.3), kB = T.p(2, 0.3, 0.45), opX = 1 - ss(0, 0.5, z), op3 = T.on(3, 0.6), op4 = T.on(4, 0.6), Gx = P.geom(stX);
+  const stZ = z > 0 ? VP.ST.done62 : stX;
+  // ---------------- left: the 11–5 section, whole eye; line 2 zoomed on the macula (finer section crossfaded in)
+  const win = VIEWS.zwin(VP.WIN.sec, VP.WIN.fov, z);
+  const secOf = (st, id) => { const C = VP.sec(st, PW, PH, win, id, { tw: VP.WIN.secT }); if (z <= 0.4) return C;
+    const Fz = VP.sec(st, PW, PH, win, id + 'z', { tw: VP.WIN.fovT, step: 0.015 }); return Object.assign({}, C, { svg: C.svg + `<g opacity="${ss(0.4, 0.9, z).toFixed(3)}">${Fz.svg.replace(/^<rect[^>]*\/>/, '')}</g>`, A: z > 0.9 ? Fz.A : C.A }); };
+  const S = secOf(stZ, 's62'), toS = p3 => S.P(G.toPlane(S.r.plane, p3));
+  let sl = S.svg, el = '', a = S.A;
+  if (kB > 0) { const SB = secOf(VP.ST.bead62, 's62b'); sl += `<g opacity="${kB.toFixed(3)}">${SB.svg.replace(/^<rect[^>]*\/>/, '')}</g>`; if (kB > 0.5) a = SB.A; }
+  // lines 0–1: the infusion (4:30, off the section: dashed where it projects onto it) and the air rising from it
+  const inf = P.troc(Gx).find(t => t.inf), qi = toS(inf.tip), opI = T.on(0) * (1 - T.on(1, 0.5)) * opX;
+  sl += `<circle cx="${F1(qi[0])}" cy="${F1(qi[1])}" r="8" fill="none" stroke="#24527d" stroke-width="2" stroke-dasharray="4 3" opacity="${opI}"/>` + arrowP([[qi[0] + 6, qi[1] - 8], [qi[0] + 24, qi[1] - 34]], COL.suture, opI, 'arrB', 3);
+  // a point in the air (scanning down the 11 o'clock side 6 mm from the axis) and in the PFCL
+  const f = P.makeCtx(Gx); let air = null; if (stX.gas > 0) for (let zz = 7.6; zz > Gx.lev.gas; zz -= 0.1) { const p = VP.inPl(VP.SEC_H, 6, zz); if (f.gas(f.at(p)) < 0) { air = VP.inPl(VP.SEC_H, 6, Math.max(Gx.lev.gas + 0.4, zz - 0.5)); break; } }
+  const gl = a.gasLineA && a.gasLineB ? (a.gasLineA[0] > a.gasLineB[0] ? a.gasLineA : a.gasLineB) : null;
+  sl += badge(14, PH - 44, '順序依主刀（示意）', COL.sub, opX * T.on(0, 0.6));
+  el += lab('infusion', '4 點半，在切面外', 14, 40, qi, { bold: true, color: '#24527d', lc: '#24527d', op: opI });
+  el += lab('空氣', 'air', PW - 12, 40, air && toS(air), { side: 'R', bold: true, op: (air ? 1 : 0) * T.on(0, 0.6, 0.6) * opX });
+  el += lab('氣液界面：垂直重力', '往後極下降', PW - 12, 160, gl, { side: 'R', bold: true, color: '#2b5a8a', lc: '#2b5a8a', op: (gl ? 1 : 0) * T.on(0, 0.6, 1.2) * opX });
+  el += lab(in1 ? '吸 PFCL（示意）' : '主刀在後面吸液體（示意）', 'needle', PW - 12, 300, a.inst0, { side: 'R', bold: true, op: opX * (stX.inst.length ? 1 : 0) * T.on(0, 0.6, 1.6) });
+  el += lab('PFCL', '', 14, 300, toS(VP.inPl(VP.SEC_H, -1.5, -9.6)), { bold: true, color: C_PF, lc: C_PF, op: (stX.pfcl > 0.06 ? 1 : 0) * opX });
+  el += lab('PFCL 也要吸乾淨', '', 14, 230, null, { bold: true, color: C_PF, op: T.on(1, 0.6) * (1 - T.p(1, 0.85, 0.95)) * opX });
+  el += lab('交換結束：視網膜全部貼平', '', 14, 230, null, { bold: true, color: COL.accent, op: T.p(1, 0.85, 0.95) * opX });
+  // lines 2–4 (zoomed): the bead under the retina, the outer retina over it gone (示意), the fovea (1.5 mm) and the card
+  if (z > 0.9) { const Gb = P.geom(VP.ST.bead62), B = VP.BEAD, band = [];
+    for (let i = 0; i <= 16; i++) band.push(toS(Gb.ret(B.h, B.s - 0.8 * B.r + 1.6 * B.r * i / 16, 0.03)));
+    for (let i = 16; i >= 0; i--) band.push(toS(Gb.ret(B.h, B.s - 0.8 * B.r + 1.6 * B.r * i / 16, 0.45)));
+    sl += `<path d="${pth(band, true)}" fill="#fff6f2" stroke="${COL.red}" stroke-width="1.4" stroke-dasharray="4 3" opacity="${op3}"/>`;
+    const fv = a.fovea, k = S.k, yb = fv[1] - 0.45 * k, x0 = fv[0] - 0.75 * k, x1 = fv[0] + 0.75 * k;
+    sl += `<path d="M${F1(x0)} ${F1(yb + 7)}L${F1(x0)} ${F1(yb)}L${F1(x1)} ${F1(yb)}L${F1(x1)} ${F1(yb + 7)}" stroke="${COL.accent}" stroke-width="2.2" fill="none" stroke-dasharray="5 3" opacity="${T.on(3, 0.6, 1.2)}"/>`;
+    sl += VIEWS.sbar(k, 1);
+    el += lab('殘留的 PFCL：在視網膜下', 'retained PFCL', 14, 300, a.bead, { bold: true, color: C_PF, lc: C_PF, op: kB });
+    el += lab('fovea', '', PW - 12, 300, fv, { side: 'R', bold: true, op: 1 });
+    el += lab('外層視網膜消失（示意）', 'outer retina', 14, 60, band[8], { bold: true, color: COL.red, lc: COL.red, op: op3 });
+    el += lab('在 fovea 下的，作者才建議處理', '', PW - 12, 350, [fv[0], yb], { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.on(3, 0.6, 1.2) });
+    if (a.bead) sl += `<circle cx="${F1(a.bead[0])}" cy="${F1(a.bead[1] - 0.1 * k)}" r="${F1(VP.BEAD.r * k * 1.9)}" fill="none" stroke="${COL.red}" stroke-width="3" opacity="${op4}"/>`; }
+  sl += `<g opacity="${(T.on(2, 0.6, 1.0) * (z > 0.9 ? 1 : 0)).toFixed(3)}">` + infoCard(PW - 306, 14, 292, [[TX6.ret.title, { bold: true, size: 15 }], [TX6.ret.a, { bold: true, size: 15, color: C_PF }], [TX6.ret.b, { size: 14 }]], { lh: 28, h: 104 }) + '</g>';
+  sl += note('小珠子的位置與大小為示意', kB, PH - 14, PW - 12);
+  // ---------------- right: the surgeon's wide view of the same state (inverter on, turned 16° toward 11, 示意); line 2 zoomed on the macula
+  const winW = VIEWS.zwin(VP.WIN.wide3, VP.WIN.w62z, z), WV = wide6(VP.w6(stZ), 'w62', winW, { pfclFlat: true }, opX), b = WV.V.A;
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + WV.svg, er = '', bb = b;
+  if (kB > 0) { const WB = wide6(VP.w6(VP.ST.bead62), 'w62b', winW, {}, opX); sr += `<g opacity="${kB.toFixed(3)}">${WB.svg}</g>`; bb = WB.V.A; }
+  sr += mark11(WV.Wt, opX) + badge(12, 10, 'inverter 開', COL.accent);
+  // line 0: the air comes in from the 4:30 infusion (an arrow at the rim of the field)
+  { const c = WV.Wt.c, d = [0, 1].map(i => (b.clock4[i] - c[i]) / Math.hypot(b.clock4[0] - c[0], b.clock4[1] - c[1]) + (b.clock5[i] - c[i]) / Math.hypot(b.clock5[0] - c[0], b.clock5[1] - c[1])), l = Math.hypot(...d), u = d.map(v => v / l), r = WV.Wt.r;
+    const p0 = [c[0] + u[0] * (r + 30), c[1] + u[1] * (r + 30)], p1 = [c[0] + u[0] * (r - 14), c[1] + u[1] * (r - 14)];
+    sr += arrowP([p0, p1], COL.suture, opI, 'arrB', 4); er += lab('空氣從 infusion 進來', '4 點半', 14, 64, p0, { bold: true, color: '#9ec5e8', lc: '#9ec5e8', op: opI }); }
+  const ge = stX.gas > 0 && stX.gas < 1 ? VP.edgeAt(stX, Gx.lev.gas, VP.SEC_H) : null, pe = stX.pfcl > 0 ? VP.edgeAt(stX, Gx.lev.pfcl, VP.SEC_H) : null;
+  er += lab('氣液界面', 'air–fluid', PW - 12, 64, inField(WV.V, ge) ? wpx(WV.V, ge) : null, { side: 'R', bold: true, color: '#24425f', lc: '#ffffff', op: (inField(WV.V, ge) ? 1 : 0) * opX * (1 - T.on(1, 0.5)) });
+  er += lab('PFCL 液面', 'interface', PW - 12, 300, inField(WV.V, pe) ? wpx(WV.V, pe) : null, { side: 'R', bold: true, color: C_PF, lc: '#e6dcff', op: (inField(WV.V, pe) ? 1 : 0) * opX });
+  er += lab(in1 ? '吸 PFCL（示意）' : '吸液體（示意）', 'needle', 14, 352, b.inst0, { bold: true, lc: '#ffffff', op: opX * (stX.inst.length ? 1 : 0) * T.on(0, 0.6, 1.6) });
+  if (z > 0.9) { const q = bb.bead; er += lab('可疑的小珠子', '視網膜下', PW - 12, 300, q, { side: 'R', bold: true, color: C_PF, lc: '#e6dcff', op: kB });
+    er += lab('fovea', '', 14, 300, b.fovea, { bold: true, lc: '#ffffff', op: 1 });
+    if (q) sr += `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="${F1(VP.BEAD.r * WV.V.k * 2.2)}" fill="none" stroke="${COL.red}" stroke-width="3" opacity="${op4}"/>`; }
+  sr += callout(PW - 352, 44, 340, TX6.say.a, TX6.say.b, op4);
+  return { L: { svg: sl, extra: el, P: z > 0.5 ? PT.sec62z : PT.sec61 }, R: { svg: sr, extra: er, P: z > 0.5 ? PT.w62z : PT.w6 } };
+};

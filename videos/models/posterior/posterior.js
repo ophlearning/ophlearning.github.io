@@ -249,8 +249,15 @@ const POSTERIOR = (() => {
     // optional st.suck { h, s, amt, w } (2026-11-12, RRD video 4-2): detached retina sucked toward the cutter's port, a Gaussian lift of amt mm
     // (width w, 示意) round (h, s), only where the retina is detached; without st.suck H is H0 itself (nothing else changes)
     const sk = st.suck ? Object.assign({ w: 1.0 }, st.suck) : null;
-    const H = !sk ? H0 : (s, h) => { const b = H0(s, h); if (!(b > 0)) return b; const ds = s - sk.s; let dh = h - sk.h; dh -= 12 * Math.round(dh / 12);
+    const H1 = !sk ? H0 : (s, h) => { const b = H0(s, h); if (!(b > 0)) return b; const ds = s - sk.s; let dh = h - sk.h; dh -= 12 * Math.round(dh / 12);
       const dc = dh * 30 * D2R * surfAt(sk.s).rho; return b + sk.amt * ss(0, 0.3, b) * Math.exp(-(ds * ds + dc * dc) / (sk.w * sk.w)); };
+    // optional st.bead { h, s, r, ht } (2026-11-12, RRD video 6-2): a bead of PFCL left under the retina (place and size 示意): the retina is lifted
+    // over a round dome of radius r (mm along the wall) and height ht at its centre (h, s); the space under the dome is PFCL (field 'bead', not 'srf').
+    // Without st.bead H is the function above (nothing else changes)
+    const bd = st.bead ? Object.assign({ r: 0.35, ht: 0.3 }, st.bead) : null;
+    const beadH = !bd ? null : (s, h) => { const ds = s - bd.s; let dh = h - bd.h; dh -= 12 * Math.round(dh / 12);
+      const dc = dh * 30 * D2R * surfAt(bd.s).rho, q = (ds * ds + dc * dc) / (bd.r * bd.r); return q < 1 ? bd.ht * (1 - q) ** 1.5 : 0; };
+    const H = !bd ? H1 : (s, h) => H1(s, h) + beadH(s, h);
     // posterior hyaloid (2026-11-12): hya(s, h) = how far it lies in front of where the retina's inner surface is when attached (mm). In the vitreous
     // base, and where it has not come off yet (pvd), it lies on the retina as it is now (H0, detached or not). Behind the line where it comes off
     // (hyaSp) it leaves the retina for env, a smooth upper envelope of the detachment (env ≥ H0), within 1.5 mm (B 0 → 1), and its gap above env
@@ -275,7 +282,7 @@ const POSTERIOR = (() => {
       const fr = (fn) => { const Q = fn(t.h, sh, 0.5), eu = unit(sub(fn(t.h, sh + 0.05, 0.5), fn(t.h, sh - 0.05, 0.5))), ec0 = unit(sub(fn(t.h + 0.005, sh, 0.5), fn(t.h - 0.005, sh, 0.5)));
         const ec = unit(sub(ec0, mul(eu, dot(ec0, eu)))); let en = unit(cross(ec, eu)); if (dot(en, Q) > 0) en = mul(en, -1); return { Q, eu, ec, en }; };
       tear = Object.assign({ sh, ts }, t, { fr: fr(ret), fr0: fr(ret0), th: rtHS(t.h, sh), ang: t.flap * D2R }); }
-    return { st, ts, D, g, rd, poly, sdf, H, H0, Dp, lev, dep, ret, ret0, rtHS, tear, flat, suck: sk, env, hyaSp, hya };
+    return { st, ts, D, g, rd, poly, sdf, H, H0, Dp, lev, dep, ret, ret0, rtHS, tear, flat, suck: sk, env, hyaSp, hya, bead: bd, beadH };
   }
   // U-shaped hole in tangent coordinates (u posterior from the hinge, c across): signed distance, negative inside
   function sdU(u, c, W, L) { const r = W / 2, cx = (L - r) / 2, hx = (L - r) / 2, qx = Math.abs(u - cx) - hx, qy = Math.abs(c) - r;
@@ -367,8 +374,8 @@ const POSTERIOR = (() => {
       const c = { p, z, rho, h, s, d: W.d, rhoF: W.rhoF, T: Tp(s), ora: oraAt(h, ts) };
       c.Dp = Gm.Dp(s, h); c.dd = W.d - c.Dp;
       c.cil = s < c.ora + 0.5 ? cilTh(s - GN.spur, c.ora - GN.spur) : 0;
-      if (s > c.ora - 0.3) { const [fx, fy] = chartHS(h, s); c.fx = fx; c.fy = fy; c.ch = chorAt(s); c.H = Gm.H(s, h); c.rt = rtAt(fx, fy, s, c.ora, D); c.dq = discQ(D, p).q; }
-      else { c.ch = 0; c.H = 0; c.rt = 0; c.dq = 9; }
+      if (s > c.ora - 0.3) { const [fx, fy] = chartHS(h, s); c.fx = fx; c.fy = fy; c.ch = chorAt(s); c.H = Gm.H(s, h); c.Hb = Gm.beadH ? Gm.beadH(s, h) : 0; c.rt = rtAt(fx, fy, s, c.ora, D); c.dq = discQ(D, p).q; }
+      else { c.ch = 0; c.H = 0; c.Hb = 0; c.rt = 0; c.dq = 9; }
       // the tear frame (detached position)
       if (T) { const q = sub(p, T.fr.Q); c.tu = dot(q, T.fr.eu); c.tc = dot(q, T.fr.ec); c.tn = dot(q, T.fr.en); }
       return c; };
@@ -386,7 +393,8 @@ const POSTERIOR = (() => {
         return g; },
       ciliary: c => c.s >= c.ora + 0.02 ? 1 : Math.max(c.T - c.dd, c.dd - c.T - (c.cil ?? 0), GN.spur - 0.02 - c.s),
       choroid: c => c.s < c.ora ? 1 : Math.max(c.T - c.dd, c.dd - c.T - c.ch, 0.92 - c.dq),
-      srf: c => c.s < c.ora || c.H < 0.002 ? 1 : Math.max(c.T + c.ch - c.dd, c.dd - c.T - c.ch - c.H, 1 - c.dq),
+      srf: c => c.s < c.ora || c.H - c.Hb < 0.002 ? 1 : Math.max(c.T + c.ch + c.Hb - c.dd, c.dd - c.T - c.ch - c.H, 1 - c.dq),
+      bead: c => !(c.Hb > 0.002) ? 1 : Math.max(c.T + c.ch - c.dd, c.dd - c.T - c.ch - c.Hb, 1 - c.dq),            // PFCL left under the retina (st.bead)
       retina: c => c.s < c.ora ? 1 : Math.max(c.T + c.ch + c.H - c.dd, c.dd - c.T - c.ch - c.H - c.rt, 1 - c.dq, -hole(c)),
       flap: c => { if (!T || Math.abs(c.tu) > 4 || Math.abs(c.tn) > 4) return 1; const a = T.ang, u = c.tu * Math.cos(a) + c.tn * Math.sin(a), n = -c.tu * Math.sin(a) + c.tn * Math.cos(a); return Math.max(sdU(u, c.tc, T.w, T.L), Math.abs(n) - T.th / 2); },
       onh: c => c.dq > 1 ? 1 : Math.max(c.dd - (c.T + c.ch + 0.25 - 0.45 * Math.max(0, 1 - c.dq * 1.6)), 0.25 - c.dd, c.dq - 1),   // nerve head in the disc and the scleral canal, cup (示意)
@@ -458,6 +466,7 @@ const POSTERIOR = (() => {
     if (Gm.tear) { const T = Gm.tear; anc('hinge', T.fr.Q); anc('flapEdge', flapPt(T, T.L, 0)); anc('tearApex', onRetina(Gm, T.fr, T.L, 0, 0.5).p); anc('tearMid', onRetina(Gm, T.fr, T.L / 2, 0, 0.0).p);
       anc('srf', P3(T.h, T.sh + 2.5, Tp(T.sh + 2.5) + chorAt(T.sh + 2.5) + Gm.H(T.sh + 2.5, T.h) * 0.5)); }
     for (const t of troc(Gm)) { anc('troc_' + t.id, t.entry); anc('cannulaTip_' + t.id, t.tip); if (t.cjC) anc('cj_' + t.id, t.cjC); }
+    if (Gm.bead) { const b = Gm.bead; anc('bead', P3(b.h, b.s, Tp(b.s) + chorAt(b.s) + b.ht / 2)); }   // the bead's centre (half its height above the RPE)
     if (Gm.dep) { anc('dep', Gm.ret(Gm.dep.h, Gm.dep.s, 1)); anc('depressor', P3(Gm.dep.h, Gm.dep.s, Gm.dep.depth - GN.conj - 0.9 - 2.5)); }
     for (const [i, ins] of (st.inst || []).entries()) { const I = instGeom(Gm, ins); anc('inst' + i, I.tip); }
     // fluid surfaces: the interface line in this plane (intersection with the level plane), clipped to the cavity
@@ -485,7 +494,7 @@ const POSTERIOR = (() => {
     const o = [`<rect x="${win.x}" y="${win.y}" width="${win.w}" height="${win.h}" fill="${C.bg}"/>`];
     o.push(layer('interior', C.aq), layer('cavity', C.bss), layer('gel', C.gel, C.gelS, 0.8), layer('vb', C.vb, C.vbS, 0.7, 'stroke-dasharray="3 2"'));
     o.push(layer('pfcl', C.pfcl, C.pfclS, 1.1), layer('gas', C.gas, C.gasS, 1.1));
-    o.push(layer('srf', C.srf, C.srfS, 0.6), layer('lens', C.lens, C.lensS), layer('iris', C.iris, C.irisS, 0.6));
+    o.push(layer('srf', C.srf, C.srfS, 0.6), layer('bead', C.pfcl, C.pfclS, 0.8), layer('lens', C.lens, C.lensS), layer('iris', C.iris, C.irisS, 0.6));
     o.push(layer('choroid', C.chor, C.chorS, 0.6), layer('ciliary', C.cil, C.cilS, 0.6), layer('retina', C.ret, C.retS, 0.7), layer('flap', C.ret, C.retS, 0.7));
     o.push(layer('sclera', C.sclera, C.scleraS), layer('limbus', C.limb, null), layer('cornea', C.cornea, C.corneaS), layer('conj', C.conj, C.conjS, 0.6));
     o.push(layer('onh', C.onh, C.onhS, 0.6), layer('nerve', C.nerve, C.nerveS, 0.6));
@@ -588,6 +597,12 @@ const POSTERIOR = (() => {
       o.push(`<path d="${path(hole, true)}" fill="#c8361f" stroke="#7e1c10" stroke-width="1" ${NS}/>`);
       const flap = U.map(q => flapPt(T, q[0], q[1], fr)); o.push(`<path d="${path(flap, true)}" fill="#ece3d6" stroke="#9f9384" stroke-width="1" opacity="0.92" ${NS}/>`);
       A.tear = proj(onRetina(Gm, fr, T.L / 2, 0, 0, fn).p); A.tearApex = proj(onRetina(Gm, fr, T.L, 0, 0, fn).p); A.hinge = proj(fr.Q); A.flapEdge = proj(flapPt(T, T.L, 0, fr)); }
+    // a PFCL bead left under the retina (st.bead): a round, glistening spot on the retina over it (示意 colours); anchor bead = its centre
+    if (Gm.bead) { const b = Gm.bead, rr = surfAt(b.s).rho * 30 * D2R, pts = [];
+      for (let i = 0; i <= 48; i++) { const a = 2 * Math.PI * i / 48; pts.push(pos(b.h + b.r * Math.cos(a) / rr, b.s + b.r * Math.sin(a), 1)); }
+      const c = proj(pos(b.h, b.s, 1)); A.bead = c;
+      o.push(`<path d="${path(pts, true)}" fill="#f3eeff" fill-opacity="0.8" stroke="#7d6bb5" stroke-width="1" ${NS}/>`);
+      if (c) o.push(`<circle cx="${(c[0] - b.r * 0.3).toFixed(3)}" cy="${(c[1] - b.r * 0.3).toFixed(3)}" r="${(b.r * 0.28).toFixed(3)}" fill="#ffffff" opacity="0.95"/>`); }
     // laser spots
     for (const sp of laserSpots(Gm)) { const q = proj(mode === 'chart' ? Gm.ret0(sp.h, sp.s, 1) : sp.p); if (q) o.push(`<circle cx="${q[0].toFixed(3)}" cy="${q[1].toFixed(3)}" r="${(mode === 'chart' ? 0.16 : 0.16).toFixed(3)}" fill="${C.laser}" stroke="${C.laserS}" stroke-width="0.9" opacity="0.95" ${NS}/>`); }
   }

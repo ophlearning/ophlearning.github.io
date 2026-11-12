@@ -272,6 +272,20 @@ def('D11', (P, ok) => { const st = P.PRESET.pfcl, Gm = P.geom(st), f = P.makeCtx
   let flat = 0, n = 0; for (let h = 0.5; h <= 12; h += 0.5) for (let s = 8; s < 31; s += 0.5) { const q = P.rpeAt(h, s); if (up(q) < L - 0.4) { n++; flat = Math.max(flat, Gm.H(s, h)); } }
   ok(n > 50 && flat < 0.01, `retina under the PFCL flat (${n} points, max height ${flat.toFixed(3)} mm)`);
   ok(up(Gm.tear.fr.Q) > L + 1, `the 11 o'clock tear ${(up(Gm.tear.fr.Q) - L).toFixed(1)} mm above the PFCL surface (fluid pushed forward leaves there)`); });
+// D14 a PFCL bead left under the retina (st.bead, 2026-11-12, narration 6-2; place and size 示意, written here): its centre (the section's anchor) is in
+// the bead field (PFCL), not in the subretinal fluid, the retina or the vitreous cavity; the retina over its centre starts its height above the RPE
+// and is not lifted one diameter away; the section through 11–5 cuts it on the 5 o'clock side; the wide view marks it at 5 o'clock from the pole,
+// as far from the fovea as on the retina (1 screen mm ≈ 1 retinal mm at the pole)
+def('D14', (P, ok) => { const b = { h: 5, s: 29.9, r: 0.35, ht: 0.3 }, st = { eye: 'OS', tear: { h: 11 }, rd: { amt: 0 }, vit: { cut: 1, shave: 1 }, gas: 1, bead: b };
+  const Gm = P.geom(st), f = P.makeCtx(Gm), sec = P.section({ st, plane: G.planes.meridian(11), win: { x: 0, y: 0, w: 1, h: 1 }, noTissue: true }).A, c = sec.bead_3;
+  ok(c && inside(f, 'bead', c) && !inside(f, 'srf', c) && !inside(f, 'retina', c) && !inside(f, 'cavity', c), 'bead centre in the PFCL under the retina (not in the subretinal fluid, the retina or the cavity)');
+  const rpe = s => P.Tp(s) + P.chorAt(s), start = (h, s) => { for (let d = rpe(s) - 0.05; d < rpe(s) + 1; d += 0.002) if (inside(f, 'retina', P.P3(h, s, d))) return d - rpe(s); return 9; };
+  const lift = start(b.h, b.s), away = start(b.h, b.s - 2 * b.r);
+  ok(near(lift, b.ht, 0.02) && away < 0.01, `retina over the bead starts ${lift.toFixed(3)} mm above the RPE (bead ${b.ht}), ${away.toFixed(3)} mm one diameter away`);
+  const sh = P.wallOf(c[2], Math.hypot(c[0], c[1])).s, hh = clockOf(c[0], c[1]);
+  ok(sec.bead_off < 0.02 && sec.bead[0] < 0 && near(sh, b.s, 0.02) && near(hdiff(hh, b.h), 0, 0.01), `section 11–5: the bead ${sec.bead_off.toFixed(3)} mm off the plane, on the 5 o'clock side, at ${hh.toFixed(2)} o'clock ${sh.toFixed(2)} mm from the limbus`);
+  const W = P.wide({ st }).A, v = sub(W.bead, W.pole), hw = clockOn(v, [0, 1], [-1, 0]), dw = len(sub(W.bead, W.fovea)), dr = len(sub(Gm.ret(b.h, b.s, 1), Gm.ret(12, P.S_POLE, 1)));
+  ok(near(hdiff(hw, b.h), 0, 0.05) && near(dw, dr, 0.25), `wide view: the bead at ${hw.toFixed(2)} o'clock from the pole, ${dw.toFixed(2)} mm from the fovea (${dr.toFixed(2)} mm on the retina)`); });
 // D12 laser round the tear: all round, outside the hole, on attached retina (only attached retina takes laser)
 def('D12', (P, ok) => { const st = P.PRESET.laser, Gm = P.geom(st), T = Gm.tear, sp = P.laserSpots(Gm), c0 = [T.L / 2 - 0.2, 0];
   const angs = sp.map(q => { const d = sub(q.p, T.fr.Q); return Math.atan2(dot(d, T.fr.ec) - c0[1], dot(d, T.fr.eu) - c0[0]) / D2R; }).sort((a, b) => a - b);
@@ -388,6 +402,9 @@ const MUT = [
   ['hyaloid comes off inside the vitreous base', ['D13'], { src: [['const hyaSp = h => lerp(S_POLE + 2, vbPostAt(h, ts), st.pvd || 0);', 'const hyaSp = h => lerp(S_POLE + 2, oraAt(h, ts) - 1, st.pvd || 0);']] }],
   ['PFCL does not flatten', ['D11'], { src: [['return ss(lev.pfcl - 0.2, lev.pfcl + 0.8, up); };', 'return 1; };']] }],
   ['PFCL floats', ['D11', 'E2'], { src: [['pfcl: pf > 0 ? q(pf) : -1e9', 'pfcl: pf > 0 ? q(1 - pf) : -1e9'], ['Math.max(cav(c), -dot(c.p, g) - lev.pfcl)', 'Math.max(cav(c), dot(c.p, g) + lev.pfcl)']] }],
+  ['PFCL bead that does not lift the retina', ['D14'], { src: [['const H = !bd ? H1 : (s, h) => H1(s, h) + beadH(s, h);', 'const H = H1;']] }],
+  ['PFCL bead drawn as subretinal fluid', ['D14'], { src: [['c.H - c.Hb < 0.002', 'c.H < 0.002'], ['c.T + c.ch + c.Hb - c.dd', 'c.T + c.ch - c.dd']] }],
+  ['PFCL bead marked 1 h off in the wide view', ['D14'], { src: [['const c = proj(pos(b.h, b.s, 1)); A.bead = c;', 'const c = proj(pos(b.h + 1, b.s, 1)); A.bead = c;']] }],
   ['laser without the posterior arc', ['D12'], { src: [['for (let a = -90; a <= 90; a += 2) add_(', 'for (let a = -90; a <= -88; a += 2) add_(']] }],
   ['laser on detached retina', ['D12'], { src: [["laser: Object.assign({}, CASE, { rd: { amt: 0 }, troc: true, vit: { cut: 1, shave: 1 }, gas: 1, laser: 1 }),", "laser: Object.assign({}, CASE, { rd: { amt: 1 }, troc: true, vit: { cut: 1, shave: 1 }, gas: 1, laser: 1 }),"]] }],
   ['gas surface tilted', ['E1'], { src: [['Math.max(cav(c), lev.gas + dot(c.p, g))', 'Math.max(cav(c), lev.gas + dot(c.p, g) + 0.2 * c.p[0])']] }],

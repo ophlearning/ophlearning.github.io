@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–5.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–6.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -35,8 +35,8 @@ const LEDGER = {
   '5-1': { '106': 'Govetto 2024', '11': '病例', '1.2': 'Jackson 2013', '1.6': 'Jackson 2013', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構',
            '10': '示意', '1': '示意' },   // 10, 1: the 10:30 port's section (trocar clock hours 依主刀決定)
   '5-2': { '1.9': 'Neffendorf 2017', '5.8': 'Neffendorf 2017', '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構' },
-  '6-1': { '11': '病例' },
-  '6-2': { '4.5': 'Figueroa 2013', '10.3': 'Garg 2012' },
+  '6-1': { '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '10': '示意', '1': '示意' },   // 10, 1: the needle's 10:30 port, the light pipe's 1:30 port (trocar clock hours 依主刀決定)
+  '6-2': { '4.5': 'Figueroa 2013', '10.3': 'Garg 2012', '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '4': '示意', '1': '結構' },   // 4: the 4:30 infusion (示意); 1: the 1 mm scale bar
   '7-1': { '360': 'Wang 2020' },
   '7-2': { '4': 'Vaziri 2016', '3': 'Vaziri 2016', '14': 'Vaziri 2016', '12': 'Brosh 2014', '16': 'Foulsham 2021',
            '50': 'Kanclerz 2018b', '10': 'Kanclerz 2018b', '20': 'Kanclerz 2018b', '40': 'Kanclerz 2018b' },
@@ -388,9 +388,108 @@ function modelChecks(ctx) {
       && line(ctx, '5-2', 4).includes('23G 約 1.9%，20G 是 5.8%') && ['23G', '20G', '1.9%', '5.8%'].every(t => onScreen(ctx, '5-2', t))
       && line(ctx, '5-2', 5).includes('看到新的裂孔或出血，說出來') && onScreen(ctx, '5-2', '看到新的裂孔或出血') && onScreen(ctx, '5-2', '→ 說出來，讓主刀標記'),
       '5-2: the press labelled 示意 (the surgeon\'s call, no common method), the break numbers by gauge on screen, the call-out to say it'); }
+  // chapter 6. The patient lies supine: gravity toward the posterior pole (SUP_G, written here, not taken from the model). States from VP (pfclStep,
+  // airStep, outStep, ST.pre61 / done62 / bead62; VP.w6 for the wide view), the same functions draw.js calls for both panels of a frame. Heavy
+  // measurements on the drawn fields are memoised by state (the model itself is never mutated by this file's selftest).
+  const SUP_G = [0, 0, -1], LIT6 = { fovea: 1.5, macula: 5.5 }, upS = p => -G.dot(p, SUP_G), keyOf = st => JSON.stringify(st);   // fovea and macula 1.5 and 5.5 mm across (Köksaldı 2025, posterior/CARD.md)
+  const ctx6 = st => memo('f' + keyOf(st), () => P.makeCtx(P.geom(st)));
+  // the highest and lowest points of the vitreous cavity (supine), at least 0.3 mm inside it, from the model's cavity sample points
+  const ext6 = st => memo('e' + keyOf(st), () => { const f = ctx6(st), V = P.voxels(); let lo = null, hi = null, a = 1e9, b = -1e9;
+    for (let i = 0; i < V.n; i += 3) { const p = [V.xs[3 * i], V.xs[3 * i + 1], V.xs[3 * i + 2]], u = upS(p); if (u > a && u < b) continue; if (f.cavity(f.at(p)) > -0.3) continue; if (u < a) { a = u; lo = p; } if (u > b) { b = u; hi = p; } }
+    return { lo, hi }; });
+  // the drawn surface of a fluid in the 11–5 section at x (mm along the section): scanning from the front (top) backward, the first change in or out of
+  // that fluid well inside the cavity (as posterior/check.js E1). Returns screen y (down = posterior) or null
+  const pl6 = G.planes.meridian(VP.SEC_H), inn6 = (f, name, p) => f[name](f.at(p)) < 0;
+  const surf6 = (st, name, x) => memo('s' + name + x + keyOf(st), () => { const f = ctx6(st); let last = null;
+    for (let y = -12; y <= 12; y += 0.01) { const p = G.onPlane(pl6, x, y), inn = inn6(f, name, p); if (last !== null && inn !== last && f.cavity(f.at(p)) < -0.2) return y; last = inn; } return null; });
+  const zOf = y => G.onPlane(pl6, 0, y)[2];   // height (supine: anterior) of a screen y of the section
+  const gravDown = Math.abs(G.dot(pl6.U, SUP_G)) < 1e-9 && G.dot(pl6.V, SUP_G) > 0.999;   // the section's screen down is gravity (supine): a horizontal surface is perpendicular to it
+  // M31 6-1 line 1: PFCL from the posterior pole sinks to the lowest place (supine: the posterior pole), its surface a plane perpendicular to gravity (horizontal
+  // in the 11–5 section, whose screen down is gravity) rising step by step; the needle's tip (示意) in the PFCL at the pole at every step
+  { const n = VP.PFCL_STEPS, rows = []; let okAll = true, prev = 1e9;
+    for (let i = 1; i <= n; i++) { const st = VP.pfclStep(i / n), f = ctx6(st), { lo, hi } = ext6(st), ys = [-4, 0, 4].map(x => surf6(st, 'pfcl', x)), tip = st.inst[0].tip;
+      const flat = ys.every(y => y !== null && near(y, ys[0], 0.06)), rise = ys[1] !== null && ys[1] < prev - 0.3; prev = ys[1] ?? prev;
+      if (!(inn6(f, 'pfcl', lo) && !inn6(f, 'pfcl', hi) && flat && rise && inn6(f, 'pfcl', tip) && st.inst[0].kind === 'needle')) okAll = false; rows.push(ys[1] === null ? 'none' : f2(zOf(ys[1]))); }
+    ok('M31', line(ctx, '6-1', 1).includes('PFCL 從後極打進去') && line(ctx, '6-1', 1).includes('從後往前把視網膜壓平') && gravDown && okAll
+      && onScreen(ctx, '6-1', '仰躺：重力朝後極gravity') && onScreen(ctx, '6-1', '液面：垂直重力interface') && onScreen(ctx, '6-1', 'PFCL 注射針（示意）needle') && onScreen(ctx, '6-1', 'PFCL 的量為示意'),
+      `6-1 PFCL (supine, gravity down the section): at the lowest point of the cavity, not the highest, the needle tip in it; its surface horizontal at ±4 mm and rising ${rows.join(' → ')} mm (height)`); }
+  // M32 6-1 line 1: below the drawn PFCL surface the retina lies flat (height 0) and above it the detachment stays as it was, and the flat part grows from the
+  // pole forward with the steps (RPE points on a 0.5 h × 0.5 mm grid behind the ora)
+  { const n = VP.PFCL_STEPS, G0 = P.geom(VP.ST.pre61); let okAll = true, prevF = -1, last = '';
+    for (let i = 1; i <= n; i++) { const st = VP.pfclStep(i / n), Gm = P.geom(st), y = surf6(st, 'pfcl', 0); if (y === null) { okAll = false; continue; } const zS = zOf(y); let nF = 0, mF = 0, nD = 0, bD = 0;
+      for (let h = 0.5; h <= 12; h += 0.5) for (let s = oraLit(h) + 0.6; s <= P.S_POLE - 0.4; s += 0.5) { const u = upS(P.rpeAt(h, s)), H = Gm.H(s, h), H0 = G0.H(s, h);
+        if (u < zS - 0.25) { nF++; mF = Math.max(mF, H); } else if (u > zS + 0.85 && H0 > 0.05) { nD++; if (Math.abs(H - H0) > 1e-6) bD++; } }
+      if (!(mF < 1e-6 && bD === 0 && nF > prevF && (i < n || (nF > 50 && nD > 10)))) okAll = false; prevF = nF; last = `${nF} points below flat (max ${f2(mF)} mm), ${nD} detached points above unchanged (${bD} changed)`; }
+    ok('M32', okAll && onScreen(ctx, '6-1', '液面以下：視網膜壓平flattened'), `6-1 below the PFCL surface flat, above it still detached, growing step by step; last step: ${last}`); }
+  // M33 6-1 line 2: at every step the PFCL surface stays below the 11 o'clock tear — every point of the hole's edge and of the flap above the surface and its
+  // flattening band, so the retina round the tear stays lifted; the drawn fluid runs forward under the retina (in the subretinal fluid, nearer the ora at each
+  // point), out through the hole (inside the U) into the cavity above the PFCL; on the 5 o'clock side it runs forward under the retina too, and the
+  // superotemporal path drawn in the wide view runs under the retina
+  { const n = VP.PFCL_STEPS; let okAll = true, minGap = 9;
+    for (let i = 1; i <= n; i++) { const st = VP.pfclStep(i / n), Gm = P.geom(st), T = Gm.tear, y = surf6(st, 'pfcl', 0); if (y === null) { okAll = false; continue; } const zS = zOf(y);
+      const U = P.uOutline(T.w, T.L), low = Math.min(...U.map(q => upS(P.onRetina(Gm, T.fr, q[0], q[1], 0).p)), ...U.map(q => upS(P.flapPt(T, q[0], q[1]))));
+      minGap = Math.min(minGap, low - zS); if (!(low > zS + 0.85)) okAll = false; }
+    const st = VP.pfclStep(1), Gm = P.geom(st), f = ctx6(st), T = Gm.tear, F = VP.flow61(st), zS = zOf(surf6(st, 'pfcl', 0) ?? 0), pre = F.tear.slice(0, -2);
+    const fwd = pts => pts.every((p, i) => !i || sOf(p) < sOf(pts[i - 1])), inSrf = pts => pts.every(p => inn6(f, 'srf', p));
+    const d = sub(F.hole, T.fr.Q), inU = P.sdU(G.dot(d, T.fr.eu), G.dot(d, T.fr.ec), T.w, T.L) < 0, out = inn6(f, 'cavity', F.out) && !inn6(f, 'pfcl', F.out) && upS(F.out) > zS;
+    ok('M33', line(ctx, '6-1', 2).includes('從原本 11 點的裂孔排出去') && okAll && inSrf(pre) && fwd(pre) && inU && out && inSrf(F.five) && fwd(F.five) && inSrf(F.st) && Gm.H(T.sh + T.L, T.h) > 0.3
+      && onScreen(ctx, '6-1', '從 11 點裂孔排出drainage') && onScreen(ctx, '6-1', '液面低於 11 點裂孔') && onScreen(ctx, '6-1', '視網膜下液往前推SRF'),
+      `6-1 the tear and its flap ≥ ${f2(minGap)} mm above the PFCL surface at every step; the drawn fluid forward under the retina, through the hole, out into the cavity above the PFCL`); }
+  // M34 6-1 lines 3–4: a drainage retinotomy instead (位置示意): on detached retina behind the equator, outside the macula (5.5 mm across), in the 11–5 section
+  // on the 5 o'clock side and inside the wide view at the same 3D point; the drawn fluid runs under the retina to it and out into the cavity; the surgeon's choice
+  { const st = VP.ST.pre61, Gm = P.geom(st), f = ctx6(st), R6 = VP.rtomy(st), m = R6.mid, hR = G.clockOf(m[0], m[1]), sR = sOf(m), off = Math.abs(G.dot(m, G.unit(G.cross(pl6.U, pl6.V)))), xs = G.toPlane(pl6, m)[0];
+    const Wv = VP.wide(VP.w6(st), W_, H_, VP.WIN.wide3, 'm34'), q = Wv.r.map.proj(R6.top), inF = Math.hypot(...q) < Wv.M.R, path = R6.path.slice(0, -2).every(p => inn6(f, 'srf', p)) && inn6(f, 'cavity', R6.path[R6.path.length - 1]);
+    ok('M34', line(ctx, '6-1', 3).includes('另開 drainage retinotomy 排液') && line(ctx, '6-1', 4).includes('依主刀決定') && Gm.H(sR, hR) > 0.1 && sR > P.S_EQ && Math.hypot(...P.chartHS(hR, sR)) > LIT6.macula / 2 + 1
+      && off < 0.01 && xs < 0 && inF && path && onScreen(ctx, '6-1', 'drainage retinotomy（位置示意）') && onScreen(ctx, '6-1', '另一種做法（示意）') && onScreen(ctx, '6-1', '用哪一種：依主刀決定'),
+      `6-1 drainage retinotomy (位置示意) at ${f2(hR)} o'clock ${f2(sR)} mm from the limbus on retina detached ${f2(Gm.H(sR, hR))} mm, ${f2(off)} mm off the 11–5 section (5 o'clock side), in the wide field; fluid out through it`); }
+  // M35 6-2 line 0: air from the infusion rises to the highest place (supine: the front), its surface a plane perpendicular to gravity going down toward the pole
+  // step by step to the PFCL surface (never below it); the 4:30 infusion's tip in the air from the first step; the PFCL stays at the bottom
+  { const n = VP.AIR_STEPS; let okAll = true, prev = -1e9; const rows = [];
+    for (let i = 1; i <= n; i++) { const st = VP.airStep(i / n), Gm = P.geom(st), f = ctx6(st), { lo, hi } = ext6(st), it = P.troc(Gm).find(t => t.inf), ys = [-6, 6].map(x => surf6(st, 'gas', x)), yp = surf6(st, 'pfcl', 0);
+      const flat = ys.every(y => y !== null && near(y, ys[0], 0.06)), down = ys[0] !== null && ys[0] > prev + 0.3; prev = ys[0] ?? prev;
+      if (!(inn6(f, 'gas', hi) && !inn6(f, 'gas', lo) && inn6(f, 'pfcl', lo) && it && inn6(f, 'gas', it.tip) && sideName(it.h).en === LIT2.ports.inf && flat && down && yp !== null && ys[0] <= yp + 0.02)) okAll = false; rows.push(ys[0] === null ? 'none' : f2(zOf(ys[0]))); }
+    ok('M35', line(ctx, '6-2', 0).includes('空氣從 infusion 進來，浮在上面') && line(ctx, '6-2', 0).includes('主刀在後面把液體吸掉') && gravDown && okAll
+      && onScreen(ctx, '6-2', 'infusion4 點半，在切面外') && onScreen(ctx, '6-2', '空氣從 infusion 進來4 點半') && onScreen(ctx, '6-2', '氣液界面：垂直重力往後極下降') && onScreen(ctx, '6-2', '順序依主刀（示意）'),
+      `6-2 air (supine): at the highest point, not the lowest (PFCL there), the inferotemporal infusion tip in it; its surface horizontal and going down ${rows.join(' → ')} mm to the PFCL`); }
+  // M36 6-2 line 1: then the PFCL goes (step by step) and the exchange ends with no PFCL left and the retina flat everywhere (0.25 h × 0.25 mm grid behind the ora):
+  // chapter 7 lasers attached retina; the detachment left above the PFCL came down while the air went in
+  { const n = VP.OUT_STEPS, pf = range(n + 1).map(i => { const st = VP.outStep(i / n), y = surf6(st, 'pfcl', 0); return y === null ? -1e9 : zOf(y); }), fin = VP.outStep(1), Gm = P.geom(fin), f = ctx6(fin), { lo } = ext6(fin);
+    let mx = 0; for (let h = 0.25; h <= 12; h += 0.25) for (let s = oraLit(h); s <= P.S_POLE - 0.1; s += 0.25) mx = Math.max(mx, Gm.H(s, h));
+    const down = pf.every((v, i) => !i || v < pf[i - 1] - 0.3 || (v === -1e9 && i === n)) && pf[n] === -1e9 && !inn6(f, 'pfcl', lo);
+    const hs = range(VP.AIR_STEPS + 1).map(i => { const g = P.geom(VP.airStep(i / VP.AIR_STEPS)); let m = 0; for (let s = 8; s < 14; s += 0.25) m = Math.max(m, g.H(s, CASE.tear)); return m; }), comeDown = hs.every((v, i) => !i || v < hs[i - 1]) && hs[hs.length - 1] === 0;
+    ok('M36', line(ctx, '6-2', 1).includes('PFCL 也要在這時吸乾淨') && down && mx === 0 && comeDown && onScreen(ctx, '6-2', 'PFCL 也要吸乾淨') && onScreen(ctx, '6-2', '交換結束：視網膜全部貼平'),
+      `6-2 PFCL surface ${pf.map(v => v === -1e9 ? 'gone' : f2(v)).join(' → ')}; at the end no PFCL at the bottom and the retina flat everywhere (max height ${f2(mx)} mm); round the tear ${hs.map(f2).join(' → ')} mm while the air went in`); }
+  // M37 6-2 lines 2–4: the retained bead lies under the retina (in the model's PFCL-under-the-retina field, not in the subretinal fluid, the retina or the cavity),
+  // in the 11–5 section on the 5 o'clock side; the wide view marks it where the section's 3D point projects; it is outside the fovea (1.5 mm across), so the
+  // fovea is marked separately for 「在 fovea 下的，作者才建議處理」; the numbers and the call-out on screen
+  { const st = VP.ST.bead62, Gm = P.geom(st), f = ctx6(st), S = VP.sec(st, W_, H_, VP.WIN.fov, 'm37', { tw: VP.WIN.fovT, noTissue: true }).M, c = S.bead_3;
+    const under = c && inn6(f, 'bead', c) && !inn6(f, 'srf', c) && !inn6(f, 'retina', c) && !inn6(f, 'cavity', c);
+    const Wv = VP.wide(VP.w6(st), W_, H_, VP.WIN.w62z, 'm37w'), q = c && Wv.r.map.proj(c), wa = Wv.M.bead, same = q && wa ? Math.hypot(q[0] - wa[0], q[1] - wa[1]) : 9;
+    const hb = c ? G.clockOf(c[0], c[1]) : 0, sb = c ? sOf(c) : 0; let se = sb; while (se < P.S_POLE && inn6(f, 'bead', P.P3(hb, se, P.Tp(se) + P.chorAt(se) + 0.03))) se += 0.005;
+    const edge = Math.hypot(...P.chartHS(hb, se));
+    ok('M37', line(ctx, '6-2', 2).includes('PFCL 可能殘留在視網膜下') && line(ctx, '6-2', 2).includes('4.5% 到 10.3%') && line(ctx, '6-2', 3).includes('在 fovea 下的，作者才建議處理') && line(ctx, '6-2', 4).includes('提出來讓主刀確認')
+      && under && S.bead_off < 0.02 && S.bead[0] < 0 && same < 0.2 && edge > LIT6.fovea / 2 && onScreen(ctx, '6-2', '殘留的 PFCL：在視網膜下retained PFCL') && onScreen(ctx, '6-2', '可疑的小珠子視網膜下')
+      && onScreen(ctx, '6-2', '約 4.5%–10.3%') && onScreen(ctx, '6-2', '在 fovea 下的，作者才建議處理') && onScreen(ctx, '6-2', '外層視網膜消失（示意）outer retina') && onScreen(ctx, '6-2', '小珠子的位置與大小為示意')
+      && onScreen(ctx, '6-2', '看到視網膜下可疑的小珠子') && onScreen(ctx, '6-2', '→ 提出來讓主刀確認'),
+      `6-2 bead under the retina (${under ? 'PFCL field' : 'not under it'}), ${S.bead_off != null ? f2(S.bead_off) : '?'} mm off the 11–5 section on the 5 o'clock side; the wide view's mark ${f2(same)} mm from where the section's point projects; its edge ${f2(edge)} mm from the foveola (fovea radius ${LIT6.fovea / 2})`); }
+  // M38 chapter 6: instruments only through the case's trocars in every drawn state (the needle in the superonasal port, the light pipe in the superotemporal
+  // port; the shaft through its pivot, cannula → tip in the cavity, ≥ 0.5 mm from the lens), and both panels of a frame draw the same state (the wide view
+  // adds only the surgeon's seat, the inverter and the turn toward 11); the section is through the 11 o'clock tear, which is inside the wide field
+  { const states = [VP.ST.pre61, ...range(VP.PFCL_STEPS + 1).map(i => VP.pfclStep(i / VP.PFCL_STEPS)), ...range(VP.AIR_STEPS + 1).map(i => VP.airStep(i / VP.AIR_STEPS)), ...range(VP.OUT_STEPS + 1).map(i => VP.outStep(i / VP.OUT_STEPS)), VP.ST.done62, VP.ST.bead62];
+    const want = { needle: 'superonasal', light: 'superotemporal' }, bad = [], strip = o => { const r = Object.assign({}, o); delete r.surgeon; delete r.inverter; delete r.look; return keyOf(r); }; let lensMin = 9, n = 0;
+    for (const st of states) { const Gm = P.geom(st), f = ctx6(st), T3 = P.troc(Gm), W = VP.w6(st);
+      if (strip(W) !== strip(st) || W.inverter !== true || W.surgeon !== 12 || !W.look || W.look.h !== CASE.tear) bad.push('wide state differs');
+      for (const ins of st.inst || []) { const I = P.instGeom(Gm, ins), port = T3.find(t => t.id === ins.port), name = port && !port.inf ? sideName(port.h).en : 'infusion or none', miss = P.segDist(I.port.pivot, I.tip, I.out); let out = 0, lm = 9; n++;
+        for (let t = 0; t <= 1; t += 0.02) { const cc = f.at(add(I.tip, mul(sub(I.port.tip, I.tip), t))); if (!(f.interior(cc) < 0) || f.lens(cc) < 0 || f.iris(cc) < 0 || f.retina(cc) < 0) out++; }
+        for (let t = 0; t <= 1; t += 0.01) lm = Math.min(lm, f.lens(f.at(add(I.tip, mul(sub(I.port.pivot, I.tip), t)))));
+        lensMin = Math.min(lensMin, lm); if (name !== want[ins.kind] || miss > 0.02 || out || lm < 0.5) bad.push(`${ins.kind} via ${name} (miss ${f2(miss)}, ${out} out, lens ${f2(lm)})`); } }
+    const M = VP.wide(VP.w6(VP.ST.pre61), W_, H_, VP.WIN.wide3, 'm38').M, ht = M.tear && clockSurg([M.tear[0] - M.pole[0], M.tear[1] - M.pole[1]]);
+    ok('M38', VP.SEC_H === CASE.tear && !bad.length && n > 30 && M.tear && Math.hypot(...M.tear) < M.R && near_h(ht, CASE.tear, 0.15) && onScreen(ctx, '6-1', '光導管light pipe（1 點半）') && onScreen(ctx, '6-1', 'PFCL 注射針（示意）needle（10 點半）'),
+      `ch. 6: ${n} instruments in ${states.length} drawn states through their trocars (needle superonasal, light pipe superotemporal), in the cavity, ≥ ${f2(lensMin)} mm from the lens; the wide view draws the same states; the tear at ${ht && f2(ht)} o'clock inside its field${bad.length ? '; bad: ' + [...new Set(bad)].slice(0, 3).join('; ') : ''}`); }
   return R;
 }
 const near_h = (a, b, t = 0.1) => a != null && b != null && Math.abs(hdiff(a, b)) <= t;
+const MEMO = new Map(), memo = (k, fn) => { if (!MEMO.has(k)) MEMO.set(k, fn()); return MEMO.get(k); };
 
 // ---------------------------------------------------------------- run
 function ledgerChecks(ctx) {
@@ -485,6 +584,14 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['cutter moves with the pressed retina (5-2)', c => { c.VP = stWith('dep52', { inst: [{ kind: 'vitrector', port: 'sn', tip: VP0.DEP_TIP }, VP0.ST.dep52.inst[1]] }); }, 'M29'],
       ['mound at 10 o\'clock in the wide view, dent at 11 in the section (5-2)', c => { c.VP = stWith('dep52On', { dep: Object.assign({}, VP0.ST.dep52On.dep, { h: 10 }) }); }, 'M29'],
       ['press drawn without 示意 (5-2)', c => { c.screen['5-2'] = c.screen['5-2'].map(t => t.replace('（示意）', '')); }, 'M30'],
+      ['PFCL floating at the front (6-1, gravity of a face-down patient)', c => { c.VP = vpWith({ pfclStep: k => Object.assign({}, VP0.pfclStep(k), { head: { pose: 'facedown' } }) }); }, 'M31'],
+      ['retina flat everywhere at once, not from behind forward (6-1)', c => { c.VP = vpWith({ pfclStep: k => Object.assign({}, VP0.pfclStep(k), { rd: { amt: 0 } }) }); }, 'M32'],
+      ['PFCL filled to 70 %, over the 11 o\'clock tear (6-1)', c => { c.VP = vpWith({ pfclStep: k => Object.assign({}, VP0.pfclStep(k), { pfcl: 0.7 * Math.round(k * VP0.PFCL_STEPS) / VP0.PFCL_STEPS }) }); }, 'M33'],
+      ['drainage retinotomy on attached retina at 9 o\'clock (6-1)', c => { c.VP = vpWith({ rtomy: st => VP0.rtomy(st, { h: 9, s: 18 }) }); }, 'M34'],
+      ['air sinking to the back (6-2, gravity of a face-down patient)', c => { c.VP = vpWith({ airStep: k => Object.assign({}, VP0.airStep(k), { head: { pose: 'facedown' } }) }); }, 'M35'],
+      ['PFCL left in the eye at the end of the exchange (6-2)', c => { c.VP = vpWith({ outStep: m => VP0.outStep(m * 0.75) }); }, 'M36'],
+      ['bead drawn half an hour off in the wide view (6-2)', c => { c.VP = vpWith({ w6: st => VP0.w6(st.bead ? Object.assign({}, st, { bead: Object.assign({}, st.bead, { h: st.bead.h + 0.5 }) }) : st) }); }, 'M37'],
+      ['PFCL needle through the infusion port (6-1)', c => { c.VP = vpWith({ pfclStep: k => { const s = VP0.pfclStep(k); return Object.assign({}, s, { inst: [Object.assign({}, s.inst[0], { port: 'it' }), s.inst[1]] }); } }); }, 'M38'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

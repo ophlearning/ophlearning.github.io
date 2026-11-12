@@ -152,6 +152,7 @@ const VP = (() => {
     depZT: { x: 3.2, y: -8.6, w: 14, h: 9.48 },
     z42: { x: -8.31, y: -5.16, w: 14 },                    // 4-2: around the cutter's tip in PLANE42 (tip at 360, 180 px; the detached retina, SRF and wall below; room top left)
     z42T: { x: -8.31, y: -5.16, w: 14, h: 9.48 },
+    w62z: { x: -9.7, y: -9.4, w: 14 },                     // 6-2 lines 2–4: the wide view (LOOK6) zoomed on the fovea and the retained bead below-left of it
   };
   const LOOK_INF = { h: INF_H, deg: 45 };                  // 2-2: the surgeon looks toward the infusion (示意, as the model looks toward 11 for the tear)
   const OR = {   // orientation lines (POSTERIOR.orient: checked in posterior/check.js B2, B5)
@@ -192,6 +193,55 @@ const VP = (() => {
   function lensNear(st) { const Gm = P.geom(st), f = P.makeCtx(Gm), I = P.instGeom(Gm, st.inst.find(x => x.kind === 'vitrector')); let best = { gap: 1e9 };
     for (let t = 0; t <= 1.0001; t += 0.0025) { const p = G.add(I.tip, G.sub(I.port.pivot, I.tip).map(v => v * t)), g = f.lens(f.at(p)) - P.N.shaft / 2; if (g < best.gap) best = { p, gap: g }; } return best; }
   Object.assign(OR, { w5: '左眼 OS　inverter 開：下＝12 點、temporal 在左　看向 11 點（示意）', w5far: '左眼 OS　inverter 開：下＝12 點、temporal 在左　看向對側周邊（示意）' });
+  // chapter 6 (getting the retina back on), after the shaving (cut 1, shave 1), the patient supine (gravity toward the posterior pole). The model puts PFCL
+  // at the bottom and gas at the top of the cavity, each surface a plane perpendicular to gravity, and flattens the retina below the PFCL surface
+  // (CARD.md「液面」「PFCL 壓平視網膜」). Instruments only through the case's trocars: a plain 23G needle (示意: the model draws any other kind as a bare
+  // shaft; kind 'needle') in the superonasal 10:30 port, the light pipe in the 1:30 port. Amounts, tip positions, the order of the exchange, the drainage
+  // retinotomy's place and the retained bead's place and size are 示意 (research/intraop.md 題 6「不能講的」).
+  const inPl = (h, r, z) => { const [cx, cy] = G.clockDir(h); return [r * cx, r * cy, z]; };   // a point of the meridional plane through clock h: r mm toward h, z anterior
+  const st6 = o => Object.assign({}, P.CASE, { troc: true, vit: { cut: 1, shave: 1 } }, o), needle = tip => ({ kind: 'needle', port: 'sn', tip });
+  const PFCL_MAX = 0.45, PFCL_STEPS = 6;                                   // 6-1: PFCL up to 45 % of the cavity (示意; its surface stays below the 11 o'clock tear)
+  const NEEDLE61 = inPl(SEC_H, 2.5, -9.0);                                // 6-1: the PFCL needle's tip at the posterior pole, 1.3 mm in front of the retina (in the 11–5 plane)
+  const AIR_STEPS = 6, OUT_STEPS = 4;                                      // 6-2: air down to the PFCL surface in 6 steps, then the PFCL out in 4
+  const ASP_A = inPl(SEC_H, 3.0, -0.75), ASP_B = inPl(SEC_H, 2.5, -9.3);   // 6-2: the aspirating needle just above the PFCL surface, then in the PFCL at the pole
+  const LOOK6 = { h: SEC_H, deg: 16 };                                     // chapter 6 wide view: turned 16° toward 11 (示意), so the pole, the tear and the retinotomy are in the field
+  const RTOMY = { h: 5, s: 18 };                                           // 6-1 line 3: drainage retinotomy (位置示意: inferotemporal behind the equator, on detached retina)
+  const BEAD = { h: 5, s: 29.9, r: 0.35, ht: 0.3 };                        // 6-2 lines 2–4: a retained PFCL bead under the retina, 1.6 mm from the foveola on the 5 o'clock side (示意)
+  // 6-1 line 1: PFCL k (0 → 1) of the way in PFCL_STEPS steps through the needle at the pole
+  const pfclStep = k => st6({ pfcl: PFCL_MAX * Math.round(c01(k) * PFCL_STEPS) / PFCL_STEPS, inst: [needle(NEEDLE61), LIGHT5] });
+  // 6-2 lines 0–1: air from the infusion k of the way down to the PFCL surface (AIR_STEPS steps; the detachment left above the PFCL comes down with it,
+  // 示意), then the PFCL out m of the way (OUT_STEPS steps; air takes its place). gas + pfcl ≤ 1 at every step (at the end of the air both surfaces meet)
+  const airStep = k => { const n = Math.round(c01(k) * AIR_STEPS) / AIR_STEPS; return st6({ rd: { amt: 1 - n }, pfcl: PFCL_MAX, gas: (1 - PFCL_MAX) * n, inst: [needle(ASP_A), LIGHT5] }); };
+  const outStep = m => { const n = Math.round(c01(m) * OUT_STEPS) / OUT_STEPS; return st6({ rd: { amt: 0 }, pfcl: PFCL_MAX * (1 - n), gas: 1 - PFCL_MAX * (1 - n), inst: [needle(ASP_B), LIGHT5] }); };
+  Object.assign(ST, {
+    pre61: st6({ inst: [LIGHT5] }),                                        // 6-1 line 0 (and line 3, the drainage retinotomy instead of PFCL): detached, no PFCL
+    done62: st6({ rd: { amt: 0 }, gas: 1 }),                               // 6-2: the exchange done, the retina flat (instruments out)
+    bead62: st6({ rd: { amt: 0 }, gas: 1, bead: BEAD }),                   // 6-2 lines 2–4: the same with a PFCL bead left under the retina (示意)
+  });
+  const w6 = st => Object.assign({}, st, { surgeon: 12, inverter: true, look: LOOK6 });   // the wide view of a chapter 6 state (both panels of a frame draw the same state)
+  // the subretinal fluid's path (3D, midway between the RPE and the retina) along clock h from s0 to s1 mm from the limbus
+  const srfMid = (st, h, s0, s1, ds = 0.2) => { const Gm = P.geom(st), out = [], n = Math.max(1, Math.round(Math.abs(s1 - s0) / ds));
+    for (let i = 0; i <= n; i++) { const s = s0 + (s1 - s0) * i / n; out.push(P.P3(h, s, P.Tp(s) + P.chorAt(s) + Gm.H(s, h) * 0.5)); } return out; };
+  // 6-1 line 2: the fluid pushed forward and out of the 11 o'clock tear — under the retina toward the tear, through the hole (its middle), 1.6 mm into the cavity;
+  // on the 5 o'clock side forward under the retina left detached; and (wide view only) from the superotemporal detachment along the wall to the tear
+  function flow61(st) { const Gm = P.geom(st), T = Gm.tear, mid = P.onRetina(Gm, T.fr, T.L / 2, 0, 0.5).p, out = G.add(mid, T.fr.en.map(v => v * 1.6));
+    const tearPath = [...srfMid(st, T.h, 13.2, T.sh + T.L + 0.25), mid, out];
+    const st2 = []; for (let i = 0; i <= 12; i++) { const t = i / 12, h = 13 - 1.75 * t, s = 12.8 - 1.9 * t; st2.push(P.P3(h % 12, s, P.Tp(s) + P.chorAt(s) + Gm.H(s, h % 12) * 0.5)); }
+    return { tear: tearPath, five: srfMid(st, 5, 13.6, 10.6), st: st2, hole: mid, out }; }
+  // 6-1 line 3: the drainage retinotomy (位置示意) — the hole's middle on the retina, a gap across the retina (s ± 0.3 mm) and the fluid's path out of it
+  function rtomy(st, at = RTOMY) { const Gm = P.geom(st), { h, s } = at, gap = [];
+    for (const f of [-0.15, 1.15]) for (let i = 0; i <= 6; i++) { const x = f < 0 ? s - 0.3 + 0.1 * i : s + 0.3 - 0.1 * i; gap.push(Gm.ret(h, x, f)); }
+    const mid = Gm.ret(h, s, 0.5), path = [...srfMid(st, h, s + 1.6, s + 0.2), mid, G.add(mid, P.N3(h, s).map(v => -1.6 * v))];
+    return { mid, top: Gm.ret(h, s, 1), gap, path }; }
+  // the PFCL's edge on the retina (supine: the RPE 0.2 mm below the PFCL surface, where the model's flattening starts), one point per 0.1 clock hour
+  function pfclRing(st) { const Gm = P.geom(st), L = Gm.lev.pfcl - 0.2, up = p => -G.dot(p, Gm.g), out = [];
+    for (let i = 0; i <= 120; i++) { const h = 12 * i / 120; let lo = P.oraAt(h, Gm.ts), hi = P.S_POLE;
+      for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; up(P.rpeAt(h, m)) > L ? lo = m : hi = m; } out.push(Gm.ret(h, (lo + hi) / 2, 1)); }
+    return out; }
+  // where a fluid surface at height level (along −g) meets the retina's inner surface on clock h (3D), or null when it does not cross that meridian
+  function edgeAt(st, level, h) { const Gm = P.geom(st), up = s => -G.dot(Gm.ret(h, s, 1), Gm.g); let lo = P.oraAt(h, Gm.ts), hi = P.S_POLE - 0.05;
+    if (!(up(lo) > level && up(hi) < level)) return null; for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; up(m) > level ? lo = m : hi = m; } return Gm.ret(h, (lo + hi) / 2, 1); }
+  Object.assign(OR, { w6: '左眼 OS　inverter 開：下＝12 點、temporal 在左　略看向 11 點（示意）' });
 
   // ---------------------------------------------------------------- views
   function fundus(st, W, H, win, id) { const c = cam(win, W, H), r = P.fundus({ st, id }); return wrap(c, r); }
@@ -268,7 +318,13 @@ const VP = (() => {
       for (let i = 0; i <= 96 && ok; i++) { const h = 12 * i / 96, sp = P.S_POLE + 2 + (P.vbPostAt(h, Gm.ts) - P.S_POLE - 2) * st.pvd, s = sp + 2.5;
         if (s > P.S_POLE - 0.4) ok = false; else ring.push(Wm.proj(P.P3(h, s, P.Tp(s) + P.chorAt(s) + Gm.rtHS(h, s) + Gm.hya(s, h)))); }
       if (ok) { o.push(`<path d="M${ring.map(G.F).join('L')}Z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-dasharray="6 4" opacity="0.95" ${G.NS}/>`); A.pvdRing = ring[60]; A.pvdRingL = ring[12]; } }
-    const svg = `<g transform="${c.tf}">${r.svg}<g clip-path="url(#${id}_f)">${o.join('')}</g></g>`;
+    // chapter 6 (o2.pfclFlat): the model tints the whole detachment even where the PFCL has flattened it; inside the PFCL's edge on the retina
+    // (pfclRing, supine) the same view of the state with the retina attached (rd.amt 0: the same 3D points there) is drawn over it, and a pale
+    // PFCL tint (示意 colour; PFCL is clear). Anchor pfclEdge = the ring's point toward 11 o'clock
+    let flat = '';
+    if (o2.pfclFlat && st.pfcl > 0 && st.rd && st.rd.amt > 0) { const ring = pfclRing(st).map(Wm.proj), f0 = P.wide({ st: Object.assign({}, st, { rd: { amt: 0 } }), id: id + 'p' }), d = 'M' + ring.map(G.F).join('L') + 'Z';
+      flat = `<clipPath id="${id}_pc"><path d="${d}"/></clipPath><g clip-path="url(#${id}_pc)">${f0.svg}</g><g clip-path="url(#${id}_f)"><path d="${d}" fill="#c9b6f2" opacity="0.2"/></g>`; A.pfclEdge = ring[110]; }
+    const svg = `<g transform="${c.tf}">${r.svg}${flat}<g clip-path="url(#${id}_f)">${o.join('')}</g></g>`;
     return { svg, A: mapA(A, c.P), M: A, k: c.k, P: c.P, r };
   }
   // 4-2: section in PLANE42 (through the cutter's shaft and the wall normal; up = the vitreous cavity, down = the wall). Extra anchors (mm): port (the
@@ -289,6 +345,7 @@ const VP = (() => {
   return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
     portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT,
     SEC4_H, inPl4, CUT4, CORE_STEPS, PVD_STEPS, coreStep, pvdStep, SUCK_AT, E42, SUCK_STEPS, st42, suckAt, traction, distOf, TR42, PLANE42, instSec,
-    SHAVE_STEPS, SHAVE_TIP, FAR_TIP, DEP_TIP, shaveStep, on11, lensNear };
+    SHAVE_STEPS, SHAVE_TIP, FAR_TIP, DEP_TIP, shaveStep, on11, lensNear,
+    inPl, PFCL_MAX, PFCL_STEPS, NEEDLE61, AIR_STEPS, OUT_STEPS, ASP_A, ASP_B, LOOK6, RTOMY, BEAD, pfclStep, airStep, outStep, w6, srfMid, flow61, rtomy, pfclRing, edgeAt };
 })();
 if (typeof module !== 'undefined') module.exports = VP;
