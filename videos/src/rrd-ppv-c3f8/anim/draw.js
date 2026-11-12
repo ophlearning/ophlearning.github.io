@@ -297,7 +297,7 @@ DRAW2['2-1'] = T => {
     el += lab('鞏膜', 'sclera', PW - 12, 252, a.sclL, { side: 'R', op: opL });
     el += lab('pars plana', '', PW - 12, 296, a.planaL, { side: 'R', color: COL.accent, lc: COL.accent, op: opL });
     el += lab('玻璃體腔', 'vitreous', PW - 12, 340, a.vitL, { side: 'R', op: opL });
-    el += lab('先推開結膜', 'displace', 14, 40, V.P([-1.2, -1.05]), { bold: true, color: COL.amber, lc: COL.amber, op: opP * (1 - uIn) });
+    el += lab('先推開結膜', 'displace', 14, 40, V.P([-1.2, -1.05]), { bold: true, color: COL.amber, lc: COL.amber, op: opP * (1 - T.p(4, 0.34, 0.42)) });   // gone before the trocar (its handle sweeps the top left) comes in at 0.42
     el += lab('斜著插', 'oblique', 14, 300, V.P([-1.3, -0.62]), { bold: true, op: T.on(4, 0.6, (T.en(4) - T.st(4)) * 0.45) * opB * (1 - kOut) });
     el += lab('結膜的開口', 'conjunctiva', 14, 200, a.cj || a.entry, { bold: true, color: '#9c2a1a', lc: '#9c2a1a', op: T.on(5, 0.6, (T.en(5) - T.st(5)) * 0.2) * opB });
     el += lab('鞏膜的開口（被結膜蓋住）', 'sclera', 14, 40, a.entry, { bold: true, op: T.on(5, 0.6, (T.en(5) - T.st(5)) * 0.3) * opB });
