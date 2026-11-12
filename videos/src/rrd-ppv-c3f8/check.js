@@ -743,6 +743,13 @@ function ledgerChecks(ctx) {
       ok(found.has(n), `${sg.id}: ledger number ${n} is used on screen or in the narration`);
       const cited = srcs.includes(src) || ['結構', '示意', '病例'].includes(src) || texts.join('').includes(src);
       ok(cited, `${sg.id}: ledger source of ${n} (${src}) is cited in the segment`); }
+    // a key box and the source line switch together (kit.js: the last entry at or before a line). A sourced number in a narration line has its source on that
+    // line's source line; a number in a key box has had its source shown by the line the key appears (a key box stays on and gathers, so a number already
+    // sourced may stand next to a later paper) — never before it, or the viewer reads it next to another paper's name (2026-11-12: seven key boxes ran ahead)
+    const srcAt = k => { let s = ''; for (const [i, x] of (sg.src || [])) if (i <= k) s = x; return plainSrc(s); }, sourced = n => L[n] && !['結構', '示意', '病例', '院內常規'].includes(L[n]);
+    const shownBy = k => (sg.src || []).filter(x => x[0] <= k).flatMap(x => plainSrc(x[1]));
+    for (const [k, h] of (sg.keys || [])) for (const n of numbers(h)) if (sourced(n)) ok(shownBy(k).includes(L[n]), `${sg.id}: ledger source of key-box number ${n} (${L[n]}) is shown by line ${k + 1}`);
+    (sg.lines || []).forEach((t, j) => { for (const n of numbers(t)) if (sourced(n)) ok(srcAt(j).includes(L[n]), `${sg.id}: ledger source of narration number ${n} (${L[n]}) is on the source line at line ${j + 1}`); });
   }
   // every reference is cited somewhere (a reference nobody cites is a leftover)
   const allSrc = ctx.segs.flatMap(s => (s.src || []).flatMap(x => plainSrc(x[1]))).flatMap(cites);
@@ -775,6 +782,8 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['on-screen number without a source', c => { c.screen['8-1'] = ['氣泡 60%']; }],
       ['ledger entry not used', c => { c.ledger['1-3']['99'] = 'Callizo 2017'; }],
       ['ledger source not cited in the segment', c => { c.ledger['5-2']['1.9'] = 'Jackson 2013'; }],
+      ['key-box number before its source shows', c => { c.segs.find(s => s.id === '8-4').keys[0][1] += '；RRD 常在 8 到 12 小時'; }],
+      ['narration number next to another paper', c => { const s = c.segs.find(x => x.id === '8-4'); s.src[0][1] = 'Muether 2011'; s.src[1][1] = 'Chen 1997'; }],
       ['citation not in REFS', c => { c.screen['4-2'] = ['Smith 2020']; }],
       ['source not a reference', c => { c.segs.find(s => s.id === '1-2').src[0][1] = 'Yoshida 2019'; }],
       ['two-word surname not in REFS', c => { c.segs.find(s => s.id === '1-4').src[0][1] = 'Ferro Desideri 2023'; }],
