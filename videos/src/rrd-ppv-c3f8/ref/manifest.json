@@ -1,0 +1,10 @@
+{
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/rrd-ppv-c3f8；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": null,
+  "pageNote": "旁白階段（2026-11-12）：還沒有畫面，影片層級檢查 SKIP；後段模型與畫面做好後改成 ../anim/video.html 並填 textBase。",
+  "textBase": null,
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [0, 64, 1280, 656],
+  "items": []
+}
