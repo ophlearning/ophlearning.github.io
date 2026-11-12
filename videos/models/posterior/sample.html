@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="../globe/globe.js"></script>
+<script src="posterior.js"></script>
+<script>
+// Posterior-segment model sample (left eye OS, the RRD case of videos/src/rrd-ppv-c3f8): the four views (mechanism section, fundus chart,
+// surgeon's wide-angle view, head position) and the key states (normal, RRD, scleral depression, PFCL, gas bubble sitting up). Sources: CARD.md.
+const P = POSTERIOR, G = GLOBE, esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 11.5, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 4 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#3f4c59', halo = o.dark ? '#121417' : '#fff';
+  const x1 = right ? tx - w - 5 : tx + w + 5, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${halo}" stroke-width="2.6" opacity="0.8"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="0.9"/><circle cx="${a[0]}" cy="${a[1]}" r="2.1" fill="${lc}" stroke="#fff" stroke-width="0.9"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="${halo}" stroke-width="3" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#56636f'}" dx="4">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.size || 12}" fill="${o.color || '#1d2733'}" font-weight="${o.bold ? 700 : 400}" text-anchor="${o.anchor || 'start'}"${o.halo ? ' stroke="#fff" stroke-width="3" paint-order="stroke"' : ''}>${esc(s)}</text>`;
+const o = [];
+o.push(T(16, 25, '眼球後段模型樣本：左眼 OS 的 RRD（11 點 horseshoe tear）', { size: 18, bold: true }));
+o.push(T(1264, 25, 'mm 建模，示意圖　同一顆 3D 眼球的切面與投影；出處見 CARD.md', { size: 12, color: '#56636f', anchor: 'end' }));
+
+// a panel: frame, title, orientation line, the drawing clipped to the drawing area; returns the mm → px function
+function panel(i, title, orient, x0, y0, wmm, svg, dark) {
+  const col = i % 4, row = Math.floor(i / 4), PX = 8 + col * 318, PY = 38 + row * 341, PW = 310, PH = 334, DY = PY + 24, DH = PH - 24 - 30, k = PW / wmm;
+  const P_ = p => [PX + (p[0] - x0) * k, DY + (p[1] - y0) * k];
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="8" fill="${dark ? '#121417' : '#fff'}" stroke="#cfd6dd"/>`);
+  o.push(`<clipPath id="cp${i}"><rect x="${PX + 1}" y="${DY}" width="${PW - 2}" height="${DH}"/></clipPath><g clip-path="url(#cp${i})"><g transform="translate(${PX} ${DY}) scale(${k}) translate(${-x0} ${-y0})">${svg}</g></g>`);
+  o.push(`<rect x="${PX}" y="${PY}" width="${PW}" height="24" rx="8" fill="#f6f8fa"/><rect x="${PX}" y="${PY + 14}" width="${PW}" height="10" fill="#f6f8fa"/>`, T(PX + 10, PY + 17, title, { size: 12.5, bold: true }));
+  o.push(`<rect x="${PX}" y="${PY + PH - 30}" width="${PW}" height="30" fill="#f6f8fa"/>`, T(PX + 10, PY + PH - 17, orient[0], { size: 10.5, color: '#3b4752' }), T(PX + 10, PY + PH - 5, orient[1] || '', { size: 10.5, color: '#3b4752' }));
+  return { P: P_, PX, PY, PW, PH, DY, DH, k };
+}
+const L = [];
+const OS = { eye: 'OS' }, RRD = P.PRESET.rrd, H11 = G.planes.meridian(11), WIN = { x: -15.9, y: -14.4, w: 31.8, h: 28.8 };
+
+// 1. normal eye, 11–5 meridional section
+{ const s = P.section({ st: OS, plane: H11, win: WIN, step: 0.05 }), A = s.A, p = panel(0, '① 正常：經 11 點的子午切面', ['上＝前　右＝11 點（上方偏鼻側）　左＝5 點', '從 2 點那側看　phakic，晶體 4.5 × 9.6 mm'], WIN.x, WIN.y, WIN.w, s.svg), Q = p.P;
+  L.push(lab('ora', 'serrata', p.PX + p.PW - 10, p.DY + 92, Q(A.oraR), { side: 'R', bold: true, color: '#7a4a12', lc: '#7a4a12' }));
+  L.push(lab('pars plana', '', p.PX + p.PW - 10, p.DY + 56, Q(A.planaR), { side: 'R' }));
+  L.push(lab('vitreous base', '', p.PX + p.PW - 10, p.DY + 130, Q(A.vbR), { side: 'R', color: '#4d6a35', lc: '#4d6a35' }));
+  const W5 = (s, d) => Q(G.toPlane(H11, P.P3(5, s, d))), sw = 19.5;
+  L.push(lab('水晶體', 'lens', p.PX + 10, p.DY + 40, Q(A.lens)));
+  L.push(lab('玻璃體', 'vitreous', p.PX + 10, p.DY + 120, Q([-3, 0])));
+  L.push(lab('視網膜', 'retina', p.PX + 10, p.DY + 168, W5(sw - 1.6, P.Tp(sw - 1.6) + P.chorAt(sw - 1.6) + 0.1)));
+  L.push(lab('脈絡膜', 'choroid', p.PX + 10, p.DY + 202, W5(sw, P.Tp(sw) + P.chorAt(sw) / 2)));
+  L.push(lab('鞏膜', 'sclera', p.PX + 10, p.DY + 236, W5(sw + 1.6, P.Tp(sw + 1.6) / 2)));
+  L.push(lab('fovea', '', p.PX + p.PW - 10, p.DY + 262, Q(A.fovea), { side: 'R' })); }
+
+// 2. the RRD, same section
+{ const s = P.section({ st: RRD, plane: H11, win: WIN, step: 0.05 }), A = s.A, p = panel(1, '② 病例 RRD：同一切面（經 11 點裂孔）', ['剝離 11 點半 → 5 點（經 temporal），bullous；', 'PVD 後玻璃體只黏在 vitreous base 與瓣上'], WIN.x, WIN.y, WIN.w, s.svg), Q = p.P;
+  L.push(lab('HST 的瓣', 'flap', p.PX + p.PW - 10, p.DY + 50, Q(A.flapEdge), { side: 'R', bold: true, color: '#9c2a1a', lc: '#9c2a1a' }));
+  L.push(lab('裂孔', 'tear', p.PX + p.PW - 10, p.DY + 84, Q(A.tearMid), { side: 'R', bold: true, color: '#9c2a1a', lc: '#9c2a1a' }));
+  L.push(lab('視網膜下液', 'SRF', p.PX + p.PW - 10, p.DY + 180, Q(A.srf), { side: 'R' }));
+  L.push(lab('後玻璃體', 'posterior hyaloid', p.PX + 10, p.DY + 140, Q(A.hyaloid)));
+  L.push(lab('fovea 還貼著', 'fovea on', p.PX + 10, p.DY + 262, Q(A.fovea)));
+  L.push(lab('inferior macula off', '', p.PX + 10, p.DY + 236, Q([-1.6, 11.05]))); }
+
+// 3. fundus chart (examiner's drawing), RRD + trocars
+{ const f = P.fundus({ st: Object.assign({}, RRD, { troc: true }), id: 'f3' }), A = f.A, p = panel(2, '③ 眼底圖（檢查者畫法）', ['左眼 OS：12 點在上、3 點 temporal 在右', '灰白＝剝離的視網膜；藍點＝trocar（距角膜緣 4 mm）'], -34.4, -31.2, 68.8, f.svg), Q = p.P;
+  for (const [h, t] of [[12, '12'], [3, '3 T'], [6, '6'], [9, 'N 9']]) { const q = Q(A['clock' + h]); o.push(T(q[0], q[1] + 4, t, { size: 11, bold: true, anchor: 'middle', color: '#24425f', halo: 1 })); }
+  L.push(lab('11 點裂孔', 'HST', p.PX + 10, p.DY + 30, Q(A.tear), { bold: true, color: '#9c2a1a', lc: '#9c2a1a' }));
+  L.push(lab('視盤', 'disc', p.PX + 10, p.DY + 168, Q(A.disc)));
+  L.push(lab('fovea', '', p.PX + 10, p.DY + 200, Q(A.fovea)));
+  L.push(lab('infusion', '4:30', p.PX + p.PW - 10, p.DY + 270, Q(A.troc_it), { side: 'R', color: '#24527d', lc: '#24527d' })); }
+
+// 4. surgeon's wide-angle view, inverter on
+{ const w = P.wide({ st: Object.assign({}, RRD, { look: { h: 11, deg: 25 } }), id: 'w4' }), A = w.A, p = panel(3, '④ 術者的廣角視野（inverter 開）', ['術者坐 12 點：下＝12 點，左眼 temporal 在左；', '11 點裂孔在畫面下方略偏右（看向 11 點，示意）'], -24, -21.7, 48, w.svg, true), Q = p.P;
+  for (const [h, t] of [[12, '12'], [3, 'T 3'], [6, '6'], [9, '9 N']]) { const q = Q(A['clock' + h]); o.push(T(q[0], q[1] + 4, t, { size: 11, bold: true, anchor: 'middle', color: '#dbe6f0' })); }
+  L.push(lab('11 點裂孔', 'HST', p.PX + p.PW - 10, p.DY + 262, Q(A.tear), { side: 'R', bold: true, color: '#ff8f7a', enColor: '#e0e6ec', lc: '#fff', dark: 1 }));
+  L.push(lab('視盤', 'disc', p.PX + p.PW - 10, p.DY + 118, Q(A.disc), { side: 'R', color: '#fff', enColor: '#e0e6ec', lc: '#fff', dark: 1 })); }
+
+// 5. scleral depression at 11 o'clock: section close-up
+{ const st = P.PRESET.depress, win = { x: 2.2, y: -11.4, w: 12, h: 11.8 }, s = P.section({ st, plane: H11, win, step: 0.02 }), A = s.A, p = panel(4, '⑤ 壓鞏膜：11 點、距角膜緣 9.3 mm（示意）', ['同一切面放大（右＝11 點）：周邊被推向中央，', 'vitrector 在 vitreous base 上 shaving'], win.x, win.y, win.w, s.svg), Q = p.P;
+  L.push(lab('壓鞏膜器', 'depressor', p.PX + p.PW - 10, p.DY + 150, Q(A.depressor), { side: 'R', bold: true }));
+  L.push(lab('凹陷', 'indentation', p.PX + p.PW - 10, p.DY + 236, Q(A.dep), { side: 'R' }));
+  L.push(lab('vitrector', '（切面）', p.PX + 10, p.DY + 120, Q(A.inst0)));
+  L.push(lab('裂孔與瓣', 'HST', p.PX + 10, p.DY + 262, Q(A.hinge), { color: '#9c2a1a', lc: '#9c2a1a' })); }
+
+// 6. scleral depression: wide-angle view looking toward 11 o'clock
+{ const w = P.wide({ st: P.PRESET.depress, id: 'w6' }), A = w.A, p = panel(5, '⑥ 壓鞏膜：廣角視野（看向 11 點）', ['隆起出現在畫面上 11 點的方向（下方略偏右）', '左手 light pipe 從 1:30、右手 vitrector 從 10:30'], -24, -21.7, 48, w.svg, true), Q = p.P;
+  L.push(lab('隆起', 'mound', p.PX + p.PW - 10, p.DY + 262, Q(A.dep), { side: 'R', bold: true, color: '#fff', enColor: '#e0e6ec', lc: '#fff', dark: 1 }));
+  L.push(lab('light pipe', '', p.PX + 10, p.DY + 262, Q(A.inst1), { color: '#fff', lc: '#fff', dark: 1 }));
+  L.push(lab('vitrector', '', p.PX + 10, p.DY + 228, Q(A.inst0), { color: '#fff', lc: '#fff', dark: 1 }));
+  L.push(lab('fovea', '', p.PX + 10, p.DY + 40, Q(A.fovea), { color: '#fff', lc: '#fff', dark: 1 })); }
+
+// 7. PFCL, supine: heavy liquid at the posterior pole flattens the retina, the fluid goes forward to the 11 o'clock tear
+{ const s = P.section({ st: P.PRESET.pfcl, plane: H11, win: WIN, step: 0.05 }), A = s.A, p = panel(6, '⑦ PFCL（仰躺）：從後往前把視網膜壓平', ['下＝重力（仰躺時往後）　PFCL 45%（示意）', 'PFCL 液面以下貼平，視網膜下液往前推到 11 點裂孔'], WIN.x, WIN.y, WIN.w, s.svg), Q = p.P;
+  L.push(lab('PFCL', '', p.PX + 10, p.DY + 236, Q([-3, 6])), lab('液面', 'interface', p.PX + 10, p.DY + 168, Q(A.pfclLineA[0] < A.pfclLineB[0] ? A.pfclLineA : A.pfclLineB)));
+  L.push(lab('11 點裂孔', 'tear', p.PX + p.PW - 10, p.DY + 60, Q(A.tearMid), { side: 'R', bold: true, color: '#9c2a1a', lc: '#9c2a1a' }));
+  L.push(lab('視網膜下液', 'SRF', p.PX + p.PW - 10, p.DY + 120, Q(A.srf), { side: 'R' })); }
+
+// 8. head position: sitting upright with a gas bubble; the eye section through the tear with gravity straight down
+{ const st = Object.assign({}, P.PRESET.sitGas, { gas: 0.3 }), h = P.head({ st, id: 'h8', win: { x: -13.5, y: -13.5, w: 27, h: 27 } }), A = h.A, p = panel(7, '⑧ 坐正：氣泡浮到最高處（C3F8 30%，示意）', ['經 11 點的子午切面，畫面下＝重力；右＝前', `坐正時氣泡 ≥ ${(P.coverFraction(st) * 100).toFixed(1)}% 就蓋住 11 點裂孔（推算）`], -13.5, -13.8, 27, h.svg), Q = p.P;
+  o.push(`<g opacity="0.95">${P.headIcon(st, p.PX + 8, p.DY + 6, 54)}</g>`, T(p.PX + 35, p.DY + 70, '示意', { size: 9.5, anchor: 'middle', color: '#56636f' }));
+  L.push(lab('氣泡', 'gas', p.PX + p.PW - 10, p.DY + 90, Q([2, -6]), { side: 'R', bold: true }), lab('液面 ⟂ 重力', '', p.PX + p.PW - 10, p.DY + 140, Q(A.gasLineA[0] > A.gasLineB[0] ? A.gasLineA : A.gasLineB), { side: 'R' }));
+  L.push(lab('11 點裂孔', 'tear', p.PX + 10, p.DY + 96, Q(A.tearMid), { bold: true, color: '#9c2a1a', lc: '#9c2a1a' }));
+  L.push(lab('水晶體', 'lens', p.PX + p.PW - 10, p.DY + 210, Q(A.lens), { side: 'R' })); }
+o.push(L.join(''));
+document.getElementById('stage').innerHTML = o.join('');
+</script></body></html>

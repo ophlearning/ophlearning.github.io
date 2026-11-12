@@ -1,6 +1,6 @@
 # RRD 的 23G PPV＋C3F8：助手版術前預習（規格書）
 
-2026-11-12 訂（草稿）。後段模型的第一部影片；模型見 `videos/models/posterior/CARD.md`（建立中）。
+2026-11-12 訂（草稿）。後段模型的第一部影片；模型見 `videos/models/posterior/CARD.md`。
 
 ## 目標與觀眾
 - 觀眾：在 RRD 的 PPV 當**助手**的眼科住院醫師（站長 2026-11-12：「我只負責當助手。我只要學習而已。」）。
@@ -37,7 +37,7 @@
 | 參考文獻 | | |
 
 ## 畫面
-- 共用 `videos/models/posterior/`（建立中）：沿用 `globe/` 那顆眼球（ora 位置已有華人數據，Liu 2014），往後延伸視網膜、玻璃體、vitreous base、裂孔、視網膜下液、trocar 與器械、液體與氣體。
+- 共用 `videos/models/posterior/`（2026-11-12 建好，見模型卡）：沿用 `globe/` 那顆眼球（後段的 ora 用 Li 2025 華人術中量測，和 `globe/` 的 Liu 2014 衝突待決定），往後延伸視網膜、玻璃體、vitreous base、裂孔、視網膜下液、trocar 與器械、液體與氣體。
 - 兩個同步視角（通用原則第 4 條）：
   - 機轉切面：經裂孔的子午切面（本例 11–5 點），看得到 trocar、vitreous base、裂孔、視網膜下液、壓鞏膜的隆起，以及液面隨頭位改變。
   - 術者視角：手術顯微鏡（架設、關傷口）或廣角系統的眼底（眼內步驟）；標明左眼 OS、術者坐 12 點、inverter 開或關。
@@ -75,4 +75,11 @@
 ## 進度
 - 2026-11-12：病例情境確認；三份文獻查證完成（`research/`）；旁白定稿第 1 版（`anim/segments.js`，22 段）與數字帳本（`check.js`：401 項 PASS，故意改錯 9 種都會擋）；只有文字的跟刀清單（`print/checklist.js`，LSs，`print.js --only checklist --gray` PASS、`--selftest` PASS）。
 - 片長：用字數估計約 15 分鐘，超過目標 10–14 分鐘；合成語音後依實際長度決定刪哪幾句。
-- 下一步：後段模型（`videos/models/posterior/`）：照 `MODEL-CARD-TEMPLATE.md` 寫模型卡（數值用 `research/anatomy-instruments.md`）、建模、`check.js`、樣本圖放大自檢；接著一章派一個小助手做 `anim/draw.js`。
+- 2026-11-12：後段模型 `videos/models/posterior/` 建好（模型卡 `CARD.md`）。
+  - 視角：11–5 子午切面（上＝前、右＝11 點、從 2 點那側看）、眼底圖（左眼 12 點在上、3 點 temporal 在右）、廣角視野（術者坐 12 點，inverter 開：下＝12 點、temporal 在左；關＝轉 180°）、病人頭位圖（重力朝下）、顯微鏡俯視的 trocar。
+  - 病例狀態 `POSTERIOR.CASE`、各步驟示範 `POSTERIOR.PRESET`。
+  - `check.js` 45 條（含旁白 24 句空間說法）＋57 個故意改錯全部抓到。樣本圖加進 `ref/manifest.json`。
+  - 推算：坐正時氣泡要占玻璃體腔 3.5% 才蓋住整個 11 點裂孔（平的液面，旁白不講這個數字）。
+  - 待決定：ora 用 Li 2025（後段）還是 Liu 2014 的 6.2 mm（`globe/`，已上線）。
+  - 廣角 130° 視野在模型裡只到赤道附近，看 11 點裂孔要「看向 11 點」（示意）；和 Tabandeh 2012「BIOM 視野邊緣離 ora 1.2 mm」不一致，待核對。
+- 下一步：一章派一個小助手做 `anim/draw.js`（先讀 `videos/models/posterior/CARD.md`）。

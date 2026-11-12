@@ -5,6 +5,8 @@ const MODEL_REGISTRY = {
   eyelid: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'eyelid/laceration.js', 'eyelid/views.js'],
   globe: ['globe/globe.js', 'globe/cataract.js', 'globe/fluidics.js', 'globe/views.js'],   // cataract.js: optional cataract states (st.cat), its own views; fluidics.js: phaco machine panel data (②)
   hands: ['hands/hands.js', 'hands/views.js'],
+  // the posterior-segment model extends the globe model's eye backwards (same outer surface, cornea, limbus, clock hours)
+  posterior: ['globe/globe.js', 'posterior/posterior.js', 'posterior/views.js'],
   // the orbit model reuses the eyelid model (globe, lateral canthus, rim) so the two share coordinates
   orbit: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'orbit/orbit.js', 'orbit/views.js'],
 };

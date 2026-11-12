@@ -34,7 +34,7 @@
 | 眼眶與淚道 | 軸向切面（從下往上看，同 CT）＋正面外眥（韌帶窗） | OCS 的 lateral canthotomy／cantholysis；之後：眶骨骨折、眼眶減壓、DCR、眼球摘除 | `orbit/CARD.md` | 2026-11-06 建立（沿用眼瞼模型的眼球與外眥）：眶骨、眼球、視神經餘裕與 globe tenting、直肌、球後血腫與眼球前凸、眼瞼「前門」與外眥韌帶上下支、canthotomy、cantholysis；樣本 `orbit/sample.html` 自檢。下一步：做 LCC 影片（`videos/src/lateral-canthotomy-ocs/`）；眶底、冠狀切面、淚道還沒做 |
 | 前段 | 經傷口的子午切面或垂直傷口切面＋手術顯微鏡俯視 | open globe（zone I–II）、白內障、PK／DALK／DSAEK／DMEK、翼狀胬肉、trabeculectomy、tube、MIGS | `globe/CARD.md` | 2026-11-06 建立（open globe 第一部）：和眼瞼共用同一顆眼球的外表面；組織寫成 3D 函數，任何平面都能切；傷口、虹膜脫出、peaked pupil、結膜下出血、扇形 peritomy、縫線（穿、打結、埋結）；樣本圖已自檢。下一步：手與器械、360° peritomy、paracentesis 與前房重建。2026-11-09 加白內障（選用式 `st.cat`，`globe/cataract.js`）：華人白內障水晶體、前後囊、zonule、散瞳、主切口隧道與 side port、OVD、CCC、run-out 與 zonule 弱的示範；12–6 切面左＝12 點；樣本 `globe/sample-cataract.html` 自檢。2026-11-09 器械撐開隧道的變形改成平滑（頂蓋抬起、後唇壓下、選用的 Descemet 皺褶），加後方壓力（前房淺、前囊前凸）狀態 `push`。2026-11-10 白內障 ②（同樣選用式）：hydrodissection（波前、壓中央、capsular block）、刻槽／分核／轉核／四象限、phaco 與 chopper、3–9 切面 `cross`、流體面板資料 `globe/fluidics.js`；樣本 `globe/sample-cataract2.html` 自檢 |
 | 前段放大 | 角膜分層；隅角＋前房角鏡視角 | 屈光雷射、CXL、SLT、LPI | 尚未建立 | 未開始 |
-| 後段 | 眼球矢狀切面（三孔 PPV）＋廣角眼底 | RD（PPV、scleral buckle、pneumatic）、IVI、PRP | 尚未建立 | 未開始 |
+| 後段 | 經裂孔的子午切面＋廣角視野（inverter 開／關）；另有眼底圖、病人頭位圖 | RD（PPV、scleral buckle、pneumatic）、IVI、PRP | `posterior/CARD.md` | 2026-11-12 建立（RRD PPV 助手版，沿用 `globe/` 的眼球往後延伸）：ora（Li 2025 華人，和 `globe/` 的 6.2 mm 衝突待決定）、pars plana、vitreous base、視網膜／脈絡膜／鞏膜厚度、視盤、黃斑、華人有晶體眼的水晶體；RRD（以鐘點描述範圍）與 horseshoe tear；PVD、TA、玻璃體切除、trocar、器械、infusion 錯位示範、壓鞏膜、PFCL、氣體與頭位；四個視角與顯微鏡俯視；`check.js` 45 條＋每次執行的 selftest；樣本 `posterior/sample.html` 自檢。下一步：一章一個小助手做 RRD 影片畫面；buckle、pneumatic、IVI、PRP、矽油還沒做 |
 | 黃斑放大 | OCT 式分層＋黃斑俯視 | ERM／ILM peel、macular hole＋氣體 | 尚未建立 | 未開始 |
 | 眼外肌 | 眼球軸向俯視＋術者視角 | recession／resection、斜肌手術 | 尚未建立 | 未開始 |
 
