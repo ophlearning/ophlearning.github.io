@@ -1,7 +1,7 @@
   {
-    id:'rrd-ppv-c3f8', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'rrd-ppv-c3f8', type:'youtube', yt:'5HpnDdDnNs4', cat:'surgery',
     zh:'RRD 的 23G PPV＋C3F8：助手版', en:'Pars plana vitrectomy with C3F8 for rhegmatogenous retinal detachment: the assistant\'s guide',
-    dur:780,
+    dur:779,
     short:'站在助手的位置預習一台 RRD 的 23G 三孔 PPV＋C3F8（左眼、11 點 horseshoe tear、fovea 還貼著）：廣角系統的倒像與 inverter、壓鞏膜的鐘點、開 infusion 前看套管尖端、視網膜下殘留的 PFCL、C3F8 的不膨脹濃度與備氣的錯誤、關傷口檢查漏，以及術後頭位、N2O 與搭飛機。',
     sum:'這支影片給在 RRD 玻璃體切除術當助手的住院醫師。先在腦中定好左眼的鐘點與剝離範圍（11 點裂孔在廣角畫面下方略偏右），再依序看 trocar 與 infusion、廣角系統的倒像與 inverter、core vitrectomy 與 PVD、周邊 shaving 與壓鞏膜、PFCL 與氣液交換、雷射、C3F8 的不膨脹濃度與備氣、沖洗與關傷口；每一步講主刀在做什麼、助手要做什麼、看到什麼要馬上說。最後是術後頭位的物理、黃斑剝離過的 face-down 試驗、有 C3F8 時不能用 N2O 麻醉、不能搭飛機與上高山、術後第一週要看的事，以及助手要記住的八件事。',
     note:'畫面為左眼 OS、術者坐 12 點的示意動畫（機轉切面＋術者視角兩圖同步），不是手術錄影，比例不精確。中間步驟依主刀決定；藥物、器械、機器設定與 C3F8 的抽量依院內常規。',
