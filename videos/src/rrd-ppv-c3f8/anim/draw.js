@@ -1304,3 +1304,311 @@ DRAW2['7-3'] = T => {
     if (kP > 0.5) PR = PT.port73; }
   return { L: { svg: sl, extra: el, P: PT.sec73 }, R: { svg: sr, extra: er, P: PR } };
 };
+
+// ---------------------------------------------------------------- 8 術後
+// Chapter 8 (after the operation; no instruments). Head pictures: the model's head view (VP.head: the section through the 11 o'clock tear, turned so that
+// gravity points straight down the screen, the fluid surface a horizontal line) and the model's head icon (the same turn, 示意); both panels of a frame
+// draw the same state; every bubble size is 示意. 8-1: the physics — the gas at the top covers the tear by surface tension (no arrow pushing the retina),
+// sitting or the head raised (示意, no angle) keeps the 11 o'clock tear above the gas surface (the same state as 7-1's inset), supine puts the gas onto
+// the back of the lens (Kanclerz 2018a, the only consequence drawn); no hours or days. 8-2: the case's macula on the chart, the retina sliding down
+// (示意: direction as the narration, no amount), PostRD's two positions (face-down: gravity forward, the bubble over the posterior pole) with bars 42 %
+// vs 56 % to scale, the same vision, a different population. 8-3 (no eye step): N2O and the growing bubble (示意: no factor, no pressure), the chain to
+// CRAO, the time line to scale (37 days, ≥ 3 months, 67.7 days), the warning card, flying and mountains (+109 %, bars to scale). 8-4: IOP (43 %, 88 %
+// within 24 h; the 8–12 h band on a 24 h axis), the four things to look at (icons 示意), redetachment among failures (72.9 %), cataract (UK, to scale).
+const POSE8 = { sit: '坐正', supine: '仰躺', facedown: '臉朝下', raised: '頭抬高（示意）' };
+const C_G8 = '#2b5a8a';                                             // gas and gravity labels (as 7-1)
+// where the front of the eye (anterior) lies on a head view's screen, from the model's plane for that state
+const frontOf = st => { const pl = POSTERIOR.headPlane(st), x = pl.U[2], y = pl.V[2];
+  return (Math.abs(x) > 0.38 ? (x > 0 ? '右' : '左') : '') + (Math.abs(y) > 0.38 ? (y < 0 ? '上' : '下') : ''); };
+const orH = st => `左眼 OS　${POSE8[st.head.pose]}　下＝重力　${frontOf(st)}＝前`;
+Object.assign(PT, {
+  h81: { title: '病人的頭位與眼睛（示意）', orient: '畫面下＝重力' },
+  s81: { title: '眼球切面：經 11 點裂孔', orient: orH(VP.ST.sit81) },
+  s81z: { title: '眼球切面：11 點裂孔放大', orient: orH(VP.ST.sit81) },
+  s81s: { title: '眼球切面：經 11 點裂孔', orient: orH(VP.ST.sup81) },
+  o81: { title: '術後的頭位', orient: '' },
+  c82: { title: '術前：黃斑放大（眼底圖）', orient: VP.OR.chart },
+  c82b: { title: '術後：視網膜往下滑（示意）', orient: VP.OR.chart },
+  c82c: { title: '試驗的病人和本例', orient: VP.OR.chart },
+  f82: { title: '術前：fovea 附近的切面', orient: VP.OR.sec },
+  h82: { title: 'PostRD 隨機試驗：術後 24 小時的頭位', orient: '氣泡量示意　下＝重力' },
+  n83: { title: '全身麻醉時平躺（示意）', orient: orH(VP.ST.sup81) },
+  k83: { title: '警示手環或卡片', orient: '' },
+  a83: { title: '搭飛機、上高山', orient: '' },
+  g83: { title: '氣體慢慢被吸收（示意）', orient: orH(VP.ST.sit81) },
+  c83: { title: 'N2O 的連鎖反應', orient: '' },
+  t83: { title: '術後的時間軸（依比例）', orient: '' },
+  i84: { title: '有氣體的眼：術後眼壓', orient: '回溯研究' },
+  t84: { title: '術後 24 小時的時間軸（依比例）', orient: '' },
+  l84: { title: '術後第一週要看的四件事（圖示為示意）', orient: '' },
+  r84: { title: '再剝離：多半在兩個月內', orient: '' },
+  e84: { title: '有晶體的眼：之後的白內障（示意）', orient: '' },
+  j84: { title: '做了白內障手術的比例', orient: '英國資料' },
+});
+window.PRELOAD_EXTRA = JSON.stringify(PT) + JSON.stringify(TX3) + JSON.stringify(TX4) + JSON.stringify(TX5) + JSON.stringify(TX6) + JSON.stringify(TX7) + JSON.stringify(POSE8);
+// the head icon (the model's, 示意) in a k px box at (x, y), and the eye of the same state enlarged in a circle (centre c, radius r px): the model's head
+// view of that state (the same turn, gravity down) clipped to the eye; a ring at the icon's eye and dashed callout lines to the circle.
+// Returns { svg, m: mm of the head view → px, M: its anchors (mm) }
+function headFig(st, id, x, y, k, c, r, op = 1, icon = true) {
+  const rot = POSTERIOR.headPlane(st).rotDeg * Math.PI / 180, ex = 0.24, ey = -0.06;   // the icon's eye at (0.74, 0.44) of its box, from the box centre
+  const q = [x + k * (0.5 + ex * Math.cos(rot) - ey * Math.sin(rot)), y + k * (0.5 + ex * Math.sin(rot) + ey * Math.cos(rot))];
+  const Z = VP.headZ(st, 100, 100, VP.WIN.headT, id, { tw: VP.WIN.headT, step: 0.06 }), s = r / 13.0, m = p => [c[0] + s * p[0], c[1] + s * p[1]];
+  const d = Math.hypot(c[0] - q[0], c[1] - q[1]) || 1, n = [-(c[1] - q[1]) / d * r, (c[0] - q[0]) / d * r];
+  let o = `<g opacity="${F1(op)}">`;
+  if (icon) o += POSTERIOR.headIcon(st, x, y, k) + `<path d="M${F1(q[0])} ${F1(q[1])}L${F1(c[0] + n[0])} ${F1(c[1] + n[1])}M${F1(q[0])} ${F1(q[1])}L${F1(c[0] - n[0])} ${F1(c[1] - n[1])}" stroke="#8a97a3" stroke-width="1.4" stroke-dasharray="5 4" fill="none"/>` +
+    `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="${F1(Math.max(6, k * 0.06))}" fill="none" stroke="#5b6878" stroke-width="1.6"/>`;
+  o += `<clipPath id="${id}_ec"><circle cx="${F1(c[0])}" cy="${F1(c[1])}" r="${F1(r)}"/></clipPath><circle cx="${F1(c[0])}" cy="${F1(c[1])}" r="${F1(r)}" fill="#fff"/>` +
+    `<g clip-path="url(#${id}_ec)"><g transform="translate(${F1(c[0])} ${F1(c[1])}) scale(${s.toFixed(4)})">${Z.r.svg}</g></g><circle cx="${F1(c[0])}" cy="${F1(c[1])}" r="${F1(r)}" fill="none" stroke="#8a97a3" stroke-width="2"/></g>`;
+  return { svg: o, m, M: Z.M, q };
+}
+const gravArrow = (x, y0, y1, op) => arrowP([[x, y0], [x, y1]], COL.ink, op, 'arrK', 5);
+const ring8 = (p, r, col, op, dash) => p ? `<circle cx="${F1(p[0])}" cy="${F1(p[1])}" r="${r}" fill="none" stroke="${col}" stroke-width="2.4"${dash ? ` stroke-dasharray="${dash}"` : ''} opacity="${F1(op)}"/>` : '';
+const cross8 = (x, y, r, op) => `<g opacity="${F1(op)}"><circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${COL.red}" stroke-width="4"/><path d="M${F1(x - r * 0.7)} ${F1(y - r * 0.7)}L${F1(x + r * 0.7)} ${F1(y + r * 0.7)}" stroke="${COL.red}" stroke-width="4"/></g>`;
+// the weight of narration line i's picture in a segment of n lines (crossfades over 0.6 s at each line's start)
+const wLine = (T, i, n) => (i ? T.on(i, 0.6) : 1) * (i < n - 1 ? 1 - T.on(i + 1, 0.6) : 1);
+
+DRAW2['8-1'] = T => {
+  const ST = VP.ST, G = GLOBE, w = [0, 1, 2, 3, 4].map(i => wLine(T, i, 5));
+  // ---------------- left: the head and its eye (示意). Lines 0–1 sitting and line 3 supine (one head), line 2 sitting and the head raised, line 4 all three
+  let sl = '', el = '';
+  const C1 = [400, 205], R1 = 118, ONE = st => headFig(st, 'e81' + st.head.pose, 36, 92, 200, C1, R1);
+  for (const [i, op] of [[0, w[0] + w[1]], [3, w[3]]]) { if (!(op > 0)) continue; const st = VP.st81(i), F = ONE(st); sl += `<g opacity="${F1(op)}">${F.svg}</g>`;
+    if (i === 0) { el += lab('氣體：浮到最高處', 'gas', 14, 52, F.m([1.5, -6.5]), { bold: true, color: C_G8, lc: C_G8, op: op * T.on(0, 0.6, 0.6) });
+      el += lab('液體', 'fluid', PW - 12, 394, F.m([1.5, 6.5]), { side: 'R', op: w[0] * T.on(0, 0.6, 0.6) });
+      el += lab('坐正', 'sitting', 40, 328, null, { bold: true, op });
+      const zw = VP.WIN.z81, a = F.m([zw.x, zw.y]), b = F.m([zw.x + zw.w, zw.y + zw.w * PH / PW]);   // line 1: where the right panel zooms
+      sl += `<rect x="${F1(a[0])}" y="${F1(a[1])}" width="${F1(b[0] - a[0])}" height="${F1(b[1] - a[1])}" fill="none" stroke="${COL.accent}" stroke-width="2.2" opacity="${F1(w[1])}"/>`; }
+    else { el += lab('氣泡浮到前方', 'gas', 14, 52, F.m([3.5, -3]), { bold: true, color: C_G8, lc: C_G8, op });
+      el += lab('仰躺', 'supine', 40, 328, null, { bold: true, op });
+      sl += cross8(176, 320, 18, op); } }
+  if (w[1] > 0) sl += bigCard(14, 342, 578, 62, [['不是把視網膜推回去', { size: 15, bold: true, color: COL.red }], ['用表面張力蓋住裂孔，撐到雷射的疤長牢', { size: 16, bold: true, color: C_G8 }]], { op: w[1], lh: 24, y0: 24 });
+  if (w[2] > 0) { const A = headFig(ST.sit81, 'e81a', 20, 50, 118, [222, 222], 76, w[2]), B = headFig(ST.up81, 'e81b', 318, 50, 118, [522, 236], 72, w[2]);
+    sl += A.svg + B.svg + ring8(A.m(A.M.tearMid), 8, '#c8361f', w[2]) + ring8(B.m(B.M.tearMid), 8, '#c8361f', w[2]);
+    el += lab('坐正', 'sitting', 20, 342, null, { bold: true, op: w[2] }) + lab('頭抬高（示意）', 'head up', 318, 342, null, { bold: true, op: w[2] });
+    el += lab('11 點裂孔（紅圈）在氣面以上', '', 20, 378, null, { bold: true, color: '#9c2a1a', op: w[2] });
+    el += lab('裂孔也在氣面以上', '', 318, 378, null, { bold: true, color: '#9c2a1a', op: w[2] }); }
+  if (w[4] > 0) { const xs = [101, 303, 505], sts = [ST.sit81, ST.up81, ST.sup81];
+    sts.forEach((st, j) => { const F = headFig(st, 'e81c' + j, xs[j] - 96, 40, 76, [xs[j] + 22, 228], 64, w[4]); sl += F.svg; });
+    sl += cross8(xs[2] + 70, 300, 18, w[4]);
+    el += lab('坐正', '', 20, 352, null, { bold: true, op: w[4] }) + lab('頭抬高（示意）', '', 222, 352, null, { bold: true, op: w[4] }) + lab('避免平躺', '', 424, 352, null, { bold: true, color: COL.red, op: w[4] }); }
+  sl += gravArrow(588, 16, 84, 1);
+  el += lab('重力', 'gravity', PW - 28, 56, null, { side: 'R', bold: true });
+  // ---------------- right: the model's head view of the same state (gravity down): sitting (lines 0, 2), the tear close up (line 1), supine (line 3), the card (line 4)
+  let sr = '', er = '', PR = PT.s81;
+  const sitOp = w[0] + w[2];
+  if (sitOp > 0) { const S = VP.head(ST.sit81, PW, PH, VP.WIN.h81, 'h81'), a = S.A, o0 = w[0], o2 = w[2];
+    sr += `<g opacity="${F1(sitOp)}">${S.svg}`;
+    if (o2 > 0) { const gA = a.gasLineA, gB = a.gasLineB; sr += `<path d="M${F1(gB[0] - 30)} ${F1(gB[1])}H${F1(gA[0] + 30)}" stroke="${C_G8}" stroke-width="2" stroke-dasharray="7 5" opacity="${F1(o2)}"/>` + ring8(a.tearMid, 13, '#c8361f', o2); }
+    sr += '</g>';
+    er += lab('氣體：浮到最高處', 'gas', 14, 40, S.P([-4, -7]), { bold: true, color: C_G8, lc: C_G8, op: o0 });
+    er += lab('液體', 'fluid', 14, 392, S.P([-4, 7]), { op: o0 });
+    er += lab('液面：垂直重力', 'level', 14, 214, S.P([-7, 0]), { bold: true, op: o0 * T.on(0, 0.6, 0.6) });
+    er += lab('重力', 'gravity', PW - 12, 150, a.gArrow, { side: 'R', bold: true, color: C_G8, lc: C_G8, op: o0 + o2 });
+    er += lab('11 點裂孔', 'HST', PW - 12, 40, a.tearMid, Object.assign({ side: 'R', op: o0 }, HST));
+    er += lab('11 點裂孔：在氣面以上', '', PW - 12, 40, a.tearMid, Object.assign({ side: 'R', op: o2 }, HST));
+    er += lab('氣面', 'gas level', 14, 214, S.P([-7, 0]), { bold: true, color: C_G8, lc: C_G8, op: o2 });
+    er += lab('水晶體', 'lens', PW - 12, 300, a.lens, { side: 'R', op: o2 }); }
+  if (w[1] > 0) { const st = ST.sit81, Z = VP.headZ(st, PW, PH, VP.WIN.z81, 'z81', { tw: VP.WIN.z81T, step: 0.015 }), Gm = POSTERIOR.geom(st), T0 = Gm.tear, to = p => Z.P(G.toPlane(Z.r.plane, p)), gl = [];
+    for (let s = T0.sh - 1.2; s <= T0.sh + T0.L * 1.06 + 1.2; s += 0.1) gl.push(to(stLRet(st, s)));
+    const sp = POSTERIOR.laserSpots(Gm).filter(q => offPl(Z, q.p) < 0.25).map(q => to(q.p)).sort((p, q) => q[0] - p[0]);
+    sr += `<g opacity="${F1(w[1])}">${Z.svg}<path d="${pth(gl)}" fill="none" stroke="#7fb4e3" stroke-width="12" stroke-linecap="round" opacity="0.45"/>` +
+      sp.map(q => `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="${F1(0.13 * Z.k)}" fill="${C_SCAR}" stroke="#2e1a0c" stroke-width="1.5"/>`).join('') + '</g>';
+    er += lab('氣體', 'gas', 14, 392, to(VP.inPl(VP.SEC_H, 8.0, 0)), { bold: true, color: C_G8, lc: C_G8, op: w[1] });
+    er += lab('表面張力：氣體蓋住裂孔（示意）', '', 14, 300, gl[Math.round(gl.length * 0.55)], { bold: true, color: C_G8, lc: C_G8, op: w[1] });
+    er += lab('11 點裂孔', 'HST', PW - 12, 392, Z.A.tearMid, Object.assign({ side: 'R', op: w[1] }, HST));
+    er += lab('雷射的疤（示意）', 'laser scar', PW - 12, 40, sp[0] || null, { side: 'R', bold: true, color: C_SCAR, lc: C_SCAR, op: w[1] * (sp.length ? 1 : 0) });
+    if (w[1] > 0.5) PR = PT.s81z; }
+  if (w[3] > 0) { const S = VP.head(ST.sup81, PW, PH, VP.WIN.h81, 's81s'), a = S.A;
+    sr += `<g opacity="${F1(w[3])}">${S.svg}</g>`;
+    er += lab('仰躺：氣泡浮到前方', 'gas', 14, 40, S.P([-4, -5]), { bold: true, color: C_G8, lc: C_G8, op: w[3] });
+    er += lab('氣泡貼著水晶體後面', 'lens', PW - 12, 40, a.lensBack, { side: 'R', bold: true, color: COL.red, lc: COL.red, op: w[3] });
+    er += lab('重力', 'gravity', PW - 12, 150, a.gArrow, { side: 'R', bold: true, color: C_G8, lc: C_G8, op: w[3] });
+    sr += note('有晶體的眼：減少氣體碰到水晶體', w[3], PH - 14, PW - 12);
+    if (w[3] > 0.5) PR = PT.s81s; }
+  if (w[4] > 0) { sr += bigCard(83, 105, 440, 200, [['頭位怎麼擺、擺幾天', { size: 22, bold: true }], ['沒有共識', { size: 22, bold: true, color: COL.red }], ['→ 依主刀的醫囑', { size: 24, bold: true, color: COL.accent }]], { op: w[4], center: true, y0: 58, lh: 56 });
+    if (w[4] > 0.5) PR = PT.o81; }
+  return { L: { svg: sl, extra: el, P: PT.h81 }, R: { svg: sr, extra: er, P: PR } };
+};
+
+// two head views side by side (8-2): the model's head view of st in a W × H box at (x, y) with the head icon in its corner; anchors in panel px
+function headBox(st, id, x, y, W, H) {
+  const S = VP.head(st, W, H, VP.WIN.h82, id), A = {}; for (const [k, v] of Object.entries(S.A)) A[k] = [v[0] + x, v[1] + y];
+  return { svg: `<g transform="translate(${x} ${y})">${S.svg}${POSTERIOR.headIcon(st, 4, H - 52, 48)}</g>`, A, P: p => { const q = S.P(p); return [q[0] + x, q[1] + y]; } };
+}
+
+DRAW2['8-2'] = T => {
+  const ST = VP.ST, w1 = T.on(1, 0.6), w3 = T.on(3, 0.6), kPost = w1 * (1 - w3), w2 = T.on(2, 0.6);
+  // ---------------- left: the chart around the macula — before the operation (line 0; line 3 for the comparison), after it with the retina sliding down (lines 1–2, 示意)
+  let sl = '', el = '', PL = PT.c82;
+  const pre = 1 - kPost;
+  if (pre > 0) { const v = VP.fundus(ST.rrd, PW, PH, VP.WIN.mac, 'f82'), a = v.A, mc = v.P([0, 0]);
+    sl += `<g opacity="${F1(pre)}">${v.svg}<circle cx="${F1(mc[0])}" cy="${F1(mc[1])}" r="${F1(2.75 * v.k)}" fill="none" stroke="${COL.accent}" stroke-width="2" stroke-dasharray="5 4"/>${VIEWS.sbar(v.k, 1)}</g>`;
+    el += lab('fovea 還貼著', 'fovea on', PW - 12, 60, a.fovea, { side: 'R', bold: true, op: pre });
+    el += lab('下半部黃斑剝離過', 'inferior macula off', PW - 12, 330, v.P([1.6, 2.2]), { side: 'R', bold: true, color: RDC, lc: RDC, op: pre * (1 - w3) });
+    el += lab('視盤', 'optic disc', 14, 60, a.disc, { op: pre * (1 - w3) });
+    if (w3 > 0) { sl += ring8(a.fovea, 22, COL.accent, w3);
+      sl += bigCard(14, 232, 330, 116, [['試驗收的：fovea 已掉的病人', { size: 17, bold: true, color: COL.red }], ['本例：fovea 還貼著', { size: 17, bold: true, color: COL.accent }], ['→ 不完全一樣', { size: 17, bold: true }]], { op: w3, lh: 32, y0: 32 });
+      if (w3 > 0.5) PL = PT.c82c; } }
+  if (kPost > 0) { const v = VP.fundus(ST.sit81, PW, PH, VP.WIN.mac, 'f82b'), a = v.A, k = v.k, D = VP.DISP82, d = D.px * T.p(1, 0.35, 0.8), f = a.fovea, rr = 2.75 * k, g = [f[0] + D.dir[0] * d, f[1] + D.dir[1] * d];
+    sl += `<g opacity="${F1(kPost)}">${v.svg}` + ring8(f, 18, '#ffffff', 1, '5 4') + ring8(g, 18, COL.amber, d > 0.5 ? 1 : 0) +
+      arrowP([[f[0] + rr * 0.55, f[1] - 46], [f[0] + rr * 0.55 + D.dir[0] * 92, f[1] - 46 + D.dir[1] * 92]], COL.amber, T.p(1, 0.35, 0.5), 'arrM', 5) + VIEWS.sbar(k, 1) + '</g>';
+    el += lab('術後可能往下滑（示意）', 'retinal displacement', PW - 12, 60, [f[0] + rr * 0.55, f[1] - 30], { side: 'R', bold: true, color: COL.amber, lc: COL.amber, op: kPost * T.p(1, 0.35, 0.5) });
+    el += lab('fovea 原本的位置（虛線圈）', '', 14, 60, [f[0] - 13, f[1] - 13], { op: kPost * T.p(1, 0.35, 0.5) });
+    el += lab('滑下來之後', '', 14, 330, [g[0] - 13, g[1] + 13], { bold: true, color: COL.amber, lc: COL.amber, op: kPost * T.p(1, 0.6, 0.8) });
+    sl += note('滑動的方向與幅度：示意', kPost, PH - 14, PW - 12);
+    if (kPost > 0.5) PL = PT.c82b; }
+  // ---------------- right: line 0 the fovea section of the case (as 1-3); lines 1–3 PostRD's two positions (face-down; support-the-break = sitting for this case),
+  // the bubble large (示意); line 2 the bars (to scale); line 3 the same vision
+  let sr = '', er = '', PR = PT.f82;
+  if (w1 < 1) { const S = VP.sec(ST.rrd, PW, PH, VP.WIN.fov, 's82', { tw: VP.WIN.fovT, step: 0.015 }), b = S.A, o = 1 - w1;
+    sr += `<g opacity="${F1(o)}">${S.svg}${VIEWS.sbar(S.k, 1)}</g>`;
+    er += lab('fovea 還貼著', 'fovea on', PW - 140, 46, b.fovea, { side: 'R', bold: true, op: o });
+    er += lab('下半部黃斑剝離過', 'inferior macula off', 14, 46, b.macOff, { bold: true, color: RDC, lc: RDC, op: o }); }
+  if (w1 > 0) { const BW = 290, BH = 228, A = headBox(ST.fd82, 'h82a', 8, 34, BW, BH), B = headBox(ST.stb82, 'h82b', 308, 34, BW, BH), bp = VP.barPx;
+    sr += `<g opacity="${F1(w1)}"><rect x="0" y="0" width="${PW}" height="${PH}" fill="#fff"/>${A.svg}${B.svg}<path d="M303 30V270" stroke="#d3dae1" stroke-width="2"/></g>`;
+    er += lab('臉朝下', 'face-down', 12, 24, null, { bold: true, op: w1 }) + lab('撐住裂孔', 'support-the-break', 312, 24, null, { bold: true, op: w1 });
+    sr += text(PW - 14, 254, '本例 11 點：坐正', { size: 14, bold: true, anchor: 'end', color: COL.sub, op: w1 });
+    er += lab('氣泡在後極（黃斑上）', 'gas', 12, 290, A.P([1, -5]), { bold: true, color: C_G8, lc: C_G8, op: w1 * (1 - w2) });
+    er += lab('氣泡在上方', 'gas', 312, 290, B.P([-3, -5]), { bold: true, color: C_G8, lc: C_G8, op: w1 * (1 - w2) });
+    // line 2: displacement 42 % vs 56 % (Casswell 2020), one scale
+    if (w2 > 0) { const y = 300, P8 = VP.PROS82;
+      sr += `<g opacity="${F1(w2)}">` + text(20, y - 12, '視網膜往下滑', { size: 15, color: COL.sub }) + text(320, y - 12, '視網膜往下滑', { size: 15, color: COL.sub }) +
+        `<rect x="20" y="${y}" width="${F1(bp(P8.fd))}" height="22" rx="3" fill="${COL.amber}"/><rect x="320" y="${y}" width="${F1(bp(P8.stb))}" height="22" rx="3" fill="${COL.amber}"/>` +
+        text(F1(28 + bp(P8.fd)), y + 18, `${P8.fd}%`, { size: 20, bold: true, color: COL.amber }) + text(F1(328 + bp(P8.stb)), y + 18, `${P8.stb}%`, { size: 20, bold: true, color: COL.amber }) + '</g>'; }
+    if (w3 > 0) sr += `<g opacity="${F1(w3)}"><rect x="20" y="346" width="566" height="46" rx="8" fill="#e7f3ef" stroke="${COL.accent}" stroke-width="2"/>` +
+      text(PW / 2, 376, '最後的視力：兩組相同', { size: 19, bold: true, anchor: 'middle', color: COL.accent }) + '</g>';
+    if (w1 > 0.5) PR = PT.h82; }
+  return { L: { svg: sl, extra: el, P: PL }, R: { svg: sr, extra: er, P: PR } };
+};
+
+// a dial (示意: no numbers) at (cx, cy), radius r; k 0 → 1 sweeps the needle from the left (low) to the right (high, red)
+function dial8(cx, cy, r, k, op) {
+  const arc = (a0, a1, col) => { const p = a => [cx + r * Math.cos(a * Math.PI / 180), cy - r * Math.sin(a * Math.PI / 180)], s = p(a0), e = p(a1);
+    return `<path d="M${F1(s[0])} ${F1(s[1])}A${r} ${r} 0 0 1 ${F1(e[0])} ${F1(e[1])}" fill="none" stroke="${col}" stroke-width="12"/>`; };
+  const a = (180 - 170 * Math.max(0, Math.min(1, k))) * Math.PI / 180;
+  return `<g opacity="${F1(op)}"><rect x="${cx - r - 14}" y="${cy - r - 14}" width="${2 * r + 28}" height="${r + 34}" rx="8" fill="#fff" stroke="#d3dae1"/>${arc(180, 120, '#3aa676')}${arc(120, 60, '#e8a33a')}${arc(60, 0, COL.red)}` +
+    `<path d="M${cx} ${cy}L${F1(cx + (r - 10) * Math.cos(a))} ${F1(cy - (r - 10) * Math.sin(a))}" stroke="${COL.ink}" stroke-width="4" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="6" fill="${COL.ink}"/></g>`;
+}
+// an aeroplane and a mountain (icons), each with a no-entry sign
+function plane8(x, y, s, op) { return `<g opacity="${F1(op)}" transform="translate(${x} ${y}) scale(${s})" fill="#7d8a96"><rect x="-50" y="-6" width="100" height="12" rx="6"/>` +
+  `<path d="M10 -5L-12 -44L-24 -44L-10 -5ZM10 5L-12 44L-24 44L-10 5ZM-36 -5L-44 -20L-51 -20L-48 -5ZM-36 5L-44 20L-51 20L-48 5Z"/></g>`; }
+function mount8(x, y, s, op) { return `<g opacity="${F1(op)}" transform="translate(${x} ${y}) scale(${s})"><path d="M-52 26L-14 -30L4 -4L18 -22L52 26Z" fill="#8a7a66"/><path d="M-14 -30L-24 -15L-14 -19L-6 -13Z" fill="#fff"/></g>`; }
+
+DRAW2['8-3'] = T => {
+  const ST = VP.ST, w = [0, 1, 2, 3, 4].map(i => wLine(T, i, 5)), kN = T.p(0, 0.15, 0.7), n01 = w[0] + w[1];
+  // ---------------- left: line 0–1 lying supine under general anaesthesia, the bubble growing with N2O (示意: no factor, no pressure); line 2 the warning card;
+  // line 3 flying and mountains; line 4 the bubble getting smaller (示意)
+  let sl = '', el = '', PL = PT.n83;
+  if (n01 > 0) { const S = VP.head(VP.n2oStep(kN), PW, PH, VP.WIN.n83, 'n83'), a = S.A, opA = T.on(0, 0.6) * (1 - T.p(0, 0.7, 0.8));
+    sl += `<g opacity="${F1(n01)}">${S.svg}${POSTERIOR.headIcon(ST.sup81, 14, PH - 92, 76)}`;
+    [[4, -4.5], [7, -3.6], [9.5, -3]].forEach((p, i) => { const q = S.P(p); sl += arrowP([[PW - 14, 150 + 35 * i], q], COL.amber, opA, 'arrM', 3, '6 5'); });   // N2O into the bubble (示意)
+    sl += dial8(492, 300, 54, kN, 1) + '</g>';
+    el += lab('N2O 跑進氣泡', 'N2O', PW - 12, 132, null, { side: 'R', bold: true, color: COL.amber, op: n01 * opA });
+    el += lab('氣泡迅速變大（示意）', 'gas', 14, 40, S.P([-3, (S.M.gasLineA || [0, 0])[1] - 1.5]), { bold: true, color: C_G8, lc: C_G8, op: n01 * T.p(0, 0.2, 0.3) });
+    el += lab('眼壓衝高', 'IOP', PW - 12, 226, [492, 262], { side: 'R', bold: true, color: COL.red, lc: COL.red, op: n01 * T.p(0, 0.55, 0.65) });
+    if (w[1] > 0) sl += badge(330, PH - 46, '有病人因此失明', COL.red, w[1]); }
+  if (w[2] > 0) { const o = w[2];
+    sl += `<g opacity="${F1(o)}"><rect x="63" y="58" width="480" height="270" rx="16" fill="#fff" stroke="${COL.red}" stroke-width="3"/><path d="M63 74a16 16 0 0 1 16 -16h448a16 16 0 0 1 16 16v42H63z" fill="${COL.red}"/>` +
+      text(PW / 2, 98, '警示卡（示意）', { size: 22, bold: true, color: '#fff', anchor: 'middle' }) + text(PW / 2, 166, '眼內有氣體（C3F8）', { size: 24, bold: true, anchor: 'middle' }) +
+      text(PW / 2, 220, '以後任何手術：先告訴麻醉科', { size: 21, bold: true, anchor: 'middle', color: COL.red }) + text(PW / 2, 272, '絕不能用 N2O 麻醉', { size: 21, bold: true, anchor: 'middle', color: COL.red }) + '</g>';
+    if (o > 0.5) PL = PT.k83; }
+  if (w[3] > 0) { const o = w[3], y = 300, ip = VP.iopPx, up = 1 + VP.MILLS / 100;
+    sl += plane8(160, 96, 1.5, o) + cross8(160, 96, 62, o) + mount8(440, 100, 1.3, o) + cross8(440, 96, 62, o);
+    sl += text(PW / 2, 196, '氣體完全吸收之前：不搭飛機、不上高山', { size: 18, bold: true, anchor: 'middle', op: o });
+    sl += `<g opacity="${F1(o)}">` + text(20, y - 50, '模擬上升時的眼壓（平均）', { size: 15, color: COL.sub }) + text(20, y - 14, '上升前', { size: 15, bold: true }) + text(20, y + 36, '上升時', { size: 15, bold: true, color: COL.red }) +
+      `<rect x="90" y="${y - 30}" width="${F1(ip(1))}" height="22" rx="3" fill="#9aa5b1"/><rect x="90" y="${y + 20}" width="${F1(ip(up))}" height="22" rx="3" fill="${COL.red}"/>` +
+      text(F1(100 + ip(up)), y + 38, `平均升高 ${VP.MILLS}%`, { size: 18, bold: true, color: COL.red }) + text(20, y + 88, '就算氣泡只剩一小部分', { size: 16, bold: true }) + '</g>';
+    if (o > 0.5) PL = PT.a83; }
+  if (w[4] > 0) { const o = w[4];
+    VP.GAS83.forEach((g, j) => { const F = headFig(VP.shrink83(g), 'g83' + j, 0, 0, 0, [101 + 202 * j, 180], 84, o, false); sl += F.svg; if (j < 2) sl += arrowP([[101 + 202 * j + 92, 180], [101 + 202 * (j + 1) - 92, 180]], COL.sub, o, 'arrK', 3); });
+    sl += text(PW / 2, 326, '氣泡慢慢被吸收（大小示意）', { size: 17, bold: true, anchor: 'middle', color: C_G8, op: o }) + text(PW / 2, 360, '有晶體的眼：氣體留得更久', { size: 18, bold: true, anchor: 'middle', op: o });
+    if (o > 0.5) PL = PT.g83; }
+  // ---------------- right: line 0 the chain from N2O to CRAO; lines 1–4 the time line after the operation, to scale (days)
+  let sr = '', er = '', PR = PT.c83;
+  if (w[0] > 0) { const rows = ['N2O 全身麻醉', 'N2O 跑進眼內的氣泡', '氣泡迅速變大', '眼壓衝高', 'CRAO：視網膜中央動脈阻塞'], o = w[0];
+    rows.forEach((t, i) => { const y = 14 + i * 78, on = kN * 5 >= i - 0.01 ? 1 : 0.25, red = i >= 3;
+      sr += `<g opacity="${F1(o * on)}"><rect x="103" y="${y}" width="400" height="52" rx="10" fill="${red ? '#fdecea' : '#f7f9fa'}" stroke="${red ? COL.red : '#c9d1d9'}" stroke-width="2"/>` + text(PW / 2, y + 33, t, { size: 18, bold: true, anchor: 'middle', color: red ? COL.red : COL.ink }) + '</g>';
+      if (i < 4) sr += arrowP([[PW / 2, y + 55], [PW / 2, y + 74]], COL.sub, o * (kN * 5 >= i + 1 ? 1 : 0.25), 'arrK', 3); }); }
+  const tl = 1 - w[0];
+  if (tl > 0) { const L = VP.TL83, x0 = 40, x1 = 566, X = d => VP.x83(d, x0, x1), y = 150, m3 = L.risk * L.dpm, o1 = T.on(1, 0.6), o2 = T.on(2, 0.6), o3 = T.on(3, 0.6), o4 = T.on(4, 0.6);
+    let s = `<g opacity="${F1(tl)}"><path d="M${x0} ${y}H${x1 + 16}" stroke="${COL.ink}" stroke-width="2.5"/><path d="M${x0} ${y - 8}V${y + 8}" stroke="${COL.ink}" stroke-width="2.5"/>` + text(x0, y + 30, '手術', { size: 15, bold: true, anchor: 'middle' });
+    // N2O risk: at least 3 months (Silvanus 2008), the arrow carrying on; loss of vision as late as day 37 (Lee 2004)
+    s += `<g opacity="${F1(o1)}"><rect x="${x0}" y="${y - 52}" width="${F1(X(m3) - x0)}" height="34" fill="${COL.red}" opacity="0.16"/>` + arrowP([[X(m3), y - 35], [x1 + 4, y - 35]], COL.red, 1, 'arrR', 3, '6 5') +
+      `<path d="M${F1(X(m3))} ${y - 8}V${y + 8}" stroke="${COL.ink}" stroke-width="2.5"/>` + text(F1(X(m3)), y + 30, `${L.risk} 個月`, { size: 15, bold: true, anchor: 'middle' }) +
+      text(x0 + 8, y - 62, `N2O 的風險期：至少 ${L.risk} 個月`, { size: 16, bold: true, color: COL.red }) +
+      `<circle cx="${F1(X(L.lee))}" cy="${y}" r="8" fill="${COL.red}"/><path d="M${F1(X(L.lee))} ${y + 8}V${y + 42}" stroke="${COL.red}" stroke-width="1.5"/>` + text(F1(X(L.lee)), y + 60, `術後 ${L.lee} 天仍發生`, { size: 15, bold: true, anchor: 'middle', color: COL.red }) + '</g>';
+    s += `<g opacity="${F1(o2)}"><rect x="${x0 + 14}" y="${y - 47}" width="40" height="24" rx="3" fill="#fff" stroke="${COL.red}" stroke-width="2"/><rect x="${x0 + 14}" y="${y - 47}" width="40" height="8" fill="${COL.red}"/>` + text(x0 + 62, y - 29, '這段期間：帶著警示卡', { size: 14, bold: true, color: COL.red }) + '</g>';
+    // no flying / mountains until the gas is all gone (no day written: the end is fuzzy); 15 % C3F8 gone at 67.7 days on average (Kontos 2017a), phakic longer
+    s += `<g opacity="${F1(o3)}"><defs><linearGradient id="t83g" x1="${x0}" x2="${x1}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C_G8}" stop-opacity="0.3"/><stop offset="${F1((X(50) - x0) / (x1 - x0))}" stop-color="${C_G8}" stop-opacity="0.3"/><stop offset="${F1((X(110) - x0) / (x1 - x0))}" stop-color="${C_G8}" stop-opacity="0"/></linearGradient></defs>` +
+      `<rect x="${x0}" y="${y + 84}" width="${x1 - x0}" height="34" fill="url(#t83g)"/>` + text(x0 + 8, y + 106, '不搭飛機、不上高山：直到氣體完全吸收', { size: 14, bold: true, color: C_G8 }) + '</g>';
+    s += `<g opacity="${F1(o4)}"><path d="M${F1(X(L.gone))} ${y - 8}V${y + 160}" stroke="${C_G8}" stroke-width="2" stroke-dasharray="5 4"/>` + arrowP([[X(L.gone), y + 202], [X(L.gone) + 110, y + 202]], COL.suture, 1, 'arrB', 3) +
+      text(F1(X(L.gone) - 6), y + 178, `15% C3F8：平均 ${L.gone} 天完全消失`, { size: 15, bold: true, anchor: 'end', color: C_G8 }) + text(F1(X(L.gone) + 116), y + 207, '有晶體：更久', { size: 15, bold: true, color: C_G8 }) + '</g>';
+    sr += s + '</g>' + note('時間軸依比例：橫軸是術後天數', tl, PH - 14, PW - 12);
+    if (tl > 0.5) PR = PT.t83; }
+  return { L: { svg: sl, extra: el, P: PL }, R: { svg: sr, extra: er, P: PR } };
+};
+
+// the four things to look at in the first week (8-4 line 2; icons 示意), one per 280 × 340 px tile at (x, y): a wound leaking, the bubble's level,
+// gas in the anterior chamber, the retina on; hl highlights the tile. Each icon is drawn round (0, 0) and scaled
+function tile8(x, y, n, op, hl = 0) {
+  const I = [
+    `<rect x="-90" y="-20" width="180" height="34" fill="#f2efe6" stroke="#9c8f78" stroke-width="1.5"/><path d="M-50 -20L30 14" stroke="#7d6a5a" stroke-width="3"/>` +
+      `<path d="M-58 -30c-6 -10 -6 -16 0 -22c6 6 6 12 0 22z" fill="#5aa0d8"/><circle cx="-40" cy="-40" r="5" fill="#fff" stroke="#5aa0d8" stroke-width="1.5"/>`,
+    `<circle cx="0" cy="0" r="46" fill="#dff0e6" stroke="#9c8f78" stroke-width="2"/><path d="M-44 6A46 46 0 0 1 44 6Z" fill="#eaf3fb" stroke="${C_G8}" stroke-width="1.5"/>` +
+      `<path d="M64 -40V4" stroke="${C_G8}" stroke-width="2.5" marker-end="url(#arrB)"/><path d="M54 6H74" stroke="${C_G8}" stroke-width="2.5"/>`,
+    `<path d="M-60 40Q0 -70 60 40" fill="#eef7fb" stroke="#86b9d6" stroke-width="3"/><path d="M-62 30H-18M18 30H62" stroke="#7a5a44" stroke-width="5"/>` +
+      `<ellipse cx="0" cy="44" rx="34" ry="16" fill="#f4f1e6" stroke="#b9ae95" stroke-width="1.5"/><circle cx="0" cy="4" r="10" fill="#ffffff" stroke="${C_G8}" stroke-width="2"/>`,
+    `<path d="M-80 30Q0 -40 80 30" fill="none" stroke="#b7795d" stroke-width="8"/><path d="M-80 22Q0 -48 80 22" fill="none" stroke="#e6a06e" stroke-width="4"/>` +
+      `<path d="M52 -40l10 10l20 -22" fill="none" stroke="${COL.accent}" stroke-width="5" stroke-linecap="round"/>`];
+  return `<g opacity="${F1(op)}"><rect x="${x}" y="${y}" width="280" height="340" rx="10" fill="${hl ? '#e7f3ef' : '#f7f9fa'}" stroke="${hl ? COL.accent : '#d3dae1'}" stroke-width="${hl ? 2.5 : 1}"/>` +
+    `<g transform="translate(${x + 140} ${y + 150}) scale(1.45)">${I[n]}</g></g>`;
+}
+
+DRAW2['8-4'] = T => {
+  const w = [0, 1, 2, 3, 4].map(i => wLine(T, i, 5)), w01 = w[0] + w[1], bp = VP.barPx;
+  // ---------------- left: lines 0–1 IOP after gas (Chen 1997: 43 % over 25 mmHg, 88 % of them within 24 h; bars to scale); line 2 two of the four things to look at;
+  // line 3 redetachment among the failures (Lee 2014: 72.9 % within two months); line 4 the lens clouding (示意)
+  let sl = '', el = '', PL = PT.i84;
+  if (w01 > 0) { const C = VP.CHEN, x = 20, o = w01, y1 = 80, y2 = 214;
+    sl += `<g opacity="${F1(o)}">` + text(x, y1 - 16, '眼壓超過 25 mmHg 的眼（佔全部有氣體的眼）', { size: 15, color: COL.sub }) +
+      `<rect x="${x}" y="${y1}" width="${F1(bp(100))}" height="30" rx="3" fill="#e1e6ea"/><rect x="${x}" y="${y1}" width="${F1(bp(C.gt25))}" height="30" rx="3" fill="${COL.red}"/>` + text(F1(x + bp(C.gt25) + 10), y1 + 23, `${C.gt25}%`, { size: 22, bold: true, color: COL.red }) +
+      text(x, y2 - 16, '眼壓升高的眼裡，發生在 24 小時內的', { size: 15, color: COL.sub }) +
+      `<rect x="${x}" y="${y2}" width="${F1(bp(100))}" height="30" rx="3" fill="#f6d5d1"/><rect x="${x}" y="${y2}" width="${F1(bp(C.in24))}" height="30" rx="3" fill="${COL.red}"/>` + text(F1(x + bp(C.in24) - 10), y2 + 23, `${C.in24}%`, { size: 22, bold: true, color: '#fff', anchor: 'end' }) + '</g>';
+    sl += bigCard(14, 300, 578, 96, [['→ 當晚到隔天早上，都要量眼壓', { size: 20, bold: true, color: COL.accent }]], { op: w[1], y0: 56 }); }
+  if (w[2] > 0) { sl += tile8(14, 20, 0, w[2]) + tile8(312, 20, 1, w[2]);
+    sl += text(154, 322, '① 傷口有沒有漏', { size: 18, bold: true, anchor: 'middle', op: w[2] }) + text(452, 322, '② 氣泡大小', { size: 18, bold: true, anchor: 'middle', op: w[2] });
+    PL = w[2] > 0.5 ? PT.l84 : PL; }
+  if (w[3] > 0) { const o = w[3], x = 20, y = 150, p = VP.LEE14;
+    sl += `<g opacity="${F1(o)}">` + text(x, y - 76, '失敗（再剝離）的病例：何時被診斷', { size: 17, bold: true }) + text(x, y - 46, '全部失敗的病例＝整條', { size: 15, color: COL.sub }) +
+      `<rect x="${x}" y="${y}" width="${F1(bp(100))}" height="34" rx="3" fill="#e1e6ea"/><rect x="${x}" y="${y}" width="${F1(bp(p))}" height="34" rx="3" fill="${COL.amber}"/>` +
+      text(F1(x + bp(p) - 10), y + 24, `${p}%`, { size: 22, bold: true, color: '#fff', anchor: 'end' }) + text(x, y + 64, '兩個月內被診斷', { size: 16, bold: true, color: COL.amber }) + text(F1(x + bp(100)), y + 64, '之後', { size: 16, color: COL.sub, anchor: 'end' }) + '</g>';
+    sl += bigCard(14, 290, 578, 100, [['這是「失敗病例裡」的比例', { size: 18, bold: true }], ['不是再剝離率', { size: 18, bold: true, color: COL.red }]], { op: o, lh: 32, y0: 40 });
+    if (o > 0.5) PL = PT.r84; }
+  if (w[4] > 0) { const o = w[4], lens = (cx, cy, cl) => `<ellipse cx="${cx}" cy="${cy}" rx="44" ry="74" fill="${cl ? '#e9dcb4' : '#f4f8fb'}" stroke="#9aa5b1" stroke-width="2.5"/>` + (cl ? `<ellipse cx="${cx}" cy="${cy}" rx="28" ry="48" fill="#cdb67a" opacity="0.8"/>` : '');
+    sl += `<g opacity="${F1(o)}">${lens(160, 170, 0)}${lens(446, 170, 1)}` + arrowP([[222, 170], [384, 170]], COL.sub, 1, 'arrK', 4) + text(160, 286, '術前：有晶體', { size: 16, bold: true, anchor: 'middle' }) +
+      text(446, 286, '做完 PPV 之後', { size: 16, bold: true, anchor: 'middle' }) + text(PW / 2, 346, '大多會長白內障（混濁的畫法為示意）', { size: 17, bold: true, anchor: 'middle', color: '#8a6400' }) + '</g>';
+    if (o > 0.5) PL = PT.e84; }
+  // ---------------- right: lines 0–1 the first 24 hours to scale (the 8–12 h band, Muether 2011); lines 2–3 two of the four things (line 3: the retina highlighted);
+  // line 4 cataract surgery by one and two years (Jackson 2013, UK; bars to scale)
+  let sr = '', er = '', PR = PT.t84;
+  if (w01 > 0) { const L = VP.TL84, x0 = 40, x1 = 560, X = h => VP.x84(h, x0, x1), y = 150, o = w01, o1 = T.on(1, 0.6);
+    sr += `<g opacity="${F1(o)}"><path d="M${x0} ${y}H${x1}" stroke="${COL.ink}" stroke-width="2.5"/>` + [0, L.end].map(h => `<path d="M${F1(X(h))} ${y - 8}V${y + 8}" stroke="${COL.ink}" stroke-width="2.5"/>`).join('') +
+      text(x0, y + 32, '手術', { size: 15, bold: true, anchor: 'middle' }) + text(F1(X(L.end)), y + 32, `${L.end} 小時`, { size: 15, bold: true, anchor: 'middle' }) +
+      `<rect x="${x0}" y="${y - 54}" width="${F1(X(L.end) - x0)}" height="36" fill="${COL.red}" opacity="0.14"/>` + text(x0 + 8, y - 30, `眼壓升高的 ${VP.CHEN.in24}% 發生在這 ${L.end} 小時內`, { size: 15, bold: true, color: COL.red }) +
+      `<g opacity="${F1(o1)}"><rect x="${F1(X(L.band[0]))}" y="${y}" width="${F1(X(L.band[1]) - X(L.band[0]))}" height="48" fill="${COL.amber}" opacity="0.22"/>` +
+      [L.band[0], L.band[1]].map(h => `<path d="M${F1(X(h))} ${y - 8}V${y + 48}" stroke="${COL.amber}" stroke-width="2"/>` + text(F1(X(h)), y + 68, `${h}`, { size: 15, bold: true, anchor: 'middle', color: COL.amber })).join('') +
+      text(F1((X(L.band[0]) + X(L.band[1])) / 2), y + 96, `RRD 常在 ${L.band[0]} 到 ${L.band[1]} 小時升高`, { size: 15, bold: true, anchor: 'middle', color: COL.amber }) + '</g>' +
+      `<g opacity="${F1(o1)}">` + text(x0, y + 156, '當晚', { size: 17, bold: true, color: COL.accent }) + arrowP([[x0 + 46, y + 150], [x0 + 140, y + 150]], COL.accent, 1, 'arrA', 3) +
+      text(x0 + 150, y + 156, '隔天早上：都量眼壓', { size: 17, bold: true, color: COL.accent }) + '</g></g>' + note('時間軸依比例：橫軸是術後小時', o, PH - 14, PW - 12); }
+  if (w[2] + w[3] > 0) { const o = w[2] + w[3];
+    sr += tile8(14, 20, 2, o) + tile8(312, 20, 3, o, w[3] > 0.5 ? 1 : 0);
+    sr += text(154, 322, '③ 氣體有沒有跑進前房', { size: 18, bold: true, anchor: 'middle', op: o }) + text(452, 322, '④ 視網膜有沒有貼回', { size: 18, bold: true, anchor: 'middle', op: o });
+    PR = PT.l84; }
+  if (w[4] > 0) { const o = w[4], x = 20, J = VP.JACK;
+    sr += `<g opacity="${F1(o)}">` + J.map((r, i) => { const y = 70 + i * 84; return text(x, y - 12, ['一年內', '兩年內'][i], { size: 16, bold: true }) +
+      `<rect x="${x}" y="${y}" width="${F1(bp(100))}" height="30" rx="3" fill="#e1e6ea"/><rect x="${x}" y="${y}" width="${F1(bp(r.p))}" height="30" rx="3" fill="#8a6400"/>` +
+      text(F1(x + bp(r.p) - 10), y + 22, `${r.p}%`, { size: 20, bold: true, color: '#fff', anchor: 'end' }); }).join('') + '</g>';
+    sr += bigCard(14, 250, 578, 140, [['英國資料庫：有晶體的眼做完玻璃體切除', { size: 16, bold: true }], ['（各種原因的 PPV，不只 RRD）', { size: 16, color: COL.sub }], ['→ 做了白內障手術的比例', { size: 16, bold: true, color: '#8a6400' }]], { op: o, lh: 30, y0: 36 });
+    if (o > 0.5) PR = PT.j84; }
+  return { L: { svg: sl, extra: el, P: PL }, R: { svg: sr, extra: er, P: PR } };
+};

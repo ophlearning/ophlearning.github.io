@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–7.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–8.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -42,7 +42,7 @@ const LEDGER = {
            '50': 'Kanclerz 2018b', '10': 'Kanclerz 2018b', '20': 'Kanclerz 2018b', '40': 'Kanclerz 2018b', '1': '結構', '30': '結構' },   // 1: the curve's 「1 倍」; 30: the syringe's scale
   '7-3': { '25': 'Williams 1990', '35': 'Shunmugam 2011', '50': 'Shunmugam 2011', '11.2': 'Woo 2009', '38.5': 'Duval 2014', '4': '示意', '10': '示意', '7': '結構', '12': '結構', '9': '結構' },   // 4, 10: the infusion and vent ports (示意); 7: the section seen from 7:30
   '8-1': { '11': '病例' },
-  '8-2': { '24': 'Casswell 2020', '42': 'Casswell 2020', '56': 'Casswell 2020' },
+  '8-2': { '24': 'Casswell 2020', '42': 'Casswell 2020', '56': 'Casswell 2020', '11': '病例', '12': '結構', '3': '結構', '2': '結構', '1': '結構' },   // 12, 3, 11, 2: chart and section orientation; 1: the 1 mm bar
   '8-3': { '37': 'Lee 2004', '3': 'Silvanus 2008', '109': 'Mills 2001', '15': 'Kontos 2017a', '67.7': 'Kontos 2017a' },
   '8-4': { '43': 'Chen 1997', '25': 'Chen 1997', '88': 'Chen 1997', '24': 'Chen 1997', '8': 'Muether 2011', '12': 'Muether 2011',
            '72.9': 'Lee 2014', '50.2': 'Jackson 2013', '68.7': 'Jackson 2013' },
@@ -613,6 +613,114 @@ function modelChecks(ctx) {
       && before && T3.length === CASE.ports && !bad.length && quad && S.troc_it_off < 0.01 && S.troc_sn_off < 0.01 && Pv.inPlane < 1e-6 && Pv.t.inf && Pv.M.tunnelIn
       && ['檢查每個傷口leak?', '① 每個傷口漏不漏', '② 量眼壓', '③ 一直漏 → 縫一針', '若一直漏：縫一針（示意）suture', '拔的順序：依主刀', '斜的隧道oblique tunnel', '氣體貼住內口，幫傷口封住（示意）gas', '23G 需要縫的比例', '各研究 11.2%（Woo 2009）', '到 38.5%（Duval 2014）'].every(t => onScreen(ctx, '7-3', t)),
       `7-3 every cannula out at once (in for all ${VP.FLUSH_STEPS + 1} flush steps), each an oblique tunnel with the conjunctiva over it and gas past its inner opening; microscope wounds in their trocars' quadrants${bad.length ? '; bad: ' + bad.join('; ') : ''}`); }
+  // chapter 8 (after the operation). Head pictures: the model's head view (VP.head / VP.headZ through P.headPlane, turned so that gravity's part in the plane
+  // points straight down the screen) and its head icon (P.headIcon: the same turn, from the same state); both panels of a frame draw the same state. The
+  // gravity of each head position is written here (SIT_G, SUP_G, FD_G; the head raised: between supine and sitting), never taken from the model.
+  const FD_G = [0, 0, 1], LIT8 = { pros: [42, 56], mills: 109, lee: 37, risk: 3, kontos: 67.7, dpm: 365.25 / 12, chen: [43, 88], muether: [8, 12], hours: 24, lee14: 72.9, jackson: [50.2, 68.7] };
+  // Casswell 2020; Mills 2001; Lee 2004; Silvanus 2008; Kontos 2017a (days per month: 365.25 / 12); Chen 1997; Muether 2011; Lee 2014; Jackson 2013
+  const scr8 = id => ctx.screen[id] || [], allTxt8 = id => { const sg = ctx.segs.find(x => x.id === id) || {}; return [...(sg.lines || []), ...(sg.keys || []).map(k => k[1]), ...scr8(id)]; };
+  // a head picture's physics, measured on the drawn plane and the model's tissue: gravity (written here) has no part across the screen and points down it;
+  // the fluid surface is a horizontal line (the gas boundary at x = −4, 0, 4 mm at one height); gas at the highest point of the cavity and not at the lowest;
+  // the gas surface's height along −g; the tear's lowest point (its U outline on the attached retina) along −g
+  const head8 = (st, g) => memo('h8' + keyOf(st) + g.join(), () => { const pl = P.headPlane(st), f = ctx6(st), V = P.voxels(); let lo = null, hi = null, a = 1e9, b = -1e9;
+    for (let i = 0; i < V.n; i += 3) { const p = [V.xs[3 * i], V.xs[3 * i + 1], V.xs[3 * i + 2]], u = -G.dot(p, g); if (f.cavity(f.at(p)) > -0.3) continue; if (u < a) { a = u; lo = p; } if (u > b) { b = u; hi = p; } }
+    const ys = [-4, 0, 4].map(x => { let last = null; for (let y = -13; y <= 13; y += 0.01) { const p = G.onPlane(pl, x, y), inn = f.gas(f.at(p)) < 0; if (last !== null && inn !== last && f.cavity(f.at(p)) < -0.2) return y; last = inn; } return null; });
+    const gu = G.dot(pl.U, g), gv = G.dot(pl.V, g), Gm = P.geom(st), T = Gm.tear;
+    const tearLow = Math.min(...P.uOutline(T.w, T.L).map(q => -G.dot(P.onRetina(Gm, T.fr0, q[0], q[1], 1, Gm.ret0).p, g)));
+    return { across: Math.abs(gu), down: gv / (Math.hypot(gu, gv) || 1), level: ys.every(v => v !== null && near(v, ys[0], 0.06)), top: f.gas(f.at(hi)) < 0, bottom: !(f.gas(f.at(lo)) < 0),
+      gasH: ys[1] === null ? null : -G.dot(G.onPlane(pl, 0, ys[1]), g), tearLow, rot: pl.rotDeg, model: P.gravity(st) }; });
+  const sameG = (a, b) => a.every((v, i) => near(v, b[i], 1e-9));
+  // M49 every head picture of chapter 8 (8-1 sitting, head raised, supine; 8-2 face-down and sitting; 8-3 supine with the bubble growing and sitting with it
+  // shrinking): the model's gravity is the one written here for that position; gravity straight down the screen; the fluid surface a horizontal line (perpendicular
+  // to gravity); gas at the highest point, not at the lowest; the head icon turned with the picture (sitting 0°, supine −90° face up, face-down +90° face down,
+  // head raised between them)
+  { const r8 = VP.RAISE_DEG, upG = [0, -Math.sin(r8 * D2R_), -Math.cos(r8 * D2R_)], rows = [['8-1 sitting', VP.ST.sit81, SIT_G, 0], ['8-1 head raised', VP.ST.up81, upG, null], ['8-1 supine', VP.ST.sup81, SUP_G, -90],
+      ['8-2 face-down', VP.ST.fd82, FD_G, 90], ['8-2 sitting', VP.ST.stb82, SIT_G, 0], ...range(VP.N2O_STEPS + 1).map(i => [`8-3 N2O step ${i}`, VP.n2oStep(i / VP.N2O_STEPS), SUP_G, -90]),
+      ...VP.GAS83.map(g => [`8-3 shrinking ${g}`, VP.shrink83(g), SIT_G, 0])], bad = [];
+    for (const [name, st, g, rot] of rows) { const h = head8(st, g), rotOk = rot === null ? h.rot < -5 && h.rot > -85 : near(h.rot, rot, 1e-6);
+      if (!sameG(h.model, g) || h.across > 1e-6 || h.down < 0.999 || !h.level || !h.top || !h.bottom || !rotOk) bad.push(`${name}: gravity ${h.model.map(f2)}, across ${f2(h.across)}, level ${h.level}, gas top ${h.top} / not bottom ${h.bottom}, turned ${f2(h.rot)}°`); }
+    ok('M49', line(ctx, '8-1', 0).includes('氣體比水輕得多，會浮到眼內最高的地方') && r8 > 0 && r8 < 90 && !bad.length && onScreen(ctx, '8-1', '重力gravity') && onScreen(ctx, '8-1', '液面：垂直重力level') && onScreen(ctx, '8-1', '氣體：浮到最高處gas')
+      && onScreen(ctx, '8-2', '氣泡量示意　下＝重力'),
+      `chapter 8: ${rows.length} head pictures — gravity as written for each position, straight down the screen, the fluid surface horizontal, gas at the top; the head icon turned with the picture${bad.length ? '; bad: ' + bad.slice(0, 3).join('; ') : ''}`); }
+  // M50 8-1 lines 1–2: sitting is the same state as 7-1's inset (pose, bubble, tear); the whole 11 o'clock tear lies above the drawn gas surface sitting and with
+  // the head raised (示意); the raised angle is not written (no ° or 度 on screen); the narration and the labels say so
+  { const s7 = VP.ST.sit7, s8 = VP.ST.sit81, r8 = VP.RAISE_DEG, a = head8(s8, SIT_G), b = head8(VP.ST.up81, [0, -Math.sin(r8 * D2R_), -Math.cos(r8 * D2R_)]);
+    ok('M50', line(ctx, '8-1', 2).includes('本例的裂孔在 11 點，靠近最上方') && line(ctx, '8-1', 2).includes('坐正或頭抬高，氣泡就蓋得到它') && keyOf(s8) === keyOf(s7) && s8.tear.h === CASE.tear && s8.head.pose === 'sit'
+      && a.gasH !== null && a.tearLow > a.gasH + 0.2 && b.gasH !== null && b.tearLow > b.gasH + 0.2 && !scr8('8-1').some(t => /°|度/.test(t))
+      && ['頭抬高（示意）head up', '11 點裂孔：在氣面以上', '11 點裂孔（紅圈）在氣面以上', '裂孔也在氣面以上', '坐正sitting'].every(t => onScreen(ctx, '8-1', t)),
+      `8-1 sitting = 7-1's inset (gas ${s8.gas}, tear at ${s8.tear.h}): tear ${a.gasH !== null ? f2(a.tearLow - a.gasH) : '?'} mm above the gas surface; head raised (示意, angle not on screen): ${b.gasH !== null ? f2(b.tearLow - b.gasH) : '?'} mm above`); }
+  // M51 8-1 line 1: the gas covers the tear, it does not push the retina back — sitting, the cavity just in front of every point of the tear's edge is gas; the
+  // close-up window holds the tear; the words: 「蓋」 and surface tension on screen, 「推」 only as 「不是…推回去」, and no 「頂」 for the gas (7-1 and chapter 8: narration, keys, screen)
+  { const st = VP.ST.sit81, Gm = P.geom(st), f = ctx6(st), T = Gm.tear; let inGas = true;
+    for (const q of P.uOutline(T.w, T.L)) { const r = P.onRetina(Gm, T.fr, q[0], q[1], 1), p = add(r.p, mul(P.N3(r.h, r.s), -0.3)); if (!(f.gas(f.at(p)) < 0)) inGas = false; }
+    const tm = G.toPlane(P.headPlane(st), P.onRetina(Gm, T.fr, T.L / 2, 0, 0).p), z = VP.WIN.z81T, inZ = tm[0] > z.x + 1 && tm[0] < z.x + z.w - 1 && tm[1] > z.y + 1 && tm[1] < z.y + z.h - 1;
+    const ding = ['7-1', '8-1', '8-2', '8-3', '8-4'].flatMap(allTxt8).filter(t => t.includes('頂')), push = scr8('8-1').filter(t => t.includes('推') && !t.includes('不是'));
+    ok('M51', line(ctx, '8-1', 1).includes('它不是把視網膜推回去') && line(ctx, '8-1', 1).includes('而是用表面張力蓋住裂孔，撐到雷射的疤長牢') && inGas && inZ && !ding.length && !push.length
+      && ['不是把視網膜推回去', '用表面張力蓋住裂孔，撐到雷射的疤長牢', '表面張力：氣體蓋住裂孔（示意）', '雷射的疤（示意）laser scar'].every(t => onScreen(ctx, '8-1', t)),
+      `8-1 line 1: gas in front of every point of the tear sitting; the close-up holds the tear (${tm.map(f2)}); 「頂」 ${ding.length ? 'used: ' + ding[0] : 'not used'}; 「推」 only as 不是…推回去`); }
+  // M52 8-1 line 3: avoid lying supine — supine (gravity toward the posterior pole) the gas goes to the front and lies on the back of the lens (Kanclerz 2018a, the
+  // only consequence drawn), much more than sitting; the labels say so
+  { const share = st => { const f = ctx6(st), L = P.LENS; let n = 0, m = 0; for (let r = 0; r <= 4.2; r += 0.3) for (let t = 0; t < 360; t += 20) { const p = [r * Math.cos(t * D2R_), r * Math.sin(t * D2R_), L.zPost(r) - 0.15]; if (!(f.cavity(f.at(p)) < 0)) continue; n++; if (f.gas(f.at(p)) < 0) m++; } return m / n; };
+    const su = share(VP.ST.sup81), si = share(VP.ST.sit81), sg = ctx.segs.find(x => x.id === '8-1');
+    ok('M52', line(ctx, '8-1', 3).includes('有氣體的眼，要避免平躺') && sameG(P.gravity(VP.ST.sup81), SUP_G) && VP.st81(3) === VP.ST.sup81 && su > 0.9 && si < su - 0.2 && (sg.src || []).some(x => x[0] === 3 && x[1].includes('Kanclerz 2018a'))
+      && ['氣泡貼著水晶體後面lens', '仰躺：氣泡浮到前方gas', '有晶體的眼：減少氣體碰到水晶體', '避免平躺'].every(t => onScreen(ctx, '8-1', t)),
+      `8-1 line 3: gas on the back of the lens supine ${(su * 100).toFixed(0)}%, sitting ${(si * 100).toFixed(0)}% (Kanclerz 2018a)`); }
+  // M53 8-1 line 4, 8-2: no hours or days for the head position on screen (captions and key boxes included) — 8-1 shows no number but the case's 11 and no
+  // number with 小時 / 天 / 週 / 日; in 8-2 the only hours are PostRD's 24 (written with 試驗) and no number of days; 「沒有共識」 and 「依主刀的醫囑」 on screen
+  { const nu = /\d\s*(小時|天|週|日)/, n81 = [...new Set(scr8('8-1').flatMap(numbers))], t81 = scr8('8-1').filter(t => nu.test(t)), h82 = scr8('8-2').filter(t => /\d\s*小時/.test(t)), d82 = scr8('8-2').filter(t => /\d\s*(天|週|日)/.test(t));
+    ok('M53', line(ctx, '8-1', 4).includes('頭位怎麼擺、擺幾天，沒有共識') && line(ctx, '8-1', 4).includes('依主刀的醫囑') && n81.every(n => n === String(CASE.tear)) && !t81.length
+      && h82.length > 0 && h82.every(t => t.includes(String(LIT8.hours)) && t.includes('試驗')) && !d82.length && onScreen(ctx, '8-1', '沒有共識') && onScreen(ctx, '8-1', '→ 依主刀的醫囑'),
+      `8-1 numbers on screen: ${n81.join(', ') || 'none'} (no hours or days); 8-2 hours only as PostRD's ${LIT8.hours} h (${h82.length} text${h82.length > 1 ? 's' : ''}), no days`); }
+  // M54 8-2: face-down — gravity forward (FD_G), the bubble over the posterior pole (the fovea's inner surface in gas) and the fluid in front (behind the lens);
+  // support-the-break for this case is sitting; both pictures the same bubble (示意), large enough that neither draws the 11 o'clock tear uncovered
+  { const fd = VP.ST.fd82, sb = VP.ST.stb82, a = head8(fd, FD_G), b = head8(sb, SIT_G), f = ctx6(fd), fov = P.geom(fd).ret(12, P.S_POLE, 1), pole = f.gas(f.at(add(fov, [0, 0, 0.6]))) < 0;
+    const front = !(f.gas(f.at([0, 0, P.LENS.zp - 0.4])) < 0);
+    ok('M54', line(ctx, '8-2', 1).includes('一個隨機試驗比較術後 24 小時的頭位') && fd.gas === sb.gas && pole && front && a.tearLow > a.gasH + 0.2 && b.tearLow > b.gasH + 0.2 && sb.head.pose === 'sit' && sb.tear.h === CASE.tear
+      && ['臉朝下face-down', '撐住裂孔support-the-break', '本例 11 點：坐正', '氣泡在後極（黃斑上）gas', '氣泡在上方gas'].every(t => onScreen(ctx, '8-2', t)),
+      `8-2 face-down: the fovea under the bubble ${pole}, fluid behind the lens ${front}; both pictures ${fd.gas * 100}% gas (示意); tear above the gas surface face-down ${f2(a.tearLow - a.gasH)} mm, sitting ${f2(b.tearLow - b.gasH)} mm`); }
+  // M55 8-2 lines 2–3: PostRD (Casswell 2020) — displacement 42 % face-down vs 56 % support-the-break, the bars on one scale (px ∝ %); the same vision; the trial took
+  // fovea-off patients, not quite this case
+  { const bp = VP.barPx, lin = [0, 42, 56, 100].every(p => near(bp(p), bp(100) * p / 100, 1e-9)) && near(bp(0), 0, 1e-9) && bp(100) <= W_ - 40;
+    ok('M55', line(ctx, '8-2', 2).includes('face-down 組 42% 有往下滑') && line(ctx, '8-2', 2).includes('撐住裂孔的頭位組是 56%') && line(ctx, '8-2', 3).includes('兩組最後的視力相同') && line(ctx, '8-2', 3).includes('fovea 已經掉的病人')
+      && VP.PROS82.fd === LIT8.pros[0] && VP.PROS82.stb === LIT8.pros[1] && lin && ['42%', '56%', '最後的視力：兩組相同', '試驗收的：fovea 已掉的病人', '本例：fovea 還貼著', '→ 不完全一樣'].every(t => onScreen(ctx, '8-2', t)),
+      `8-2 bars ${VP.PROS82.fd}% and ${VP.PROS82.stb}% (Casswell 2020) at ${f2(bp(VP.PROS82.fd))} and ${f2(bp(VP.PROS82.stb))} px on one scale`); }
+  // M56 8-2 line 1 (示意): the retina sliding down — on the chart (12 up) the fovea's mark moves toward 6 o'clock, by some amount (no number); after the operation
+  // the retina is flat; 示意 and no mm but the scale bar on screen
+  { const D = VP.DISP82, h = clockScr(D.dir), mm = scr8('8-2').filter(t => /mm/.test(t) && t.replace(/\s/g, '') !== '1mm');
+    ok('M56', line(ctx, '8-2', 1).includes('剝離過的視網膜，術後可能往下滑') && near(h, 6, 0.01) && D.px > 0 && VP.ST.sit81.rd.amt === 0 && !mm.length
+      && ['術後可能往下滑（示意）retinal displacement', '滑動的方向與幅度：示意', 'fovea 原本的位置（虛線圈）'].every(t => onScreen(ctx, '8-2', t)),
+      `8-2 displacement (示意) toward ${f2(h)} o'clock on the chart, no amount on screen`); }
+  // M57 8-3 lines 1, 4: the time line to scale — day d at x0 + (x1 − x0) d / end: 37 days (Lee 2004), 3 months (Silvanus 2008, 3 × 365.25 / 12 days) and 67.7 days
+  // (Kontos 2017a) in proportion and in order; the axis reaches past 3 months (the risk period's arrow carries on)
+  { const L = VP.TL83, x0 = 40, x1 = 566, fr = d => (VP.x83(d, x0, x1) - x0) / (x1 - x0), m3 = L.risk * L.dpm, ds = [L.lee, L.gone, m3];
+    ok('M57', line(ctx, '8-3', 1).includes('最晚在術後 37 天還發生過') && line(ctx, '8-3', 1).includes('至少 3 個月都算風險期') && line(ctx, '8-3', 4).includes('15% 的 C3F8，平均 67.7 天才完全消失')
+      && L.lee === LIT8.lee && L.risk === LIT8.risk && L.gone === LIT8.kontos && near(L.dpm, LIT8.dpm, 1e-9) && near(fr(0), 0, 1e-9) && ds.every(d => near(fr(d), d / L.end, 1e-9)) && fr(L.lee) < fr(L.gone) && fr(L.gone) < fr(m3) && L.end > m3 + 10
+      && ['術後 37 天仍發生', 'N2O 的風險期：至少 3 個月', '3 個月', '15% C3F8：平均 67.7 天完全消失', '有晶體：更久', '時間軸依比例：橫軸是術後天數'].every(t => onScreen(ctx, '8-3', t)),
+      `8-3 time line: 37 d at ${f2(fr(L.lee))}, 67.7 d at ${f2(fr(L.gone))}, 3 months at ${f2(fr(m3))} of the axis (${L.end} days)`); }
+  // M58 8-3 lines 0, 2–4: N2O makes the bubble grow (step by step, 示意: no factor and no pressure on screen — research/gas-postop.md 4「不能講的」: no solubility
+  // factor, no 「below X % you may fly」); the warning card; ascent +109 % on average (Mills 2001; the bars in proportion 1 : 2.09); the bubble shrinking afterwards
+  { const g = range(VP.N2O_STEPS + 1).map(i => VP.n2oStep(i / VP.N2O_STEPS).gas), grow = g.every((v, i) => !i || v > g[i - 1]), sh = VP.GAS83.every((v, i) => !i || v < VP.GAS83[i - 1]);
+    const bad = scr8('8-3').filter(t => /倍|mmHg|可以(搭|飛)|以下.*(飛|搭)/.test(t)), ratio = VP.iopPx(1 + VP.MILLS / 100) / VP.iopPx(1);
+    ok('M58', line(ctx, '8-3', 0).includes('N2O 跑進氣泡、讓它迅速變大，眼壓衝高造成 CRAO') && line(ctx, '8-3', 3).includes('模擬上升時眼壓平均升高 109%') && grow && sh && !bad.length && VP.MILLS === LIT8.mills && near(ratio, 1 + LIT8.mills / 100, 1e-9) && near(VP.iopPx(0), 0, 1e-9)
+      && ['氣泡迅速變大（示意）gas', 'N2O 跑進氣泡N2O', '眼壓衝高IOP', 'CRAO：視網膜中央動脈阻塞', '警示卡（示意）', '以後任何手術：先告訴麻醉科', '絕不能用 N2O 麻醉', '平均升高 109%', '就算氣泡只剩一小部分', '氣體完全吸收之前：不搭飛機、不上高山', '氣泡慢慢被吸收（大小示意）'].every(t => onScreen(ctx, '8-3', t)),
+      `8-3 bubble ${g.map(v => (v * 100).toFixed(0)).join(' → ')}% with N2O (示意), shrinking ${VP.GAS83.join(' → ')}; ascent bars 1 : ${f2(ratio)} (Mills 2001 +${LIT8.mills}%)${bad.length ? '; forbidden on screen: ' + bad[0] : ''}`); }
+  // M59 8-4 lines 0–1: IOP > 25 mmHg in 43 %, 88 % of them within 24 h (Chen 1997; bars on one scale); RRD rises at 8–12 h (Muether 2011): the band on a 0–24 h axis
+  // in proportion (h at x0 + (x1 − x0) h / 24); measure that evening to the next morning
+  { const L = VP.TL84, x0 = 40, x1 = 560, fr = h => (VP.x84(h, x0, x1) - x0) / (x1 - x0), bp = VP.barPx;
+    ok('M59', line(ctx, '8-4', 0).includes('43% 超過 25 mmHg，其中 88% 發生在 24 小時內') && line(ctx, '8-4', 1).includes('RRD 術後常在 8 到 12 小時升高') && line(ctx, '8-4', 1).includes('當晚到隔天早上，都要量眼壓')
+      && VP.CHEN.gt25 === LIT8.chen[0] && VP.CHEN.in24 === LIT8.chen[1] && L.band.join() === LIT8.muether.join() && L.end === LIT8.hours && [0, ...L.band, L.end].every(h => near(fr(h), h / LIT8.hours, 1e-9))
+      && near(bp(VP.CHEN.gt25) / bp(100), 0.43, 1e-9) && near(bp(VP.CHEN.in24) / bp(100), 0.88, 1e-9)
+      && ['43%', '88%', 'RRD 常在 8 到 12 小時升高', '24 小時', '眼壓升高的 88% 發生在這 24 小時內', '→ 當晚到隔天早上，都要量眼壓', '時間軸依比例：橫軸是術後小時'].every(t => onScreen(ctx, '8-4', t)),
+      `8-4 bars ${VP.CHEN.gt25}% and ${VP.CHEN.in24}% (Chen 1997); 8–12 h band at ${f2(fr(L.band[0]))}–${f2(fr(L.band[1]))} of the 24 h axis (Muether 2011)`); }
+  // M60 8-4 lines 2–4: the four things to look at (icons 示意); 72.9 % of the failures diagnosed within two months (Lee 2014) — worded as a share of the failures,
+  // never as a redetachment rate; cataract surgery 50.2 % by one year and 68.7 % by two (Jackson 2013: UK database, phakic eyes after vitrectomy for any reason,
+  // not only RRD — research/gas-postop.md 6: no RRD + C3F8 figure); bars on one scale
+  { const bp = VP.barPx, J = VP.JACK, rate = scr8('8-4').filter(t => t.includes('再剝離率') && !t.includes('不是'));
+    ok('M60', line(ctx, '8-4', 2).includes('傷口有沒有漏、氣泡大小') && line(ctx, '8-4', 3).includes('失敗的病例裡，72.9% 在兩個月內被診斷') && line(ctx, '8-4', 4).includes('英國資料一年內 50.2%、兩年內 68.7% 做了白內障手術')
+      && VP.LEE14 === LIT8.lee14 && J.length === 2 && J[0].yr === 1 && J[1].yr === 2 && J[0].p === LIT8.jackson[0] && J[1].p === LIT8.jackson[1] && near(bp(VP.LEE14) / bp(100), 0.729, 1e-9) && !rate.length
+      && ['① 傷口有沒有漏', '② 氣泡大小', '③ 氣體有沒有跑進前房', '④ 視網膜有沒有貼回', '術後第一週要看的四件事（圖示為示意）', '失敗（再剝離）的病例：何時被診斷', '這是「失敗病例裡」的比例', '不是再剝離率', '兩個月內被診斷', '72.9%',
+        '英國資料庫：有晶體的眼做完玻璃體切除', '（各種原因的 PPV，不只 RRD）', '一年內', '兩年內', '50.2%', '68.7%'].every(t => onScreen(ctx, '8-4', t)),
+      `8-4 redetachment: ${VP.LEE14}% of the failures within two months (Lee 2014), not a rate; cataract surgery ${J.map(r => r.p + '% by ' + r.yr + ' y').join(', ')} (Jackson 2013, UK, any indication)${rate.length ? '; rate wording: ' + rate[0] : ''}`); }
   return R;
 }
 const near_h = (a, b, t = 0.1) => a != null && b != null && Math.abs(hdiff(a, b)) <= t;
@@ -729,6 +837,18 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['flush stopped half way (7-3)', c => { c.VP = vpWith({ flushStep: k => VP0.flushStep(k * 0.5) }); }, 'M46'],
       ['computer model flush drawn as 30 mL (7-3)', c => { c.VP = vpWith({ FLUSH_VOL: VP0.FLUSH_VOL.map((x, i) => i === 1 ? Object.assign({}, x, { v: 30 }) : x) }); }, 'M47'],
       ['infusion cannula left in (7-3)', c => { c.VP = stWith('closed', { troc: POSTERIOR.trocarsFor('OS').map(t => t.inf ? t : Object.assign({}, t, { out: 1, cj: -VP0.CJ_PUSH })) }); }, 'M48'],
+      ['face-down picture drawn with supine gravity (8-2)', c => { c.VP = stWith('fd82', { head: { pose: 'facedown', g: [0, 0, -1] } }); }, 'M49'],
+      ['8-1 sitting bubble 3 % (not 7-1\'s inset, the tear uncovered)', c => { c.VP = stWith('sit81', { gas: 0.03 }); }, 'M50'],
+      ['「氣泡頂住裂孔」 on screen (8-1)', c => { c.screen['8-1'] = [...c.screen['8-1'], '氣泡頂住裂孔']; }, 'M51'],
+      ['8-1 「supine」 picture drawn sitting', c => { c.VP = stWith('sup81', { head: { pose: 'sit' } }); }, 'M52'],
+      ['head position days on screen (8-1)', c => { c.screen['8-1'] = [...c.screen['8-1'], '坐正 3 天']; }, 'M53'],
+      ['face-down bubble 50 % (the tear drawn uncovered, 8-2)', c => { c.VP = stWith('fd82', { gas: 0.5 }); }, 'M54'],
+      ['support-the-break bar drawn as 46 % (8-2)', c => { c.VP = vpWith({ PROS82: { fd: 42, stb: 46 } }); }, 'M55'],
+      ['retina drawn sliding up (8-2)', c => { c.VP = vpWith({ DISP82: Object.assign({}, VP0.DISP82, { dir: [0, -1] }) }); }, 'M56'],
+      ['time line not to scale (8-3)', c => { c.VP = vpWith({ x83: (d, x0, x1) => x0 + (x1 - x0) * Math.sqrt(d / VP0.TL83.end) }); }, 'M57'],
+      ['bubble shrinking with N2O (8-3)', c => { c.VP = vpWith({ n2oStep: k => VP0.n2oStep(1 - k) }); }, 'M58'],
+      ['8–12 h band drawn at 4–8 h (8-4)', c => { c.VP = vpWith({ TL84: { band: [4, 8], end: 24 } }); }, 'M59'],
+      ['72.9 % worded as a redetachment rate (8-4)', c => { c.screen['8-4'] = c.screen['8-4'].map(t => t === '不是再剝離率' ? '再剝離率 72.9%' : t); }, 'M60'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

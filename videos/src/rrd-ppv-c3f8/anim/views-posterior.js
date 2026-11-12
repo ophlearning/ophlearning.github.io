@@ -5,6 +5,7 @@
 //   VP.fundus(st, W, H, win, id)            fundus chart, examiner's drawing (12 up; OS 3 o'clock temporal on the right)
 //   VP.sec(st, W, H, win, id, o)            meridional section through clock o.h (default 11: right = 11, left = 5), anterior up
 //   VP.head(st, W, H, win, id)              head-position view: section through the tear with gravity straight down
+//   VP.headZ(st, W, H, win, id, o)          the same plane in any window (a close-up), without the model's gravity arrow
 //   VP.ext(st, W, H, win, id)               microscope view from above with the trocars (surgeon at 12)
 //   VP.port(st, W, H, win, id, portId)      cross-section of a trocar's tunnel (wall left–right, inside down; the tunnel runs to the right)
 //   VP.wide(st, W, H, win, id)              surgeon's wide-angle view, with the cannulas seen from inside (shaft from the pars plana to the tip)
@@ -307,6 +308,45 @@ const VP = (() => {
     for (let i = 0; i <= 24; i++) { const u = i / 24, a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, d = u * u; inn.push([0, 1, 2].map(j => a * it.tip[j] + b * c[j] + d * sn.tip[j])); }   // a smooth curve: infusion tip → past the middle → the 10:30 cannula's tip
     return { inn, out: [sn.tip, sn.base, G.add(sn.hubTop, G.sub(sn.hubTop, sn.base).map(v => v * 1.5))], it, sn }; }
   Object.assign(OR, { w7: OR.w5 });
+  // chapter 8 (after the operation). Head pictures = the model's head view (P.head: the section through the 11 o'clock tear turned so that gravity points
+  // straight down the screen) with its head icon (P.headIcon: the same turn); gravity from the head position (CARD.md「重力」). Both panels of a frame draw
+  // the same state (st81 for 8-1). Every bubble size is 示意. 8-1: sitting = 7-1's inset (ST.sit7: half the cavity gas); the head raised (示意: lying with the
+  // head end raised by RAISE_DEG — no source for the angle, none on screen); supine (the gas goes to the front, onto the back of the lens: Kanclerz 2018a,
+  // the only consequence drawn). 8-2 (PostRD, Casswell 2020: positioning for the first 24 h): face-down and support-the-break (this case: sitting), the bubble
+  // large as after a full gas fill (GAS82, 示意; large enough that the face-down picture does not show the 11 o'clock tear uncovered — no source says either
+  // way). 8-3 (示意): lying supine under general anaesthesia, the bubble growing with N2O in N2O_STEPS steps (no factor and no pressure on screen).
+  const RAISE_DEG = 45, GAS82 = 0.85, N2O_GAS = [0.3, 0.75], N2O_STEPS = 5;
+  const raisedG = d => [0, -Math.sin(d * D2R), -Math.cos(d * D2R)];      // gravity in the eye frame, lying supine with the head end raised by d°
+  Object.assign(ST, {
+    sit81: ST.sit7,                                                        // 8-1 sitting: the same state as 7-1's inset
+    up81: Object.assign({}, P.PRESET.sitGas, { head: { pose: 'raised', g: raisedG(RAISE_DEG) } }),   // 8-1 line 2: head raised (示意)
+    sup81: Object.assign({}, P.PRESET.sitGas, { head: { pose: 'supine' } }),                          // 8-1 line 3: lying supine
+    fd82: Object.assign({}, P.PRESET.sitGas, { gas: GAS82, head: { pose: 'facedown' } }),           // 8-2: face-down
+    stb82: Object.assign({}, P.PRESET.sitGas, { gas: GAS82, head: { pose: 'sit' } }),               // 8-2: support-the-break (11 o'clock tear: sitting)
+  });
+  const st81 = i => i === 3 ? ST.sup81 : ST.sit81;                         // 8-1: the state both panels draw at narration line i (line 2 adds ST.up81 on the left)
+  const n2oStep = k => { const n = Math.round(c01(k) * N2O_STEPS) / N2O_STEPS;   // 8-3 line 0: the bubble k (0 → 1) of the way grown, supine
+    return Object.assign({}, P.PRESET.sitGas, { gas: +(N2O_GAS[0] + (N2O_GAS[1] - N2O_GAS[0]) * n).toFixed(4), head: { pose: 'supine' } }); };
+  const GAS83 = [0.5, 0.22, 0.06], shrink83 = g => Object.assign({}, ST.sit81, { gas: g });   // 8-3 line 4: the bubble getting smaller, sitting (sizes 示意)
+  // drawing constants (numbers from the sources in segments.js; check.js compares them with its own copies). Bars: barPx(%) and iopPx(ratio to baseline), one scale each
+  const PROS82 = { fd: 42, stb: 56 };                                      // PostRD: retinal displacement 42 % face-down vs 56 % support-the-break (Casswell 2020)
+  const DISP82 = { dir: [0, 1], px: 22 };                                  // 8-2: the fovea sliding down on the chart, px (示意: direction as the narration; the amount has no source, none on screen)
+  const MILLS = 109;                                                       // 8-3: IOP up 109 % on average during simulated ascent (Mills 2001)
+  const TL83 = { lee: 37, risk: 3, gone: 67.7, dpm: 365.25 / 12, end: 122 };   // 8-3 time line (days): 37 (Lee 2004); ≥ 3 months (Silvanus 2008); 67.7 (Kontos 2017a)
+  const x83 = (d, x0, x1) => x0 + (x1 - x0) * d / TL83.end;               // px of day d on an axis drawn from x0 (the operation) to x1 (TL83.end days)
+  const CHEN = { gt25: 43, in24: 88 };                                     // 8-4: IOP > 25 mmHg in 43 %, 88 % of them within 24 h (Chen 1997)
+  const TL84 = { band: [8, 12], end: 24 };                                 // 8-4 time line (hours): RRD rises at 8–12 h (Muether 2011), the first 24 h (Chen 1997)
+  const x84 = (h, x0, x1) => x0 + (x1 - x0) * h / TL84.end;
+  const LEE14 = 72.9, JACK = [{ yr: 1, p: 50.2 }, { yr: 2, p: 68.7 }];      // 8-4: failures diagnosed within 2 months (Lee 2014); cataract surgery by 1 and 2 years (Jackson 2013)
+  const BAR = { pct: 3.6, iop: 120 };                                      // px per percentage point (8-2, 8-4); px per 100 % of baseline IOP (8-3)
+  const barPx = p => BAR.pct * p, iopPx = r => BAR.iop * r;
+  Object.assign(WIN, {
+    h81: { x: -24, y: -16.24, w: 48 },                    // 8-1: the whole head view (the eye in the middle, room for labels at both sides)
+    z81: { x: -2.0, y: -13.24, w: 9.6 },                  // 8-1 line 1: the 11 o'clock tear close up in the sitting head view (tear at 2.6, −11.1)
+    z81T: { x: -2.0, y: -13.24, w: 9.6, h: 6.5 },
+    h82: { x: -17.5, y: -13.9, w: 35 },                   // 8-2: one of two head views side by side (a 290 × 228 px box)
+    n83: { x: -15, y: -14.4, w: 48 },                     // 8-3: the supine head view on the left of the panel (room for the arrows and the dial)
+  });
 
   // ---------------------------------------------------------------- views
   function fundus(st, W, H, win, id) { const c = cam(win, W, H), r = P.fundus({ st, id }); return wrap(c, r); }
@@ -336,6 +376,12 @@ const VP = (() => {
     A.flow = flow;   // mm, from the tear down the wall (not mapped: an array of points)
     const bg = `<rect x="0" y="0" width="${W}" height="${H}" fill="${P.C.bg}"/>`;
     return { svg: `${bg}<g transform="${c.tf}">${r.svg}</g>`, A: mapA(A, c.P), M: A, k: c.k, P: c.P, flow: flow.map(c.P), r };
+  }
+  // the head view's plane in any window (8-1 line 1: the tear close up), without the model's gravity arrow; o.tw the computed window, o.step
+  function headZ(st, W, H, win, id, o = {}) {
+    const c = cam(win, W, H), pl = P.headPlane(st), r = P.section({ st, plane: pl, win: o.tw || Object.assign({ h: win.w * H / W }, win), step: o.step || 0.03, id, noTissue: o.noTissue });
+    const bg = `<rect x="0" y="0" width="${W}" height="${H}" fill="${P.C.bg}"/>`;
+    return { svg: `${bg}<g transform="${c.tf}">${r.svg}</g>`, A: mapA(r.A, c.P), M: r.A, k: c.k, P: c.P, r, plane: pl };
   }
   function ext(st, W, H, win, id) { const c = cam(win, W, H), r = P.ext({ st, id }); return wrap(c, r); }
   // cross-section of a trocar's tunnel (plane across the meridian at the port: the wall runs left–right, inside down, the tunnel to the right).
@@ -410,7 +456,8 @@ const VP = (() => {
   }
   // points round the tear on the attached retina, in its tangent frame (u posterior from the hinge, c across, mm) → chart mm
   function tearChart(st, pts) { const Gm = P.geom(st), T = Gm.tear; return pts.map(([u, cc]) => chartXY(P.onRetina(Gm, T.fr0, u, cc, 1, Gm.ret0).p)); }
-  return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST,
+  return { cam, chart, chartXY, tearChart, fundus, sec, head, headZ, ext, port, wide, ST,
+    RAISE_DEG, GAS82, N2O_GAS, N2O_STEPS, raisedG, st81, n2oStep, GAS83, shrink83, PROS82, DISP82, MILLS, TL83, x83, CHEN, TL84, x84, LEE14, JACK, BAR, barPx, iopPx,
     tunnelIn, st7, LASER_STEPS, LASER_E, SPOTS7, PIV7, aimAt, laserStep, CRYO, band360, SYR, syrX, conc, EXPAND, C3F8_MIX, expand, MIX_COL, FLUSH_VOL, volBar, FLUSH_STEPS, mixHex, GAS_SIG, modelSt, recolor, flushStep, flush73, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
     portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT,
     SEC4_H, inPl4, CUT4, CORE_STEPS, PVD_STEPS, coreStep, pvdStep, SUCK_AT, E42, SUCK_STEPS, st42, suckAt, traction, distOf, TR42, PLANE42, instSec,
