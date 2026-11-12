@@ -31,7 +31,7 @@ const VP = (() => {
   const INF_H = 4.5;                  // 2-2: section through the infusion port (OS inferotemporal; Tei 2005; the exact clock hour 示意)
   const TROC_RANGE = [3, 4];          // trocars 3–4 mm from the limbus depending on the lens (EyeWiki 2026a); phakic 4 mm (Duker 2021)
   const ORA_LBL = { 3: '7.6', 9: '7.0' };   // limbus → ora written on screen: temporal 7.6, nasal 7.0 mm (Li 2025: 7.58, 6.96; narration 2-1 line 2)
-  const CJ_PUSH = 2;                  // conjunctiva displaced about 2 mm before the trocar goes in (Warrier 2008); portOut's cj
+  const CJ_PUSH = 2;                  // conjunctiva displaced before the trocar goes in; 示意 (Warrier 2008's about 2 mm is for 25G; not shown as a number); portOut's cj
   // chapter 2 (set-up). The port shown going in (2-1) is the infusion port, the one 2-2 is about; the other two stay in place.
   const PORT = 'it';
   const portSt = (ins, out, cj) => Object.assign({}, P.CASE, { troc: P.trocarsFor('OS').map(t => t.id === PORT ? Object.assign({}, t, { ins, out, cj }) : t) });

@@ -286,11 +286,11 @@ DRAW2['2-1'] = T => {
     const st = kOut > 0 ? VP.portSt(1, 1, -VP.CJ_PUSH * back) : VP.portSt(0, 0, u > 0.4 ? 0 : undefined);   // the opening appears once the blade has passed the conjunctiva
     const V = VP.port(st, PW, PH, VP.WIN.port, 'p21'), a = V.A, opB = zB;
     sl += `<g opacity="${opB}">${V.svg}</g>`;
-    // the conjunctiva pushed about 2 mm toward the tunnel (Warrier 2008): the point of it that the trocar will pierce moves over the entry (示意 marker)
+    // the conjunctiva pushed toward the tunnel (distance 示意: Warrier 2008's 「about 2 mm」 describes 25G, so no number is shown for 23G)
     const opP = T.on(4, 0.4) * opB * (1 - kOut), xm = -VP.CJ_PUSH + VP.CJ_PUSH * kP, m = V.P([xm, -0.12]);
     if (uIn <= 0 || u <= 0.4) { const m0 = V.P([-VP.CJ_PUSH, -0.12]); sl += `<circle cx="${F1(m0[0])}" cy="${F1(m0[1])}" r="6" fill="none" stroke="#b2434d" stroke-width="1.5" stroke-dasharray="3 2" opacity="${opP * kP}"/><circle cx="${F1(m[0])}" cy="${F1(m[1])}" r="6.5" fill="#b2434d" stroke="#fff" stroke-width="1.5" opacity="${opP}"/>`; }
     const ar = [V.P([-VP.CJ_PUSH, -1.05]), V.P([0, -1.05])]; sl += arrowP(ar, COL.amber, opP * (1 - uIn), 'arrM', 4);
-    sl += htext((ar[0][0] + ar[1][0]) / 2, ar[0][1] - 10, '約 2 mm', { size: 14, bold: true, color: COL.amber, anchor: 'middle', op: opP * (1 - uIn) });
+    sl += htext((ar[0][0] + ar[1][0]) / 2, ar[0][1] - 10, '推開（示意）', { size: 14, bold: true, color: COL.amber, anchor: 'middle', op: opP * (1 - uIn) });
     if (uIn > 0 && kOut < 1) sl += trocarRod(V, u, opB * (1 - kOut));
     const opL = opB * (1 - T.on(5, 0.4));   // the layers are named while the trocar goes in
     el += lab('結膜', 'conjunctiva', PW - 12, 40, a.conjL, { side: 'R', op: opL });
