@@ -14,9 +14,11 @@
 //    double-armed suture only with 推測／推論; (g) 圓刀 only in the follow-along list, with 依主治; (h) no number the model derived itself (needle
 //    angle, dock depth, tilt…), and 0.58 / 0.85 (the model's choices within the literature) only beside 示意.
 // 4. The same fixation point / needle in both views (window.SYNC, written by draw.js): every point drawn in the section and on the microscope view
-//    is the same 3D point (< 0.01 mm), at 2 o'clock, at the distance the label gives.
+//    is the same 3D point (< 0.01 mm), at its clock hour, at the distance the label gives (on the outer surface, or in the flap bed); points off the
+//    wall (the dock, the haptic ties outside the eye) are the model's 3D point. Chapters 3–5: the flap's hinge and apex in the bed, the trocars,
+//    the 12 o'clock wound, the needle entries in the beds and the dock, and the haptic ties (each strand on its own side, at the distal third).
 // 5. Spec acceptance: chapters 2 + 5 ≥ 35 % of the video; total 10–12 min (the kit's estimate until there is a timeline.js); placeholder segments
-//    (chapters 3–9 this round) draw only their title and 「畫面製作中」.
+//    (chapters 6–9 this round) draw only their title and 「畫面製作中」; the segments already drawn (title, chapters 1–5) are not placeholders.
 // --selftest breaks each check once on purpose and fails unless every check then reports the error. --list prints the numbers per segment.
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
 const path = require('path');
@@ -42,13 +44,13 @@ const LEDGER = {
   '2-6': { '15': 'Marianelli 2019', '64': 'Alp 2009', '24': 'Alp 2009', '57.69': 'Zhao 2025' },
   '2-7': { '3': 'Groh 2002', '9': 'Groh 2002', '2': 'Kokame 2018', '8': 'Kokame 2018', '180': 'Kokame 2018', '12': '結構', '6': '結構' },
   '2-8': { '1': 'Guedes 2026', '2': '結構', '8': '結構', '0': '結構', '12': '結構', '9': '結構' },
-  '3-1': { '3': 'Guedes 2026', '1': 'Guedes 2026' },
-  '3-2': { '3.5': 'Rajan 2025', '4': 'Rajan 2025', '12': '範本' },
-  '4-1': { '12': '範本' },
-  '5-1': { '10-0': '範本' },
-  '5-2': { '1': 'Guedes 2026' },
-  '5-3': { '12': '範本', '2': '結構', '8': '結構' },
-  '5-4': { '3-1': 'Guedes 2026', '1': 'Guedes 2026' },
+  '3-1': { '3': 'Guedes 2026', '1': 'Guedes 2026', '2': '結構', '8': '結構', '12': '結構', '9': '結構' },
+  '3-2': { '3.5': 'Rajan 2025', '4': 'Rajan 2025', '12': '範本', '1': '結構', '7': '結構', '0': '結構', '2': '結構', '9': '結構' },
+  '4-1': { '12': '範本', '6': '結構', '2': '結構', '9': '結構' },
+  '5-1': { '10-0': '範本', '2': '結構', '8': '結構', '12': '結構', '9': '結構' },
+  '5-2': { '1': 'Guedes 2026', '0': '結構', '2': '結構', '8': '結構', '12': '結構', '9': '結構' },
+  '5-3': { '12': '範本', '2': '結構', '8': '結構', '9': '結構' },
+  '5-4': { '3-1': 'Guedes 2026', '1': 'Guedes 2026', '2': '結構', '8': '結構', '12': '結構', '9': '結構' },
   '6-1': { '12': '範本', '3.13': 'Zhao 2025', '5': 'Zhao 2025' },
   '7-1': { '8-0': 'Guedes 2026' },
   '8-1': { '8.9': 'Kanclerz 2025', '8.5': 'Kanclerz 2025' },
@@ -173,15 +175,44 @@ function wordingChecks(ctx) {
 }
 
 // ---------------------------------------------------------------- 4. the same point in both views; 5. timing and placeholders
-const EXPECT = { '2-3': { '0.58': ['psl', X.SUL - SN.psl], '1': ['psl', 1], '2': ['psl', 2] }, '2-4': { psl1: ['psl', 1], vis1: ['vis', 1] }, '2-5': { mm1: ['psl', 1], mm2: ['psl', 2] }, '2-8': { zero: ['psl', 0], dot: ['psl', 1] } };
+// expected points: [from, mm, opt] on the wall (opt.h clock hour, default 2; opt.depth 'bed' = the flap bed, 1/3 of the scleral thickness deep,
+// else on the outer surface), or ['p3', point, opt] for the model's 3D point itself (opt.h / opt.depth checked when given)
+const FR = SN.flap.frac, PSE = X.passes(X.norm({ sfix: { ndl: { s2: SN.guedes, s8: SN.guedes } } })), INC = X.incOf();
+// the lens outside the eye in 5-4 (draw.js: 9 mm below the 12 o'clock wound, turned 180° in its plane so that each strand reaches the haptic on its
+// own side); the tie is the model's (X.HAP, SN.iol.tieT)
+const TIE_I = X.HAP.pts.findIndex(p => Math.abs(p[3] - SN.iol.tieT) < 0.013), O_OUT = G.add(INC.outer, [0, 9.0, 1.0]);
+const HAP_OUT = [0, 1].map(j => { const ex = j === 0 ? [1, 0, 0] : [-1, 0, 0], ey = j === 0 ? [0, 1, 0] : [0, -1, 0]; return X.HAP.pts.map(p => G.add(G.add(G.add(O_OUT, ex, p[0]), ey, p[1]), [0, 0, 1], p[2])); });
+const EXPECT = { '2-3': { '0.58': ['psl', X.SUL - SN.psl], '1': ['psl', 1], '2': ['psl', 2] }, '2-4': { psl1: ['psl', 1], vis1: ['vis', 1] }, '2-5': { mm1: ['psl', 1], mm2: ['psl', 2] }, '2-8': { zero: ['psl', 0], dot: ['psl', 1] },
+  '3-1': { hinge: ['psl', 0, { depth: 'bed' }], apex: ['psl', X.H_TRI, { depth: 'bed' }] },
+  '3-2': { trocar1: ['psl', SN.trocar.s, { h: 1 }], trocar7: ['psl', SN.trocar.s, { h: 7 }] },
+  '4-1': { wound: ['vis', SN.inc.s, { h: 12 }] },
+  '5-2': { E2: ['p3', PSE.E2, { h: 2, depth: 'bed' }], E8: ['p3', PSE.E8, { h: 8, depth: 'bed' }], D: ['p3', PSE.D] },
+  '5-3': { E2: ['p3', PSE.E2, { h: 2, depth: 'bed' }], E8: ['p3', PSE.E8, { h: 8, depth: 'bed' }] },
+  '5-4': { tie2: ['p3', HAP_OUT[0][TIE_I]], tie8: ['p3', HAP_OUT[1][TIE_I]] } };
 function syncChecks(ctx) {
   const R = [], ok = (c, m) => R.push([!!c, m]), bad = [], seen = [];
   for (const [id, pts] of Object.entries(EXPECT)) { const S = ctx.sync[id] || { sec: {}, scope: {} };
-    for (const [nm, [from, mm]] of Object.entries(pts)) { const a = S.sec[nm], b = S.scope[nm];
+    for (const [nm, [from, mm, o = {}]] of Object.entries(pts)) { const a = S.sec[nm], b = S.scope[nm];
       if (!a || !b) { bad.push(`${id} ${nm} missing`); continue; }
-      const d = Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]), m = G.mer(a), W = G.wallOf(m.z, m.rho), mmGot = W.s - (from === 'vis' ? 0 : SN.psl);
-      if (d > 0.01 || Math.abs(X.dH(m.h, 2)) > 0.01 || Math.abs(mmGot - mm) > 0.01 || W.d > 0.02) bad.push(`${id} ${nm}: ${d.toFixed(3)} mm apart, at ${f2(m.h)} o'clock, ${f2(mmGot)} mm from the ${from}`); else seen.push(`${id} ${nm}`); } }
-  ok(!bad.length, `the same entry point in the section and on the microscope view (${seen.length}: < 0.01 mm, 2 o'clock, the labelled distance)${bad.length ? '; ' + bad.join(' | ') : ''}`);
+      const d = Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]), m = G.mer(a), W = G.wallOf(m.z, m.rho), h = o.h ?? 2, msg = [];
+      if (d > 0.01) msg.push(`${d.toFixed(3)} mm apart`);
+      if (from === 'p3') { const e = Math.hypot(a[0] - mm[0], a[1] - mm[1], a[2] - mm[2]); if (e > 0.01) msg.push(`${e.toFixed(3)} mm from the model's point`); }
+      else { const mmGot = W.s - (from === 'vis' ? 0 : SN.psl); if (Math.abs(mmGot - mm) > 0.01) msg.push(`${f2(mmGot)} mm from the ${from} (expected ${f2(mm)})`); }
+      if ((from !== 'p3' || o.h) && Math.abs(X.dH(m.h, h)) > 0.01) msg.push(`at ${f2(m.h)} o'clock (expected ${h})`);
+      if (from !== 'p3' || o.depth) { const want = o.depth === 'bed' ? G.T(W.s) * FR : 0; if (Math.abs(W.d - want) > 0.02) msg.push(`${f2(W.d)} mm deep (expected ${o.depth === 'bed' ? 'the flap bed ' : 'the surface '}${f2(want)})`); }
+      if (msg.length) bad.push(`${id} ${nm}: ${msg.join(', ')}`); else seen.push(`${id} ${nm}`); } }
+  ok(!bad.length, `the same point in the section and on the microscope view (${seen.length}: < 0.01 mm, its clock hour, the labelled distance and depth)${bad.length ? '; ' + bad.join(' | ') : ''}`);
+  // 5-2: the needle entering the 2 o'clock bed and the insulin needle entering the 8 o'clock bed lie on lines through the outer surface 1 mm behind the PSL
+  { const sAt = p => { const m = G.mer(p); return { W: G.wallOf(m.z, m.rho), h: m.h }; }, q2 = sAt(PSE.S2), q8 = sAt(PSE.S8);
+    ok(Math.abs(q2.W.s - SN.psl - SN.guedes) < 0.01 && Math.abs(q8.W.s - SN.psl - SN.guedes) < 0.01 && Math.abs(X.dH(q2.h, 2)) < 0.01 && Math.abs(X.dH(q8.h, 8)) < 0.01 && line(ctx, '5-2', 0).includes('角膜緣後約 1 mm'),
+      `5-2 the needle tracks cross the outer surface ${f2(q2.W.s - SN.psl)} / ${f2(q8.W.s - SN.psl)} mm behind the PSL at 2 / 8 o'clock (narration 約 1 mm)`); }
+  // 5-4: each strand tied to the haptic on its own side (the strands do not cross outside the wound), at the distal third
+  { const S = ctx.sync['5-4'] || { sec: {}, scope: {} }, M = G.enfaceMap(12), wq = M(INC.outer), e2 = M(PSE.E2), t2 = S.scope.tie2 && M(S.scope.tie2), t8 = S.scope.tie8 && M(S.scope.tie8);
+    const tOf = p => { let best = 1e9, t = null; HAP_OUT.forEach(H => H.forEach((q, i) => { const d = Math.hypot(q[0] - p[0], q[1] - p[1], q[2] - p[2]); if (d < best) { best = d; t = X.HAP.pts[i][3]; } })); return best < 0.02 ? t : null; };
+    const ts = [S.scope.tie2, S.scope.tie8].map(p => p ? tOf(p) : null);
+    ok(t2 && t8 && Math.sign(t2[0] - wq[0]) === Math.sign(e2[0] - wq[0]) && Math.sign(t8[0] - wq[0]) === -Math.sign(e2[0] - wq[0]),
+      `5-4 the 2 o'clock strand is tied to the haptic on the 2 o'clock side of the wound, the 8 o'clock strand on the other (the strands do not cross)`);
+    ok(ts.every(t => t !== null && t > 2 / 3 && t < 1) && line(ctx, '5-4', 0).includes('遠端三分之一'), `5-4 both ties on a haptic, at ${ts.map(t => t === null ? '—' : f2(t)).join(' / ')} of its length (distal third)`); }
   return R;
 }
 function timingChecks(ctx) {
@@ -190,6 +221,8 @@ function timingChecks(ctx) {
   ok(total >= 600 && total <= 720, `length ${(total / 60).toFixed(2)} min (target 10–12; ${ctx.source})`);
   const bad = (ctx.place || []).filter(id => !(ctx.placed[id] || []).length || (ctx.placed[id] || []).some(t => t !== '畫面製作中'));
   ok((ctx.place || []).length >= 1 && !bad.length, `placeholder segments draw only 「畫面製作中」 in their panels (${(ctx.place || []).join(', ')})${bad.length ? '; more: ' + bad.join(', ') : ''}`);
+  { const done = SEGS.filter(x => !x.chapterCard && x.layout !== 'refs' && x.ch >= 0 && x.ch <= 5).map(x => x.id), stub = done.filter(id => (ctx.place || []).includes(id) || (ctx.screen[id] || []).some(t => t === '畫面製作中') || (ctx.screen[id] || []).length < 4);
+    ok(!stub.length, `the drawn segments (title, chapters 1–5: ${done.length}) are not placeholders${stub.length ? '; placeholder: ' + stub.join(', ') : ''}`); }
   return R;
 }
 
@@ -264,7 +297,20 @@ if (require.main === module) (async () => {
       ['a scope dot 0.1 mm off the section pin', c => { const p = c.sync['2-3'].scope['1']; c.sync['2-3'].scope['1'] = [p[0] + 0.1, p[1], p[2]]; }],
       ['a scope dot measured from the wrong line', c => { c.sync['2-4'].scope.psl1 = c.sync['2-4'].scope.vis1; }],
       ['chapters 2 + 5 too short', c => { let k = 0; c.tl = c.tl.map(x => { const d = (x.t1 - x.t0) * ((x.ch === 2 || x.ch === 5) ? 0.3 : 1), y = { ...x, t0: k, t1: k + d }; k += d; return y; }); }],
-      ['a placeholder drawing a number', c => { c.placed['3-2'].push('3.5 mm'); }],
+      ['a placeholder drawing a number', c => { c.placed['6-1'].push('3.13°'); }],
+      ['a chapter 3–5 segment left as a placeholder', c => { c.place.push('4-1'); c.placed['4-1'] = ['畫面製作中']; }],
+      ['a new on-screen number without a source (5-2)', c => { c.screen['5-2'].push('2.5 mm'); }],
+      ['3-1 the flap apex 0.1 mm off on the microscope view', c => { const p = c.sync['3-1'].scope.apex; c.sync['3-1'].scope.apex = [p[0] + 0.1, p[1], p[2]]; }],
+      ['3-1 the hinge drawn on the surface, not in the bed', c => { c.sync['3-1'].sec.hinge = c.sync['3-1'].scope.hinge = G.P3(2, SN.psl, 0); }],
+      ['3-2 the trocar at 3.0 mm', c => { c.sync['3-2'].sec.trocar1 = c.sync['3-2'].scope.trocar1 = G.P3(1, SN.psl + 3.0, 0); }],
+      ['4-1 the wound at 11 o\'clock', c => { c.sync['4-1'].sec.wound = c.sync['4-1'].scope.wound = G.P3(11, SN.inc.s, 0); }],
+      ['5-2 the 8 o\'clock entry drawn at 2 o\'clock on the microscope view', c => { c.sync['5-2'].scope.E8 = c.sync['5-2'].scope.E2; }],
+      ['5-2 the needle entering the surface instead of the bed', c => { c.sync['5-2'].sec.E2 = c.sync['5-2'].scope.E2 = PSE.S2; }],
+      ['5-2 the dock 0.5 mm off in the section', c => { const p = c.sync['5-2'].sec.D; c.sync['5-2'].sec.D = [p[0], p[1], p[2] + 0.5]; }],
+      ['5-3 the 2 o\'clock entry at 2 mm', c => { c.sync['5-3'].sec.E2 = c.sync['5-3'].scope.E2 = X.passes(X.norm({ sfix: { ndl: { s2: 2, s8: 1 } } })).E2; }],
+      ['5-4 the strands crossing (2 o\'clock strand on the 8 o\'clock side haptic)', c => { const S = c.sync['5-4']; [S.sec.tie2, S.sec.tie8] = [S.sec.tie8, S.sec.tie2]; [S.scope.tie2, S.scope.tie8] = [S.scope.tie8, S.scope.tie2]; }],
+      ['5-4 tied in the middle third', c => { const S = c.sync['5-4'], i = X.HAP.pts.findIndex(p => Math.abs(p[3] - 0.5) < 0.013); S.sec.tie2 = S.scope.tie2 = HAP_OUT[0][i]; S.sec.tie8 = S.scope.tie8 = HAP_OUT[1][i]; }],
+      ['5-2 the narration entry distance changed', c => setLine(c, '5-2', 0, l => l.replace('約 1 mm', '約 2 mm'))],
     ];
     let bad = 0;
     for (const [name, mut] of MUT) { const c = baseCtx(page, M); mut(c); const n = runAll(c).filter(r => !r[0]).length; console.log(`${n ? 'PASS' : 'FAIL'} selftest: breaking 「${name}」 → ${n} check(s) fail`); if (!n) bad++; }
