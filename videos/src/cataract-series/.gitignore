@@ -1,0 +1,2 @@
+# 列印單的輸出（PDF、PNG）不進 git；手術錄影另由根目錄 .gitignore 的 videos/src/*/footage/ 擋
+out/

@@ -81,6 +81,20 @@ PRINT.sheet({ type: 'anatomy', title: '關鍵解剖與數字速查', sub: '…',
 ```
 表格每一列的第三欄是**帳本的鍵**：`check.js` 的 `LEDGER` 段落編號（兩段用「；」隔開）。這一列的每個數字都必須在那一段登記，否則整張停下來報錯；「出處」欄由帳本自動填（涵蓋所有數字的最少文獻）。
 
+## 系列的單子：跨好幾支影片（2026-11-12 為白內障系列加）
+一個手術系列拆成好幾支影片時（例：白內障 ①–④），貼牆可以另做一張「全流程」，放在系列資料夾的 `print/`（例：`videos/src/cataract-series/print/`）。範例就是那個資料夾。
+- `sources.json`：`{ "videos": ["cataract-1-wound-ccc", …], "refs": [] }`。系列資料夾沒有自己的 `check.js`，數字檢查改讀這幾支影片的帳本（段落寫成「<影片> <段落>」）與 `REFS`；`refs` 放只有系列單子用到的文獻全文（格式同 `REFS`）。
+- `video.js`：`id` 是網站的系列網址（白內障用 `cataract`，`videos/#cataract` 會開 ①）；`models: []`、`scripts: []`。
+- `flow.js`（版面 `type: 'flow'`）：每個階段一欄、步驟號碼 1…n 連續、不放勾選框（貼牆不勾）；下方一條粗框「出事時第一步」，三個一列、照發生順序。
+  ```js
+  PRINT.sheet({ type: 'flow', title: '白內障全流程', sub: '…', note: '依四支教學影片的跟刀單整理；…',   // note 取代頁尾的「示意圖，非手術錄影；…」（沒有圖的單子用）
+    sources: ['Ernest 1995', …], ledger: { '1': '結構', … },
+    phases: [{ sec: '① 切口與 CCC', w: 1, items: ['<b>Side port</b>：…', …] }, …],          // w：欄寬比例（步驟少或短的階段給小一點）
+    alarm: { head: '出事時第一步', items: [{ name: 'Run-out', see: '撕囊前緣往周邊跑', act: '<b>停、補 OVD</b>，…' }, …] } });
+  ```
+- **內容**：只從各支影片的跟刀清單濃縮，不加新的醫學內容；影片標「示意」「常用做法」「依院內常規」的照標。字太多時先把句子縮成重點（細節在各支影片的單子），不要讓字縮到下限 14 pt。
+- 不想被拆成兩行的詞組包 `<span class="nw">…</span>`（或 `<b class="nw">`）；`act` 裡的粗體本來就不拆。
+
 ## 設計規則
 - **紙與邊界**：橫式，預設 LSs 270 × 210 mm，四邊 10 mm；白底，文字後面不放灰底，不放半透明或動畫中途的東西。
 - **兩個孔**：LSs 紙上緣有兩個預打的孔（ISO 838：相距 80 mm、置中、離上緣 12 mm、直徑 6 mm），孔的周圍 1.5 mm 內不放東西（`print.js` 會檢查）。
@@ -108,7 +122,7 @@ PRINT.sheet({ type: 'anatomy', title: '關鍵解剖與數字速查', sub: '…',
 
 ## 檔案
 - `print.js`：輸出與檢查；`numcheck.js`：數字檢查；`sheet.html`：所有單子共用的頁面（`?video=…&sheet=…`，依 `video.js` 載入模型與資料檔）。
-- `layout.js`：三種單子的版面（`PRINT.video`、`PRINT.sheet`、帳本鍵）；`print-kit.js`：畫圖的基本工具（`view` 兩層畫法、疊圖、圈號、標籤排版、圖例、頁框與頁尾）；`print.css`：頁面與黑白樣式。
+- `layout.js`：三種單子與系列全流程（`flow`）的版面（`PRINT.video`、`PRINT.sheet`、帳本鍵）；`print-kit.js`：畫圖的基本工具（`view` 兩層畫法、疊圖、圈號、標籤排版、圖例、頁框與頁尾）；`print.css`：頁面與黑白樣式。
 
 ## 已知限制
 - 模型的紅色同時代表切口與切開，CSS 只能整張圖選一種；同一張圖兩種都有時用 `red: 'none'`，再用 `overlays` 依意義畫（範例的第 2、3 步）。

@@ -39,6 +39,20 @@ svg text { font-family: 'Noto Sans TC', sans-serif; }
 .ck-note::before { content: '注意 '; font-weight: 700; }
 .ck-tag { font-size: 14pt; font-weight: 400; }
 
+/* whole-surgery flow (layout 'flow', a series sheet): one column of numbered steps per phase, no check boxes; under them a black-framed
+   band of first actions. Step numbers are pills so two digits fit. */
+.fl { display: flex; flex-direction: column; gap: 4.6mm; height: 100%; }
+.fl-cols { display: grid; column-gap: 6mm; flex: 1; min-height: 0; }
+.fl-col { display: flex; flex-direction: column; gap: 1.6mm; min-height: 0; overflow: hidden; }
+.fl-item { display: grid; grid-template-columns: 8.8mm 1fr; column-gap: 1.6mm; align-items: start; font-size: 16pt; line-height: 1.22; }
+.fl-item .ck-no { width: 8.8mm; border-radius: 3.6mm; letter-spacing: -0.04em; }
+.fl-alarm { flex: none; position: relative; border: 0.9mm solid #000; padding: 3.4mm 2.2mm 1.6mm; }
+.fl-alarm-hd { position: absolute; left: 3mm; top: 0; transform: translateY(-58%); background: #fff; padding: 0 1.8mm; font-size: 16pt; font-weight: 700; line-height: 1.1; }   /* heading on the frame line */
+.fl-alarm-grid { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 4mm; row-gap: 1.8mm; }
+.fl-al { font-size: 14.5pt; line-height: 1.2; }
+.fl-al b { white-space: nowrap; }                                   /* an action stays on one line */
+.nw { white-space: nowrap; }                                        /* data files: a phrase that must not break (<span class="nw">…</span>) */
+
 /* step grid and figures */
 .grid { display: grid; height: 100%; gap: 2.4mm; }
 .cell { border: 0.3mm solid #000; box-sizing: border-box; padding: 1.2mm 1.4mm 0.8mm; display: flex; flex-direction: column; overflow: hidden; }

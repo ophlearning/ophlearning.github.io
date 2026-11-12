@@ -38,12 +38,12 @@ async function measure(page) {
       let pt;
       if (svgText) { const fs = parseFloat(svgText.getAttribute('font-size')), m = svgText.getScreenCTM(); pt = fs * m.a * 0.75; }
       else pt = parseFloat(getComputedStyle(el).fontSize) * 0.75;
-      const cls = el.closest('.footer') ? 'footer' : el.closest('.hd-title') ? 'title' : el.closest('.ck-item') ? 'item' : 'other';
+      const cls = el.closest('.footer') ? 'footer' : el.closest('.hd-title') ? 'title' : el.closest('.ck-item, .fl-item, .fl-al') ? 'item' : 'other';
       const range = document.createRange(); range.selectNodeContents(n); const rs = [...range.getClientRects()];
       for (const r of rs) if (r.width > 0) out.boxes.push({ ...mm(r), t: t.slice(0, 30) });
       out.sizes.push({ t: t.slice(0, 30), pt: +pt.toFixed(2), cls }); }
     for (const el of document.querySelectorAll('svg.fig, .ck-box, .ck-no, .cell, .legend svg')) out.boxes.push({ ...mm(el.getBoundingClientRect()), t: el.className.baseVal ?? el.className });
-    for (const el of document.querySelectorAll('.body, .cell, .ck-col, .footer, .hd-left, .hd-right'))
+    for (const el of document.querySelectorAll('.body, .cell, .ck-col, .fl-col, .footer, .hd-left, .hd-right'))
       if (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1) out.overflow.push(`${el.className} ${el.scrollWidth}×${el.scrollHeight} > ${el.clientWidth}×${el.clientHeight}`);
     document.querySelectorAll('svg.fig').forEach((svg, i) => { const fr = svg.getBoundingClientRect();
       for (const g of svg.querySelectorAll('g.lbl text')) { const r = g.getBoundingClientRect();
