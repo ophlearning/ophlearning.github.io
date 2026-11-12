@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–6.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–7.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -37,10 +37,10 @@ const LEDGER = {
   '5-2': { '1.9': 'Neffendorf 2017', '5.8': 'Neffendorf 2017', '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構' },
   '6-1': { '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '10': '示意', '1': '示意' },   // 10, 1: the needle's 10:30 port, the light pipe's 1:30 port (trocar clock hours 依主刀決定)
   '6-2': { '4.5': 'Figueroa 2013', '10.3': 'Garg 2012', '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '4': '示意', '1': '結構' },   // 4: the 4:30 infusion (示意); 1: the 1 mm scale bar
-  '7-1': { '360': 'Wang 2020' },
+  '7-1': { '360': 'Wang 2020', '11': '病例', '2': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '10': '示意' },   // 10: the laser probe's 10:30 port (trocar clock hours 依主刀決定)
   '7-2': { '4': 'Vaziri 2016', '3': 'Vaziri 2016', '14': 'Vaziri 2016', '12': 'Brosh 2014', '16': 'Foulsham 2021',
-           '50': 'Kanclerz 2018b', '10': 'Kanclerz 2018b', '20': 'Kanclerz 2018b', '40': 'Kanclerz 2018b' },
-  '7-3': { '25': 'Williams 1990', '35': 'Shunmugam 2011', '50': 'Shunmugam 2011', '11.2': 'Woo 2009', '38.5': 'Duval 2014' },
+           '50': 'Kanclerz 2018b', '10': 'Kanclerz 2018b', '20': 'Kanclerz 2018b', '40': 'Kanclerz 2018b', '1': '結構', '30': '結構' },   // 1: the curve's 「1 倍」; 30: the syringe's scale
+  '7-3': { '25': 'Williams 1990', '35': 'Shunmugam 2011', '50': 'Shunmugam 2011', '11.2': 'Woo 2009', '38.5': 'Duval 2014', '4': '示意', '10': '示意', '7': '結構', '12': '結構', '9': '結構' },   // 4, 10: the infusion and vent ports (示意); 7: the section seen from 7:30
   '8-1': { '11': '病例' },
   '8-2': { '24': 'Casswell 2020', '42': 'Casswell 2020', '56': 'Casswell 2020' },
   '8-3': { '37': 'Lee 2004', '3': 'Silvanus 2008', '109': 'Mills 2001', '15': 'Kontos 2017a', '67.7': 'Kontos 2017a' },
@@ -486,6 +486,133 @@ function modelChecks(ctx) {
     const M = VP.wide(VP.w6(VP.ST.pre61), W_, H_, VP.WIN.wide3, 'm38').M, ht = M.tear && clockSurg([M.tear[0] - M.pole[0], M.tear[1] - M.pole[1]]);
     ok('M38', VP.SEC_H === CASE.tear && !bad.length && n > 30 && M.tear && Math.hypot(...M.tear) < M.R && near_h(ht, CASE.tear, 0.15) && onScreen(ctx, '6-1', '光導管light pipe（1 點半）') && onScreen(ctx, '6-1', 'PFCL 注射針（示意）needle（10 點半）'),
       `ch. 6: ${n} instruments in ${states.length} drawn states through their trocars (needle superonasal, light pipe superotemporal), in the cavity, ≥ ${f2(lensMin)} mm from the lens; the wide view draws the same states; the tear at ${ht && f2(ht)} o'clock inside its field${bad.length ? '; bad: ' + [...new Set(bad)].slice(0, 3).join('; ') : ''}`); }
+  // chapter 7. States from VP (laserStep, ST.las1 / sit7 / cryo7, flushStep, ST.closed; VP.on11 for the wide view), the same functions draw.js calls for
+  // both panels of a frame. The patient lies supine during the operation (SUP_G); sitting upright after it (SIT_G); both written here.
+  const LIT7 = { e: 2.0, expand: 4, peakDays: [3, 4], mix: 14, mixRange: [12, 16], syr: 50, sf6: [[10, 20], [20, 40]], flush: [25, 35], tunnel: LIT2.tunnel };   // Vaziri 2016; Brosh 2014; Foulsham 2021; Kanclerz 2018b; Williams 1990; Shunmugam 2011; Teixeira 2009
+  const strip7 = o => { const r = Object.assign({}, o); delete r.surgeon; delete r.inverter; delete r.look; return keyOf(r); };
+  const tearFrame = st => P.geom(st).tear.fr0;   // the tear's tangent frame on the attached retina (hinge Q, eu posterior, ec across)
+  // M39 7-1 line 0: the laser spots only on attached retina, round the 11 o'clock tear and not in it. Measured on the drawn 3D spots of every step: retina height 0
+  // there, outside the U by ≥ 0.3 mm and within 1.5 mm of it, with spots in front of the hinge, behind the apex and on both sides; their centre at 11 o'clock.
+  // Both panels draw the same state (the wide view only adds the seat, the inverter and the turn toward 11); the 11–5 section shows spots in front of the hinge
+  // and behind the apex in its plane; in the wide view the spots lie all round the tear (no gap of 90° seen from it)
+  { const n = VP.LASER_STEPS, bad = []; let tot = 0, cnt = [0, 0, 0, 0], hx = 0, hy = 0, gapMax = 0;
+    const fr = tearFrame(VP.ST.las1), T = P.geom(VP.ST.las1).tear;
+    for (let i = 0; i <= n; i++) { const st = VP.laserStep(i / n), Gm = P.geom(st), sp = P.laserSpots(Gm), W = VP.on11(st);
+      if (strip7(W) !== strip7(st) || W.inverter !== true || W.surgeon !== 12 || !W.look || W.look.h !== CASE.tear) bad.push('wide state differs');
+      for (const q of sp) { const d = sub(q.p, fr.Q), u = G.dot(d, fr.eu), c = G.dot(d, fr.ec), sd = P.sdU(u, c, T.w, T.L);
+        if (Gm.H(q.s, q.h) !== 0) bad.push(`spot on detached retina (${f2(Gm.H(q.s, q.h))} mm)`); if (!(sd >= 0.3 && sd <= 1.5)) bad.push(`spot ${f2(sd)} mm from the tear's edge`);
+        if (i === n) { tot++; if (u < 0) cnt[0]++; if (u > T.L) cnt[1]++; if (c > T.w / 2) cnt[2]++; if (c < -T.w / 2) cnt[3]++; hx += q.p[0]; hy += q.p[1]; } } }
+    const pl = G.planes.meridian(VP.SEC_H), nr = G.unit(G.cross(pl.U, pl.V)), inPl = P.laserSpots(P.geom(VP.ST.las1)).filter(q => Math.abs(G.dot(sub(q.p, pl.O), nr)) < 0.25).map(q => G.dot(sub(q.p, fr.Q), fr.eu));
+    const Wv = VP.wide(VP.on11(VP.ST.las1), W_, H_, VP.WIN.wide3, 'm39'), m = Wv.r.map, tc = m.proj(P.onRetina(P.geom(VP.ST.las1), fr, T.L / 2, 0, 1, P.geom(VP.ST.las1).ret0).p);
+    const ang = P.laserSpots(P.geom(VP.ST.las1)).map(q => { const v = m.proj(q.p); return Math.atan2(v[1] - tc[1], v[0] - tc[0]) / D2R_; }).sort((a, b) => a - b);
+    ang.forEach((a, i) => { gapMax = Math.max(gapMax, i ? a - ang[i - 1] : a + 360 - ang[ang.length - 1]); });
+    const hc = G.clockOf(hx, hy);
+    ok('M39', line(ctx, '7-1', 0).includes('視網膜貼平之後，用 endolaser 圍著裂孔打') && !bad.length && tot > 20 && cnt.every(v => v > 0) && near_h(hc, CASE.tear, 0.3)
+      && inPl.some(u => u < 0) && inPl.some(u => u > T.L) && gapMax < 90 && onScreen(ctx, '7-1', '雷射點：圍著裂孔打laser') && onScreen(ctx, '7-1', '雷射的排數、間距沒有術中出處（示意）'),
+      `7-1 laser: ${tot} spots on attached retina, 0.3–1.5 mm outside the tear (in front ${cnt[0]}, behind ${cnt[1]}, sides ${cnt[2]} / ${cnt[3]}), centred at ${f2(hc)} o'clock; section shows spots in front of and behind it; wide view: largest gap round the tear ${f2(gapMax)}°${bad.length ? '; bad: ' + [...new Set(bad)].slice(0, 3).join('; ') : ''}`); }
+  // M40 7-1 line 0: the endolaser probe goes in only through a trocar (the superonasal 10:30 port, not the infusion), its shaft through the port's pivot, from the
+  // cannula to the tip in the cavity (not the lens, iris or retina), ≥ 0.5 mm from the phakic lens; its tip out of the cannula (≥ 0.45 mm) and 0.8–2 mm (示意) in
+  // front of the spot just laid, on the line from the pivot through that spot (the aiming beam runs along the shaft)
+  { const n = VP.LASER_STEPS, bad = []; let lensMin = 9;
+    for (let i = 0; i <= n; i++) { const st = VP.laserStep(i / n), Gm = P.geom(st), f = P.makeCtx(Gm), T3 = P.troc(Gm), ins = st.inst.find(x => x.kind === 'laser');
+      if (!ins) { bad.push('no laser probe'); continue; }
+      const I = P.instGeom(Gm, ins), port = T3.find(t => t.id === ins.port), name = port && !port.inf ? sideName(port.h).en : 'infusion or none', miss = P.segDist(I.port.pivot, I.tip, I.out); let out = 0, lm = 9;
+      for (let t = 0; t <= 1; t += 0.02) { const c = f.at(add(I.tip, mul(sub(I.port.tip, I.tip), t))); if (!(f.interior(c) < 0) || f.lens(c) < 0 || f.iris(c) < 0 || f.retina(c) < 0) out++; }
+      for (let t = 0; t <= 1; t += 0.01) lm = Math.min(lm, f.lens(f.at(add(I.tip, mul(sub(I.port.pivot, I.tip), t)))));
+      const sp = P.laserSpots(Gm), aim = sp.length ? sp[sp.length - 1].p : P.laserSpots(P.geom(Object.assign({}, st, { laser: 1 })))[0].p, dS = G.len(sub(I.tip, aim)), outC = G.dot(sub(I.tip, I.port.tip), I.port.axis), onLine = P.segDist(I.tip, aim, I.port.pivot) < 0.02 || G.len(sub(aim, I.port.pivot)) > G.len(sub(I.tip, I.port.pivot)) && G.len(G.cross(sub(I.tip, aim), sub(I.port.pivot, aim))) / (G.len(sub(I.port.pivot, aim)) || 1) < 0.02;
+      lensMin = Math.min(lensMin, lm); if (name !== 'superonasal' || miss > 0.02 || out || lm < 0.5 || dS > LIT7.e + 0.01 || dS < 0.8 || outC < 0.45 || !onLine) bad.push(`laser via ${name} (miss ${f2(miss)}, ${out} out, lens ${f2(lm)}, ${f2(dS)} mm from the spot, ${f2(outC)} mm out of the cannula, on the beam line ${onLine})`); }
+    ok('M40', !bad.length && onScreen(ctx, '7-1', '雷射探頭endolaser（10 點半）') && onScreen(ctx, '7-1', '雷射探頭（虛線：在切面外）endolaser'),
+      `7-1 endolaser probe in ${n + 1} steps through the superonasal trocar, in the cavity, ≥ ${f2(lensMin)} mm from the lens, out of its cannula, ≤ ${LIT7.e} mm in front of the spot just laid on the line from its pivot${bad.length ? '; bad: ' + bad.slice(0, 3).join('; ') : ''}`); }
+  // M41 7-1 line 1: before the scar holds, the gas covers the tear — during the operation (supine) the cavity just in front of every point of the tear's edge is gas;
+  // after it, sitting upright (inset; gravity written here, SIT_G): gravity has no part across the inset's screen and points down it, the gas at the highest point of the cavity and not the lowest,
+  // and the whole tear above the gas surface — as chapter 8 says (sitting, the bubble reaches the 11 o'clock tear)
+  { const Gm = P.geom(VP.ST.las1), f = P.makeCtx(Gm), T = Gm.tear, U = P.uOutline(T.w, T.L); let inGas = true;
+    for (const q of U) { const r = P.onRetina(Gm, T.fr, q[0], q[1], 1), p = add(r.p, mul(P.N3(r.h, r.s), -0.3)); if (!(f.gas(f.at(p)) < 0)) inGas = false; }
+    // the inset's plane holds the tear's meridian: gravity's part in it points straight down
+    const S7 = VP.ST.sit7, G7 = P.geom(S7), f7 = P.makeCtx(G7), pl = P.headPlane(S7), down = G.dot(pl.V, SIT_G), V = P.voxels(); let lo = null, hi = null, a = 1e9, b = -1e9;
+    for (let i = 0; i < V.n; i += 3) { const p = [V.xs[3 * i], V.xs[3 * i + 1], V.xs[3 * i + 2]], u = -G.dot(p, SIT_G); if (f7.cavity(f7.at(p)) > -0.3) continue; if (u < a) { a = u; lo = p; } if (u > b) { b = u; hi = p; } }
+    const low = Math.min(...U.map(q => -G.dot(P.onRetina(G7, G7.tear.fr0, q[0], q[1], 1, G7.ret0).p, SIT_G)));
+    ok('M41', line(ctx, '7-1', 1).includes('疤長牢之前，靠氣體頂著裂孔') && line(ctx, '8-1', 2).includes('坐正或頭抬高，氣泡就頂得到它') && VP.ST.las1.gas === 1 && inGas
+      && Math.abs(G.dot(pl.U, SIT_G)) < 1e-6 && down > 0.8 && S7.tear.h === CASE.tear && S7.laser === 1 && S7.rd.amt === 0 && f7.gas(f7.at(hi)) < 0 && !(f7.gas(f7.at(lo)) < 0) && low > G7.lev.gas + 0.2
+      && onScreen(ctx, '7-1', '疤長牢之前：氣體蓋住裂孔') && onScreen(ctx, '7-1', '術後坐正（示意）') && onScreen(ctx, '7-1', '蓋住 11 點裂孔') && onScreen(ctx, '7-1', '長出疤，把視網膜黏住（示意）scar'),
+      `7-1 line 1: gas in front of every point of the tear during the operation; inset sitting: gravity straight down the screen (its part in the plane: ${f2(down)}), gas at the top, the tear ${f2(low - G7.lev.gas)} mm above the gas surface`); }
+  // M42 7-1 line 2 (示意): the band where a 360° laser would go runs all round (12 clock hours), on attached retina, behind the vitreous base and not behind the
+  // equator; the chart and the wide view draw the same 3D band (at 11 o'clock it is at 11 o'clock in both); the studies and 「依主刀決定」 on screen
+  { const Gm = P.geom(VP.ST.las1); let okB = true;
+    for (let h = 0.25; h <= 12; h += 0.25) { const [s0, s1] = VP.band360(h); if (!(s0 > P.vbPostAt(h, 1) + 0.5 && s1 <= P.S_EQ + 0.5 && s1 > s0) || Gm.H(s0, h) !== 0 || Gm.H(s1, h) !== 0) okB = false; }
+    const v = VP.fundus(VP.ST.las1, W_, H_, VP.WIN.chart, 'm42'), c = v.P([0, 0]), q = v.P(VP.chartXY(Gm.ret0(CASE.tear, VP.band360(CASE.tear)[0], 1))), hc = clockScr([q[0] - c[0], q[1] - c[1]]);
+    const Wm = VP.wide(VP.on11(VP.ST.las1), W_, H_, VP.WIN.wide3, 'm42w').M, m = VP.wide(VP.on11(VP.ST.las1), W_, H_, VP.WIN.wide3, 'm42w').r.map, w = m.proj(Gm.ret0(CASE.tear, VP.band360(CASE.tear)[0], 1)), hw = clockSurg([w[0] - Wm.pole[0], w[1] - Wm.pole[1]]);
+    ok('M42', line(ctx, '7-1', 2).includes('要不要整圈 360 度都打，研究結果不一致') && line(ctx, '7-1', 2).includes('依主刀決定') && okB && near_h(hc, CASE.tear, 0.1) && near_h(hw, CASE.tear, 0.1)
+      && onScreen(ctx, '7-1', '360 度：整圈打在周邊（示意）360° laser') && onScreen(ctx, '7-1', '360 度的位置（示意）') && onScreen(ctx, '7-1', '統合分析（Yaldo 2026）：較好') && onScreen(ctx, '7-1', '大型世代（Wang 2020）：沒有好處') && onScreen(ctx, '7-1', '→ 依主刀決定'),
+      `7-1 360° band (示意): all round on attached retina between the vitreous base and the equator; at 11 o'clock drawn at ${f2(hc)} on the chart and ${f2(hw)} in the wide view`); }
+  // M43 7-1 line 3 (另一種做法, 示意): the cryo probe stays outside the eye — no point of the cavity, the retina or the choroid inside it — pressed over the tear at
+  // its clock hour (between the hinge and the apex); no instrument through the 10:30 port in that state; the dent in the 11–5 section, the mound at 11 o'clock in the wide view
+  { const st = VP.ST.cryo7, Gm = P.geom(st), f = P.makeCtx(Gm), dp = Gm.dep, T = Gm.tear; let inside = 0, n = 0;
+    const nn = P.N3(dp.h, dp.s), e1 = G.unit(G.cross(nn, [0, 0, 1])), e2 = G.cross(nn, e1), base = P.P3(dp.h, dp.s, dp.depth - 2);   // sample a cylinder round the press, 2 mm inside the outer surface to 12 mm out
+    for (let t = 0; t <= 14; t += 0.1) for (const r of [0, 0.4, 0.8, 1.2]) for (let a = 0; a < 360; a += r ? 30 : 360) { const p = add(add(base, mul(nn, t)), add(mul(e1, r * Math.cos(a * D2R_)), mul(e2, r * Math.sin(a * D2R_)))), c = f.at(p);
+      if (f.depressor(c) < 0) { n++; if (f.cavity(c) < 0 || f.retina(c) < 0 || f.choroid(c) < 0 || f.lens(c) < 0 || f.sclera(c) < 0) inside++; } }
+    const hinge = sOf(T.fr0.Q), apex = P.onRetina(Gm, T.fr0, T.L, 0, 0, Gm.ret0).s, S = VP.sec(st, W_, H_, VP.WIN.c71, 'm43', { tw: VP.WIN.c71T, noTissue: true }).M, Wm = VP.wide(VP.on11(st), W_, H_, VP.WIN.wide3, 'm43w').M;
+    const hw = Wm.dep && clockSurg([Wm.dep[0] - Wm.pole[0], Wm.dep[1] - Wm.pole[1]]);
+    ok('M43', line(ctx, '7-1', 3).includes('太周邊的裂孔雷射探頭不好打') && line(ctx, '7-1', 3).includes('改用冷凍，避免碰到水晶體') && n > 20 && inside === 0 && !(st.laser > 0) && !st.inst.some(x => x.port === 'sn')
+      && near_h(dp.h, CASE.tear, 0.05) && dp.s > hinge && dp.s < apex && S.dep_off < 0.02 && S.dep[0] > 0 && hw && near_h(hw, CASE.tear, 0.15)
+      && onScreen(ctx, '7-1', '冷凍探頭在眼外（示意）cryo probe') && onScreen(ctx, '7-1', '和裂孔同一個鐘點11 點') && onScreen(ctx, '7-1', '另一種做法（示意）') && onScreen(ctx, '7-1', '台灣的系列（Lai 2019）'),
+      `7-1 cryo (示意): probe outside the eye (${inside} of ${n} probe samples inside it), at ${dp.h} o'clock ${f2(dp.s)} mm (tear ${f2(hinge)}–${f2(apex)}); dent in the section, mound at ${hw && f2(hw)} o'clock in the wide view`); }
+  // M44 7-2 lines 0–1: pure C3F8 expands about 4 times, largest at 3–4 days (Vaziri 2016; the curve's shape 示意): the drawn curve starts at 1, peaks at 4 within days 3–4,
+  // is lower after; the bubble is drawn with the volume of the marked day; the mixture (14 %, 12–16 %: Vaziri 2016, Brosh 2014, Foulsham 2021) stays at 1
+  { const E = VP.EXPAND; let pk = 0, at = 0; for (let t = 0; t <= E.end; t += 0.01) { const v = VP.expand(t); if (v > pk) { pk = v; at = t; } }
+    const later = VP.expand(LIT7.peakDays[1] + 2) < pk - 0.05;
+    ok('M44', line(ctx, '7-2', 0).includes('膨脹約 4 倍') && line(ctx, '7-2', 0).includes('3 到 4 天達到最大') && line(ctx, '7-2', 1).includes('常用 14%；各研究用過 12 到 16%')
+      && near(VP.expand(0), 1, 1e-9) && near(pk, LIT7.expand, 0.05) && at >= LIT7.peakDays[0] && at <= LIT7.peakDays[1] && later && E.peak === LIT7.expand && E.days.join() === LIT7.peakDays.join()
+      && VP.C3F8_MIX.use === LIT7.mix && VP.C3F8_MIX.range.join() === LIT7.mixRange.join() && onScreen(ctx, '7-2', '約 4 倍') && onScreen(ctx, '7-2', '3 到 4 天最大') && onScreen(ctx, '7-2', '混成 14%：不膨脹')
+      && onScreen(ctx, '7-2', 'C3F8 14%') && onScreen(ctx, '7-2', '各研究用過 12 到 16%') && onScreen(ctx, '7-2', '曲線形狀為示意'),
+      `7-2 expansion: starts at 1, peaks at ${f2(pk)} on day ${f2(at)} (Vaziri 2016: about 4, 3–4 days), lower later; mixture ${VP.C3F8_MIX.use}% (${VP.C3F8_MIX.range.join('–')}%) flat`); }
+  // M45 7-2 lines 2–5: the 50 mL syringe (Kanclerz 2018b): kept volume / 50 = the concentration — SF6 10 mL → 20 %, the case's 20 mL → 40 %, the drawn fill in proportion
+  // (scale ticks at their volumes); the C3F8 syringe has no amount and no scale: its kept gas is a band (≥ 0.15 of the barrel), no 「n mL」 on screen but 10, 20 and 50 mL;
+  // 「依院內常規」 and the call-out to confirm with the surgeon on screen
+  { const S = VP.SYR, x0 = 0, x1 = 100, fr = v => (VP.syrX(x0, x1, v) - x0) / (x1 - x0), mls = (ctx.screen['7-2'] || []).flatMap(t => [...t.matchAll(/(\d+(?:\.\d+)?)\s*mL/g)].map(m => +m[1]));
+    const pairs = [[S.sf6.ok, VP.conc(S.sf6.ok)], [S.sf6.bad, VP.conc(S.sf6.bad)]];
+    ok('M45', line(ctx, '7-2', 2).includes('備氣用 50 mL 針筒：先抽純氣、排到需要的量，再用無菌空氣補到 50 mL') && line(ctx, '7-2', 5).includes('C3F8 要留多少，依院內常規') && line(ctx, '7-2', 5).includes('和主刀確認氣體和濃度')
+      && S.full === LIT7.syr && pairs.every(([k, c], i) => k === LIT7.sf6[i][0] && c === LIT7.sf6[i][1] && near(fr(k), c / 100, 1e-9)) && S.ticks.every(v => near(fr(v), v / LIT7.syr, 1e-9)) && near(fr(S.full), 1, 1e-9)
+      && S.c3f8.keep === null && S.c3f8.range[1] - S.c3f8.range[0] >= 0.15 && mls.every(v => [10, 20, 50].includes(v)) && mls.length > 0
+      && onScreen(ctx, '7-2', 'SF6 留 10 mL') && onScreen(ctx, '7-2', '誤留 20 mL') && onScreen(ctx, '7-2', '濃度 20%') && onScreen(ctx, '7-2', '濃度 40%') && onScreen(ctx, '7-2', '需要的量：依院內常規')
+      && onScreen(ctx, '7-2', 'C3F8 要留多少：依院內常規') && onScreen(ctx, '7-2', '備好之後 → 和主刀確認') && ['① 抽純氣', '② 排到需要的量', '③ 用無菌空氣補到 50 mL'].every(t => onScreen(ctx, '7-2', t)),
+      `7-2 syringe: ${S.full} mL; SF6 ${pairs.map(([k, c]) => `${k} mL → ${c}%`).join(', ')} (Kanclerz 2018b), fill drawn in proportion; C3F8: no amount (band ${S.c3f8.range.join('–')} of the barrel, no scale), mL on screen: ${[...new Set(mls)].join(', ')}`); }
+  // M46 7-3 line 0: the mixed gas flushed through the eye after the air–fluid exchange — before, the cavity is all air (drawn in air's colour); the mixture goes forward
+  // only; after, the cavity is all the mixture (drawn in its colour, no air-coloured gas left; no PFCL; the highest and lowest points both gas). The drawn path
+  // (示意) leaves the infusion tip (inferotemporal), stays in the cavity, enters the open 10:30 cannula and leaves the eye through it
+  { const n = VP.FLUSH_STEPS, ks = range(n + 1).map(i => VP.flushStep(i / n).mix), fwd = ks.every((v, i) => !i || v > ks[i - 1]) && ks[0] === 0 && ks[n] === 1;
+    const secSvg = st => VP.sec(st, W_, H_, VP.WIN.inf, 'm46', { h: VP.INF_H, tw: VP.WIN.infT, step: 0.4 }).svg, sig = col => `fill="${col}" fill-rule="evenodd" stroke="${P.C.gasS}"`;
+    const s0 = secSvg(VP.flushStep(0)), s1 = secSvg(VP.flushStep(1)), st0 = VP.flushStep(0), st1 = VP.flushStep(1);
+    const colOk = s0.includes(sig(P.C.gas)) && !s0.includes(sig(VP.MIX_COL)) && s1.includes(sig(VP.MIX_COL)) && !s1.includes(sig(P.C.gas)) && VP.MIX_COL.toLowerCase() !== P.C.gas.toLowerCase();
+    const all = st => { const f = ctx6(VP.modelSt(st)), { lo, hi } = ext6(VP.modelSt(st)); return st.gas === 1 && !(st.pfcl > 0) && f.gas(f.at(lo)) < 0 && f.gas(f.at(hi)) < 0; };
+    const F = VP.flush73(st0), f = ctx6(VP.modelSt(st0)), inCav = F.inn.every(p => f.cavity(f.at(p)) < 0), sn = F.sn, outIn = F.out.slice(0, 2).every(p => P.segDist(p, sn.base, sn.tip) < 0.05), last = F.out[F.out.length - 1];
+    ok('M46', line(ctx, '7-3', 0).includes('先完成氣液交換，再把混好的氣體沖過整個眼睛') && line(ctx, '7-3', 0).includes('換掉眼內的空氣') && fwd && colOk && st0.gasKind === 'air' && st1.gasKind === 'c3f8' && all(st0) && all(st1)
+      && G.len(sub(F.inn[0], F.it.tip)) < 1e-9 && G.len(sub(F.inn[F.inn.length - 1], sn.tip)) < 1e-9 && sideName(F.it.h).en === LIT2.ports.inf && sideName(sn.h).en === 'superonasal' && inCav && outIn && !(f.interior(f.at(last)) < 0)
+      && onScreen(ctx, '7-3', '混好的氣體從 infusion 進來4 點半') && onScreen(ctx, '7-3', '空氣從套管排出（示意）10 點半') && onScreen(ctx, '7-3', '眼內換成混合氣體（顏色示意）C3F8＋空氣') && onScreen(ctx, '7-3', '沖洗的路徑與排氣處為示意'),
+      `7-3 flush ${ks.map(f2).join(' → ')}: before all air (air colour), after all mixture (mix colour, no air colour), the cavity gas top and bottom; path from the inferotemporal infusion through the cavity out of the superonasal cannula (示意)`); }
+  // M47 7-3 line 1: how much to flush — 25 mL nearly complete in the experiment (Williams 1990), 35 mL in the computer model, two 50 mL syringes for a long eye
+  // (Shunmugam 2011); the bars on one scale (in proportion to the volumes)
+  { const FV = VP.FLUSH_VOL, prop = FV.every(x => near(VP.volBar(x.v) / x.v, VP.volBar(FV[0].v) / FV[0].v, 1e-9));
+    ok('M47', line(ctx, '7-3', 1).includes('實驗用 25 mL 就幾乎換完全') && line(ctx, '7-3', 1).includes('電腦模擬建議 35 mL') && line(ctx, '7-3', 1).includes('眼軸較長的要用兩支 50 mL')
+      && FV[0].v === LIT7.flush[0] && FV[1].v === LIT7.flush[1] && FV[2].v === 2 * LIT7.syr && FV[2].two && prop && FV[0].who === 'Williams 1990' && FV[1].who === 'Shunmugam 2011'
+      && onScreen(ctx, '7-3', '25 mL 幾乎換完全') && onScreen(ctx, '7-3', '35 mL') && onScreen(ctx, '7-3', '眼軸較長：兩支 50 mL') && onScreen(ctx, '7-3', '實驗（Williams 1990）') && onScreen(ctx, '7-3', '電腦模擬（Shunmugam 2011）'),
+      `7-3 flush volumes ${FV.map(x => x.v).join(', ')} mL (Williams 1990; Shunmugam 2011), bars in proportion`); }
+  // M48 7-3 lines 2–3: every cannula out at the same step (the order is the surgeon's: none drawn), each wound an oblique tunnel (20–30°, Teixeira 2009) with the
+  // conjunctiva slid back over it (as 2-1); the gas against each tunnel's inner opening (past the pars plana: Warrier 2008, 示意); the microscope view marks each wound
+  // at its trocar's quadrant, the section holds the infusion and the 10:30 wound, the tunnel cross-section is through the infusion's tunnel; the checks and rates on screen
+  { const st = VP.ST.closed, Gm = P.geom(VP.modelSt(st)), f = P.makeCtx(Gm), T3 = P.troc(Gm), before = range(VP.FLUSH_STEPS + 1).every(i => P.troc(P.geom(VP.modelSt(VP.flushStep(i / VP.FLUSH_STEPS)))).every(t => !(t.out >= 1)));
+    const bad = [];
+    for (const t of T3) { const ang = Math.asin(Math.abs(G.dot(t.tdir, t.nin))) / D2R_, cil = P.cilTh(t.s - G.N.spur, P.oraAt(t.h, 1) - G.N.spur), Lin = (t.Tw + cil) / Math.sin(t.ang * D2R_);
+      const ti = VP.tunnelIn(Gm, t), Lc = G.dot(sub(ti, t.entry), t.tdir), pin = add(ti, mul(t.tdir, 0.1)), wall = f.ciliary(f.at(add(t.entry, mul(t.tdir, Lc - 0.15)))) < 0 || f.sclera(f.at(add(t.entry, mul(t.tdir, Lc - 0.15)))) < 0;
+      const closed = f.conj(f.at(add(t.entry, P.N3(t.h, t.s).map(v => v * G.N.conj / 2)))) < 0, away = t.cjC && G.len(sub(t.cjC, t.entry)) > 1;
+      if (!(t.out >= 1) || ang < LIT7.tunnel[0] || ang > LIT7.tunnel[1] || !(Lc > Lin - 0.2 && Lc < Lin + 1) || !wall || !(f.gas(f.at(pin)) < 0) || !closed || !away)
+        bad.push(`${t.id}: out ${t.out}, ${f2(ang)}°, reaches the cavity ${f2(Lc)} mm along it (pars plana ends ${f2(Lin)}), gas past the inner opening ${f.gas(f.at(pin)) < 0}, conjunctiva closed ${closed}`); }
+    const E = VP.ext(st, W_, H_, VP.WIN.extF, 'm48').M, c = E.centre, quad = ['it', 'st', 'sn'].every(k => { const q = E['troc_' + k], t = T3.find(x => x.id === k); return q && sideName(clockSurg([q[0] - c[0], q[1] - c[1]])).en === sideName(t.h).en; });
+    const S = VP.sec(st, W_, H_, VP.WIN.inf, 'm48s', { h: VP.INF_H, tw: VP.WIN.infT, noTissue: true }).M, Pv = VP.port(st, W_, H_, VP.WIN.port, 'm48p', 'it', { noTissue: true });
+    ok('M48', line(ctx, '7-3', 2).includes('拔 cannula 之後，檢查每個傷口漏不漏、量眼壓') && line(ctx, '7-3', 2).includes('一直漏就縫一針') && line(ctx, '7-3', 3).includes('11.2% 到 38.5%') && line(ctx, '7-3', 3).includes('眼內有氣體，也有助斜的傷口自己封住')
+      && before && T3.length === CASE.ports && !bad.length && quad && S.troc_it_off < 0.01 && S.troc_sn_off < 0.01 && Pv.inPlane < 1e-6 && Pv.t.inf && Pv.M.tunnelIn
+      && ['檢查每個傷口leak?', '① 每個傷口漏不漏', '② 量眼壓', '③ 一直漏 → 縫一針', '若一直漏：縫一針（示意）suture', '拔的順序：依主刀', '斜的隧道oblique tunnel', '氣體貼住內口，幫傷口封住（示意）gas', '23G 需要縫的比例', '各研究 11.2%（Woo 2009）', '到 38.5%（Duval 2014）'].every(t => onScreen(ctx, '7-3', t)),
+      `7-3 every cannula out at once (in for all ${VP.FLUSH_STEPS + 1} flush steps), each an oblique tunnel with the conjunctiva over it and gas past its inner opening; microscope wounds in their trocars' quadrants${bad.length ? '; bad: ' + bad.join('; ') : ''}`); }
   return R;
 }
 const near_h = (a, b, t = 0.1) => a != null && b != null && Math.abs(hdiff(a, b)) <= t;
@@ -592,6 +719,16 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['PFCL left in the eye at the end of the exchange (6-2)', c => { c.VP = vpWith({ outStep: m => VP0.outStep(m * 0.75) }); }, 'M36'],
       ['bead drawn half an hour off in the wide view (6-2)', c => { c.VP = vpWith({ w6: st => VP0.w6(st.bead ? Object.assign({}, st, { bead: Object.assign({}, st.bead, { h: st.bead.h + 0.5 }) }) : st) }); }, 'M37'],
       ['PFCL needle through the infusion port (6-1)', c => { c.VP = vpWith({ pfclStep: k => { const s = VP0.pfclStep(k); return Object.assign({}, s, { inst: [Object.assign({}, s.inst[0], { port: 'it' }), s.inst[1]] }); } }); }, 'M38'],
+      ['laser on detached retina (7-1)', c => { c.VP = vpWith({ laserStep: k => Object.assign({}, VP0.laserStep(k), { rd: { amt: 1 } }) }); }, 'M39'],
+      ['laser probe through the infusion port (7-1)', c => { c.VP = vpWith({ laserStep: k => { const s = VP0.laserStep(k); return Object.assign({}, s, { inst: [Object.assign({}, s.inst[0], { port: 'it' }), s.inst[1]] }); } }); }, 'M40'],
+      ['inset after the operation lying supine (7-1)', c => { c.VP = stWith('sit7', { head: { pose: 'supine' } }); }, 'M41'],
+      ['360° band in front of the vitreous base (7-1)', c => { c.VP = vpWith({ band360: h => [POSTERIOR.vbAntAt(h, 1), POSTERIOR.vbAntAt(h, 1) + 0.8] }); }, 'M42'],
+      ['cryo probe pressed at 10 o\'clock (7-1)', c => { c.VP = stWith('cryo7', { dep: Object.assign({}, VP0.CRYO, { h: 10 }) }); }, 'M43'],
+      ['pure C3F8 largest on day 6 (7-2)', c => { c.VP = vpWith({ expand: t => VP0.expand(t * VP0.EXPAND.at / 6) }); }, 'M44'],
+      ['C3F8 amount drawn as 7 mL (7-2)', c => { c.screen['7-2'] = [...c.screen['7-2'], 'C3F8 留 7 mL']; }, 'M45'],
+      ['flush stopped half way (7-3)', c => { c.VP = vpWith({ flushStep: k => VP0.flushStep(k * 0.5) }); }, 'M46'],
+      ['computer model flush drawn as 30 mL (7-3)', c => { c.VP = vpWith({ FLUSH_VOL: VP0.FLUSH_VOL.map((x, i) => i === 1 ? Object.assign({}, x, { v: 30 }) : x) }); }, 'M47'],
+      ['infusion cannula left in (7-3)', c => { c.VP = stWith('closed', { troc: POSTERIOR.trocarsFor('OS').map(t => t.inf ? t : Object.assign({}, t, { out: 1, cj: -VP0.CJ_PUSH })) }); }, 'M48'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

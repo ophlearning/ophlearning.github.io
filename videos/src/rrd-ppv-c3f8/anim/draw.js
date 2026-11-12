@@ -1008,3 +1008,299 @@ DRAW2['6-2'] = T => {
   sr += callout(PW - 352, 44, 340, TX6.say.a, TX6.say.b, op4);
   return { L: { svg: sl, extra: el, P: z > 0.5 ? PT.sec62z : PT.sec61 }, R: { svg: sr, extra: er, P: z > 0.5 ? PT.w62z : PT.w6 } };
 };
+
+// ---------------------------------------------------------------- 7 雷射、C3F8 與關傷口
+// Chapter 7 (after chapter 6: the retina flat, the eye full of air, the patient supine). 7-1: the 11–5 section zoomed on the 11 o'clock tear + the
+// surgeon's wide view looking toward 11 (示意): the endolaser probe from the 10:30 port lays the model's two rings round the tear (rows and spacing 示意)
+// in VP.LASER_STEPS steps, both views drawing the same state; line 1 the spots turn into scars (示意) and an inset after the operation, sitting: the
+// bubble at the top covers the tear (bubble size 示意; chapter 8); line 2 the fundus chart with the band where a 360° laser would go (示意) and the
+// studies; line 3 (另一種做法, 示意) a cryo probe pressed on the sclera over the tear from outside (Lai 2019), away from the lens. 7-2: no eye — the
+// expansion of pure C3F8 (curve shape 示意) and its bubble, the mixture, the 50 mL syringe in three steps (C3F8: no scale, the amount 依院內常規), the SF6
+// example and its error (Kanclerz 2018b), the two other errors, the call-out. 7-3: the 4:30–10:30 section (the infusion and the 10:30 port in the plane)
+// + the microscope view: the mixed gas flushed through the eye (colour 示意: one uniform mixture going from air to the mix; the vent 示意), the volumes,
+// every cannula out at once (the order 依主刀), each wound checked; line 3 the tunnel cross-section of the infusion port with the gas against its inner end.
+Object.assign(PT, {
+  sec71: { title: '經 11 點的子午切面：裂孔周圍放大', orient: VP.OR.sec },
+  ch71: { title: '眼底圖：360 度雷射的位置（示意）', orient: VP.OR.chart },
+  sec71c: { title: '經 11 點的子午切面：冷凍（示意）', orient: VP.OR.sec },
+  w71: { title: '術者的廣角畫面', orient: VP.OR.w7 },
+  g72a: { title: '純 C3F8 在眼內會膨脹', orient: '縱軸＝氣泡體積（倍）　橫軸＝術後天數' },
+  g72b: { title: '混成不會膨脹的濃度', orient: '和空氣混合' },
+  s72: { title: '50 mL 針筒備氣', orient: '針筒不畫刻度：量依院內常規' },
+  s72l: { title: '備氣的三個步驟', orient: '' },
+  s72ok: { title: 'SF6 的例子：正確', orient: '病例系列' },
+  s72bad: { title: 'SF6 的例子：算錯量', orient: '病例系列' },
+  e72a: { title: '其他錯誤（一）', orient: '病例系列' },
+  e72b: { title: '其他錯誤（二）', orient: '病例系列' },
+  s72c: { title: 'C3F8：留多少依院內常規', orient: '針筒不畫刻度' },
+  c72: { title: '備好之後', orient: '' },
+  sec73: { title: '經灌注孔（4 點半）的子午切面', orient: VP.OR.inf },
+  ext73: { title: '顯微鏡：三個 trocar', orient: VP.OR.ext },
+  port73: { title: 'trocar 隧道的橫切面（灌注孔）', orient: VP.OR.port },
+});
+const TX7 = {   // texts drawn by helpers (listed for the font preload)
+  inset: { title: '術後坐正（示意）', a: '氣泡浮到最高處', b: '蓋住 11 點裂孔' },
+  s360: { title: '要不要整圈 360 度？研究不一致', a: '統合分析（Yaldo 2026）：較好', b: '大型世代（Wang 2020）：沒有好處', c: '→ 依主刀決定' },
+  cryo: { title: '台灣的系列（Lai 2019）', a: '太周邊的裂孔：改用冷凍', b: '避免雷射探頭碰到水晶體' },
+  steps: { a: '① 抽純氣', b: '② 排到需要的量', c: '③ 用無菌空氣補到 50 mL', note: '需要的量：依院內常規' },
+  sup: { title: '換了供應商', a: '新的一批是純氣，', b: '被當成稀釋過的來用', bot1: '原本：稀釋過的', bot2: '新的一批：純氣' },
+  tank: { title: '從高壓鋼瓶直接抽', a: '針筒裡的壓力不準，', b: '最後的濃度無法確定', t: '高壓鋼瓶' },
+  say: { a: 'C3F8 要留多少：依院內常規', b: '備好之後 → 和主刀確認', c: '氣體和濃度' },
+  vol: { title: '沖多少', a: '實驗', b: '電腦模擬', c: '眼軸較長：兩支', a2: '幾乎換完全' },
+  close: { a: '① 每個傷口漏不漏', b: '② 量眼壓', c: '③ 一直漏 → 縫一針' },
+  sut: { title: '23G 需要縫的比例', a: '各研究 11.2%（Woo 2009）', b: '到 38.5%（Duval 2014）' },
+};
+window.PRELOAD_EXTRA = JSON.stringify(PT) + JSON.stringify(TX3) + JSON.stringify(TX4) + JSON.stringify(TX5) + JSON.stringify(TX6) + JSON.stringify(TX7);
+const C_LAS = '#d23c3c', C_SCAR = '#6b4423', C_ICE = '#2f86c8', C_MIX = '#2c6fa3', C_PURE = '#e8a33a', C_AIR = '#eef3f7';
+const nLaid = st => Math.round(VP.SPOTS7.length * Math.min(1, st.laser || 0));   // spots the model draws for a state (posterior.js laserSpots)
+const offPl = (S, p3) => Math.abs(GLOBE.dot(GLOBE.sub(p3, S.r.plane.O), GLOBE.unit(GLOBE.cross(S.r.plane.U, S.r.plane.V))));
+// the spots drawn in a section (the model draws those within 0.25 mm of the plane): rings over them (scar, 示意) in panel px
+function scarSec(S, st, op) { if (!(op > 0)) return ''; const k = S.k; let s = '';
+  for (const sp of VP.SPOTS7.slice(0, nLaid(st))) if (offPl(S, sp.p) < 0.25) { const q = S.P(GLOBE.toPlane(S.r.plane, sp.p)); s += `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="${F1(0.13 * k)}" fill="${C_SCAR}" stroke="#2e1a0c" stroke-width="1.5" opacity="${op}"/>`; }
+  return s; }
+// the same spots in a wide view (all of them, projected): scars
+function scarWide(V, st, op) { if (!(op > 0)) return ''; let s = '';
+  for (const sp of VP.SPOTS7.slice(0, nLaid(st))) { const q = wpx(V, sp.p); s += `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="${F1(Math.max(2.6, 0.2 * V.k))}" fill="${C_SCAR}" stroke="#2e1a0c" stroke-width="1" opacity="${op}"/>`; }
+  return s; }
+// the field circle of a wide view as a clip path (overlays drawn outside the model's own clip)
+const fieldClip = (V, id) => { const c = V.P([0, 0]); return `<clipPath id="${id}"><circle cx="${F1(c[0])}" cy="${F1(c[1])}" r="${F1(V.M.R * V.k)}"/></clipPath>`; };
+// a band on the retina between s0(h) and s1(h) mm from the limbus all round (attached retina), as an even-odd path through proj (3D → px)
+function bandPath(Gm, proj, sOf) { const a = [], b = []; for (let i = 0; i <= 144; i++) { const h = 12 * i / 144, [s0, s1] = sOf(h); a.push(proj(Gm.ret0(h, s0, 1))); b.push(proj(Gm.ret0(h, s1, 1))); }
+  return pth(a, true) + pth(b, true); }
+// a syringe lying left (nozzle, 0 mL) to right (50 mL at x1): pure gas from 0 to keep (or a hatched band when keep is null: o.range, fractions), air from there to
+// total (the plunger's face); ticks with numbers only when o.ticks
+function syringe(x0, x1, y, o) {
+  const H = 46, top = y - H / 2, X = v => VP.syrX(x0, x1, v), face = X(o.total), rod = 0.95 * (x1 - x0), id = o.id;
+  let s = `<g opacity="${o.op ?? 1}">`;
+  s += `<rect x="${F1(x0 - 26)}" y="${F1(y - 6)}" width="26" height="12" rx="3" fill="#dfe5ea" stroke="#7d8a96" stroke-width="1.5"/>`;                    // nozzle
+  if (o.keep != null) { s += `<rect x="${F1(x0)}" y="${F1(top)}" width="${F1(Math.max(0, Math.min(X(o.keep), face) - x0))}" height="${H}" fill="${C_PURE}" opacity="0.85"/>`;
+    if (face > X(o.keep)) s += `<rect x="${F1(X(o.keep))}" y="${F1(top)}" width="${F1(face - X(o.keep))}" height="${H}" fill="${C_AIR}"/>`; }
+  else { const r0 = x0 + (x1 - x0) * o.range[0], r1 = x0 + (x1 - x0) * o.range[1], e = Math.min(face, r1);
+    s += `<defs><linearGradient id="${id}_g" x1="${F1(x0)}" x2="${F1(r1)}" y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C_PURE}" stop-opacity="0.9"/><stop offset="${F1((r0 - x0) / (r1 - x0))}" stop-color="${C_PURE}" stop-opacity="0.85"/><stop offset="1" stop-color="${C_PURE}" stop-opacity="0"/></linearGradient>` +
+      `<pattern id="${id}_h" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V9" stroke="#9a6412" stroke-width="2.2"/></pattern></defs>`;
+    if (o.pureAll) s += `<rect x="${F1(x0)}" y="${F1(top)}" width="${F1(face - x0)}" height="${H}" fill="${C_PURE}" opacity="0.85"/>`;
+    else { if (face > r1) s += `<rect x="${F1(x0)}" y="${F1(top)}" width="${F1(face - x0)}" height="${H}" fill="${C_AIR}"/>`;
+      s += `<rect x="${F1(x0)}" y="${F1(top)}" width="${F1(e - x0)}" height="${H}" fill="url(#${id}_g)"/><rect x="${F1(r0)}" y="${F1(top)}" width="${F1(e - r0)}" height="${H}" fill="url(#${id}_h)" opacity="${o.hatch ?? 0.6}"/>`; } }
+  s += `<rect x="${F1(x0)}" y="${F1(top)}" width="${F1(x1 - x0 + 8)}" height="${H}" rx="4" fill="none" stroke="#5b6878" stroke-width="2.2"/>` +                       // barrel
+    `<rect x="${F1(x1 + 8)}" y="${F1(top - 12)}" width="7" height="${H + 24}" rx="2" fill="#c3ccd4" stroke="#5b6878" stroke-width="1.5"/>` +                         // flange
+    `<rect x="${F1(face - 5)}" y="${F1(top + 2)}" width="10" height="${H - 4}" rx="2" fill="#2b3036"/>` +                                                            // plunger face
+    `<rect x="${F1(face + 5)}" y="${F1(y - 4)}" width="${F1(rod)}" height="8" fill="#a9b3bd" stroke="#5b6878" stroke-width="1"/>` +
+    `<rect x="${F1(face + 5 + rod)}" y="${F1(top - 4)}" width="8" height="${H + 8}" rx="2" fill="#a9b3bd" stroke="#5b6878" stroke-width="1.2"/>`;                   // thumb plate
+  if (o.ticks) for (const v of VP.SYR.ticks) { const x = X(v); s += `<path d="M${F1(x)} ${F1(top)}v10" stroke="#3b4752" stroke-width="1.6"/>` + (v === VP.SYR.full ? '' : text(F1(x), F1(top - 16), String(v), { size: 13, anchor: 'middle', color: '#3b4752' })); }
+  s += text(F1(X(VP.SYR.full) - 8), F1(top - 16), VP.SYR.full + ' mL', { size: 13, bold: true, color: '#3b4752' });   // the 50 mL line is the barrel's end
+  return s + '</g>';
+}
+// a bracket under a syringe from px a to b with a text below it
+const braceU = (a, b, y, t, col, op) => `<g opacity="${op}"><path d="M${F1(a)} ${F1(y)}v8H${F1(b)}v-8" fill="none" stroke="${col}" stroke-width="2"/>${text(F1((a + b) / 2), F1(y + 30), t, { size: 15, bold: true, color: col, anchor: 'middle' })}</g>`;
+const stLRet = (st, s) => POSTERIOR.geom(st).ret(VP.SEC_H, s, 1);   // the retina's inner surface on the 11 o'clock meridian, s mm from the limbus
+const bigCard = (x, y, w, h, rows, o = {}) => `<g opacity="${o.op ?? 1}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="#fff" stroke="${o.stroke || '#d3dae1'}" stroke-width="${o.sw || 1}"/>` +
+  rows.map(([t, ro = {}], i) => text(o.center ? x + w / 2 : x + 16, y + (o.y0 || 34) + i * (o.lh || 32), t, { size: ro.size || 17, bold: ro.bold, color: ro.color || COL.ink, anchor: o.center ? 'middle' : 'start', op: ro.op ?? 1 })).join('') + '</g>';
+
+DRAW2['7-1'] = T => {
+  const P = POSTERIOR, G = GLOBE;
+  // ---------------- the state of this frame (both panels): line 0 the laser round the tear in steps; lines 1–2 the laser done; line 3 cryo instead (示意)
+  const kL = T.p(0, 0.1, 0.85), in1 = T.on(1, 0.01) > 0, stL = in1 ? VP.ST.las1 : VP.laserStep(kL), nL = nLaid(stL), firing = !in1 && T.on(0, 0.01) > 0;
+  const kC = T.on(2, 0.6) * (1 - T.on(3, 0.6)), kY = T.on(3, 0.6), opZ = 1 - Math.max(kC, kY), scar = T.on(1, 0.8, 0.3), opIn = T.on(1, 0.6, 1.2) * opZ;
+  const aim = VP.SPOTS7[Math.max(0, nL - 1)];   // the spot the probe aims at
+  // ---------------- left, lines 0–1: the 11–5 section zoomed on the 11 o'clock tear (supine, the eye full of air)
+  let sl = '', el = '', PL = PT.sec71;
+  if (opZ > 0) {
+    const S = VP.sec(stL, PW, PH, VP.WIN.l71, 's71', { tw: VP.WIN.l71T, step: 0.02 }), a = S.A, toS = p3 => S.P(G.toPlane(S.r.plane, p3));
+    // line 1: the gas lying on the retina over the tear (a glow along its inner surface from in front of the hinge to behind the apex; 示意), under the scars
+    let glow = ''; if (opIn > 0) { const T0 = P.geom(stL).tear, gl = []; for (let s = T0.sh - 1.2; s <= T0.sh + T0.L * 1.06 + 1.2; s += 0.1) gl.push(toS(stLRet(stL, s)));
+      glow = `<path d="${pth(gl)}" fill="none" stroke="#7fb4e3" stroke-width="12" stroke-linecap="round" opacity="${(0.45 * opIn).toFixed(3)}"/>`; }
+    sl += `<g opacity="${opZ.toFixed(3)}">${S.svg}${glow}${scarSec(S, stL, scar)}`;
+    // the probe (off the plane, on the far side): its projection as a ghost, the aiming beam to the spot (projection)
+    if (firing) { const I = P.instGeom(P.geom(stL), stL.inst[0]), c0 = toS(I.port.tip), c1 = toS(I.tip), q = toS(aim.p), d = [c1[0] - c0[0], c1[1] - c0[1]], l = Math.hypot(...d) || 1, w = P.N.shaft * S.k / 2, nx = -d[1] / l * w, ny = d[0] / l * w;
+      sl += `<path d="M${F1(c0[0] + nx)} ${F1(c0[1] + ny)}L${F1(c1[0] + nx)} ${F1(c1[1] + ny)}L${F1(c1[0] - nx)} ${F1(c1[1] - ny)}L${F1(c0[0] - nx)} ${F1(c0[1] - ny)}Z" fill="#a6aeb6" fill-opacity="0.35" stroke="#59626b" stroke-width="1.5" stroke-dasharray="5 4"/>` +
+        `<path d="M${F1(c1[0])} ${F1(c1[1])}L${F1(q[0])} ${F1(q[1])}" stroke="${C_LAS}" stroke-width="2" stroke-dasharray="3 3"/><circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="9" fill="none" stroke="${C_LAS}" stroke-width="2"/>`;
+      el += lab('雷射探頭（虛線：在切面外）', 'endolaser', 14, 40, [(c0[0] + c1[0]) / 2, (c0[1] + c1[1]) / 2], { bold: true, op: T.on(0, 0.6) * (1 - T.on(1, 0.4)) }); }
+    sl += '</g>';
+    const spIn = VP.SPOTS7.slice(0, nL).filter(sp => offPl(S, sp.p) < 0.25), spA = spIn.find(sp => sp.u < 0), spP = spIn.find(sp => sp.u > 1.8), tm = S.M.tearMid_3;
+    const gasPt = toS(G.add(tm, P.N3(VP.SEC_H, P.wallOf(tm[2], Math.hypot(tm[0], tm[1])).s).map(v => -0.35 * v)));
+    el += lab('11 點裂孔', 'HST', 14, 290, a.tearMid, Object.assign({ op: T.on(0) * opZ * (1 - opIn) }, HST));
+    el += lab('雷射點：圍著裂孔打', 'laser', 14, 200, spA ? toS(spA.p) : null, { bold: true, color: C_LAS, lc: C_LAS, op: (spA ? 1 : 0) * T.p(0, 0.3, 0.4) * (1 - T.on(1, 0.4)) });
+    el += lab('雷射點', 'laser', PW - 12, 290, spP ? toS(spP.p) : null, { side: 'R', bold: true, color: C_LAS, lc: C_LAS, op: (spP ? 1 : 0) * T.p(0, 0.3, 0.4) * (1 - T.on(1, 0.4)) });
+    el += lab('視網膜已貼平', 'attached', PW - 12, 350, toS(stLRet(stL, 12.2)), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.on(0, 0.6, 0.6) * (1 - T.on(1, 0.4)) * opZ });
+    el += lab('眼內充滿空氣', 'air', 14, 120, toS(VP.inPl(VP.SEC_H, 8.2, 4.2)), { bold: true, color: '#2b5a8a', lc: '#2b5a8a', op: T.on(0, 0.6, 1.2) * (1 - T.on(1, 0.4)) * opZ });
+    el += lab('長出疤，把視網膜黏住（示意）', 'scar', PW - 12, 290, spP ? toS(spP.p) : null, { side: 'R', bold: true, color: C_SCAR, lc: C_SCAR, op: (spP ? 1 : 0) * scar * opZ });
+    el += lab('疤長牢之前：氣體蓋住裂孔', '', 14, 40, gasPt, { bold: true, color: '#2b5a8a', lc: '#2b5a8a', op: opIn });
+    sl += note('雷射的排數、間距沒有術中出處（示意）', T.on(0, 0.6) * opZ * (1 - opIn), PH - 14, 14, 'start');
+    // line 1 inset: after the operation, sitting upright — the bubble at the top covers the 11 o'clock tear (bubble size 示意)
+    if (opIn > 0) { const x = 14, y = PH - 236, z = 150, Hd = VP.head(VP.ST.sit7, z, z, VP.WIN.headT, 'h71'), t = [x + 26 + Hd.A.tearMid[0], y + 32 + Hd.A.tearMid[1]];
+      sl += `<g opacity="${opIn.toFixed(3)}"><rect x="${x}" y="${y}" width="${z + 52}" height="226" rx="8" fill="#fff" stroke="#c9d1d9"/>` + text(x + 12, y + 22, TX7.inset.title, { size: 14, bold: true }) +
+        `<g transform="translate(${x + 26} ${y + 32})">${Hd.svg}</g>` + POSTERIOR.headIcon(VP.ST.sit7, x + 6, y + z - 2, 34) + `<circle cx="${F1(t[0])}" cy="${F1(t[1])}" r="9" fill="none" stroke="#c8361f" stroke-width="2.2"/>` +
+        text(x + 12, y + 198, TX7.inset.a, { size: 14, bold: true, color: '#2b5a8a' }) + text(x + 12, y + 218, TX7.inset.b, { size: 14, bold: true, color: '#2b5a8a' }) + '</g>'; }
+  }
+  // ---------------- left, line 2: the fundus chart, the rings round the tear and the band where a 360° laser would go (示意)
+  if (kC > 0) { const v = VP.fundus(VP.ST.las1, PW, PH, VP.WIN.chart, 'f71'), Gm = P.geom(VP.ST.las1), pr = p3 => v.P(VP.chartXY(p3));
+    sl += `<g opacity="${kC.toFixed(3)}">${v.svg}${clockRing(v)}<path d="${bandPath(Gm, pr, VP.band360)}" fill="#fff" fill-opacity="0.35" fill-rule="evenodd" stroke="#fff" stroke-width="1.8" stroke-dasharray="5 4"/>` +
+      `<circle cx="${F1(v.A.tear[0])}" cy="${F1(v.A.tear[1])}" r="15" fill="none" stroke="${C_LAS}" stroke-width="2.5"/></g>`;
+    el += lab('雷射圍住 11 點裂孔', 'laser', 14, 42, v.A.tear, { bold: true, color: C_LAS, lc: C_LAS, op: kC });
+    el += lab('360 度：整圈打在周邊（示意）', '360° laser', PW - 12, 60, pr(Gm.ret0(1.5, VP.band360(1.5)[1], 1)), { side: 'R', bold: true, color: COL.amber, lc: COL.amber, op: kC });
+    if (kC > 0.5) PL = PT.ch71; }
+  // ---------------- left, line 3 (另一種做法, 示意): the cryo probe pressed on the sclera over the tear, from outside the eye; the lens
+  if (kY > 0) { const S = VP.sec(VP.ST.cryo7, PW, PH, VP.WIN.c71, 's71c', { tw: VP.WIN.c71T, step: 0.04 }), a = S.A, toS = p3 => S.P(G.toPlane(S.r.plane, p3)), cr = VP.CRYO;
+    const c = toS(P.P3(cr.h, cr.s, cr.depth)), r = 1.3 * S.k;
+    sl += `<g opacity="${kY.toFixed(3)}">${S.svg}<circle cx="${F1(c[0])}" cy="${F1(c[1])}" r="${F1(r)}" fill="#d9f0ff" fill-opacity="0.6" stroke="${C_ICE}" stroke-width="2" stroke-dasharray="5 3"/></g>`;
+    sl += badge(14, 14, '另一種做法（示意）', COL.sub, kY);
+    sl += `<g opacity="${(kY * T.on(3, 0.6, 0.8)).toFixed(3)}">` + bigCard(14, PH - 118, 268, 104, [[TX7.cryo.title, { bold: true, size: 15 }], [TX7.cryo.a, { size: 15, bold: true, color: C_ICE }], [TX7.cryo.b, { size: 15 }]], { lh: 28, y0: 30 }) + '</g>';
+    el += lab('冷凍探頭在眼外（示意）', 'cryo probe', PW - 12, 40, a.depressor, { side: 'R', bold: true, color: C_ICE, lc: C_ICE, op: kY });
+    el += lab('和裂孔同一個鐘點', '11 點', PW - 12, 300, toS(P.P3(cr.h, cr.s, cr.depth + 0.6)), { side: 'R', bold: true, op: kY * T.on(3, 0.6, 0.4) });
+    el += lab('水晶體', 'lens', 14, 200, a.lens, { bold: true, op: kY });
+    if (kY > 0.5) PL = PT.sec71c; }
+  // ---------------- right: the surgeon's wide view of the same state (inverter on, looking toward 11, 示意); zoomed on the tear, out for the 360° band
+  const zW = Math.max(1 - T.p(2, 0, 0.3), T.p(3, 0, 0.3)), win = VIEWS.zwin(VP.WIN.wide3, VP.WIN.w71z, zW);
+  const W0 = VP.wide(VP.on11(stL), PW, PH, win, 'w71', {}), Wt = { A: W0.A, c: W0.P([0, 0]), r: W0.M.R * W0.k }, A = W0.A, Gm = P.geom(stL);
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + W0.svg + clockNums(Wt, 1 - zW), er = '';
+  sr += `<defs>${fieldClip(W0, 'w71_fc')}</defs><g clip-path="url(#w71_fc)">${scarWide(W0, stL, scar * (1 - kY))}`;
+  if (firing) { const q = wpx(W0, aim.p); sr += `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="${F1(Math.max(7, 0.4 * W0.k))}" fill="none" stroke="#ff5a4f" stroke-width="2.5"/>`; }
+  if (kC > 0) sr += `<path d="${bandPath(Gm, p3 => wpx(W0, p3), VP.band360)}" fill="#fff" fill-opacity="${(0.3 * kC).toFixed(3)}" fill-rule="evenodd" stroke="#fff" stroke-width="1.8" stroke-dasharray="5 4" opacity="${kC}"/>`;
+  sr += '</g>';
+  let cryoAt = null;
+  if (kY > 0) { const W2 = VP.wide(VP.on11(VP.ST.cryo7), PW, PH, win, 'w71c', {}), Gc = P.geom(VP.ST.cryo7), cr = VP.CRYO, rr = P.surfAt(cr.s).rho * 30 * VP.D2R, ring = [];
+    for (let i = 0; i <= 48; i++) { const t = 2 * Math.PI * i / 48; ring.push(wpx(W2, Gc.ret(cr.h + 1.3 * Math.cos(t) / rr, cr.s + 1.3 * Math.sin(t), 1))); }
+    sr += `<g opacity="${kY.toFixed(3)}"><rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>${W2.svg}<path d="${pth(ring, true)}" fill="#f4fbff" fill-opacity="0.5" stroke="#ffffff" stroke-width="2" stroke-dasharray="5 3"/></g>`;
+    cryoAt = ring[36]; }
+  sr += mark11(Wt, 1 - zW) + badge(12, 10, 'inverter 開', COL.accent);
+  er += lab('雷射探頭', 'endolaser（10 點半）', PW - 12, 380, A.inst0, { side: 'R', bold: true, lc: '#ffffff', op: (firing ? 1 : 0) * T.on(0, 0.6) });
+  er += lab('11 點裂孔', 'HST', 14, 380, A.tear, Object.assign({ op: (1 - kY) * (1 - kC) }, HST));
+  er += lab('雷射點圍住裂孔', 'laser', 14, 64, nL > 8 ? wpx(W0, VP.SPOTS7[8].p) : null, { bold: true, color: C_LAS, lc: '#ff8f7a', op: (nL > 8 ? 1 : 0) * T.p(0, 0.5, 0.6) * (1 - T.on(1, 0.4)) });
+  er += lab('疤（示意）', 'scar', 14, 64, wpx(W0, VP.SPOTS7[8].p), { bold: true, color: '#e0b58a', lc: '#e0b58a', op: scar * (1 - kC) * (1 - kY) });
+  er += lab('360 度的位置（示意）', '', 14, 300, wpx(W0, Gm.ret0(1.8, VP.band360(1.8)[0], 1)), { bold: true, color: COL.amber, lc: '#ffd27a', op: kC });
+  er += lab('冷凍處：從外面壓的隆起（示意）', 'cryo', 14, 64, cryoAt, { bold: true, color: '#9fd4ff', lc: '#ffffff', op: kY });
+  sr += `<g opacity="${kC.toFixed(3)}">` + bigCard(PW - 330, 14, 316, 136, [[TX7.s360.title, { bold: true, size: 15 }], [TX7.s360.a, { size: 15 }], [TX7.s360.b, { size: 15 }], [TX7.s360.c, { bold: true, size: 16, color: COL.accent }]], { lh: 28, y0: 30 }) + '</g>';
+  return { L: { svg: sl, extra: el, P: PL }, R: { svg: sr, extra: er, P: PT.w71 } };
+};
+
+DRAW2['7-2'] = T => {
+  const SY = VP.SYR, F50 = SY.full, on = i => T.on(i, 0.5) * (i < 5 ? 1 - T.on(i + 1, 0.5) : 1);   // the content of line i, faded out as line i + 1 comes in
+  const kG = 1 - T.on(2, 0.5), tN = VP.EXPAND.end * T.p(0, 0.1, 0.85), op1 = T.on(1, 0.6) * kG;
+  let sl = '', sr = '', PL = PT.g72a, PR = PT.g72b;
+  // ---------------- lines 0–1, left: the bubble volume of pure C3F8 over the days (largest about 4 times at 3–4 days; curve shape 示意); the mixture stays at 1
+  if (kG > 0) { const X0 = 92, X1 = 566, Y0 = 64, Y1 = 330, VM = 4.6, gx = t => X0 + (X1 - X0) * t / VP.EXPAND.end, gy = v => Y1 - (Y1 - Y0) * v / VM, [d0, d1] = VP.EXPAND.days;
+    let g = `<rect x="${F1(gx(d0))}" y="${Y0}" width="${F1(gx(d1) - gx(d0))}" height="${Y1 - Y0}" fill="${C_PURE}" opacity="0.16"/>` +
+      `<path d="M${X0} ${Y0 - 14}V${Y1}H${X1 + 14}" fill="none" stroke="${COL.ink}" stroke-width="2"/>` +
+      `<path d="M${X0} ${F1(gy(1))}H${X1}M${X0} ${F1(gy(VP.EXPAND.peak))}H${X1}" stroke="#9aa5b1" stroke-width="1.2" stroke-dasharray="5 4"/>` +
+      text(X0 - 10, F1(gy(1) + 5), '1 倍', { size: 14, bold: true, anchor: 'end' }) + text(X0 - 10, F1(gy(VP.EXPAND.peak) + 5), '約 4 倍', { size: 14, bold: true, anchor: 'end', color: '#9a6412' }) +
+      text(F1((gx(d0) + gx(d1)) / 2), Y0 - 18, '3 到 4 天最大', { size: 14, bold: true, anchor: 'middle', color: '#9a6412' }) + text(X1 + 10, Y1 + 30, '術後天數', { size: 14, anchor: 'end', color: COL.sub }) +
+      text(X0 + 8, Y0 - 18, '氣泡體積', { size: 14, color: COL.sub });
+    const pts = []; for (let t = 0; t <= tN + 1e-9; t += 0.05) pts.push([gx(t), gy(VP.expand(t))]);
+    if (pts.length > 1) g += `<path d="${pth(pts)}" fill="none" stroke="${C_PURE}" stroke-width="4.5" stroke-linecap="round"/>`;
+    const tM = Math.min(tN, VP.EXPAND.at), m = [gx(tM), gy(VP.expand(tM))]; g += `<circle cx="${F1(m[0])}" cy="${F1(m[1])}" r="7" fill="#fff" stroke="#9a6412" stroke-width="3"/>`;
+    g += htext(F1(gx(5.6)), F1(gy(VP.expand(5.6)) + 30), '純 C3F8', { size: 15, bold: true, color: '#9a6412', op: T.p(0, 0.6, 0.7) });
+    g += `<path d="M${X0} ${F1(gy(1))}H${X1}" stroke="${C_MIX}" stroke-width="4.5" opacity="${op1}"/>` + htext(X1, F1(gy(1) - 12), `混成 ${VP.C3F8_MIX.use}%：不膨脹`, { size: 15, bold: true, anchor: 'end', color: C_MIX, op: op1 });
+    sl += `<g opacity="${kG.toFixed(3)}">${g}</g>` + note('曲線形狀為示意', kG, PH - 14, PW - 12);
+    // right: the bubble of pure C3F8 growing with the same day (volume ∝ radius³), the mixed bubble staying; the mixture bar (14 %, 12–16 % in studies)
+    const bub = (cx, cy, r, col, op) => `<g opacity="${op}"><defs><radialGradient id="b72${cx}" cx="${F1(cx - r * 0.35)}" cy="${F1(cy - r * 0.35)}" r="${F1(r * 1.3)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="${col}"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${F1(r)}" fill="url(#b72${cx})" stroke="${col}" stroke-width="2"/></g>`;
+    const r0 = 30, rP = r0 * Math.cbrt(VP.expand(Math.min(tN, VP.EXPAND.at)));   // the bubble of the marked day (the marker stops at the peak)
+    let h = `<circle cx="160" cy="180" r="${r0}" fill="none" stroke="#9a6412" stroke-width="1.5" stroke-dasharray="4 3"/>` + bub(160, 180, rP, C_PURE, 1) + `<circle cx="160" cy="180" r="${r0}" fill="none" stroke="#9a6412" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.8"/>` + text(160, 92, '純 C3F8', { size: 17, bold: true, anchor: 'middle', color: '#9a6412' }) + text(160, 268, '體積變大約 4 倍', { size: 15, bold: true, anchor: 'middle', op: T.p(0, 0.45, 0.6) });
+    h += bub(440, 180, r0, C_MIX, op1 / kG) + text(440, 92, `混成 ${VP.C3F8_MIX.use}%`, { size: 17, bold: true, anchor: 'middle', color: C_MIX, op: op1 / kG }) + text(440, 268, '大小不變', { size: 15, bold: true, anchor: 'middle', op: op1 / kG });
+    const bx = 70, bw = 466, by = 318, f = VP.C3F8_MIX.use / 100;
+    h += `<g opacity="${(op1 / kG).toFixed(3)}"><rect x="${bx}" y="${by}" width="${F1(bw * f)}" height="26" fill="${C_PURE}"/><rect x="${F1(bx + bw * f)}" y="${by}" width="${F1(bw * (1 - f))}" height="26" fill="${C_AIR}"/><rect x="${bx}" y="${by}" width="${bw}" height="26" fill="none" stroke="#5b6878" stroke-width="1.5"/>` +
+      text(bx, by + 50, `C3F8 ${VP.C3F8_MIX.use}%`, { size: 15, bold: true, color: '#9a6412' }) + text(bx + bw, by + 50, '空氣', { size: 15, bold: true, anchor: 'end', color: COL.sub }) + text(bx + bw / 2, by + 50, `各研究用過 ${VP.C3F8_MIX.range[0]} 到 ${VP.C3F8_MIX.range[1]}%`, { size: 14, anchor: 'middle', color: COL.sub }) + '</g>';
+    sr += `<g opacity="${kG.toFixed(3)}">${h}</g>`; }
+  // ---------------- line 2: the 50 mL syringe, C3F8, in three steps (no scale: the amount kept is 依院內常規); right: the steps
+  const x0 = 70, x1 = 320, yS = 200, rg = SY.c3f8.range, vEnd = rg[1] * F50;
+  if (on(2) > 0) { const p1 = T.p(2, 0.05, 0.28), p2 = T.p(2, 0.36, 0.6), p3 = T.p(2, 0.7, 0.94), o = on(2), ph = p3 > 0 ? 3 : p2 > 0 ? 2 : 1;
+    const S = p3 > 0 || p2 >= 1 ? { total: lerp(vEnd, F50, p3), keep: null, range: rg } : { total: p2 > 0 ? lerp(F50, vEnd, p2) : F50 * p1, keep: null, range: rg, pureAll: true };
+    sl += syringe(x0, x1, yS, Object.assign({ id: 'sy72a', op: o }, S));
+    sl += text(F1((x0 + x1) / 2), yS - 64, '純 C3F8', { size: 16, bold: true, anchor: 'middle', color: '#9a6412', op: o * (ph < 3 ? 1 : 0) });
+    if (ph === 2 && p2 < 1) sl += arrowP([[x0 - 30, yS], [x0 - 84, yS]], COL.amber, o, 'arrM', 4);                                                       // the extra gas pushed out
+    if (ph === 3) sl += arrowP([[x0 - 84, yS], [x0 - 32, yS]], COL.sub, o, 'arrK', 4) + text(x0 - 58, yS + 36, '無菌空氣', { size: 14, bold: true, anchor: 'middle', color: COL.sub, op: o });
+    if (ph >= 2 && (p2 >= 1 || p3 > 0)) sl += braceU(x0 + (x1 - x0) * 0.0, x0 + (x1 - x0) * rg[1], yS + 34, TX7.steps.note, '#9a6412', o);
+    if (p3 > 0) sl += braceU(x0 + (x1 - x0) * rg[1] + 4, VP.syrX(x0, x1, F50), yS - 66, '', COL.sub, o * p3) + text(F1((x0 + (x1 - x0) * rg[1] + x1) / 2), yS - 70, '無菌空氣補到 50 mL', { size: 15, bold: true, anchor: 'middle', color: COL.sub, op: o * p3 });
+    const rows = [TX7.steps.a, TX7.steps.b, TX7.steps.c];
+    sr += `<g opacity="${o.toFixed(3)}"><rect x="40" y="40" width="526" height="250" rx="10" fill="#fff" stroke="#d3dae1"/>` +
+      rows.map((t, i) => `<rect x="56" y="${62 + i * 66}" width="494" height="50" rx="8" fill="${i + 1 === ph ? '#e7f3ef' : '#f7f9fa'}" stroke="${i + 1 === ph ? COL.accent : '#e1e6ea'}" stroke-width="${i + 1 === ph ? 2 : 1}"/>` +
+        text(74, 94 + i * 66, t, { size: 19, bold: i + 1 === ph, color: i + 1 === ph ? COL.accent : COL.sub })).join('') + text(56, 322, TX7.steps.note, { size: 15, bold: true, color: '#9a6412' }) + '</g>';
+    if (o > 0.5) { PL = PT.s72; PR = PT.s72l; } }
+  // ---------------- line 3: the SF6 example (Kanclerz 2018b): keep 10 mL, air up to 50 mL = 20 %; the case report's error: kept 20 mL = 40 %
+  if (on(3) > 0) { const o = on(3), pa = T.p(3, 0.08, 0.35), pb = T.p(3, 0.55, 0.8), ob = T.on(3, 0.5, (T.en(3) - T.st(3)) * 0.48);
+    const one = (keep, p, id, col, op, lbl) => { const X = v => VP.syrX(x0, x1, v);
+      return syringe(x0, x1, yS, { id, op, keep, total: lerp(keep, F50, p), ticks: true }) + braceU(X(0), X(keep), yS + 34, lbl, '#9a6412', op) +
+        braceU(X(keep) + 4, X(F50), yS + 34, '', COL.sub, op * p) + text(F1((X(keep) + X(F50)) / 2), yS + 64, '空氣補到 50 mL', { size: 15, bold: true, anchor: 'middle', color: COL.sub, op: op * p }) +
+        text(F1(x0), yS + 136, `濃度 ${VP.conc(keep)}%`, { size: 30, bold: true, color: col, op: op * p }); };
+    sl += one(SY.sf6.ok, pa, 'sy72b', COL.accent, o, `SF6 留 ${SY.sf6.ok} mL`) + text(F1(x0), 92, '正確', { size: 18, bold: true, color: COL.accent, op: o });
+    sr += one(SY.sf6.bad, pb, 'sy72c', COL.red, o * ob, `誤留 ${SY.sf6.bad} mL`) + badge(PW - 176, PH - 44, '錯誤的病例', COL.red, o * ob) + text(F1(x0), 92, '算錯量', { size: 18, bold: true, color: COL.red, op: o * ob });
+    if (o > 0.5) { PL = PT.s72ok; PR = PT.s72bad; } }
+  // ---------------- line 4: two other errors (Kanclerz 2018b): a new supplier's pure gas taken as diluted; drawing straight from a high-pressure tank
+  if (on(4) > 0) { const o = on(4), ob = T.on(4, 0.5, (T.en(4) - T.st(4)) * 0.45);
+    const bottle = (x, y, lab_, col) => `<rect x="${x}" y="${y}" width="54" height="96" rx="12" fill="${col}" stroke="#5b6878" stroke-width="2"/><rect x="${x + 16}" y="${y - 16}" width="22" height="18" rx="3" fill="#a9b3bd" stroke="#5b6878" stroke-width="1.5"/>` +
+      text(x + 27, y + 124, lab_, { size: 14, bold: true, anchor: 'middle' });
+    sl += `<g opacity="${o.toFixed(3)}">` + bottle(130, 110, TX7.sup.bot1, C_AIR) + bottle(390, 110, TX7.sup.bot2, C_PURE) + arrowP([[214, 158], [370, 158]], COL.red, 1, 'arrR', 4) +
+      text(PW / 2, 60, TX7.sup.title, { size: 20, bold: true, anchor: 'middle' }) + text(PW / 2, 300, TX7.sup.a, { size: 18, bold: true, anchor: 'middle', color: COL.red }) + text(PW / 2, 332, TX7.sup.b, { size: 18, bold: true, anchor: 'middle', color: COL.red }) + '</g>';
+    sr += `<g opacity="${(o * ob).toFixed(3)}"><rect x="96" y="96" width="92" height="170" rx="40" fill="#c7cfd6" stroke="#5b6878" stroke-width="2"/><rect x="126" y="72" width="32" height="26" rx="4" fill="#a9b3bd" stroke="#5b6878" stroke-width="1.5"/>` +
+      `<circle cx="142" cy="60" r="16" fill="#fff" stroke="#5b6878" stroke-width="2"/><path d="M142 60l9 -8" stroke="${COL.red}" stroke-width="2.5"/>` + text(142, 300, TX7.tank.t, { size: 14, bold: true, anchor: 'middle' }) +
+      arrowP([[160, 72], [250, 72], [250, 150]], COL.red, 1, 'arrR', 3.5) + '</g>' + syringe(290, 480, 196, { id: 'sy72d', op: o * ob, keep: null, range: [0, 0], total: 26, pureAll: true }) +
+      `<g opacity="${(o * ob).toFixed(3)}">` + text(PW / 2, 60, TX7.tank.title, { size: 20, bold: true, anchor: 'middle' }) + text(PW / 2 + 60, 300, TX7.tank.a, { size: 18, bold: true, anchor: 'middle', color: COL.red }) + text(PW / 2 + 60, 332, TX7.tank.b, { size: 18, bold: true, anchor: 'middle', color: COL.red }) + '</g>';
+    if (o > 0.5) { PL = PT.e72a; PR = PT.e72b; } }
+  // ---------------- line 5: the C3F8 syringe — how much to keep: the hospital's routine (no scale, no number); the call-out
+  if (on(5) > 0) { const o = on(5);
+    sl += syringe(x0, x1, yS, { id: 'sy72e', op: o, keep: null, range: rg, total: F50, hatch: 0.75 }) + braceU(x0, x0 + (x1 - x0) * rg[1], yS + 34, TX7.steps.note, '#9a6412', o) +
+      text(F1((x0 + x1) / 2), yS - 64, '純 C3F8＋無菌空氣補到 50 mL', { size: 16, bold: true, anchor: 'middle', color: '#9a6412', op: o });
+    sr += bigCard(40, 70, 526, 250, [[TX7.say.a, { size: 24, bold: true }], [TX7.say.b, { size: 24, bold: true, color: COL.red }], [TX7.say.c, { size: 24, bold: true, color: COL.red }]], { op: o, stroke: COL.red, sw: 4, center: true, y0: 104, lh: 56 });
+    if (o > 0.5) { PL = PT.s72c; PR = PT.c72; } }
+  return { L: { svg: sl, extra: '', P: PL }, R: { svg: sr, extra: '', P: PR } };
+};
+
+DRAW2['7-3'] = T => {
+  const P = POSTERIOR, G = GLOBE;
+  // ---------------- the state of this frame (both panels): line 0 the mixed gas flushed through the eye in steps; line 2 every cannula out at once; line 3 the wound
+  const kF = Math.max(T.p(0, 0.15, 0.85), T.on(1, 0.01)), stIn = VP.flushStep(kF), kO = T.on(2, 0.6), kP = T.on(3, 0.6);
+  const opFlow = T.on(0, 0.6) * (1 - T.on(1, 0.5));
+  // ---------------- left: the section through the 4:30 infusion (right = 4:30, left = 10:30: both ports in the plane)
+  const secOf = (st, id) => VP.sec(st, PW, PH, VP.WIN.inf, id, { h: VP.INF_H, tw: VP.WIN.infT, step: 0.06 });
+  const S0 = secOf(stIn, 's73'), a = S0.A, toS = p3 => S0.P(G.toPlane(S0.r.plane, p3));
+  let sl = S0.svg, el = '', b = a;
+  if (kO > 0) { const S1 = secOf(VP.ST.closed, 's73c'); sl += `<g opacity="${kO.toFixed(3)}">${S1.svg.replace(/^<rect[^>]*\/>/, '')}</g>`; if (kO > 0.5) b = S1.A; }
+  // line 0 (示意): the mixed gas out of the infusion, across the eye, out through the open 10:30 cannula
+  const FL = VP.flush73(stIn), fk = T.p(0, 0.15, 0.85);
+  sl += arrowP(cutPts(FL.inn.map(toS), Math.max(0.05, fk)), C_MIX, opFlow, 'arrB', 4) + arrowP(FL.out.map(toS), COL.amber, opFlow * T.p(0, 0.5, 0.6), 'arrM', 4);
+  const cav = toS(VP.inPl(VP.INF_H, 0.5, -4.5));
+  el += lab('先完成氣液交換：眼內是空氣', '', 14, 352, cav, { bold: true, op: T.on(0) * (1 - T.p(0, 0.3, 0.4)) });
+  el += lab('眼內換成混合氣體（顏色示意）', 'C3F8＋空氣', 14, 352, cav, { bold: true, color: C_MIX, lc: C_MIX, op: T.p(0, 0.4, 0.5) * (1 - kP) });
+  el += lab('混好的氣體從 infusion 進來', '4 點半', PW - 12, 40, a.troc_it, { side: 'R', bold: true, color: C_MIX, lc: C_MIX, op: T.on(0, 0.6, 0.4) * (1 - kO) });
+  el += lab('空氣從套管排出（示意）', '10 點半', 14, 40, a.troc_sn, { bold: true, color: COL.amber, lc: COL.amber, op: opFlow * T.p(0, 0.5, 0.6) });
+  el += lab('拔掉 cannula 之後', '', 14, 40, b.troc_sn, { bold: true, op: kO * (1 - kP) });
+  sl += note('沖洗的路徑與排氣處為示意', opFlow, PH - 14, PW - 12);
+  { const t = P.troc(P.geom(VP.modelSt(VP.ST.closed))).find(x => x.inf), cil = P.cilTh(t.s - G.N.spur, P.oraAt(t.h, 1) - G.N.spur);   // the gas just inside the 4:30 wound
+    el += lab('眼內的氣體貼著傷口的內口', '（示意）', PW - 12, 120, toS(P.P3(t.h, t.s, t.Tw + cil + 0.5)), { side: 'R', bold: true, color: C_MIX, lc: C_MIX, op: kP }); }
+  // ---------------- right, lines 0–2: the microscope view (the mixed gas on the infusion line, the vent 示意; the volumes; the cannulas out, each wound checked)
+  let sr = '', er = '', PR = PT.ext73;
+  if (kP < 1) { const E0 = VP.ext(stIn, PW, PH, VP.WIN.extF, 'e73'), e = E0.A, o = 1 - kP;
+    sr += `<g opacity="${o.toFixed(3)}">${E0.svg}`;
+    { const t = P.troc(P.geom(VP.modelSt(stIn))).find(x => x.inf), top = extPx(E0, t.hubTop), mid = extPx(E0, G.add(t.entry, P.N3(t.h, t.s).map(v => v * 1.5))), far = extPx(E0, P.P3(t.h, t.s + 9, -3));   // the model's infusion line, in the mix colour
+      sr += `<path d="M${F1(top[0])} ${F1(top[1])}Q${F1(mid[0])} ${F1(mid[1])} ${F1(far[0])} ${F1(far[1])}" fill="none" stroke="${C_MIX}" stroke-width="5" stroke-linecap="round" opacity="${(T.on(0, 0.6) * (1 - kO)).toFixed(3)}"/>`; }
+    sr += '</g>';
+    // the closed state crossfaded in at line 2
+    if (kO > 0) { const E1 = VP.ext(VP.ST.closed, PW, PH, VP.WIN.extF, 'e73c'), c = E1.A; sr += `<g opacity="${(kO * o).toFixed(3)}">${E1.svg}</g>`;
+      for (const id of ['it', 'st', 'sn']) { const q = c['cj_' + id] || c['troc_' + id]; sr += `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="16" fill="none" stroke="${COL.accent}" stroke-width="2.5" stroke-dasharray="5 3" opacity="${(kO * o).toFixed(3)}"/>`; }
+      const qs = c.cj_sn || c.troc_sn, ks = T.p(2, 0.6, 0.75) * o;   // 示意: one stitch over a wound that keeps leaking
+      sr += `<path d="M${F1(qs[0] - 9)} ${F1(qs[1] - 9)}L${F1(qs[0] + 9)} ${F1(qs[1] + 9)}" stroke="#2463eb" stroke-width="3" stroke-linecap="round" opacity="${ks}"/>`;
+      er += lab('檢查每個傷口', 'leak?', 14, 380, c.cj_st || c.troc_st, { bold: true, color: COL.accent, lc: COL.accent, op: kO * o });
+      er += lab('若一直漏：縫一針（示意）', 'suture', PW - 12, 380, qs, { side: 'R', bold: true, color: '#2463eb', lc: '#2463eb', op: ks });
+      sr += bigCard(PW - 252, 14, 238, 118, [[TX7.close.a, { size: 15, bold: true }], [TX7.close.b, { size: 15, bold: true }], [TX7.close.c, { size: 15, bold: true }]], { op: kO * o, lh: 30, y0: 32 });
+      sr += note('拔的順序：依主刀', kO * o, 40, 14, 'start'); }
+    er += lab('infusion 接上混好的氣體（示意）', '', 14, 40, e.troc_it, { bold: true, color: C_MIX, lc: C_MIX, op: T.on(0, 0.6) * (1 - kO) * o });
+    const vh = e.troc_sn, vc = E0.P([0, 0]), vd = [vh[0] - vc[0], vh[1] - vc[1]], vl = Math.hypot(...vd);
+    sr += arrowP([[vh[0] + vd[0] / vl * 14, vh[1] + vd[1] / vl * 14], [vh[0] + vd[0] / vl * 64, vh[1] + vd[1] / vl * 64]], COL.amber, opFlow * T.p(0, 0.5, 0.6), 'arrM', 4);
+    er += lab('排氣（示意）', 'vent', PW - 12, 380, [vh[0] + vd[0] / vl * 40, vh[1] + vd[1] / vl * 40], { side: 'R', bold: true, color: COL.amber, lc: COL.amber, op: opFlow * T.p(0, 0.5, 0.6) });
+    // line 1: how much to flush (Williams 1990: 25 mL; Shunmugam 2011: 35 mL, two 50 mL syringes for a long eye)
+    const ov = T.on(1, 0.6) * (1 - kO), V = VP.SYR.full, bw = VP.volBar, FV = VP.FLUSH_VOL;
+    if (ov > 0) { const x = PW - 330, y = 14, rows = [[`實驗（${FV[0].who}）`, FV[0].v, `${FV[0].v} mL 幾乎換完全`], [`電腦模擬（${FV[1].who}）`, FV[1].v, `${FV[1].v} mL`], [`眼軸較長：兩支 ${V} mL`, FV[2].v, '']];
+      let s = `<g opacity="${ov.toFixed(3)}"><rect x="${x}" y="${y}" width="316" height="188" rx="10" fill="#fff" stroke="#d3dae1"/>` + text(x + 14, y + 28, TX7.vol.title, { size: 16, bold: true });
+      rows.forEach(([t, v, t2], i) => { const yy = y + 58 + i * 44; s += text(x + 14, yy, t, { size: 14, color: COL.sub });
+        if (i < 2) s += `<rect x="${x + 14}" y="${yy + 8}" width="${F1(bw(v))}" height="14" rx="3" fill="${C_MIX}"/>` + text(F1(x + 22 + bw(v)), yy + 20, t2, { size: 14, bold: true, color: C_MIX });
+        else s += `<rect x="${x + 14}" y="${yy + 8}" width="${F1(bw(V))}" height="14" rx="3" fill="${C_MIX}"/><rect x="${F1(x + 16 + bw(V))}" y="${yy + 8}" width="${F1(bw(V))}" height="14" rx="3" fill="${C_MIX}"/>`; });
+      sr += s + '</g>'; } }
+  // ---------------- right, line 3: the tunnel cross-section of the infusion port, closed: the oblique tunnel, the gas against its inner end (Warrier 2008)
+  if (kP > 0) { const V = VP.port(VP.ST.closed, PW, PH, VP.WIN.port, 'p73', 'it'), c = V.A, ti = c.tunnelIn, en = c.entry, te = c.tunnelEnd;
+    sr += `<g opacity="${kP.toFixed(3)}">${V.svg}<path d="M${F1(te[0])} ${F1(te[1])}L${F1(ti[0])} ${F1(ti[1])}" stroke="#7d6a5a" stroke-width="1.4"/></g>`;   // the tunnel on through the pars plana
+    sr += arrowP([[ti[0] - 26, ti[1] + 46], [ti[0] - 5, ti[1] + 10]], C_MIX, kP * T.on(3, 0.6, 0.6), 'arrB', 3.5) + arrowP([[ti[0] + 26, ti[1] + 46], [ti[0] + 5, ti[1] + 10]], C_MIX, kP * T.on(3, 0.6, 0.6), 'arrB', 3.5);
+    er += lab('斜的隧道', 'oblique tunnel', PW - 12, 40, [(en[0] + ti[0]) / 2, (en[1] + ti[1]) / 2], { side: 'R', bold: true, op: kP });
+    er += lab('氣體貼住內口，幫傷口封住（示意）', 'gas', 14, 290, [ti[0] - 20, ti[1] + 36], { bold: true, color: C_MIX, lc: C_MIX, op: kP * T.on(3, 0.6, 0.6) });
+    sr += bigCard(14, PH - 102, 286, 92, [[TX7.sut.title, { size: 15, bold: true }], [TX7.sut.a, { size: 15 }], [TX7.sut.b, { size: 15 }]], { op: kP * T.on(3, 0.6, 0.2), lh: 24, y0: 26 });
+    if (kP > 0.5) PR = PT.port73; }
+  return { L: { svg: sl, extra: el, P: PT.sec73 }, R: { svg: sr, extra: er, P: PR } };
+};

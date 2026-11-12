@@ -153,6 +153,11 @@ const VP = (() => {
     z42: { x: -8.31, y: -5.16, w: 14 },                    // 4-2: around the cutter's tip in PLANE42 (tip at 360, 180 px; the detached retina, SRF and wall below; room top left)
     z42T: { x: -8.31, y: -5.16, w: 14, h: 9.48 },
     w62z: { x: -9.7, y: -9.4, w: 14 },                     // 6-2 lines 2–4: the wide view (LOOK6) zoomed on the fovea and the retained bead below-left of it
+    c71: { x: -5.4, y: -12.8, w: 23 },                     // 7-1 line 3: the lens and the 11 o'clock periphery of the 11–5 section, room outside the wall for the cryo probe
+    c71T: { x: -5.4, y: -12.8, w: 23, h: 15.57 },
+    l71: { x: 5.4, y: -6.2, w: 9.5 },                      // 7-1 lines 0–1: the 11 o'clock tear in the 11–5 section (the hinge at 10.8, −3.4; the spots in front of and behind it)
+    l71T: { x: 5.4, y: -6.2, w: 9.5, h: 6.43 },
+    w71z: { x: -0.5, y: 5.1, w: 16 },                      // 7-1: the wide view (looking toward 11) zoomed on the tear, its rings and the 10:30 cannula
   };
   const LOOK_INF = { h: INF_H, deg: 45 };                  // 2-2: the surgeon looks toward the infusion (示意, as the model looks toward 11 for the tear)
   const OR = {   // orientation lines (POSTERIOR.orient: checked in posterior/check.js B2, B5)
@@ -242,12 +247,73 @@ const VP = (() => {
   function edgeAt(st, level, h) { const Gm = P.geom(st), up = s => -G.dot(Gm.ret(h, s, 1), Gm.g); let lo = P.oraAt(h, Gm.ts), hi = P.S_POLE - 0.05;
     if (!(up(lo) > level && up(hi) < level)) return null; for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; up(m) > level ? lo = m : hi = m; } return Gm.ret(h, (lo + hi) / 2, 1); }
   Object.assign(OR, { w6: '左眼 OS　inverter 開：下＝12 點、temporal 在左　略看向 11 點（示意）' });
+  // chapter 7 (laser, gas, closing). The state after chapter 6: the retina flat everywhere (rd amt 0), the cavity all gas (air), the patient supine,
+  // the case's trocars; instruments only through them. 7-1: the endolaser probe (kind 'laser': a bare 23G shaft, 示意) in the superonasal 10:30 port,
+  // the light pipe in the 1:30 port; the model's two rings of spots round the 11 o'clock tear (rows and spacing 示意: research/intraop.md 題 7「不能講
+  // 的」) laid in LASER_STEPS steps, the probe's tip LASER_E mm (示意; nearer for the spots close to the port) in front of the latest spot on the line
+  // from its port's pivot (the aiming beam runs along the shaft). Line 1: the inset after the operation, sitting upright (P.PRESET.sitGas: half the cavity gas, 示意; chapter 8 says sitting
+  // brings the bubble to the 11 o'clock tear). Line 2: where a 360° laser would go (band360, 示意). Line 3 (另一種做法, 示意; Lai 2019): a cryo probe
+  // pressed on the sclera over the tear (the model's depressor, CRYO), no laser.
+  const st7 = o => Object.assign({}, P.CASE, { troc: true, vit: { cut: 1, shave: 1 }, rd: { amt: 0 }, gas: 1 }, o);
+  const LASER_STEPS = 9, LASER_E = 2.0;
+  const SPOTS7 = P.laserSpots(P.geom(st7({ laser: 1 }))).map(q => ({ h: q.h, s: q.s, p: q.p, u: q.u, c: q.c, ring: q.ring }));   // every spot, in the order laid
+  const PIV7 = P.troc(P.geom(st7({}))).find(t => t.id === 'sn').pivot;
+  // the probe's tip on the line from the pivot to the spot, LASER_E mm in front of it — nearer (but ≥ 0.5 mm out of the cannula) for the spots close to the port
+  const aimAt = sp => { const d = G.unit(G.sub(PIV7, sp.p)), D = G.len(G.sub(PIV7, sp.p)), t = P.troc(P.geom(st7({ inst: [{ kind: 'laser', port: 'sn', tip: sp.p }] }))).find(x => x.id === 'sn');
+    const e = Math.min(LASER_E, D - G.len(G.sub(t.tip, PIV7)) - 0.5); return G.add(sp.p, d.map(v => v * e)).map(v => +v.toFixed(4)); };
+  // the laser k (0 → 1) of the way round in LASER_STEPS steps; the probe aims at the last spot laid (before the first one: at the first)
+  const laserStep = k => { const n = Math.round(c01(k) * LASER_STEPS), m = Math.round(SPOTS7.length * n / LASER_STEPS);
+    return st7({ laser: n / LASER_STEPS, inst: [{ kind: 'laser', port: 'sn', tip: aimAt(SPOTS7[Math.max(0, m - 1)]) }, LIGHT5] }); };
+  const CRYO = (() => { const Gm = P.geom(st7({})), T = Gm.tear, c = P.onRetina(Gm, T.fr, T.L / 2, 0, 1); return { h: T.h, s: +c.s.toFixed(3), depth: 1.0, w: 1.8 }; })();   // over the tear's middle; depth 示意
+  // the inner opening of a trocar's tunnel: along the tunnel line from the scleral entry, the first point in the vitreous cavity (past the pars plana)
+  function tunnelIn(Gm, t) { const f = P.makeCtx(Gm), at = L => G.add(t.entry, t.tdir.map(v => v * L)); let L = t.Tw / Math.sin(t.ang * D2R);
+    while (L < 6 && !(f.cavity(f.at(at(L))) < 0)) L += 0.01; return at(L); }
+  const band360 = h => [P.vbPostAt(h, 1) + 2.8, P.vbPostAt(h, 1) + 3.5];   // 7-1 line 2: mm from the limbus where a 360° laser would go (behind the tear's rings; 示意)
+  Object.assign(ST, {
+    las1: st7({ laser: 1, inst: [LIGHT5] }),                               // 7-1 lines 1–2: the laser done round the tear, the probe out
+    sit7: Object.assign({}, P.PRESET.sitGas),                              // 7-1 line 1 inset: after the operation, sitting upright (bubble size 示意)
+    cryo7: st7({ dep: CRYO, inst: [LIGHT5] }),                             // 7-1 line 3: cryo instead of laser (示意)
+  });
+  // 7-2 (preparing the gas; drawn by draw.js, not the model): the 50 mL syringe (Kanclerz 2018b), pure gas kept, then sterile air up to 50 mL. The SF6
+  // example and the case report's error (Kanclerz 2018b): 10 mL → 20 %, 20 mL → 40 %. C3F8: how much to keep is the hospital's routine — no number and
+  // no scale on its syringe (research/gas-postop.md 2.8: 7/50 is our own arithmetic). Pure C3F8 expands about 4 times, largest at 3–4 days (Vaziri 2016;
+  // the curve's shape is 示意); mixed to the non-expansile concentration it does not expand.
+  const SYR = { full: 50, ticks: [10, 20, 30, 40, 50], sf6: { ok: 10, bad: 20 }, c3f8: { keep: null, range: [0.1, 0.32] } };   // range: the hatched 「依院內常規」 band (fraction of the barrel, no scale)
+  const syrX = (x0, x1, v) => x0 + (x1 - x0) * v / SYR.full;               // px of a volume on a barrel drawn from x0 (0 mL, the nozzle end) to x1 (50 mL)
+  const conc = keep => Math.round(100 * keep / SYR.full);                  // % of pure gas after filling up to 50 mL
+  const EXPAND = { peak: 4, days: [3, 4], at: 3.5, end: 7 };
+  const C3F8_MIX = { use: 14, range: [12, 16] };                           // the non-expansile mixture: commonly 14 % (Vaziri 2016); 12–16 % in studies (Brosh 2014; Foulsham 2021)
+  const easeE = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  const expand = t => t <= EXPAND.at ? 1 + (EXPAND.peak - 1) * easeE(t / EXPAND.at) : EXPAND.peak - 0.12 * (t - EXPAND.at) ** 1.5;   // pure C3F8: bubble volume × (示意 shape)
+  // 7-3 (flushing and closing), after the laser. The mixed gas comes in through the 4:30 infusion and is flushed through the whole eye; the air goes out
+  // through the open 10:30 cannula (the vent and the path 示意: no source). The drawn gas colour goes from air (the model's white) to the mix (MIX_COL,
+  // 示意) as one uniform mixture (st.mix 0 → 1 in FLUSH_STEPS steps; the model's gasKind is a name only). Then every cannula out at once (the order is the
+  // surgeon's: no source), the conjunctiva slid back over each wound as in 2-1 (CJ_PUSH, 示意); the gas lies against the inner end of each oblique tunnel.
+  const MIX_COL = '#b9dbf5', FLUSH_STEPS = 6;
+  // 7-3 line 1: how much to flush — 25 mL in the experiment (Williams 1990), 35 mL in the computer model, two 50 mL syringes for a long eye (Shunmugam 2011);
+  // drawn as bars of volBar(v) px (the same scale for all three)
+  const FLUSH_VOL = [{ v: 25, who: 'Williams 1990' }, { v: 35, who: 'Shunmugam 2011' }, { v: 2 * SYR.full, who: 'Shunmugam 2011', two: true }], volBar = v => 190 * v / (2 * SYR.full);
+  const hexRGB = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mixHex = k => { const a = hexRGB(P.C.gas), b = hexRGB(MIX_COL); return '#' + a.map((v, i) => Math.round(v + (b[i] - v) * c01(k)).toString(16).padStart(2, '0')).join(''); };
+  // the model draws one gas colour; a state with st.mix gets its gas layer recoloured (and the model gets the state without mix / gasKind, so the
+  // cached tissue is reused while only the colour changes). GAS_SIG: the gas layer's attributes as posterior.js writes them (fill C.gas, stroke C.gasS)
+  const GAS_SIG = `fill="${P.C.gas}" fill-rule="evenodd" stroke="${P.C.gasS}"`;
+  const modelSt = st => { if (!st || !('mix' in st)) return st; const r = Object.assign({}, st); delete r.mix; delete r.gasKind; return r; };
+  const recolor = (svg, st) => st && 'mix' in st && st.gas > 0 ? svg.replace(GAS_SIG, `fill="${mixHex(st.mix)}" fill-rule="evenodd" stroke="${P.C.gasS}"`) : svg;
+  const flushStep = k => { const n = Math.round(c01(k) * FLUSH_STEPS) / FLUSH_STEPS; return st7({ laser: 1, gasKind: n >= 1 ? 'c3f8' : 'air', mix: n }); };
+  ST.closed = st7({ laser: 1, gasKind: 'c3f8', mix: 1, troc: P.trocarsFor('OS').map(t => Object.assign({}, t, { out: 1, cj: -CJ_PUSH })) });
+  // 7-3 line 0 (示意): the flush's path in the 4:30–10:30 plane — out of the infusion tip, across the cavity, into the open 10:30 cannula and out of its hub
+  function flush73(st) { const T3 = P.troc(P.geom(modelSt(st))), it = T3.find(t => t.inf), sn = T3.find(t => t.id === 'sn'), c = inPl(INF_H, 0, -6), inn = [];
+    for (let i = 0; i <= 24; i++) { const u = i / 24, a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, d = u * u; inn.push([0, 1, 2].map(j => a * it.tip[j] + b * c[j] + d * sn.tip[j])); }   // a smooth curve: infusion tip → past the middle → the 10:30 cannula's tip
+    return { inn, out: [sn.tip, sn.base, G.add(sn.hubTop, G.sub(sn.hubTop, sn.base).map(v => v * 1.5))], it, sn }; }
+  Object.assign(OR, { w7: OR.w5 });
 
   // ---------------------------------------------------------------- views
   function fundus(st, W, H, win, id) { const c = cam(win, W, H), r = P.fundus({ st, id }); return wrap(c, r); }
   // section; o.h clock hour (right side), o.tw the computed window (smaller than the panel: the rest is filled with the background colour)
   function sec(st, W, H, win, id, o = {}) {
-    const h = o.h ?? SEC_H, c = cam(win, W, H), tw = o.tw || win, r = P.section({ st, plane: G.planes.meridian(h), win: tw, step: o.step || 0.06, id, noTissue: o.noTissue }), Gm = r.Gm, pl = r.plane;
+    const h = o.h ?? SEC_H, c = cam(win, W, H), tw = o.tw || win, r = P.section({ st: modelSt(st), plane: G.planes.meridian(h), win: tw, step: o.step || 0.06, id, noTissue: o.noTissue }), Gm = r.Gm, pl = r.plane;
+    r.svg = recolor(r.svg, st);
     const to = p => G.toPlane(pl, p), hl = ((h + 5) % 12) + 1, x = { };
     // extra anchors: detached retina on the right side (s 14 mm), inferior macula 1.6 mm from the foveola on the left side, its SRF, the wall at both sides
     const onCh = (fx, fy, frac) => { const hs = P.hsChart(fx, fy); return Gm.ret(hs.h, hs.s, frac); };
@@ -276,10 +342,12 @@ const VP = (() => {
   // Extra anchors (mm): the scleral entry, the inner end of the tunnel, the conjunctival opening, label points on each layer 1.9 mm right of the port;
   // tdir = the tunnel direction on screen; out(L) = the point L mm outside the entry along the tunnel line (the trocar's handle, drawn by draw.js)
   function port(st, W, H, win, id, portId = PORT, o = {}) {
-    const c = cam(win, W, H), Gm = P.geom(st), t = P.troc(Gm).find(x => x.id === portId), pl = G.planes.across(t.h, t.s), to = q => G.toPlane(pl, q);
-    const r = P.section({ st, plane: pl, win: o.tw || Object.assign({ h: win.w * H / W }, win), step: o.step || 0.016, id, noTissue: o.noTissue });
+    const c = cam(win, W, H), Gm = P.geom(modelSt(st)), t = P.troc(Gm).find(x => x.id === portId), pl = G.planes.across(t.h, t.s), to = q => G.toPlane(pl, q);
+    const r = P.section({ st: modelSt(st), plane: pl, win: o.tw || Object.assign({ h: win.w * H / W }, win), step: o.step || 0.016, id, noTissue: o.noTissue });
+    r.svg = recolor(r.svg, st);
     const A = Object.assign({}, r.A), Lt = t.Tw / Math.sin(t.ang * D2R), dh = 1.9 / (P.surfAt(t.s).rho * 30 * D2R), cil = P.cilTh(t.s - G.N.spur, P.oraAt(t.h, 1) - G.N.spur);
     A.entry = to(t.entry); A.tunnelEnd = to(G.add(t.entry, t.tdir.map(v => v * Lt))); if (t.cjC) A.cj = to(t.cjC);
+    A.tunnelIn = to(tunnelIn(Gm, t));   // the inner opening: the tunnel carried on through the pars plana into the cavity (7-3)
     A.conjL = to(P.P3(t.h + dh, t.s, -G.N.conj * 0.5)); A.sclL = to(P.P3(t.h + dh, t.s, t.Tw * 0.5)); A.planaL = to(P.P3(t.h + dh, t.s, t.Tw + cil * 0.5)); A.vitL = to(P.P3(t.h + dh, t.s, t.Tw + cil + 1.0));
     const td = [G.dot(t.tdir, pl.U), G.dot(t.tdir, pl.V)], out = L => c.P([A.entry[0] - td[0] * L, A.entry[1] - td[1] * L]);
     const bg = `<rect x="0" y="0" width="${W}" height="${H}" fill="${P.C.bg}"/>`;
@@ -288,7 +356,7 @@ const VP = (() => {
   // wide-angle view with the cannulas: each cannula drawn from where it leaves the wall into the cavity to its tip (the same 3D points as the section),
   // shaft width from the distance to the viewpoint (as the model draws instruments), clipped to the field. Anchors cannula_<id> (tip), cannulaIn_<id>
   function wide(st, W, H, win, id, o2 = {}) {
-    const c = cam(win, W, H), r = P.wide({ st, id }), Gm = r.Gm, Wm = r.map, f = P.makeCtx(Gm), kp = P.keyPoints(), A = Object.assign({}, r.A), o = [];
+    const c = cam(win, W, H), r = P.wide({ st: modelSt(st), id }), Gm = r.Gm, Wm = r.map, f = P.makeCtx(Gm), kp = P.keyPoints(), A = Object.assign({}, r.A), o = [];
     for (const t of P.troc(Gm)) { if (!(t.ins >= 1) || t.out >= 1) continue;
       const at = u => G.add(t.base, G.sub(t.tip, t.base).map(v => v * u));
       let u0 = null; for (let k = 0; k <= 400; k++) if (f.cavity(f.at(at(k / 400))) < 0) { u0 = k / 400; break; }
@@ -342,7 +410,8 @@ const VP = (() => {
   }
   // points round the tear on the attached retina, in its tangent frame (u posterior from the hinge, c across, mm) → chart mm
   function tearChart(st, pts) { const Gm = P.geom(st), T = Gm.tear; return pts.map(([u, cc]) => chartXY(P.onRetina(Gm, T.fr0, u, cc, 1, Gm.ret0).p)); }
-  return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
+  return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST,
+    tunnelIn, st7, LASER_STEPS, LASER_E, SPOTS7, PIV7, aimAt, laserStep, CRYO, band360, SYR, syrX, conc, EXPAND, C3F8_MIX, expand, MIX_COL, FLUSH_VOL, volBar, FLUSH_STEPS, mixHex, GAS_SIG, modelSt, recolor, flushStep, flush73, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
     portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT,
     SEC4_H, inPl4, CUT4, CORE_STEPS, PVD_STEPS, coreStep, pvdStep, SUCK_AT, E42, SUCK_STEPS, st42, suckAt, traction, distOf, TR42, PLANE42, instSec,
     SHAVE_STEPS, SHAVE_TIP, FAR_TIP, DEP_TIP, shaveStep, on11, lensNear,
