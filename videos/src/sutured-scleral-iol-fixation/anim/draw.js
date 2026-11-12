@@ -8,8 +8,8 @@
 // both views is the same 3D point (window.SYNC records them per segment; check.js compares them).
 // Chapters 3–5 (2026-11-12, second round) also use the 1–7 section through two trocars and the 12–6 section through the wound; needles, the 27G
 // (insulin) needle and the suture drawn by draw.js over a section are thin strokes on the model's geometry (X.passes, X.sutureOf; the true
-// thickness hides the anatomy; 示意). Chapters 6–9 (third round): the lens put in through the 12 o'clock wound along a 示意 path (lensAt) into the
-// model's slack pose and pulled to the sulcus by the model; the knot in the bed under the flap; error states of the same model (8-1, 8-2, 8-4;
+// thickness hides the anatomy; 示意). Chapters 6–9 (third round): the lens put in through the 12 o'clock wound along a 示意 path (lensAt; 2026-11-12 rewritten:
+// through the wound only, the MA60AC's size kept, slack at its free size) and pulled into the model's fixed pose; the knot in the bed under the flap; error states of the same model (8-1, 8-2, 8-4;
 // draw.js keeps a slipped haptic's knot on the suture); evidence cards on the right of 8-2 to 8-4; the follow-along list (9-1). No placeholder is left.
 // ============================================================================
 const DRAW2 = {};
@@ -714,65 +714,101 @@ function scopeD(st, win, id, o = {}) {
 const arrowOut = (v, from3, to3, col, op = 1) => arrowPath([v.Q(from3), v.Q(to3)], col, 2.6, op);
 
 // ---------------------------------------------------------------- 6 放入 IOL 與置中
-// The strands are cut and tied (5-3, 5-4); the lens goes in from the 5-4 pose outside the 12 o'clock wound (HAP_OUT): turned in its plane outside
-// so that the haptic tied to the 8 o'clock strand leads, slid through the wound with the optic folded (the fold drawn as a narrower optic with its
-// crease), the leading haptic behind the iris toward 8 o'clock while the lens turns until the haptics point at 2 and 8 o'clock; it ends in the
-// model's slack pose (iol pull 0), from which the model pulls both strands to the sulcus (pull 1). The insertion path and the fold are 示意.
+// The strands are cut and tied (5-3, 5-4); the lens goes in from the 5-4 pose outside the 12 o'clock wound (HAP_OUT). Rewritten 2026-11-12 (出片前定稿):
+// the lens keeps the MA60AC's size — optic 6 mm, overall 13 mm (the model's X.HAP) outside the eye and while it hangs slack inside; only the
+// haptics bend (示意) — and every point of it crosses the wall in the 12 o'clock wound only. Path (示意): outside, the lens turns so that the haptic
+// tied to the 8 o'clock strand leads, the optic is folded (drawn narrower, with its crease) and both haptics are pressed toward the lens axis; it
+// slides in along one straight line through the middle of the tunnel (IN6.pitch below the frontal plane, toward 6 o'clock): the leading haptic
+// passes over the iris and through the pupil behind the iris, the optic reaches the pupil; the trailing haptic is pressed against the optic (the
+// tuck of a three-piece lens, 示意) and so comes in through the tunnel; the lens moves onto the axis, sinks behind the iris and turns until its
+// haptics point at 2 and 8 o'clock; the optic unfolds and the trailing haptic is let go behind the iris. The slack pose hangs below the sulcus at
+// the free size (the model's own slack pose, iol pull 0, compresses the haptics to 10.8 mm, so draw.js draws the lens itself in both views);
+// pulling both strands brings the ties up to the sulcus exits while the haptics flex into the model's fixed pose (iol pull 1: 12.84 mm).
+// check.js samples the segment every 0.1 s and every drawn pose (window.LENS61, LENS61_AT): through the wall only in the wound, never in the
+// iris, cornea or ciliary body; 13 mm long outside the eye and when slack.
 const IN_ST = p => OPEN({ ndl: { s2: SN.guedes, s8: SN.guedes, pass: 1, g27: 1, out: 1, taut: 1, hook: 1, cut: 1 }, iol: { pull: p } });
-const IOP0 = X.iolOf(X.norm(IN_ST(0))), IOF = X.iolOf(X.norm(IN_ST(1)));
-// keyframes [u, centre, psi (deg; d = [cos, sin, 0] is where the 8 o'clock haptic points), k (haptic compression: the PMMA loops flex while the
-// lens is placed), fold (optic width across the haptic axis), pitch (deg: the trailing, 12 o'clock end up)]; u 0 = the 5-4 pose (psi 180: HAP_OUT),
-// u 1 = the model's slack pose. The leading haptic goes down behind the iris first, the optic through the pupil, the trailing haptic last.
-const LK = [[0, O_OUT, 180, 1, 1, 0], [0.15, O_OUT, 270, 1, 1, 0], [0.3, [0, 11.0, 10.95], 270, 1, 0.42, 0], [0.52, [0, 3.3, 10.4], 270, 0.8, 0.42, 8],
-  [0.72, [0, 0.6, 9.5], 270, 0.6, 1, 14], [0.86, [0, -0.4, 8.6], 262, 0.6, 1, 0], [1, IOP0.O, 210, IOP0.k, 1, 0]];
+const IOF = X.iolOf(X.norm(IN_ST(1))), D2R6 = Math.PI / 180, TN10 = Math.tan(SN.iol.ang * D2R6), RO = X.HAP.Ro;
+const IN6 = { pitch: 25.5, fold: 0.4, sq: 0.28, zSlack: 7.3, kTuck: 0.05, aB: 3.9, zC: 9.5 };   // 示意: the line, the fold, the squeeze, the tuck, the slack depth
+const WP = G.add(INC.outer, G.sub(INC.inner, INC.outer), 0.5), UL = [0, -Math.cos(IN6.pitch * D2R6), -Math.sin(IN6.pitch * D2R6)], onL = a => G.add(WP, UL, a);
+const A0 = (() => { let t = 0; for (;;) { const p = onL(-t); if (G.wallOf(p[2], Math.hypot(p[0], p[1])).d < 0) break; t += 0.01; } return X.HAP.rTie + t + 0.25; })();   // leading tie 0.25 mm outside
+// a lens pose: centre O; heading psi of the lens axis d (deg; d points to the haptic tied to the 8 o'clock strand); pitch (deg, d below the frontal
+// plane); optic fold (its width across d); the haptics' squeeze across d; compression of the trailing (k0) and the leading (k1) haptic (1 = free)
+function lensPose(P) {
+  const psi = P.psi * D2R6, pt = P.pt * D2R6, d0 = [Math.cos(psi), Math.sin(psi), 0], eb = [-Math.sin(psi), Math.cos(psi), 0];
+  const d = G.add(d0.map(x => x * Math.cos(pt)), [0, 0, 1], -Math.sin(pt)), en = G.add([0, 0, Math.cos(pt)], d0, Math.sin(pt));
+  const haps = [0, 1].map(j => { const ex = j === 0 ? d.map(x => -x) : d, ey = j === 0 ? eb.map(x => -x) : eb, k = j === 0 ? P.k0 : P.k1;
+    return X.HAP.pts.map(p => { const r = Math.hypot(p[0], p[1]), r2 = r <= RO ? r : RO + (r - RO) * k, f = r > 1e-9 ? r2 / r : 1;
+      return G.add(G.add(G.add(P.O, ex, p[0] * f), ey, p[1] * f * P.sq), en, Math.max(0, r2 - RO) * TN10); }); });
+  const rim = []; for (let m = 0; m <= 48; m++) { const th = 2 * Math.PI * m / 48; rim.push(G.add(G.add(P.O, d, RO * Math.cos(th)), eb, RO * Math.sin(th) * P.fold)); }
+  return { O: P.O, d, eb, en, fold: P.fold, haps, rim, ties: haps.map(H => H[TIE_I]) };
+}
+const LP = (O, psi, pt, fold, sq, k0, k1) => ({ O, psi, pt, fold, sq, k0, k1 });
+// keyframes [u, pose]: 0 the 5-4 pose (psi 180 = HAP_OUT) → 0.1 turned → 0.2 folded and squeezed, at the wound → 0.5 along the line (a pure
+// translation through the tunnel) → 0.6 the trailing haptic tucked → 0.68 onto the axis → 0.82 behind the iris, turned to 2–8 → 0.9 unfolded → 1 slack
+const LK = [[0, LP(O_OUT, 180, 0, 1, 1, 1, 1)], [0.1, LP(O_OUT, 270, 0, 1, 1, 1, 1)], [0.2, LP(onL(-A0), 270, IN6.pitch, IN6.fold, IN6.sq, 1, 1)],
+  [0.5, LP(onL(IN6.aB), 270, IN6.pitch, IN6.fold, IN6.sq, 1, 1)], [0.6, LP(onL(IN6.aB), 270, IN6.pitch, IN6.fold, IN6.sq, IN6.kTuck, 1)],
+  [0.68, LP([0, 0, IN6.zC], 270, IN6.pitch, IN6.fold, IN6.sq, IN6.kTuck, 1)], [0.82, LP([0, 0, IN6.zSlack], 210, 0, IN6.fold, IN6.sq, IN6.kTuck, 1)],
+  [0.9, LP([0, 0, IN6.zSlack], 210, 0, 1, 1, IN6.kTuck, 1)], [1, LP([0, 0, IN6.zSlack], 210, 0, 1, 1, 1, 1)]];
 function lensAt(u) {
   let i = 1; while (i < LK.length - 1 && u > LK[i][0]) i++;
-  const a = LK[i - 1], b = LK[i], t = ss(a[0], b[0], u), O = [0, 1, 2].map(m => lerp(a[1][m], b[1][m], t)), psi = lerp(a[2], b[2], t) * Math.PI / 180, k = lerp(a[3], b[3], t), fold = lerp(a[4], b[4], t), pt = lerp(a[5], b[5], t) * Math.PI / 180;
-  const d0 = [Math.cos(psi), Math.sin(psi), 0], eb = [-Math.sin(psi), Math.cos(psi), 0], d = G.add(d0.map(x => x * Math.cos(pt)), [0, 0, 1], -Math.sin(pt)), en = G.add([0, 0, Math.cos(pt)], d0, Math.sin(pt));
-  const tn = Math.tan(SN.iol.ang * Math.PI / 180), Ro = X.HAP.Ro;
-  const haps = [0, 1].map(j => { const ex = j === 0 ? d.map(x => -x) : d, ey = j === 0 ? eb.map(x => -x) : eb;
-    return X.HAP.pts.map(p => { const r = Math.hypot(p[0], p[1]), r2 = r <= Ro ? r : Ro + (r - Ro) * k, f = r > 1e-9 ? r2 / r : 1; return G.add(G.add(G.add(O, ex, p[0] * f), ey, p[1] * f * fold), en, Math.max(0, r2 - Ro) * tn); }); });
-  const rim = []; for (let m = 0; m <= 48; m++) { const th = 2 * Math.PI * m / 48; rim.push(G.add(G.add(O, d, Ro * Math.cos(th)), eb, Ro * Math.sin(th) * fold)); }
-  return { O, d, eb, fold, haps, rim, ties: haps.map(H => H[TIE_I]) };
+  const [ua, a] = LK[i - 1], [ub, b] = LK[i], t = ss(ua, ub, u), L = (x, y) => lerp(x, y, t);
+  return lensPose(LP([0, 1, 2].map(m => L(a.O[m], b.O[m])), L(a.psi, b.psi), L(a.pt, b.pt), L(a.fold, b.fold), L(a.sq, b.sq), L(a.k0, b.k0), L(a.k1, b.k1)));
 }
+// slack → the model's fixed pose (pull 1 = X.iolOf of IN_ST(1)): the haptics flex first, then the lens rises to the sulcus
+function pulledAt(pl) { const k = lerp(1, IOF.k, ss(0, 0.3, pl)); return lensPose(LP([0, 0, lerp(IN6.zSlack, IOF.O[2], ss(0.15, 1, pl))], 210, 0, 1, 1, k, k)); }
+const U61 = 120, P61 = 16;   // quantised steps of the insertion and the pull (frames reused between steps)
+window.LENS61_AT = { u: k => lensAt(k / U61), pull: k => pulledAt(k / P61), U61, P61 };
 // each strand from its bed to its tie on the moving lens: out through the wound while the tie is outside, through the tunnel, around the pupil
-// margin while the tie is in the chamber, straight behind the iris once the tie is there (the hooked route of 5-3; 示意)
+// margin while the tie is in the chamber (the hooked route of 5-3; 示意), straight behind the iris once the tie is there (sagging inward when slack)
 const STR0 = X.sutureOf(X.norm(CUT_ST)).segs.map(sg => sg.slice(0, 3)), HK = [0, 1].map(j => X.hookPts(PS0, j));
-function strandsTo(ties) { return ties.map((T, j) => { const W = G.wallOf(T[2], Math.hypot(T[0], T[1])), r = Math.hypot(T[0], T[1]);
+function strandsTo(ties, sag = 0) { return ties.map((T, j) => { const W = G.wallOf(T[2], Math.hypot(T[0], T[1])), r = Math.hypot(T[0], T[1]);
   if (W.d < 0) return [...STR0[j], ...HK[j], INC.inner, INC.outer, T];
   if (W.d <= G.T(W.s)) return [...STR0[j], ...HK[j], INC.inner, T];
-  return X.acTest(r, T[2]) ? [...STR0[j], ...HK[j], T] : [...STR0[j], T]; }); }
+  if (X.acTest(r, T[2])) return [...STR0[j], ...HK[j], T];
+  const I = STR0[j][2], M = G.add(I, G.sub(T, I), 0.5); return [...STR0[j], G.add(M, G.unit([M[0], M[1], 0]), -sag), T]; }); }
 // the moving lens on the microscope view: optic (narrow while folded, with its crease), haptics dashed where hidden, the two ties
 function lensScope(v, L, op = 1) {
   const q = L.rim.map(p => v.Q(p)), c = v.Q([0, 0, 0]), behind = !X.acTest(Math.hypot(L.O[0], L.O[1]), L.O[2]) && G.wallOf(L.O[2], Math.hypot(L.O[0], L.O[1])).d > 0;
   let s = `<clipPath id="pup61"><circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${(X.IR.pr * v.k).toFixed(1)}"/></clipPath>`;
   s += `<g ${behind ? 'clip-path="url(#pup61)"' : ''}><path d="M${q.map(f1).join('L')}Z" fill="#fff6dc" opacity="0.55"/></g>` + polyScope(v, L.rim, 1.8, C.iolS);
-  if (L.fold < 0.95) { const a = v.Q(G.add(L.O, L.d, -X.HAP.Ro)), b = v.Q(G.add(L.O, L.d, X.HAP.Ro)); s += `<path d="M${f1(a)}L${f1(b)}" stroke="${C.iolS}" stroke-width="1.4" stroke-dasharray="4 3"/>`; }
+  if (L.fold < 0.95) { const a = v.Q(G.add(L.O, L.d, -RO)), b = v.Q(G.add(L.O, L.d, RO)); s += `<path d="M${f1(a)}L${f1(b)}" stroke="${C.iolS}" stroke-width="1.4" stroke-dasharray="4 3"/>`; }
   for (const H of L.haps) s += polyScope(v, H, 2.0, C.hap);
   for (const t of L.ties) s += dot(v.Q(t), '#111827', 3.5);
   return `<g opacity="${op}">${s}</g>`;
 }
+// the lens in the 2–8 section (it lies in this plane once turned): the optic's cut (thickness profile), the haptics projected (dashed: out of the
+// plane, as the model draws them), the ties
+function lensSec(v, L, op = 1) {
+  const top = [], bot = []; for (let m = 0; m <= 30; m++) { const x = -RO + 2 * RO * m / 30, h = X.optHalf(Math.abs(x)); top.push(v.Q(G.add(G.add(L.O, L.d, x), L.en, h))); bot.unshift(v.Q(G.add(G.add(L.O, L.d, x), L.en, -h))); }
+  let s = ''; for (const H of L.haps) s += `<path d="M${H.map(p => f1(v.Q(p))).join('L')}" fill="none" stroke="${C.iolS}" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.7"/>`;
+  s += `<path d="M${[...top, ...bot].map(f1).join('L')}Z" fill="${C.iol}" stroke="${C.iolS}" stroke-width="1.2"/>`;
+  for (const t of L.ties) s += dot(v.Q(t), '#111827', 3.5);
+  return `<g opacity="${op}">${s}</g>`;
+}
 DRAW2['6-1'] = T => {
-  const u = T.p(0, 0.02, 0.56), kx = T.p(0, 0.56, 0.62), pull = T.p(0, 0.62, 0.9), k1 = T.on(1), k2 = T.on(2);
-  const uq = qz(u, 60), L = lensAt(uq), strands = strandsTo(L.ties), pq = qz(pull, 16);
-  // left: the 2–8 section: the strands follow the lens in (out of this plane: dashed); the lens appears when it hangs behind the iris (slack, pull 0),
-  // then both strands are pulled and the haptics come up to the sulcus under the fixation points: optic centred, not tilted
-  const vA = sec(OPEN({}), W_IOL), vB = kx > 0 ? sec(IN_ST(pq), W_IOL) : null, A = vB ? vB.A : vA.A;
-  let svg = kx <= 0 ? vA.svg : kx >= 1 ? vB.svg : vA.svg + `<g opacity="${kx.toFixed(2)}">${vB.svg}</g>`;
-  if (kx < 1) for (const sg of strands) svg += strandSec(vA, sg, { op: 1 - kx });
+  const pre = T.st(0) - 0.3, d0 = T.en(0) - T.st(0);   // the segment's lead (segments.js) gives the insertion time before line 0
+  const u = T.on(0, pre + 0.5 * d0, -pre), pull = T.p(0, 0.6, 0.92), k1 = T.on(1), k2 = T.on(2);
+  const uq = Math.round(clamp01(u) * U61), pq = Math.round(clamp01(pull) * P61), L = pq > 0 ? pulledAt(pq / P61) : lensAt(uq / U61), strands = strandsTo(L.ties, 0.35 * (1 - pq / P61));
+  const uu = uq / U61, kx = ss(0.8, 0.86, uu), win = (a, b, c, d) => ss(a, b, uu) * (1 - ss(c, d, uu));   // kx: the lens lies in the 2–8 plane (turned, behind the iris)
+  window.LENS61 = { u: uq, pull: pq, O: L.O, d: L.d, eb: L.eb, en: L.en, fold: L.fold, haps: L.haps };
+  // left: the 2–8 section: the strands follow the lens in (out of this plane: dashed); the lens appears once it is turned into this plane behind
+  // the iris (the optic unfolds, the trailing haptic is let go: hanging slack); then both strands are pulled and the haptics come up to the sulcus under the fixation points: optic centred, not tilted
+  const vA = sec(OPEN({}), W_IOL);
+  let svg = vA.svg; for (const sg of strands) svg += strandSec(vA, sg);
+  if (kx > 0) svg += lensSec(vA, L, kx);
   const kp = pull > 0 && pull < 1 ? 1 : 0, out2 = G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 1.6), out8 = G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 1.6);
   svg += arrowOut(vA, G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 0.4), out2, WARN, kp) + arrowOut(vA, G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 0.4), out8, WARN, kp);
-  if (k2 > 0) { const top = [], bot = [], back = -0.7; for (let m = 0; m <= 30; m++) { const x = -X.HAP.Ro + 2 * X.HAP.Ro * m / 30, hth = X.optHalf(Math.abs(x)); top.push(vB.Q(G.add(G.add(IOF.O, IOF.d, x), IOF.en, back + hth))); bot.unshift(vB.Q(G.add(G.add(IOF.O, IOF.d, x), IOF.en, back - hth))); }
+  if (k2 > 0) { const top = [], bot = [], back = -0.7; for (let m = 0; m <= 30; m++) { const x = -RO + 2 * RO * m / 30, hth = X.optHalf(Math.abs(x)); top.push(vA.Q(G.add(G.add(IOF.O, IOF.d, x), IOF.en, back + hth))); bot.unshift(vA.Q(G.add(G.add(IOF.O, IOF.d, x), IOF.en, back - hth))); }
     svg += `<path d="M${[...top, ...bot].map(f1).join('L')}Z" fill="none" stroke="#7d8e9b" stroke-width="1.8" stroke-dasharray="6 4" opacity="${k2.toFixed(2)}"/>`;
-    const a = vB.Q(G.add(IOF.O, IOF.en, back - 0.35)), b = vB.Q(G.add(IOF.O, IOF.en, -0.45)); svg += arrowPath([a, b], COL.accent, 2.4, k2.toFixed(2)); }
-  let ex = tag('IOL 從 12 點切口放入：見右圖', T.on(0) * (1 - kx), INK2, 30);
-  if (vB) { ex += labL('haptic 在虹膜後', '鬆的', 60, A.tie8, { bold: true, color: '#2f5f93', lc: '#2f5f93', op: kx * (1 - pull) });
-    ex += labR('拉 2 點的線', '', 210, vB.Q(PS0.E2), { bold: true, color: WARN, lc: WARN, op: kp });
-    ex += labL('拉 8 點的線', '', 210, vB.Q(PS0.E8), { bold: true, color: WARN, lc: WARN, op: kp });
-    ex += labR('haptic 到睫狀溝 sulcus', '', 130, A.tie2, { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) * (1 - k1) });
-    ex += labL('optic 置中、不傾斜', '', 300, A.iolC, { bold: true, color: IOLC, lc: IOLC, op: ss(0.85, 1, pull) * (1 - k2) });
-    ex += labL('縫在溝：較前', 'sulcus', 300, A.iolC, { bold: true, color: COL.accent, lc: COL.accent, op: k2 });
-    ex += labR('囊袋內的位置', '比較、示意', 330, vB.Q(G.add(G.add(IOF.O, IOF.d, -2.2), IOF.en, -0.7 - 0.25)), { bold: true, color: '#56616d', lc: '#56616d', op: k2 }); }
+    const a = vA.Q(G.add(IOF.O, IOF.en, back - 0.35)), b = vA.Q(G.add(IOF.O, IOF.en, -0.45)); svg += arrowPath([a, b], COL.accent, 2.4, k2.toFixed(2)); }
+  let ex = tag('IOL 從 12 點切口放入：見右圖', T.on(0, 0.6, -pre) * (1 - kx), INK2, 30);
+  if (kx > 0) { ex += labL('haptic 在虹膜後', '鬆的', 60, vA.Q(L.ties[1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: kx * (1 - pull) });
+    ex += labR('拉 2 點的線', '', 210, vA.Q(PS0.E2), { bold: true, color: WARN, lc: WARN, op: kp });
+    ex += labL('拉 8 點的線', '', 210, vA.Q(PS0.E8), { bold: true, color: WARN, lc: WARN, op: kp });
+    ex += labR('haptic 到睫狀溝 sulcus', '', 130, vA.Q(L.ties[0]), { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) * (1 - k1) });
+    ex += labL('optic 置中、不傾斜', '', 300, vA.Q(L.O), { bold: true, color: IOLC, lc: IOLC, op: ss(0.85, 1, pull) * (1 - k2) });
+    ex += labL('縫在溝：較前', 'sulcus', 300, vA.Q(L.O), { bold: true, color: COL.accent, lc: COL.accent, op: k2 });
+    ex += labR('囊袋內的位置', '比較、示意', 330, vA.Q(G.add(G.add(IOF.O, IOF.d, -2.2), IOF.en, -0.7 - 0.25)), { bold: true, color: '#56616d', lc: '#56616d', op: k2 }); }
   // line 1: vertical tilt in the UBM study (a gauge; the lens drawn tilted by the study's mean, the 5° line the threshold it quotes)
   if (k1 > 0) { const bx = 300, by = 238, bw = 292, bh = 160, cx = bx + bw / 2, cy = by + 96, R = 120, rot = (deg, r) => [cx + r * Math.cos(deg * Math.PI / 180), cy - r * Math.sin(deg * Math.PI / 180)];
     let g = `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="8" fill="#fff" stroke="#d3dae1"/>` + text(bx + 12, by + 24, '垂直傾斜 tilt（UBM，Zhao 2025）', { size: 14, bold: true, color: INK2 });
@@ -782,24 +818,25 @@ DRAW2['6-1'] = T => {
     g += text(bx + bw - 12, by + 52, '> 5°：可能眩光、複視（引述）', { size: 13, bold: true, color: WARN, anchor: 'end' }) + text(bx + 12, by + bh - 12, '平均 3.13°', { size: 15, bold: true, color: IOLC });
     svg += `<g opacity="${(k1 * (1 - k2)).toFixed(2)}">${g}</g>`; }
   ex += sbar(vA, 2) + note('放入的方式與路線：示意', 1);
-  if (pull >= 1) { sync('6-1', 'sec', 'tie2', IOF.ties[0]); sync('6-1', 'sec', 'tie8', IOF.ties[1]); sync('6-1', 'sec', 'iolC', IOF.O); }
-  // right: the microscope view: the folded lens through the 12 o'clock wound, the leading haptic behind the iris toward 8 o'clock, the lens turned;
-  // then the model's lens pulled from slack to the sulcus; dashed = behind the iris
-  const zw = qz(T.p(0, 0.14, 0.4), 24), swn = VIEWS.zwin(SC_54, SC_ALL, zw), wA = scope(OPEN({}), swn, 'sR'), wB = kx > 0 ? scope(IN_ST(pq), SC_ALL, 'sR2') : null;
-  let rsvg = kx <= 0 ? wA.svg : kx >= 1 ? wB.svg : wB.svg + `<g opacity="${(1 - kx).toFixed(2)}">${wA.svg}</g>`;
-  if (kx < 1) { for (const [j, sg] of strands.entries()) rsvg += polyScope(wA, sg, 1.6, j ? S8C : S2C, { op: 1 - kx }); rsvg += lensScope(wA, L, 1 - kx); }
-  rsvg += arrowOut(wA, G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 0.4), out2, WARN, kp) + arrowOut(wA, G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 0.4), out8, WARN, kp);
+  if (pq >= P61) { sync('6-1', 'sec', 'tie2', L.ties[0]); sync('6-1', 'sec', 'tie8', L.ties[1]); sync('6-1', 'sec', 'iolC', L.O); }
+  // right: the microscope view: the folded lens through the 12 o'clock wound, the leading haptic behind the iris, the trailing haptic tucked, the
+  // lens turned to 2–8 behind the iris and let go; then pulled from slack to the sulcus; dashed = behind the iris
+  const zw = qz(ss(0.15, 0.45, uq / U61), 24), wA = scope(OPEN({}), VIEWS.zwin(SC_54, SC_ALL, zw), 'sR');
+  let rsvg = wA.svg; for (const [j, sg] of strands.entries()) rsvg += polyScope(wA, sg, 1.6, j ? S8C : S2C);
+  rsvg += lensScope(wA, L) + arrowOut(wA, G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 0.4), out2, WARN, kp) + arrowOut(wA, G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 0.4), out8, WARN, kp);
   let rx = orientTag();
   rx += labR('12 點切口', '', 386, wA.Q(INC.outer), { bold: true, color: INK2, op: 1 - pull });
-  rx += labL('摺疊後放入', '方式示意', 330, wA.Q(G.add(L.O, L.d, -1.5)), { bold: true, color: IOLC, lc: IOLC, op: T.p(0, 0.2, 0.28) * (1 - T.p(0, 0.48, 0.55)) });
-  rx += labR('haptic 往 8 點、到虹膜後', '虛線', 96, wA.Q(L.haps[1][X.HAP.pts.length - 1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: T.p(0, 0.4, 0.46) * (1 - kx) });
-  if (wB) { rx += labR('拉 8 點的線', '', 130, wB.Q(out8), { bold: true, color: WARN, lc: WARN, op: kp });
-    rx += labL('拉 2 點的線', '', 300, wB.Q(out2), { bold: true, color: WARN, lc: WARN, op: kp });
-    rx += labR('optic 置中', 'centred', 230, wB.A.iolC, { bold: true, color: IOLC, lc: IOLC, op: ss(0.85, 1, pull) });
-    if (wB.A.tie2) rx += labL('2 點綁線處', 'haptic', 230, wB.A.tie2, { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) });
-    if (wB.A.tie8) rx += labR('8 點綁線處', 'haptic', 130, wB.A.tie8, { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) * (1 - kp) }); }
+  rx += labL('摺疊後放入', '方式示意', 330, wA.Q(G.add(L.O, L.d, -1.5)), { bold: true, color: IOLC, lc: IOLC, op: win(0.1, 0.18, 0.42, 0.48) });
+  rx += labR('前面的 haptic 先到虹膜後', '虛線', 96, wA.Q(L.haps[1][X.HAP.pts.length - 1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: win(0.38, 0.44, 0.52, 0.56) });
+  rx += labL('後面的 haptic 壓向 optic', '示意', 300, wA.Q(L.haps[0][TIE_I]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: win(0.52, 0.56, 0.68, 0.72) });
+  rx += labR('轉到 2 點與 8 點', '虹膜後', 96, wA.Q(L.ties[1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: win(0.72, 0.76, 0.98, 1.01) * (1 - clamp01(pull * 4)) });
+  if (kx > 0) { rx += labR('拉 8 點的線', '', 130, wA.Q(out8), { bold: true, color: WARN, lc: WARN, op: kp });
+    rx += labL('拉 2 點的線', '', 300, wA.Q(out2), { bold: true, color: WARN, lc: WARN, op: kp });
+    rx += labR('optic 置中', 'centred', 230, wA.Q(L.O), { bold: true, color: IOLC, lc: IOLC, op: ss(0.85, 1, pull) });
+    rx += labL('2 點綁線處', 'haptic', 230, wA.Q(L.ties[0]), { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) });
+    rx += labR('8 點綁線處', 'haptic', 130, wA.Q(L.ties[1]), { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) * (1 - kp) }); }
   rx += note('虛線：在虹膜後面（看不到）', 1, 30) + note('度數依主治', k2);
-  if (pull >= 1) { sync('6-1', 'scope', 'tie2', IOF.ties[0]); sync('6-1', 'scope', 'tie8', IOF.ties[1]); sync('6-1', 'scope', 'iolC', IOF.O); }
+  if (pq >= P61) { sync('6-1', 'scope', 'tie2', L.ties[0]); sync('6-1', 'scope', 'tie8', L.ties[1]); sync('6-1', 'scope', 'iolC', L.O); }
   return { L: { svg, extra: ex, P: IOL_SEC_T }, R: { svg: rsvg, extra: rx, P: SCOPE_T } };
 };
 

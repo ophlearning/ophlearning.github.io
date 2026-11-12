@@ -23,6 +23,11 @@
 //    left: every segment draws more than its title and never 「畫面製作中」.
 // 6. States drawn (window.STATES): 8-1 the symmetric lens is not tilted and the asymmetric one is (Zhao 2025: asymmetry predicts tilt; amount 示意);
 //    8-4 each state shown side by side is an error state (decentred or tilted).
+// 7. 6-1, the lens put in (2026-11-12, 出片前定稿): the whole segment every 0.1 s and every pose draw.js can draw (window.LENS61, LENS61_AT): every
+//    point of the haptics (centre line every 0.05 mm) and of the optic (both faces and the rim) is outside the eye, in the open chamber / cavity, or
+//    in the wall only inside the 12 o'clock wound (2.75 mm wide, from its outer to its inner opening, the whole thickness: the lips open); never in
+//    the iris, the cornea, sclera or limbus elsewhere, or the ciliary body; the lens does cross the wound; outside the eye the lens is the MA60AC's
+//    13 mm overall with a 6 mm optic, and hanging slack inside it is still 13 mm (only the haptics bend; pulled, they flex to the model's fixed pose).
 // --selftest breaks each check once on purpose and fails unless every check then reports the error. --list prints the numbers per segment.
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
 const path = require('path');
@@ -86,7 +91,13 @@ async function fromPage() {   // all text drawn on screen per drawn segment (60 
     const placed = {}; for (const id of window.PLACEHOLDERS || []) { const s = TL_EXPORT.find(x => x.id === id), set = new Set();
       for (const [a, e] of s.lines) { renderAt(a + (e - a) * 0.6); for (const t of document.querySelectorAll('#stage text')) { const r = t.getBoundingClientRect(), y = r.y + r.height / 2; if (y > CONTENT_Y && y < CONTENT_Y + CONTENT_H) set.add(t.textContent); } }
       placed[id] = [...set]; }
-    return { screen, sync: window.SYNC, tl, place: window.PLACEHOLDERS, placed, source: window.TIMELINE_SOURCE, states: window.STATES }; });
+    // 6-1: the lens every 0.1 s, and every pose draw.js can draw (its quantised insertion and pull steps)
+    const s61 = TL_EXPORT.find(x => x.id === '6-1'), pick = L => L ? { O: L.O, d: L.d, eb: L.eb, en: L.en, fold: L.fold, haps: L.haps } : {}, lens61 = [];
+    if (s61) for (let t = s61.t0; t < s61.t1; t += 0.1) { renderAt(t); lens61.push({ t: +(t - s61.t0).toFixed(2), u: (window.LENS61 || {}).u, pull: (window.LENS61 || {}).pull, ...pick(window.LENS61) }); }
+    const at = window.LENS61_AT, poses = !at ? [] : [...Array(at.U61 + 1).keys()].map(k => ({ u: k, pull: 0, ...pick(at.u(k)) }))
+      .concat([...Array(at.P61 + 1).keys()].map(k => ({ u: at.U61, pull: k, ...pick(at.pull(k)) })));
+    return { screen, sync: window.SYNC, tl, place: window.PLACEHOLDERS, placed, source: window.TIMELINE_SOURCE, states: window.STATES,
+      lens61: JSON.parse(JSON.stringify(lens61)), poses: JSON.parse(JSON.stringify(poses)), dur61: s61 ? s61.t1 - s61.t0 : 0, U61: at && at.U61, P61: at && at.P61 }; });
   await b.close();
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
   return out;
@@ -285,13 +296,57 @@ function ledgerChecks(ctx) {
   return R;
 }
 
+// ---------------------------------------------------------------- 7. 6-1: the lens through the wound only, its size
+const RO = X.HAP.Ro, WOUND = { h: SN.inc.h, half: SN.inc.w / 2, s0: SN.inc.sIn - 0.1, s1: SN.inc.s + 0.1 };
+function where(p) {   // outside / in (open chamber or cavity) / wound / wall (cornea, limbus, sclera elsewhere) / iris / uvea
+  const rho = Math.hypot(p[0], p[1]), o = X.uveaAt(rho, p[2]), W = o.W;
+  if (o.cornea < 0 || o.limbus < 0 || o.sclera < 0) { const lat = Math.abs(X.dH(G.mer(p).h, WOUND.h)) * Math.PI / 6 * W.rhoF;
+    return W.s >= WOUND.s0 && W.s <= WOUND.s1 && lat <= WOUND.half ? 'wound' : 'wall'; }
+  if (o.iris < 0) return 'iris';
+  if (o.cbody < 0 || o.proc < 0 || o.choroid < 0 || o.retina < 0) return 'uvea';
+  return o.interior < 0 ? 'in' : 'out';
+}
+function lensPts(F) {   // haptic centre lines every ≤ 0.05 mm; the optic's two faces (a grid inside its outline, narrowed while folded) and its rim
+  const pts = [];
+  for (const H of F.haps) for (let i = 1; i < H.length; i++) { const a = H[i - 1], b = H[i], n = Math.max(1, Math.ceil(G.len(G.sub(b, a)) / 0.05)); for (let k = i === 1 ? 0 : 1; k <= n; k++) pts.push(['haptic', G.add(a, G.sub(b, a), k / n)]); }
+  for (let i = -6; i <= 6; i++) for (let k = -6; k <= 6; k++) { const a = i / 6, b = k / 6, r = Math.hypot(a, b); if (r > 1) continue; const h = X.optHalf(RO * r);
+    for (const sg of [-1, 1]) pts.push(['optic', G.add(G.add(G.add(F.O, F.d, RO * a), F.eb, RO * b * F.fold), F.en, sg * h)]); }
+  for (let m = 0; m < 48; m++) { const th = 2 * Math.PI * m / 48; pts.push(['optic', G.add(G.add(F.O, F.d, RO * Math.cos(th)), F.eb, RO * Math.sin(th) * F.fold)]); }
+  return pts;
+}
+const along = (F, pts) => { const v = pts.map(p => G.dot(G.sub(p, F.O), F.d)); return Math.max(...v) - Math.min(...v); };
+const sizeOf = F => ({ overall: along(F, F.haps.flat()), optic: 2 * RO });   // optic: the drawn outline is RO along d (the fold narrows it across d only)
+const LCACHE = new Map();   // the self-test re-runs every check per mutation: the lens part only when its frames changed
+function lensChecks(ctx) {
+  const key = JSON.stringify([ctx.lens61, ctx.poses, ctx.dur61, ctx.U61]); if (!LCACHE.has(key)) LCACHE.set(key, lensChecks0(ctx)); return LCACHE.get(key);
+}
+function lensChecks0(ctx) {
+  const R = [], ok = (c, m) => R.push([!!c, m]), frames = ctx.lens61 || [], poses = ctx.poses || [], all = [...frames.map(f => ['t ' + f.t + ' s', f]), ...poses.map(f => [`pose u ${f.u} pull ${f.pull}`, f])];
+  const bad = [], outside = [], slack = []; let wound = 0, missing = 0;
+  for (const [nm, F] of all) { if (!F.haps) { missing++; continue; } const kinds = {};
+    const wh = lensPts(F).map(([part, p]) => [part, where(p)]);
+    for (const [part, w] of wh) { if (w === 'wound') wound++; if (['wall', 'iris', 'uvea'].includes(w)) kinds[part + ' in ' + w] = (kinds[part + ' in ' + w] || 0) + 1; }
+    if (Object.keys(kinds).length) bad.push(`${nm}: ${Object.entries(kinds).map(([k, n]) => `${k} ×${n}`).join(', ')}`);
+    const sz = sizeOf(F), rimLen = along(F, [0, 1, 2, 3].map(q => G.add(F.O, F.d, RO * Math.cos(q * Math.PI / 2))));
+    if (wh.every(x => x[1] === 'out')) outside.push([nm, sz.overall, rimLen]);
+    if (F.u === ctx.U61 && F.pull === 0) slack.push([nm, sz.overall]); }
+  const need = Math.floor((ctx.dur61 || 0) / 0.1);
+  ok(frames.length >= need && need > 100 && poses.length > 100 && !missing && wound > 0 && !bad.length,
+    `6-1 the lens (${frames.length} frames every 0.1 s, ${poses.length} drawn poses): through the wall only in the 12 o'clock wound (${wound} points there), never in the iris, cornea, sclera or ciliary body${missing ? `; ${missing} frame(s) without the lens` : ''}${bad.length ? '; ' + bad.slice(0, 4).join(' | ') + (bad.length > 4 ? ` … (${bad.length})` : '') : ''}`);
+  const badOut = outside.filter(([, o, r]) => Math.abs(o - SN.iol.overall) > 0.02 || Math.abs(r - SN.iol.optic) > 0.02), badSl = slack.filter(([, o]) => Math.abs(o - SN.iol.overall) > 0.02);
+  ok(outside.length >= 10 && slack.length >= 2 && !badOut.length && !badSl.length && SN.iol.overall === 13 && SN.iol.optic === 6,
+    `6-1 the MA60AC keeps its size: outside the eye (${outside.length} frames) ${outside.length ? [...new Set(outside.map(x => x[1].toFixed(2)))].join(' / ') : '—'} mm overall, optic ${outside.length ? [...new Set(outside.map(x => x[2].toFixed(2)))].join(' / ') : '—'} mm; slack in the eye (${slack.length}) ${slack.length ? [...new Set(slack.map(x => x[1].toFixed(2)))].join(' / ') : '—'} mm (expected 13 and 6)${badOut.length || badSl.length ? '; wrong: ' + [...badOut, ...badSl].slice(0, 3).map(x => x[0]).join(', ') : ''}`);
+  return R;
+}
+
 // ---------------------------------------------------------------- run
 const clone = o => JSON.parse(JSON.stringify(o));
 function baseCtx(page, M) {
   const text = {}; for (const s of SEGS) text[s.id] = clone(s);
-  return { M: clone(M), text, segs: clone(SEGS), screen: clone(page.screen), ledger: clone(LEDGER), sync: clone(page.sync), tl: clone(page.tl), place: clone(page.place || []), placed: clone(page.placed || {}), source: page.source, video: clone(VIDEO), states: clone(page.states || {}) };
+  return { M: clone(M), text, segs: clone(SEGS), screen: clone(page.screen), ledger: clone(LEDGER), sync: clone(page.sync), tl: clone(page.tl), place: clone(page.place || []), placed: clone(page.placed || {}), source: page.source, video: clone(VIDEO), states: clone(page.states || {}),
+    lens61: clone(page.lens61 || []), poses: clone(page.poses || []), dur61: page.dur61, U61: page.U61, P61: page.P61 };
 }
-const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChecks(ctx), ...syncChecks(ctx), ...timingChecks(ctx), ...stateChecks(ctx)];
+const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChecks(ctx), ...syncChecks(ctx), ...timingChecks(ctx), ...stateChecks(ctx), ...lensChecks(ctx)];
 if (require.main === module) (async () => {
   const page = await fromPage(), M = modelFacts();
   if (process.argv.includes('--list')) { for (const s of SEGS) if (!s.chapterCard && s.layout !== 'refs') { const t = [s.title || '', ...(s.lines || []), ...(s.keys || []).map(k => k[1]), ...(page.screen[s.id] || [])];
@@ -360,7 +415,13 @@ if (require.main === module) (async () => {
       ['8-1 the symmetric state drawn asymmetric', c => { c.states['8-1'].sym = c.states['8-1'].asym; }],
       ['8-4 a state side by side that is not an error', c => { c.states['8-4'].loose = c.states['8-1'].sym; }],
       ['(d) 8-4 on screen explains the earlier surgery', c => { c.screen['8-4'].push('前一次縫線太鬆所以脫位'); }],
+      ['6-1 the lens 2 mm sideways while it crosses the wall (through the cornea beside the wound)', c => { let F = null, n0 = 0; for (const f of c.lens61) { if (!f.haps) continue; const n = lensPts(f).filter(x => where(x[1]) === 'wound').length; if (n > n0) { n0 = n; F = f; } } moveF(F, p => [p[0] + 2, p[1], p[2]]); }],
+      ['6-1 the slack lens 2 mm forward (haptics into the iris and ciliary body)', c => { const F = c.lens61.find(f => f.u === c.U61 && f.pull === 0); moveF(F, p => [p[0], p[1], p[2] + 2]); }],
+      ['6-1 the lens 5 % bigger outside the eye', c => { const F = c.lens61[0]; F.haps = F.haps.map(H => H.map(p => G.add(F.O, G.sub(p, F.O), 1.05))); }],
+      ['6-1 the slack lens compressed to the model\'s slack pose (10.8 mm)', c => { for (const F of [...c.lens61, ...c.poses].filter(f => f.u === c.U61 && f.pull === 0)) F.haps = F.haps.map(H => H.map(p => { const q = G.sub(p, F.O), x = G.dot(q, F.d), y = G.dot(q, F.eb), z = G.dot(q, F.en), r = Math.hypot(x, y), r2 = r <= RO ? r : RO + (r - RO) * 0.69, f = r > 1e-9 ? r2 / r : 1; return G.add(G.add(G.add(F.O, F.d, x * f), F.eb, y * f), F.en, z); })); }],
+      ['6-1 a frame without the lens', c => { c.lens61[Math.floor(c.lens61.length / 2)] = { t: 0 }; }],
     ];
+    const moveF = (F, f) => { F.O = f(F.O); F.haps = F.haps.map(H => H.map(f)); };
     let bad = 0;
     for (const [name, mut] of MUT) { const c = baseCtx(page, M); mut(c); const n = runAll(c).filter(r => !r[0]).length; console.log(`${n ? 'PASS' : 'FAIL'} selftest: breaking 「${name}」 → ${n} check(s) fail`); if (!n) bad++; }
     if (bad) { console.log(`${bad} mutation(s) not caught`); fail += bad; }
