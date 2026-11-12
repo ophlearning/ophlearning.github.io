@@ -456,8 +456,8 @@ DRAW2['3-1'] = T => {
   rsvg += side(B1, ab, kd);
   rsvg += `<g opacity="${k2.toFixed(2)}"><path d="M${f1(w.Q(B1))}L${f1(w.Q(B2))}" stroke="#fff" stroke-width="8" stroke-linecap="round"/><path d="M${f1(w.Q(B1))}L${f1(w.Q(B2))}" stroke="${GRN}" stroke-width="5" stroke-linecap="round"/></g>`;
   let rx = orientTag();
-  rx += labL('2 點', '', 330, w.Q(G.P3(HP, SN.psl + 2.0, 0)), { bold: true, color: PUR, lc: PUR, op: T.on(0) * (1 - zr) });
-  rx += labR('8 點', '', 120, w.Q(G.P3(8, SN.psl + 2.0, 0)), { bold: true, color: PUR, lc: PUR, op: T.on(0) * (1 - zr) });
+  rx += labL('2 點', '', 330, w.Q(G.P3(HP, SN.psl + 2.0, 0)), { bold: true, color: PUR, lc: PUR, op: T.on(0) * (1 - ss(0, 0.2, zr)) });
+  rx += labR('8 點', '', 120, w.Q(G.P3(8, SN.psl + 2.0, 0)), { bold: true, color: PUR, lc: PUR, op: T.on(0) * (1 - ss(0, 0.2, zr)) });
   rx += labL('結膜剪開', 'conjunctiva', 345, w.Q(G.P3(HP - 0.3, SN.psl + 3.2, 0)), { bold: true, color: '#b0505a', lc: '#b0505a', op: T.on(1) * ss(0.6, 1, zr) });
   rx += labL('三角形瓣：邊長 3 mm', '', 250, w.Q(G.add(ab, G.sub(B1, ab), 0.5)), { bold: true, color: '#7a5418', lc: '#7a5418', op: kd });
   rx += labR('掀起的瓣', '1/3 厚', 250, w.Q(R.rot(X.flapPt(HP, TH * 0.6, 0, 0))), { color: '#7a5418', lc: '#7a5418', op: kd });
@@ -478,9 +478,9 @@ DRAW2['3-2'] = T => {
   const v = sec(st, VIEWS.zwin(W_ZONE, W_17, z), { h: 1 }), A = v.A, T1 = X.trocarOf(1), T7 = X.trocarOf(7), LP = INSTR(1), VC = INSTR(10);
   let svg = v.svg + ticksSec(v, [0, 3.5, 4], 'psl', { h: 1, op: 1 - z });
   svg += `<g opacity="${(0.45 * kI).toFixed(2)}"><path d="M${f1(v.Q(LP.tip))}L${f1(v.Q(G.add(LP.tip, T1.n, -2.6)))}" stroke="#f3d77a" stroke-width="${(0.5 * v.k).toFixed(1)}" stroke-linecap="round"/></g>` + rodSec(v, LP.tip, LP.back, '#9aa6b2', 4, kI);
-  let ex = labL('23G trocar', '', 190, A.trocar1, { bold: true, color: INK2, op: zOut(z) });
-  ex += labL('pars plana', '', 330, A.plana, { bold: true, color: INK2, op: T.on(0) * zOut(z) });
-  ex += labL('睫狀突 pars plicata', '', 250, A.procMid, { color: BRN, lc: BRN, op: T.on(0) * zOut(z) });
+  let ex = labL('23G trocar', '', 190, A.trocar1, { bold: true, color: INK2, op: zOut(4 * z) });
+  ex += labL('pars plana', '', 330, A.plana, { bold: true, color: INK2, op: T.on(0) * zOut(4 * z) });
+  ex += labL('睫狀突 pars plicata', '', 250, A.procMid, { color: BRN, lc: BRN, op: T.on(0) * zOut(4 * z) });
   ex += labR('灌流 infusion', '', 130, A.trocar7, { bold: true, color: BLU, lc: BLU, op: zIn(z) });
   ex += labR('光纖 light pipe', '', 250, v.Q(G.add(LP.E, T1.n, -2.5)), { bold: true, color: INK2, op: zIn(z) * kI });
   ex += labR('玻璃體切除中', '範圍示意', 300, v.Q(G.onPlane(v.r.pl, 0.5, -1.8)), { bold: true, color: '#4f6478', lc: '#4f6478', op: T.on(2) });
@@ -621,7 +621,7 @@ DRAW2['5-3'] = T => {
   const v = sec(OPEN({}), W_ALL);
   let svg = v.svg; SU.segs.forEach((sg, j) => { svg += strandSec(v, sg, { col: cut ? (j ? S8C : S2C) : C.pro }); });
   for (const p of [PS0.E2, PS0.E8]) svg += dot(v.Q(p), GRN, 5);
-  let ex = labR('拉直的線', '', 330, v.Q(G.add(PS0.I2, G.sub(PS0.I8, PS0.I2), 0.75)), { bold: true, color: C.pro, lc: C.pro, op: 1 - T.p(0, 0.05, 0.15) });
+  let ex = labR('拉直的線', '', 200, v.Q(G.add(PS0.I2, G.sub(PS0.I8, PS0.I2), 0.75)), { bold: true, color: C.pro, lc: C.pro, op: 1 - T.p(0, 0.05, 0.15) });
   ex += labR('勾到瞳孔', '往 12 點切口', 180, v.Q(kh < 0.5 ? [0, 0, PMZ - 0.25] : H2[1]), { bold: true, color: INK2, op: T.p(0, 0.15, 0.25) * (1 - kl) });
   ex += labR('連 2 點的線', '', 60, v.Q(PS0.I2), { bold: true, color: S2C, lc: S2C, op: kl });
   ex += labL('連 8 點的線', '', 60, v.Q(PS0.I8), { bold: true, color: S8C, lc: S8C, op: kl });
@@ -810,9 +810,9 @@ DRAW2['6-1'] = T => {
     svg += `<path d="M${[...top, ...bot].map(f1).join('L')}Z" fill="none" stroke="#7d8e9b" stroke-width="1.8" stroke-dasharray="6 4" opacity="${k2.toFixed(2)}"/>`;
     const a = vA.Q(G.add(IOF.O, IOF.en, back - 0.35)), b = vA.Q(G.add(IOF.O, IOF.en, -0.45)); svg += arrowPath([a, b], COL.accent, 2.4, k2.toFixed(2)); }
   let ex = tag('IOL 從 12 點切口放入：見右圖', T.on(0, 0.6, -pre) * (1 - kx), INK2, 30);
-  if (kx > 0) { ex += labR('haptic 在虹膜後', '鬆的', 160, vA.Q(L.ties[1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: kx * (1 - pull) });
-    ex += labR('拉 2 點的線', '', 210, vA.Q(PS0.E2), { bold: true, color: WARN, lc: WARN, op: kp });
-    ex += labL('拉 8 點的線', '', 210, vA.Q(PS0.E8), { bold: true, color: WARN, lc: WARN, op: kp });
+  if (kx > 0) { ex += labR('haptic 在虹膜後', '鬆的', 160, vA.Q(L.ties[1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: pull > 0 ? 0 : kx });
+    ex += labR('拉 2 點的線', '', 210, vA.Q(PS0.E2), { bold: true, color: WARN, lc: WARN, op: kp * (1 - ss(0.78, 0.85, pull)) });
+    ex += labL('拉 8 點的線', '', 210, vA.Q(PS0.E8), { bold: true, color: WARN, lc: WARN, op: kp * (1 - ss(0.78, 0.85, pull)) });
     ex += labR('haptic 到睫狀溝 sulcus', '', 130, vA.Q(L.ties[0]), { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) * (1 - k1) });
     ex += labL('optic 置中、不傾斜', '', 230, vA.Q(L.O), { bold: true, color: IOLC, lc: IOLC, op: ss(0.85, 1, pull) * (1 - k2) });
     ex += labL('縫在溝：較前', 'sulcus', 230, vA.Q(L.O), { bold: true, color: COL.accent, lc: COL.accent, op: k2 });
@@ -833,7 +833,7 @@ DRAW2['6-1'] = T => {
   let rsvg = wA.svg; for (const [j, sg] of strands.entries()) rsvg += polyScope(wA, sg, 1.6, j ? S8C : S2C);
   rsvg += lensScope(wA, L) + arrowOut(wA, G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 0.4), out2, WARN, kp) + arrowOut(wA, G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 0.4), out8, WARN, kp);
   let rx = orientTag();
-  rx += labR('12 點切口', '', 386, wA.Q(INC.outer), { bold: true, color: INK2, op: 1 - pull });
+  rx += labR('12 點切口', '', Math.min(386, wA.Q(INC.outer)[1] + 20), wA.Q(INC.outer), { bold: true, color: INK2, op: 1 - pull });
   rx += labL('摺疊後放入', '方式示意', 330, wA.Q(G.add(L.O, L.d, -1.5)), { bold: true, color: IOLC, lc: IOLC, op: win(0.1, 0.18, 0.42, 0.48) });
   rx += labR('前面的 haptic 先到虹膜後', '虛線', 96, wA.Q(L.haps[1][X.HAP.pts.length - 1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: win(0.38, 0.44, 0.52, 0.56) });
   rx += labL('後面的 haptic 壓向 optic', '示意', 300, wA.Q(L.haps[0][TIE_I]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: win(0.52, 0.56, 0.68, 0.72) });
@@ -882,8 +882,8 @@ DRAW2['7-1'] = T => {
     const tip = [lerp(lerp(a[0], m[0], kb), lerp(m[0], b[0], kb), kb), lerp(lerp(a[1], m[1], kb), lerp(m[1], b[1], kb), kb)];
     rsvg += `<path d="M${f1(a)}Q${f1(m)} ${f1(b)}" fill="none" stroke="#7a5418" stroke-width="2" stroke-dasharray="4 3" opacity="0.7"/>` + `<path d="M${f1(a)}Q${f1(m)} ${f1(tip)}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="M${f1(a)}Q${f1(m)} ${f1(tip)}" fill="none" stroke="#56616d" stroke-width="4" stroke-linecap="round"/>`; }
   let rx = orientTag();
-  rx += labL('2 點：彎針咬一針', '推論', 280, w.Q(G.add(K2.biteA, G.sub(K2.biteB, K2.biteA), 0.5)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.p(0, 0.1, 0.18) * (1 - zo) });
-  if (w.A.knot2) rx += labR('打結 knot', '', 150, w.A.knot2, { bold: true, color: '#111827', lc: '#111827', op: knot * (1 - zo) });
+  rx += labL('2 點：彎針咬一針', '推論', 280, w.Q(G.add(K2.biteA, G.sub(K2.biteB, K2.biteA), 0.5)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.p(0, 0.1, 0.18) * (1 - ss(0, 0.3, zo)) });
+  if (w.A.knot2) rx += labR('打結 knot', '', 150, w.A.knot2, { bold: true, color: '#111827', lc: '#111827', op: knot * (1 - ss(0, 0.3, zo)) });
   if (w.A.knot8) rx += labL('8 點那頭：依主治', '畫成同樣打結（示意）', 60, w.A.knot8, { bold: true, color: WARN, lc: WARN, op: k8 * (1 - T.on(1)) });
   if (w.A.knot2) rx += labL('線結在瓣下', '隱約', 330, w.A.knot2, { bold: true, color: '#111827', lc: '#111827', op: T.p(1, 0.45, 0.6) * (1 - T.on(2)) });
   rx += labR('瓣蓋回', 'flap', 130, w.A.flap8 || w.Q(G.P3(8, sAt(1.5), 0)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.p(1, 0.45, 0.6) * (1 - T.on(2)) });
