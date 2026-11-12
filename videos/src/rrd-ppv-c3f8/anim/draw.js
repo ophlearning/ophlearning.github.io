@@ -415,3 +415,212 @@ DRAW2['2-2'] = T => {
       text(PW / 2, PH / 2 - 14, '氣液交換中：空氣跑到脈絡膜下', { size: 18, bold: true, anchor: 'middle' }) + text(PW / 2, PH / 2 + 24, '→ 立刻停止灌氣', { size: 22, bold: true, color: COL.red, anchor: 'middle' }) + '</g>'; }
   return { L: { svg: sl, extra: el, P: PT.inf }, R: { svg: sr, extra: er, P: kW > 0.5 ? PT.wide : PT.ext } };
 };
+
+// ---------------------------------------------------------------- 3 看懂畫面
+// Chapter 3 (reading the picture): 3-1 the light path of the wide-angle system (示意: the eye of the case in the 11–5 section, the lens, the real
+// image above it, the inverter) + the surgeon's wide-angle view turning by 180° without the inverter, then inverter off and on side by side;
+// contact and non-contact lenses (示意); 3-2 the 11–5 section with the depressor at 11 o'clock + the wide-angle view looking toward 11 (the mound,
+// then the same mound with the inverter off). Both views of a pressing frame are drawn from the same state (VP.depStep with the same k).
+const CLK = [[12, '12'], [3, '3 T'], [6, '6'], [9, '9 N']];       // clock numbers round the surgeon's field (left eye: 3 temporal, 9 nasal)
+const CLK_C = '#dbe6f0', CLK_HI = '#7fe0c8', TEAR_C = '#ff8f7a';   // their colours on the dark field; highlighted; the 11 o'clock mark
+const rotP = (p, a, c) => { const r = a * Math.PI / 180, x = p[0] - c[0], y = p[1] - c[1]; return [c[0] + x * Math.cos(r) - y * Math.sin(r), c[1] + x * Math.sin(r) + y * Math.cos(r)]; };
+// the surgeon's field turned by a degrees (0 = inverter on, 180 = inverter off): below 90° the inverter-on picture turned by a, from 90° the model's
+// inverter-off picture turned back by a − 180, so both ends are the model's own pictures. A: anchors in panel px (turned); c, r: field centre, radius (px)
+function wideTurn(stOn, stOff, a, W, H, win, id) {
+  const off = a >= 90, V = VP.wide(off ? stOff : stOn, W, H, win, id + (off ? 'b' : 'a')), c = V.P([0, 0]), r = V.M.R * V.k, b = off ? a - 180 : a, A = {};
+  for (const [k, p] of Object.entries(V.A)) A[k] = rotP(p, b, c);
+  return { svg: Math.abs(b) > 1e-6 ? `<g transform="rotate(${b.toFixed(3)} ${F1(c[0])} ${F1(c[1])})">${V.svg}</g>` : V.svg, A, c, r, off };
+}
+// one of two fields side by side: VP.wide in a W px wide half shifted by dx (clipped to it)
+function wideAt(st, id, dx, W = 290) {
+  const V = VP.wide(st, W, PH, VP.WIN.wideS, id), sh = p => [p[0] + dx, p[1]], A = {}; for (const [k, p] of Object.entries(V.A)) A[k] = sh(p);
+  return { svg: `<clipPath id="${id}_h"><rect x="${dx}" y="0" width="${W}" height="${PH}"/></clipPath><g clip-path="url(#${id}_h)"><g transform="translate(${dx} 0)">${V.svg}</g></g>`, A, c: sh(V.P([0, 0])), r: V.M.R * V.k };
+}
+// a point gap px outside the rim of a field in the direction of its anchor clock<h> (turned with the field)
+const rimPt = (Wt, h, gap) => { const p = Wt.A['clock' + h], d = Math.hypot(p[0] - Wt.c[0], p[1] - Wt.c[1]); return [Wt.c[0] + (p[0] - Wt.c[0]) / d * (Wt.r + gap), Wt.c[1] + (p[1] - Wt.c[1]) / d * (Wt.r + gap)]; };
+// clock numbers outside the field, upright; hi = { hour: colour }
+function clockNums(Wt, op, o = {}) {
+  const z = o.size || 15; let s = '';
+  for (const [h, t] of CLK) { const q = rimPt(Wt, h, o.gap || 18); s += text(F1(q[0]), F1(q[1] + z * 0.36), t, { size: z, bold: true, color: (o.hi || {})[h] || CLK_C, anchor: 'middle', op }); }
+  return s;
+}
+// the 11 o'clock mark on the rim of a field (tick and number, turned with the field)
+function mark11(Wt, op) {
+  const a = rimPt(Wt, 11, -8), b = rimPt(Wt, 11, 6), q = rimPt(Wt, 11, 18);
+  return `<path d="M${F1(a[0])} ${F1(a[1])}L${F1(b[0])} ${F1(b[1])}" stroke="${TEAR_C}" stroke-width="3" stroke-linecap="round" opacity="${op}"/>` + text(F1(q[0]), F1(q[1] + 5.4), '11', { size: 15, bold: true, color: TEAR_C, anchor: 'middle', op });
+}
+// a ring round a field (highlight)
+const ringF = (Wt, col, op) => `<circle cx="${F1(Wt.c[0])}" cy="${F1(Wt.c[1])}" r="${F1(Wt.r + 4)}" fill="none" stroke="${col}" stroke-width="4" opacity="${op}"/>`;
+// top view of the patient lying face up with the surgeon at the head (示意, not to scale): the surgeon at the bottom, where the picture's 12 o'clock is;
+// the patient's left eye (OS) on the left, where the picture's temporal side is. x, y: top-left corner (px), 128 × 118
+function seatInset(x, y, op, tx) {
+  const X = v => F1(x + v), Y = v => F1(y + v);
+  return `<g opacity="${op}"><rect x="${x}" y="${y}" width="128" height="118" rx="8" fill="#fff" stroke="#c9d1d9"/>` +
+    `<path d="M${X(34)} ${Y(6)}L${X(34)} ${Y(44)}Q${X(34)} ${Y(56)} ${X(46)} ${Y(57)}L${X(82)} ${Y(57)}Q${X(94)} ${Y(56)} ${X(94)} ${Y(44)}L${X(94)} ${Y(6)}Z" fill="#d5e4f1" stroke="#7d93a8"/>` +
+    `<circle cx="${X(64)}" cy="${Y(72)}" r="15" fill="#f1dccb" stroke="#8a6a55"/><circle cx="${X(58)}" cy="${Y(75)}" r="2.6" fill="#2b3a4a"/><circle cx="${X(70)}" cy="${Y(75)}" r="2.6" fill="#2b3a4a"/>` +
+    `<circle cx="${X(58)}" cy="${Y(75)}" r="6" fill="none" stroke="#c8361f" stroke-width="2"/>` +
+    `<circle cx="${X(64)}" cy="${Y(103)}" r="8" fill="#9aa5b1" stroke="#56636f"/><path d="M${X(44)} ${Y(118)}Q${X(64)} ${Y(104)} ${X(84)} ${Y(118)}" fill="#9aa5b1" stroke="#56636f"/>` +
+    text(x + 64, y + 30, tx.pt, { size: 12, color: '#3b4752', anchor: 'middle' }) + text(x + 7, y + 79, tx.os, { size: 12, bold: true, color: '#c8361f' }) + text(x + 79, y + 108, tx.su, { size: 12, bold: true }) + text(x + 122, y + 18, tx.note, { size: 11, color: COL.sub, anchor: 'end' }) + '</g>';
+}
+// the assistant cannot see the surgeon's picture (示意): the surgeon at the eyepieces, the assistant holding the depressor, the surgeon's command
+function cantSee(cx, cy, op, tx) {
+  const x = cx - 190, y = cy - 85, X = v => F1(x + v), Y = v => F1(y + v);
+  const person = (px, py) => `<circle cx="${X(px)}" cy="${Y(py)}" r="13" fill="#9aa5b1" stroke="#56636f"/><path d="M${X(px - 26)} ${Y(py + 44)}Q${X(px)} ${Y(py + 8)} ${X(px + 26)} ${Y(py + 44)}Z" fill="#9aa5b1" stroke="#56636f"/>`;
+  return `<g opacity="${op}"><rect x="${x}" y="${y}" width="380" height="170" rx="10" fill="#fff" stroke="#c9d1d9"/>` + text(cx, y + 27, tx.title, { size: 17, bold: true, anchor: 'middle' }) +
+    person(70, 78) + `<path d="M${X(62)} ${Y(52)}L${X(62)} ${Y(66)}M${X(78)} ${Y(52)}L${X(78)} ${Y(66)}" stroke="#3b4752" stroke-width="5"/><rect x="${X(48)}" y="${Y(40)}" width="44" height="14" rx="3" fill="#3b4752"/>` +
+    person(310, 78) + `<path d="M${X(318)} ${Y(108)}L${X(344)} ${Y(86)}" stroke="#6b737c" stroke-width="5" stroke-linecap="round"/>` +
+    `<rect x="${X(118)}" y="${Y(62)}" width="132" height="34" rx="9" fill="#e7f3ef" stroke="${COL.accent}" stroke-width="1.5"/><path d="M${X(118)} ${Y(82)}L${X(102)} ${Y(88)}L${X(118)} ${Y(88)}Z" fill="#e7f3ef" stroke="${COL.accent}" stroke-width="1.5"/>` +
+    text(x + 184, y + 84, tx.cmd, { size: 15, bold: true, color: COL.accent, anchor: 'middle' }) + arrowP([[x + 252, y + 79], [x + 280, y + 79]], COL.accent, 1, 'arrA', 3) +
+    text(x + 70, y + 142, tx.su, { size: 14, bold: true, anchor: 'middle' }) + text(x + 70, y + 160, tx.su2, { size: 12.5, color: COL.sub, anchor: 'middle' }) +
+    text(x + 310, y + 142, tx.as, { size: 14, bold: true, anchor: 'middle' }) + text(x + 310, y + 160, tx.as2, { size: 12.5, color: COL.sub, anchor: 'middle' }) + '</g>';
+}
+// a biconvex lens (half width hw, half thickness ht, mm) centred at (0, y) of a section view S
+function lensPath(S, y, hw, ht) { const a = S.P([-hw, y]), b = S.P([hw, y]), t = S.P([0, y - 2 * ht]), u = S.P([0, y + 2 * ht]);
+  return `M${F1(a[0])} ${F1(a[1])}Q${F1(t[0])} ${F1(t[1])} ${F1(b[0])} ${F1(b[1])}Q${F1(u[0])} ${F1(u[1])} ${F1(a[0])} ${F1(a[1])}Z`; }
+// a polyline cut at the fraction k of its length
+function cutPts(pts, k) { const L = []; let tot = 0; for (let i = 1; i < pts.length; i++) { L.push(Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); tot += L[i - 1]; }
+  let rem = tot * k; const out = [pts[0]]; for (let i = 1; i < pts.length; i++) { if (rem >= L[i - 1]) { out.push(pts[i]); rem -= L[i - 1]; } else { const f = rem / L[i - 1]; out.push([lerp(pts[i - 1][0], pts[i][0], f), lerp(pts[i - 1][1], pts[i][1], f)]); break; } }
+  return out; }
+const TX3 = {   // texts drawn by the helpers above (listed for the font preload)
+  seat: { pt: '病人', os: 'OS', su: '術者', note: '示意' },
+  see: { title: '助手看不到主刀的畫面（示意）', cmd: '主刀的口令', su: '主刀', su2: '看著廣角畫面', as: '助手', as2: '看不到 → 照口令調整' },
+};
+Object.assign(PT, {
+  opt: { title: '廣角系統的光路（示意，不按比例）', orient: VP.OR.sec },
+  w3on: { title: '術者的廣角畫面', orient: VP.OR.wideOn.replace('：下＝12 點　', '：下＝12 點、') },
+  w3off: { title: '術者的廣角畫面', orient: VP.OR.wideOff.replace('：下＝6 點　', '：下＝6 點、') },
+  w3two: { title: '廣角畫面：inverter 關與開', orient: '左眼 OS　術者坐 12 點　左：inverter 關　右：inverter 開' },
+  w3look: { title: '術者的廣角畫面', orient: '左眼 OS　inverter 開：下＝12 點、temporal 在左　看向 11 點（示意）' },
+  w3dep: { title: '廣角：壓 11 點', orient: '左眼 OS　inverter 開：下＝12 點、temporal 在左　看向 11 點（示意）' },
+  w3depOff: { title: '廣角：壓 11 點', orient: '左眼 OS　inverter 關（倒像）：下＝6 點、temporal 在右　看向 11 點（示意）' },
+  sec3: { title: '經 11 點的子午切面', orient: VP.OR.sec },
+  sec3z: { title: '經 11 點的子午切面：壓鞏膜（放大）', orient: VP.OR.sec },
+});
+window.PRELOAD_EXTRA = JSON.stringify(PT) + JSON.stringify(TX3);
+
+DRAW2['3-1'] = T => {
+  // ---------------- left: the light path (示意) above the 11–5 section of the case: rays from a retinal point on each side cross in the pupil, the
+  // lens makes the real image above it on the other side (line 1: inverted); the inverter turns it back (line 2; off again at the end of the line);
+  // line 3 the lens moved onto the cornea (contact, held by the assistant), line 4 back off the cornea with the depressor at 11 o'clock
+  const O = VP.optics(), S0 = VP.sec(VP.ST.rrd, PW, PH, VP.WIN.opt, 's31', { tw: VP.WIN.secT }), kDep = T.p(4, 0.2, 0.45);
+  const S = kDep > 0 ? VP.sec(VP.depStep(VP.ST.dep, kDep), PW, PH, VP.WIN.opt, 's31d', { tw: VP.WIN.secD }) : S0, a = S.A, h5 = ((VP.SEC_H + 5) % 12) + 1;
+  const dim = 1 - 0.88 * T.on(3, 0.6), dimL = 1 - T.on(3, 0.5), opR = T.on(1, 0.5), kRay = T.p(1, 0.08, 0.5), opI = T.p(1, 0.48, 0.58), opInv = T.on(2, 0.5);
+  const kOff = T.p(2, 0.66, 0.78) * (1 - T.on(3, 0.6)), kErect = T.p(2, 0.08, 0.3) * (1 - kOff);
+  const kC = T.p(3, 0.45, 0.6) * (1 - T.p(4, 0, 0.15)), opF = T.p(3, 0.5, 0.62) * (1 - T.p(4, 0, 0.12)), ht = 1.3, lensY = lerp(O.lensY, O.apex[1] - ht - 0.05, kC);
+  const yInv = O.imgY - 6.4, yE = O.imgY - 11.6, xs = VP.SEC_H, C11 = '#c8361f', C5 = COL.suture, col = h => h === xs ? C11 : C5;
+  let sl = S.svg;
+  // rays: retina → pupil → lens → real image (each side its colour)
+  if (opR > 0) for (const h of [xs, h5]) for (const ray of O.rays[h]) { const pts = cutPts(ray.map(p => S.P(p)), kRay);
+    sl += `<path d="${pth(pts)}" stroke="${col(h)}" stroke-width="1.6" fill="none" stroke-linejoin="round" opacity="${(0.85 * opR * dim * (1 - T.on(3, 0.6))).toFixed(3)}"/>`; }
+  // the lens (non-contact above the cornea; contact on it)
+  sl += `<path d="${lensPath(S, lensY, VP.OPT.lensR, ht)}" fill="#d7ecf7" fill-opacity="0.85" stroke="#4f86b0" stroke-width="2"/>`;
+  // the assistant's finger holding the contact lens (示意)
+  { const f0 = S.P([-VP.OPT.lensR - 0.4, lensY - 0.3]), f1 = S.P([-VP.OPT.lensR - 7.5, lensY - 6.5]);
+    sl += `<g opacity="${opF}"><path d="M${F1(f0[0])} ${F1(f0[1])}L${F1(f1[0])} ${F1(f1[1])}" stroke="#8a6a55" stroke-width="20" stroke-linecap="round"/><path d="M${F1(f0[0])} ${F1(f0[1])}L${F1(f1[0])} ${F1(f1[1])}" stroke="#f1dccb" stroke-width="17" stroke-linecap="round"/></g>`; }
+  // the retinal points, the real image above the lens, the inverter and what the surgeon sees
+  const dot = (p, c, op, r = 6) => `<circle cx="${F1(p[0])}" cy="${F1(p[1])}" r="${r}" fill="${c}" stroke="#fff" stroke-width="2" opacity="${op}"/>`;
+  const num = (p, t, c, op) => htext(F1(p[0]), F1(p[1] - 11), t, { size: 14, bold: true, color: c, anchor: 'middle', op });
+  for (const h of [xs, h5]) { sl += dot(S.P(O.R[h]), col(h), opR); const q = S.P(O.I[h]); sl += dot(q, col(h), opI * dim) + num(q, String(h), col(h), opI * dim); }
+  { const a0 = S.P([-9, O.imgY]), b0 = S.P([9, O.imgY]); sl += `<path d="M${F1(a0[0])} ${F1(a0[1])}L${F1(b0[0])} ${F1(b0[1])}" stroke="#6b737c" stroke-width="1.5" stroke-dasharray="5 4" opacity="${opI * dim}"/>`; }
+  const bx0 = S.P([-11, yInv - 2.3]), bx1 = S.P([11, yInv + 2.3]), on = kOff < 0.5, bc = on ? COL.accent : COL.red;
+  sl += `<g opacity="${(opInv * dim).toFixed(3)}"><rect x="${F1(bx0[0])}" y="${F1(bx0[1])}" width="${F1(bx1[0] - bx0[0])}" height="${F1(bx1[1] - bx0[1])}" rx="7" fill="#fff" stroke="${bc}" stroke-width="2.5"/>` +
+    text(F1((bx0[0] + bx1[0]) / 2), F1((bx0[1] + bx1[1]) / 2 + 5.5), on ? 'inverter 開：轉 180°' : 'inverter 關：不轉', { size: 15, bold: true, color: bc, anchor: 'middle' }) + '</g>';
+  for (const h of [xs, h5]) { const x = lerp(O.I[h][0], O.E[h][0], kErect), q = S.P([x, yE]); sl += dot(q, col(h), opInv * dim) + num(q, String(h), col(h), opInv * dim); }
+  { const a0 = S.P([-9, yE]), b0 = S.P([9, yE]); sl += `<path d="M${F1(a0[0])} ${F1(a0[1])}L${F1(b0[0])} ${F1(b0[1])}" stroke="#6b737c" stroke-width="1.5" opacity="${opInv * dim}"/>`; }
+  sl += note('光路示意，不按比例', 1, PH - 14, 14, 'start');
+  const xR = S.P([O.I[h5][0], O.imgY]), xE = S.P([lerp(O.I[xs][0], O.E[xs][0], kErect), yE]), pup = S.P([0, O.pupY]);
+  let el = lab('11 點側的視網膜', 'retina', PW - 12, 362, S.P(O.R[xs]), { side: 'R', bold: true, color: C11, lc: C11, op: opR });
+  el += lab('5 點側', 'retina', 14, 362, S.P(O.R[h5]), { bold: true, color: C5, lc: C5, op: opR });
+  el += lab('光線在瞳孔交叉', '', 14, 270, pup, { op: T.on(1, 0.6, (T.en(1) - T.st(1)) * 0.3) * dimL });
+  el += lab('廣角鏡', 'wide-angle lens', PW - 12, 196, S.P([VP.OPT.lensR, lensY]), { side: 'R', bold: true, color: '#2f6690', lc: '#2f6690' });
+  el += lab('倒像（鏡片上方的實像）', 'inverted', PW - 12, 124, xR, { side: 'R', bold: true, color: COL.red, lc: COL.red, op: opI * dimL });
+  el += lab('inverter', '接在顯微鏡上', PW - 12, 82, S.P([11, yInv]), { side: 'R', bold: true, op: opInv * dimL });
+  el += lab('術者看到：正像', 'erect', 14, 30, xE, { bold: true, color: COL.accent, lc: COL.accent, op: T.p(2, 0.25, 0.35) * (1 - T.p(2, 0.62, 0.66)) * dimL });
+  el += lab('inverter 關：看到倒像', 'inverted', 14, 30, xE, { bold: true, color: COL.red, lc: COL.red, op: T.p(2, 0.72, 0.8) * (1 - T.on(3, 0.4)) });
+  // line 3: non-contact (not touching the cornea) → contact (on the cornea, held by the assistant); line 4: non-contact with the depressor at 11
+  const opNC = Math.max(T.on(3, 0.5) * (1 - T.p(3, 0.42, 0.46)), T.p(4, 0.1, 0.2)), gapPt = S.P([0, (O.lensY + ht + O.apex[1]) / 2]);
+  el += lab('non-contact：不碰角膜', '', PW - 12, 250, gapPt, { side: 'R', bold: true, color: '#2f6690', lc: '#2f6690', op: opNC });
+  el += lab('contact：放在角膜上', '', 14, 200, S.P([-VP.OPT.lensR + 1.5, lensY]), { bold: true, color: '#2f6690', lc: '#2f6690', op: T.p(3, 0.5, 0.56) * (1 - T.p(4, 0, 0.1)) });
+  el += lab('助手扶著（示意）', 'contact lens', 14, 120, S.P([-VP.OPT.lensR - 5, lensY - 4.3]), { bold: true, op: opF });
+  if (kDep > 0) el += lab('壓鞏膜器', 'depressor', PW - 12, 300, a.depressor, { side: 'R', bold: true, op: T.p(4, 0.3, 0.4) });
+  el += lab('non-contact 也能壓鞏膜看周邊', '', 14, 120, null, { bold: true, color: COL.accent, op: T.p(4, 0.45, 0.55) });
+  // ---------------- right: the surgeon's field of the case — line 0 inverter on; line 1 turned by 180° (no inverter: the inverted image);
+  // lines 2–3 inverter off and on side by side; line 4 looking toward 11 with the depressor in (the same press as on the left)
+  const rot = 180 * T.p(1, 0.12, 0.42), kTwo = T.on(2, 0.6) * (1 - T.on(4, 0.6)), kD4 = T.on(4, 0.6);
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>`, er = '', PR = rot >= 90 ? PT.w3off : PT.w3on;
+  if (kTwo < 1 && kD4 < 1) {
+    const Wt = wideTurn(VP.ST.view3, VP.ST.view3Off, rot, PW, PH, VP.WIN.wide3, 'w31'), o1 = (1 - kTwo) * (1 - kD4), still = 1 - T.p(1, 0.08, 0.14) * (1 - T.p(1, 0.42, 0.5));
+    sr += `<g opacity="${o1.toFixed(3)}">${Wt.svg}${clockNums(Wt, 1)}</g>`;
+    sr += badge(12, 10, 'inverter 開：正像', COL.accent, o1 * (1 - T.p(1, 0.05, 0.12))) + badge(12, 10, '沒有 inverter：倒像', COL.red, o1 * T.p(1, 0.42, 0.5));
+    er += lab('視盤', 'optic disc', rot >= 90 ? 14 : PW - 12, 160, Wt.A.disc, { side: rot >= 90 ? 'L' : 'R', bold: true, op: o1 * still });
+    er += lab('剝離的視網膜', 'RD', rot >= 90 ? PW - 12 : 14, 300, Wt.A.rd, { side: rot >= 90 ? 'R' : 'L', bold: true, color: RDC, lc: RDC, op: o1 * still });
+    er += lab('上下顛倒＋左右相反', '', 14, 358, null, { bold: true, color: COL.red, op: o1 * T.p(1, 0.5, 0.6) });
+    er += lab('＝整張轉 180°', '', 14, 392, null, { bold: true, color: COL.red, op: o1 * T.p(1, 0.56, 0.66) });
+  }
+  if (kTwo > 0) {
+    const L = wideAt(VP.ST.view3Off, 'w31L', 5), R = wideAt(VP.ST.view3, 'w31R', 311), hiOn = T.on(2, 0.5, 0.5) * (1 - T.p(2, 0.62, 0.7)), hiOff = T.p(2, 0.7, 0.78);
+    sr += `<g opacity="${kTwo.toFixed(3)}">${L.svg}${R.svg}${clockNums(L, 1, { size: 14, gap: 22, hi: { 12: CLK_HI } })}${clockNums(R, 1, { size: 14, gap: 22, hi: { 12: CLK_HI } })}` +
+      ringF(R, COL.accent, hiOn) + ringF(L, COL.red, hiOff) +
+      text(L.c[0], 44, 'inverter 關：倒像', { size: 16, bold: true, color: '#ff9b9b', anchor: 'middle' }) + text(R.c[0], 44, 'inverter 開：正像', { size: 16, bold: true, color: CLK_HI, anchor: 'middle' }) +
+      arrowP([[L.c[0] + 60, 372], [R.c[0] - 60, 372]], COL.accent, 1, 'arrA', 3) + text(PW / 2, 400, 'inverter 把倒像整張轉 180°', { size: 15, bold: true, color: '#fff', anchor: 'middle' }) + '</g>';
+    if (kTwo > 0.5) PR = PT.w3two;
+  }
+  if (kD4 > 0) {
+    const Wv = VP.wide(VP.depStep(VP.ST.depOn, kDep), PW, PH, VP.WIN.wide3, 'w31d'), Wt = { A: Wv.A, c: Wv.P([0, 0]), r: Wv.M.R * Wv.k };
+    sr += `<g opacity="${kD4.toFixed(3)}">${Wv.svg}${clockNums(Wt, 1)}${mark11(Wt, 1)}</g>` + badge(12, 10, 'inverter 開', COL.accent, kD4);
+    if (Wv.A.dep) er += lab('壓 11 點的隆起（示意）', 'mound', PW - 12, 300, Wv.A.dep, { side: 'R', bold: true, op: T.p(4, 0.35, 0.45) });
+    if (kD4 > 0.5) PR = PT.w3dep;
+  }
+  return { L: { svg: sl, extra: el, P: PT.opt }, R: { svg: sr, extra: er, P: PR } };
+};
+
+DRAW2['3-2'] = T => {
+  // ---------------- left: the 11–5 section of the case; line 3 zooms on the 11 o'clock periphery and the depressor goes in (6 steps)
+  const z = T.p(3, 0, 0.3), kD = T.p(3, 0.32, 0.62), win = VIEWS.zwin(VP.WIN.sec, VP.WIN.depZ, z), stS = VP.depStep(VP.ST.dep, kD);
+  const C = VP.sec(VP.ST.rrd, PW, PH, win, 's32', { tw: VP.WIN.secT });
+  let sl = C.svg, a = C.A;
+  let Fz = null;
+  if (z > 0.4) { Fz = VP.sec(stS, PW, PH, win, 's32z', { tw: VP.WIN.depZT, step: 0.025 }); sl += `<g opacity="${ss(0.4, 0.9, z).toFixed(3)}">${Fz.svg.replace(/^<rect[^>]*\/>/, '')}</g>`; if (z > 0.9) a = Fz.A; }
+  const opW = 1 - ss(0, 0.5, z), opZ = ss(0.6, 1, z), hiR = T.p(2, 0.5, 0.6);
+  let el = lab('11 點：上方略偏鼻側', 'superonasal', PW - 12, 40, a.wallR, { side: 'R', bold: true, color: hiR > 0.5 ? COL.accent : COL.ink, lc: hiR > 0.5 ? COL.accent : undefined, op: T.on(0) * opW });
+  el += lab('5 點：下方偏顳側', 'inferotemporal', 14, 40, a.wallL, { bold: true, op: T.on(0) * opW });
+  el += lab('11 點裂孔', 'HST', PW - 12, 150, a.tearMid, Object.assign({ side: 'R', op: T.on(0, 0.6, 0.6) * opW }, HST));
+  if (z > 0.9) {
+    el += lab('11 點裂孔', 'HST', 14, 330, a.tearMid, Object.assign({ op: opZ }, HST));
+    if (a.depressor) { el += lab('壓鞏膜器', 'depressor', PW - 12, 330, a.depressor, { side: 'R', bold: true, op: opZ * T.p(3, 0.4, 0.5) });
+      el += lab('凹陷：從外面往內壓', 'indentation', 14, 380, wallPx(Fz, stS.dep.h, stS.dep.s, stS.dep.depth), { bold: true, op: opZ * T.p(3, 0.55, 0.65) }); }
+    el += lab('11 點：上方略偏鼻側', 'superonasal', PW - 12, 40, null, { side: 'R', bold: true, op: opZ });
+  }
+  // line 4: what to check when the mound is somewhere else
+  const opK = T.on(4, 0.5);
+  sl += `<g opacity="${opK}">` + infoCard(14, 56, 232, [['隆起不在 11 點時', { bold: true, size: 15 }], ['① 先確認：壓的位置', { color: COL.accent, bold: true, size: 15, op: T.on(4, 0.5, 0.4) }], ['② 再確認：inverter 開了沒', { color: COL.accent, bold: true, size: 15, op: T.p(4, 0.5, 0.6) }]], { lh: 32 }) + '</g>';
+  // ---------------- right: the surgeon's field (inverter on): lines 0–1 straight, the clock numbers and the 11 o'clock mark; line 1 the surgeon at the
+  // head (示意); line 2 the view turns toward 11 (示意) and the tear comes in, low and a little to the right; line 3 the mound of the same press;
+  // line 4 the same mound with the inverter off (turned 180°: up and a little to the left), then on again; line 5 the assistant cannot see it
+  const LK = VP.ST.depOn.look, kL = T.p(2, 0.05, 0.35), a4 = 180 * T.p(4, 0.05, 0.28) * (1 - T.p(4, 0.66, 0.88));
+  const stOn = kD > 0 ? VP.depStep(VP.ST.depOn, kD) : VP.lookStep(VP.ST.view3, LK, kL), stOff = kD > 0 ? VP.depStep(VP.ST.depOff, kD) : Object.assign({}, stOn, { inverter: false });
+  const Wt = wideTurn(stOn, stOff, a4, PW, PH, VP.WIN.wide3, 'w32'), off = a4 >= 90, opSeat = T.on(1, 0.6) * (1 - T.on(3, 0.5));
+  const hi1 = T.p(1, 0.3, 0.4) * (1 - T.on(3, 0.5)) > 0.5 ? { 12: CLK_HI, 3: CLK_HI } : {};
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + Wt.svg + clockNums(Wt, 1, { hi: hi1 }) + mark11(Wt, T.on(0, 0.6, 0.6));
+  sr += seatInset(10, 10, opSeat, TX3.seat);
+  let er = lab('本片假設術者坐病人頭側', '', 14, 358, null, { bold: true, color: COL.accent, op: opSeat });
+  er += lab('下＝12 點、左眼 temporal 在左', '', 14, 392, null, { bold: true, color: COL.accent, op: opSeat * T.p(1, 0.3, 0.4) });
+  // line 2: the 11 o'clock direction from the middle of the picture, and the tear seen there
+  const opT = T.p(2, 0.3, 0.4) * (1 - T.on(3, 0.5)); { const c = Wt.c, q = rimPt(Wt, 11, -4);
+    sr += arrowP([[c[0], c[1]], q], TEAR_C, opT, 'arrR', 3, '8 6'); }
+  er += lab('11 點裂孔：畫面下方略偏右', 'HST', PW - 12, 300, Wt.A.tear, Object.assign({ side: 'R', op: opT }, HST));
+  // line 3: the mound (same press as the section); line 4: inverter off → the same mound up and a little to the left; on again → back at 11
+  const opM = T.p(3, 0.4, 0.5) * (1 - T.p(4, 0.05, 0.12)), opOff = T.p(4, 0.26, 0.32) * (1 - T.p(4, 0.66, 0.72)), opBack = T.p(4, 0.86, 0.92);
+  if (Wt.A.dep) { er += lab('11 點的隆起', 'mound', PW - 12, 300, Wt.A.dep, { side: 'R', bold: true, op: opM });
+    er += lab('同一個隆起', '', 14, 64, null, { bold: true, color: COL.red, op: opOff });
+    er += lab('跑到上方略偏左', '（推論）', 14, 98, Wt.A.dep, { bold: true, color: COL.red, lc: COL.red, op: opOff });   // research/intraop.md 題 3: no source says this directly; inferred from 倒像 = 180°
+    er += lab('inverter 開：回到 11 點', 'mound', PW - 12, 300, Wt.A.dep, { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: opBack * (1 - T.on(5, 0.5)) }); }
+  if (opOff > 0 && Wt.A.dep) { const q = rotP(Wt.A.dep, -a4, Wt.c);   // where the mound is with the inverter on (every point is turned by a4)
+    { sr += `<circle cx="${F1(q[0])}" cy="${F1(q[1])}" r="26" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 5" opacity="${opOff}"/>`;
+      er += lab('inverter 開時在這裡', '', PW - 12, 352, [q[0] + 18, q[1] + 18], { side: 'R', op: opOff }); } }
+  sr += badge(PW - 132, 10, 'inverter 開', COL.accent, T.on(3, 0.5) * (off ? 0 : 1) * (1 - T.on(5, 0.5))) + badge(PW - 172, 10, 'inverter 關（倒像）', COL.red, off ? 1 : 0);
+  // line 5: the assistant cannot see this picture (示意)
+  const opV = T.on(5, 0.6);
+  sr += `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f" opacity="${(0.6 * opV).toFixed(3)}"/>` + cantSee(PW / 2, PH / 2 + 10, opV, TX3.see);
+  return { L: { svg: sl, extra: el, P: z > 0.5 ? PT.sec3z : PT.sec3 }, R: { svg: sr, extra: er, P: off ? PT.w3depOff : kD > 0 ? PT.w3dep : kL > 0.5 ? PT.w3look : PT.w3on } };
+};

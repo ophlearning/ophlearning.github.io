@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–2.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–3.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -28,7 +28,8 @@ const LEDGER = {
   '2-1': { '3': 'EyeWiki 2026a', '4': 'Duker 2021', '7.6': 'Li 2025', '7.0': 'Li 2025', '83': 'Singh 2008', '39': 'Singh 2008',
            '9': '結構', '12': '結構' },
   '2-2': { '4': '示意', '7': '結構', '9': '結構', '12': '結構' },
-  '3-2': { '11': '病例', '12': '結構' },
+  '3-1': { '11': '病例', '5': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '2': '結構', '180': 'Spitznas 1987' },
+  '3-2': { '11': '病例', '12': '結構', '5': '結構', '3': '結構', '6': '結構', '9': '結構', '2': '結構' },
   '4-1': { '110': 'Lai 2019' },
   '5-1': { '106': 'Govetto 2024', '11': '病例', '1.2': 'Jackson 2013', '1.6': 'Jackson 2013' },
   '5-2': { '1.9': 'Neffendorf 2017', '5.8': 'Neffendorf 2017' },
@@ -204,6 +205,55 @@ function modelChecks(ctx) {
     ok('M15', line(ctx, '2-2', 5).includes('若空氣跑到脈絡膜下') && line(ctx, '2-2', 5).includes('要立刻停止灌氣') && VP.ST.infAir.gas > 0 && !(C.f.cavity(C.c) < 0) && C.c.dd > C.c.T - 0.02 && C.c.dd < C.c.T + 0.1
       && onScreen(ctx, '2-2', '空氣跑到脈絡膜下（示意）') && onScreen(ctx, '2-2', '示意'),
       `2-2 示意: air in the eye, the slipped tip in the wall just inside the sclera (${f2(C.c.dd)} mm deep, sclera ${f2(C.c.T)} mm), not in the cavity`); }
+  // chapter 3. Screen vectors of the surgeon's wide-angle view are taken from the field centre (VP.wide(...).M: model mm, y down) or from the pole;
+  // up/down/left/right are written here (screen y down), not taken from the model's orientation code.
+  const wideM = st => VP.wide(st, W_, H_, VP.WIN.wide3, 'mw').M, wideMap = st => VP.wide(st, W_, H_, VP.WIN.wide3, 'mw').r.map;
+  const scr = (st, h, s = 14) => { const m = wideMap(st), Gm = P.geom(st), q = m.proj(Gm.ret(h, s, 1)), o = m.proj([0, 0, -12]); return [q[0] - o[0], q[1] - o[1]]; };
+  const degFromDown = v => Math.atan2(v[0], v[1]) / D2R_, degFromUp = v => Math.atan2(-v[0], -v[1]) / D2R_;   // + = to the right of straight down / to the left of straight up
+  // M16 3-1 lines 1–2: the wide-angle image is upside down and laterally reversed (Spitznas 1987) = turned 180°; the inverter turns it back.
+  // (a) the light path drawn (示意): the real image of each retinal point lies on the other side of the axis, the inverter's output on the same side;
+  // (b) the wide-angle view drawn with the inverter off = the inverter-on view turned 180° about the field centre (every anchor), for both pairs drawn;
+  //     the 12 o'clock point goes from the bottom to the top and the 3 o'clock point from the left to the right
+  { const O = VP.optics(), hs = [VP.SEC_H, ((VP.SEC_H + 5) % 12) + 1];
+    const inv = hs.every(h => O.R[h][0] * O.I[h][0] < 0 && O.R[h][0] * O.E[h][0] > 0 && near(Math.abs(O.E[h][0]), Math.abs(O.I[h][0]), 1e-9) && O.I[h][1] < O.apex[1] && O.R[h][1] > O.apex[1]
+      && O.rays[h].every(r => r[0] === O.R[h] && near(r[r.length - 1][0], O.I[h][0], 1e-9) && near(r[r.length - 1][1], O.I[h][1], 1e-9)));
+    ok('M16', line(ctx, '3-1', 1).includes('影像上下顛倒、左右相反') && line(ctx, '3-1', 2).includes('inverter 關著時，看到的就是倒像') && inv && onScreen(ctx, '3-1', '倒像（鏡片上方的實像）inverted'),
+      `3-1 light path (示意): ${hs.map(h => `${h} o'clock retina at x ${f2(O.R[h][0])} → real image ${f2(O.I[h][0])} (other side) → inverter ${f2(O.E[h][0])}`).join('; ')} mm`);
+    let worst = 0, n = 0; const flips = [];
+    for (const [a, b] of [['view3', 'view3Off'], ['depOn', 'depOff']]) { const on = wideM(VP.ST[a]), off = wideM(VP.ST[b]);
+      for (const k of Object.keys(on)) if (Array.isArray(on[k]) && on[k].length === 2 && off[k]) { worst = Math.max(worst, Math.hypot(on[k][0] + off[k][0], on[k][1] + off[k][1])); n++; }
+      const v12 = scr(VP.ST[a], 12), w12 = scr(VP.ST[b], 12), v3 = scr(VP.ST[a], 3), w3 = scr(VP.ST[b], 3); flips.push(v12[1] > 5 && w12[1] < -5 && v3[0] < -5 && w3[0] > 5); }
+    ok('M16', n > 20 && worst < 1e-6 && flips.every(Boolean) && onScreen(ctx, '3-1', '整張轉 180°') && onScreen(ctx, '3-1', 'inverter 關：倒像') && onScreen(ctx, '3-1', 'inverter 開：正像'),
+      `3-1, 3-2 wide view: inverter off = inverter on turned 180° (${n} anchors, max ${worst.toExponential(1)} mm); 12 o'clock bottom → top, 3 o'clock left → right`); }
+  // M17 3-2 line 1: surgeon at the patient's head (12), inverter on: the left eye's 12 o'clock at the bottom of the picture, temporal (3 o'clock) on the left
+  { const st = VP.ST.view3, v12 = scr(st, 12), v3 = scr(st, 3), tH = OS_TEMPORAL > 0 ? 3 : 9;
+    ok('M17', line(ctx, '3-2', 1).includes('術者坐在病人頭側') && line(ctx, '3-2', 1).includes('左眼的 12 點在畫面下方，temporal 在畫面左邊') && st.eye === 'OS' && st.inverter !== false && tH === 3
+      && v12[1] > 5 && Math.abs(degFromDown(v12)) < 1 && v3[0] < -5 && Math.abs(v3[1]) < 0.5 && onScreen(ctx, '3-2', '本片假設術者坐病人頭側') && onScreen(ctx, '3-2', '下＝12 點、左眼 temporal 在左'),
+      `3-2 wide view (OS, inverter on): 12 o'clock ${f2(degFromDown(v12))}° from straight down, temporal 3 o'clock at (${v3.map(f2).join(', ')}) mm = left`); }
+  // M18 3-2 line 2: the left eye's 11 o'clock low in the picture and a little to the right (30° from straight down); on the patient superonasal;
+  // the tear seen there when the view turns toward 11 (示意), inside the field
+  { const st = VP.ST.view3, v11 = scr(st, 11), d11 = degFromDown(v11), nm = sideName(11), lk = VP.lookStep(st, VP.ST.depOn.look, 1), M = wideM(lk), ht = M.tear && clockSurg([M.tear[0] - M.pole[0], M.tear[1] - M.pole[1]]);
+    ok('M18', line(ctx, '3-2', 2).includes('左眼的 11 點，在畫面上靠近下方、略偏右') && line(ctx, '3-2', 2).includes('上方略偏鼻側') && v11[1] > 0 && d11 >= 15 && d11 <= 45 && near(d11, 30, 1)
+      && nm.en === 'superonasal' && POSTERIOR.anat(11, st.eye).en === nm.en && onScreen(ctx, '3-2', `11 點：${nm.zh.replace('偏', '略偏')}${nm.en}`)
+      && ht && near(hdiff(ht, CASE.tear), 0, 0.1) && Math.hypot(...M.tear) < M.R && onScreen(ctx, '3-2', '11 點裂孔：畫面下方略偏右HST'),
+      `3-2 wide view: 11 o'clock ${f2(d11)}° right of straight down (略偏右), ${nm.zh} ${nm.en} on the patient; looking toward 11 the tear at ${ht && f2(ht)} o'clock, inside the field`); }
+  // M19 3-2 line 3 (3-1 line 4): the assistant presses at 11 o'clock: the same press in the section and the wide view (every step of the animation);
+  // in the 11 o'clock section the wall is pushed in by the depth at that point; in the wide view (inverter on) the mound is at 11 o'clock, pushed into view
+  { const sd = VP.ST.dep.dep, same = [0, 1, 2, 3, 4, 5, 6].every(i => JSON.stringify(VP.depStep(VP.ST.dep, i / 6).dep) === JSON.stringify(VP.depStep(VP.ST.depOn, i / 6).dep) && JSON.stringify(VP.depStep(VP.ST.depOff, i / 6).dep) === JSON.stringify(VP.depStep(VP.ST.dep, i / 6).dep));
+    const S = VP.sec(VP.ST.dep, W_, H_, VP.WIN.depZ, 'm19', { tw: VP.WIN.depZT, noTissue: true }).M, G0 = P.geom(VP.ST.rrd), G1 = P.geom(VP.ST.dep), inw = GLOBE.len(G0.ret(sd.h, sd.s, 1)) - GLOBE.len(G1.ret(sd.h, sd.s, 1));
+    const M = wideM(VP.ST.depOn), hw = M.dep && clockSurg([M.dep[0] - M.pole[0], M.dep[1] - M.pole[1]]);
+    ok('M19', line(ctx, '3-2', 3).includes('助手從外面壓 11 點的鞏膜') && line(ctx, '3-2', 3).includes('畫面上會在 11 點看到一個隆起') && VP.DEP_H === CASE.tear && sd.h === CASE.tear && same
+      && S.dep_off < 0.02 && S.dep[0] > 0 && near(inw, sd.depth, 0.25) && hw && near(hdiff(hw, CASE.tear), 0, 0.1) && Math.hypot(...M.dep) < M.R && VP.ST.depOn.inverter !== false
+      && onScreen(ctx, '3-2', '11 點的隆起mound') && onScreen(ctx, '3-2', '壓鞏膜器depressor') && onScreen(ctx, '3-2', '凹陷：從外面往內壓indentation'),
+      `3-2 press at ${sd.h} o'clock, same state in both views (7 steps): section dent in the plane (${f2(S.dep_off)} mm off), right side, wall in by ${f2(inw)} mm (depth ${sd.depth}); wide view mound at ${hw && f2(hw)} o'clock`);
+    const m = wideMap(VP.ST.depOn), b0 = m.beta(P.geom(Object.assign({}, VP.ST.depOn, { dep: null })).ret(sd.h, sd.s, 1)), b1 = m.beta(G1.ret(sd.h, sd.s, 1));
+    ok('M19', line(ctx, '3-1', 4).includes('照樣可以壓鞏膜看周邊') && b1 < b0 && b1 < m.bmax && onScreen(ctx, '3-1', '壓 11 點的隆起（示意）mound') && onScreen(ctx, '3-1', '壓鞏膜器depressor'),
+      `3-1 line 4: the pressed spot comes into view, ${f2(b0 / D2R_)}° → ${f2(b1 / D2R_)}° from the viewing axis (field ±${f2(m.bmax / D2R_)}°)`); }
+  // M20 3-2 line 4: with the inverter off the same mound shows up high in the picture and a little to the left (turned 180°: the 5 o'clock direction)
+  { const on = wideM(VP.ST.depOn), off = wideM(VP.ST.depOff), v = off.dep && [off.dep[0] - off.pole[0], off.dep[1] - off.pole[1]], u = degFromUp(v || [0, 0]);
+    ok('M20', line(ctx, '3-2', 4).includes('隆起出現在別的鐘點') && line(ctx, '3-2', 4).includes('再確認 inverter 有沒有開') && VP.ST.depOff.inverter === false && v && v[1] < 0 && v[0] < 0 && u >= 15 && u <= 45
+      && near(off.dep[0], -on.dep[0], 1e-6) && near(off.dep[1], -on.dep[1], 1e-6) && onScreen(ctx, '3-2', 'inverter 關（倒像）') && onScreen(ctx, '3-2', '同一個隆起') && onScreen(ctx, '3-2', '跑到上方略偏左'),
+      `3-2 inverter off: the mound ${f2(u)}° left of straight up (上方略偏左), at the 180° turn of the inverter-on mound`); }
   return R;
 }
 
@@ -281,6 +331,13 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['infusion at 7:30', c => { c.VP = stWith('setup', { troc: POSTERIOR.trocarsFor('OS').map(t => t.inf ? Object.assign({}, t, { h: 7.5 }) : t) }); }, 'M13'],
       ['microscope with the surgeon at 6', c => { c.VP = stWith('setup', { surgeon: 6 }); }, 'M14'],
       ['error demonstration with the tip in the cavity', c => { c.VP = stWith('infSub', { troc: POSTERIOR.trocarsFor('OS') }); }, 'M15'],
+      ['inverter off drawn only mirrored left–right', c => { c.VP = vpWith({ wide: (st, ...a) => { const r = VP0.wide(st, ...a); if (st.inverter !== false) return r; const M = {};
+        for (const [k, v] of Object.entries(r.M)) M[k] = Array.isArray(v) && v.length === 2 && typeof v[0] === 'number' ? [v[0], -v[1]] : v; return Object.assign({}, r, { M }); } }); }, 'M16'],
+      ['real image drawn on the same side as the retinal point', c => { c.VP = vpWith({ optics: (...a) => { const o = VP0.optics(...a); for (const h of Object.keys(o.I)) { o.I[h] = [-o.I[h][0], o.I[h][1]]; o.rays[h].forEach(r => { r[r.length - 1] = o.I[h]; }); } return o; } }); }, 'M16'],
+      ['wide view with the surgeon at 6', c => { c.VP = stWith('view3', { surgeon: 6 }); }, 'M17'],
+      ['wide view with the surgeon at 1 (11 o\'clock 60° off straight down)', c => { c.VP = stWith('view3', { surgeon: 1 }); }, 'M18'],
+      ['mound at 10 o\'clock in the wide view, dent at 11 in the section', c => { c.VP = stWith('depOn', { dep: Object.assign({}, VP0.ST.depOn.dep, { h: 10 }) }); }, 'M19'],
+      ['「inverter 關」 demonstration drawn with the inverter on', c => { c.VP = stWith('depOff', { inverter: true }); }, 'M20'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

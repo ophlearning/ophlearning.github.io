@@ -43,6 +43,41 @@ const VP = (() => {
     infSub: infSt('sub'),                           // 2-2 line 3: 錯誤示範, infusion tip under the retina
     infAir: infSt('supra', { vit: { cut: 1, shave: 1 }, gas: 0.5 }),   // 2-2 line 5: 示意, air through a slipped cannula into the suprachoroidal space (air–fluid exchange after the vitrectomy)
   });
+  // chapter 3 (reading the picture): the surgeon's wide-angle view of the case, inverter on and off; the assistant pressing at 11 o'clock.
+  // Where and how deep the press goes is the model's 示意 (PRESET.depress: 9.3 mm from the limbus, 1.6 mm deep; looking toward 11 by 32°).
+  const DEP_H = 11;                   // 3-2: 主刀說「壓 11 點」 (the tear's clock hour, 病例)
+  const DEP = Object.assign({}, P.PRESET.depress.dep, { h: DEP_H }), LOOK_DEP = Object.assign({}, P.PRESET.depress.look, { h: DEP_H });
+  const DEP_STEPS = 6;                // the depressor goes in over 6 steps (each step is a new section)
+  Object.assign(ST, {
+    view3: Object.assign({}, P.CASE, { surgeon: 12, inverter: true }),       // 3-1, 3-2: the case seen straight through the wide-angle system, inverter on
+    view3Off: Object.assign({}, P.CASE, { surgeon: 12, inverter: false }),   // the same, inverter off (the inverted image)
+    dep: Object.assign({}, P.CASE, { dep: DEP }),                            // 3-1 line 4, 3-2: pressing at 11 o'clock (the section)
+  });
+  ST.depOn = Object.assign({}, ST.dep, { surgeon: 12, inverter: true, look: LOOK_DEP });   // the same press seen in the wide view, looking toward 11
+  ST.depOff = Object.assign({}, ST.depOn, { inverter: false });                             // 3-2 line 5: the same press, inverter off
+  // a dep state (section or wide view) with the depressor k (0 → 1) of the way in, in DEP_STEPS steps: both views of a frame take the same k
+  const depStep = (st, k) => { const n = Math.round(Math.max(0, Math.min(1, k)) * DEP_STEPS) / DEP_STEPS;
+    return Object.assign({}, st, { dep: n > 0 ? Object.assign({}, st.dep, { depth: st.dep.depth * n }) : null }); };
+  // a wide-view state turned toward look.h by the fraction k of look.deg (8 steps), for the turn toward 11 in 3-2
+  const lookStep = (st, look, k) => Object.assign({}, st, { look: { h: look.h, deg: look.deg * Math.round(Math.max(0, Math.min(1, k)) * 8) / 8 } });
+  // 3-1: the light path of the wide-angle system (示意, not to scale) in the 11–5 section of the case (mm: x toward 11, y down = posterior).
+  // A retinal point on each side, OPT.s mm from the limbus (about 30° from the viewing axis); the eye sends its light out through the pupil as a
+  // parallel beam (direction: from the retinal point through the nodal point, the model's wide-angle viewpoint); the wide-angle lens, OPT.gap mm
+  // above the cornea with focal length OPT.f (both 示意), focuses each beam to a point of the real image above the lens. The inverter turns the
+  // picture back (erect). Returns the points of every ray: retina → pupil → lens → image.
+  const OPT = { s: 22, gap: 6, f: 11, lensR: 10, pupilX: [-2.6, 0, 2.6] };
+  function optics(st = ST.rrd, o = {}) {
+    const Gm = P.geom(st), pl = G.planes.meridian(SEC_H), to = p => G.toPlane(pl, p), kp = P.keyPoints(), O = Object.assign({}, OPT, o);
+    const nod = to([0, 0, kp.VZ]), apex = to([0, 0, kp.apexZ]), pupY = to([0, 0, P.IRIS.pm[0]])[1], lensY = apex[1] - O.gap, imgY = lensY - O.f;
+    const out = { apex, nod, pupY, lensY, imgY, R: {}, I: {}, E: {}, rays: {} };
+    for (const h of [SEC_H, ((SEC_H + 5) % 12) + 1]) {
+      const R = to(Gm.ret(h, O.s, 1)), d0 = [nod[0] - R[0], nod[1] - R[1]], dl = Math.hypot(...d0), d = [d0[0] / dl, d0[1] / dl];
+      const I = [O.f * d[0] / -d[1], imgY];
+      out.R[h] = R; out.I[h] = I; out.E[h] = [-I[0], imgY];   // E: the inverter's output (the image turned back), drawn by draw.js higher up
+      out.rays[h] = O.pupilX.map(x => { const q = [x, pupY], t = (lensY - q[1]) / d[1], L = [q[0] + d[0] * t, lensY]; return [R, q, L, I]; });
+    }
+    return out;
+  }
   // drawing constants checked by check.js against the case or the literature
   const RD_ARC = [11.5, 17];          // the detachment's extent drawn round the chart: 11:30 clockwise via 12 and 3 to 5 o'clock (病例)
   const LINCOFF = { c: 12, half: 1.5 };   // superior detachment crossing 12: primary break within 1.5 clock hours of 12 (Yoshida 2018)
@@ -71,6 +106,12 @@ const VP = (() => {
     infZ: { x: 3.0, y: -10.3, w: 15 },                     // 2-2 lines 2–5: the infusion port, the ora and the detached retina behind it (labels on the right)
     infZT: { x: 3.0, y: -10.3, w: 10.6, h: 10.2 },
     wide: { x: -29.6, y: -20, w: 59.2 },                   // 2-2: whole wide-angle field
+    wide3: { x: -34.93, y: -23.63, w: 69.86 },             // chapter 3: whole wide-angle field (165 px) with room for the clock numbers round it
+    wideS: { x: -27.58, y: -38.99, w: 55.16 },             // 3-1 lines 2–3: one of two fields side by side (in a 290 px wide half; radius 100 px)
+    opt: { x: -43.9, y: -46.2, w: 87.8 },                  // 3-1: the light path above the whole 11–5 section (eye at the bottom of the panel)
+    secD: { x: -13.6, y: -21.6, w: 36, h: 35.33 },         // 3-1 line 4: the section computed wider, so the depressor at 11 o'clock is not cut off
+    depZ: { x: 3.2, y: -8.6, w: 14 },                      // 3-2 lines 4–6: the 11 o'clock periphery with the dent, the tear and the depressor (11–5 section)
+    depZT: { x: 3.2, y: -8.6, w: 14, h: 9.48 },
   };
   const LOOK_INF = { h: INF_H, deg: 45 };                  // 2-2: the surgeon looks toward the infusion (示意, as the model looks toward 11 for the tear)
   const OR = {   // orientation lines (POSTERIOR.orient: checked in posterior/check.js B2, B5)
@@ -82,6 +123,8 @@ const VP = (() => {
     ext: '俯視：左眼 OS　術者坐 12 點　下＝12 點、右＝9 點 nasal',
     port: '切面平行角膜緣　上＝外（結膜）　下＝玻璃體腔',
     wide: P.orient.wide('OS', true, 12).replace('術者坐 12 點　', '').replace('：下＝12 點　', '：下＝12 點、') + '　看向灌注（示意）',
+    wideOn: P.orient.wide('OS', true, 12),                 // chapter 3: 左眼 OS　術者坐 12 點　inverter 開：下＝12 點　temporal 在左
+    wideOff: P.orient.wide('OS', false, 12),               // inverter 關（倒像）：下＝6 點　temporal 在右
   };
 
   // ---------------------------------------------------------------- views
@@ -148,6 +191,6 @@ const VP = (() => {
   // points round the tear on the attached retina, in its tangent frame (u posterior from the hinge, c across, mm) → chart mm
   function tearChart(st, pts) { const Gm = P.geom(st), T = Gm.tear; return pts.map(([u, cc]) => chartXY(P.onRetina(Gm, T.fr0, u, cc, 1, Gm.ret0).p)); }
   return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
-    portSt, WIN, OR, D2R };
+    portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT };
 })();
 if (typeof module !== 'undefined') module.exports = VP;
