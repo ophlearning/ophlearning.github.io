@@ -239,10 +239,10 @@ const VP = (() => {
     if (st.ta > 0 && o2.taNear) { const ff = P.makeCtx(Gm); let best = 1e9;
       for (let k = 0; k < 900; k++) { if (G.hash(k, 11) > 0.6 * st.ta) continue; const p = [24 * G.hash(k, 12) - 12, 24 * G.hash(k, 13) - 12, 20 * G.hash(k, 14) - 12];
         if (G.len(p) > 12 || !(ff.gel(ff.at(p)) < 0)) continue; const q = Wm.proj(p), d = Math.hypot(q[0] - o2.taNear[0], q[1] - o2.taNear[1]); if (d < best) { best = d; A.taSpeck = q; } } }
-    // 4-1 line 3 (示意): where the posterior hyaloid has come off, a ring half way up its rise (the model's PVD: from the pole out to the vitreous base)
+    // 4-1 line 3 (示意): where the posterior hyaloid has come off, a ring on it half way up its rise (the model's PVD: from the pole out to the vitreous base; Gm.hya)
     if (o2.pvdRing && st.pvd > 0) { const ring = []; let ok = true;
       for (let i = 0; i <= 96 && ok; i++) { const h = 12 * i / 96, sp = P.S_POLE + 2 + (P.vbPostAt(h, Gm.ts) - P.S_POLE - 2) * st.pvd, s = sp + 2.5;
-        if (s > P.S_POLE - 0.4) ok = false; else ring.push(Wm.proj(P.P3(h, s, P.Tp(s) + P.chorAt(s) + Gm.rtHS(h, s) + P.N.pvdGap / 2))); }
+        if (s > P.S_POLE - 0.4) ok = false; else ring.push(Wm.proj(P.P3(h, s, P.Tp(s) + P.chorAt(s) + Gm.rtHS(h, s) + Gm.hya(s, h)))); }
       if (ok) { o.push(`<path d="M${ring.map(G.F).join('L')}Z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-dasharray="6 4" opacity="0.95" ${G.NS}/>`); A.pvdRing = ring[60]; A.pvdRingL = ring[12]; } }
     const svg = `<g transform="${c.tf}">${r.svg}<g clip-path="url(#${id}_f)">${o.join('')}</g></g>`;
     return { svg, A: mapA(A, c.P), M: A, k: c.k, P: c.P, r };

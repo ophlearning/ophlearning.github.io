@@ -37,6 +37,7 @@ const POSTERIOR = (() => {
     field: 130,                                 // non-contact wide-angle field, degrees (Tabandeh 2012: most systems 120–140°; 130 示意)
     vortex: 7.6,                                // vortex vein ampullae 7.6 mm behind the ora (Sohn 2020)
     pvdGap: 3.5,                                // detached posterior hyaloid in front of the retina (示意)
+    pvdEnv: 3.4,                                // the hyaloid rides over a smooth envelope of the detachment: dilation radius on the fundus chart, mm (示意)
   };
 
   // ---------------------------------------------------------------- outer profile 0–180° (globe/ stops at 150°): same formula and step
@@ -169,7 +170,23 @@ const POSTERIOR = (() => {
       buf[j * NX + i] = (inside ? 1 : -1) * Math.sqrt(bd); }
     const f = (x, y) => { const u = (x - X0) / ST, v = (y - X0) / ST; if (u < 0 || v < 0 || u >= NX - 1 || v >= NX - 1) return -9;
       const i = Math.floor(u), j = Math.floor(v), a = u - i, b = v - j, q = j * NX + i; return lerp(lerp(buf[q], buf[q + 1], a), lerp(buf[q + NX], buf[q + NX + 1], a), b); };
-    if (SDF_CACHE.size > 20) SDF_CACHE.delete(SDF_CACHE.keys().next().value); SDF_CACHE.set(key, f); return f;
+    f.key = key; if (SDF_CACHE.size > 20) SDF_CACHE.delete(SDF_CACHE.keys().next().value); SDF_CACHE.set(key, f); return f;
+  }
+  // smooth upper envelope of a height field on the fundus chart (2026-11-12; the posterior hyaloid over a detachment): fn (chart mm → mm) sampled on the
+  // sdf's raster, dilated (square, radius 2B + 1 cells ≈ N.pvdEnv) and blurred twice by boxes of B cells (support 2B), so at every point the envelope
+  // ≥ fn within a cell (smooth: no bumps where the field has them); bilinear, cached by key
+  const ENV_CACHE = new Map();
+  function envOf(key, fn) {
+    if (ENV_CACHE.has(key)) return ENV_CACHE.get(key);
+    const X0 = -32, ST = 0.2, NX = 321, n = NX * NX, B = Math.max(1, Math.floor((N.pvdEnv / ST - 1) / 2)), RR = 2 * B + 1, a = new Float32Array(n), b = new Float32Array(n);
+    for (let j = 0; j < NX; j++) for (let i = 0; i < NX; i++) a[j * NX + i] = fn(X0 + i * ST, X0 + j * ST);
+    const pass = (src, dst, r, max, dx) => { for (let j = 0; j < NX; j++) for (let i = 0; i < NX; i++) { let m = 0, cnt = 0;
+        for (let k = -r; k <= r; k++) { const ii = i + k * dx, jj = j + k * (1 - dx); if (ii < 0 || jj < 0 || ii >= NX || jj >= NX) continue; const v = src[jj * NX + ii]; if (max) { if (v > m) m = v; } else { m += v; cnt++; } }
+        dst[j * NX + i] = max ? m : m / cnt; } };
+    pass(a, b, RR, true, 1); pass(b, a, RR, true, 0); for (let k = 0; k < 2; k++) { pass(a, b, B, false, 1); pass(b, a, B, false, 0); }
+    const f = (x, y) => { const u = (x - X0) / ST, v = (y - X0) / ST; if (!(u >= 0 && v >= 0 && u < NX - 1 && v < NX - 1)) return 0;
+      const i = Math.floor(u), j = Math.floor(v), p = u - i, q = v - j, o = j * NX + i; return lerp(lerp(a[o], a[o + 1], p), lerp(a[o + NX], a[o + NX + 1], p), q); };
+    if (ENV_CACHE.size > 12) ENV_CACHE.delete(ENV_CACHE.keys().next().value); ENV_CACHE.set(key, f); return f;
   }
 
   // ---------------------------------------------------------------- state
@@ -233,6 +250,19 @@ const POSTERIOR = (() => {
     const sk = st.suck ? Object.assign({ w: 1.0 }, st.suck) : null;
     const H = !sk ? H0 : (s, h) => { const b = H0(s, h); if (!(b > 0)) return b; const ds = s - sk.s; let dh = h - sk.h; dh -= 12 * Math.round(dh / 12);
       const dc = dh * 30 * D2R * surfAt(sk.s).rho; return b + sk.amt * ss(0, 0.3, b) * Math.exp(-(ds * ds + dc * dc) / (sk.w * sk.w)); };
+    // posterior hyaloid (2026-11-12): hya(s, h) = how far it lies in front of where the retina's inner surface is when attached (mm). In the vitreous
+    // base, and where it has not come off yet (pvd), it lies on the retina as it is now (H0, detached or not). Behind the line where it comes off
+    // (hyaSp) it leaves the retina for env, a smooth upper envelope of the detachment (env ≥ H0), within 1.5 mm (B 0 → 1), and its gap above env
+    // rises to N.pvdGap over 5 mm (R 0 → 1): it keeps a gap ≥ R × N.pvdGap from the bulging retina, and away from where it comes off it does not
+    // follow the bumps of the border (the macular tongue). env is the detachment for amt 1 (without suck) on the fundus chart, built on first use.
+    let ENV = null;
+    const env = (fx, fy) => { if (!rd || !(rd.amt > 0)) return 0;
+      if (!ENV) ENV = envOf(sdf.key + JSON.stringify([ts, rd.lo, rd.hi, st.pfcl > 0 ? [lev.pfcl, g] : 0]), (x, y) => { const hs = hsChart(x, y), ora = oraAt(hs.h, ts); if (hs.s < ora) return 0;
+        const d = sdf(x, y); return d <= 0 ? 0 : Hpk(x, y) * ss(0, 1.2, d) * ss(ora, ora + 5.0, hs.s) * flat(hs.h, hs.s); });
+      return rd.amt * ENV(fx, fy); };
+    const hyaSp = h => lerp(S_POLE + 2, vbPostAt(h, ts), st.pvd || 0);
+    const hya = (s, h) => { const h0 = H0(s, h); if (s < oraAt(h, ts)) return h0; const sp = hyaSp(h), R = ss(sp, sp + 5, s), B = ss(sp, sp + 1.5, s); if (!(R > 0)) return h0;
+      const [fx, fy] = chartHS(h, s), he = Math.max(env(fx, fy), h0); return h0 + B * (he - h0) + R * N.pvdGap; };
     const Dp = (s, h) => { if (!dep) return 0; const ds = s - dep.s; let dh = h - dep.h; dh -= 12 * Math.round(dh / 12); const dc = dh * 30 * D2R * surfAt(dep.s).rho; return dep.depth * Math.exp(-(ds * ds + dc * dc) / (dep.w * dep.w)); };
     const rtHS = (h, s) => { const [fx, fy] = chartHS(h, s); return rtAt(fx, fy, s, oraAt(h, ts), D); };
     // a point on the retina: frac 0 = outer (photoreceptor) side, 1 = inner (ILM) side; includes the detachment and the indentation
@@ -244,7 +274,7 @@ const POSTERIOR = (() => {
       const fr = (fn) => { const Q = fn(t.h, sh, 0.5), eu = unit(sub(fn(t.h, sh + 0.05, 0.5), fn(t.h, sh - 0.05, 0.5))), ec0 = unit(sub(fn(t.h + 0.005, sh, 0.5), fn(t.h - 0.005, sh, 0.5)));
         const ec = unit(sub(ec0, mul(eu, dot(ec0, eu)))); let en = unit(cross(ec, eu)); if (dot(en, Q) > 0) en = mul(en, -1); return { Q, eu, ec, en }; };
       tear = Object.assign({ sh, ts }, t, { fr: fr(ret), fr0: fr(ret0), th: rtHS(t.h, sh), ang: t.flap * D2R }); }
-    return { st, ts, D, g, rd, poly, sdf, H, H0, Dp, lev, dep, ret, ret0, rtHS, tear, flat, suck: sk };
+    return { st, ts, D, g, rd, poly, sdf, H, H0, Dp, lev, dep, ret, ret0, rtHS, tear, flat, suck: sk, env, hyaSp, hya };
   }
   // U-shaped hole in tangent coordinates (u posterior from the hinge, c across): signed distance, negative inside
   function sdU(u, c, W, L) { const r = W / 2, cx = (L - r) / 2, hx = (L - r) / 2, qx = Math.abs(u - cx) - hx, qy = Math.abs(c) - r;
@@ -366,11 +396,13 @@ const POSTERIOR = (() => {
       iris: c => { if (c.rho < N.pupil - 0.3 || c.rho > IRIS.root[1] + 0.8 || c.z < IRIS.root[0] - 0.8 || c.z > IRIS.pm[0] + 1.0) return 1; const q = [c.z, c.rho];
         let bd = 1e9, bt = 0; const L = IRIS.line; for (let i = 1; i < L.length; i++) { const a = L[i - 1], e = [L[i][0] - a[0], L[i][1] - a[1]], l2 = e[0] * e[0] + e[1] * e[1]; let t = ((q[0] - a[0]) * e[0] + (q[1] - a[1]) * e[1]) / l2; t = clamp(t, 0, 1);
           const d = Math.hypot(q[0] - a[0] - e[0] * t, q[1] - a[1] - e[1] * t); if (d < bd) { bd = d; bt = (i - 1 + t) / (L.length - 1); } } return bd - IRIS.th(bt) / 2; },
-      // vitreous gel: in the cavity, in front of the posterior hyaloid (detached by pvd), within the shell left by the cutter; a cord holds the flap
-      gel: c => { const cv = cav(c); if (cv > 0.5) return 1; const e = c.dd - innerD(c) + c.H;   // mm in front of where the retina's inner surface lies when attached (smooth hyaloid over a detachment)
-        const vbp = vbPostAt(c.h, ts), spvd = lerp(S_POLE + 2, vbp, st.pvd || 0), gap = c.s < c.ora ? 0 : N.pvdGap * ss(spvd, spvd + 5, c.s);
+      // vitreous gel: in the cavity, in front of the posterior hyaloid (detached by pvd: Gm.hya, the same formula), within the shell left by the cutter;
+      // a cord holds the flap. Where the hyaloid has come off, the gel body rides over the detachment's envelope (B × he): the shell keeps its thickness
+      gel: c => { const cv = cav(c); if (cv > 0.5) return 1; const e = c.dd - innerD(c) + c.H;   // mm in front of where the retina's inner surface lies when attached
+        const vbp = vbPostAt(c.h, ts), sp = Gm.hyaSp(c.h), R = c.s < c.ora ? 0 : ss(sp, sp + 5, c.s), B = R > 0 ? ss(sp, sp + 1.5, c.s) : 0;
+        const h0 = Gm.suck ? Gm.H0(c.s, c.h) : c.H, he = R > 0 ? Math.max(Gm.env(c.fx, c.fy), h0) : h0, hy = h0 + B * (he - h0) + R * N.pvdGap;
         let shell = lerp(30, 3.0, vit.cut); if (vit.shave > 0) shell = c.s < vbp + 0.5 ? lerp(shell, 0.45, vit.shave) : lerp(shell, 0, vit.shave);
-        let gg = Math.max(cv, gap - e, e - shell);
+        let gg = Math.max(cv, hy - e, e - shell - B * he);
         if (cord && cord.b) gg = Math.min(gg, Math.max(cv, capsule(c.p, cord.a, cord.b, 0.32 * (1 - vit.shave))));
         return gg; },
       // vitreous base (示意 thickness 1.2 mm): the gel firmly attached from 2 mm in front of the ora to its posterior border
@@ -418,7 +450,7 @@ const POSTERIOR = (() => {
         anc('plana' + k, P3(hh, (PLICATA_END + ora) / 2, G.T((PLICATA_END + ora) / 2) + 0.1)); anc('plicata' + k, P3(hh, GN.spur + 1.0, G.T(GN.spur + 1.0) + 0.5)); anc('limbus' + k, P3(hh, 0, 0));
         anc('equator' + k, Gm.ret(hh, S_EQ, 1)); anc('choroid' + k, P3(hh, S_EQ + 3, Tp(S_EQ + 3) + chorAt(S_EQ + 3) / 2)); anc('sclera' + k, P3(hh, S_EQ + 3, Tp(S_EQ + 3) / 2));
         anc('vb' + k, P3(hh, ora, G.T(ora) + cilTh(ora - GN.spur, ora - GN.spur) + 0.6));
-        const sp = S_POLE - 4, spvd = lerp(S_POLE + 2, vbPostAt(hh, ts), st.pvd || 0); anc('hyaloid' + k, P3(hh, sp, Tp(sp) + chorAt(sp) + Gm.rtHS(hh, sp) + N.pvdGap * ss(spvd, spvd + 5, sp))); }
+        const sp = S_POLE - 4; anc('hyaloid' + k, P3(hh, sp, Tp(sp) + chorAt(sp) + Gm.rtHS(hh, sp) + Gm.hya(sp, hh))); }
       A.hyaloid = A.hyaloidL;
       anc('fovea', Gm.ret(12, S_POLE, 1)); anc('lens', [0, 0, (LENS.za + LENS.zp) / 2]); anc('lensBack', [0, 0, LENS.zp]); }
     anc('centre', [0, 0, 0]);

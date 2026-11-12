@@ -43,6 +43,7 @@ const LIT = {
   shaft: 0.6,                             // de Oliveira 2016 (23G)
   foveola: 0.35,                          // Curcio 1990
   coverSit: 0.035,                        // 推算 (CARD.md): smallest gas fraction that covers the whole 11 o'clock tear sitting upright, flat interface
+  pvdGap: 3.5, pvdRise: 5,                // 示意 (CARD.md): with a PVD the hyaloid lies 3.5 mm in front of the retina, reached 5 mm behind the vitreous base
 };
 const CASE = { eye: 'OS', tear: 11, rdFrom: 11.5, rdTo: 5 };   // 病例 (spec.md, 2026-11-12)
 const oraLit = (h, eye = 'OS') => { const ts = eye === 'OS' ? 1 : -1; return (LIT.oraT + LIT.oraN) / 2 + (LIT.oraT - LIT.oraN) / 2 * clockDir(h)[0] * ts; };   // smooth between clock hours (示意)
@@ -231,6 +232,40 @@ def('D10', (P, ok) => { const at = (st, h, s, e) => { const Gm = P.geom(st), f =
   ok(at({ eye: 'OS', pvd: 0 }, 12, P.S_POLE - 0.5, 0.1), 'no PVD: gel on the retina at the posterior pole');
   ok(!at({ eye: 'OS', pvd: 1 }, 12, P.S_POLE - 0.5, 0.1) && !at({ eye: 'OS', pvd: 1 }, 12, P.S_POLE - 0.5, 2.0), 'PVD: no gel within 2 mm of the posterior pole');
   ok(at({ eye: 'OS', pvd: 1 }, 3, oraLit(3) + 0.5, 0.1), 'PVD: gel still on the retina at the vitreous base'); });
+// D13 PVD over the detachment (2026-11-12; Govetto 2024: every eye with a tear has a PVD). Measured on the drawn gel along the wall's inward normal from the
+// retina as it is now (detached, bulging): behind the vitreous base (outside the tear and its flap, not at the disc) the hyaloid is off the retina from 1 mm
+// on and ≥ 3.5 mm off it from 5 mm on (示意, CARD.md), also over the bullous part; in the vitreous base and on the flap's free edge the gel touches it.
+// Smooth: along the 5 o'clock meridian (the section of the videos) the retina rises twice (the inferior detachment, then the macular tongue) but the
+// hyaloid rises once and stays (it does not follow the tongue), and along 11 o'clock it has one hump at most. After a core vitrectomy the gel left over the
+// bulge is as thick as over attached retina (the gel body is displaced, not cut away)
+def('D13', (P, ok) => { const st = P.PRESET.rrd, Gm = P.geom(st), f = P.makeCtx(Gm), T = Gm.tear, vbp = h => P.vbPostAt(h, 1);
+  // the first gel along n from p (mm; 0 when p is in the gel) and where that gel ends
+  const gelRun = (ff, p, n, max = 14) => { const g = d => ff.gel(ff.at(add(p, mul(n, d)))) < 0; let d = 0; while (d <= max && !g(d)) d += 0.05; if (d > max) return [max, max];
+    let a = d; if (d > 0) { let lo = d - 0.05, hi = d; for (let k = 0; k < 8; k++) { const m = (lo + hi) / 2; g(m) ? hi = m : lo = m; } a = hi; }
+    let e = d; while (e <= max && g(e)) e += 0.05; return [a, e]; };
+  const inward = (h, s) => mul(P.N3(h, s), -1), gapAt = (h, s, ff = f, G2 = Gm) => gelRun(ff, G2.ret(h, s, 1), inward(h, s))[0];
+  const skip = (h, s) => (Math.abs(hdiff(h, CASE.tear)) < 0.6 && s < vbp(h) + T.L + 1.5) || f.at(Gm.ret(h, s, 1)).dq < 1.3;   // the tear and its flap; the disc
+  let off = 9, full = 9, offAt = '', fullAt = '', n = 0, Hbig = 0, nBig = 0;
+  for (let h = 0.5; h <= 12; h += 0.5) for (let s = vbp(h) + 1; s <= P.S_POLE - 0.4; s += 0.5) { if (skip(h, s)) continue; const g = gapAt(h, s), H = Gm.H(s, h); n++;
+    if (s < vbp(h) + LIT.pvdRise) { if (g < off) { off = g; offAt = `${h} o'clock ${(s - vbp(h)).toFixed(1)} mm behind the base`; } }
+    else { if (g < full) { full = g; fullAt = `${h} o'clock ${(s - vbp(h)).toFixed(1)} mm behind the base, retina detached ${H.toFixed(2)} mm`; } if (H >= 3) { nBig++; Hbig = Math.max(Hbig, H); } } }
+  ok(n > 300 && off >= 0.1 && full >= LIT.pvdGap - 0.05 && nBig > 10,
+    `PVD, ${n} points behind the vitreous base: hyaloid off the retina as it is now ≥ ${off.toFixed(2)} mm within ${LIT.pvdRise} mm of the base (${offAt}), ≥ ${full.toFixed(2)} mm beyond (${fullAt}; 示意 ${LIT.pvdGap}), ${nBig} of them over retina detached ≥ 3 mm (up to ${Hbig.toFixed(2)})`);
+  let vb = 0; for (let h = 0.5; h <= 12; h += 1) for (const s of [oraLit(h) + 0.3, (oraLit(h) + vbp(h)) / 2, vbp(h) - 0.3]) vb = Math.max(vb, gapAt(h, s));
+  const fe = P.flapPt(T, T.L, 0), onFlap = [[0, 0, 0], [0.12, 0, 0], [0, 0.12, 0], [0, 0, 0.12], [-0.12, 0, 0], [0, -0.12, 0], [0, 0, -0.12]].some(e => inside(f, 'gel', add(fe, e)));
+  ok(vb <= 0.05 && onFlap, `gel on the retina in the vitreous base all round (gap ≤ ${vb.toFixed(2)} mm) and on the flap's free edge (${onFlap ? 'yes' : 'no'})`);
+  // smoothness: humps of a profile (a rise then a fall, each more than 0.1 mm; the macular tongue is 0.5 mm high)
+  const humps = v => { let n = 0, up = null, ext = v[0];
+    for (const x of v) { if (up === null) { if (Math.abs(x - ext) > 0.1) { up = x > ext; ext = x; } }
+      else if (up) { if (x > ext) ext = x; else if (x < ext - 0.1) { n++; up = false; ext = x; } }
+      else { if (x < ext) ext = x; else if (x > ext + 0.1) { up = true; ext = x; } } }
+    return n; };
+  const prof = h => { const hy = [], rt = []; for (let s = vbp(h) + 1; s <= P.S_POLE - 0.4; s += 0.25) { hy.push(gelRun(f, Gm.ret0(h, s, 1), inward(h, s))[0]); rt.push(Gm.H(s, h)); } return { hy: humps(hy), rt: humps(rt) }; };
+  const p5 = prof(5), p11 = prof(11);
+  ok(p5.rt >= 2 && p5.hy === 0 && p11.hy <= 1, `smooth hyaloid: along 5 o'clock the retina has ${p5.rt} humps (detachment, macular tongue), the hyaloid ${p5.hy}; along 11 o'clock the hyaloid has ${p11.hy}`);
+  const cut = Object.assign({}, st, { vit: { cut: 0.85 } }), Gc = P.geom(cut), fc = P.makeCtx(Gc), thick = (h, s) => { const r = gelRun(fc, Gc.ret(h, s, 1), inward(h, s)); return r[1] - r[0]; };
+  const tB = Math.min(...[[1, 15], [1.5, 16], [12, 15]].map(([h, s]) => thick(h, s))), tA = thick(9, 18);
+  ok(Gc.H(15, 1) >= 3 && near(tB, tA, 0.2), `core vitrectomy: the gel left is ${tB.toFixed(2)} mm thick over the bullous detachment, ${tA.toFixed(2)} mm over attached retina`); });
 // D11 PFCL (supine): sinks to the posterior pole, flattens the retina under it, the 11 o'clock tear above it (fluid leaves there; narration 6-1)
 def('D11', (P, ok) => { const st = P.PRESET.pfcl, Gm = P.geom(st), f = P.makeCtx(Gm), up = p => -dot(p, Gm.g), L = Gm.lev.pfcl;
   ok(inside(f, 'pfcl', P.P3(12, P.S_POLE - 0.3, P.Tp(P.S_POLE) + 0.254 + 0.5)) && !inside(f, 'pfcl', [0, 0, 4]), 'PFCL at the posterior pole, not at the front of the cavity');
@@ -346,7 +381,11 @@ const MUT = [
   ['trocar marks half an hour off on the chart', ['D8'], { src: [['const q = proj(P3(t.h, t.s, 0.6));', 'const q = proj(P3(t.h + 0.5, t.s, 0.6));']] }],
   ['TA outside the gel', ['D9'], { src: [['gg = f.gel(c); if (!(gg < 0)) continue;', 'gg = f.gel(c); if (!(gg < 3)) continue;']] }],
   ['TA drawn without TA', ['D9'], { src: [["if (!(st.ta > 0)) return ''; const o = [], cell", "if (!(st.ta > -1)) return ''; const o = [], cell"], ['if (r3 > 0.55 * st.ta) continue;', 'if (r3 > 0.55) continue;']] }],
-  ['PVD never detaches', ['D10'], { src: [['N.pvdGap * ss(spvd, spvd + 5, c.s)', 'N.pvdGap * ss(spvd, spvd + 5, c.s) * 0']] }],
+  ['PVD never detaches', ['D10'], { src: [['hy = h0 + B * (he - h0) + R * N.pvdGap;', 'hy = h0 + B * (he - h0) + R * N.pvdGap * 0;']] }],
+  ['hyaloid kept where the retina lies when attached (gel on the bulging retina)', ['D13'], { src: [['hy = h0 + B * (he - h0) + R * N.pvdGap;', 'hy = R * N.pvdGap;']] }],
+  ['hyaloid follows the retina as it is now (bumps of the macular tongue)', ['D13'], { src: [['he = R > 0 ? Math.max(Gm.env(c.fx, c.fy), h0) : h0, hy', 'he = h0, hy']] }],
+  ['gel left after core vitrectomy cut away over the bulge', ['D13'], { src: [['e - shell - B * he);', 'e - shell);']] }],
+  ['hyaloid comes off inside the vitreous base', ['D13'], { src: [['const hyaSp = h => lerp(S_POLE + 2, vbPostAt(h, ts), st.pvd || 0);', 'const hyaSp = h => lerp(S_POLE + 2, oraAt(h, ts) - 1, st.pvd || 0);']] }],
   ['PFCL does not flatten', ['D11'], { src: [['return ss(lev.pfcl - 0.2, lev.pfcl + 0.8, up); };', 'return 1; };']] }],
   ['PFCL floats', ['D11', 'E2'], { src: [['pfcl: pf > 0 ? q(pf) : -1e9', 'pfcl: pf > 0 ? q(1 - pf) : -1e9'], ['Math.max(cav(c), -dot(c.p, g) - lev.pfcl)', 'Math.max(cav(c), dot(c.p, g) + lev.pfcl)']] }],
   ['laser without the posterior arc', ['D12'], { src: [['for (let a = -90; a <= 90; a += 2) add_(', 'for (let a = -90; a <= -88; a += 2) add_(']] }],
