@@ -17,8 +17,12 @@
 //    is the same 3D point (< 0.01 mm), at its clock hour, at the distance the label gives (on the outer surface, or in the flap bed); points off the
 //    wall (the dock, the haptic ties outside the eye) are the model's 3D point. Chapters 3–5: the flap's hinge and apex in the bed, the trocars,
 //    the 12 o'clock wound, the needle entries in the beds and the dock, and the haptic ties (each strand on its own side, at the distal third).
-// 5. Spec acceptance: chapters 2 + 5 ≥ 35 % of the video; total 10–12 min (the kit's estimate until there is a timeline.js); placeholder segments
-//    (chapters 6–9 this round) draw only their title and 「畫面製作中」; the segments already drawn (title, chapters 1–5) are not placeholders.
+//    Chapters 6–7 (2026-11-12, third round): the haptic ties and the optic centre of the lens in place (the ties at the sulcus exits under the
+//    fixation points, the optic on the axis), the 2 o'clock knot (in the bed, inside the flap, under it once the flap is closed).
+// 5. Spec acceptance: chapters 2 + 5 ≥ 35 % of the video; total 10–12 min (the kit's estimate until there is a timeline.js); no placeholder is
+//    left: every segment draws more than its title and never 「畫面製作中」.
+// 6. States drawn (window.STATES): 8-1 the symmetric lens is not tilted and the asymmetric one is (Zhao 2025: asymmetry predicts tilt; amount 示意);
+//    8-4 each state shown side by side is an error state (decentred or tilted).
 // --selftest breaks each check once on purpose and fails unless every check then reports the error. --list prints the numbers per segment.
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
 const path = require('path');
@@ -51,13 +55,14 @@ const LEDGER = {
   '5-2': { '1': 'Guedes 2026', '0': '結構', '2': '結構', '8': '結構', '12': '結構', '9': '結構' },
   '5-3': { '12': '範本', '2': '結構', '8': '結構', '9': '結構' },
   '5-4': { '3-1': 'Guedes 2026', '1': 'Guedes 2026', '2': '結構', '8': '結構', '12': '結構', '9': '結構' },
-  '6-1': { '12': '範本', '3.13': 'Zhao 2025', '5': 'Zhao 2025' },
-  '7-1': { '8-0': 'Guedes 2026', '2': '結構', '8': '結構' },
-  '8-1': { '8.9': 'Kanclerz 2025', '8.5': 'Kanclerz 2025' },
-  '8-2': { '0': 'Van Meter 1997', '73': 'Solomon 1993', '10-0': 'Vote 2006', '4': 'Vote 2006', '214': 'Kokame 2018', '1': 'Kokame 2018' },
-  '8-3': { '7.3': 'Kaufmann 2024', '5.1': 'Kaufmann 2024' },
-  '8-4': {},
-  '9-1': { '10-0': '範本', '11': '範本' },
+  '6-1': { '12': '範本', '3.13': 'Zhao 2025', '5': 'Zhao 2025', '2': '結構', '8': '結構', '9': '結構' },
+  '7-1': { '8-0': 'Guedes 2026', '2': '結構', '8': '結構', '0.5': '結構', '1': '結構', '12': '結構', '9': '結構' },
+  '8-1': { '8.9': 'Kanclerz 2025', '8.5': 'Kanclerz 2025', '2': '結構', '8': '結構', '12': '結構', '9': '結構' },
+  '8-2': { '0': 'Van Meter 1997', '26': 'Van Meter 1997', '73': 'Solomon 1993', '30': 'Solomon 1993', '10-0': 'Vote 2006', '4': 'Vote 2006', '61': 'Vote 2006', '6': 'Vote 2006',
+    '214': 'Kokame 2018', '1': 'Kokame 2018', '118': 'Kokame 2018', '6.0': 'Kokame 2018', '2': '結構', '8': '結構' },
+  '8-3': { '7.3': 'Kaufmann 2024', '5.1': 'Kaufmann 2024', '561': 'Kaufmann 2024', '2': '結構', '8': '結構' },
+  '8-4': { '2': '結構', '8': '結構' },
+  '9-1': { '10-0': '範本', '11': '範本', '2': '結構', '8': '結構' },
 };
 const CITE = /(Van Meter|Abu Serhan|[A-Z][A-Za-zÀ-žş'\-]+) (\d{4})([a-z])?/g;
 const cites = s => [...s.matchAll(CITE)].map(m => ({ who: m[1], year: m[2], all: m[0] }));
@@ -81,7 +86,7 @@ async function fromPage() {   // all text drawn on screen per drawn segment (60 
     const placed = {}; for (const id of window.PLACEHOLDERS || []) { const s = TL_EXPORT.find(x => x.id === id), set = new Set();
       for (const [a, e] of s.lines) { renderAt(a + (e - a) * 0.6); for (const t of document.querySelectorAll('#stage text')) { const r = t.getBoundingClientRect(), y = r.y + r.height / 2; if (y > CONTENT_Y && y < CONTENT_Y + CONTENT_H) set.add(t.textContent); } }
       placed[id] = [...set]; }
-    return { screen, sync: window.SYNC, tl, place: window.PLACEHOLDERS, placed, source: window.TIMELINE_SOURCE }; });
+    return { screen, sync: window.SYNC, tl, place: window.PLACEHOLDERS, placed, source: window.TIMELINE_SOURCE, states: window.STATES }; });
   await b.close();
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
   return out;
@@ -136,6 +141,7 @@ const allLines = ctx => SEGS.filter(s => s.lines).flatMap(s => ctx.text[s.id].li
 const allKeys = ctx => SEGS.filter(s => s.keys).flatMap(s => ctx.text[s.id].keys.map(k => ({ id: s.id, t: k[1].replace(/<\/?b>/g, '') })));
 const DETAIL = ['2-5', '2-7', '2-8', '3-1', '3-2', '4-1', '5-1', '5-2', '5-3', '5-4', '6-1', '7-1'];
 const HEDGE = /以主治為準|依主治/;
+const JUDGE = /沒縫好|太鬆|不夠|做錯|失敗|不當|應該|疏失|問題|因為|所以|原因是|可能是本例|可能因為|導致/;   // explaining or judging the earlier surgery (rule d)
 const MODEL_ONLY = ['30.7', '30.71', '3.87', '4.3', '0.24', '0.20', '0.36', '0.33', '0.81', '72', '145', '12.87', '12.84', '0.39', '0.79', '2.42', '3.26', '1.43', '2.47'];
 function wordingChecks(ctx) {
   const R = [], ok = (c, m) => R.push([!!c, m]), L = allLines(ctx), K2 = allKeys(ctx);
@@ -152,9 +158,11 @@ function wordingChecks(ctx) {
     ok(/灰藍帶的後緣/.test(t) && /角膜緣後界/.test(t) && /沒寫哪條線/.test(t) && /推論/.test(t) && /量尺抵在哪一條線/.test(t) && /零點/.test(segText(ctx, '2-4')),
       '(c) limbus: the literature measures from the PSL (灰藍帶的後緣), the closest paper does not say which line (沒寫哪條線, 推論), watch where the caliper sits'); }
   // (d) the earlier surgery
-  { const prior = L.filter(x => /前一次|縫回|再脫位|又半脫位|又脫位/.test(x.t)), bad = prior.filter(x => /沒縫好|太鬆|不夠|做錯|失敗|不當|應該|疏失|問題|因為|所以|原因是|可能是本例|可能因為|導致/.test(x.t));
+  { const prior = L.filter(x => /前一次|縫回|再脫位|又半脫位|又脫位/.test(x.t)), bad = prior.filter(x => JUDGE.test(x.t));
     ok(prior.length >= 3 && !bad.length && /查不到/.test(segText(ctx, '1-1')) && /不推測/.test(segText(ctx, '1-1')) && /查不到/.test(segText(ctx, '8-4')) && /不推測/.test(segText(ctx, '8-4')),
-      `(d) the earlier surgery: ${prior.length} lines, none explains or judges it; 1-1 and 8-4 say 查不到 and 不推測${bad.length ? '; judging: ' + bad.map(x => x.id + ':' + x.i).join(', ') : ''}`); }
+      `(d) the earlier surgery: ${prior.length} lines, none explains or judges it; 1-1 and 8-4 say 查不到 and 不推測${bad.length ? '; judging: ' + bad.map(x => x.id + ':' + x.i).join(', ') : ''}`);
+    const scr = ['1-1', '8-4'].flatMap(id => (ctx.screen[id] || []).map(t => ({ id, t }))), badS = scr.filter(x => JUDGE.test(x.t));
+    ok(scr.length >= 4 && !badS.length && (ctx.screen['8-4'] || []).some(t => /不推測/.test(t)), `(d) on screen in 1-1 and 8-4 (${scr.length} texts) nothing explains or judges the earlier surgery; 8-4 shows 不推測${badS.length ? '; judging: ' + badS.map(x => x.id + ' ' + x.t).join(' | ') : ''}`); }
   // (e) no dates, case acuity / pressure, hospital names
   { const date = /\d{1,2}\s*\/\s*\d{1,2}(?!\s*(mm|°))|\d{4}\s*[-./]\s*\d{1,2}|\d+\s*月\s*\d*\s*日?|星期|週[一二三四五六日]|上午|下午/, place = /醫院|長庚|Chang Gung|CGMH|林口|基隆|院區/;
     const hits = everything.filter(s => date.test(s.replace(/1\/3/g, '')) || place.test(s));
@@ -182,13 +190,17 @@ const FR = SN.flap.frac, PSE = X.passes(X.norm({ sfix: { ndl: { s2: SN.guedes, s
 // own side); the tie is the model's (X.HAP, SN.iol.tieT)
 const TIE_I = X.HAP.pts.findIndex(p => Math.abs(p[3] - SN.iol.tieT) < 0.013), O_OUT = G.add(INC.outer, [0, 9.0, 1.0]);
 const HAP_OUT = [0, 1].map(j => { const ex = j === 0 ? [1, 0, 0] : [-1, 0, 0], ey = j === 0 ? [0, 1, 0] : [0, -1, 0]; return X.HAP.pts.map(p => G.add(G.add(G.add(O_OUT, ex, p[0]), ey, p[1]), [0, 0, 1], p[2])); });
+// the lens in place (6-1) and the 2 o'clock knot (7-1): the model's points for the fixed state
+const IOFIX = X.iolOf(X.norm({ sfix: { vit: 1, ndl: {}, iol: {} } })), K2 = X.knotOf(X.norm({ sfix: { ndl: {} } }), 0);
 const EXPECT = { '2-3': { '0.58': ['psl', X.SUL - SN.psl], '1': ['psl', 1], '2': ['psl', 2] }, '2-4': { psl1: ['psl', 1], vis1: ['vis', 1] }, '2-5': { mm1: ['psl', 1], mm2: ['psl', 2] }, '2-8': { zero: ['psl', 0], dot: ['psl', 1] },
   '3-1': { hinge: ['psl', 0, { depth: 'bed' }], apex: ['psl', X.H_TRI, { depth: 'bed' }] },
   '3-2': { trocar1: ['psl', SN.trocar.s, { h: 1 }], trocar7: ['psl', SN.trocar.s, { h: 7 }] },
   '4-1': { wound: ['vis', SN.inc.s, { h: 12 }] },
   '5-2': { E2: ['p3', PSE.E2, { h: 2, depth: 'bed' }], E8: ['p3', PSE.E8, { h: 8, depth: 'bed' }], D: ['p3', PSE.D] },
   '5-3': { E2: ['p3', PSE.E2, { h: 2, depth: 'bed' }], E8: ['p3', PSE.E8, { h: 8, depth: 'bed' }] },
-  '5-4': { tie2: ['p3', HAP_OUT[0][TIE_I]], tie8: ['p3', HAP_OUT[1][TIE_I]] } };
+  '5-4': { tie2: ['p3', HAP_OUT[0][TIE_I]], tie8: ['p3', HAP_OUT[1][TIE_I]] },
+  '6-1': { tie2: ['p3', IOFIX.ties[0], { h: 2 }], tie8: ['p3', IOFIX.ties[1], { h: 8 }], iolC: ['p3', IOFIX.O] },
+  '7-1': { knot2: ['p3', K2.p] } };
 function syncChecks(ctx) {
   const R = [], ok = (c, m) => R.push([!!c, m]), bad = [], seen = [];
   for (const [id, pts] of Object.entries(EXPECT)) { const S = ctx.sync[id] || { sec: {}, scope: {} };
@@ -213,16 +225,40 @@ function syncChecks(ctx) {
     ok(t2 && t8 && Math.sign(t2[0] - wq[0]) === Math.sign(e2[0] - wq[0]) && Math.sign(t8[0] - wq[0]) === -Math.sign(e2[0] - wq[0]),
       `5-4 the 2 o'clock strand is tied to the haptic on the 2 o'clock side of the wound, the 8 o'clock strand on the other (the strands do not cross)`);
     ok(ts.every(t => t !== null && t > 2 / 3 && t < 1) && line(ctx, '5-4', 0).includes('遠端三分之一'), `5-4 both ties on a haptic, at ${ts.map(t => t === null ? '—' : f2(t)).join(' / ')} of its length (distal third)`); }
+  // 6-1: in both views the haptic ties end at the sulcus exits under the fixation points (the clock hour of the bed entry, within 0.1 mm of where the
+  // suture leaves the uvea) and the optic centre is on the axis
+  { const S = ctx.sync['6-1'] || { sec: {}, scope: {} }, msg = [], hr = p => G.mer(p).h;
+    for (const [nm, I, E] of [['tie2', PSE.I2, PSE.E2], ['tie8', PSE.I8, PSE.E8]]) for (const vw of ['sec', 'scope']) { const p = S[vw][nm];
+      if (!p) { msg.push(`${vw} ${nm} missing`); continue; } const d = Math.hypot(p[0] - I[0], p[1] - I[1], p[2] - I[2]);
+      if (d > 0.1) msg.push(`${vw} ${nm} ${d.toFixed(2)} mm from the sulcus exit`); if (Math.abs(X.dH(hr(p), hr(E))) > 0.01) msg.push(`${vw} ${nm} at ${f2(hr(p))} o'clock, the entry at ${f2(hr(E))}`); }
+    for (const vw of ['sec', 'scope']) { const p = S[vw].iolC; if (!p || Math.hypot(p[0], p[1]) > 0.01) msg.push(`${vw} optic centre ${p ? Math.hypot(p[0], p[1]).toFixed(2) + ' mm off the axis' : 'missing'}`); }
+    ok(!msg.length && line(ctx, '6-1', 0).includes('置中、不傾斜'), `6-1 the haptic ties at the sulcus exits under the fixation points and the optic centre on the axis, in both views${msg.length ? ': ' + msg.join(', ') : ''}`); }
+  // 7-1: the 2 o'clock knot drawn in both views lies in the flap bed, inside the triangle, wholly under the flap; the last drawn state has the flap
+  // closed over it
+  { const S = ctx.sync['7-1'] || { sec: {}, scope: {} }, msg = [], r = SN.knot.r;
+    for (const vw of ['sec', 'scope']) { const p = S[vw].knot2; if (!p) { msg.push(`${vw} knot missing`); continue; }
+      const m = G.mer(p), W = G.wallOf(m.z, m.rho), inTri = X.triG(2, W.s, m.h, W.rhoF) < -0.05, bed = G.T(W.s) * FR;
+      if (!inTri) msg.push(`${vw} knot outside the flap triangle`); if (!(W.d - r > 0 && W.d + r <= bed + 1e-3)) msg.push(`${vw} knot ${f2(W.d)} mm deep (the bed is ${f2(bed)})`); }
+    const end = ctx.states && ctx.states['7-1'] && ctx.states['7-1'].end, cov = end ? X.coveredKnot(X.norm(end), 0) : false;
+    ok(!msg.length && cov && line(ctx, '7-1', 1).includes('線結埋在瓣下'), `7-1 the knot in the 2 o'clock bed under the flap in both views; the flap closed over it at the end (${cov})${msg.length ? ': ' + msg.join(', ') : ''}`); }
+  return R;
+}
+// states drawn: 8-1 symmetric → no tilt, asymmetric → tilt; 8-4 every state side by side is an error
+function stateChecks(ctx) {
+  const R = [], ok = (c, m) => R.push([!!c, m]), S = ctx.states || {}, io = st => st ? X.iolOf(X.norm(st)) : null;
+  { const s1 = S['8-1'] || {}, a = io(s1.sym), b = io(s1.asym), n = s1.asym && s1.asym.sfix && s1.asym.sfix.ndl || {}, asym = (n.s2 ?? SN.guedes) !== (n.s8 ?? SN.guedes);
+    ok(a && b && a.tilt < 0.1 && b.tilt > 2 && asym && line(ctx, '8-1', 0).includes('兩點不對稱會傾斜'), `8-1 symmetric fixation: tilt ${a ? f2(a.tilt) : '—'}°; asymmetric (${n.s2 ?? SN.guedes} / ${n.s8 ?? SN.guedes} mm): tilt ${b ? f2(b.tilt) : '—'}° (amount 示意)`); }
+  { const s4 = S['8-4'] || {}, ks = ['slip', 'one', 'loose'], got = ks.map(k => io(s4[k])), bad = ks.filter((k, i) => !got[i] || !(got[i].tilt > 2 || got[i].dec > 0.1));
+    ok(!bad.length, `8-4 every state side by side is an error (decentred > 0.1 mm or tilted > 2°): ${ks.map((k, i) => got[i] ? `${k} ${f2(got[i].dec)} mm / ${f2(got[i].tilt)}°` : k + ' —').join(', ')}${bad.length ? '; not an error: ' + bad.join(', ') : ''}`); }
   return R;
 }
 function timingChecks(ctx) {
   const R = [], ok = (c, m) => R.push([!!c, m]), tl = ctx.tl, total = tl[tl.length - 1].t1, chDur = c => tl.filter(x => x.ch === c).reduce((a, x) => a + x.t1 - x.t0, 0), share = (chDur(2) + chDur(5)) / total;
   ok(share >= 0.35, `chapters 2 + 5: ${(100 * share).toFixed(1)}% of the video (spec: ≥ 35%; ${ctx.source})`);
   ok(total >= 600 && total <= 720, `length ${(total / 60).toFixed(2)} min (target 10–12; ${ctx.source})`);
-  const bad = (ctx.place || []).filter(id => !(ctx.placed[id] || []).length || (ctx.placed[id] || []).some(t => t !== '畫面製作中'));
-  ok((ctx.place || []).length >= 1 && !bad.length, `placeholder segments draw only 「畫面製作中」 in their panels (${(ctx.place || []).join(', ')})${bad.length ? '; more: ' + bad.join(', ') : ''}`);
-  { const done = SEGS.filter(x => !x.chapterCard && x.layout !== 'refs' && x.ch >= 0 && x.ch <= 5).map(x => x.id), stub = done.filter(id => (ctx.place || []).includes(id) || (ctx.screen[id] || []).some(t => t === '畫面製作中') || (ctx.screen[id] || []).length < 4);
-    ok(!stub.length, `the drawn segments (title, chapters 1–5: ${done.length}) are not placeholders${stub.length ? '; placeholder: ' + stub.join(', ') : ''}`); }
+  ok(!(ctx.place || []).length, `no placeholder segment is left${(ctx.place || []).length ? ': ' + ctx.place.join(', ') : ''}`);
+  { const done = SEGS.filter(x => !x.chapterCard && x.layout !== 'refs').map(x => x.id), stub = done.filter(id => (ctx.place || []).includes(id) || (ctx.screen[id] || []).some(t => t === '畫面製作中') || (ctx.screen[id] || []).length < 4);
+    ok(!stub.length, `every segment is drawn (title, chapters 1–9: ${done.length}), none is a placeholder${stub.length ? '; placeholder: ' + stub.join(', ') : ''}`); }
   return R;
 }
 
@@ -253,9 +289,9 @@ function ledgerChecks(ctx) {
 const clone = o => JSON.parse(JSON.stringify(o));
 function baseCtx(page, M) {
   const text = {}; for (const s of SEGS) text[s.id] = clone(s);
-  return { M: clone(M), text, segs: clone(SEGS), screen: clone(page.screen), ledger: clone(LEDGER), sync: clone(page.sync), tl: clone(page.tl), place: clone(page.place), placed: clone(page.placed), source: page.source, video: clone(VIDEO) };
+  return { M: clone(M), text, segs: clone(SEGS), screen: clone(page.screen), ledger: clone(LEDGER), sync: clone(page.sync), tl: clone(page.tl), place: clone(page.place || []), placed: clone(page.placed || {}), source: page.source, video: clone(VIDEO), states: clone(page.states || {}) };
 }
-const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChecks(ctx), ...syncChecks(ctx), ...timingChecks(ctx)];
+const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx), ...wordingChecks(ctx), ...syncChecks(ctx), ...timingChecks(ctx), ...stateChecks(ctx)];
 if (require.main === module) (async () => {
   const page = await fromPage(), M = modelFacts();
   if (process.argv.includes('--list')) { for (const s of SEGS) if (!s.chapterCard && s.layout !== 'refs') { const t = [s.title || '', ...(s.lines || []), ...(s.keys || []).map(k => k[1]), ...(page.screen[s.id] || [])];
@@ -297,7 +333,9 @@ if (require.main === module) (async () => {
       ['a scope dot 0.1 mm off the section pin', c => { const p = c.sync['2-3'].scope['1']; c.sync['2-3'].scope['1'] = [p[0] + 0.1, p[1], p[2]]; }],
       ['a scope dot measured from the wrong line', c => { c.sync['2-4'].scope.psl1 = c.sync['2-4'].scope.vis1; }],
       ['chapters 2 + 5 too short', c => { let k = 0; c.tl = c.tl.map(x => { const d = (x.t1 - x.t0) * ((x.ch === 2 || x.ch === 5) ? 0.3 : 1), y = { ...x, t0: k, t1: k + d }; k += d; return y; }); }],
-      ['a placeholder drawing a number', c => { c.placed['6-1'].push('3.13°'); }],
+      ['a segment left as a placeholder (8-3)', c => { c.place = ['8-3']; c.placed['8-3'] = ['畫面製作中']; }],
+      ['a segment drawing 「畫面製作中」 (9-1)', c => { c.screen['9-1'].push('畫面製作中'); }],
+      ['a segment drawing almost nothing (8-4)', c => { c.screen['8-4'] = ['示意']; }],
       ['a chapter 3–5 segment left as a placeholder', c => { c.place.push('4-1'); c.placed['4-1'] = ['畫面製作中']; }],
       ['a new on-screen number without a source (5-2)', c => { c.screen['5-2'].push('2.5 mm'); }],
       ['3-1 the flap apex 0.1 mm off on the microscope view', c => { const p = c.sync['3-1'].scope.apex; c.sync['3-1'].scope.apex = [p[0] + 0.1, p[1], p[2]]; }],
@@ -311,6 +349,17 @@ if (require.main === module) (async () => {
       ['5-4 the strands crossing (2 o\'clock strand on the 8 o\'clock side haptic)', c => { const S = c.sync['5-4']; [S.sec.tie2, S.sec.tie8] = [S.sec.tie8, S.sec.tie2]; [S.scope.tie2, S.scope.tie8] = [S.scope.tie8, S.scope.tie2]; }],
       ['5-4 tied in the middle third', c => { const S = c.sync['5-4'], i = X.HAP.pts.findIndex(p => Math.abs(p[3] - 0.5) < 0.013); S.sec.tie2 = S.scope.tie2 = HAP_OUT[0][i]; S.sec.tie8 = S.scope.tie8 = HAP_OUT[1][i]; }],
       ['5-2 the narration entry distance changed', c => setLine(c, '5-2', 0, l => l.replace('約 1 mm', '約 2 mm'))],
+      ['a new on-screen number without a source (8-2)', c => { c.screen['8-2'].push('45 眼'); }],
+      ['6-1 the ties drawn where the lens hangs slack (not at the sulcus)', c => { const P0 = X.iolOf(X.norm({ sfix: { ndl: {}, iol: { pull: 0 } } })); for (const v of ['sec', 'scope']) { c.sync['6-1'][v].tie2 = P0.ties[0]; c.sync['6-1'][v].tie8 = P0.ties[1]; } }],
+      ['6-1 the optic centre 0.3 mm off the axis in both views', c => { for (const v of ['sec', 'scope']) c.sync['6-1'][v].iolC = [0.3, 0, IOFIX.O[2]]; }],
+      ['6-1 the 8 o\'clock tie drawn at 7 o\'clock on the microscope view', c => { const p = c.sync['6-1'].scope.tie8, r = Math.hypot(p[0], p[1]), d = G.clockDir(7); c.sync['6-1'].scope.tie8 = [r * d[0], r * d[1], p[2]]; }],
+      ['7-1 the knot drawn on the outer surface', c => { for (const v of ['sec', 'scope']) c.sync['7-1'][v].knot2 = G.P3(K2.h, K2.s, 0); }],
+      ['7-1 the knot drawn outside the flap (beside it)', c => { for (const v of ['sec', 'scope']) c.sync['7-1'][v].knot2 = G.P3(2.6, K2.s, K2.bed - SN.knot.r); }],
+      ['7-1 the flap left open at the end', c => { c.states['7-1'].end.sfix.flap = { open: 1 }; }],
+      ['8-1 the asymmetric state drawn symmetric', c => { c.states['8-1'].asym = c.states['8-1'].sym; }],
+      ['8-1 the symmetric state drawn asymmetric', c => { c.states['8-1'].sym = c.states['8-1'].asym; }],
+      ['8-4 a state side by side that is not an error', c => { c.states['8-4'].loose = c.states['8-1'].sym; }],
+      ['(d) 8-4 on screen explains the earlier surgery', c => { c.screen['8-4'].push('前一次縫線太鬆所以脫位'); }],
     ];
     let bad = 0;
     for (const [name, mut] of MUT) { const c = baseCtx(page, M); mut(c); const n = runAll(c).filter(r => !r[0]).length; console.log(`${n ? 'PASS' : 'FAIL'} selftest: breaking 「${name}」 → ${n} check(s) fail`); if (!n) bad++; }

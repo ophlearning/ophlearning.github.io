@@ -1,8 +1,8 @@
 {
-  "about": "鞏膜縫合固定 IOL（sutured scleral fixation，MA60AC＋10-0 Prolene＋兩個三角鞏膜瓣＋23G TPPV）的檢查：模型樣本 globe/sample-sfix.html 與影片頁 anim/video.html 已做畫面的段落（片頭、第 1–5 章）每段一張參考圖；第 6–9 章是佔位畫面，不進參考圖。改了 globe/sfix.js、樣本頁或影片畫面後跑 node videos/tools/check-all.js videos/src/sutured-scleral-iol-fixation；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "about": "鞏膜縫合固定 IOL（sutured scleral fixation，MA60AC＋10-0 Prolene＋兩個三角鞏膜瓣＋23G TPPV）的檢查：模型樣本 globe/sample-sfix.html 與影片頁 anim/video.html 每段一張參考圖（片頭、第 1–9 章，2026-11-12 起全片沒有佔位畫面）。改了 globe/sfix.js、樣本頁或影片畫面後跑 node videos/tools/check-all.js videos/src/sutured-scleral-iol-fixation；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "textBase": "b6bb8bc",
-  "textBaseNote": "旁白、重點、來源、章節與參考文獻第 1 版（2026-11-12）的 commit；check-video.js 以它比對文字。改旁白時：改 segments.js、重做參考圖，commit 後把 textBase 換成那個 commit。還沒有 timeline.js（語音未合成），參考圖用 kit 的字數估計時間軸；合成語音、timeline.js 進 git 後要重做參考圖。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。",
+  "textBase": "72da863",
+  "textBaseNote": "旁白、重點、來源、章節與參考文獻的基準 commit（第 1 版 b6bb8bc；2026-11-12 改成 72da863：7-1 第 1 句補上「8 點那頭怎麼固定，依主治」）；check-video.js 以它比對文字。改旁白時：改 segments.js、重做參考圖，commit 後把 textBase 換成那個 commit。還沒有 timeline.js（語音未合成），參考圖用 kit 的字數估計時間軸；合成語音、timeline.js 進 git 後要重做參考圖。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
@@ -179,6 +179,62 @@
       "ref": "5-4-L0-0.9.jpg",
       "approved": "2026-11-12",
       "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途標籤交接的時刻（3-1、3-2、5-2、5-4 的放大／縮小）；dpr 2 裁切放大 3-1 的鉸鏈與瓣床、5-2 經原本表面 1 mm 進瓣床、穿過睫狀體與睫狀溝到虹膜後、4-1 的 viscoelastic 只在前房；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（瓣、trocar、切口、進出針點、會合點、haptic 綁點）由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "6-1",
+      "at": "0:0.42",
+      "ref": "6-1-L0-0.42.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途的時刻：6-1 放入的路線（摺疊、穿過 12 點切口、領頭的 haptic 到虹膜後、轉到 2–8 點）與拉線、7-1 放大縮小與蓋瓣、8-1 與 8-2 換狀態時標籤先退後進；dpr 2 裁切放大 8-3 的視網膜剝離與裂孔、6-1 置中的 IOL；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（6-1 的兩個綁點與 optic 中心、7-1 瓣下的線結）、8-1 對稱與不對稱的傾斜、8-4 每個錯誤狀態由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "7-1",
+      "at": "1:0.8",
+      "ref": "7-1-L1-0.8.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途的時刻：6-1 放入的路線（摺疊、穿過 12 點切口、領頭的 haptic 到虹膜後、轉到 2–8 點）與拉線、7-1 放大縮小與蓋瓣、8-1 與 8-2 換狀態時標籤先退後進；dpr 2 裁切放大 8-3 的視網膜剝離與裂孔、6-1 置中的 IOL；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（6-1 的兩個綁點與 optic 中心、7-1 瓣下的線結）、8-1 對稱與不對稱的傾斜、8-4 每個錯誤狀態由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "8-1",
+      "at": "1:0.6",
+      "ref": "8-1-L1-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途的時刻：6-1 放入的路線（摺疊、穿過 12 點切口、領頭的 haptic 到虹膜後、轉到 2–8 點）與拉線、7-1 放大縮小與蓋瓣、8-1 與 8-2 換狀態時標籤先退後進；dpr 2 裁切放大 8-3 的視網膜剝離與裂孔、6-1 置中的 IOL；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（6-1 的兩個綁點與 optic 中心、7-1 瓣下的線結）、8-1 對稱與不對稱的傾斜、8-4 每個錯誤狀態由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "8-2",
+      "at": "1:0.6",
+      "ref": "8-2-L1-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途的時刻：6-1 放入的路線（摺疊、穿過 12 點切口、領頭的 haptic 到虹膜後、轉到 2–8 點）與拉線、7-1 放大縮小與蓋瓣、8-1 與 8-2 換狀態時標籤先退後進；dpr 2 裁切放大 8-3 的視網膜剝離與裂孔、6-1 置中的 IOL；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（6-1 的兩個綁點與 optic 中心、7-1 瓣下的線結）、8-1 對稱與不對稱的傾斜、8-4 每個錯誤狀態由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "8-3",
+      "at": "0:0.9",
+      "ref": "8-3-L0-0.9.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途的時刻：6-1 放入的路線（摺疊、穿過 12 點切口、領頭的 haptic 到虹膜後、轉到 2–8 點）與拉線、7-1 放大縮小與蓋瓣、8-1 與 8-2 換狀態時標籤先退後進；dpr 2 裁切放大 8-3 的視網膜剝離與裂孔、6-1 置中的 IOL；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（6-1 的兩個綁點與 optic 中心、7-1 瓣下的線結）、8-1 對稱與不對稱的傾斜、8-4 每個錯誤狀態由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "8-4",
+      "at": "2:0.8",
+      "ref": "8-4-L2-0.8.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途的時刻：6-1 放入的路線（摺疊、穿過 12 點切口、領頭的 haptic 到虹膜後、轉到 2–8 點）與拉線、7-1 放大縮小與蓋瓣、8-1 與 8-2 換狀態時標籤先退後進；dpr 2 裁切放大 8-3 的視網膜剝離與裂孔、6-1 置中的 IOL；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（6-1 的兩個綁點與 optic 中心、7-1 瓣下的線結）、8-1 對稱與不對稱的傾斜、8-4 每個錯誤狀態由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "9-1",
+      "at": "2:0.9",
+      "ref": "9-1-L2-0.9.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖，並看動畫中途的時刻：6-1 放入的路線（摺疊、穿過 12 點切口、領頭的 haptic 到虹膜後、轉到 2–8 點）與拉線、7-1 放大縮小與蓋瓣、8-1 與 8-2 換狀態時標籤先退後進；dpr 2 裁切放大 8-3 的視網膜剝離與裂孔、6-1 置中的 IOL；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字帳本、兩圖同一點（6-1 的兩個綁點與 optic 中心、7-1 瓣下的線結）、8-1 對稱與不對稱的傾斜、8-4 每個錯誤狀態由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
     }
   ]
 }

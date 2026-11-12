@@ -6,9 +6,11 @@
 //   right = 術者視角: the microscope view, RIGHT eye OD, surgeon at 12 (下＝12 點、右＝9 點 temporal; 2 o'clock lower left, 8 o'clock upper right).
 // "x mm" = behind the posterior surgical limbus (PSL, X.sAbs) unless drawn as measured from the clear-cornea edge (visible limbus). A point shown in
 // both views is the same 3D point (window.SYNC records them per segment; check.js compares them).
-// Chapters 6–9 are placeholders this round (panel title + 「畫面製作中」, no numbers); spec.md 進度 lists them. Chapters 3–5 (2026-11-12, second round)
-// also use the 1–7 section through two trocars and the 12–6 section through the wound; needles, the 27G (insulin) needle and the suture drawn by
-// draw.js over a section are thin strokes on the model's geometry (X.passes, X.sutureOf; the true thickness hides the anatomy; 示意).
+// Chapters 3–5 (2026-11-12, second round) also use the 1–7 section through two trocars and the 12–6 section through the wound; needles, the 27G
+// (insulin) needle and the suture drawn by draw.js over a section are thin strokes on the model's geometry (X.passes, X.sutureOf; the true
+// thickness hides the anatomy; 示意). Chapters 6–9 (third round): the lens put in through the 12 o'clock wound along a 示意 path (lensAt) into the
+// model's slack pose and pulled to the sulcus by the model; the knot in the bed under the flap; error states of the same model (8-1, 8-2, 8-4;
+// draw.js keeps a slipped haptic's knot on the suture); evidence cards on the right of 8-2 to 8-4; the follow-along list (9-1). No placeholder is left.
 // ============================================================================
 const DRAW2 = {};
 const lab = VIEWS.lab2, G = GLOBE, K = CATARACT, X = SFIX, SN = X.SN, C = X.C;
@@ -694,9 +696,317 @@ DRAW2['5-4'] = T => {
   return { L: { svg, extra: ex, P: MAG_T }, R: { svg: rsvg, extra: rx, P: SCOPE_T } };
 };
 
-// ---------------------------------------------------------------- 6–9: placeholders (this round: the panel title and 「畫面製作中」, no numbers)
-const PLACE = ['6-1', '7-1', '8-1', '8-2', '8-3', '8-4', '9-1'];
-const ph = (W, title) => ({ svg: `<rect width="${W}" height="${PH}" fill="#f7f9fa"/>` + text(W / 2, PH / 2 + 8, '畫面製作中', { size: 22, bold: true, color: COL.sub, anchor: 'middle' }), extra: '', P: { title, orient: '' } });
-for (const id of PLACE) { const sg = SEGS.find(s => s.id === id);
-  DRAW2[id] = sg.layout === 'full' ? (() => ({ F: ph(FW, sg.title) })) : (() => ({ L: ph(PW, sg.title), R: ph(PW, '') })); }
-window.PLACEHOLDERS = PLACE;
+// ---------------------------------------------------------------- 6–9 (2026-11-12, third round): helpers
+const IOL_SEC_T = { title: '機轉切面：經 2 點與 8 點（模型）', orient: '右＝2 點　上＝前' };
+window.STATES = {};                                                                         // states drawn, for check.js (tilt, knot under the flap, error states)
+// a model section / microscope view with the tie mark on one haptic removed (the haptic slipped out of its knot: the knot stays on the suture, draw.js
+// draws it there); the model draws the tie mark on the haptic itself
+function dropTie(r, A, nm, rad) { const t = A[nm]; if (!t) return r; const re = new RegExp(`<circle cx="${t[0].toFixed(4)}" cy="${t[1].toFixed(4)}" r="${rad}"[^>]*/>`); return r.replace(re, ''); }
+function secD(st, win, o = {}) {
+  const W = o.W || PW, H = o.H || PH, c = VIEWS.cam(win, W, H), h = win.w * H / W;
+  const r = X.section({ st, h: o.h ?? HP, win: { x: win.x, y: win.y, w: win.w, h }, step: o.step || +(win.w / 330).toFixed(4) }), svg = o.drop ? dropTie(r.svg, r.A, 'tie' + o.drop, '0.09') : r.svg;
+  return { svg: `<g transform="${c.tf}">${svg}</g>`, A: mapA(r.A, c.P), P: c.P, k: c.k, r, Q: p3 => c.P(G.toPlane(r.pl, p3)) };
+}
+function scopeD(st, win, id, o = {}) {
+  const W = o.W || PW, H = o.H || PH, c = VIEWS.cam(win, W, H), r = X.enface({ st, id, surgeon: 12 }), svg = o.drop ? dropTie(r.svg, r.A, 'tie' + o.drop, '0.12') : r.svg;
+  return { svg: `<g transform="${c.tf}">${svg}</g>`, A: mapA(r.A, c.P), P: c.P, k: c.k, r, Q: p3 => c.P(r.M(p3)) };
+}
+const arrowOut = (v, from3, to3, col, op = 1) => arrowPath([v.Q(from3), v.Q(to3)], col, 2.6, op);
+
+// ---------------------------------------------------------------- 6 放入 IOL 與置中
+// The strands are cut and tied (5-3, 5-4); the lens goes in from the 5-4 pose outside the 12 o'clock wound (HAP_OUT): turned in its plane outside
+// so that the haptic tied to the 8 o'clock strand leads, slid through the wound with the optic folded (the fold drawn as a narrower optic with its
+// crease), the leading haptic behind the iris toward 8 o'clock while the lens turns until the haptics point at 2 and 8 o'clock; it ends in the
+// model's slack pose (iol pull 0), from which the model pulls both strands to the sulcus (pull 1). The insertion path and the fold are 示意.
+const IN_ST = p => OPEN({ ndl: { s2: SN.guedes, s8: SN.guedes, pass: 1, g27: 1, out: 1, taut: 1, hook: 1, cut: 1 }, iol: { pull: p } });
+const IOP0 = X.iolOf(X.norm(IN_ST(0))), IOF = X.iolOf(X.norm(IN_ST(1)));
+// keyframes [u, centre, psi (deg; d = [cos, sin, 0] is where the 8 o'clock haptic points), k (haptic compression: the PMMA loops flex while the
+// lens is placed), fold (optic width across the haptic axis), pitch (deg: the trailing, 12 o'clock end up)]; u 0 = the 5-4 pose (psi 180: HAP_OUT),
+// u 1 = the model's slack pose. The leading haptic goes down behind the iris first, the optic through the pupil, the trailing haptic last.
+const LK = [[0, O_OUT, 180, 1, 1, 0], [0.15, O_OUT, 270, 1, 1, 0], [0.3, [0, 11.0, 10.95], 270, 1, 0.42, 0], [0.52, [0, 3.3, 10.4], 270, 0.8, 0.42, 8],
+  [0.72, [0, 0.6, 9.5], 270, 0.6, 1, 14], [0.86, [0, -0.4, 8.6], 262, 0.6, 1, 0], [1, IOP0.O, 210, IOP0.k, 1, 0]];
+function lensAt(u) {
+  let i = 1; while (i < LK.length - 1 && u > LK[i][0]) i++;
+  const a = LK[i - 1], b = LK[i], t = ss(a[0], b[0], u), O = [0, 1, 2].map(m => lerp(a[1][m], b[1][m], t)), psi = lerp(a[2], b[2], t) * Math.PI / 180, k = lerp(a[3], b[3], t), fold = lerp(a[4], b[4], t), pt = lerp(a[5], b[5], t) * Math.PI / 180;
+  const d0 = [Math.cos(psi), Math.sin(psi), 0], eb = [-Math.sin(psi), Math.cos(psi), 0], d = G.add(d0.map(x => x * Math.cos(pt)), [0, 0, 1], -Math.sin(pt)), en = G.add([0, 0, Math.cos(pt)], d0, Math.sin(pt));
+  const tn = Math.tan(SN.iol.ang * Math.PI / 180), Ro = X.HAP.Ro;
+  const haps = [0, 1].map(j => { const ex = j === 0 ? d.map(x => -x) : d, ey = j === 0 ? eb.map(x => -x) : eb;
+    return X.HAP.pts.map(p => { const r = Math.hypot(p[0], p[1]), r2 = r <= Ro ? r : Ro + (r - Ro) * k, f = r > 1e-9 ? r2 / r : 1; return G.add(G.add(G.add(O, ex, p[0] * f), ey, p[1] * f * fold), en, Math.max(0, r2 - Ro) * tn); }); });
+  const rim = []; for (let m = 0; m <= 48; m++) { const th = 2 * Math.PI * m / 48; rim.push(G.add(G.add(O, d, Ro * Math.cos(th)), eb, Ro * Math.sin(th) * fold)); }
+  return { O, d, eb, fold, haps, rim, ties: haps.map(H => H[TIE_I]) };
+}
+// each strand from its bed to its tie on the moving lens: out through the wound while the tie is outside, through the tunnel, around the pupil
+// margin while the tie is in the chamber, straight behind the iris once the tie is there (the hooked route of 5-3; 示意)
+const STR0 = X.sutureOf(X.norm(CUT_ST)).segs.map(sg => sg.slice(0, 3)), HK = [0, 1].map(j => X.hookPts(PS0, j));
+function strandsTo(ties) { return ties.map((T, j) => { const W = G.wallOf(T[2], Math.hypot(T[0], T[1])), r = Math.hypot(T[0], T[1]);
+  if (W.d < 0) return [...STR0[j], ...HK[j], INC.inner, INC.outer, T];
+  if (W.d <= G.T(W.s)) return [...STR0[j], ...HK[j], INC.inner, T];
+  return X.acTest(r, T[2]) ? [...STR0[j], ...HK[j], T] : [...STR0[j], T]; }); }
+// the moving lens on the microscope view: optic (narrow while folded, with its crease), haptics dashed where hidden, the two ties
+function lensScope(v, L, op = 1) {
+  const q = L.rim.map(p => v.Q(p)), c = v.Q([0, 0, 0]), behind = !X.acTest(Math.hypot(L.O[0], L.O[1]), L.O[2]) && G.wallOf(L.O[2], Math.hypot(L.O[0], L.O[1])).d > 0;
+  let s = `<clipPath id="pup61"><circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${(X.IR.pr * v.k).toFixed(1)}"/></clipPath>`;
+  s += `<g ${behind ? 'clip-path="url(#pup61)"' : ''}><path d="M${q.map(f1).join('L')}Z" fill="#fff6dc" opacity="0.55"/></g>` + polyScope(v, L.rim, 1.8, C.iolS);
+  if (L.fold < 0.95) { const a = v.Q(G.add(L.O, L.d, -X.HAP.Ro)), b = v.Q(G.add(L.O, L.d, X.HAP.Ro)); s += `<path d="M${f1(a)}L${f1(b)}" stroke="${C.iolS}" stroke-width="1.4" stroke-dasharray="4 3"/>`; }
+  for (const H of L.haps) s += polyScope(v, H, 2.0, C.hap);
+  for (const t of L.ties) s += dot(v.Q(t), '#111827', 3.5);
+  return `<g opacity="${op}">${s}</g>`;
+}
+DRAW2['6-1'] = T => {
+  const u = T.p(0, 0.02, 0.56), kx = T.p(0, 0.56, 0.62), pull = T.p(0, 0.62, 0.9), k1 = T.on(1), k2 = T.on(2);
+  const uq = qz(u, 60), L = lensAt(uq), strands = strandsTo(L.ties), pq = qz(pull, 16);
+  // left: the 2–8 section: the strands follow the lens in (out of this plane: dashed); the lens appears when it hangs behind the iris (slack, pull 0),
+  // then both strands are pulled and the haptics come up to the sulcus under the fixation points: optic centred, not tilted
+  const vA = sec(OPEN({}), W_IOL), vB = kx > 0 ? sec(IN_ST(pq), W_IOL) : null, A = vB ? vB.A : vA.A;
+  let svg = kx <= 0 ? vA.svg : kx >= 1 ? vB.svg : vA.svg + `<g opacity="${kx.toFixed(2)}">${vB.svg}</g>`;
+  if (kx < 1) for (const sg of strands) svg += strandSec(vA, sg, { op: 1 - kx });
+  const kp = pull > 0 && pull < 1 ? 1 : 0, out2 = G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 1.6), out8 = G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 1.6);
+  svg += arrowOut(vA, G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 0.4), out2, WARN, kp) + arrowOut(vA, G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 0.4), out8, WARN, kp);
+  if (k2 > 0) { const top = [], bot = [], back = -0.7; for (let m = 0; m <= 30; m++) { const x = -X.HAP.Ro + 2 * X.HAP.Ro * m / 30, hth = X.optHalf(Math.abs(x)); top.push(vB.Q(G.add(G.add(IOF.O, IOF.d, x), IOF.en, back + hth))); bot.unshift(vB.Q(G.add(G.add(IOF.O, IOF.d, x), IOF.en, back - hth))); }
+    svg += `<path d="M${[...top, ...bot].map(f1).join('L')}Z" fill="none" stroke="#7d8e9b" stroke-width="1.8" stroke-dasharray="6 4" opacity="${k2.toFixed(2)}"/>`;
+    const a = vB.Q(G.add(IOF.O, IOF.en, back - 0.35)), b = vB.Q(G.add(IOF.O, IOF.en, -0.45)); svg += arrowPath([a, b], COL.accent, 2.4, k2.toFixed(2)); }
+  let ex = tag('IOL 從 12 點切口放入：見右圖', T.on(0) * (1 - kx), INK2, 30);
+  if (vB) { ex += labL('haptic 在虹膜後', '鬆的', 60, A.tie8, { bold: true, color: '#2f5f93', lc: '#2f5f93', op: kx * (1 - pull) });
+    ex += labR('拉 2 點的線', '', 210, vB.Q(PS0.E2), { bold: true, color: WARN, lc: WARN, op: kp });
+    ex += labL('拉 8 點的線', '', 210, vB.Q(PS0.E8), { bold: true, color: WARN, lc: WARN, op: kp });
+    ex += labR('haptic 到睫狀溝 sulcus', '', 130, A.tie2, { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) * (1 - k1) });
+    ex += labL('optic 置中、不傾斜', '', 300, A.iolC, { bold: true, color: IOLC, lc: IOLC, op: ss(0.85, 1, pull) * (1 - k2) });
+    ex += labL('縫在溝：較前', 'sulcus', 300, A.iolC, { bold: true, color: COL.accent, lc: COL.accent, op: k2 });
+    ex += labR('囊袋內的位置', '比較、示意', 330, vB.Q(G.add(G.add(IOF.O, IOF.d, -2.2), IOF.en, -0.7 - 0.25)), { bold: true, color: '#56616d', lc: '#56616d', op: k2 }); }
+  // line 1: vertical tilt in the UBM study (a gauge; the lens drawn tilted by the study's mean, the 5° line the threshold it quotes)
+  if (k1 > 0) { const bx = 300, by = 238, bw = 292, bh = 160, cx = bx + bw / 2, cy = by + 96, R = 120, rot = (deg, r) => [cx + r * Math.cos(deg * Math.PI / 180), cy - r * Math.sin(deg * Math.PI / 180)];
+    let g = `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="8" fill="#fff" stroke="#d3dae1"/>` + text(bx + 12, by + 24, '垂直傾斜 tilt（UBM，Zhao 2025）', { size: 14, bold: true, color: INK2 });
+    g += `<path d="M${f1(rot(180, R))}L${f1(rot(0, R))}" stroke="#97a4b2" stroke-width="1.4" stroke-dasharray="4 4"/>`;
+    g += `<path d="M${f1(rot(180 + 5, R))}L${f1(rot(5, R))}" stroke="${WARN}" stroke-width="2" stroke-dasharray="7 4"/>`;
+    { const e = 3.13, a = rot(180 + e, R - 34), b = rot(e, R - 34); g += `<path d="M${f1(a)}L${f1(b)}" stroke="${IOLC}" stroke-width="12" stroke-linecap="round" opacity="0.8"/>`; }
+    g += text(bx + bw - 12, by + 52, '> 5°：可能眩光、複視（引述）', { size: 13, bold: true, color: WARN, anchor: 'end' }) + text(bx + 12, by + bh - 12, '平均 3.13°', { size: 15, bold: true, color: IOLC });
+    svg += `<g opacity="${(k1 * (1 - k2)).toFixed(2)}">${g}</g>`; }
+  ex += sbar(vA, 2) + note('放入的方式與路線：示意', 1);
+  if (pull >= 1) { sync('6-1', 'sec', 'tie2', IOF.ties[0]); sync('6-1', 'sec', 'tie8', IOF.ties[1]); sync('6-1', 'sec', 'iolC', IOF.O); }
+  // right: the microscope view: the folded lens through the 12 o'clock wound, the leading haptic behind the iris toward 8 o'clock, the lens turned;
+  // then the model's lens pulled from slack to the sulcus; dashed = behind the iris
+  const zw = qz(T.p(0, 0.14, 0.4), 24), swn = VIEWS.zwin(SC_54, SC_ALL, zw), wA = scope(OPEN({}), swn, 'sR'), wB = kx > 0 ? scope(IN_ST(pq), SC_ALL, 'sR2') : null;
+  let rsvg = kx <= 0 ? wA.svg : kx >= 1 ? wB.svg : wB.svg + `<g opacity="${(1 - kx).toFixed(2)}">${wA.svg}</g>`;
+  if (kx < 1) { for (const [j, sg] of strands.entries()) rsvg += polyScope(wA, sg, 1.6, j ? S8C : S2C, { op: 1 - kx }); rsvg += lensScope(wA, L, 1 - kx); }
+  rsvg += arrowOut(wA, G.add(PS0.E2, G.unit(G.sub(PS0.E2, PS0.I2)), 0.4), out2, WARN, kp) + arrowOut(wA, G.add(PS0.E8, G.unit(G.sub(PS0.E8, PS0.I8)), 0.4), out8, WARN, kp);
+  let rx = orientTag();
+  rx += labR('12 點切口', '', 386, wA.Q(INC.outer), { bold: true, color: INK2, op: 1 - pull });
+  rx += labL('摺疊後放入', '方式示意', 330, wA.Q(G.add(L.O, L.d, -1.5)), { bold: true, color: IOLC, lc: IOLC, op: T.p(0, 0.2, 0.28) * (1 - T.p(0, 0.48, 0.55)) });
+  rx += labR('haptic 往 8 點、到虹膜後', '虛線', 96, wA.Q(L.haps[1][X.HAP.pts.length - 1]), { bold: true, color: '#2f5f93', lc: '#2f5f93', op: T.p(0, 0.4, 0.46) * (1 - kx) });
+  if (wB) { rx += labR('拉 8 點的線', '', 130, wB.Q(out8), { bold: true, color: WARN, lc: WARN, op: kp });
+    rx += labL('拉 2 點的線', '', 300, wB.Q(out2), { bold: true, color: WARN, lc: WARN, op: kp });
+    rx += labR('optic 置中', 'centred', 230, wB.A.iolC, { bold: true, color: IOLC, lc: IOLC, op: ss(0.85, 1, pull) });
+    if (wB.A.tie2) rx += labL('2 點綁線處', 'haptic', 230, wB.A.tie2, { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) });
+    if (wB.A.tie8) rx += labR('8 點綁線處', 'haptic', 130, wB.A.tie8, { bold: true, color: GRN, lc: GRN, op: ss(0.85, 1, pull) * (1 - kp) }); }
+  rx += note('虛線：在虹膜後面（看不到）', 1, 30) + note('度數依主治', k2);
+  if (pull >= 1) { sync('6-1', 'scope', 'tie2', IOF.ties[0]); sync('6-1', 'scope', 'tie8', IOF.ties[1]); sync('6-1', 'scope', 'iolC', IOF.O); }
+  return { L: { svg, extra: ex, P: IOL_SEC_T }, R: { svg: rsvg, extra: rx, P: SCOPE_T } };
+};
+
+// ---------------------------------------------------------------- 7 打結、埋結與收尾
+// The lens is in place (6-1); each strand's other end is fixed in its flap bed: at 2 o'clock the curved needle takes a bite in the bed and the
+// strand is tied (推論 from the template's 「10-0 直彎針」); how the 8 o'clock end (the straight needle's end) is fixed is up to the attending: the
+// model ties it the same way (示意). Then the flaps are closed over the knots and the conjunctiva over the flaps (8-0 Vicryl in Guedes 2026).
+const FIN = o => OPEN({ ndl: { s2: SN.guedes, s8: SN.guedes, pass: 1, g27: 1, out: 1, taut: 1, hook: 1, cut: 1 }, iol: {}, ...o });
+const K2 = X.knotOf(X.norm(FIN({ knot: 1 })), 0), K8 = X.knotOf(X.norm(FIN({ knot: 1 })), 1);
+window.STATES['7-1'] = { end: FIN({ knot: 1, flap: { open: 0 }, peri: 0 }) };
+const W_K = { x: 6.3, y: -10.35, w: 2.6 }, SC_K = swin(G.add(K2.biteA, G.sub(K2.biteB, K2.biteA), 0.5), 5.5);   // the 2 o'clock bed: section, microscope
+DRAW2['7-1'] = T => {
+  const kb = T.p(0, 0.12, 0.42), knot = T.p(0, 0.42, 0.48) > 0.5 ? 1 : 0, zi = T.p(0, 0.02, 0.12), zo = T.p(0, 0.6, 0.72), k8 = T.p(0, 0.7, 0.8);
+  const fc = T.p(1, 0.08, 0.5), zs = T.p(1, 0, 0.2), pc = T.p(2, 0.05, 0.4), open = qz(1 - fc, 12), peri = qz(1 - pc, 8);
+  const st = FIN({ knot, flap: { open }, peri });
+  // left: the 2 o'clock bed magnified: the strand from the sulcus through the needle track into the bed; the curved needle's bite in the bed (it runs
+  // across this plane: drawn as its projection), the knot; then the flap closes over the knot and the conjunctiva over the flap
+  const v = sec(st, VIEWS.zwin(W_K, W_31, zs));
+  let svg = v.svg;
+  if (!knot && kb > 0) { const pts = []; for (let m = 0; m <= 16; m++) pts.push(G.add(K2.biteA, G.sub(K2.biteB, K2.biteA), m / 16)); svg += strandSec(v, partial3(pts, kb), { col: '#7a5418', w: 2.4 }); }
+  let ex = labR('瓣床 flap bed', '', 60, v.Q(X.flapPt(HP, TH * 0.75, 0, FR)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.on(0) * (1 - zs) });
+  ex += labL('針道 needle track', '', 300, v.Q(G.add(PS0.E2, G.sub(PS0.I2, PS0.E2), 0.5)), { color: INK2, op: T.on(0) * (1 - zs) });
+  ex += labR('彎針在瓣床咬一針', '推論', 330, v.Q(G.add(K2.biteA, G.sub(K2.biteB, K2.biteA), 0.5)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.p(0, 0.12, 0.2) * (1 - knot) });
+  ex += labR('線結 knot', '', 250, v.Q(K2.p), { bold: true, color: '#111827', lc: '#111827', op: knot * (1 - zs) });
+  ex += labR('線結在瓣下', 'knot under the flap', 250, v.Q(K2.p), { bold: true, color: '#111827', lc: '#111827', op: T.p(1, 0.4, 0.55) * (1 - T.on(2)) });
+  ex += labL('瓣蓋回 flap', '', 60, v.Q(X.flapPt(HP, TH * 0.7, 0, FR / 2)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.p(1, 0.4, 0.55) });
+  ex += labL('結膜縫回 conjunctiva', '', 130, v.Q(G.P3(HP, sAt(3.2), -0.04)), { bold: true, color: '#b0505a', lc: '#b0505a', op: T.p(2, 0.3, 0.45) });
+  ex += sbar(v, zs < 0.5 ? 0.5 : 1, 1) + note(T.on(2) > 0 ? '論文用 8-0 Vicryl；以主治為準' : '咬針的位置、線結大小：示意', 1);
+  sync('7-1', 'sec', 'knot2', K2.p);
+  // right: the microscope view: in on the 2 o'clock bed (the curved needle's bite, the knot), out to both sites (the 8 o'clock end: 依主治, drawn
+  // the same way), then both flaps close (the knots show through faintly) and the conjunctiva is closed over them
+  const w = scope(st, VIEWS.zwin(VIEWS.zwin(SC_ALL, SC_K, zi), SC_ALL, zo), 'sR');
+  let rsvg = w.svg;
+  if (!knot && kb > 0) { const a = w.Q(K2.biteA), b = w.Q(K2.biteB), nn = [-(b[1] - a[1]), b[0] - a[0]], l = Math.hypot(...nn) || 1, m = [(a[0] + b[0]) / 2 + nn[0] / l * 0.35 * w.k, (a[1] + b[1]) / 2 + nn[1] / l * 0.35 * w.k];
+    const tip = [lerp(lerp(a[0], m[0], kb), lerp(m[0], b[0], kb), kb), lerp(lerp(a[1], m[1], kb), lerp(m[1], b[1], kb), kb)];
+    rsvg += `<path d="M${f1(a)}Q${f1(m)} ${f1(b)}" fill="none" stroke="#7a5418" stroke-width="2" stroke-dasharray="4 3" opacity="0.7"/>` + `<path d="M${f1(a)}Q${f1(m)} ${f1(tip)}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="M${f1(a)}Q${f1(m)} ${f1(tip)}" fill="none" stroke="#56616d" stroke-width="4" stroke-linecap="round"/>`; }
+  let rx = orientTag();
+  rx += labL('2 點：彎針咬一針', '推論', 330, w.Q(G.add(K2.biteA, G.sub(K2.biteB, K2.biteA), 0.5)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.p(0, 0.1, 0.18) * (1 - zo) });
+  if (w.A.knot2) rx += labL('打結 knot', '', 386, w.A.knot2, { bold: true, color: '#111827', lc: '#111827', op: knot * (1 - zo) });
+  if (w.A.knot8) rx += labR('8 點那頭：依主治', '畫成同樣打結（示意）', 60, w.A.knot8, { bold: true, color: WARN, lc: WARN, op: k8 * (1 - T.on(1)) });
+  if (w.A.knot2) rx += labL('線結在瓣下', '隱約', 330, w.A.knot2, { bold: true, color: '#111827', lc: '#111827', op: T.p(1, 0.45, 0.6) * (1 - T.on(2)) });
+  rx += labR('瓣蓋回', 'flap', 130, w.A.flap8 || w.Q(G.P3(8, sAt(1.5), 0)), { bold: true, color: '#7a5418', lc: '#7a5418', op: T.p(1, 0.45, 0.6) * (1 - T.on(2)) });
+  rx += labL('結膜縫回', '8-0 Vicryl（論文）', 300, w.Q(G.P3(HP, sAt(3.4), 0)), { bold: true, color: '#b0505a', lc: '#b0505a', op: T.p(2, 0.3, 0.45) });
+  rx += note('點藥、包眼：不畫（範本照錄）', T.on(2), 30);
+  sync('7-1', 'scope', 'knot2', K2.p);
+  return { L: { svg, extra: ex, P: ZOOM_T }, R: { svg: rsvg, extra: rx, P: SCOPE_T } };
+};
+// the first fraction k of a 3D polyline (by length)
+function partial3(pts, k) { const L = pts.slice(1).reduce((a, q, i) => a + G.len(G.sub(q, pts[i])), 0); let left = L * clamp01(k); const out = [pts[0]];
+  for (let i = 1; i < pts.length && left > 0; i++) { const l = G.len(G.sub(pts[i], pts[i - 1])); out.push(l <= left ? pts[i] : G.add(pts[i - 1], G.sub(pts[i], pts[i - 1]), left / l)); left -= l; } return out; }
+
+// ---------------------------------------------------------------- 8 會出錯的地方
+// error states of the same model after surgery (flaps closed; the conjunctiva left open so the flaps and the caliper dots show); amounts 示意
+const ERRB = o => S({ vit: 1, peri: 1, marks: 1, inc: 1, flap: { open: 0 }, ...o });
+const FIX8 = ERRB({ ndl: {}, iol: {}, knot: 1 }), ASYM8 = s8 => ERRB({ ndl: { s8 }, iol: {}, knot: 1 });
+const SLIP8 = ERRB({ iol: { slip: 8 } });                                                 // the 8 o'clock haptic out of its knot (no ndl: draw.js draws the strands)
+const IOFX = X.iolOf(X.norm(FIX8)), IOSL = X.iolOf(X.norm(SLIP8)), STRFX = X.sutureOf(X.norm(FIX8)).segs;   // the fixed lens and its two strands (bed → tie)
+const K8F = X.knotOf(X.norm(FIX8), 1), K2F = X.knotOf(X.norm(FIX8), 0);
+window.STATES['8-1'] = { sym: FIX8, asym: ASYM8(2), slip: SLIP8 };
+const STR_K = '#1f2a44';
+// the strands of the fixed lens over a view; the slipped side keeps its knot (an empty loop) where the haptic was tied
+function slipStrands(v, sec, o = {}) { let s = '';
+  const strands = o.only2 ? [STRFX[0]] : STRFX;
+  for (const sg of strands) s += sec ? strandSec(v, sg, { w: 2 }) : polyScope(v, sg, 1.6, STR_K);
+  if (!o.only2) { const c = v.Q(IOFX.ties[1]), r = Math.max(5, 0.16 * v.k); s += `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${r.toFixed(1)}" fill="none" stroke="#fff" stroke-width="4"/><circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${r.toFixed(1)}" fill="none" stroke="${STR_K}" stroke-width="2"/>`; }
+  for (const K of o.only2 ? [K2F] : [K2F, K8F]) s += dot(v.Q(K.p), '#111827', 3.2, sec ? 1 : 0.45);
+  return s; }
+DRAW2['8-1'] = T => {
+  const ka = T.p(0, 0.05, 0.32), s8 = 1 + qz(ka, 6), asym = ASYM8(s8), k1 = T.on(1), sl = T.p(1, 0, 0.15), lo = 1 - ss(0, 0.45, sl), li = ss(0.55, 1, sl);   // labels: the old leave before the new come
+  // left: the 2–8 section: the 8 o'clock entry moves back (the same needle angle) → the lens tilts (Zhao 2025: asymmetry predicts tilt; amount 示意);
+  // then the 8 o'clock haptic slips out of its knot (the knot stays on the suture; Kokame 2018 quoting another report)
+  const vA = sec(asym, W_IOL), vB = sl > 0 ? secD(SLIP8, W_IOL, { drop: 8 }) : null, A = vA.A;
+  let svg = sl <= 0 ? vA.svg : sl >= 1 ? vB.svg : vA.svg + `<g opacity="${sl.toFixed(2)}">${vB.svg}</g>`;
+  if (sl > 0) svg += `<g opacity="${sl.toFixed(2)}">${slipStrands(vB, true)}</g>`;
+  if (A.iolC && sl < 1) { const a = vA.Q(G.add(IOFX.O, IOFX.d, -X.HAP.Ro - 1.0)), b = vA.Q(G.add(IOFX.O, IOFX.d, X.HAP.Ro + 1.0)); svg += `<path d="M${f1(a)}L${f1(b)}" stroke="#5b6878" stroke-width="1.6" stroke-dasharray="6 5" opacity="${(ka * (1 - sl)).toFixed(2)}"/>`; }
+  let ex = tag('兩點對稱 → 置中、不傾斜', T.on(0) * (1 - ka), GRN, 30) + tag('兩點不對稱 → 傾斜（量：示意）', ka * lo, WARN, 30) + tag('haptic 從線結滑出（示意）', li, WARN, 30);
+  ex += labR('2 點進針點', '', 80, A.E2, { bold: true, color: PUR, lc: PUR, op: T.on(0) * lo });
+  ex += labL('8 點進針點較後', '', 80, A.E8, { bold: true, color: WARN, lc: WARN, op: ka * lo });
+  ex += labL('傾斜 tilt', '', 300, A.iolC, { bold: true, color: WARN, lc: WARN, op: ka * lo });
+  ex += labR('原本的平面', '', 300, vA.Q(G.add(IOFX.O, IOFX.d, -X.HAP.Ro - 0.9)), { color: '#5b6878', op: ka * lo });
+  if (vB) { ex += labL('線結還在', 'knot', 80, vB.Q(IOFX.ties[1]), { bold: true, color: STR_K, lc: STR_K, op: li });
+    ex += labL('haptic 掉下', 'slipped', 300, vB.Q(IOSL.ties[1]), { bold: true, color: WARN, lc: WARN, op: li });
+    ex += labR('IOL 偏位、傾斜', '量示意', 300, vB.A.iolC, { bold: true, color: WARN, lc: WARN, op: li }); }
+  ex += sbar(vA, 2) + note('模型示意', 1);
+  // right: the microscope view: the caliper dots, 8 o'clock farther back; then the slipped lens (decentred; the fallen haptic dashed)
+  const wA = scope(asym, SC_ALL, 'sR'), wB = sl > 0 ? scopeD(SLIP8, SC_ALL, 'sR2', { drop: 8 }) : null;
+  let rsvg = sl <= 0 ? wA.svg : sl >= 1 ? wB.svg : wA.svg + `<g opacity="${sl.toFixed(2)}">${wB.svg}</g>`;
+  if (sl > 0) rsvg += `<g opacity="${sl.toFixed(2)}">${slipStrands(wB, false)}</g>`;
+  let rx = orientTag();
+  rx += labL('2 點的點', '', 330, wA.A.dot2, { bold: true, color: PUR, lc: PUR, op: T.on(0) * lo });
+  rx += labR('8 點的點較後', 'marking pen', 60, wA.A.dot8, { bold: true, color: WARN, lc: WARN, op: ka * lo });
+  if (wB) { rx += labR('optic 偏位', 'decentred', 230, wB.A.iolC, { bold: true, color: WARN, lc: WARN, op: li });
+    rx += labR('haptic 掉下', '虛線', 96, wB.A.hapTip1, { bold: true, color: WARN, lc: WARN, op: li }); }
+  rx += note('虛線：在虹膜後面（看不到）', 1, 30);
+  return { L: { svg, extra: ex, P: SEC_T }, R: { svg: rsvg, extra: rx, P: SCOPE_T } };
+};
+
+// an evidence card (right panel of 8-2 to 8-4): blocks of [heading, rows [text, bold, colour]], each block with its own opacity
+function evCard(blocks, o = {}) { let y = o.y0 || 34, s = `<rect width="${PW}" height="${PH}" fill="#fff"/>`;
+  for (const b of blocks) { const op = (+b.op).toFixed(2); s += `<g opacity="${op}">`;
+    if (b.head) { s += text(16, y, b.head, { size: 17, bold: true, color: b.col || COL.accent }); y += 30; }
+    for (const r of b.rows) { s += text(28, y, r[0], { size: r[3] || 15.5, bold: r[1], color: r[2] || COL.ink }); y += r[4] || 25; }
+    s += `</g>`; y += b.gap ?? 14; }
+  return s; }
+const EVID_T = { title: '文獻怎麼說', orient: '數字照論文' };
+window.PRELOAD_EXTRA += JSON.stringify([EVID_T, IOL_SEC_T]);
+
+DRAW2['8-2'] = T => {
+  const ke = T.p(0, 0.1, 0.55), kp = T.p(0, 0.5, 0.62), k1 = T.on(1), sw = T.p(1, 0, 0.12), lo = 1 - ss(0, 0.45, sw), li = ss(0.55, 1, sw);
+  // left, line 0: the 2 o'clock site magnified, the flap and the conjunctiva closed over the knot; the knot wears through both (erosion; 示意)
+  // line 1: the 2–8 section: the 8 o'clock strand breaks late; that haptic and the lens drop (示意)
+  let svg, ex = '';
+  if (sw < 1) { const v = sec(ERRB({ ndl: {}, iol: {}, knot: 1, peri: 0 }), W_31), n = G.N3(K2F.h, K2F.s), top = G.add(G.P3(K2F.h, K2F.s, 0), n, 0.3);
+    svg = v.svg; const a = v.Q(K2F.p), b = v.Q(G.add(K2F.p, G.sub(top, K2F.p), ke));
+    svg += `<g opacity="${(1 - sw).toFixed(2)}"><path d="M${f1(a)}L${f1(b)}" stroke="${WARN}" stroke-width="7" stroke-linecap="round" opacity="0.55"/>` + (kp > 0 ? dot(v.Q(G.add(G.P3(K2F.h, K2F.s, 0), n, 0.08)), '#111827', 6, kp) + ring2(v.Q(G.add(G.P3(K2F.h, K2F.s, 0), n, 0.08)), WARN, 12, kp) : '') + `</g>`;
+    ex += labL('線結（瓣下）', 'knot', 250, a, { bold: true, color: '#111827', lc: '#111827', op: T.on(0) * (1 - ke) * lo });
+    ex += labR('磨穿瓣與結膜', 'erosion（示意）', 300, v.Q(G.add(K2F.p, G.sub(top, K2F.p), 0.55)), { bold: true, color: WARN, lc: WARN, op: T.p(0, 0.2, 0.3) * lo });
+    ex += labL('線結外露', 'exposed', 60, v.Q(G.add(G.P3(K2F.h, K2F.s, 0), n, 0.08)), { bold: true, color: WARN, lc: WARN, op: kp * lo });
+    ex += labR('結膜 conjunctiva', '', 60, v.Q(G.P3(HP, sAt(2.8), -0.04)), { color: '#b0505a', lc: '#b0505a', op: T.on(0) * lo });
+    ex += sbar(v, 1, 1 - sw); svg = `<g opacity="${(1 - sw).toFixed(2)}">${svg}</g>`; }
+  if (sw > 0) { const v = secD(SLIP8, W_IOL), I8 = PS0.I8, cutA = G.add(I8, G.sub(IOFX.ties[1], I8), 0.0), tieS = IOSL.ties[1];
+    let s2 = v.svg + strandSec(v, STRFX[0], { w: 2 }) + strandSec(v, [...STRFX[1].slice(0, STRFX[1].length - 1), G.add(I8, G.unit(G.sub(tieS, I8)), 0.45)], { w: 2 }) + strandSec(v, [tieS, G.add(tieS, G.unit(G.sub(I8, tieS)), 0.45)], { w: 2 });
+    for (const K of [K2F, K8F]) s2 += dot(v.Q(K.p), '#111827', 3.2);
+    const brk = v.Q(G.add(I8, G.sub(tieS, I8), 0.5)); s2 += `<g stroke="${WARN}" stroke-width="3" stroke-linecap="round"><path d="M${f1([brk[0] - 7, brk[1] - 7])}L${f1([brk[0] + 7, brk[1] + 7])}M${f1([brk[0] - 7, brk[1] + 7])}L${f1([brk[0] + 7, brk[1] - 7])}"/></g>`;
+    svg = (svg || '') + `<g opacity="${sw.toFixed(2)}">${s2}</g>`;
+    ex += labL('8 點的線斷了', '示意', 60, brk, { bold: true, color: WARN, lc: WARN, op: li });
+    ex += labR('IOL 往斷的那邊掉', '示意', 300, v.A.iolC, { bold: true, color: WARN, lc: WARN, op: li });
+    ex += sbar(v, 2, sw); }
+  ex += note('模型示意', 1);
+  // right: the numbers of the studies (design and follow-up as in the papers)
+  const o = evCard([{ head: '線結磨出 erosion', op: T.on(0), rows: [['Van Meter 1997（26 例）', true, COL.sub, 15], ['結埋在部分厚度瓣下：0%', false, COL.ink, 17, 32], ['Solomon 1993（30 眼）', true, COL.sub, 15], ['穿過半厚瓣：73%', false, WARN, 17, 32]] },
+    { head: '晚期斷線　10-0 Prolene', op: k1, rows: [['Vote 2006（61 眼，平均追蹤 6 年）', true, COL.sub, 15], ['平均約術後 4 年斷、年輕人多', false, WARN, 17, 32], ['Kokame 2018（118 眼，平均追蹤 6.0 年）', true, COL.sub, 15], ['214 條線只斷 1 條', false, COL.ink, 17, 32]] }]);
+  return { L: { svg, extra: ex, P: sw > 0.5 ? SEC_T : ZOOM_T }, R: { svg: o, extra: '', P: EVID_T } };
+};
+
+// 8-3: where the retinal and other complications are (示意 places) on the 2–8 section; the posterior pole is outside the model's range (arrow)
+const W_83 = { x: -12, y: -13.6, w: 24 }, N0 = G.N;
+DRAW2['8-3'] = T => {
+  const k0 = T.p(0, 0.05, 0.3), k1 = T.p(0, 0.55, 0.8);
+  const v = sec(FIX8, W_83);
+  let svg = v.svg;
+  // a retinal tear behind the ora at 8 o'clock and the detachment behind it (lifted retina; 示意); a haze of blood in the vitreous (示意)
+  const rp = (s, lift) => { const f = G.surfAt(s), d = G.T(s) + 0.3 + lift; return v.Q(G.P3(8, s, d)); };
+  { const pts = []; for (let m = 0; m <= 24; m++) { const s = N0.ora + 1.3 + 6.5 * m / 24, l = 1.3 * Math.sin(Math.PI * m / 24) ** 0.7; pts.push(rp(s, l)); }
+    svg += `<g opacity="${k0.toFixed(2)}"><path d="M${pts.map(f1).join('L')}" fill="none" stroke="#fff" stroke-width="7"/><path d="M${pts.map(f1).join('L')}" fill="none" stroke="#c4553d" stroke-width="3.5"/>${ring2(rp(N0.ora + 1.2, 0), WARN, 9)}</g>`; }
+  { const c = v.Q([-2.6, -1.5, 3.2]), r = 2.4 * v.k; svg += `<g opacity="${(0.55 * k1).toFixed(2)}"><ellipse cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" rx="${(r * 1.3).toFixed(1)}" ry="${r.toFixed(1)}" fill="#b3262c" opacity="0.35"/><ellipse cx="${(c[0] + 18).toFixed(1)}" cy="${(c[1] + 10).toFixed(1)}" rx="${(r * 0.7).toFixed(1)}" ry="${(r * 0.5).toFixed(1)}" fill="#8e1b20" opacity="0.35"/></g>`; }
+  let ex = labL('術中裂孔', 'retinal tear', 210, rp(N0.ora + 1.2, 0), { bold: true, color: WARN, lc: WARN, op: k0 });
+  ex += labL('視網膜剝離', 'RD', 300, rp(N0.ora + 4.5, 1.1), { bold: true, color: '#c4553d', lc: '#c4553d', op: k0 });
+  ex += labR('玻璃體出血', 'VH', 330, v.Q([-2.6, -1.5, 3.2]), { bold: true, color: '#8e1b20', lc: '#8e1b20', op: k1 });
+  ex += labR('眼壓', 'IOP', 60, v.Q([0, 0, 11.2]), { bold: true, color: '#1f6f9e', lc: '#1f6f9e', op: k1 });
+  { const a = [PW / 2, PH - 64], b = [PW / 2, PH - 24]; ex += `<g opacity="${k1.toFixed(2)}">${arrowPath([a, b], '#7a5418', 2.4)}</g>` + htext(PW / 2 + 14, PH - 40, '黃斑在後極：黃斑水腫 CME（不在這張圖）', { size: 15, bold: true, color: '#7a5418', op: k1 }); }
+  ex += sbar(v, 2) + note('位置：示意', 1, 30);
+  const o = evCard([{ head: 'Kaufmann 2024', op: k0, rows: [['回溯 561 位成人：二次植入 IOL＋PPV', true, COL.sub, 15], ['術中裂孔：7.3%', false, WARN, 18, 32], ['縫合固定術後視網膜剝離：5.1%', false, WARN, 18, 36]] },
+    { head: 'Stem 2017（回顧）', op: k1, rows: [['也要追：眼壓、黃斑水腫 CME、玻璃體出血', false, COL.ink, 17, 32]] }], { y0: 40 });
+  return { L: { svg, extra: ex, P: SEC_T }, R: { svg: o, extra: '', P: EVID_T } };
+};
+
+// 8-4: the closest causes in the literature, as error states of the model side by side (示意): ① the haptic slipped out of its knot, ② only one
+// side sutured, the other slipping off a capsule remnant (示意 remnant), ③ loose suture + asymmetric fixation. None is about early redislocation;
+// the cause in this case is not inferred (spec).
+const ONE8 = ERRB({ iol: { slip: 8 } }), LOOSE8 = ERRB({ ndl: { s8: 2 }, iol: { ten: [1, 0.4] }, knot: 1 });
+window.STATES['8-4'] = { slip: SLIP8, one: ONE8, loose: LOOSE8 };
+const W_STRIP = { x: -8.8, y: -10.2, w: 17.6 };
+DRAW2['8-4'] = T => {
+  const k0 = T.on(0), ks = [T.p(1, 0, 0.12), T.p(1, 0.3, 0.42), T.p(1, 0.62, 0.74)], k2 = T.on(2);
+  const sh = 128, sw = PW - 16, rows = [['① haptic 從線結滑出（線結還在）', SLIP8, 'slip'], ['② 只縫一邊：另一邊從殘留囊滑走', ONE8, 'one'], ['③ 縫線鬆＋兩邊不對稱', LOOSE8, 'loose']];
+  let o = `<rect width="${PW}" height="${PH}" fill="#fff"/>`, ex = '';
+  rows.forEach(([title, st, kind], i) => { const y = 8 + i * (sh + 7), op = ks[i];
+    const v = kind === 'loose' ? sec(st, W_STRIP, { W: sw, H: sh }) : secD(st, W_STRIP, { W: sw, H: sh, drop: 8 });
+    let g = v.svg;
+    if (kind === 'slip') g += slipStrands(v, true); else if (kind === 'one') g += slipStrands(v, true, { only2: true });
+    if (kind === 'one') { const c = PS0.I8, pts = []; for (let m = 0; m <= 12; m++) { const t = m / 12; pts.push(v.Q(G.add(G.add(c, G.unit([c[0], c[1], 0]), 0.2 - 1.6 * t), [0, 0, 1], -0.55 - 0.25 * Math.sin(Math.PI * t)))); }
+      g += `<path d="M${pts.map(f1).join('L')}" fill="none" stroke="#fff" stroke-width="6"/><path d="M${pts.map(f1).join('L')}" fill="none" stroke="#8a97a3" stroke-width="3" stroke-dasharray="6 3"/>`; }
+    o += `<g opacity="${op.toFixed(2)}"><svg x="8" y="${y}" width="${sw}" height="${sh}" viewBox="0 0 ${sw} ${sh}" overflow="hidden">${g}</svg><rect x="8" y="${y}" width="${sw}" height="${sh}" rx="6" fill="none" stroke="#d3dae1"/>` +
+      htext(18, y + 22, title, { size: 15, bold: true, color: WARN }) + `</g>`;
+    const at = q => [8 + q[0], y + q[1]];
+    if (kind === 'slip') ex += lab('haptic 掉下', 'slipped', PW - 14, y + sh - 14, at(v.Q(IOSL.haps[1][Math.round(X.HAP.pts.length * 0.7)])), { side: 'R', bold: true, color: WARN, lc: WARN, op });
+    if (kind === 'one') ex += lab('殘留囊', '示意', PW - 14, y + sh - 14, at(v.Q(G.add(G.add(PS0.I8, G.unit([PS0.I8[0], PS0.I8[1], 0]), -0.6), [0, 0, 1], -0.75))), { side: 'R', bold: true, color: '#56616d', lc: '#56616d', op });
+    if (kind === 'loose') ex += lab('鬆的那邊下垂', '示意', PW - 14, y + sh - 14, at(v.A.tie8 || v.A.iolC), { side: 'R', bold: true, color: WARN, lc: WARN, op }); });
+  o += boxAt(40, PH / 2 - 30, PW - 80, 60, '縫回後很快再脫位的專門研究：查不到', k0 * (1 - ks[0]), INK2, 19);
+  // right: what each source actually reports (none is about early redislocation; this case is not inferred)
+  const c = evCard([{ head: '最接近的資料（都不是早期再脫位的研究）', op: k0, col: INK2, gap: 0, rows: [] }, { op: ks[0], rows: [['① Kokame 2018 引述的報告：', true, COL.sub, 15], ['線結還在、haptic 卻滑出來', false, COL.ink, 17, 32]] },
+    { op: ks[1], gap: 6, rows: [['② Kokame 2018 自己的病例：', true, COL.sub, 15], ['只縫一邊，另一邊從殘留囊上滑走', false, COL.ink, 17, 32]] },
+    { op: ks[2], rows: [['③ Hudde 1996（UBM）：', true, COL.sub, 15], ['縫線鬆＋兩個 haptic 原本不對稱 → 輕度移位', false, COL.ink, 17, 32]] }], { y0: 36 });
+  const fin = boxAt(16, PH - 106, PW - 32, 42, '都沒有直接連到早期再脫位', k2, WARN, 18) + boxAt(16, PH - 56, PW - 32, 42, '本例的原因：影片不推測', k2, INK2, 18);
+  return { L: { svg: o, extra: ex, P: { title: '模型的錯誤狀態並排（示意）', orient: '經 2 點與 8 點　右＝2 點　量：示意' } }, R: { svg: c + fin, extra: '', P: EVID_T } };
+};
+
+// ---------------------------------------------------------------- 9 跟刀清單 (full width)
+DRAW2['9-1'] = T => {
+  const k0 = T.on(0), k2 = T.on(2), kr = i => T.on(1, 0.5, 0.75 * i);
+  let o = `<rect width="${FW}" height="${PH}" fill="#fff"/>`;
+  const col = (x, w, title, c, op) => `<g opacity="${(+op).toFixed(2)}"><rect x="${x}" y="12" width="${w}" height="${PH - 24}" rx="10" fill="#f7f9fa" stroke="${c}" stroke-width="1.6"/>${text(x + 16, 44, title, { size: 19, bold: true, color: c })}</g>`;
+  // column 1: what the scheduling sheet lists
+  o += col(16, 340, '備品（排程單）', COL.accent, k0);
+  [['10-0 直彎針', '推測：雙頭針'], ['11 號刀片', ''], ['圓刀', '用途依主治'], ['marking pen', ''], ['量尺', '']].forEach(([a, b], i) => {
+    o += `<g opacity="${k0.toFixed(2)}">` + text(36, 88 + i * 52, '□ ' + a, { size: 18, bold: true }) + (b ? text(56, 110 + i * 52, b, { size: 14, color: i === 2 ? WARN : COL.sub, bold: i === 2 }) : '') + `</g>`; });
+  // column 2: each step: what to watch (the narration's six points), with what the template or the papers hand over
+  o += col(372, 520, '跟刀時盯哪裡', '#2463eb', T.on(1));
+  [['量位置', '量尺零點抵哪一條線', '量尺、marking pen（用法推測）'], ['記號', '兩點正對面（文獻：2 點與 8 點）', ''], ['穿線', '兩支針在瞳孔後會合', '直彎針＋胰島素空針（文獻）'],
+   ['綁 haptic', '線綁的位置（文獻：遠端三分之一）', ''], ['放 IOL', 'optic 置中、不傾斜', ''], ['收尾', '線結埋好在瓣下', '彎針咬一針（推論）']].forEach(([st, look, give], i) => {
+    const y = 84 + i * 48, op = kr(i);
+    o += `<g opacity="${op.toFixed(2)}">` + text(392, y, st, { size: 16, bold: true, color: '#2463eb' }) + text(482, y, look, { size: 17, bold: true }) + (give ? text(482, y + 21, '遞：' + give, { size: 13.5, color: COL.sub }) : '') + `</g>`; });
+  o += `<g opacity="${T.on(1).toFixed(2)}">` + text(392, PH - 26, '誰遞哪支、誰接針：以主治為準', { size: 15, bold: true, color: WARN }) + `</g>`;
+  // column 3: after surgery
+  o += col(908, 306, '術後追', '#7a3b1e', k2);
+  [['IOL 位置與傾斜', '文獻用 UBM 量'], ['眼壓', ''], ['視網膜', '裂孔、剝離'], ['線結外露', '結膜有沒有磨穿']].forEach(([a, b], i) => {
+    o += `<g opacity="${k2.toFixed(2)}">` + text(928, 88 + i * 58, '□ ' + a, { size: 18, bold: true }) + (b ? text(948, 110 + i * 58, b, { size: 14, color: COL.sub }) : '') + `</g>`; });
+  return { F: { svg: o, extra: '', P: TXT_T('跟刀清單：備品、每一步盯哪裡、術後追什麼') } };
+};
