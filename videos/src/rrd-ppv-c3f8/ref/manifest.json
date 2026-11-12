@@ -1,8 +1,8 @@
 {
   "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/rrd-ppv-c3f8；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "pageNote": "2026-11-12 起有影片頁：片頭、第 1 章（1-1 到 1-4）、第 2 章（2-1、2-2）、第 3 章（3-1、3-2）、第 4 章（4-1、4-2）、第 5 章（5-1、5-2）與第 6 章（6-1、6-2）有畫面，其他段落還是空白面板。textBase 2891a47 是旁白第 1 版的 commit（旁白、重點、來源、章節與參考文獻定稿），check-video.js 以它比對文字；之後合併進 main 時改成 main 上的 commit。還沒有 timeline.js，參考圖用字數估計的時間軸，合成語音後要重做。",
-  "textBase": "2891a47",
+  "pageNote": "2026-11-12 起有影片頁：片頭、第 1 章（1-1 到 1-4）、第 2 章（2-1、2-2）、第 3 章（3-1、3-2）、第 4 章（4-1、4-2）、第 5 章（5-1、5-2）與第 6 章（6-1、6-2）有畫面，其他段落還是空白面板。textBase 是目前旁白定稿的 commit（第 1 版 2891a47；2026-11-12 改 6-2 第 4 句後換成 abd985e），check-video.js 以它比對旁白、重點、來源、章節與參考文獻；之後合併進 main 時改成 main 上的 commit。還沒有 timeline.js，參考圖用字數估計的時間軸，合成語音後要重做。",
+  "textBase": "abd985e",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
