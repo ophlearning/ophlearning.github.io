@@ -347,6 +347,27 @@ const VP = (() => {
     h82: { x: -17.5, y: -13.9, w: 35 },                   // 8-2: one of two head views side by side (a 290 × 228 px box)
     n83: { x: -15, y: -14.4, w: 48 },                     // 8-3: the supine head view on the left of the panel (room for the arrows and the dial)
   });
+  // chapter 9 (the assistant's eight things: one full-width panel, a 4 × 2 grid of cards, one card per narration line 1–8). Each card's small picture is
+  // a state its chapter already draws, in the same view (no new anatomy): 1 = 3-2 line 2 (the wide view turned toward 11: the tear low and a little to
+  // the right), 2 = 2-2 (the infusion tip in the vitreous cavity; the section through 4:30), 3 = 5-2 (the press at 11 at full depth; the wide view: the
+  // mound), 5 = 6-2 lines 2–4 (the retained bead; the wide view on the macula), 7 = 7-3 line 2 (every cannula out; the microscope), 8 = 8-1 sitting
+  // (the head view). Cards 4 and 6 are words with icons (4: 示意) and 7-2's syringe. c, w: the picture's window (centre and width, mm) in a PIC9 px box.
+  const PIC9 = [150, 140];
+  const win9 = (c, w) => ({ x: c[0] - w / 2, y: c[1] - w * PIC9[1] / PIC9[0] / 2, w });
+  const CH9 = [
+    { n: 1, from: '3-2', view: 'wide', st: lookStep(ST.view3, LOOK_DEP, 1), win: win9([0, 0], 58) },
+    { n: 2, from: '2-2', view: 'sec', h: INF_H, st: ST.setup, win: win9([7.4, -6.7], 8.4) },
+    { n: 3, from: '5-2', view: 'wide', st: ST.dep52On, win: win9([5.2, 9.4], 24) },
+    { n: 4, from: '4-2' },
+    { n: 5, from: '6-2', view: 'wide', st: w6(ST.bead62), win: win9([-2.75, -4.75], 7.5) },
+    { n: 6, from: '7-2' },
+    { n: 7, from: '7-3', view: 'ext', st: ST.closed, win: win9([0, 0], 26) },
+    { n: 8, from: '8-1', view: 'head', st: ST.sit81 },
+  ];
+  // the grid (px in the full panel's drawing area, FW × PH): card n at column (n − 1) % 4, row ⌊(n − 1) / 4⌋; inside a card the title row, the picture box
+  // (x, y of its top left) and the text column at tx
+  const GRID9 = { x0: 12, y0: 10, w: 294, h: 190, gx: 10, gy: 10, pic: [8, 42], tx: 168 };
+  const card9 = n => [GRID9.x0 + ((n - 1) % 4) * (GRID9.w + GRID9.gx), GRID9.y0 + Math.floor((n - 1) / 4) * (GRID9.h + GRID9.gy)];
 
   // ---------------------------------------------------------------- views
   function fundus(st, W, H, win, id) { const c = cam(win, W, H), r = P.fundus({ st, id }); return wrap(c, r); }
@@ -456,7 +477,7 @@ const VP = (() => {
   }
   // points round the tear on the attached retina, in its tangent frame (u posterior from the hinge, c across, mm) → chart mm
   function tearChart(st, pts) { const Gm = P.geom(st), T = Gm.tear; return pts.map(([u, cc]) => chartXY(P.onRetina(Gm, T.fr0, u, cc, 1, Gm.ret0).p)); }
-  return { cam, chart, chartXY, tearChart, fundus, sec, head, headZ, ext, port, wide, ST,
+  return { cam, chart, chartXY, tearChart, fundus, sec, head, headZ, ext, port, wide, ST, PIC9, win9, CH9, GRID9, card9,
     RAISE_DEG, GAS82, N2O_GAS, N2O_STEPS, raisedG, st81, n2oStep, GAS83, shrink83, PROS82, DISP82, MILLS, TL83, x83, CHEN, TL84, x84, LEE14, JACK, BAR, barPx, iopPx,
     tunnelIn, st7, LASER_STEPS, LASER_E, SPOTS7, PIV7, aimAt, laserStep, CRYO, band360, SYR, syrX, conc, EXPAND, C3F8_MIX, expand, MIX_COL, FLUSH_VOL, volBar, FLUSH_STEPS, mixHex, GAS_SIG, modelSt, recolor, flushStep, flush73, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
     portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT,

@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–8.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–9.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -46,7 +46,7 @@ const LEDGER = {
   '8-3': { '37': 'Lee 2004', '3': 'Silvanus 2008', '109': 'Mills 2001', '15': 'Kontos 2017a', '67.7': 'Kontos 2017a' },
   '8-4': { '43': 'Chen 1997', '25': 'Chen 1997', '88': 'Chen 1997', '24': 'Chen 1997', '8': 'Muether 2011', '12': 'Muether 2011',
            '72.9': 'Lee 2014', '50.2': 'Jackson 2013', '68.7': 'Jackson 2013' },
-  '9': { '11': '病例', '50': 'Kanclerz 2018b' },
+  '9': { '11': '病例', '50': 'Kanclerz 2018b', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '4': '示意' },   // 12, 3, 6, 9: the wide view's clock numbers (card 一); 4: the 4:30 infusion (card 二, 示意)
 };
 // citations: 「Author 2018」; two-word surnames used in this video are listed explicitly (Ferro Desideri)
 const CITE = /([A-Z][A-Za-zÀ-ž'\-]+(?: Desideri)?) (\d{4})([a-z])?/g;
@@ -61,10 +61,18 @@ async function screenText() {   // all text drawn on screen per segment, at 60 %
   const errs = []; p.on('pageerror', e => errs.push(String(e)));
   await p.goto('file://' + path.join(__dirname, 'anim', 'video.html')); await p.waitForTimeout(200);
   const out = await p.evaluate(() => { const r = {};
-    for (const s of TL_EXPORT) { if (!DRAW2[s.id]) continue; const set = new Set();
-      for (const [a, e] of s.lines) for (const f of [0.6, 0.98]) { renderAt(a + (e - a) * f);
-        for (const t of document.querySelectorAll('#stage text')) if (!t.classList.contains('hdr')) set.add(t.textContent); }
-      r[s.id] = [...set]; }
+    // chapter 9 (cards drawn with text(), not VIEWS.lab2): at the same moments, the visible cards (number, highlighted or not, the card's box, its picture
+    // box and every text of it) and the heading, in page px; check.js M61–M62 read them as r['9:lay']
+    const op = el => { let o = 1; for (let x = el; x && x.id !== 'stage'; x = x.parentElement) { const v = x.getAttribute('opacity'); if (v !== null) o *= parseFloat(v); } return o; };
+    const bb = el => { const q = el.getBoundingClientRect(); return [q.x, q.y, q.width, q.height].map(v => +v.toFixed(1)); };
+    const lay9 = (line, f) => ({ line, f, head: [...document.querySelectorAll('#stage text.h9')].filter(t => op(t) > 0.5).map(t => t.textContent),
+      cards: [...document.querySelectorAll('#stage g.c9')].filter(g => op(g) > 0.5).map(g => ({ n: +g.getAttribute('data-n'), hl: g.getAttribute('data-hl') === '1', box: bb(g.querySelector('.cb9')),
+        pic: g.querySelector('.p9') ? bb(g.querySelector('.p9')) : null, texts: [...g.querySelectorAll('text.t9')].filter(t => op(t) > 0.5).map(t => ({ s: t.textContent, b: bb(t) })) })) });
+    for (const s of TL_EXPORT) { if (!DRAW2[s.id]) continue; const set = new Set(), lay = [];
+      s.lines.forEach(([a, e], i) => { for (const f of [0.6, 0.98]) { renderAt(a + (e - a) * f);
+        for (const t of document.querySelectorAll('#stage text')) if (!t.classList.contains('hdr')) set.add(t.textContent);
+        if (s.id === '9') lay.push(lay9(i, f)); } });
+      r[s.id] = [...set]; if (s.id === '9') r['9:lay'] = lay; }
     return r; });
   await b.close();
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
@@ -721,6 +729,96 @@ function modelChecks(ctx) {
       && ['① 傷口有沒有漏', '② 氣泡大小', '③ 氣體有沒有跑進前房', '④ 視網膜有沒有貼回', '術後第一週要看的四件事（圖示為示意）', '失敗（再剝離）的病例：何時被診斷', '這是「失敗病例裡」的比例', '不是再剝離率', '兩個月內被診斷', '72.9%',
         '英國資料庫：有晶體的眼做完玻璃體切除', '（各種原因的 PPV，不只 RRD）', '一年內', '兩年內', '50.2%', '68.7%'].every(t => onScreen(ctx, '8-4', t)),
       `8-4 redetachment: ${VP.LEE14}% of the failures within two months (Lee 2014), not a rate; cataract surgery ${J.map(r => r.p + '% by ' + r.yr + ' y').join(', ')} (Jackson 2013, UK, any indication)${rate.length ? '; rate wording: ' + rate[0] : ''}`); }
+  // chapter 9 (the assistant's eight things: a 4 × 2 grid of cards in one full-width panel). VP.CH9 = each card's picture: a state its chapter already draws, in
+  // the same view; the source chapter's state is rebuilt here from the VP functions that chapter's drawing calls. The cards are drawn with text(), which
+  // check-video.js does not see: screenText measures them on the rendered page (ctx.screen['9:lay']: every narration line at 60 % and 98 %).
+  const lay9 = ctx.screen['9:lay'] || [], NUM9 = ['一', '二', '三', '四', '五', '六', '七', '八'], C9 = VP.CH9 || [], [PW9, PH9] = VP.PIC9 || [0, 0];
+  const FP9 = [25, 96, 1230, 410];   // the full panel's drawing area in page px (video-kit: PANELS.full x 24 + 1, width 1232 − 2; CONTENT_Y 96, CONTENT_H 410)
+  const inBox = (b, Q, t = 1) => b[0] >= Q[0] - t && b[1] >= Q[1] - t && b[0] + b[2] <= Q[0] + Q[2] + t && b[1] + b[3] <= Q[1] + Q[3] + t;
+  const ovl = (a, b) => Math.max(0, Math.min(a[0] + a[2], b[0] + b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[1] + a[3], b[1] + b[3]) - Math.max(a[1], b[1]));
+  // on9: a text drawn on a card (not the caption bar, which repeats the narration); scr9: everything on screen, captions included (for what must never show)
+  const txt9 = [...new Set(lay9.flatMap(L => L.cards.flatMap(c => c.texts.map(t => t.s))))], on9 = t => txt9.some(x => x.replace(/\s/g, '').includes(t.replace(/\s/g, '')));
+  const scr9 = ctx.screen['9'] || [], pic9In = (V, p) => { const q = V.P(p); return q[0] > 4 && q[0] < PW9 - 4 && q[1] > 4 && q[1] < PH9 - 4; };
+  // M61 lines 0–8: the heading alone at line 0; at line n (1–8) cards 1…n, card n highlighted; eight cards numbered 一…八 in reading order (rows top to
+  // bottom, left to right); narration line n begins with that number; the pictures come from 3-2, 2-2, 5-2, 4-2, 6-2, 7-2, 7-3, 8-1 in that order
+  { const bad = [];
+    for (const L of lay9) { const ns = L.cards.map(c => c.n).sort((a, b) => a - b), hl = L.cards.filter(c => c.hl).map(c => c.n), want = range(L.line).map(i => i + 1);
+      if (ns.join() !== want.join() || (L.line ? hl.join() !== String(L.line) : hl.length) || (L.line === 0) !== L.head.includes('助手記住這八件事'))
+        bad.push(`line ${L.line} at ${L.f}: cards ${ns.join(',') || 'none'}, highlighted ${hl.join(',') || 'none'}, heading ${L.head.length ? 'on' : 'off'}`);
+      for (const c of L.cards) if (!c.texts.some(t => t.s === NUM9[c.n - 1])) bad.push(`card ${c.n} without its number ${NUM9[c.n - 1]}`); }
+    const last = lay9.filter(L => L.line === 8).pop(), cs = last ? [...last.cards].sort((a, b) => a.n - b.n) : [];
+    const order = cs.length === 8 && cs.every((c, i) => !i || c.box[1] > cs[i - 1].box[1] + 5 || (Math.abs(c.box[1] - cs[i - 1].box[1]) <= 5 && c.box[0] > cs[i - 1].box[0] + 5));
+    const nar = range(8).every(i => line(ctx, '9', i + 1).startsWith(NUM9[i] + '，')), from = C9.map(x => x.from).join();
+    ok('M61', line(ctx, '9', 0) === '助手記住這八件事。' && ctx.text['9'].lines.length === 9 && lay9.length === 18 && !bad.length && order && nar && C9.length === 8 && C9.every((x, i) => x.n === i + 1)
+      && from === '3-2,2-2,5-2,4-2,6-2,7-2,7-3,8-1',
+      `9: the heading alone at line 0, then ${cs.length} cards one per line in reading order, the current one highlighted; pictures from ${from}${bad.length ? '; bad: ' + bad.slice(0, 3).join('; ') : ''}`); }
+  // M62 every card, picture box and text of chapter 9 inside the full panel; no two cards overlapping; every text inside its card, inside the picture box or
+  // clear of it (a text across its edge is cut), no two texts of a card overlapping — at every measured moment
+  { const bad = [];
+    for (const L of lay9) L.cards.forEach((c, i) => {
+      if (!inBox(c.box, FP9)) bad.push(`line ${L.line}: card ${c.n} outside the panel`);
+      for (const d of L.cards.slice(i + 1)) if (ovl(c.box, d.box) > 0) bad.push(`line ${L.line}: cards ${c.n} and ${d.n} overlap`);
+      if (c.pic && !inBox(c.pic, c.box)) bad.push(`line ${L.line}: card ${c.n}'s picture outside it`);
+      c.texts.forEach((t, j) => { if (!inBox(t.b, c.box)) bad.push(`line ${L.line}: 「${t.s}」 outside card ${c.n}`);
+        if (c.pic && ovl(t.b, c.pic) > 0 && !inBox(t.b, c.pic)) bad.push(`line ${L.line}: 「${t.s}」 across card ${c.n}'s picture edge`);
+        for (const u of c.texts.slice(j + 1)) if (ovl(t.b, u.b) > 6) bad.push(`line ${L.line}: 「${t.s}」 and 「${u.s}」 overlap in card ${c.n}`); }); });
+    const nT = lay9.reduce((a, L) => a + L.cards.reduce((b, c) => b + c.texts.length, 0), 0);
+    ok('M62', lay9.length > 0 && nT > 100 && !bad.length, `9: ${lay9.length} moments, ${nT} texts measured: inside the panel and their cards, none across a picture edge or overlapping${bad.length ? '; bad: ' + bad.slice(0, 3).join('; ') : ''}`); }
+  // M63 card 一 (3-2 line 2): the same state as 3-2's wide view turned toward 11 (OS, inverter on, surgeon at 12); in the drawn picture the 11 o'clock mark low
+  // and a little to the right (30° right of straight down: M18, posterior/check.js B3), the tear at 11 o'clock from the pole, in the field and in the picture
+  { const I = C9[0] || {}, src = VP.lookStep(VP.ST.view3, VP.ST.depOn.look, 1), V = I.st ? VP.wide(I.st, PW9, PH9, I.win, 'm63') : null, M = V ? V.M : {};
+    const c11 = M.clock11 && [M.clock11[0] - M.centre[0], M.clock11[1] - M.centre[1]], d11 = c11 ? degFromDown(c11) : NaN, ht = M.tear && clockSurg([M.tear[0] - M.pole[0], M.tear[1] - M.pole[1]]), dt = M.tear ? degFromDown(M.tear) : NaN;
+    ok('M63', line(ctx, '9', 1).includes('左眼的 11 點，在畫面下方略偏右') && I.from === '3-2' && I.view === 'wide' && !!I.st && keyOf(I.st) === keyOf(src) && I.st.eye === 'OS' && I.st.inverter !== false && (I.st.surgeon ?? 12) === 12
+      && c11 && c11[1] > 0 && near(d11, 30, 1) && ht && near(hdiff(ht, CASE.tear), 0, 0.1) && dt > 15 && dt < 45 && Math.hypot(...M.tear) < M.R && pic9In(V, M.tear) && pic9In(V, M.centre)
+      && ['左眼 11 點', '在畫面下方', '略偏右', '術者坐 12 點', 'inverter 開', '3 T', '9 N'].every(on9),
+      `9 card 一 = 3-2 line 2's state: the 11 o'clock mark ${f2(d11)}° right of straight down, the tear at ${ht && f2(ht)} o'clock from the pole and ${f2(dt)}° right of down from the centre, in the picture`); }
+  // M64 card 二 (2-2): the same state as 2-2's correct infusion (VP.ST.setup), the section through the infusion port (4:30, inferotemporal: Tei 2005); its tip
+  // in the vitreous cavity (not under the retina, not in it) and in the picture
+  { const I = C9[1] || {}, st = I.st || {}, Gm = P.geom(st), f = P.makeCtx(Gm), t = P.troc(Gm).find(x => x.inf), c = t && f.at(t.tip);
+    const S = I.st ? VP.sec(I.st, PW9, PH9, I.win, 'm64', { h: I.h, tw: Object.assign({ h: I.win.w * PH9 / PW9 }, I.win), noTissue: true }) : null, tp = t && S && G.toPlane(S.r.plane, t.tip);
+    ok('M64', line(ctx, '9', 2).includes('開 infusion 之前，看到套管尖端在玻璃體腔') && I.from === '2-2' && keyOf(st) === keyOf(VP.ST.setup) && I.h === VP.INF_H && t && near_h(t.h, I.h, 1e-9) && sideName(t.h).en === LIT2.ports.inf
+      && f.cavity(c) < 0 && !(f.srf(c) < 0) && !(f.retina(c) < 0) && tp && pic9In(S, tp) && ['看到套管尖端', '在玻璃體腔', '術中也要不時再看', 'infusion（4 點半）'].every(on9),
+      `9 card 二 = 2-2's state: the infusion at ${t && t.h} o'clock (${t && sideName(t.h).en}), its tip in the vitreous cavity and in the picture`); }
+  // M65 card 三 (5-2): the same state as 5-2's wide view at full press (VP.depStep(VP.ST.dep52On, 1)): pressing at the tear's 11 o'clock (病例), the mound at
+  // 11 o'clock from the pole (inverter on), in the field and in the picture
+  { const I = C9[2] || {}, st = I.st || {}, src = VP.depStep(VP.ST.dep52On, 1), V = I.st ? VP.wide(I.st, PW9, PH9, I.win, 'm65') : null, M = V ? V.M : {}, hw = M.dep && clockSurg([M.dep[0] - M.pole[0], M.dep[1] - M.pole[1]]);
+    ok('M65', line(ctx, '9', 3).includes('壓鞏膜：主刀說幾點就壓幾點') && line(ctx, '9', 3).includes('深度與時間聽口令') && I.from === '5-2' && keyOf(st) === keyOf(src) && !!st.dep && st.dep.h === CASE.tear && st.dep.depth > 0
+      && st.inverter !== false && hw && near(hdiff(hw, CASE.tear), 0, 0.1) && Math.hypot(...M.dep) < M.R && pic9In(V, M.dep) && ['主刀說幾點', '就壓幾點', '深度、時間', '聽口令', '隆起＝壓的位置'].every(on9),
+      `9 card 三 = 5-2's full press: at ${st.dep && st.dep.h} o'clock, the mound at ${hw && f2(hw)} o'clock in the wide view, in the picture`); }
+  // M66 card 四: the three things to say at once, in the narration's words and order, each one shown earlier (the retina sucked up: 4-2; a new break: 5-2;
+  // an instrument behind the lens: 5-1); the icons marked 示意
+  { const said = ['視網膜被吸起', '新的裂孔', '器械靠近水晶體'], l4 = line(ctx, '9', 4), pos = said.map(w => l4.indexOf(w));
+    ok('M66', pos.every((q, i) => q >= 0 && (!i || q > pos[i - 1])) && l4.includes('馬上說') && said.every(on9) && on9('→ 馬上說出來') && on9('圖示為示意')
+      && onScreen(ctx, '4-2', '視網膜被吸起') && onScreen(ctx, '5-2', '新的裂孔') && onScreen(ctx, '5-1', '器械從水晶體後方經過'),
+      `9 card 四: ${said.join('、')} in the narration's order, each shown in 4-2, 5-2, 5-1; icons 示意`); }
+  // M67 card 五 (6-2 lines 2–4): the same state as 6-2's wide view of the retained bead (VP.w6(VP.ST.bead62)): the bead (VP.BEAD) off the fovea (more than its
+  // radius from the foveola, 1.5 mm across: Köksaldı 2025), both in the picture
+  { const I = C9[4] || {}, st = I.st || {}, V = I.st ? VP.wide(I.st, PW9, PH9, I.win, 'm67') : null, M = V ? V.M : {}, Gm = P.geom(st), b = st.bead;
+    const off = b ? G.len(sub(Gm.ret(b.h, b.s, 1), Gm.ret(12, P.S_POLE, 1))) : 0;
+    ok('M67', line(ctx, '9', 5).includes('PFCL 要吸乾淨') && line(ctx, '9', 5).includes('看到可疑的殘留，提出來') && I.from === '6-2' && keyOf(st) === keyOf(VP.w6(VP.ST.bead62)) && b && JSON.stringify(b) === JSON.stringify(VP.BEAD)
+      && off > LIT6.fovea / 2 && M.bead && M.fovea && pic9In(V, M.bead) && pic9In(V, M.fovea) && ['視網膜下', '可疑的小珠子', '→ 提出來', '讓主刀確認', 'fovea'].every(on9),
+      `9 card 五 = 6-2's retained bead: ${f2(off)} mm from the foveola (fovea ${LIT6.fovea} mm across), bead and fovea in the picture`); }
+  // M68 card 六 (7-2 line 2): the 50 mL syringe in three steps (Kanclerz 2018b), 7-2's words; how much C3F8 to keep is 依院內常規: no amount in the drawing
+  // constants, no mL on screen but the syringe's 50, no concentration figure in this chapter
+  { const mls = scr9.flatMap(t => [...t.matchAll(/(\d+(?:\.\d+)?)\s*mL/g)].map(m => m[1])), pct = scr9.filter(t => /\d\s*%/.test(t)), steps = ['① 抽純氣', '② 排到需要的量', '③ 用無菌空氣補到 50 mL'];
+    ok('M68', line(ctx, '9', 6).includes('備氣：50 mL 針筒，排到需要的量再補無菌空氣') && line(ctx, '9', 6).includes('和主刀確認氣體與濃度') && VP.SYR.full === LIT7.syr && VP.SYR.c3f8.keep === null
+      && mls.length > 0 && mls.every(v => +v === LIT7.syr) && !pct.length && steps.every(t => on9(t) && onScreen(ctx, '7-2', t)) && on9('依院內常規') && on9('→ 和主刀確認氣體與濃度'),
+      `9 card 六: mL on screen only ${[...new Set(mls)].join(', ') || 'none'} (the ${LIT7.syr} mL syringe); C3F8 kept 依院內常規, no amount${pct.length ? '; % on screen: ' + pct[0] : ''}`); }
+  // M69 card 七 (7-3 line 2): the same state as 7-3's closed eye (VP.ST.closed): all three cannulas out; the microscope picture marks each wound in its trocar's
+  // quadrant (surgeon at 12) and in the picture; the words: every wound, the pressure
+  { const I = C9[6] || {}, st = I.st || {}, T3 = P.troc(P.geom(VP.modelSt(st))), E = I.st ? VP.ext(I.st, PW9, PH9, I.win, 'm69') : null, M = E ? E.M : {}, c = M.centre || [0, 0];
+    const quad = T3.length > 0 && T3.every(t => { const q = M['cj_' + t.id] || M['troc_' + t.id]; return q && sideName(clockSurg([q[0] - c[0], q[1] - c[1]])).en === sideName(t.h).en && pic9In(E, q); });
+    ok('M69', line(ctx, '9', 7).includes('拔 cannula 之後，檢查每個傷口、量眼壓') && I.from === '7-3' && keyOf(st) === keyOf(VP.ST.closed) && T3.length === CASE.ports && T3.every(t => t.out >= 1) && quad
+      && ['每個傷口', '漏不漏', '量眼壓', '一直漏 → 縫一針'].every(on9) && onScreen(ctx, '7-3', '③ 一直漏 → 縫一針'),
+      `9 card 七 = 7-3's closed eye: ${T3.filter(t => t.out >= 1).length} of ${T3.length} cannulas out, each wound marked in its quadrant in the picture`); }
+  // M70 card 八 (8-1, 8-3): the same state as 8-1's sitting picture (VP.ST.sit81): gravity down (SIT_G), the whole 11 o'clock tear above the gas surface;
+  // no hours or days and no 「頂」 anywhere in this chapter (narration, key box, screen); the narration's words and 8-3's warning card
+  { const I = C9[7] || {}, st = I.st || {}, h = I.st ? head8(st, SIT_G) : {}, nu = /\d\s*(小時|天|週|日)/, sg9 = ctx.segs.find(x => x.id === '9') || {};
+    const all9 = [...(sg9.lines || []), ...(sg9.keys || []).map(k => k[1]), ...scr9], tim = all9.filter(t => nu.test(t)), ding = all9.filter(t => t.includes('頂'));
+    ok('M70', line(ctx, '9', 8).includes('術後：頭位依醫囑、當晚到隔天量眼壓') && line(ctx, '9', 8).includes('不用 N2O、不搭飛機，給警示卡') && I.from === '8-1' && keyOf(st) === keyOf(VP.ST.sit81)
+      && !!st.head && st.head.pose === 'sit' && sameG(P.gravity(st), SIT_G) && h.gasH != null && h.tearLow > h.gasH + 0.2 && !tim.length && !ding.length
+      && ['頭位：依醫囑', '眼壓：當晚到隔天', '不用 N2O', '不搭飛機', '給警示卡', '例：坐正'].every(on9) && onScreen(ctx, '8-3', '警示卡（示意）'),
+      `9 card 八 = 8-1's sitting state: the tear ${h.gasH != null ? f2(h.tearLow - h.gasH) : '?'} mm above the gas surface; hours or days: ${tim.length ? tim[0] : 'none'}`); }
   return R;
 }
 const near_h = (a, b, t = 0.1) => a != null && b != null && Math.abs(hdiff(a, b)) <= t;
@@ -765,6 +863,7 @@ function baseCtx(screen) {
 const vpWith = patch => Object.assign({}, VP0, patch);
 const stWith = (k, patch) => vpWith({ ST: Object.assign({}, VP0.ST, { [k]: Object.assign({}, VP0.ST[k], patch) }) });
 const portWith = o => Object.assign({}, POSTERIOR.CASE, { troc: POSTERIOR.trocarsFor('OS').map(t => t.id === VP0.PORT ? Object.assign({}, t, o) : t) });   // the demonstrated port changed
+const ch9With = (i, st) => vpWith({ CH9: VP0.CH9.map((x, j) => j === i ? Object.assign({}, x, { st }) : x) });   // chapter 9: card i + 1's picture drawn from another state
 const mirrorChart = (keys) => vpWith({ fundus: (...a) => { const r = VP0.fundus(...a), c = r.P([0, 0]), A = Object.assign({}, r.A); for (const k of keys || Object.keys(A)) A[k] = [2 * c[0] - A[k][0], A[k][1]]; return Object.assign({}, r, { A }); } });
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
 (async () => {
@@ -858,6 +957,16 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['bubble shrinking with N2O (8-3)', c => { c.VP = vpWith({ n2oStep: k => VP0.n2oStep(1 - k) }); }, 'M58'],
       ['8–12 h band drawn at 4–8 h (8-4)', c => { c.VP = vpWith({ TL84: { band: [4, 8], end: 24 } }); }, 'M59'],
       ['72.9 % worded as a redetachment rate (8-4)', c => { c.screen['8-4'] = c.screen['8-4'].map(t => t === '不是再剝離率' ? '再剝離率 72.9%' : t); }, 'M60'],
+      ['card 四 shown already with line 3 (9)', c => { c.screen['9:lay'] = c.screen['9:lay'].map(L => L.line === 3 ? Object.assign({}, L, { cards: [...L.cards, Object.assign({}, L.cards[0], { n: 4, hl: false })] }) : L); }, 'M61'],
+      ['a text of card 四 pushed out of its card (9)', c => { const L = c.screen['9:lay'][c.screen['9:lay'].length - 1], k = L.cards.find(x => x.n === 4); k.texts[1].b[0] += 260; }, 'M62'],
+      ['card 一 drawn with the inverter off (9)', c => { c.VP = ch9With(0, Object.assign({}, VP0.CH9[0].st, { inverter: false })); }, 'M63'],
+      ['card 二 drawn with the infusion tip under the retina (9)', c => { c.VP = ch9With(1, VP0.ST.infSub); }, 'M64'],
+      ['card 三 pressing at 10 o\'clock (9)', c => { c.VP = ch9With(2, Object.assign({}, VP0.CH9[2].st, { dep: Object.assign({}, VP0.CH9[2].st.dep, { h: 10 }) })); }, 'M65'],
+      ['card 四 without 「新的裂孔」 (9)', c => { c.screen['9:lay'].forEach(L => L.cards.forEach(k => { k.texts = k.texts.filter(t => t.s !== '新的裂孔'); })); }, 'M66'],
+      ['card 五 drawn without the bead (9)', c => { c.VP = ch9With(4, VP0.w6(VP0.ST.done62)); }, 'M67'],
+      ['C3F8 amount on card 六 (9)', c => { c.screen['9'] = [...c.screen['9'], 'C3F8 留 7 mL']; }, 'M68'],
+      ['card 七 drawn with the cannulas still in (9)', c => { c.VP = ch9With(6, VP0.flushStep(1)); }, 'M69'],
+      ['head position days on card 八 (9)', c => { c.screen['9'] = [...c.screen['9'], '坐正 3 天']; }, 'M70'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

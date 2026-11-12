@@ -1087,7 +1087,7 @@ function syringe(x0, x1, y, o) {
     `<rect x="${F1(face + 5)}" y="${F1(y - 4)}" width="${F1(rod)}" height="8" fill="#a9b3bd" stroke="#5b6878" stroke-width="1"/>` +
     `<rect x="${F1(face + 5 + rod)}" y="${F1(top - 4)}" width="8" height="${H + 8}" rx="2" fill="#a9b3bd" stroke="#5b6878" stroke-width="1.2"/>`;                   // thumb plate
   if (o.ticks) for (const v of VP.SYR.ticks) { const x = X(v); s += `<path d="M${F1(x)} ${F1(top)}v10" stroke="#3b4752" stroke-width="1.6"/>` + (v === VP.SYR.full ? '' : text(F1(x), F1(top - 16), String(v), { size: 13, anchor: 'middle', color: '#3b4752' })); }
-  s += text(F1(X(VP.SYR.full) - 8), F1(top - 16), VP.SYR.full + ' mL', { size: 13, bold: true, color: '#3b4752' });   // the 50 mL line is the barrel's end
+  if (o.label !== false) s += text(F1(X(VP.SYR.full) - 8), F1(top - 16), VP.SYR.full + ' mL', { size: 13, bold: true, color: '#3b4752' });   // the 50 mL line is the barrel's end (chapter 9 draws it scaled down and writes its own)
   return s + '</g>';
 }
 // a bracket under a syringe from px a to b with a text below it
@@ -1611,4 +1611,104 @@ DRAW2['8-4'] = T => {
     sr += bigCard(14, 250, 578, 140, [['英國資料庫：有晶體的眼做完玻璃體切除', { size: 16, bold: true }], ['（各種原因的 PPV，不只 RRD）', { size: 16, color: COL.sub }], ['→ 做了白內障手術的比例', { size: 16, bold: true, color: '#8a6400' }]], { op: o, lh: 30, y0: 36 });
     if (o > 0.5) PR = PT.j84; }
   return { L: { svg: sl, extra: el, P: PL }, R: { svg: sr, extra: er, P: PR } };
+};
+
+// ---------------------------------------------------------------- 9 助手記住這八件事
+// Chapter 9 (one full-width panel): line 0 the heading only; lines 1–8 add one card each to a 4 × 2 grid (VP.GRID9, reading order), the card of the
+// current line highlighted, the earlier ones kept. Each card: its number (一…八), a title, a small picture and a column of words. The pictures are
+// states their chapters already draw, in the same view (VP.CH9: 1 = 3-2's wide view turned toward 11, 2 = 2-2's infusion section, 3 = 5-2's mound,
+// 5 = 6-2's bead, 7 = 7-3's microscope, 8 = 8-1's sitting head); 4 = three icons (示意) and 6 = 7-2's syringe in three steps (C3F8: no scale and no
+// mL amount, 依院內常規). No hours or days for the head position. Nothing here is a VIEWS.lab2 label: check.js (M62) measures every text and picture box
+// of this panel on the rendered page (inside the panel and inside its card, not overlapping).
+const NUM9 = ['一', '二', '三', '四', '五', '六', '七', '八'];
+const TX9 = {
+  head: '助手記住這八件事', sub: '依手術的順序：從架設到術後', mound: '隆起',
+  t: ['先在腦中定好方位', '開 infusion 之前', '壓鞏膜', '看到就馬上說', 'PFCL 要吸乾淨', '備氣：50 mL 針筒', '拔 cannula 之後', '術後'],
+  r1: ['左眼 11 點', '在畫面下方', '略偏右', '術者坐 12 點', 'inverter 開'],
+  r2: ['看到套管尖端', '在玻璃體腔', '術中也要不時再看', 'infusion（4 點半）'],
+  r3: ['主刀說幾點', '就壓幾點', '深度、時間', '聽口令', '隆起＝壓的位置'],
+  r4: ['視網膜被吸起', '新的裂孔', '器械靠近水晶體', '→ 馬上說出來', '圖示為示意'],
+  r5: ['視網膜下', '可疑的小珠子', '→ 提出來', '讓主刀確認'],
+  r6: ['① 抽純氣', '② 排到需要的量（依院內常規）', '③ 用無菌空氣補到 50 mL', '→ 和主刀確認氣體與濃度', '50 mL', '純 C3F8'],
+  r7: ['每個傷口', '漏不漏', '量眼壓', '一直漏 → 縫一針'],
+  r8: ['頭位：依醫囑', '眼壓：當晚到隔天', '不用 N2O', '不搭飛機', '給警示卡', '例：坐正'],
+  P: { title: '跟刀清單的回顧', orient: '左眼 OS　小圖取自前面各章（看向 11 點、壓的位置、小珠子、圖示皆為示意）' },
+};
+window.PRELOAD_EXTRA = JSON.stringify(PT) + JSON.stringify(TX3) + JSON.stringify(TX4) + JSON.stringify(TX5) + JSON.stringify(TX6) + JSON.stringify(TX7) + JSON.stringify(POSE8) + JSON.stringify(TX9);
+const t9 = (x, y, s, o = {}) => text(x, y, s, Object.assign({ cls: 't9' }, o));
+// a column of words at (x, y): rows [text, { size, bold, color }]; each row's baseline 1.5 × its size below the previous one (gap: extra px before a row)
+const col9 = (x, y, rows) => { let s = '', yy = y; rows.forEach(([t, o = {}], i) => { if (i) yy += (o.size || 15) * 1.5 + (o.gap || 0); s += t9(x, yy, t, o); }); return s; };
+// the picture box of a card (VP.PIC9 px at GRID9.pic, rounded, clipped); the model's picture drawn into it once (a pure function of constants: cached)
+const PICS9 = {};
+const pic9 = (n, make, bg = '#fff') => { const [W, H] = VP.PIC9, [px, py] = VP.GRID9.pic, s = PICS9[n] || (PICS9[n] = make(W, H));
+  return `<clipPath id="c9p${n}"><rect x="${px}" y="${py}" width="${W}" height="${H}" rx="6"/></clipPath><g clip-path="url(#c9p${n})"><g transform="translate(${px} ${py})"><rect width="${W}" height="${H}" fill="${bg}"/>${s}</g></g>` +
+    `<rect class="p9" x="${px}" y="${py}" width="${W}" height="${H}" rx="6" fill="none" stroke="#c9d1d9" stroke-width="1.2"/>`; };
+const ring9 = (p, r, col, w = 2.4, dash) => `<circle cx="${F1(p[0])}" cy="${F1(p[1])}" r="${r}" fill="none" stroke="${col}" stroke-width="${w}"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`;
+const slash9 = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${COL.red}" stroke-width="2.6"/><path d="M${F1(x - r * 0.7)} ${F1(y - r * 0.7)}L${F1(x + r * 0.7)} ${F1(y + r * 0.7)}" stroke="${COL.red}" stroke-width="2.6"/>`;
+// the eight pictures (W × H px boxes; I = VP.CH9[n − 1])
+const PIC9F = {
+  1: (W, H) => { const I = VP.CH9[0], V = VP.wide(I.st, W, H, I.win, 'n9w1'), Wt = { A: V.A, c: V.P([0, 0]), r: V.M.R * V.k };   // 3-2 line 2: turned toward 11
+    const a = rimPt(Wt, 11, -6), b = rimPt(Wt, 11, 4), q = rimPt(Wt, 11, 13);
+    return `<rect width="${W}" height="${H}" fill="#0c0d0f"/>` + V.svg + clockNums(Wt, 1, { size: 12, gap: 10 }).replace(/<text /g, '<text class="t9" ') + `<path d="M${F1(a[0])} ${F1(a[1])}L${F1(b[0])} ${F1(b[1])}" stroke="${TEAR_C}" stroke-width="3" stroke-linecap="round"/>` +
+      t9(F1(q[0]), F1(q[1] + 4.3), '11', { size: 12, bold: true, color: TEAR_C, anchor: 'middle' }) + arrowP([Wt.c, rimPt(Wt, 11, -10)], TEAR_C, 1, 'arrR', 2.2, '6 4') + ring9(Wt.A.tear, 7, TEAR_C, 2); },
+  2: (W, H) => { const I = VP.CH9[1], S = VP.sec(I.st, W, H, I.win, 'n9s2', { h: I.h, tw: Object.assign({ h: I.win.w * H / W }, I.win), step: 0.02 }), t = POSTERIOR.troc(POSTERIOR.geom(I.st)).find(x => x.inf);   // 2-2: the tip in the cavity
+    return S.svg + ring9(S.P(GLOBE.toPlane(S.r.plane, t.tip)), 9, COL.accent, 2.6); },
+  3: (W, H) => { const I = VP.CH9[2], V = VP.wide(I.st, W, H, I.win, 'n9w3'), Wt = { A: V.A, c: V.P([0, 0]), r: V.M.R * V.k }, a = rimPt(Wt, 11, -6), b = rimPt(Wt, 11, 4), q = rimPt(Wt, 11, 12);   // 5-2: the mound at 11
+    return `<rect width="${W}" height="${H}" fill="#0c0d0f"/>` + V.svg + `<path d="M${F1(a[0])} ${F1(a[1])}L${F1(b[0])} ${F1(b[1])}" stroke="${TEAR_C}" stroke-width="3" stroke-linecap="round"/>` +
+      t9(F1(q[0]), F1(q[1] + 4.3), '11', { size: 12, bold: true, color: TEAR_C, anchor: 'middle' }) + htext(F1(V.A.dep[0] - 22), F1(V.A.dep[1] + 4), TX9.mound, { size: 12, bold: true, anchor: 'end', cls: 't9' }); },   // the model's dashed ring marks the mound
+  5: (W, H) => { const I = VP.CH9[4], V = VP.wide(I.st, W, H, I.win, 'n9w5'), f = V.A.fovea;   // 6-2 lines 2–4: the retained bead by the fovea
+    return V.svg + ring9(V.A.bead, F1(VP.BEAD.r * V.k * 2.2), COL.red, 2.6) + htext(F1(f[0] + 10), F1(f[1] + 22), 'fovea', { size: 12, bold: true, color: COL.ink, cls: 't9' }); },
+  7: (W, H) => { const I = VP.CH9[6], E = VP.ext(I.st, W, H, I.win, 'n9e7');   // 7-3 line 2: every cannula out, each wound checked
+    return E.svg + ['it', 'st', 'sn'].map(id => ring9(E.A['cj_' + id] || E.A['troc_' + id], 10, COL.accent, 2.4, '4 3')).join(''); },
+  8: (W, H) => { const I = VP.CH9[7], F = headFig(I.st, 'n9h8', 0, 48, 78, [108, 52], 36);   // 8-1: sitting, the bubble at the top over the 11 o'clock tear
+    return F.svg + ring8(F.m(F.M.tearMid), 5, '#c8361f', 1) + t9(108, 112, TX9.r8[5], { size: 12, bold: true, color: COL.sub, anchor: 'middle' }); },
+};
+// card 4's icons (示意), centred at (x, y): the retina sucked up to the cutter's port; a new break; an instrument close to the back of the lens
+const ICON9 = [
+  (x, y) => `<g transform="translate(${x} ${y})"><path d="M-24 10C-8 10 -7 -4 0 -4C7 -4 8 10 24 10" fill="none" stroke="#c97b6a" stroke-width="3.5"/><path d="M6 -8L24 -22" stroke="#6b737c" stroke-width="7" stroke-linecap="round"/></g>`,
+  (x, y) => `<g transform="translate(${x} ${y})"><rect x="-24" y="-13" width="48" height="26" rx="6" fill="#d9703c"/><path d="M-7 -8V2A7 7 0 0 0 7 2V-8" fill="none" stroke="#7e1c10" stroke-width="3"/></g>`,
+  (x, y) => `<g transform="translate(${x} ${y})"><ellipse cx="-8" cy="0" rx="9" ry="14" fill="#eef3f7" stroke="#9aa5b1" stroke-width="2"/><path d="M24 -10L5 2" stroke="#6b737c" stroke-width="5" stroke-linecap="round"/>` +
+    `<path d="M2 -16v8" stroke="${COL.red}" stroke-width="2.6" stroke-linecap="round"/><circle cx="2" cy="-3.5" r="1.6" fill="${COL.red}"/></g>`,
+];
+// card 8's icons: a gas cylinder, an aeroplane (8-3's) and the warning card (8-3's, small), the first two struck out
+const ICON8 = [
+  (x, y) => `<g transform="translate(${x} ${y})"><rect x="-5" y="-8" width="10" height="17" rx="4" fill="#9aa5b1"/><rect x="-2.5" y="-11" width="5" height="4" fill="#5b6878"/></g>` + slash9(x, y, 11),
+  (x, y) => plane8(x, y, 0.16, 1) + slash9(x, y, 11),
+  (x, y) => `<g transform="translate(${x} ${y})"><rect x="-11" y="-8" width="22" height="16" rx="2.5" fill="#fff" stroke="${COL.red}" stroke-width="1.6"/><rect x="-11" y="-8" width="22" height="5" fill="${COL.red}"/></g>`,
+];
+
+DRAW2['9'] = T => {
+  const G9 = VP.GRID9, W9 = G9.w, H9 = G9.h, R = (s, o) => [s, o];
+  let s = '';
+  // line 0: the heading only (fades as the first card comes in)
+  const opH = 1 - T.on(1, 0.6);
+  if (opH > 0) s += `<g opacity="${F1(opH)}">` + text(FW / 2, 186, TX9.head, { size: 38, bold: true, anchor: 'middle', cls: 'h9' }) + text(FW / 2, 236, TX9.sub, { size: 19, color: COL.sub, anchor: 'middle', cls: 'h9' }) + '</g>';
+  // card 6: 7-2's syringe in three steps over line 6 (C3F8: no scale; the amount kept is a hatched band, 依院內常規)
+  const syr6 = () => { const rg = VP.SYR.c3f8.range, F50 = VP.SYR.full, vEnd = rg[1] * F50, p1 = T.p(6, 0.05, 0.3), p2 = T.p(6, 0.35, 0.55), p3 = T.p(6, 0.6, 0.85), sc = 0.62, X0 = 30, Y0 = 74;
+    const S = p3 > 0 || p2 >= 1 ? { total: lerp(vEnd, F50, p3), keep: null, range: rg } : { total: p2 > 0 ? lerp(F50, vEnd, p2) : F50 * p1, keep: null, range: rg, pureAll: true };
+    const ph = p3 > 0 ? 3 : p2 > 0 ? 2 : 1, done = p3 >= 1, r = TX9.r6;
+    return `<g transform="translate(${X0} ${Y0}) scale(${sc})">${syringe(0, 200, 0, Object.assign({ id: 'n9sy', label: false }, S))}</g>` + t9(F1(X0 + 200 * sc), Y0 - 22, r[4], { size: 13, bold: true, color: '#3b4752', anchor: 'middle' }) +
+      t9(X0, Y0 - 22, r[5], { size: 13, bold: true, color: '#9a6412', op: ph < 3 ? 1 : 0 }) +
+      col9(14, 120, [0, 1, 2].map(i => R(r[i], { size: 14, bold: !done && i + 1 === ph, color: !done && i + 1 === ph ? COL.accent : COL.ink })).concat([R(r[3], { size: 14, bold: true, color: COL.red, gap: 2 })])); };
+  const body = {
+    1: () => pic9(1, PIC9F[1], '#0c0d0f') + col9(G9.tx, 64, [R(TX9.r1[0], Object.assign({ size: 16 }, HST)), R(TX9.r1[1], { size: 16, bold: true }), R(TX9.r1[2], { size: 16, bold: true, color: COL.accent }),
+      R(TX9.r1[3], { size: 13, color: COL.sub, gap: 6 }), R(TX9.r1[4], { size: 13, color: COL.sub })]),
+    2: () => pic9(2, PIC9F[2]) + col9(G9.tx, 64, [R(TX9.r2[0], { size: 15, bold: true }), R(TX9.r2[1], { size: 15, bold: true, color: COL.accent }), R(TX9.r2[2], { size: 13, color: COL.sub, gap: 6 }), R(TX9.r2[3], { size: 13, color: '#24527d' })]),
+    3: () => pic9(3, PIC9F[3], '#0c0d0f') + col9(G9.tx, 64, [R(TX9.r3[0], { size: 15, bold: true }), R(TX9.r3[1], { size: 15, bold: true, color: COL.accent }), R(TX9.r3[2], { size: 15, bold: true }), R(TX9.r3[3], { size: 15, bold: true, color: COL.accent }),
+      R(TX9.r3[4], { size: 13, color: COL.sub, gap: 4 })]),
+    4: () => [0, 1, 2].map(i => ICON9[i](40, 62 + i * 36) + t9(78, 68 + i * 36, TX9.r4[i], { size: 15, bold: true })).join('') + t9(14, 174, TX9.r4[3], { size: 17, bold: true, color: COL.red }) + t9(W9 - 10, 174, TX9.r4[4], { size: 12, color: COL.sub, anchor: 'end' }),
+    5: () => pic9(5, PIC9F[5]) + col9(G9.tx, 64, [R(TX9.r5[0], { size: 15, bold: true }), R(TX9.r5[1], { size: 15, bold: true, color: C_PF }), R(TX9.r5[2], { size: 15, bold: true, color: COL.accent }), R(TX9.r5[3], { size: 13, color: COL.sub })]),
+    6: syr6,
+    7: () => pic9(7, PIC9F[7]) + col9(G9.tx, 64, [R(TX9.r7[0], { size: 15, bold: true, color: COL.accent }), R(TX9.r7[1], { size: 15, bold: true }), R(TX9.r7[2], { size: 15, bold: true, color: COL.accent }), R(TX9.r7[3], { size: 13, color: COL.sub, gap: 6 })]),
+    8: () => pic9(8, PIC9F[8]) + col9(G9.tx, 62, [R(TX9.r8[0], { size: 14, bold: true }), R(TX9.r8[1], { size: 14, bold: true })]) +
+      [0, 1, 2].map(i => ICON8[i](G9.tx + 12, 112 + i * 27) + t9(G9.tx + 32, 117 + i * 27, TX9.r8[2 + i], { size: 14, bold: true, color: COL.red })).join(''),
+  };
+  // lines 1–8: card n comes in with line n and stays; the card of the current line is highlighted
+  for (let n = 1; n <= 8; n++) { const op = T.on(n, 0.6); if (!(op > 0)) continue;
+    const hl = T.on(n, 0.4) * (n < 8 ? 1 - T.on(n + 1, 0.4) : 1) > 0.5, [x, y] = VP.card9(n);
+    s += `<g class="c9" data-n="${n}" data-hl="${hl ? 1 : 0}" transform="translate(${x} ${y})" opacity="${F1(op)}">` +
+      `<rect class="cb9" width="${W9}" height="${H9}" rx="10" fill="${hl ? '#eaf5f1' : '#f7f9fa'}" stroke="${hl ? COL.accent : '#d3dae1'}" stroke-width="${hl ? 3 : 1.2}"/>` +
+      `<circle cx="22" cy="23" r="14" fill="${hl ? COL.accent : '#5b6878'}"/>` + t9(22, 29, NUM9[n - 1], { size: 16, bold: true, color: '#fff', anchor: 'middle' }) +
+      t9(44, 29, TX9.t[n - 1], { size: 17, bold: true, color: hl ? COL.accent : COL.ink }) + body[n]() + '</g>'; }
+  return { F: { svg: s, extra: '', P: TX9.P } };
 };
