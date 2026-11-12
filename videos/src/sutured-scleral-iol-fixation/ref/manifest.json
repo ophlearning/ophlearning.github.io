@@ -1,8 +1,8 @@
 {
-  "about": "鞏膜縫合固定 IOL（sutured scleral fixation，MA60AC＋10-0 Prolene＋兩個三角鞏膜瓣＋23G TPPV）的檢查：還在模型階段，只有模型樣本 globe/sample-sfix.html 的參考圖。改了 globe/sfix.js 或樣本頁後跑 node videos/tools/check-all.js videos/src/sutured-scleral-iol-fixation；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。影片頁做好後把 page 改成 ../anim/video.html、textBase 填旁白定稿的 commit。",
-  "page": null,
-  "textBase": null,
-  "textBaseNote": "還沒有影片頁（page: null），check-all.js 把影片層級檢查標成 SKIP。",
+  "about": "鞏膜縫合固定 IOL（sutured scleral fixation，MA60AC＋10-0 Prolene＋兩個三角鞏膜瓣＋23G TPPV）的檢查：模型樣本 globe/sample-sfix.html 與影片頁 anim/video.html 已做畫面的段落（片頭、第 1、2 章）每段一張參考圖；第 3–9 章是佔位畫面，不進參考圖。改了 globe/sfix.js、樣本頁或影片畫面後跑 node videos/tools/check-all.js videos/src/sutured-scleral-iol-fixation；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": "../anim/video.html",
+  "textBase": "b6bb8bc",
+  "textBaseNote": "旁白、重點、來源、章節與參考文獻第 1 版（2026-11-12）的 commit；check-video.js 以它比對文字。改旁白時：改 segments.js、重做參考圖，commit 後把 textBase 換成那個 commit。還沒有 timeline.js（語音未合成），參考圖用 kit 的字數估計時間軸；合成語音、timeline.js 進 git 後要重做參考圖。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
@@ -19,6 +19,110 @@
       "crop": null,
       "approved": "2026-11-12",
       "note": "Claude 自檢（dpr 1 看全圖；dpr 2 裁切放大三列：俯視的兩個固定點、量尺與方位標籤、2 點放大的垂直進針（0.58／1／2 mm）、2–8 全景＋放大框、量錯線（從透明角膜邊緣量 1 mm）、2 mm 對照、trocar 與三角瓣、瓣下進針、直針接 27G（切面與俯視）、勾出剪斷綁 haptic、縫好的 IOL（切面與俯視）、瓣下線結、不對稱傾斜、滑脫與線結外露；shot-model.js 加 1 mm 格線放大到 1.8–3 mm 視窗看睫狀溝與綁線點、瓣的鉸鏈、線結、俯視的瓣與記號；落點、兩圖一致、方位、穿針路徑、IOL 位置與數字由 globe/check.js 第 15 節檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "title",
+      "at": "2:0.6",
+      "ref": "title-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-1",
+      "at": "2:0.6",
+      "ref": "1-1-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-2",
+      "at": "3:0.6",
+      "ref": "1-2-L3-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-3",
+      "at": "2:0.6",
+      "ref": "1-3-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-4",
+      "at": "2:0.6",
+      "ref": "1-4-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-1",
+      "at": "4:0.6",
+      "ref": "2-1-L4-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-2",
+      "at": "2:0.6",
+      "ref": "2-2-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-3",
+      "at": "3:0.6",
+      "ref": "2-3-L3-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-4",
+      "at": "2:0.6",
+      "ref": "2-4-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-5",
+      "at": "3:0.6",
+      "ref": "2-5-L3-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-6",
+      "at": "2:0.6",
+      "ref": "2-6-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-7",
+      "at": "3:0.6",
+      "ref": "2-7-L3-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-8",
+      "at": "2:0.6",
+      "ref": "2-8-L2-0.6.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（dpr 1 看全圖、2-1 與 2-4 的 2 點放大處 dpr 2 裁切放大：兩個零點與 0.85 mm 尺寸線、對錯兩支針的針路（紅＝隅角、虹膜前；綠＝經睫狀溝到虹膜後）、垂直針打到虹膜根；標籤位置由 check-video.js 檢查：在面板內、不重疊；數字、措辭、兩圖同一點由 check.js 檢查）。第 1 版畫面，時間軸是字數估計，合成語音後重做"
     }
   ]
 }
