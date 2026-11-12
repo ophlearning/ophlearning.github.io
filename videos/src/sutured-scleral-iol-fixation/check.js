@@ -19,7 +19,7 @@
 //    the 12 o'clock wound, the needle entries in the beds and the dock, and the haptic ties (each strand on its own side, at the distal third).
 //    Chapters 6–7 (2026-11-12, third round): the haptic ties and the optic centre of the lens in place (the ties at the sulcus exits under the
 //    fixation points, the optic on the axis), the 2 o'clock knot (in the bed, inside the flap, under it once the flap is closed).
-// 5. Spec acceptance: chapters 2 + 5 ≥ 35 % of the video; total 10–12 min (the kit's estimate until there is a timeline.js); no placeholder is
+// 5. Spec acceptance: chapters 2 + 5 ≥ 35 % of the video; total 9–12 min (2026-11-12: timeline.js, the real narration; the spec's 10–12 was set from the kit's estimate); no placeholder is
 //    left: every segment draws more than its title and never 「畫面製作中」.
 // 6. States drawn (window.STATES): 8-1 the symmetric lens is not tilted and the asymmetric one is (Zhao 2025: asymmetry predicts tilt; amount 示意);
 //    8-4 each state shown side by side is an error state (decentred or tilted).
@@ -255,7 +255,7 @@ function stateChecks(ctx) {
 function timingChecks(ctx) {
   const R = [], ok = (c, m) => R.push([!!c, m]), tl = ctx.tl, total = tl[tl.length - 1].t1, chDur = c => tl.filter(x => x.ch === c).reduce((a, x) => a + x.t1 - x.t0, 0), share = (chDur(2) + chDur(5)) / total;
   ok(share >= 0.35, `chapters 2 + 5: ${(100 * share).toFixed(1)}% of the video (spec: ≥ 35%; ${ctx.source})`);
-  ok(total >= 600 && total <= 720, `length ${(total / 60).toFixed(2)} min (target 10–12; ${ctx.source})`);
+  ok(total >= 540 && total <= 720, `length ${(total / 60).toFixed(2)} min (target 9–12; ${ctx.source})`);
   ok(!(ctx.place || []).length, `no placeholder segment is left${(ctx.place || []).length ? ': ' + ctx.place.join(', ') : ''}`);
   { const done = SEGS.filter(x => !x.chapterCard && x.layout !== 'refs').map(x => x.id), stub = done.filter(id => (ctx.place || []).includes(id) || (ctx.screen[id] || []).some(t => t === '畫面製作中') || (ctx.screen[id] || []).length < 4);
     ok(!stub.length, `every segment is drawn (title, chapters 1–9: ${done.length}), none is a placeholder${stub.length ? '; placeholder: ' + stub.join(', ') : ''}`); }

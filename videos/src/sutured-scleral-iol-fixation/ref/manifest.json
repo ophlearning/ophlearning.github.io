@@ -2,7 +2,7 @@
   "about": "鞏膜縫合固定 IOL（sutured scleral fixation，MA60AC＋10-0 Prolene＋兩個三角鞏膜瓣＋23G TPPV）的檢查：模型樣本 globe/sample-sfix.html 與影片頁 anim/video.html 每段一張參考圖（片頭、第 1–9 章，2026-11-12 起全片沒有佔位畫面）。改了 globe/sfix.js、樣本頁或影片畫面後跑 node videos/tools/check-all.js videos/src/sutured-scleral-iol-fixation；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
   "textBase": "72da863",
-  "textBaseNote": "旁白、重點、來源、章節與參考文獻的基準 commit（第 1 版 b6bb8bc；2026-11-12 改成 72da863：7-1 第 1 句補上「8 點那頭怎麼固定，依主治」）；check-video.js 以它比對文字。改旁白時：改 segments.js、重做參考圖，commit 後把 textBase 換成那個 commit。還沒有 timeline.js（語音未合成），參考圖用 kit 的字數估計時間軸；合成語音、timeline.js 進 git 後要重做參考圖。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。",
+  "textBaseNote": "旁白、重點、來源、章節與參考文獻的基準 commit（第 1 版 b6bb8bc；2026-11-12 改成 72da863：7-1 第 1 句補上「8 點那頭怎麼固定，依主治」）；check-video.js 以它比對文字。改旁白時：改 segments.js、重做參考圖，commit 後把 textBase 換成那個 commit。2026-11-12 合成語音：anim/timeline.js 進 git，參考圖改用真實語音的時間軸重新比對，全部 0.000%（畫面依每句的比例時刻畫，沒有變），不需更新；改了旁白要重做語音與參考圖。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
