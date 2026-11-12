@@ -1,0 +1,76 @@
+站在助手的位置預習一台 RRD 的 23G 三孔 PPV＋C3F8（左眼、11 點 horseshoe tear、fovea 還貼著）：廣角系統的倒像與 inverter、壓鞏膜的鐘點、開 infusion 前看套管尖端、視網膜下殘留的 PFCL、C3F8 的不膨脹濃度與備氣的錯誤、關傷口檢查漏，以及術後頭位、N2O 與搭飛機。
+
+畫面為左眼 OS、術者坐 12 點的示意動畫（機轉切面＋術者視角兩圖同步），不是手術錄影，比例不精確。中間步驟依主刀決定；藥物、器械、機器設定與 C3F8 的抽量依院內常規。
+
+章節
+0:00 片頭
+0:13 1 這台刀的地圖
+2:14 2 架設
+3:32 3 看懂畫面
+4:38 4 Core vitrectomy 與 PVD
+5:29 5 周邊 shaving 與壓鞏膜
+6:44 6 讓視網膜貼回
+7:40 7 雷射、C3F8 與關傷口
+9:20 8 術後
+11:28 9 助手清單
+12:16 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Yoshida 2018. Clin Ophthalmol 12:2213-22
+2. Shunmugam 2014. Am J Ophthalmol 157:221-6.e1
+3. Kontos 2017b. Br J Ophthalmol 101:1011-5
+4. Callizo 2017. Graefes Arch Clin Exp Ophthalmol 255:1559-64
+5. Sothivannan 2022. Am J Ophthalmol 244:19-29
+6. Ferro Desideri 2024. Graefes Arch Clin Exp Ophthalmol 262:679-87
+7. Adelman 2014. Ophthalmology 121:1715-9
+8. Wickham 2011. Br J Ophthalmol 95:1234-8
+9. Schwartz 2020. Cochrane Database Syst Rev 5:CD006126
+10. EyeWiki 2026. Pars plana vitrectomy
+11. Duker 2021. J Vitreoretin Dis 5:333-6
+12. Li 2025. BMC Ophthalmol 25:686
+13. Warrier 2008. Indian J Ophthalmol 56:453-8
+14. Singh 2008. Retina 28:242-8
+15. Tei 2005. Am J Ophthalmol 139:1130-3
+16. EyeWiki 2026. Macula-on rhegmatogenous retinal detachment
+17. Treviño-Herrera 2023. Int J Surg Case Rep 108:108441
+18. Boral 2024. Indian J Ophthalmol 72:1840
+19. Spitznas 1987. Graefes Arch Clin Exp Ophthalmol 225:9-12
+20. Chalam 2004. Surv Ophthalmol 49:437-45
+21. Lai 2019. BMC Ophthalmol 19:230
+22. Chandrakanth 2025. Indian J Ophthalmol 73:1687-90
+23. Sakamoto 2002. Graefes Arch Clin Exp Ophthalmol 240:423-9
+24. Teixeira 2010. Ophthalmology 117:1387-92
+25. Schwartz 2008. Clin Ophthalmol 2:57-63
+26. Sohn 2020. Retina 40:943-50
+27. Govetto 2024. Retina 44:269-79
+28. Jackson 2013. Eye (Lond) 27:644-51
+29. Neffendorf 2017. Eur J Ophthalmol 27:226-30
+30. Chang 1988. Am J Ophthalmol 106:668-74
+31. Fukuyama 2024. Sci Rep 14:7795
+32. Figueroa 2013. Eur J Ophthalmol 23:417-22
+33. Garg 2012. Retina 32:2127-32
+34. Sigler 2013. Retin Cases Brief Rep 7:164-8
+35. Vaziri 2016. Clin Ophthalmol 10:471-6
+36. Wang 2020. Retina 40:2070-6
+37. Yaldo 2026. Acta Ophthalmol 104:731-41
+38. Brosh 2014. Eye (Lond) 28:892-4
+39. Foulsham 2021. Retin Cases Brief Rep 15:564-7
+40. Kanclerz 2018a. J Ophthalmol 2018:8606494
+41. Kanclerz 2018b. Case Rep Ophthalmol 9:405-10
+42. Williams 1990. Arch Ophthalmol 108:1484-6
+43. Shunmugam 2011. Invest Ophthalmol Vis Sci 52:8262-5
+44. Woo 2009. Retina 29:456-63
+45. Duval 2014. Retina 34:679-83
+46. Agarwalla 2024. Retina 44:1150-6
+47. Liang 2023. Clin Ophthalmol 17:3389-96
+48. Casswell 2020. JAMA Ophthalmol 138:634-42
+49. Hart 2002. Am J Ophthalmol 134:761-3
+50. Lee 2004. Br J Anaesth 93:464-6
+51. Silvanus 2008. Dtsch Arztebl Int 105:108-12
+52. Fu 2002. Retina 22:569-74
+53. Houston 2012. Aviat Space Environ Med 83:809-10
+54. Mills 2001. Ophthalmology 108:40-4
+55. Kontos 2017a. Graefes Arch Clin Exp Ophthalmol 255:231-6
+56. Chen 1997. Ophthalmic Surg Lasers 28:37-42
+57. Muether 2011. Retina 31:1545-52
+58. Lee 2014. Graefes Arch Clin Exp Ophthalmol 252:1711-6
