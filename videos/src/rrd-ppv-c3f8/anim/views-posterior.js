@@ -78,6 +78,44 @@ const VP = (() => {
     }
     return out;
   }
+  // chapter 4 (core vitrectomy, TA, PVD; the cutter near the detached retina). Instruments only through the case's trocars (P.trocarsFor('OS')):
+  // the vitrector in the superonasal 10:30 port, the light pipe in the superotemporal 1:30 port (as PRESET.core and chapters 1–3: the surgeon at
+  // 12 is right-handed, the 10:30 port is on his right). Tip positions, the amount cut, the PVD steps and the suction demonstration are 示意.
+  const c01 = x => Math.max(0, Math.min(1, x)), mix3 = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+  const SEC4_H = 10.5;                // 4-1: the section through the vitrector's port (right = 10:30 superonasal; left = 4:30 inferotemporal, the infusion)
+  const inPl4 = (r, z) => { const [cx, cy] = G.clockDir(SEC4_H); return [r * cx, r * cy, z]; };   // a point of that section: r mm toward 10:30, z anterior
+  const LIGHT4 = { kind: 'light', port: 'st', tip: inPl4(-2.6, -3.4) };   // the light pipe's tip in the section (it comes in from the viewer's side, 1:30)
+  const CUT4 = 0.85;                  // core vitrectomy: the gel left within about 7 mm of the retina (示意; the model's shell = lerp(30, 3, cut))
+  const CORE_STEPS = 4, CORE_TIPS = [inPl4(1.6, -0.6), inPl4(-1.4, -2.6), inPl4(1.0, -4.6), inPl4(-0.8, -6.0), inPl4(0.4, -3.2)];   // the cutter sweeping the centre
+  const PVD_STEPS = 6, PVD_TIP = [inPl4(-0.6, -9.4), inPl4(-0.6, -7.2)];   // 4-1 line 3: the cutter at the posterior pole, lifting as the hyaloid comes off
+  const st4 = o => Object.assign({}, P.CASE, { troc: true }, o), vitr = tip => ({ kind: 'vitrector', port: 'sn', tip });
+  // core vitrectomy k (0 → 1) of the way in CORE_STEPS steps, in the case (PVD present: P.CASE.pvd = 1); ta 0 or 1
+  const coreStep = (k, ta = 0) => { const n = Math.round(c01(k) * CORE_STEPS); return st4({ vit: { cut: CUT4 * n / CORE_STEPS }, ta, inst: [vitr(CORE_TIPS[n]), LIGHT4] }); };
+  // 4-1 line 3 (示意: an eye whose posterior hyaloid is still attached): the PVD k (0 → 1) of the way in PVD_STEPS steps, after the core and the TA
+  const pvdStep = k => { const n = Math.round(c01(k) * PVD_STEPS) / PVD_STEPS; return st4({ vit: { cut: CUT4 }, ta: 1, pvd: n, inst: [vitr(mix3(PVD_TIP[0], PVD_TIP[1], n)), LIGHT4] }); };
+  // 4-2: the cutter near mobile detached retina (superotemporal, behind the equator, bullous in the model; 示意), approaching in 3 steps (mm in front
+  // of the detached retina), then the retina sucked toward its port in SUCK_STEPS steps (錯誤示範). Both views of a frame take the same state.
+  const SUCK_AT = { h: 1, s: 16 }, E42 = [2.6, 1.8, 1.0], SUCK_STEPS = 3;
+  const LIGHT42 = { kind: 'light', port: 'st', tip: [4.5, 2.5, -1] };   // 2 mm off PLANE42 on one side: it does not cross or glow in the 4-2 section
+  // the lift that brings the retina's inner surface up to the cutter's port (the edge of the shaft), on the wall normal under the port
+  function suckAt(st, k) { const Gm = P.geom(st), I = P.instGeom(Gm, st.inst[0]), q = I.portAt, h = G.clockOf(q[0], q[1]), s0 = P.wallOf(q[2], Math.hypot(q[0], q[1])).s;
+    let s = s0, best = 9; for (let x = s0 - 1.5; x <= s0 + 1.5; x += 0.001) { const d = G.len(G.cross(G.sub(q, P.P3(h, x, 0)), P.N3(h, x))); if (d < best) { best = d; s = x; } }   // the wall point whose normal passes the port
+    const lift = G.len(G.sub(q, Gm.ret(h, s, 1))) - P.N.shaft / 2 + 0.05; return { h, s: +s.toFixed(3), amt: lift * k, w: 1.0 }; }
+  // the tip is fixed in 3D from the unsucked retina (e mm in front of it), so the cutter does not move when the retina comes up
+  const st42 = (e, k = 0) => { const s0 = st4({ vit: { cut: CUT4 }, ta: 1, inst: [vitr({ h: SUCK_AT.h, s: SUCK_AT.s, e }), LIGHT42] });
+    const st = Object.assign({}, s0, { inst: [vitr(P.instTip(P.geom(s0), s0.inst[0]).map(v => +v.toFixed(4))), LIGHT42] });
+    const n = Math.round(c01(k) * SUCK_STEPS) / SUCK_STEPS; if (n > 0) st.suck = suckAt(st, n); return st; };
+  // 4-2 line 1: the pull on the retina, 示意 of the direction only (Teixeira 2010, porcine eyes: more with higher vacuum and closer to the retina,
+  // less with a higher cut rate). Inputs 0 → 1 without units (no values on screen); output 0 → 1 = the arrow's length
+  const traction = (vac, dist, cut) => c01(vac) * (1 - 0.7 * c01(dist)) * (1 - 0.65 * c01(cut));
+  const distOf = e => 0.1 + 0.9 * (e - E42[2]) / (E42[0] - E42[2]);   // the distance bar from the tip's distance to the retina (示意 scale)
+  const TR42 = { s0: { vac: 0.3, e: 1.8, cut: 0.2 }, s1: { vac: 1, e: 1.8, cut: 0.2 }, s2: { vac: 1, e: 1.0, cut: 0.2 }, s3: { vac: 1, e: 1.0, cut: 1 },   // line 1: vacuum up, closer, cut rate up
+    low: { vac: 0.3, e: 1.0, cut: 1 } };                                                                                                          // line 2: high cut rate, low vacuum
+  Object.assign(ST, { core4: coreStep(1), ta4: coreStep(1, 1), pvd0: pvdStep(0), pvd1: pvdStep(1), near42: st42(E42[2]), suck42: st42(E42[2], 1) });
+  // 4-2: the plane through the cutter's shaft and the wall normal at SUCK_AT (screen down = outward, the wall at the bottom; the shaft up to the right).
+  // Every approach step's tip lies on that normal line, so the whole shaft is in the plane at every step.
+  const PLANE42 = (() => { const st = st42(E42[2]), Gm = P.geom(st), I = P.instGeom(Gm, st.inst[0]), foot = Gm.ret(SUCK_AT.h, SUCK_AT.s, 1), V = P.N3(SUCK_AT.h, SUCK_AT.s);
+    const d = G.sub(I.port.pivot, foot), U = G.unit(G.sub(d, V.map(v => v * G.dot(d, V)))); return { O: foot, U, V, kind: 'inst' }; })();
   // drawing constants checked by check.js against the case or the literature
   const RD_ARC = [11.5, 17];          // the detachment's extent drawn round the chart: 11:30 clockwise via 12 and 3 to 5 o'clock (病例)
   const LINCOFF = { c: 12, half: 1.5 };   // superior detachment crossing 12: primary break within 1.5 clock hours of 12 (Yoshida 2018)
@@ -112,6 +150,8 @@ const VP = (() => {
     secD: { x: -13.6, y: -21.6, w: 36, h: 35.33 },         // 3-1 line 4: the section computed wider, so the depressor at 11 o'clock is not cut off
     depZ: { x: 3.2, y: -8.6, w: 14 },                      // 3-2 lines 4–6: the 11 o'clock periphery with the dent, the tear and the depressor (11–5 section)
     depZT: { x: 3.2, y: -8.6, w: 14, h: 9.48 },
+    z42: { x: -8.31, y: -5.16, w: 14 },                    // 4-2: around the cutter's tip in PLANE42 (tip at 360, 180 px; the detached retina, SRF and wall below; room top left)
+    z42T: { x: -8.31, y: -5.16, w: 14, h: 9.48 },
   };
   const LOOK_INF = { h: INF_H, deg: 45 };                  // 2-2: the surgeon looks toward the infusion (示意, as the model looks toward 11 for the tear)
   const OR = {   // orientation lines (POSTERIOR.orient: checked in posterior/check.js B2, B5)
@@ -125,6 +165,8 @@ const VP = (() => {
     wide: P.orient.wide('OS', true, 12).replace('術者坐 12 點　', '').replace('：下＝12 點　', '：下＝12 點、') + '　看向灌注（示意）',
     wideOn: P.orient.wide('OS', true, 12),                 // chapter 3: 左眼 OS　術者坐 12 點　inverter 開：下＝12 點　temporal 在左
     wideOff: P.orient.wide('OS', false, 12),               // inverter 關（倒像）：下＝6 點　temporal 在右
+    sec4: (() => { const o = P.orient.section(SEC4_H, 'OS'); return `左眼 OS　上＝前　右＝${P.clockName(o.right)}　從 ${P.clockName(o.from)}那側看`; })(),
+    z42: '左眼 OS　上方偏顳側、赤道後　上＝玻璃體腔　下＝眼球壁',
   };
 
   // ---------------------------------------------------------------- views
@@ -171,7 +213,7 @@ const VP = (() => {
   }
   // wide-angle view with the cannulas: each cannula drawn from where it leaves the wall into the cavity to its tip (the same 3D points as the section),
   // shaft width from the distance to the viewpoint (as the model draws instruments), clipped to the field. Anchors cannula_<id> (tip), cannulaIn_<id>
-  function wide(st, W, H, win, id) {
+  function wide(st, W, H, win, id, o2 = {}) {
     const c = cam(win, W, H), r = P.wide({ st, id }), Gm = r.Gm, Wm = r.map, f = P.makeCtx(Gm), kp = P.keyPoints(), A = Object.assign({}, r.A), o = [];
     for (const t of P.troc(Gm)) { if (!(t.ins >= 1) || t.out >= 1) continue;
       const at = u => G.add(t.base, G.sub(t.tip, t.base).map(v => v * u));
@@ -185,12 +227,43 @@ const VP = (() => {
         `<circle cx="${tip[0][0].toFixed(3)}" cy="${tip[0][1].toFixed(3)}" r="${(tip[1] * 0.42).toFixed(3)}" fill="#2b3036" stroke="#e8edf1" stroke-width="1.2" ${G.NS}/>`);
       A['cannula_' + t.id] = tip[0]; A['cannulaIn_' + t.id] = pts[0][0]; A['cannulaU0_' + t.id] = u0; }
     A.rdInf = Wm.proj(Gm.ret(INF_H, P.oraAt(INF_H, 1) + 4, 1));   // the detached retina behind the infusion port
+    // 4-2 (示意): the retina sucked toward the cutter — the lifted patch (rings at 1.3 w round the apex, the same 3D retina as the section), folds to the apex
+    if (Gm.suck) { const sk = Gm.suck, rr = P.surfAt(sk.s).rho * 30 * D2R, ring = [], ap = Wm.proj(Gm.ret(sk.h, sk.s, 1));
+      for (let i = 0; i <= 48; i++) { const a = 2 * Math.PI * i / 48; ring.push(Wm.proj(Gm.ret(sk.h + 1.3 * sk.w * Math.cos(a) / rr, sk.s + 1.3 * sk.w * Math.sin(a), 1))); }
+      const rad = Math.max(...ring.map(q => Math.hypot(q[0] - ap[0], q[1] - ap[1])));
+      o.push(`<defs><radialGradient id="${id}_sk" cx="${ap[0].toFixed(3)}" cy="${ap[1].toFixed(3)}" r="${rad.toFixed(3)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/><stop offset="0.6" stop-color="#f3eee6" stop-opacity="0.7"/><stop offset="1" stop-color="#d9d2c6" stop-opacity="0.25"/></radialGradient></defs>`,
+        `<path d="M${ring.map(G.F).join('L')}Z" fill="url(#${id}_sk)" stroke="#8a7f70" stroke-width="1" ${G.NS}/>`,
+        ring.filter((q, i) => i % 6 === 3).map(q => `<path d="M${G.F(q)}L${G.F(ap)}" stroke="#9c9182" stroke-width="1" ${G.NS}/>`).join(''));
+      A.suck = ap; }
+    // TA specks: the same 3D samples as the model's wide view (posterior.js wide()); anchor taSpeck = the drawn speck nearest o.taNear (field mm)
+    if (st.ta > 0 && o2.taNear) { const ff = P.makeCtx(Gm); let best = 1e9;
+      for (let k = 0; k < 900; k++) { if (G.hash(k, 11) > 0.6 * st.ta) continue; const p = [24 * G.hash(k, 12) - 12, 24 * G.hash(k, 13) - 12, 20 * G.hash(k, 14) - 12];
+        if (G.len(p) > 12 || !(ff.gel(ff.at(p)) < 0)) continue; const q = Wm.proj(p), d = Math.hypot(q[0] - o2.taNear[0], q[1] - o2.taNear[1]); if (d < best) { best = d; A.taSpeck = q; } } }
+    // 4-1 line 3 (示意): where the posterior hyaloid has come off, a ring half way up its rise (the model's PVD: from the pole out to the vitreous base)
+    if (o2.pvdRing && st.pvd > 0) { const ring = []; let ok = true;
+      for (let i = 0; i <= 96 && ok; i++) { const h = 12 * i / 96, sp = P.S_POLE + 2 + (P.vbPostAt(h, Gm.ts) - P.S_POLE - 2) * st.pvd, s = sp + 2.5;
+        if (s > P.S_POLE - 0.4) ok = false; else ring.push(Wm.proj(P.P3(h, s, P.Tp(s) + P.chorAt(s) + Gm.rtHS(h, s) + P.N.pvdGap / 2))); }
+      if (ok) { o.push(`<path d="M${ring.map(G.F).join('L')}Z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-dasharray="6 4" opacity="0.95" ${G.NS}/>`); A.pvdRing = ring[60]; A.pvdRingL = ring[12]; } }
     const svg = `<g transform="${c.tf}">${r.svg}<g clip-path="url(#${id}_f)">${o.join('')}</g></g>`;
     return { svg, A: mapA(A, c.P), M: A, k: c.k, P: c.P, r };
+  }
+  // 4-2: section in PLANE42 (through the cutter's shaft and the wall normal; up = the vitreous cavity, down = the wall). Extra anchors (mm): port (the
+  // cutter's opening, 0.5 mm behind the tip), suck (the apex of the sucked retina, with suck_off = its distance from the plane), and label points
+  // 3.2 mm left of the foot on the detached retina, the subretinal fluid under it, the choroid and the sclera (found along the screen vertical); retF 5.6 mm left
+  function instSec(st, W, H, win, id, o = {}) {
+    const c = cam(win, W, H), pl = PLANE42, r = P.section({ st, plane: pl, win: o.tw || Object.assign({ h: win.w * H / W }, win), step: o.step || 0.02, id, noTissue: o.noTissue });
+    const Gm = r.Gm, f = P.makeCtx(Gm), to = q => G.toPlane(pl, q), A = Object.assign({}, r.A), I = P.instGeom(Gm, st.inst[0]), nrm = G.unit(G.cross(pl.U, pl.V));
+    A.port = to(I.portAt); A.tip = to(I.tip);
+    if (Gm.suck) { const p3 = Gm.ret(Gm.suck.h, Gm.suck.s, 1); A.suck = to(p3); A.suck_off = Math.abs(G.dot(G.sub(p3, pl.O), nrm)); A.suck_3 = p3; }
+    const run = (name, x) => { let a = null, b = null; for (let y = -1; y <= 6; y += 0.01) { const v = f[name](f.at(G.onPlane(pl, x, y))) < 0; if (v && a === null) a = y; if (!v && a !== null) { b = y; break; } } return a === null ? null : [x, (a + (b ?? a)) / 2]; };
+    for (const [k, name, x] of [['retL', 'retina', -3.2], ['srfL', 'srf', -3.2], ['chorL', 'choroid', -3.2], ['sclL', 'sclera', -3.2], ['retF', 'retina', -5.6]]) { const q = run(name, x); if (q) A[k] = q; }
+    const bg = `<rect x="0" y="0" width="${W}" height="${H}" fill="${P.C.bg}"/>`;
+    return { svg: `${bg}<g transform="${c.tf}">${r.svg}</g>`, A: mapA(A, c.P), M: A, k: c.k, P: c.P, r, plane: pl };
   }
   // points round the tear on the attached retina, in its tangent frame (u posterior from the hinge, c across, mm) → chart mm
   function tearChart(st, pts) { const Gm = P.geom(st), T = Gm.tear; return pts.map(([u, cc]) => chartXY(P.onRetina(Gm, T.fr0, u, cc, 1, Gm.ret0).p)); }
   return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
-    portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT };
+    portSt, WIN, OR, D2R, DEP_H, DEP_STEPS, depStep, lookStep, optics, OPT,
+    SEC4_H, inPl4, CUT4, CORE_STEPS, PVD_STEPS, coreStep, pvdStep, SUCK_AT, E42, SUCK_STEPS, st42, suckAt, traction, distOf, TR42, PLANE42, instSec };
 })();
 if (typeof module !== 'undefined') module.exports = VP;

@@ -624,3 +624,120 @@ DRAW2['3-2'] = T => {
   sr += `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f" opacity="${(0.6 * opV).toFixed(3)}"/>` + cantSee(PW / 2, PH / 2 + 10, opV, TX3.see);
   return { L: { svg: sl, extra: el, P: z > 0.5 ? PT.sec3z : PT.sec3 }, R: { svg: sr, extra: er, P: off ? PT.w3depOff : kD > 0 ? PT.w3dep : kL > 0.5 ? PT.w3look : PT.w3on } };
 };
+
+// ---------------------------------------------------------------- 4 Core vitrectomy 與 PVD
+// Chapter 4: 4-1 the section through the vitrector's 10:30 port (the infusion at 4:30 in the same plane; the light pipe comes in from the viewer's
+// side, 1:30, so only its tip is cut) + the surgeon's wide-angle view (inverter on): core vitrectomy → TA specks on the gel → PVD (示意: an eye
+// whose posterior hyaloid is still attached; the case itself has a PVD, P.CASE.pvd = 1) → the TA-coated hyaloid off the retina. 4-2 the plane
+// through the cutter's shaft near mobile detached retina (superotemporal, bullous): the retina sucked into the port (錯誤示範), the pull as an
+// arrow (示意 of the direction in porcine eyes, no values), high cut rate and low vacuum; the same states in the wide-angle view (示意).
+Object.assign(PT, {
+  sec4: { title: '經 10 點半（器械孔）的子午切面', orient: VP.OR.sec4 },
+  w4: { title: '術者的廣角畫面', orient: VP.OR.wideOn.replace('：下＝12 點　', '：下＝12 點、') },
+  z42: { title: '切割頭靠近剝離的視網膜（放大）', orient: VP.OR.z42 },
+});
+const TX4 = {   // texts drawn by helpers (listed for the font preload)
+  card: { title: '拉力的方向（示意，豬眼實驗）', vac: '吸力 vacuum', dist: '離視網膜 distance', cut: '切速 cut rate', up: '大', down: '小' },
+  say: { a: '助手看到視網膜被吸起', b: '→ 馬上說出來' },
+};
+window.PRELOAD_EXTRA = JSON.stringify(PT) + JSON.stringify(TX3) + JSON.stringify(TX4);
+const C_TA = '#7a8792';                                            // TA labels
+// a wide view of a state (inverter on, surgeon at 12) with the clock numbers round it; Wt-like { A, c, r } for the chapter 3 helpers
+function wide4(st, id, o) { const V = VP.wide(st, PW, PH, VP.WIN.wide3, id, o), Wt = { A: V.A, c: V.P([0, 0]), r: V.M.R * V.k }; return { V, Wt, svg: V.svg + clockNums(Wt, 1) }; }
+// the three settings of 4-2 line 1 as bars (no values: 示意 of the direction only) and the pull they give (VP.traction)
+function tractionCard(x, y, s, op) {
+  const W = 268, bar = (row, v, col) => { const yy = y + 46 + row * 30; return text(x + 12, yy + 12, [TX4.card.vac, TX4.card.dist, TX4.card.cut][row], { size: 13.5, color: COL.ink }) +
+    `<rect x="${x + 140}" y="${yy}" width="112" height="13" rx="3" fill="#e6ebef"/><rect x="${x + 140}" y="${yy}" width="${F1(112 * v)}" height="13" rx="3" fill="${col}"/>`; };
+  return `<g opacity="${op}"><rect x="${x}" y="${y}" width="${W}" height="140" rx="9" fill="#fff" stroke="#d3dae1"/>` + text(x + 12, y + 24, TX4.card.title, { size: 14, bold: true }) +
+    bar(0, s.vac, COL.red) + bar(1, VP.distOf(s.e), COL.sub) + bar(2, s.cut, COL.accent) + '</g>';
+}
+const mixS = (a, b, k) => ({ vac: lerp(a.vac, b.vac, k), e: lerp(a.e, b.e, k), cut: lerp(a.cut, b.cut, k) });
+
+DRAW2['4-1'] = T => {
+  const P = POSTERIOR;
+  // ---------------- the state of this frame (both panels): line 0 core vitrectomy in the case; line 1 TA; line 3 the PVD demonstration (示意)
+  const kC = T.p(0, 0.12, 0.85), kT = T.on(1, 0.8, 0.6), kP = T.p(3, 0.25, 0.9), kD = T.on(3, 0.6, 0.15);   // kD: switch to the demonstration
+  const stA = VP.coreStep(kC, 0), stB = VP.ST.ta4, stP = VP.pvdStep(kP);
+  // ---------------- left: the section through the 10:30 port (right = 10:30 superonasal, left = 4:30 inferotemporal)
+  const o = { h: VP.SEC4_H, tw: VP.WIN.secT }, win = VP.WIN.sec;
+  const SA = VP.sec(stA, PW, PH, win, 's41a', o);
+  let sl = SA.svg, a = SA.A;
+  if (kT > 0 && kD < 1) { const SB = VP.sec(stB, PW, PH, win, 's41b', o); sl += `<g opacity="${(kT * (1 - kD)).toFixed(3)}">${SB.svg}</g>`; if (kT > 0.5) a = SB.A; }
+  if (kD > 0) { const SP = VP.sec(stP, PW, PH, win, 's41p', o); sl += `<g opacity="${kD.toFixed(3)}">${SP.svg}</g>`; if (kD > 0.5) a = SP.A; }
+  const toS = p3 => SA.P(GLOBE.toPlane(SA.r.plane, p3)), opDemo = kD * (1 - T.on(4, 0.6, 0.4));
+  // 示意: the hyaloid comes off from the pole outward (arrows along both sides while it separates)
+  { const pts = (h, s0, s1) => { const r = []; for (let s = s0; s >= s1; s -= 0.5) r.push(toS(P.P3(h, s, P.Tp(s) + P.chorAt(s) + 2.2))); return r; }, op = T.p(3, 0.25, 0.4) * (1 - T.p(3, 0.9, 1));
+    sl += arrowP(pts(VP.SEC4_H, P.S_POLE - 2, P.S_POLE - 9), COL.amber, op, 'arrM', 3.5, '7 5') + arrowP(pts(VP.SEC4_H - 6, P.S_POLE - 2, P.S_POLE - 9), COL.amber, op, 'arrM', 3.5, '7 5'); }
+  sl += badge(14, PH - 44, '示意：後玻璃體還沒分開時', COL.sub, opDemo);
+  const opC = 1 - T.on(1, 0.6, 1.2);
+  let el = lab('切割頭', 'vitrector', PW - 12, 330, a.inst0, { side: 'R', bold: true, op: T.on(0) * (1 - T.on(3, 0.6)) + T.on(3, 0.6) * (1 - T.on(4, 0.6)) });
+  el += lab('光導管', 'light pipe（從 1 點半）', 14, 330, a.inst1, { bold: true, color: '#8a6d00', lc: '#8a6d00', op: T.on(0, 0.6, 0.6) * opC });
+  el += lab('器械孔', '10 點半 superonasal', PW - 12, 40, a.troc_sn, { side: 'R', bold: true, op: T.on(0) * opC });
+  el += lab('灌注', '4 點半 infusion', 14, 40, a.troc_it, { bold: true, color: '#24527d', lc: '#24527d', op: T.on(0) * opC });
+  el += lab('先切中央', 'core vitrectomy', 14, 120, toS(VP.inPl4(0, -3)), { bold: true, color: COL.accent, lc: COL.accent, op: T.on(0, 0.6, 0.6) * (1 - T.on(1, 0.6)) });
+  // line 1: TA on the gel; the cut centre has none
+  const gelPt = toS(P.P3(VP.SEC4_H, 20, P.Tp(20) + P.chorAt(20) + 5.2)), opTA = T.on(1, 0.6, 1.4) * (1 - T.on(3, 0.5));
+  el += lab('TA 白色顆粒附在玻璃體上', '', PW - 12, 120, gelPt, { side: 'R', bold: true, color: C_TA, lc: C_TA, op: opTA });
+  el += lab('切掉的中央：沒有顆粒', '', 14, 120, toS(VP.inPl4(0, -3)), { bold: true, color: COL.accent, lc: COL.accent, op: T.on(1, 0.6, 2.2) * (1 - T.on(3, 0.5)) });
+  // lines 3–4: the posterior hyaloid (TA-coated) off the retina; still attached at the vitreous base
+  el += lab('後玻璃體', 'posterior hyaloid', 14, 230, a.hyaloidL, { bold: true, color: C_TA, lc: C_TA, op: T.on(3, 0.6, 0.6) });
+  el += lab('主刀把它分開', 'PVD', 14, 120, a.inst0, { bold: true, color: COL.amber, lc: COL.amber, op: T.p(3, 0.3, 0.4) * (1 - T.on(4, 0.5)) });
+  el += lab('已經和視網膜分開', '（沾了 TA 才看得見）', 14, 276, null, { bold: true, color: COL.accent, op: T.on(4, 0.6, 0.6) });
+  el += lab('vitreous base 仍黏著', '', PW - 12, 40, a.vbR, { side: 'R', bold: true, color: '#4f6d3a', lc: '#4f6d3a', op: T.on(4, 0.6, 1.2) });
+  el += lab('vitreous base 仍黏著', '', 14, 40, a.vbL, { bold: true, color: '#4f6d3a', lc: '#4f6d3a', op: T.on(4, 0.6, 1.2) });
+  // ---------------- right: the surgeon's wide-angle view of the same state (inverter on, surgeon at 12)
+  const tn = [-6, -4];   // the TA speck labelled: one near the upper left of the centre (field mm)
+  const WA = wide4(stA, 'w41a', {});
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + WA.svg, b = WA.V.A, Wt = WA.Wt;
+  if (kT > 0 && kD < 1) { const WB = wide4(stB, 'w41b', { taNear: tn }); sr += `<g opacity="${(kT * (1 - kD)).toFixed(3)}">${WB.svg}</g>`; if (kT > 0.5) b = WB.V.A; }
+  if (kD > 0) { const WP = wide4(stP, 'w41p', { taNear: tn, pvdRing: true }); sr += `<g opacity="${kD.toFixed(3)}">${WP.svg}</g>`; if (kD > 0.5) b = WP.V.A; }
+  sr += badge(12, 10, 'inverter 開', COL.accent) + badge(PW - 236, 10, '示意：後玻璃體還沒分開時', COL.sub, opDemo);
+  let er = lab('切割頭', 'vitrector（10 點半）', PW - 12, 300, b.inst0, { side: 'R', bold: true, op: T.on(0) * (1 - T.on(3, 0.5)) });
+  er += lab('光導管', 'light pipe（1 點半）', 14, 352, b.inst1, { bold: true, color: '#8a6d00', lc: '#e8c95a', op: T.on(0, 0.6, 0.6) * (1 - T.on(3, 0.5)) });
+  er += lab('玻璃體是透明的', '看不出切了哪裡', 14, 64, null, { bold: true, op: T.on(0, 0.6, 1.6) * (1 - T.on(1, 0.6, 0.6)) });
+  er += lab('TA 白色顆粒', 'triamcinolone', 14, 64, b.taSpeck, { bold: true, color: C_TA, lc: '#ffffff', op: T.on(1, 0.6, 1.2) * (1 - T.on(3, 0.5)) });
+  er += lab('後玻璃體分開的範圍（示意）', '', PW - 12, 64, b.pvdRing, { side: 'R', bold: true, lc: '#ffffff', op: T.p(3, 0.5, 0.6) * (1 - T.on(4, 0.5)) });
+  er += lab('沾了 TA 的後玻璃體', 'posterior hyaloid', PW - 12, 64, b.pvdRing, { side: 'R', bold: true, color: C_TA, lc: '#ffffff', op: T.on(4, 0.6, 0.5) });
+  return { L: { svg: sl, extra: el, P: PT.sec4 }, R: { svg: sr, extra: er, P: PT.w4 } };
+};
+
+DRAW2['4-2'] = T => {
+  // ---------------- the state of this frame (both panels): line 0 the cutter comes near (3 steps), then the retina is sucked in (錯誤示範);
+  // line 1 the retina lets go (3 steps), then the pull as an arrow while the settings change; line 2 high cut rate, low vacuum; line 3 sucked again
+  const kA = T.p(0, 0.05, 0.4), kS = T.p(0, 0.5, 0.85) * (1 - T.on(1, 0.4)) + T.on(3, 0.6, 0.3), R4 = VP.TR42;
+  const in1 = T.on(1, 0.01) > 0, in2 = T.on(2, 0.01) > 0, cardOp = T.on(1, 0.4) * (1 - T.on(3, 0.5)), on1 = T.on(1, 0.4) * (1 - T.on(2, 0.5)), on2 = T.on(2, 0.5, 0.5) * (1 - T.on(3, 0.5));   // on2 after on1 is gone (both labels sit at the same place)
+  const p1a = T.p(1, 0.05, 0.3), p1b = T.p(1, 0.35, 0.6), p1c = T.p(1, 0.65, 0.95);
+  const set = !in1 || !(cardOp > 0) ? null : in2 ? R4.low : p1c > 0 ? mixS(R4.s2, R4.s3, p1c) : p1b > 0 ? mixS(R4.s1, R4.s2, p1b) : mixS(R4.s0, R4.s1, p1a);
+  const e = kS > 0 || T.on(3, 0.01) > 0 ? VP.E42[2] : set ? (set.e > (VP.E42[1] + VP.E42[2]) / 2 ? VP.E42[1] : VP.E42[2]) : VP.E42[Math.round(kA * 2)];
+  const st = VP.st42(e, kS);
+  // ---------------- left: the plane through the cutter's shaft (up = the vitreous cavity, down = the wall), 1 mm bar
+  const S = VP.instSec(st, PW, PH, VP.WIN.z42, 's42', { tw: VP.WIN.z42T }), a = S.A, sucked = !!st.suck;
+  let sl = S.svg + VIEWS.sbar(S.k, 1);
+  // the pull (示意): an arrow from the retina under the port up toward it, its length from VP.traction of the settings shown
+  if (set) { const tr = VP.traction(set.vac, VP.distOf(set.e), set.cut), q = S.P([S.M.port[0], 0.02]), L = 14 + 70 * tr;
+    sl += arrowP([q, [q[0], q[1] - L]], COL.red, cardOp * (sucked ? 0 : 1), 'arrR', 5) + tractionCard(14, 14, set, cardOp); }
+  sl += badge(PW - 120, PH - 44, '錯誤示範', COL.red, sucked && cardOp < 0.5 ? 1 : 0);
+  // line 0: the detached retina moves (示意: a double arrow beside it)
+  if (a.retF) { const q = a.retF, opF = T.on(0, 0.6) * (1 - T.on(1, 0.4)); sl += arrowP([[q[0], q[1] - 6], [q[0], q[1] - 34]], COL.amber, opF, 'arrM', 3.5) + arrowP([[q[0], q[1] + 6], [q[0], q[1] + 34]], COL.amber, opF, 'arrM', 3.5); }
+  let el = lab('剝離、會飄的視網膜', 'detached retina', 14, 260, a.retL, { bold: true, color: RDC, lc: RDC, op: T.on(0) });
+  el += lab('視網膜下液', 'SRF', 14, 330, a.srfL, { op: T.on(0, 0.6, 0.6) });
+  el += lab('切割頭', 'vitrector', PW - 12, 200, a.tip, { side: 'R', bold: true, op: T.on(0) * (1 - cardOp) });
+  el += lab('切割口', 'port', PW - 12, 252, a.port, { side: 'R', op: T.on(0, 0.6, 0.6) * (1 - cardOp) });
+  el += lab('視網膜被吸進切割口', '', PW - 12, 340, a.suck, { side: 'R', bold: true, color: COL.red, lc: COL.red, op: sucked ? 1 : 0 });
+  if (set) { const q = S.P([S.M.port[0], 0.02]), tr = VP.traction(set.vac, VP.distOf(set.e), set.cut);
+    el += lab('拉力（示意）', 'traction', PW - 12, 296, [q[0] + 4, q[1] - 10 - 35 * tr], { side: 'R', bold: true, color: COL.red, lc: COL.red, op: on1 * (sucked ? 0 : 1) }); }
+  el += lab('高切速、低吸力：', '視網膜不被吸起', PW - 12, 290, null, { side: 'R', bold: true, color: COL.accent, op: on2 });
+  // ---------------- right: the surgeon's wide-angle view of the same state (示意 of the sucked retina)
+  const Wv = wide4(st, 'w42', {}), b = Wv.V.A, Wt = Wv.Wt;
+  let sr = `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#0c0d0f"/>` + Wv.svg + badge(12, 10, 'inverter 開', COL.accent);
+  if (sucked && b.suck) sr += `<circle cx="${F1(b.suck[0])}" cy="${F1(b.suck[1])}" r="${F1(20 + 6 * (1 - T.on(3, 0.6, 0.5)))}" fill="none" stroke="${COL.red}" stroke-width="3" opacity="${T.on(3, 0.6) > 0 ? 1 : 0.8}"/>`;
+  let er = lab('切割頭', 'vitrector', PW - 12, 300, b.inst0, { side: 'R', bold: true, op: T.on(0) });
+  er += lab('剝離的視網膜', 'RD', 14, 64, b.rd, { bold: true, color: RDC, lc: '#ffffff', op: T.on(0) });
+  er += lab('視網膜被吸起（示意）', '', 14, 120, b.suck, { bold: true, color: COL.red, lc: '#ff8f7a', op: sucked ? 1 : 0 });
+  // line 3: say it at once
+  const opSay = T.on(3, 0.6, 0.4);
+  const bx = PW - 352;   // top right, clear of the sucked retina (lower middle of the field) and the labels on the left
+  sr += `<g opacity="${opSay}"><rect x="${bx}" y="44" width="340" height="88" rx="10" fill="#fff" stroke="${COL.red}" stroke-width="3"/>` +
+    text(bx + 170, 78, TX4.say.a, { size: 19, bold: true, anchor: 'middle' }) + text(bx + 170, 112, TX4.say.b, { size: 24, bold: true, color: COL.red, anchor: 'middle' }) + '</g>';
+  return { L: { svg: sl, extra: el, P: PT.z42 }, R: { svg: sr, extra: er, P: PT.w4 } };
+};

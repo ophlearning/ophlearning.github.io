@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–3.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–4.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -30,7 +30,8 @@ const LEDGER = {
   '2-2': { '4': '示意', '7': '結構', '9': '結構', '12': '結構' },
   '3-1': { '11': '病例', '5': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '2': '結構', '180': 'Spitznas 1987' },
   '3-2': { '11': '病例', '12': '結構', '5': '結構', '3': '結構', '6': '結構', '9': '結構', '2': '結構' },
-  '4-1': { '110': 'Lai 2019' },
+  '4-1': { '110': 'Lai 2019', '10': '示意', '1': '示意', '4': '示意', '12': '結構', '3': '結構', '6': '結構', '9': '結構' },   // 10, 1, 4: trocar clock hours (依主刀決定)
+  '4-2': { '1': '結構', '12': '結構', '3': '結構', '6': '結構', '9': '結構' },
   '5-1': { '106': 'Govetto 2024', '11': '病例', '1.2': 'Jackson 2013', '1.6': 'Jackson 2013' },
   '5-2': { '1.9': 'Neffendorf 2017', '5.8': 'Neffendorf 2017' },
   '6-1': { '11': '病例' },
@@ -254,8 +255,74 @@ function modelChecks(ctx) {
     ok('M20', line(ctx, '3-2', 4).includes('隆起出現在別的鐘點') && line(ctx, '3-2', 4).includes('再確認 inverter 有沒有開') && VP.ST.depOff.inverter === false && v && v[1] < 0 && v[0] < 0 && u >= 15 && u <= 45
       && near(off.dep[0], -on.dep[0], 1e-6) && near(off.dep[1], -on.dep[1], 1e-6) && onScreen(ctx, '3-2', 'inverter 關（倒像）') && onScreen(ctx, '3-2', '同一個隆起') && onScreen(ctx, '3-2', '跑到上方略偏左'),
       `3-2 inverter off: the mound ${f2(u)}° left of straight up (上方略偏左), at the 180° turn of the inverter-on mound`); }
+  // chapter 4. The drawn states come from VP (coreStep, pvdStep, st42), the same functions draw.js calls for both panels of a frame.
+  const G = GLOBE, add = G.add, sub = G.sub, mul = (a, k) => a.map(v => v * k), range = n => [...Array(n).keys()];
+  // M21 4-1 lines 0, 3; 4-2: the instruments go in only through the case's trocars — the vitrector through the superonasal port, the light pipe through
+  // the superotemporal port (the working ports of 2-1 and 2-2; Tei 2005), never the infusion: in every drawn state the shaft passes its port's pivot, from the
+  // cannula to the tip it stays in the eye's cavity (not in the lens, iris or retina) and the whole shaft stays ≥ 0.5 mm from the phakic lens. The 4-1
+  // section through the 10:30 port holds the vitrector's whole shaft and the infusion; in the wide view (inverter on) the vitrector's cannula is superonasal, the light pipe's superotemporal
+  { const states = [...range(VP.CORE_STEPS + 1).map(i => VP.coreStep(i / VP.CORE_STEPS, i % 2)), ...range(VP.PVD_STEPS + 1).map(i => VP.pvdStep(i / VP.PVD_STEPS)), ...VP.E42.map(e => VP.st42(e))];
+    const want = { vitrector: 'superonasal', light: 'superotemporal' }, bad = []; let lensMin = 9, n = 0;
+    for (const st of states) { const Gm = P.geom(st), f = P.makeCtx(Gm), T3 = P.troc(Gm);
+      for (const ins of st.inst) { const I = P.instGeom(Gm, ins), port = T3.find(t => t.id === ins.port), name = port && !port.inf ? sideName(port.h).en : 'infusion or none';
+        const miss = P.segDist(I.port.pivot, I.tip, I.out); let out = 0, lm = 9; n++;
+        for (let t = 0; t <= 1; t += 0.01) { const c = f.at(add(I.tip, mul(sub(I.port.tip, I.tip), t))); if (!(f.interior(c) < 0) || f.lens(c) < 0 || f.iris(c) < 0 || f.retina(c) < 0) out++; }
+        for (let t = 0; t <= 1; t += 0.01) lm = Math.min(lm, f.lens(f.at(add(I.tip, mul(sub(I.port.pivot, I.tip), t)))));
+        lensMin = Math.min(lensMin, lm); if (name !== want[ins.kind] || miss > 0.02 || out || lm < 0.5) bad.push(`${ins.kind} via ${name} (miss ${f2(miss)}, ${out} samples out, lens ${f2(lm)})`); } }
+    ok('M21', line(ctx, '4-1', 0).includes('core vitrectomy') && states.length > 10 && !bad.length && onScreen(ctx, '4-1', '器械孔10 點半 superonasal') && onScreen(ctx, '4-1', '光導管light pipe（從 1 點半）'),
+      `ch. 4: ${n} instruments in ${states.length} drawn states go in through their trocars (vitrector superonasal, light pipe superotemporal), stay in the cavity, ≥ ${f2(lensMin)} mm from the lens${bad.length ? '; bad: ' + bad.slice(0, 3).join('; ') : ''}`);
+    let sect = true, wideOk = true;
+    for (const st of [VP.coreStep(0), VP.ST.core4, VP.pvdStep(0), VP.ST.pvd1]) { const S = VP.sec(st, W_, H_, VP.WIN.sec, 'm21', { h: VP.SEC4_H, tw: VP.WIN.secT, noTissue: true }), M = S.M, pl = S.r.plane, nrm = G.unit(G.cross(pl.U, pl.V));
+      const I = P.instGeom(P.geom(st), st.inst[0]), pivOff = Math.abs(G.dot(sub(I.port.pivot, pl.O), nrm));
+      if (!(M.inst0_off < 0.05 && pivOff < 0.05 && M.inst1_off < 0.05 && M.troc_sn_off < 0.01 && M.troc_it_off < 0.01 && M.troc_sn[0] > 0 && M.troc_it[0] < 0 && st.inst[0].port === 'sn')) sect = false;
+      const Wm = VP.wide(st, W_, H_, VP.WIN.wide3, 'm21w').M, hs = k => Wm['cannulaIn_' + k] && clockSurg([Wm['cannulaIn_' + k][0] - Wm.pole[0], Wm['cannulaIn_' + k][1] - Wm.pole[1]]);
+      if (!(hs('sn') && sideName(hs('sn')).en === want.vitrector && hs('st') && sideName(hs('st')).en === want.light && Wm.cannulaIn_sn[0] > 0 && Wm.cannulaIn_st[0] < 0)) wideOk = false; }
+    ok('M21', VP.SEC4_H === 10.5 && sideName(VP.SEC4_H).en === want.vitrector && sect && wideOk && VP.OR.sec4.includes('右＝10 點半'),
+      `4-1 section through ${VP.SEC4_H} o'clock (${sideName(VP.SEC4_H).en}): the vitrector's tip and pivot, the light pipe's tip and both ports in the plane, the 10:30 port right, the 4:30 infusion left; wide view: vitrector cannula ${want.vitrector} (right), light pipe ${want.light} (left)`); }
+  // M22 4-1 lines 3–4: PVD (示意 demonstration of an eye whose posterior hyaloid is still attached). Measured on the drawn gel along the retina's inward
+  // normal: at the start the gel lies on the retina at the pole; at the end it is ≥ 2 mm off the retina round the pole (6 mm) and along both drawn meridians
+  // from 5 mm behind the vitreous base to the pole, and still on the retina at the vitreous base all round and on the flap's free edge (traction at the
+  // anterior edge of the tear, Govetto 2024); the steps only go forward (0 → 1)
+  { const gap = (st, h, s) => { const Gm = P.geom(st), f = P.makeCtx(Gm), r = Gm.ret(h, s, 1), nn = mul(P.N3(h, s), -1);
+      for (let d = 0.05; d <= 3; d += 0.05) { const c = f.at(add(r, mul(nn, d))); if (f.gel(c) < 0) return d; } return 3; };
+    const end = VP.pvdStep(1), start = VP.pvdStep(0), Gm = P.geom(end), notDisc = (h, s) => P.makeCtx(Gm).at(Gm.ret(h, s, 1)).dq > 1.3;
+    let pole = 9, pole0 = 0, mer = 9, base = 0;
+    for (let h = 1; h <= 12; h++) for (let s = P.S_POLE - 6; s <= P.S_POLE - 0.4; s += 1.4) if (notDisc(h, s)) { pole = Math.min(pole, gap(end, h, s)); pole0 = Math.max(pole0, gap(start, h, s)); }
+    for (const h of [VP.SEC4_H, VP.SEC4_H - 6]) for (let s = P.vbPostAt(h, 1) + 5; s <= P.S_POLE - 0.4; s += 1) if (notDisc(h, s)) mer = Math.min(mer, gap(end, h, s));
+    for (let h = 0.5; h <= 12; h += 1) { const s = (P.oraAt(h, 1) + P.vbPostAt(h, 1)) / 2; base = Math.max(base, gap(end, h, s)); }
+    const f = P.makeCtx(Gm), cord = f.cord, flapOn = cord && f.gel(f.at(add(cord.a, mul(sub(cord.b, cord.a), 0.15)))) < 0 && G.len(sub(cord.a, P.flapPt(Gm.tear, Gm.tear.L, 0))) < 1e-6;
+    const ks = range(21).map(i => VP.pvdStep(i / 20).pvd), fwd = ks.every((v, i) => !i || v >= ks[i - 1]) && ks[0] === 0 && ks[20] === 1;
+    ok('M22', line(ctx, '4-1', 3).includes('主刀會先把它分開，造成 PVD') && line(ctx, '4-1', 4).includes('Triamcinolone 也讓後玻璃體看得見') && pole0 <= 0.1 && pole >= 2 && mer >= 2 && base <= 0.1 && flapOn && fwd && end.ta > 0
+      && onScreen(ctx, '4-1', '示意：後玻璃體還沒分開時') && onScreen(ctx, '4-1', '後玻璃體posterior hyaloid') && onScreen(ctx, '4-1', 'vitreous base 仍黏著'),
+      `4-1 PVD (示意): start — gel on the retina at the pole (gap ≤ ${f2(pole0)} mm); end — gel off the retina ≥ ${f2(Math.min(pole, mer))} mm round the pole and along the drawn meridians, on it at the vitreous base (≤ ${f2(base)} mm) and on the flap (cord ${flapOn ? 'attached' : 'missing'}); steps forward ${fwd}`); }
+  // M23 4-2 lines 0, 3: the retina sucked into the cutter (錯誤示範). Where the cutter comes near, the retina is detached and high (mobile: > 1 mm); in the
+  // plane through the cutter the sucked retina comes up to the port (its apex in the plane, ≤ 0.6 mm from the port, lifted ≥ 0.5 mm); in the wide view of
+  // the same state it shows at the projection of that same apex, at the cutter's port and at the same clock hour (superotemporal, near 1 o'clock)
+  { let worst = 0, bad = []; const near = VP.st42(VP.E42[VP.E42.length - 1]), G0 = P.geom(near), h0 = G0.H0(VP.SUCK_AT.s, VP.SUCK_AT.h);
+    for (let i = 1; i <= VP.SUCK_STEPS; i++) { const st = VP.st42(VP.E42[VP.E42.length - 1], i / VP.SUCK_STEPS), Gm = P.geom(st), sk = Gm.suck, I = P.instGeom(Gm, st.inst[0]);
+      const S = VP.instSec(st, W_, H_, VP.WIN.z42, 'm23', { noTissue: true }).M, ap = S.suck_3, lift = G.len(sub(ap, G0.ret(sk.h, sk.s, 1)));
+      const Wv = VP.wide(st, W_, H_, VP.WIN.wide3, 'm23w'), Wm = Wv.r.map, wa = Wv.M.suck, same = wa && Math.hypot(wa[0] - Wm.proj(ap)[0], wa[1] - Wm.proj(ap)[1]), atPort = wa && Math.hypot(wa[0] - Wm.proj(I.portAt)[0], wa[1] - Wm.proj(I.portAt)[1]);
+      const hw = wa && clockSurg([wa[0] - Wv.M.pole[0], wa[1] - Wv.M.pole[1]]), hsec = G.clockOf(ap[0], ap[1]);
+      worst = G.len(sub(ap, I.portAt));   // the last step's (fully sucked) distance to the port
+      if (i === VP.SUCK_STEPS && !(S.suck_off < 0.1 && G.len(sub(ap, I.portAt)) <= 0.6 && lift >= 0.5)) bad.push(`section apex ${f2(S.suck_off)} mm off the plane, ${f2(G.len(sub(ap, I.portAt)))} mm from the port, lifted ${f2(lift)}`);
+      if (!(same < 0.05 && atPort < 1 && near_h(hw, hsec) && near_h(hsec, VP.SUCK_AT.h, 0.25) && sideName(hw).en === 'superotemporal')) bad.push(`step ${i}: wide apex ${same && f2(same)} mm from the section's apex, ${atPort && f2(atPort)} mm from the port, at ${hw && f2(hw)} o'clock (section ${f2(hsec)})`); }
+    ok('M23', line(ctx, '4-2', 0).includes('就可能把它吸進來') && line(ctx, '4-2', 3).includes('助手看到視網膜被吸起來') && h0 > 1 && !bad.length
+      && onScreen(ctx, '4-2', '錯誤示範') && onScreen(ctx, '4-2', '視網膜被吸進切割口') && onScreen(ctx, '4-2', '視網膜被吸起（示意）'),
+      `4-2 sucked retina: detached ${f2(h0)} mm where the cutter comes near; fully sucked, its apex ${f2(worst)} mm from the port (in the plane); the wide view shows it at the same apex, at the port, superotemporal${bad.length ? '; bad: ' + bad.join('; ') : ''}`); }
+  // M24 4-2 lines 1–2 (Teixeira 2010, porcine eyes; 示意 of the direction, no values): the drawn pull rises with the vacuum, rises as the cutter comes closer
+  // and falls with the cut rate; line 1's drawn sequence follows it (vacuum up → more, closer → more, cut rate up → less); line 2's setting (high cut rate,
+  // low vacuum) pulls less than every line 1 setting and its retina is not sucked; the distance bar follows the tip's real distance from the retina
+  { const tr = VP.traction, s = VP.TR42, T_ = x => tr(x.vac, VP.distOf(x.e), x.cut), g = [0, 0.25, 0.5, 0.75, 1];
+    let mono = true; for (const a of g) for (const b of g) for (let i = 1; i < g.length; i++) { if (!(tr(g[i], a, b) > tr(g[i - 1], a, b))) mono = false; if (!(tr(1, g[i], a) < tr(1, g[i - 1], a))) mono = false; if (!(tr(0.5, a, g[i]) < tr(0.5, a, g[i - 1]))) mono = false; }
+    const seq = T_(s.s1) > T_(s.s0) && T_(s.s2) > T_(s.s1) && T_(s.s3) < T_(s.s2) && [s.s0, s.s1, s.s2, s.s3].every(x => T_(s.low) < T_(x)) && s.s1.vac > s.s0.vac && s.s2.e < s.s1.e && s.s3.cut > s.s2.cut && s.low.vac < s.s3.vac;
+    const dReal = VP.E42.map(e => { const st = VP.st42(e), Gm = P.geom(st); return G.len(sub(P.instGeom(Gm, st.inst[0]).tip, Gm.ret(VP.SUCK_AT.h, VP.SUCK_AT.s, 1))); });
+    const bars = VP.E42.every((e, i) => !i || (dReal[i] < dReal[i - 1] && VP.distOf(e) < VP.distOf(VP.E42[i - 1]))) && VP.E42.every((e, i) => near(dReal[i], e, 0.05)), lowFlat = !VP.st42(s.low.e, 0).suck;
+    ok('M24', line(ctx, '4-2', 1).includes('吸力越大、離視網膜越近，拉力越大') && line(ctx, '4-2', 1).includes('切速越快，拉力越小') && line(ctx, '4-2', 2).includes('高切速、低吸力')
+      && mono && seq && bars && lowFlat && onScreen(ctx, '4-2', '拉力的方向（示意，豬眼實驗）') && onScreen(ctx, '4-2', '拉力（示意）traction') && onScreen(ctx, '4-2', '高切速、低吸力：視網膜不被吸起'),
+      `4-2 pull (示意): monotone ${mono} (up with vacuum, up when closer, down with cut rate); line 1 ${[s.s0, s.s1, s.s2, s.s3].map(x => f2(T_(x))).join(' → ')}, line 2 ${f2(T_(s.low))}; tip ${dReal.map(f2).join(' → ')} mm from the retina (bars follow)`); }
   return R;
 }
+const near_h = (a, b, t = 0.1) => a != null && b != null && Math.abs(hdiff(a, b)) <= t;
 
 // ---------------------------------------------------------------- run
 function ledgerChecks(ctx) {
@@ -338,6 +405,11 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['wide view with the surgeon at 1 (11 o\'clock 60° off straight down)', c => { c.VP = stWith('view3', { surgeon: 1 }); }, 'M18'],
       ['mound at 10 o\'clock in the wide view, dent at 11 in the section', c => { c.VP = stWith('depOn', { dep: Object.assign({}, VP0.ST.depOn.dep, { h: 10 }) }); }, 'M19'],
       ['「inverter 關」 demonstration drawn with the inverter on', c => { c.VP = stWith('depOff', { inverter: true }); }, 'M20'],
+      ['vitrector through the infusion port (4-1 core)', c => { c.VP = vpWith({ coreStep: (k, ta) => { const s = VP0.coreStep(k, ta); return Object.assign({}, s, { inst: [Object.assign({}, s.inst[0], { port: 'it' }), s.inst[1]] }); } }); }, 'M21'],
+      ['light pipe tip in the lens (4-1 PVD)', c => { c.VP = vpWith({ pvdStep: k => { const s = VP0.pvdStep(k); return Object.assign({}, s, { inst: [s.inst[0], Object.assign({}, s.inst[1], { tip: [0, 0, 7] })] }); } }); }, 'M21'],
+      ['PVD stops half way (4-1 line 3)', c => { c.VP = vpWith({ pvdStep: k => VP0.pvdStep(k * 0.5) }); }, 'M22'],
+      ['sucked retina drawn 1 h off in the wide view (4-2)', c => { c.VP = vpWith({ wide: (st, ...a) => VP0.wide(st.suck ? Object.assign({}, st, { suck: Object.assign({}, st.suck, { h: st.suck.h + 1 }) }) : st, ...a) }); }, 'M23'],
+      ['pull grows with the cut rate (4-2)', c => { c.VP = vpWith({ traction: (v, d, k) => VP0.traction(v, d, 1 - k) }); }, 'M24'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

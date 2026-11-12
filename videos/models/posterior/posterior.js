@@ -177,6 +177,7 @@ const POSTERIOR = (() => {
   // pvd 0→1 (posterior hyaloid detached from the pole out to the vitreous base); vit { cut, shave } 0→1; ta 0→1;
   // troc [{ id, h, s, ang, ins, out, inf, tip: 'vit' | 'sub' | 'supra' }]; inst [{ kind: 'vitrector' | 'light' | 'laser', port, tip }];
   // dep { h, s, depth, w }; pfcl, gas: volume fractions of the vitreous cavity; gasKind; laser 0→1; head { pose: 'supine' | 'sit' | 'facedown', tilt };
+  // suck { h, s, amt, w } (optional): detached retina lifted amt mm toward the cutter round (h, s) (geom's H; 示意);
   // inverter (wide view), look { h, deg }, surgeon (clock hour at the bottom of the surgeon's views)
   const DEF = { eye: 'OD', rd: null, tear: null, pvd: 0, vit: null, ta: 0, troc: null, inst: [], dep: null, pfcl: 0, gas: 0, gasKind: 'air', laser: 0,
     head: null, inverter: true, look: null, surgeon: 12 };
@@ -225,8 +226,13 @@ const POSTERIOR = (() => {
     // PFCL presses the retina flat where it lies below the PFCL level
     const flat = (h, s) => { if (!(st.pfcl > 0)) return 1; const up = -dot(rpeAt(h, s), g); return ss(lev.pfcl - 0.2, lev.pfcl + 0.8, up); };
     const Hpk = (fx, fy) => lerp(rd.lo, rd.hi, ss(-6, 10, fy) * ss(5, 14, Math.hypot(fx, fy)));
-    const H = (s, h) => { if (!rd || !(rd.amt > 0)) return 0; const ora = oraAt(h, ts); if (s < ora) return 0; const [fx, fy] = chartHS(h, s), d = sdf(fx, fy); if (d <= 0) return 0;
+    const H0 = (s, h) => { if (!rd || !(rd.amt > 0)) return 0; const ora = oraAt(h, ts); if (s < ora) return 0; const [fx, fy] = chartHS(h, s), d = sdf(fx, fy); if (d <= 0) return 0;
       return rd.amt * Hpk(fx, fy) * ss(0, 1.2, d) * ss(ora, ora + 5.0, s) * flat(h, s); };
+    // optional st.suck { h, s, amt, w } (2026-11-12, RRD video 4-2): detached retina sucked toward the cutter's port, a Gaussian lift of amt mm
+    // (width w, 示意) round (h, s), only where the retina is detached; without st.suck H is H0 itself (nothing else changes)
+    const sk = st.suck ? Object.assign({ w: 1.0 }, st.suck) : null;
+    const H = !sk ? H0 : (s, h) => { const b = H0(s, h); if (!(b > 0)) return b; const ds = s - sk.s; let dh = h - sk.h; dh -= 12 * Math.round(dh / 12);
+      const dc = dh * 30 * D2R * surfAt(sk.s).rho; return b + sk.amt * ss(0, 0.3, b) * Math.exp(-(ds * ds + dc * dc) / (sk.w * sk.w)); };
     const Dp = (s, h) => { if (!dep) return 0; const ds = s - dep.s; let dh = h - dep.h; dh -= 12 * Math.round(dh / 12); const dc = dh * 30 * D2R * surfAt(dep.s).rho; return dep.depth * Math.exp(-(ds * ds + dc * dc) / (dep.w * dep.w)); };
     const rtHS = (h, s) => { const [fx, fy] = chartHS(h, s); return rtAt(fx, fy, s, oraAt(h, ts), D); };
     // a point on the retina: frac 0 = outer (photoreceptor) side, 1 = inner (ILM) side; includes the detachment and the indentation
@@ -238,7 +244,7 @@ const POSTERIOR = (() => {
       const fr = (fn) => { const Q = fn(t.h, sh, 0.5), eu = unit(sub(fn(t.h, sh + 0.05, 0.5), fn(t.h, sh - 0.05, 0.5))), ec0 = unit(sub(fn(t.h + 0.005, sh, 0.5), fn(t.h - 0.005, sh, 0.5)));
         const ec = unit(sub(ec0, mul(eu, dot(ec0, eu)))); let en = unit(cross(ec, eu)); if (dot(en, Q) > 0) en = mul(en, -1); return { Q, eu, ec, en }; };
       tear = Object.assign({ sh, ts }, t, { fr: fr(ret), fr0: fr(ret0), th: rtHS(t.h, sh), ang: t.flap * D2R }); }
-    return { st, ts, D, g, rd, poly, sdf, H, Dp, lev, dep, ret, ret0, rtHS, tear, flat };
+    return { st, ts, D, g, rd, poly, sdf, H, H0, Dp, lev, dep, ret, ret0, rtHS, tear, flat, suck: sk };
   }
   // U-shaped hole in tangent coordinates (u posterior from the hinge, c across): signed distance, negative inside
   function sdU(u, c, W, L) { const r = W / 2, cx = (L - r) / 2, hx = (L - r) / 2, qx = Math.abs(u - cx) - hx, qy = Math.abs(c) - r;
