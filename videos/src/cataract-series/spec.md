@@ -110,3 +110,9 @@
     - `globe/check.js` 加 51 條，38 個故意改錯全部抓到；open globe 參考圖 0.000% 不變；樣本 `globe/sample-cataract.html` 自檢，參考圖登記在 `cataract-1-wound-ccc/ref/manifest.json`（page: null）。
     - 待確認：keratome 寬（模型 2.4 mm）、side port 位置（模型 2 點）、CCC 起點與方向、IOL optic 直徑；錄影裡主切口偏 temporal 約 22°，做影片時把 `main.h` 設成實測值。
 - 2026-11-10：四支都上線（YouTube 不公開）：① `c4TrAOf9m3U`（9:12）、② `TbwKQ93RaYQ`（10:01）、③ `QygPR3YDopA`（8:55）、④ `gaLjjfhpbmU`（11:23）。舊版 `cataract`（`Z74G7jgHq4o`）從 `videos/index.html` 移除，舊網址 `videos/#cataract` 自動轉到 ①；YouTube 上的舊片沒有刪。還在等的：Veritas 院內預設參數（拿到後換 ② 面板的示意數字）。
+- 2026-11-12：貼在開刀房牆上的一頁式單子（站長要「術前可以貼牆的表」，不另做影片；討論後選兩張都做）。放在 `print/`，輸出在 `out/print/`（不進 git）：
+  - `flow.js`「白內障全流程」：①②③ 三欄共 15 步，下方一條粗框「出事時第一步」6 項（run-out、capsular block、wound burn、surge、後囊被吸住、PCR）。只從四支影片的跟刀清單濃縮，不加新內容；示意、常用做法、依院內常規照標；步驟 16 pt。
+  - `prep.js`「術前核對與備料」：核對 3 項（眼別與 IOL、備用 3-piece IOL、散瞳）＋風險因子 6 項（α1 阻斷劑／IFIS、PXF、white／brunescent、posterior polar、其他 PCR 風險因子、住院醫師主刀）。這是影片刻意移出的術前內容，新查 PubMed：Narendran 2009、Chang 2005、Chang 2008、Melles 1999、Osher 1990、Langwińska-Wośko 2011、Shingleton 2017（全文放 `print/sources.json`）；備用 IOL 用影片 ④ 的 Chang 2009。這個環境連不到 nature.com、doi.org、PMC，只讀得到摘要，所以沒有各因子的 odds ratio；器材與藥物一律「依院內常規」。
+  - 列印工具：系列資料夾用 `print/sources.json` 讀四支影片的帳本與 REFS；新增 flow 版面；說明在 `videos/tools/print/README.md`「系列的單子」。
+  - 檢查：`print.js --gray --selftest` 兩張 PASS；白內障 ① 三張改工具前後逐像素相同；②③ 與眼瞼範例重跑 PASS；④ 三張 PASS，但 ④ 的 `--selftest` 改工具前就會當掉（④ 帳本沒有「院內常規」或「示意」的數字，自我測試挑不到例子），這次沒修。
+  - 待站長：院內的 IOL 與備用 IOL、擴瞳器材、CTR、trypan blue 等品項；拿到 Veritas 設定後，全流程表要不要加參數欄。

@@ -135,12 +135,13 @@
   }
 
   const LAYOUTS = { checklist, steps, anatomy, flow };
-  // the sheet: def.type picks the layout; the page frame, footer and readiness flag come from PRINT.render. A flow sheet numbers its own
-  // steps (it stands for the whole series, not one video's step diagram).
+  // the sheet: def.type picks the layout; the page frame, footer and readiness flag come from PRINT.render. A flow sheet, and every sheet
+  // of a series folder (video.js without steps), numbers its own items (no step diagram to match). def.surgery replaces the title block's
+  // right side (video.js surgery) for one sheet.
   P.sheet = def => {
     const V = VIDEO_CFG, name = window.PRINT_SHEET_NAME || def.type, n = def.type === 'checklist' ? def.items.length : def.type === 'steps' ? def.steps.length : def.type === 'flow' ? flowSteps(def) : V.steps;
-    if (def.type !== 'flow' && n !== V.steps) throw new Error(`${def.type}: ${n} steps, but video.js says steps: ${V.steps} (checklist numbers = step numbers)`);
-    const meta = { id: V.id, short: V.surgery[0], videoTitle: V.title, surgery: V.surgery[0], eye: V.surgery.slice(1).join('<br>') };
+    if (def.type !== 'flow' && V.steps != null && n !== V.steps) throw new Error(`${def.type}: ${n} steps, but video.js says steps: ${V.steps} (checklist numbers = step numbers)`);
+    const S = def.surgery || V.surgery, meta = { id: V.id, short: S[0], videoTitle: V.title, surgery: S[0], eye: S.slice(1).join('<br>') };
     return P.render({ ...def, name, meta, steps: n, body: () => LAYOUTS[def.type](def) });
   };
 })();
