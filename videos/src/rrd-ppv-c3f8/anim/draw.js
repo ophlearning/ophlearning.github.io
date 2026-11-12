@@ -1206,8 +1206,8 @@ DRAW2['7-2'] = T => {
     const S = p3 > 0 || p2 >= 1 ? { total: lerp(vEnd, F50, p3), keep: null, range: rg } : { total: p2 > 0 ? lerp(F50, vEnd, p2) : F50 * p1, keep: null, range: rg, pureAll: true };
     sl += syringe(x0, x1, yS, Object.assign({ id: 'sy72a', op: o }, S));
     sl += text(F1((x0 + x1) / 2), yS - 64, '純 C3F8', { size: 16, bold: true, anchor: 'middle', color: '#9a6412', op: o * (ph < 3 ? 1 : 0) });
-    if (ph === 2 && p2 < 1) sl += arrowP([[x0 - 30, yS], [x0 - 84, yS]], COL.amber, o, 'arrM', 4);                                                       // the extra gas pushed out
-    if (ph === 3) sl += arrowP([[x0 - 84, yS], [x0 - 32, yS]], COL.sub, o, 'arrK', 4) + text(x0 - 58, yS + 36, '無菌空氣', { size: 14, bold: true, anchor: 'middle', color: COL.sub, op: o });
+    if (ph === 2 && p2 < 1) sl += arrowP([[x0 - 30, yS], [x0 - 62, yS]], COL.amber, o, 'arrM', 4);                                                       // the extra gas pushed out
+    if (ph === 3) sl += arrowP([[x0 - 62, yS], [x0 - 32, yS]], COL.sub, o, 'arrK', 4) + text(x0 - 62, yS + 36, '無菌空氣', { size: 14, bold: true, color: COL.sub, op: o });
     if (ph >= 2 && (p2 >= 1 || p3 > 0)) sl += braceU(x0 + (x1 - x0) * 0.0, x0 + (x1 - x0) * rg[1], yS + 34, TX7.steps.note, '#9a6412', o);
     if (p3 > 0) sl += braceU(x0 + (x1 - x0) * rg[1] + 4, VP.syrX(x0, x1, F50), yS - 66, '', COL.sub, o * p3) + text(F1((x0 + (x1 - x0) * rg[1] + x1) / 2), yS - 70, '無菌空氣補到 50 mL', { size: 15, bold: true, anchor: 'middle', color: COL.sub, op: o * p3 });
     const rows = [TX7.steps.a, TX7.steps.b, TX7.steps.c];
