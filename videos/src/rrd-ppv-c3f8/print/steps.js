@@ -64,7 +64,7 @@
             ['斜插', 'oblique', V => P3(V, along(LT * 0.5))]] },
         { kind: 'pscope', state: PORT_IN_R, win: { x: -12.5, y: -10, w: 25, h: 20 },
           draw: all(tag('顯微鏡'), bladeTop, V => PRINT.dim(W3(V, 4.9, 0, 0), W3(V, 4.9, 4, 0)), lb('4 mm', '', 'R', 4.4, V => W3(V, 4.9, 2.2, 0)),
-            lb('infusion', '4 點半', 'R', 9.6, V => P3(V, TR.entry)), lb('器械', '1 點半', 'R', 18, 'troc_st'), lb('器械', '10 點半', 'L', 26.8, 'troc_sn')) }] },
+            lb('infusion', '4 點半', 'R', 9.6, V => P3(V, TR.entry)), lb('器械', '1 點半', 'L', 26.8, 'troc_st'), lb('器械', '10 點半', 'R', 18, 'troc_sn')) }] },
       { hd: '開 infusion 前：看到尖端在玻璃體腔', views: [                                                            // 2-2 lines 2–4
         { kind: 'psec', hp: VP.INF_H, state: ST.setup, win: { x: 3.0, y: -10.0, w: 12.5 },
           draw: all(V => ring(P3(V, IT.tip), 1.2, { w: 0.6 }), lb('尖端', 'tip', 'L', 26.8, V => P3(V, IT.tip)),
