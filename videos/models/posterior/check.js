@@ -313,7 +313,7 @@ def('E2', (P, ok) => { const V = P.voxels();
 def('E3', (P, ok) => { for (const [pose, fr] of [['sit', 0.2], ['supine', 0.5], ['facedown', 0.8]]) { const st = { eye: 'OS', gas: fr, head: { pose } }, Gm = P.geom(st), L = Gm.lev.gas; let n = 0, m = 0;
     let k = 0; for (let x = -11.8; x < 12; x += 0.5) for (let y = -11.8; y < 12; y += 0.5) for (let z = -11.8; z < 9; z += 0.5) { k++; const p = [x + 0.5 * G.hash(k, 7) - 0.25, y + 0.5 * G.hash(k, 8) - 0.25, z + 0.5 * G.hash(k, 9) - 0.25]; if (len(p) > 12.1 || !P.cavity0(p)) continue; n++; if (-dot(p, Gm.g) > L) m++; }
     ok(near(m / n, fr, 0.012), `${pose}: gas ${fr * 100}% → ${(m / n * 100).toFixed(1)}% of the cavity above its surface`); } });
-// E4 sitting upright, the bubble must fill at least ≈ 3.5% (推算, CARD.md) to cover the whole 11 o'clock tear (narration 8-1: 坐正 … 氣泡就頂得到它)
+// E4 sitting upright, the bubble must fill at least ≈ 3.5% (推算, CARD.md) to cover the whole 11 o'clock tear (narration 8-1: 坐正 … 氣泡就蓋得到它)
 def('E4', (P, ok) => { const st = Object.assign({}, P.PRESET.rrd, { rd: { amt: 0 }, head: { pose: 'sit' } }), fc = P.coverFraction(st);
   const covered = fr => { const Gm = P.geom(Object.assign({}, st, { gas: fr })), T = Gm.tear, L = Gm.lev.gas; return P.uOutline(T.w, T.L).every(q => -dot(P.onRetina(Gm, T.fr0, q[0], q[1], 1, Gm.ret0).p, Gm.g) > L); };
   ok(near(fc, LIT.coverSit, 0.004), `smallest bubble covering the tear sitting upright: ${(fc * 100).toFixed(1)}% of the cavity (CARD.md: 3.5%, 推算)`);
@@ -345,7 +345,7 @@ def('N1', (P, ok, V, NARR) => { const say = (id, re) => { const s = NARR.find(x 
     ['1-1', /黃斑在視盤的 temporal 側/, 'B2'], ['1-1', /裂孔在 11 點/, 'C1'], ['2-1', /4 mm 落在 ora 前面的 pars plana/, 'D1'], ['2-1', /顳側約 7\.6 mm，鼻側約 7\.0 mm/, 'A1'], ['2-2', /inferotemporal 的套管底下，視網膜可能是剝離的/, 'D6'],
     ['3-1', /上下顛倒、左右相反/, 'B4'], ['3-2', /左眼的 12 點在畫面下方，temporal 在畫面左邊/, 'B3'], ['3-2', /11 點，在畫面上靠近下方、略偏右/, 'B3'], ['3-2', /上方略偏鼻側/, 'B1'], ['3-2', /畫面上會在 11 點看到一個隆起/, 'D7'],
     ['5-1', /跨在 ora 上；裂孔通常就在它的後緣/, 'A3, C6'], ['5-1', /被玻璃體往前拉著/, 'C7'], ['5-2', /周邊的視網膜被推進視野/, 'D7'], ['6-1', /從後往前把視網膜壓平/, 'D11'], ['6-1', /從原本 11 點的裂孔排出去/, 'D11'],
-    ['6-2', /浮在上面/, 'E2'], ['8-1', /會浮到眼內最高的地方/, 'E2'], ['8-1', /坐正或頭抬高，氣泡就頂得到它/, 'E4'], ['8-1', /要避免平躺/, 'E5'], ['9', /左眼的 11 點，在畫面下方略偏右/, 'B3']])
+    ['6-2', /浮在上面/, 'E2'], ['8-1', /會浮到眼內最高的地方/, 'E2'], ['8-1', /坐正或頭抬高，氣泡就蓋得到它/, 'E4'], ['8-1', /要避免平躺/, 'E5'], ['9', /左眼的 11 點，在畫面下方略偏右/, 'B3']])
     ok(say(id, re), `narration ${id} says 「${re.source.replace(/\\/g, '')}」 (checked by ${what})`); });
 
 // ---------------------------------------------------------------- run

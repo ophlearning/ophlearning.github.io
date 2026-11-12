@@ -532,7 +532,7 @@ function modelChecks(ctx) {
     const S7 = VP.ST.sit7, G7 = P.geom(S7), f7 = P.makeCtx(G7), pl = P.headPlane(S7), down = G.dot(pl.V, SIT_G), V = P.voxels(); let lo = null, hi = null, a = 1e9, b = -1e9;
     for (let i = 0; i < V.n; i += 3) { const p = [V.xs[3 * i], V.xs[3 * i + 1], V.xs[3 * i + 2]], u = -G.dot(p, SIT_G); if (f7.cavity(f7.at(p)) > -0.3) continue; if (u < a) { a = u; lo = p; } if (u > b) { b = u; hi = p; } }
     const low = Math.min(...U.map(q => -G.dot(P.onRetina(G7, G7.tear.fr0, q[0], q[1], 1, G7.ret0).p, SIT_G)));
-    ok('M41', line(ctx, '7-1', 1).includes('疤長牢之前，靠氣體頂著裂孔') && line(ctx, '8-1', 2).includes('坐正或頭抬高，氣泡就頂得到它') && VP.ST.las1.gas === 1 && inGas
+    ok('M41', line(ctx, '7-1', 1).includes('疤長牢之前，靠氣體蓋住裂孔') && line(ctx, '8-1', 2).includes('坐正或頭抬高，氣泡就蓋得到它') && VP.ST.las1.gas === 1 && inGas
       && Math.abs(G.dot(pl.U, SIT_G)) < 1e-6 && down > 0.8 && S7.tear.h === CASE.tear && S7.laser === 1 && S7.rd.amt === 0 && f7.gas(f7.at(hi)) < 0 && !(f7.gas(f7.at(lo)) < 0) && low > G7.lev.gas + 0.2
       && onScreen(ctx, '7-1', '疤長牢之前：氣體蓋住裂孔') && onScreen(ctx, '7-1', '術後坐正（示意）') && onScreen(ctx, '7-1', '蓋住 11 點裂孔') && onScreen(ctx, '7-1', '長出疤，把視網膜黏住（示意）scar'),
       `7-1 line 1: gas in front of every point of the tear during the operation; inset sitting: gravity straight down the screen (its part in the plane: ${f2(down)}), gas at the top, the tear ${f2(low - G7.lev.gas)} mm above the gas surface`); }
