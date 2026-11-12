@@ -1,0 +1,44 @@
+術前預習：鞏膜縫合固定 IOL（sutured scleral-fixated IOL）。一台右眼 OD 的手術：23G TPPV、取出舊 IOL，把三片式 Alcon MA60AC 用 10-0 Prolene 縫在睫狀溝，線結藏在三角形鞏膜瓣下。全片四成多的時間花在兩件事：從外面找到睫狀溝，以及穿線、綁 haptic。內容：沒有囊袋支撐時的選項、為什麼合併 TPPV；角膜緣的兩條線與量尺的零點該抵哪一條；從角膜緣後界往後依序是虹膜根、睫狀溝、pars plicata、pars plana；垂直進針 0.58、1、2 mm 各落在哪，從透明角膜邊緣量錯會打到哪；實際下針 1 mm 還是 2 mm 的理由與代價；術後 UBM 看 haptic 真的在睫狀溝的比例；為什麼避開 3、9 點、兩點相隔 180°；量尺與 marking pen、結膜與三角形瓣、23G trocar、12 點切口取出舊 IOL；雙頭針穿過眼球、對側胰島素空針接針、勾出剪斷、綁 haptic（3-1-1、cow hitch）；放入 IOL、拉線置中與傾斜；打結、埋結與收尾；傾斜與偏位、線結外露、晚期斷線、視網膜併發症，以及縫回後很快又脫位文獻怎麼說；最後是跟刀清單。
+
+畫面都是以 mm 建模的動畫，沒有手術錄影。左邊是經 2 點與 8 點的機轉切面，右邊是術者視角：右眼 OD、術者坐 12 點，畫面下方是 12 點、右邊是 9 點 temporal，所以 2 點在左下、8 點在右上。手術步驟依主治醫師的術式範本，範本沒寫的細節照最接近的論文（Guedes 2026）示範，旁白都註明以主治為準：下針距離、固定的鐘點、瓣的大小、trocar 位置、舊 IOL 的取法、誰拿哪支針、綁法、8 點那頭怎麼固定、IOL 度數與圓刀的用途。排程單的「10-0 直彎針」推測是一條兩頭各一支針（一直一彎）的 10-0 Prolene，是推論。角膜緣後界放在透明角膜邊緣後 0.85 mm、2 點與 8 點的 0.58 mm、穿針的角度與會合點、trocar 的鐘點、取出舊 IOL 與放入 IOL 的路線都是示意，畫面上有標。本例病程只寫相對時間，早期再脫位的原因影片不推測。
+
+章節
+0:00 片頭
+0:18 1 為什麼這樣做
+1:48 2 從外面找到睫狀溝
+4:58 3 準備與 TPPV
+5:36 4 取出舊 IOL
+5:51 5 穿線與綁 haptic
+6:55 6 放入 IOL 與置中
+7:21 7 打結、埋結與收尾
+7:48 8 會出錯的地方
+8:45 9 跟刀清單
+9:10 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Guedes 2026. J Vitreoretin Dis (online). doi:10.1177/24741264251412080
+2. Stem 2017. J Vitreoretin Dis 1:144-152. doi:10.1177/2474126417690650
+3. Yamane 2017. Ophthalmology 124:1136-1142. doi:10.1016/j.ophtha.2017.03.036
+4. Wagoner 2003. Ophthalmology 110:840-59. doi:10.1016/s0161-6420(02)02000-6
+5. Shen 2020. Ophthalmology 127:1234-1258. doi:10.1016/j.ophtha.2020.03.005
+6. Aydin 2025. Indian J Ophthalmol 73:416-421. doi:10.4103/IJO.IJO_2235_24
+7. Abu Serhan 2026. Clin Exp Ophthalmol 54:687-697. doi:10.1111/ceo.70107
+8. Duffey 1989. Am J Ophthalmol 108:300-9. doi:10.1016/0002-9394(89)90121-9
+9. Kokame 2018. Am J Ophthalmol 189:10-16. doi:10.1016/j.ajo.2018.01.034
+10. Le 2018. Transl Vis Sci Technol 7:12. doi:10.1167/tvst.7.4.12
+11. Yoon 2023. Korean J Ophthalmol 37:128-136. doi:10.3341/kjo.2022.0093
+12. Marianelli 2019. Int J Retina Vitreous 5:33. doi:10.1186/s40942-019-0182-y
+13. Alp 2009. J Cataract Refract Surg 35:291-6. doi:10.1016/j.jcrs.2008.10.045
+14. Pavlin 1993. J Cataract Refract Surg 19:573-7. doi:10.1016/s0886-3350(13)80002-8
+15. Zhao 2025. BMC Ophthalmol 25:707. doi:10.1186/s12886-025-04504-y
+16. Groh 2002. Ophthalmologe 99:181-2. doi:10.1007/s003470100500
+17. Iovieno 2022. Int Ophthalmol 42:1259-1262. doi:10.1007/s10792-021-02112-5
+18. Van Meter 1997. Trans Am Ophthalmol Soc 95:307-21. https://pmc.ncbi.nlm.nih.gov/articles/PMC1298365/
+19. Rajan 2025. Taiwan J Ophthalmol 15:549-558. doi:10.4103/tjo.TJO-D-25-00059
+20. Kanclerz 2025. J Cataract Refract Surg 51:257-266. doi:10.1097/j.jcrs.0000000000001572
+21. Solomon 1993. J Cataract Refract Surg 19:488-93. doi:10.1016/s0886-3350(13)80612-8
+22. Vote 2006. Am J Ophthalmol 141:308-312. doi:10.1016/j.ajo.2005.09.012
+23. Kaufmann 2024. Retina 44:1337-1343. doi:10.1097/IAE.0000000000004139
+24. Hudde 1996. Ger J Ophthalmol 5:449-53. https://pubmed.ncbi.nlm.nih.gov/9479535/
+
+製作　張博淳
