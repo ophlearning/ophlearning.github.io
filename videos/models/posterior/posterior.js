@@ -303,7 +303,10 @@ const POSTERIOR = (() => {
       if (t.inf && t.tip === 'supra') tipTarget = P3(h, s + 1.6, Tw + 0.02);
       const axis = unit(sub(tipTarget, pivot));
       const L = N.cannulaL, base = sub(pivot, mul(axis, Tw * 0.5 + 0.25)), tip = t.inf && t.tip !== 'vit' ? tipTarget : add(base, mul(axis, L));
-      return Object.assign({}, t, { i, entry, pivot, nin, ec, tdir, axis, base, tip, hubTop: sub(base, mul(axis, 1.1)), Tw, inst: ins || null });
+      // optional conjunctival opening (t.cj, mm along the tunnel direction ec from the scleral entry): 0 while the conjunctiva is held pushed
+      // over the entry; after release it slides back and the opening no longer lies over the scleral one. Without t.cj the conjunctiva is intact.
+      const cjC = typeof t.cj === 'number' ? P3(h + t.cj / (surfAt(s).rho * 30 * D2R), s, 0) : null, cjN = cjC ? N3(h + t.cj / (surfAt(s).rho * 30 * D2R), s) : null;
+      return Object.assign({}, t, { i, entry, pivot, nin, ec, tdir, axis, base, tip, hubTop: sub(base, mul(axis, 1.1)), Tw, inst: ins || null, cjC, cjN });
     });
     TROC_CACHE.set(Gm, out); return out;
   }
@@ -318,7 +321,7 @@ const POSTERIOR = (() => {
 
   // ---------------------------------------------------------------- tissue fields at a 3D point (g < 0 inside)
   function makeCtx(Gm) {
-    const st = Gm.st, ts = Gm.ts, D = Gm.D, T = Gm.tear, TR = troc(Gm), IN = (st.inst || []).map(x => instGeom(Gm, x));
+    const st = Gm.st, ts = Gm.ts, D = Gm.D, T = Gm.tear, TR = troc(Gm), IN = (st.inst || []).map(x => instGeom(Gm, x)), CJ = TR.filter(t => t.cjC);
     const gf = G.makeField({}).g;                                       // globe/'s cornea, limbus band, sclera (same anterior segment)
     const vit = Object.assign({ cut: 0, shave: 0 }, st.vit || {}), lev = Gm.lev, g = Gm.g;
     const cord = T ? (() => { const fe = flapPt(T, T.L, 0), dir = unit(add(mul(T.fr.en, 1), mul(T.fr.eu, -0.35))); return { a: fe, b: add(fe, mul(dir, 1.6 * (1 - vit.shave))) }; })() : null;
@@ -341,7 +344,9 @@ const POSTERIOR = (() => {
       at,
       cornea: c => gf.cornea(Wg(c)), limbus: c => gf.limbus(Wg(c)),
       sclera: c => Math.max(gf.sclera(Wg(c)), Math.min((0.85 - c.dq) * 0.9, c.dd - 0.3)),               // scleral canal at the disc (continuous field: smooth edge)
-      conj: c => Math.max(-c.dd - GN.conj, c.dd, 0.25 - c.s, c.s - 12),                                   // to the fornix, ~12 mm (示意)
+      conj: c => { let g = Math.max(-c.dd - GN.conj, c.dd, 0.25 - c.s, c.s - 12);                         // to the fornix, ~12 mm (示意)
+        for (const t of CJ) { const q = sub(c.p, t.cjC), a = dot(q, t.cjN); if (Math.abs(a) < 1) g = Math.max(g, N.cannula / 2 - len(sub(q, mul(t.cjN, a)))); }   // opening as wide as the cannula
+        return g; },
       ciliary: c => c.s >= c.ora + 0.02 ? 1 : Math.max(c.T - c.dd, c.dd - c.T - (c.cil ?? 0), GN.spur - 0.02 - c.s),
       choroid: c => c.s < c.ora ? 1 : Math.max(c.T - c.dd, c.dd - c.T - c.ch, 0.92 - c.dq),
       srf: c => c.s < c.ora || c.H < 0.002 ? 1 : Math.max(c.T + c.ch - c.dd, c.dd - c.T - c.ch - c.H, 1 - c.dq),
@@ -413,7 +418,7 @@ const POSTERIOR = (() => {
     anc('centre', [0, 0, 0]);
     if (Gm.tear) { const T = Gm.tear; anc('hinge', T.fr.Q); anc('flapEdge', flapPt(T, T.L, 0)); anc('tearApex', onRetina(Gm, T.fr, T.L, 0, 0.5).p); anc('tearMid', onRetina(Gm, T.fr, T.L / 2, 0, 0.0).p);
       anc('srf', P3(T.h, T.sh + 2.5, Tp(T.sh + 2.5) + chorAt(T.sh + 2.5) + Gm.H(T.sh + 2.5, T.h) * 0.5)); }
-    for (const t of troc(Gm)) { anc('troc_' + t.id, t.entry); anc('cannulaTip_' + t.id, t.tip); }
+    for (const t of troc(Gm)) { anc('troc_' + t.id, t.entry); anc('cannulaTip_' + t.id, t.tip); if (t.cjC) anc('cj_' + t.id, t.cjC); }
     if (Gm.dep) { anc('dep', Gm.ret(Gm.dep.h, Gm.dep.s, 1)); anc('depressor', P3(Gm.dep.h, Gm.dep.s, Gm.dep.depth - GN.conj - 0.9 - 2.5)); }
     for (const [i, ins] of (st.inst || []).entries()) { const I = instGeom(Gm, ins); anc('inst' + i, I.tip); }
     // fluid surfaces: the interface line in this plane (intersection with the level plane), clipped to the cavity
@@ -626,7 +631,8 @@ const POSTERIOR = (() => {
     const Gm = geom(opt.st), st = Gm.st, id = opt.id || 'ex', sur = st.surgeon ?? 12, base = G.enface({ st: {}, id, surgeon: sur }), M = G.enfaceMap(sur), o = [base.svg], A = Object.assign({}, base.A);
     const pts = []; for (let k = 0; k <= 72; k++) { const a = 2 * Math.PI * k / 72; pts.push(M([N.pupil * Math.sin(a), N.pupil * Math.cos(a), 0])); }
     o.push(`<path d="M${pts.map(F).join('L')}Z" fill="#8c2f17" stroke="#2e1a0f" stroke-width="1.2" ${NS}/>`);
-    for (const t of troc(Gm)) { if (t.out >= 1) { const q = M(t.entry); o.push(`<circle cx="${q[0].toFixed(3)}" cy="${q[1].toFixed(3)}" r="0.3" fill="#c9a49c"/>`); A['troc_' + t.id] = q; continue; }
+    for (const t of troc(Gm)) { if (t.out >= 1) { const q = M(t.entry); A['troc_' + t.id] = q;   // the closed wound; with t.cj the opening seen from above is the conjunctival one
+        const v = t.cjC ? M(t.cjC) : q; o.push(`<circle cx="${v[0].toFixed(3)}" cy="${v[1].toFixed(3)}" r="0.3" fill="#c9a49c"/>`); if (t.cjC) A['cj_' + t.id] = v; continue; }
       const q = M(t.entry), top = M(t.hubTop); A['troc_' + t.id] = q;
       if (t.inf) { const out = M(add(t.entry, mul(N3(t.h, t.s), 1.5))), far = M(P3(t.h, t.s + 9, -3)); o.push(`<path d="M${F(top)}Q${F(out)} ${F(far)}" fill="none" stroke="#9ec5e8" stroke-width="5" stroke-linecap="round" ${NS}/>`); }
       o.push(`<circle cx="${top[0].toFixed(3)}" cy="${top[1].toFixed(3)}" r="${N.hub / 2}" fill="${C.hub}" stroke="${C.hubS}" stroke-width="1" ${NS}/><circle cx="${top[0].toFixed(3)}" cy="${top[1].toFixed(3)}" r="0.22" fill="#1d2a3a"/>`); }

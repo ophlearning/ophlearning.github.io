@@ -1,7 +1,7 @@
 {
   "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/rrd-ppv-c3f8；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "pageNote": "2026-11-12 起有影片頁：片頭與第 1 章（1-1 到 1-4）有畫面，其他段落還是空白面板。textBase 2891a47 是旁白第 1 版的 commit（旁白、重點、來源、章節與參考文獻定稿），check-video.js 以它比對文字；之後合併進 main 時改成 main 上的 commit。還沒有 timeline.js，參考圖用字數估計的時間軸，合成語音後要重做。",
+  "pageNote": "2026-11-12 起有影片頁：片頭、第 1 章（1-1 到 1-4）與第 2 章（2-1、2-2）有畫面，其他段落還是空白面板。textBase 2891a47 是旁白第 1 版的 commit（旁白、重點、來源、章節與參考文獻定稿），check-video.js 以它比對文字；之後合併進 main 時改成 main 上的 commit。還沒有 timeline.js，參考圖用字數估計的時間軸，合成語音後要重做。",
   "textBase": "2891a47",
   "threshold": 0.0002,
   "tol": 48,
@@ -59,6 +59,22 @@
       "ref": "1-4-L4-0.9.jpg",
       "approved": "2026-11-12",
       "note": "Claude 自檢（半解析度看全圖、雙倍解析度放大左圖）：11 點裂孔的眼底圖放大（PVR B 的表面皺褶與裂孔邊緣捲起為示意、周邊被拉寬所以不放比例尺、全圖放大框）；右圖術式一覽與顯微鏡俯視的三個 trocar（位置示意）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-1",
+      "at": "3:0.9",
+      "ref": "2-1-L3-0.9.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（半解析度看全圖；標籤與數字由 check-video.js、check.js 檢查）：水平切面（右＝9 點 nasal、左＝3 點 temporal）用 shot-model.js 加 1 mm 格線放大看過顳側：pars plicata 後緣、4 mm 點落在 pars plana、7.58 mm 處視網膜從 ora 開始；鼻側 ora 6.96 mm、距離弧線與 trocar 箭頭的位置；右圖顯微鏡三個 trocar 都在 ora 環內（ora 與 pars plana 環為示意）。同段第 4、5 句的隧道橫切面也放大看過：斜插 25°、拔除後結膜開口離鞏膜入口 2 mm"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-2",
+      "at": "4:0.9",
+      "ref": "2-2-L4-0.9.jpg",
+      "approved": "2026-11-12",
+      "note": "Claude 自檢（半解析度看全圖；shot-model.js 加 1 mm 格線放大 4 點半切面）：灌注套管尖端在玻璃體腔、vitreous base 前方；套管底下 ora 後方的視網膜剝離（下方剝離淺，是模型的示意高度）；第 3 句錯誤示範的尖端在視網膜下液裡；右圖廣角看向 4 點半（示意），套管從 pars plana 伸進玻璃體腔"
     }
   ]
 }

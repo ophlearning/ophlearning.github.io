@@ -5,7 +5,7 @@
 //    病例 = the case summary confirmed by 站長 2026-11-12, spec.md「病例情境」).
 // 2. Narration ↔ model (M1…): each spatial claim the narration makes about the case is checked on what the video draws: the posterior-segment
 //    model (videos/models/posterior) through anim/views-posterior.js (VP: the states, windows and drawing constants draw.js uses), against
-//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapter 1.
+//    case or literature numbers written here — never against the model's own parameters. Segments drawn so far: title, chapters 1–2.
 // --selftest breaks each check once on purpose (a mutation) and fails unless every check then reports the error; a mutation that names
 // a model check (M…) must make that check fail.
 // --list prints the numbers found per segment (to fill the ledger).
@@ -25,7 +25,9 @@ const LEDGER = {
   '1-3': { '930': 'Kontos 2017b', '1.1': 'Kontos 2017b', '1.8': 'Callizo 2017', '19.8': 'Callizo 2017', '24': 'Sothivannan 2022',
            '11': '病例', '12': '結構', '3': '結構', '6': '結構', '9': '結構', '2': '結構', '1': '結構' },
   '1-4': { '11': '病例', '12': '結構', '3': '結構', '9': '結構' },
-  '2-1': { '3': 'EyeWiki 2026a', '4': 'Duker 2021', '7.6': 'Li 2025', '7.0': 'Li 2025', '83': 'Singh 2008', '39': 'Singh 2008' },
+  '2-1': { '3': 'EyeWiki 2026a', '4': 'Duker 2021', '7.6': 'Li 2025', '7.0': 'Li 2025', '83': 'Singh 2008', '39': 'Singh 2008', '2': 'Warrier 2008',
+           '9': '結構', '12': '結構' },
+  '2-2': { '4': '示意', '7': '結構', '9': '結構', '12': '結構' },
   '3-2': { '11': '病例', '12': '結構' },
   '4-1': { '110': 'Lai 2019' },
   '5-1': { '106': 'Govetto 2024', '11': '病例', '1.2': 'Jackson 2013', '1.6': 'Jackson 2013' },
@@ -70,9 +72,11 @@ async function screenText() {   // all text drawn on screen per segment, at 60 %
 // case and literature numbers (spec.md「病例情境」; posterior/CARD.md「數值與出處」)
 const CASE = { tear: 11, rdFrom: 11.5, rdTo: 5, ports: 3 };          // 病例: OS, HST at 11, RD 11:30 → 5 o'clock via temporal, 23G three-port PPV
 const LIT = { lincoff: 1.5, dfDist: 4.76, foveola: 0.35, oraT: 7.58, oraN: 6.96 };   // Yoshida 2018; Jonas 2015a; Curcio 1990; Li 2025
+const LIT2 = { trocRange: [3, 4], troc: 4, plicata: 2.0, tunnel: [20, 30], cjPush: 2,   // EyeWiki 2026a; Duker 2021; Guedes 2024 (pars plicata 2 mm behind the spur); Teixeira 2009; Warrier 2008
+  ports: { inf: 'inferotemporal', other: ['superonasal', 'superotemporal'] } };            // Tei 2005: infusion inferotemporal, the others superonasal and superotemporal
 const OS_TEMPORAL = 1;                    // left eye: clock 3 (the patient's left, X > 0) is temporal; in the examiner's drawing it is on the right
 const SIT_G = [0, -1, 0];                 // sitting upright: gravity toward the feet (eye frame: Y = superior)
-const near = (a, b, t) => Math.abs(a - b) <= t, f2 = v => (+v).toFixed(2);
+const near = (a, b, t) => Math.abs(a - b) <= t, f2 = v => (+v).toFixed(2), D2R_ = Math.PI / 180;
 const hdiff = (a, b) => { let d = a - b; d -= 12 * Math.round(d / 12); return d; };
 const line = (ctx, id, i) => ctx.text[id].lines[i].replace(/\n/g, '');
 const onScreen = (ctx, id, s) => (ctx.screen[id] || []).some(t => t.replace(/\s/g, '').includes(s.replace(/\s/g, '')));
@@ -83,6 +87,10 @@ const sideName = h => { const x = Math.sin(h * Math.PI / 6) * OS_TEMPORAL, y = M
   return { zh: (y > 0 ? '上方' : '下方') + '偏' + (x > 0 ? '顳側' : '鼻側'), en: (y > 0 ? 'supero' : 'infero') + (x > 0 ? 'temporal' : 'nasal') }; };
 const oraLit = h => (LIT.oraT + LIT.oraN) / 2 + (LIT.oraT - LIT.oraN) / 2 * Math.sin(h * Math.PI / 6) * OS_TEMPORAL;
 const W_ = 606, H_ = 410;   // dual panel drawing area (video-kit PW × PH)
+// clock hour of a screen vector in the surgeon's views (microscope; wide-angle with the inverter on), surgeon at 12: screen down = 12, left = 3 (written here)
+const clockSurg = d => { let h = Math.atan2(-d[0], d[1]) / (Math.PI / 6); if (h <= 0) h += 12; return h; };
+const sOf = p => POSTERIOR.wallOf(p[2], Math.hypot(p[0], p[1])).s;
+const onArc = (h, a, b) => ((h - a) % 12 + 12) % 12 <= ((b - a) % 12 + 12) % 12;   // h on the clockwise arc a → b
 function modelChecks(ctx) {
   const VP = ctx.VP, P = POSTERIOR, R = [], ok = (id, c, m) => R.push([!!c, `${id} ${m}`]);
   const det = (st, h) => { const Gm = P.geom(st); return Gm.H(oraLit(h) + 0.5, h) > 0.01; };
@@ -141,6 +149,61 @@ function modelChecks(ctx) {
   { const st = VP.ST.setup, E = VP.ext(st, 306, H_, VP.WIN.ext, 'm10'), n = Object.keys(E.A).filter(k => k.startsWith('troc_')).length, inf = P.troc(P.geom(st)).filter(t => t.inf).length;
     ok('M10', line(ctx, '1-4', 2).includes('23G 三孔 PPV') && n === CASE.ports && inf === 1 && ['23G 三孔 PPV', '不合併白內障手術（phaco）', '不加 scleral buckle', '最後打 C3F8'].every(t => onScreen(ctx, '1-4', t)),
       `1-4 microscope view: ${n} ports (${inf} infusion; 病例 三孔), plan rows on screen`); }
+  // M11 2-1 lines 0–3: trocars 3–4 mm from the limbus (EyeWiki 2026a), 4 mm in a phakic eye (Duker 2021): in the pars plana, in front of the ora on the temporal
+  // and the nasal side (Li 2025: 7.58, 6.96 mm). The horizontal section's sides named from the geometry; the drawn ora measured on each side
+  { const G = GLOBE, n0 = line(ctx, '2-1', 0), n1 = line(ctx, '2-1', 1), n2 = line(ctx, '2-1', 2), n3 = line(ctx, '2-1', 3), d4 = +((n1.match(/角膜緣後 (\d+(?:\.\d+)?) mm/) || [])[1]);
+    const hR = VP.SEC2_H, hL = hR + 6 > 12 ? hR - 6 : hR + 6, S = VP.sec(VP.ST.setup, W_, H_, VP.WIN.sec2, 'm11', { h: hR, tw: VP.WIN.sec2T, noTissue: true }).M;
+    const nasR = Math.sin(hR * Math.PI / 6) * OS_TEMPORAL < 0 && Math.sin(hL * Math.PI / 6) * OS_TEMPORAL > 0, oR = sOf(S.oraR_3), oL = sOf(S.oraL_3);
+    ok('M11', n0.includes(`${LIT2.trocRange[0]} 到 ${LIT2.trocRange[1]} mm`) && d4 === LIT2.troc && n2.includes('顳側約 7.6 mm，鼻側約 7.0 mm') && n3.includes('4 mm 落在 ora 前面的 pars plana')
+      && nasR && S.oraR[0] > 0 && S.oraL[0] < 0 && near(oR, LIT.oraN, 0.05) && near(oL, LIT.oraT, 0.05) && VP.ORA_LBL[hL] === LIT.oraT.toFixed(1) && VP.ORA_LBL[hR] === LIT.oraN.toFixed(1)
+      && onScreen(ctx, '2-1', VP.ORA_LBL[hL] + ' mm') && onScreen(ctx, '2-1', VP.ORA_LBL[hR] + ' mm') && onScreen(ctx, '2-1', '顳側temporal') && onScreen(ctx, '2-1', '鼻側nasal')
+      && VP.TROC_RANGE[0] === LIT2.trocRange[0] && VP.TROC_RANGE[1] === d4 && d4 < LIT.oraN - 1 && d4 < LIT.oraT - 1 && d4 > G.N.spur + LIT2.plicata,
+      `2-1 section: right ${hR} o'clock nasal, ora drawn ${f2(oR)} mm (Li 2025 ${LIT.oraN}), left ${hL} temporal ${f2(oL)} mm (${LIT.oraT}); marks at ${VP.TROC_RANGE.join('–')} mm; narration 4 mm < both, behind the pars plicata (${f2(G.N.spur + LIT2.plicata)} mm)`);
+    const Gm = P.geom(VP.ST.setup), f = P.makeCtx(Gm), T3 = P.troc(Gm);
+    ok('M11', T3.length === CASE.ports && T3.every(t => near(sOf(t.entry), d4, 0.01) && sOf(t.entry) < oraLit(t.h) - 1 && sOf(t.tip) < oraLit(t.h) && f.cavity(f.at(t.tip)) < 0 && !(f.retina(f.at(t.tip)) < 0)),
+      `2-1 the three drawn trocars: ${T3.map(t => `${t.id} ${f2(sOf(t.entry))} mm (ora ${f2(oraLit(t.h))})`).join(', ')}; cannula tips in the vitreous cavity in front of the ora, not in the retina`); }
+  // M12 2-1 lines 4–5: the conjunctiva pushed aside, the trocar in obliquely (tunnel 20–30° to the surface, Teixeira 2009) in the drawn plane; while it is in, the
+  // conjunctival opening lies over the scleral one; after it comes out, the conjunctiva slides back about 2 mm (Warrier 2008): the openings no longer line up,
+  // the conjunctiva closes over the scleral opening, its own opening lies away from the tunnel; the microscope view shows the same offset
+  { const G = GLOBE, n4 = line(ctx, '2-1', 4), n5 = line(ctx, '2-1', 5), Vin = VP.port(VP.ST.portIn, W_, H_, VP.WIN.port, 'm12a', VP.PORT, { noTissue: true }), Vout = VP.port(VP.ST.portOut, W_, H_, VP.WIN.port, 'm12b', VP.PORT, { noTissue: true });
+    const t = Vout.t, ang = Math.asin(Math.abs(G.dot(t.tdir, t.nin))) / D2R_, e = Vout.M.entry, te = Vout.M.tunnelEnd, scr = Math.atan2(te[1] - e[1], te[0] - e[0]) / D2R_;
+    ok('M12', n4.includes('先把結膜推開，再斜著插進鞏膜') && ang >= LIT2.tunnel[0] && ang <= LIT2.tunnel[1] && Vout.inPlane < 1e-6 && scr >= LIT2.tunnel[0] - 1 && scr <= LIT2.tunnel[1] + 1 && onScreen(ctx, '2-1', '斜著插oblique'),
+      `2-1 tunnel ${f2(ang)}° to the surface (Teixeira 2009: 20–30°), in the cross-section plane, drawn ${f2(scr)}° below the wall line`);
+    const f = P.makeCtx(P.geom(VP.ST.portOut)), cj = t.cjC, dIn = Vin.t.cjC ? G.len(G.sub(Vin.t.cjC, Vin.t.entry)) : 9, dOut = cj ? G.len(G.sub(cj, t.entry)) : 0, cg = G.N.conj / 2;
+    const closed = f.conj(f.at(G.add(t.entry, P.N3(t.h, t.s).map(v => v * cg)))) < 0, open = cj && f.conj(f.at(G.add(cj, t.cjN.map(v => v * cg)))) > 0, away = cj && G.dot(G.sub(cj, t.entry), t.tdir) < 0;
+    const E = VP.ext(VP.ST.portOut, W_, H_, VP.WIN.extZ, 'm12e').M, mm = E.cj_it && Math.hypot(E.cj_it[0] - E.troc_it[0], E.cj_it[1] - E.troc_it[1]);
+    const back = (() => { const M = VP.ext(VP.ST.portOut, W_, H_, VP.WIN.extZ, 'm12f').r.M, a = M(t.entry), b = M(G.sub(t.entry, t.tdir)); return E.cj_it && (E.cj_it[0] - E.troc_it[0]) * (b[0] - a[0]) + (E.cj_it[1] - E.troc_it[1]) * (b[1] - a[1]) > 0; })();
+    ok('M12', n5.includes('結膜和鞏膜的開口錯開') && dIn <= 0.05 && near(dOut, LIT2.cjPush, 0.25) && closed && open && away && near(mm, dOut, 0.3) && back
+      && onScreen(ctx, '2-1', '結膜的開口conjunctiva') && onScreen(ctx, '2-1', '鞏膜的開口（被結膜蓋住）sclera'),
+      `2-1 openings: aligned while the trocar is in (${f2(dIn)} mm); after removal ${f2(dOut)} mm apart (Warrier 2008 ≈ ${LIT2.cjPush}), conjunctiva closed over the scleral opening, its opening on the side the trocar came from; microscope ${f2(mm)} mm`); }
+  // M13 2-2 lines 1–2: the left eye's inferotemporal infusion lies on the detachment (11:30 clockwise via 12 and 3 to 5 o'clock); the retina under it is detached
+  { const n1 = line(ctx, '2-2', 1), n2 = line(ctx, '2-2', 2), Gm = P.geom(VP.ST.setup), it = P.troc(Gm).find(t => t.inf) || { h: NaN }, h = it.h;
+    let detd = true; for (let s = oraLit(h) + 1; s <= oraLit(h) + 4; s += 0.5) if (!(Gm.H(s, h) > 0.05)) detd = false;
+    const S = VP.sec(VP.ST.setup, W_, H_, VP.WIN.inf, 'm13', { h: VP.INF_H, tw: VP.WIN.infT, noTissue: true }).M;
+    ok('M13', n1.includes('套管常見放在 inferotemporal') && n2.includes('剝離經過 temporal 下方') && n2.includes('inferotemporal 的套管底下，視網膜可能是剝離的')
+      && sideName(h).en === LIT2.ports.inf && onArc(h, CASE.rdFrom, CASE.rdTo) && onArc(3, CASE.rdFrom, CASE.rdTo) && detd && VP.INF_H === h && S.troc_it_off < 0.01 && S.troc_it[0] > 0
+      && onScreen(ctx, '2-2', '剝離的視網膜detachedretina') && onScreen(ctx, '2-2', sideName(h).en),
+      `2-2 infusion at ${h} o'clock = ${sideName(h).zh} ${sideName(h).en} (OS), on the arc ${CASE.rdFrom} → ${CASE.rdTo} via 3; retina 1–4 mm behind the ora detached; drawn section through it (right side)`); }
+  // M14 2-1, 2-2: the three ports in the same quadrants in every view — microscope (2-1, 2-2), the section through the infusion (2-2), the wide-angle view (2-2)
+  { const E = VP.ext(VP.ST.setup, W_, H_, VP.WIN.extF, 'm14').M, c = E.centre, names = {}, want = { it: LIT2.ports.inf };
+    for (const k of ['it', 'st', 'sn']) { const q = E['troc_' + k]; names[k] = q ? sideName(clockSurg([q[0] - c[0], q[1] - c[1]])).en : 'missing'; }
+    const oth = [names.st, names.sn].sort().join(), labs = ['灌注inferotemporal', '器械孔superotemporal', '器械孔superonasal'];
+    const S = VP.sec(VP.ST.setup, W_, H_, VP.WIN.inf, 'm14s', { h: VP.INF_H, tw: VP.WIN.infT, noTissue: true }).M, hl = VP.INF_H + 6 > 12 ? VP.INF_H - 6 : VP.INF_H + 6;
+    const Wv = VP.wide(Object.assign({}, VP.ST.setup, { look: VP.LOOK_INF }), W_, H_, VP.WIN.wide, 'm14w').M, hw = Wv.cannula_it && clockSurg([Wv.cannula_it[0] - Wv.pole[0], Wv.cannula_it[1] - Wv.pole[1]]);
+    ok('M14', names.it === want.it && oth === LIT2.ports.other.join() && labs.every(t => onScreen(ctx, '2-1', t) && onScreen(ctx, '2-2', t))
+      && S.troc_it && S.troc_it_off < 0.01 && S.troc_it[0] > 0 && sideName(VP.INF_H).en === names.it && S.troc_sn && S.troc_sn_off < 0.01 && S.troc_sn[0] < 0 && sideName(hl).en === names.sn
+      && hw && sideName(hw).en === names.it && Math.hypot(Wv.cannula_it[0], Wv.cannula_it[1]) < Wv.R,
+      `ports — microscope: infusion ${names.it}, ${names.st}, ${names.sn} (Tei 2005); 2-2 section: infusion right (${sideName(VP.INF_H).en}), superonasal port left (${sideName(hl).en}); wide view: infusion cannula at ${hw && f2(hw)} o'clock, inside the field`); }
+  // M15 2-2 lines 0, 3–5: the infusion tip — in the vitreous cavity (drawn in the wide view), under the retina in the 錯誤示範, in the wall (示意) when air goes under the choroid
+  { const tipOf = st => { const Gm = P.geom(st), f = P.makeCtx(Gm), t = P.troc(Gm).find(x => x.inf) || { tip: [0, 0, 30] }; return { c: f.at(t.tip), f, t }; };
+    const A = tipOf(VP.ST.setup), B = tipOf(VP.ST.infSub), C = tipOf(VP.ST.infAir), Wv = VP.wide(Object.assign({}, VP.ST.setup, { look: VP.LOOK_INF }), W_, H_, VP.WIN.wide, 'm15w').M;
+    ok('M15', line(ctx, '2-2', 4).includes('一定要看到尖端在玻璃體腔') && A.f.cavity(A.c) < 0 && !(A.f.srf(A.c) < 0) && !(A.f.retina(A.c) < 0) && Wv.cannulaU0_it > 0 && onScreen(ctx, '2-2', '尖端在玻璃體腔inthevitreous'),
+      `2-2 correct: infusion tip in the vitreous cavity, drawn in the wide view from ${f2(Wv.cannulaU0_it)} of the cannula on`);
+    ok('M15', line(ctx, '2-2', 3).includes('套管尖端不可以在視網膜下') && B.f.srf(B.c) < 0 && onScreen(ctx, '2-2', '錯誤示範') && onScreen(ctx, '2-2', '尖端在視網膜下subretinal'),
+      '2-2 錯誤示範: the tip under the retina (in the subretinal fluid), labelled on screen');
+    ok('M15', line(ctx, '2-2', 5).includes('若空氣跑到脈絡膜下') && line(ctx, '2-2', 5).includes('要立刻停止灌氣') && VP.ST.infAir.gas > 0 && !(C.f.cavity(C.c) < 0) && C.c.dd > C.c.T - 0.02 && C.c.dd < C.c.T + 0.1
+      && onScreen(ctx, '2-2', '空氣跑到脈絡膜下（示意）') && onScreen(ctx, '2-2', '示意'),
+      `2-2 示意: air in the eye, the slipped tip in the wall just inside the sclera (${f2(C.c.dd)} mm deep, sclera ${f2(C.c.T)} mm), not in the cavity`); }
   return R;
 }
 
@@ -175,6 +238,7 @@ function baseCtx(screen) {
 // mutation helpers: a copy of VP with some states, constants or views replaced
 const vpWith = patch => Object.assign({}, VP0, patch);
 const stWith = (k, patch) => vpWith({ ST: Object.assign({}, VP0.ST, { [k]: Object.assign({}, VP0.ST[k], patch) }) });
+const portWith = o => Object.assign({}, POSTERIOR.CASE, { troc: POSTERIOR.trocarsFor('OS').map(t => t.id === VP0.PORT ? Object.assign({}, t, o) : t) });   // the demonstrated port changed
 const mirrorChart = (keys) => vpWith({ fundus: (...a) => { const r = VP0.fundus(...a), c = r.P([0, 0]), A = Object.assign({}, r.A); for (const k of keys || Object.keys(A)) A[k] = [2 * c[0] - A[k][0], A[k][1]]; return Object.assign({}, r, { A }); } });
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
 (async () => {
@@ -210,6 +274,13 @@ const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
       ['head view lying supine', c => { c.VP = stWith('sit', { head: { pose: 'supine' } }); }, 'M8'],
       ['superotemporal label at 10:30', c => { c.VP = vpWith({ ST_H: 10.5 }); }, 'M9'],
       ['two ports', c => { c.VP = stWith('setup', { troc: POSTERIOR.trocarsFor('OS').slice(0, 2) }); }, 'M10'],
+      ['trocars 7.5 mm behind the limbus', c => { c.VP = stWith('setup', { troc: POSTERIOR.trocarsFor('OS').map(t => Object.assign({}, t, { s: 7.5 })) }); }, 'M11'],
+      ['ora distances swapped (temporal 7.0)', c => { c.VP = vpWith({ ORA_LBL: { 3: '7.0', 9: '7.6' } }); }, 'M11'],
+      ['straight insertion (tunnel 90°)', c => { c.VP = vpWith({ ST: Object.assign({}, VP0.ST, { portOut: portWith({ ins: 1, out: 1, cj: -2, ang: 90 }) }) }); }, 'M12'],
+      ['conjunctiva not pushed (openings still aligned)', c => { c.VP = vpWith({ ST: Object.assign({}, VP0.ST, { portOut: portWith({ ins: 1, out: 1, cj: 0 }) }) }); }, 'M12'],
+      ['infusion at 7:30', c => { c.VP = stWith('setup', { troc: POSTERIOR.trocarsFor('OS').map(t => t.inf ? Object.assign({}, t, { h: 7.5 }) : t) }); }, 'M13'],
+      ['microscope with the surgeon at 6', c => { c.VP = stWith('setup', { surgeon: 6 }); }, 'M14'],
+      ['error demonstration with the tip in the cavity', c => { c.VP = stWith('infSub', { troc: POSTERIOR.trocarsFor('OS') }); }, 'M15'],
     ];
     let bad = 0;
     for (const [name, mut, target] of MUT) { const c = baseCtx(screen); mut(c); const fails = runAll(c).filter(r => !r[0]), n = fails.length, hit = !target || fails.some(r => r[1].startsWith(target + ' '));

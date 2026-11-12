@@ -6,6 +6,8 @@
 //   VP.sec(st, W, H, win, id, o)            meridional section through clock o.h (default 11: right = 11, left = 5), anterior up
 //   VP.head(st, W, H, win, id)              head-position view: section through the tear with gravity straight down
 //   VP.ext(st, W, H, win, id)               microscope view from above with the trocars (surgeon at 12)
+//   VP.port(st, W, H, win, id, portId)      cross-section of a trocar's tunnel (wall left–right, inside down; the tunnel runs to the right)
+//   VP.wide(st, W, H, win, id)              surgeon's wide-angle view, with the cannulas seen from inside (shaft from the pars plana to the tip)
 //   VP.chart(h, r)                          chart mm (screen: y down) of clock hour h at r mm from the foveola
 const VP = (() => {
   const P = POSTERIOR, G = GLOBE, D2R = Math.PI / 180;
@@ -25,6 +27,22 @@ const VP = (() => {
     sit: Object.assign({}, P.CASE, { head: { pose: 'sit' } }),                 // the case sitting upright (1-2: the detachment follows gravity)
     setup: Object.assign({}, P.CASE, { troc: true }),                          // three ports (1-4: 23G three-port PPV; clock hours 示意)
   };
+  const SEC2_H = 9;                   // 2-1: horizontal section, right = 9 (OS nasal), left = 3 (temporal), seen from 12 like the surgeon
+  const INF_H = 4.5;                  // 2-2: section through the infusion port (OS inferotemporal; Tei 2005; the exact clock hour 示意)
+  const TROC_RANGE = [3, 4];          // trocars 3–4 mm from the limbus depending on the lens (EyeWiki 2026a); phakic 4 mm (Duker 2021)
+  const ORA_LBL = { 3: '7.6', 9: '7.0' };   // limbus → ora written on screen: temporal 7.6, nasal 7.0 mm (Li 2025: 7.58, 6.96; narration 2-1 line 2)
+  const CJ_PUSH = 2;                  // conjunctiva displaced about 2 mm before the trocar goes in (Warrier 2008); portOut's cj
+  // chapter 2 (set-up). The port shown going in (2-1) is the infusion port, the one 2-2 is about; the other two stay in place.
+  const PORT = 'it';
+  const portSt = (ins, out, cj) => Object.assign({}, P.CASE, { troc: P.trocarsFor('OS').map(t => t.id === PORT ? Object.assign({}, t, { ins, out, cj }) : t) });
+  const infSt = (tip, extra) => Object.assign({}, P.CASE, extra || {}, { troc: P.trocarsFor('OS').map(t => t.inf ? Object.assign({}, t, { tip }) : t) });
+  Object.assign(ST, {
+    portPush: portSt(0, 0, undefined),             // 2-1 line 4: the conjunctiva pushed aside, the trocar not in yet (no opening yet)
+    portIn: portSt(0, 0, 0),                        // 2-1 line 4: the blade (drawn by draw.js along the tunnel line) through the pushed conjunctiva: openings aligned
+    portOut: portSt(1, 1, -CJ_PUSH),                // 2-1 line 5: trocar out, the conjunctiva slid back (its opening CJ_PUSH mm from the scleral one)
+    infSub: infSt('sub'),                           // 2-2 line 3: 錯誤示範, infusion tip under the retina
+    infAir: infSt('supra', { vit: { cut: 1, shave: 1 }, gas: 0.5 }),   // 2-2 line 5: 示意, air through a slipped cannula into the suprachoroidal space (air–fluid exchange after the vitrectomy)
+  });
   // drawing constants checked by check.js against the case or the literature
   const RD_ARC = [11.5, 17];          // the detachment's extent drawn round the chart: 11:30 clockwise via 12 and 3 to 5 o'clock (病例)
   const LINCOFF = { c: 12, half: 1.5 };   // superior detachment crossing 12: primary break within 1.5 clock hours of 12 (Yoshida 2018)
@@ -43,11 +61,27 @@ const VP = (() => {
     head: { x: -19.5, y: -13.6, w: 40.4 },                 // head-position view (1-2)
     headT: { x: -13.5, y: -13.5, w: 27, h: 27 },
     ext: { x: -12.6, y: -16.9, w: 25.2 },                  // microscope view (1-4), in the right half of the panel (306 px)
+    sec2: { x: -15.6, y: -14.6, w: 31.2 },                 // 2-1: anterior two thirds of the horizontal (9–3) section, room outside the wall for the distance marks
+    sec2T: { x: -13.4, y: -14.6, w: 26.8, h: 21.2 },
+    port: { x: -3.2, y: -1.95, w: 6.4 },                   // 2-1: tunnel cross-section, 6.4 mm wide (wall at the top, vitreous below)
+    extF: { x: -18.5, y: -12.5, w: 37 },                   // 2-1, 2-2: microscope view filling a panel (the ora ring, about 11 mm from the centre, fits)
+    extZ: { x: -11.4, y: -9.6, w: 10 },                    // 2-1 lines 4–5: microscope view around the infusion port (upper left; its entry at −6.3, −6.3)
+    inf: { x: -20.2, y: -13.6, w: 40.4 },                  // 2-2: whole eye, 4:30–10:30 section
+    infT: { x: -13.6, y: -13.6, w: 27.2, h: 27.33 },
+    infZ: { x: 3.0, y: -10.3, w: 15 },                     // 2-2 lines 2–5: the infusion port, the ora and the detached retina behind it (labels on the right)
+    infZT: { x: 3.0, y: -10.3, w: 10.6, h: 10.2 },
+    wide: { x: -29.6, y: -20, w: 59.2 },                   // 2-2: whole wide-angle field
   };
+  const LOOK_INF = { h: INF_H, deg: 45 };                  // 2-2: the surgeon looks toward the infusion (示意, as the model looks toward 11 for the tear)
   const OR = {   // orientation lines (POSTERIOR.orient: checked in posterior/check.js B2, B5)
     chart: P.orient.chart('OS'),
     sec: (() => { const o = P.orient.section(SEC_H, 'OS'); return `左眼 OS　上＝前　右＝${P.clockName(o.right)}　從 ${P.clockName(o.from)}那側看`; })(),
     head: '左眼 OS　' + P.orient.head(ST.sit).replace('　畫面下＝重力方向', '') + '　下＝重力　右＝前',
+    sec2: P.orient.section(SEC2_H, 'OS').text,
+    inf: (() => { const o = P.orient.section(INF_H, 'OS'); return `左眼 OS　上＝前　右＝${P.clockName(o.right)}　從 ${P.clockName(o.from)}那側看`; })(),
+    ext: '俯視：左眼 OS　術者坐 12 點　下＝12 點、右＝9 點 nasal',
+    port: '切面平行角膜緣　上＝外（結膜）　下＝玻璃體腔',
+    wide: P.orient.wide('OS', true, 12).replace('術者坐 12 點　', '').replace('：下＝12 點　', '：下＝12 點、') + '　看向灌注（示意）',
   };
 
   // ---------------------------------------------------------------- views
@@ -79,8 +113,41 @@ const VP = (() => {
     return { svg: `${bg}<g transform="${c.tf}">${r.svg}</g>`, A: mapA(A, c.P), M: A, k: c.k, P: c.P, flow: flow.map(c.P), r };
   }
   function ext(st, W, H, win, id) { const c = cam(win, W, H), r = P.ext({ st, id }); return wrap(c, r); }
+  // cross-section of a trocar's tunnel (plane across the meridian at the port: the wall runs left–right, inside down, the tunnel to the right).
+  // Extra anchors (mm): the scleral entry, the inner end of the tunnel, the conjunctival opening, label points on each layer 1.9 mm right of the port;
+  // tdir = the tunnel direction on screen; out(L) = the point L mm outside the entry along the tunnel line (the trocar's handle, drawn by draw.js)
+  function port(st, W, H, win, id, portId = PORT, o = {}) {
+    const c = cam(win, W, H), Gm = P.geom(st), t = P.troc(Gm).find(x => x.id === portId), pl = G.planes.across(t.h, t.s), to = q => G.toPlane(pl, q);
+    const r = P.section({ st, plane: pl, win: o.tw || Object.assign({ h: win.w * H / W }, win), step: o.step || 0.016, id, noTissue: o.noTissue });
+    const A = Object.assign({}, r.A), Lt = t.Tw / Math.sin(t.ang * D2R), dh = 1.9 / (P.surfAt(t.s).rho * 30 * D2R), cil = P.cilTh(t.s - G.N.spur, P.oraAt(t.h, 1) - G.N.spur);
+    A.entry = to(t.entry); A.tunnelEnd = to(G.add(t.entry, t.tdir.map(v => v * Lt))); if (t.cjC) A.cj = to(t.cjC);
+    A.conjL = to(P.P3(t.h + dh, t.s, -G.N.conj * 0.5)); A.sclL = to(P.P3(t.h + dh, t.s, t.Tw * 0.5)); A.planaL = to(P.P3(t.h + dh, t.s, t.Tw + cil * 0.5)); A.vitL = to(P.P3(t.h + dh, t.s, t.Tw + cil + 1.0));
+    const td = [G.dot(t.tdir, pl.U), G.dot(t.tdir, pl.V)], out = L => c.P([A.entry[0] - td[0] * L, A.entry[1] - td[1] * L]);
+    const bg = `<rect x="0" y="0" width="${W}" height="${H}" fill="${P.C.bg}"/>`;
+    return { svg: `${bg}<g transform="${c.tf}">${r.svg}</g>`, A: mapA(A, c.P), M: A, k: c.k, P: c.P, r, t, plane: pl, tdir: td, out, inPlane: Math.abs(G.dot(t.tdir, G.unit(G.cross(pl.U, pl.V)))) };
+  }
+  // wide-angle view with the cannulas: each cannula drawn from where it leaves the wall into the cavity to its tip (the same 3D points as the section),
+  // shaft width from the distance to the viewpoint (as the model draws instruments), clipped to the field. Anchors cannula_<id> (tip), cannulaIn_<id>
+  function wide(st, W, H, win, id) {
+    const c = cam(win, W, H), r = P.wide({ st, id }), Gm = r.Gm, Wm = r.map, f = P.makeCtx(Gm), kp = P.keyPoints(), A = Object.assign({}, r.A), o = [];
+    for (const t of P.troc(Gm)) { if (!(t.ins >= 1) || t.out >= 1) continue;
+      const at = u => G.add(t.base, G.sub(t.tip, t.base).map(v => v * u));
+      let u0 = null; for (let k = 0; k <= 400; k++) if (f.cavity(f.at(at(k / 400))) < 0) { u0 = k / 400; break; }
+      if (u0 === null) continue;
+      const pts = []; for (let k = 0; k <= 24; k++) { const p = at(u0 + (1 - u0) * k / 24); pts.push([Wm.proj(p), kp.K_W * P.N.cannula / G.len(G.sub(p, [0, 0, kp.VZ]))]); }
+      const L = [], R = []; for (let k = 0; k < pts.length; k++) { const [q, w] = pts[k], nb = pts[Math.min(pts.length - 1, k + 1)][0], pb = pts[Math.max(0, k - 1)][0], d = G.unit([nb[0] - pb[0], nb[1] - pb[1], 0]), nr = [-d[1], d[0]];
+        L.push([q[0] + nr[0] * w / 2, q[1] + nr[1] * w / 2]); R.push([q[0] - nr[0] * w / 2, q[1] - nr[1] * w / 2]); }
+      const tip = pts[pts.length - 1];
+      o.push(`<path d="M${[...L, ...R.reverse()].map(G.F).join('L')}Z" fill="#c3cad1" stroke="#4b545d" stroke-width="1" ${G.NS}/>`,
+        `<circle cx="${tip[0][0].toFixed(3)}" cy="${tip[0][1].toFixed(3)}" r="${(tip[1] * 0.42).toFixed(3)}" fill="#2b3036" stroke="#e8edf1" stroke-width="1.2" ${G.NS}/>`);
+      A['cannula_' + t.id] = tip[0]; A['cannulaIn_' + t.id] = pts[0][0]; A['cannulaU0_' + t.id] = u0; }
+    A.rdInf = Wm.proj(Gm.ret(INF_H, P.oraAt(INF_H, 1) + 4, 1));   // the detached retina behind the infusion port
+    const svg = `<g transform="${c.tf}">${r.svg}<g clip-path="url(#${id}_f)">${o.join('')}</g></g>`;
+    return { svg, A: mapA(A, c.P), M: A, k: c.k, P: c.P, r };
+  }
   // points round the tear on the attached retina, in its tangent frame (u posterior from the hinge, c across, mm) → chart mm
   function tearChart(st, pts) { const Gm = P.geom(st), T = Gm.tear; return pts.map(([u, cc]) => chartXY(P.onRetina(Gm, T.fr0, u, cc, 1, Gm.ret0).p)); }
-  return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, ST, RD_ARC, LINCOFF, ST_H, SEC_H, WIN, OR, D2R };
+  return { cam, chart, chartXY, tearChart, fundus, sec, head, ext, port, wide, ST, RD_ARC, LINCOFF, ST_H, SEC_H, SEC2_H, INF_H, TROC_RANGE, ORA_LBL, CJ_PUSH, PORT, LOOK_INF,
+    portSt, WIN, OR, D2R };
 })();
 if (typeof module !== 'undefined') module.exports = VP;
