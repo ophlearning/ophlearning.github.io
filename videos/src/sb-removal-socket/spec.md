@@ -15,6 +15,7 @@
 ## 病例情境（站長 2026-11-13 確認）
 - 站長確認的原文：「這次是做SB removal，我是助手，學習手術步驟」；手術時間「對，今天 17:30 以後」（2026-11-13）。
 - Claude 依站長提供的門診紀錄與三份舊 OP note 整理、站長確認的一行摘要：OS 眼窩（evisceration、沒放植入物、目前戴 conformer）：GA 下取出暴露且 NTM 感染的 #41 encircling band（縫在鞏膜殼上、穿過四條直肌下方）→ 拆縫線、剪斷 band、從直肌下抽出 → band 送 mycobacteria 培養 → 清創、沖洗 → 關結膜、放回 conformer；這次不放植入物、不做眼窩重建。
+- 站長 2026-11-13 確認：提供的文件裡三份 OP note 都是這位病人過去的手術紀錄。
 - 病史（只寫年份與術式，來源是舊 OP note 原文）：
   - 2009 年：RRD，radial scleral buckle（#506 silicone sponge）＋PPV＋endolaser＋C3F8。
   - 2009 年（同年再剝離）：360° peritomy、四條直肌用 silk 套住、**拆掉 radial buckle**、改用 **#41 band** 以 **5-0 Dacron** 縫在鞏膜上；20G PPV、posterior retinotomy、fluid-air exchange、endolaser、silicone oil。
