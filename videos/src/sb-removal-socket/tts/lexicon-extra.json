@@ -1,0 +1,22 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py。「著」換成「着」：模型字典的「著」唸 zhù，旁白裡都是輕聲的 zhe。NTM 照字母唸；#41 唸成「四十一號」；5-0 照開刀房習慣唸 five-O。",
+ "replace": {
+  "著": "着",
+  "NTM": "N T M",
+  "#41": "四十一號",
+  "5-0": "five O"
+ },
+ "words": {
+  "abscessus": "AE0 B S EH1 S AH0 S",
+  "amikacin": "AE2 M IH0 K EY1 S IH0 N",
+  "biofilm": "B AY1 OW0 F IH2 L M",
+  "clarithromycin": "K L AE2 R IH0 TH R OW0 M AY1 S IH0 N",
+  "conformer": "K AH0 N F AO1 R M ER0",
+  "evisceration": "IH0 V IH2 S ER0 EY1 SH AH0 N",
+  "formalin": "F AO1 R M AH0 L IH0 N",
+  "mycobacteria": "M AY2 K OW0 B AE0 K T IH1 R IY0 AH0",
+  "povidone": "P OW1 V IH0 D OW2 N",
+  "scleral": "S K L IH1 R AH0 L",
+  "tenon": "T EH1 N AH0 N"
+ }
+}

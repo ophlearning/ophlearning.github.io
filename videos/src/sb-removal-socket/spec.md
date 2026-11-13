@@ -1,0 +1,66 @@
+# Eviscerated socket 的 scleral buckle removal：助手版術前預習（規格書）
+
+2026-11-13 訂（草稿）。新類別：眼窩（evisceration 後、沒有植入物）裡殘留的 encircling band；模型見 `videos/models/socket/CARD.md`。
+
+## 目標與觀眾
+- 觀眾：在這台刀當**助手**的眼科住院醫師（站長 2026-11-13：「這次是做SB removal，我是助手，學習手術步驟」）。
+- 看完要能做到（每一項都是「上刀時的動作或判斷會不一樣」）：
+  1. **看懂整台刀的地圖**：band 在哪裡、怎麼穿過四條直肌下方、為什麼一定要拿掉；每一步主刀在做什麼、下一步是什麼。
+  2. **助手自己的動作做對**：暴露（拉開結膜與 Tenon、勾起直肌）、接住剪斷的 band 和縫線、核對 band 有沒有完整拿出來、檢體怎麼裝與送。
+  3. **認出不對勁並說出來**：band 被沒剪斷的縫線卡住、band 斷在裡面或少一段、縫線沒拿乾淨。
+  4. **術後**：知道為什麼這次不放植入物，以及 NTM 的治療要和誰接手。
+- 主刀才做的判斷（清創範圍、要不要縫合結膜）只講到看得懂為止，標「依主刀決定」。
+- 片長目標 6–9 分鐘（時間壓力下先求正確、精簡）。
+
+## 病例情境（站長 2026-11-13 確認）
+- 站長確認的原文：「這次是做SB removal，我是助手，學習手術步驟」；手術時間「對，今天 17:30 以後」（2026-11-13）。
+- Claude 依站長提供的門診紀錄與三份舊 OP note 整理、站長確認的一行摘要：OS 眼窩（evisceration、沒放植入物、目前戴 conformer）：GA 下取出暴露且 NTM 感染的 #41 encircling band（縫在鞏膜殼上、穿過四條直肌下方）→ 拆縫線、剪斷 band、從直肌下抽出 → band 送 mycobacteria 培養 → 清創、沖洗 → 關結膜、放回 conformer；這次不放植入物、不做眼窩重建。
+- 站長 2026-11-13 確認：提供的文件裡三份 OP note 都是這位病人過去的手術紀錄。
+- 病史（只寫年份與術式，來源是舊 OP note 原文）：
+  - 2009 年：RRD，radial scleral buckle（#506 silicone sponge）＋PPV＋endolaser＋C3F8。
+  - 2009 年（同年再剝離）：360° peritomy、四條直肌用 silk 套住、**拆掉 radial buckle**、改用 **#41 band** 以 **5-0 Dacron** 縫在鞏膜上；20G PPV、posterior retinotomy、fluid-air exchange、endolaser、silicone oil。
+  - 2023 年：Pseudomonas 角膜潰瘍 → **evisceration**（上方 180° peritomy、清除眼內組織與矽油、**沒有放植入物**、鞏膜 5-0 Vicryl mattress 關閉、Tenon 與結膜關閉、放 conformer）。OP note 沒有提到 band，影片當作 band 留在鞏膜殼上。
+  - 2026 年：眼窩可見暴露的 buckle、大顆 papillae、黏膿分泌物、眼周紅腫；培養長出 non-tuberculous mycobacteria（NTM，菌種病歷未寫，用 [菌種] 占位）。
+- **隱私**：網站 repo 是公開的。影片、網站、這份規格書都不寫病人姓名、病歷號、生日、年齡、性別、院內人員、主治代號與醫院名稱；只寫年份，不寫日期。
+- 站長沒有指定、病歷也沒寫的：band 暴露的鐘點、Dacron 縫線的數目與位置、有沒有 sleeve、結膜要不要縫、沖洗用什麼。畫面標「示意」，旁白說「依主刀決定」。
+
+## 時程（手術 2026-11-13 17:30 以後）
+1. 文字版跟刀清單（只有文字）：先交。
+2. 模型（小助手）與旁白並行 → 畫面 → `check-all` → 術前速讀包（`brief.js`）：15:50 交。
+3. 出片、上傳、網站：刀後。
+
+## 章節（暫定；數值與做法等文獻查證後定稿）
+| 章 | 內容 | 助手的重點 |
+|---|---|---|
+| 片頭 | 左眼 eviscerated socket，取出感染的 encircling band；助手版 | — |
+| 1 這台刀的地圖 | band 怎麼來的：繞眼球一圈、在四條直肌下方、用縫線固定；evisceration 後留在鞏膜殼上；暴露與 NTM 感染為什麼要拿掉 | 先在腦中定好四條直肌與 band 的位置 |
+| 2 暴露 | 拿掉 conformer、找到暴露處、打開結膜與 Tenon | 拉開、吸乾淨、讓主刀看得到 band |
+| 3 剪斷與抽出 | 剪斷固定縫線、剪斷 band、勾起直肌、把 band 從直肌下抽出 | 勾肌肉、接住 band 的一端、提醒還有縫線卡住 |
+| 4 核對、檢體、清創 | 核對 band 完整（兩端、長度）、縫線也拿乾淨；band 送 mycobacteria 培養；清除肉芽組織與沖洗 | 檢體不泡 formalin、標明要做 mycobacteria 培養 |
+| 5 收尾與術後 | 關結膜（依主刀）、放回 conformer；為什麼這次不放植入物；NTM 的抗生素交給誰 | — |
+| 6 助手清單 | 跟刀清單的回顧 | — |
+| 參考文獻 | | |
+
+## 畫面
+- 新模型 `videos/models/socket/`（2026-11-13 建）：
+  - 機轉切面：經某個鐘點的子午切面（上＝前），看得到結膜、Tenon、直肌、band 的橫切面、Dacron 縫線、鞏膜殼。
+  - 術者視角：左眼眼窩正面，術者坐 12 點（下＝12 點、temporal 在左），看得到開瞼器、結膜、直肌（結膜下）、band 的環與暴露處。
+- 沒有院內錄影。
+
+## 文獻
+- 查證紀錄：`research/`（小助手 2026-11-13 查，見檔案內每條的出處與證據層級）。
+
+## 驗收項目
+1. 眼別（OS）、術者方位（坐 12 點、temporal 在左）在旁白、畫面、模型一致：模型 `check.js` 檢查。
+2. 同一個結構（暴露處、剪斷處、被勾起的直肌）在兩個視角落在同一個鐘點，寫成檢查。
+3. band 在四條直肌下方、抽出時總長不變、沒剪斷的縫線會卡住 band，寫成檢查。
+4. 旁白每個數字在數字帳本都有出處；`node videos/tools/check-all.js videos/src/sb-removal-socket` 全部 PASS。
+5. 不出現病人識別資料、院內人員、主治代號與醫院名稱（commit 前 grep 檢查）。
+
+## 進度
+- 2026-11-13 15:25　規格書草稿；模型由小助手建；文獻由小助手查。
+- 2026-11-13 15:30　文字版跟刀清單交給站長。
+- 2026-11-13 15:50　模型（`videos/models/socket/`）、14 段畫面、影片 `check.js`（數字帳本＋旁白↔模型 M1–M6，故意改錯 15 種都會報錯）、16 張參考圖（Claude 自檢）完成；`check-all.js` 全部 PASS；術前速讀包（`brief.js`，14 張圖＋旁白）交給站長。
+- 2026-11-13 16:00　語音合成（`timeline.js`；參考圖在真實時間軸下逐像素相同）、出片（`out/sb-removal-socket.mp4`，1920×1080、6:13，ffprobe 372.6 秒），mp4 交給站長；YouTube 說明、章節、網站條目草稿在 `publish/`。
+- 2026-11-13 17:50　三張列印單（`print/`：跟刀清單 8 項、手術步驟圖 8 格、關鍵解剖與數字速查）：`print.js --gray` 全部 PASS，彩色與灰階全頁看過，交給站長（`-lss-on-a4.pdf`＋PNG）。站長指出原本漏做（repo 根目錄 `CLAUDE.md` 規定每台手術都要三張）。
+- 卡住：這個環境沒有 YOUTUBE_CLIENT_ID、YOUTUBE_CLIENT_SECRET、YOUTUBE_REFRESH_TOKEN，沒有上傳。下一步：在環境設定補上這三個環境變數後開新 session 上傳（或站長自己以不公開上傳、給影片 ID），再照 repo 根目錄 `CLAUDE.md` 同步網站（`publish/website-entry-draft.txt` 的 `yt` 換成影片 ID）。
