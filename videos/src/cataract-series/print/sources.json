@@ -1,0 +1,12 @@
+{
+  "videos": ["cataract-1-wound-ccc", "cataract-2-hydro-dc", "cataract-3-ia-iol", "cataract-4-pcr"],
+  "refs": [
+    "Chang DF, Campbell JR. Intraoperative floppy iris syndrome associated with tamsulosin. J Cataract Refract Surg 2005;31(4):664-73. doi:10.1016/j.jcrs.2005.02.027",
+    "Chang DF, et al. ASCRS White Paper: clinical review of intraoperative floppy-iris syndrome. J Cataract Refract Surg 2008;34(12):2153-62. doi:10.1016/j.jcrs.2008.08.031",
+    "Narendran N, et al. The Cataract National Dataset electronic multicentre audit of 55,567 operations: risk stratification for posterior capsule rupture and vitreous loss. Eye (Lond) 2009;23(1):31-7. doi:10.1038/sj.eye.6703049",
+    "Melles GR, et al. Trypan blue capsule staining to visualize the capsulorhexis in cataract surgery. J Cataract Refract Surg 1999;25(1):7-9. doi:10.1016/s0886-3350(99)80004-2",
+    "Osher RH, Yu BC, Koch DD. Posterior polar cataracts: a predisposition to intraoperative posterior capsular rupture. J Cataract Refract Surg 1990;16(2):157-62. doi:10.1016/s0886-3350(13)80724-9",
+    "Langwińska-Wośko E, Szulborski K, Broniek-Kowalik K. The complications during phacoemulsification in patients with posterior polar cataract. Klin Oczna 2011;113(1-3):16-8. PMID 21853943",
+    "Shingleton BJ, et al. Outcome of phacoemulsification and intraocular lens implantion in eyes with pseudoexfoliation and weak zonules. Acta Ophthalmol 2017;95(2):182-187. doi:10.1111/aos.13110"
+  ]
+}

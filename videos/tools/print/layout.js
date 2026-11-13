@@ -5,6 +5,8 @@
 //   checklist.js   PRINT.sheet({ type: 'checklist', … })                                — the checklist items
 //   steps.js       PRINT.sheet({ type: 'steps', … })                                    — each step: two views (state, window, labels)
 //   anatomy.js     PRINT.sheet({ type: 'anatomy', … })                                  — figures + number tables
+// A series folder (several videos of one operation, e.g. cataract-series) may add flow.js: PRINT.sheet({ type: 'flow', … }) — the
+// whole operation on one page (README.md「系列的單子」).
 // Everything else (page frame, layout, B/W overlay styles, label placement, legend, footer) is here and in print-kit.js; PDF / PNG
 // output and the checks are in print.js. The data format is documented in README.md (this folder).
 // ============================================================================
@@ -115,12 +117,31 @@
       `<div style="display: grid; grid-template-columns: ${def.bottom || '1fr 1fr 50mm'}; gap: 3mm">${def.tables.map(table).join('')}${def.legend ? P.legend(def.legend) : ''}</div></div>`;
   }
 
-  const LAYOUTS = { checklist, steps, anatomy };
-  // the sheet: def.type picks the layout; the page frame, footer and readiness flag come from PRINT.render
+  // ---------------------------------------------------------------- 4 whole-surgery flow (a series sheet for the wall: one page, the whole operation)
+  // def: { phases: [{ sec: 'phase heading', items: ['action, <b>key number</b>', …], w: relative column width (default 1) }, …]
+  //        (one column each, left to right; give a phase with fewer or shorter steps a smaller w),
+  //        alarm: { head: 'band heading', items: [{ name: 'the complication', see: 'what you see', act: 'the first action, <b>…</b>' }, …] }
+  //        (a black-framed band across the foot of the sheet, three per row, in the order they happen: 「name：see」, then 「→ act」 on a new line;
+  //        bold parts of act never break inside) }.
+  // Steps are numbered 1 … n across the phases, with no check boxes (it hangs on the wall); alarm items are not numbered.
+  const flowSteps = def => def.phases.reduce((a, p) => a + p.items.length, 0);
+  function flow(def) {
+    let k = 0;
+    const col = p => `<div class="fl-col"><div class="ck-sec">${p.sec}</div>` +
+      p.items.map(a => `<div class="fl-item"><div class="ck-no" data-struct="step">${++k}</div><div class="ck-act">${a}</div></div>`).join('') + `</div>`;
+    const al = def.alarm;
+    return `<div class="fl"><div class="fl-cols" style="grid-template-columns: ${def.phases.map(p => (p.w || 1) + 'fr').join(' ')}">${def.phases.map(col).join('')}</div>` +
+      (al ? `<div class="fl-alarm"><div class="fl-alarm-hd">${al.head}</div><div class="fl-alarm-grid">${al.items.map(i => `<div class="fl-al"><b>${i.name}</b>：${i.see}<br>→ ${i.act}</div>`).join('')}</div></div>` : '') + `</div>`;
+  }
+
+  const LAYOUTS = { checklist, steps, anatomy, flow };
+  // the sheet: def.type picks the layout; the page frame, footer and readiness flag come from PRINT.render. A flow sheet, and every sheet
+  // of a series folder (video.js without steps), numbers its own items (no step diagram to match). def.surgery replaces the title block's
+  // right side (video.js surgery) for one sheet.
   P.sheet = def => {
-    const V = VIDEO_CFG, name = window.PRINT_SHEET_NAME || def.type, n = def.type === 'checklist' ? def.items.length : def.type === 'steps' ? def.steps.length : V.steps;
-    if (n !== V.steps) throw new Error(`${def.type}: ${n} steps, but video.js says steps: ${V.steps} (checklist numbers = step numbers)`);
-    const meta = { id: V.id, short: V.surgery[0], videoTitle: V.title, surgery: V.surgery[0], eye: V.surgery.slice(1).join('<br>') };
-    return P.render({ ...def, name, meta, steps: V.steps, body: () => LAYOUTS[def.type](def) });
+    const V = VIDEO_CFG, name = window.PRINT_SHEET_NAME || def.type, n = def.type === 'checklist' ? def.items.length : def.type === 'steps' ? def.steps.length : def.type === 'flow' ? flowSteps(def) : V.steps;
+    if (def.type !== 'flow' && V.steps != null && n !== V.steps) throw new Error(`${def.type}: ${n} steps, but video.js says steps: ${V.steps} (checklist numbers = step numbers)`);
+    const S = def.surgery || V.surgery, meta = { id: V.id, short: S[0], videoTitle: V.title, surgery: S[0], eye: S.slice(1).join('<br>') };
+    return P.render({ ...def, name, meta, steps: n, body: () => LAYOUTS[def.type](def) });
   };
 })();
