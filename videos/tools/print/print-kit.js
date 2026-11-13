@@ -145,7 +145,7 @@ const PRINT = (() => {
       <div class="hd-left"><div class="hd-title">${esc(def.title)}</div><div class="hd-sub">${def.sub || ''}</div></div>
       <div class="hd-right"><b>${M.surgery}</b><br>${M.eye || ''}</div>
       <div class="body">${body}</div>
-      <div class="footer"><div>示意圖，非手術錄影；各院做法不同處依院內常規。　教學影片：${url}</div><div class="credit">製作　張博淳</div>
+      <div class="footer"><div>${def.note || '示意圖，非手術錄影；各院做法不同處依院內常規。'}　教學影片：${url}</div><div class="credit">製作　張博淳</div>
       <div class="src">數字出處：${def.sources.map(esc).join('；')}</div></div></div>`; };
     build();
     const all = document.body.textContent + document.title;
@@ -165,12 +165,12 @@ const PRINT = (() => {
     if (t) { const tw = () => { const r = document.createRange(); r.selectNodeContents(t); return r.getBoundingClientRect().width; };
       for (let pt = 25; tw() > (W / 2 - 40 - 4.5 - 1 - 10) * MMPX && pt > 22; ) { pt -= 0.5; t.style.fontSize = pt + 'pt'; } }
     const body = document.querySelector('.body'); if (!body) return;
-    const over = () => body.scrollHeight > body.clientHeight + 1 || [...body.querySelectorAll('.ck-col')].some(c => c.scrollHeight > c.clientHeight + 1);
+    const over = () => body.scrollHeight > body.clientHeight + 1 || [...body.querySelectorAll('.ck-col, .fl-col')].some(c => c.scrollHeight > c.clientHeight + 1);
     // a header wraps when its text has line boxes at more than one height (the cell is a flex column, so its height alone does not show it)
     const lines = el => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].map(q => Math.round(q.top))).size; };
     body.querySelectorAll('.cell-hd').forEach(h => { const t = h.lastElementChild;
       for (let pt = 11; lines(t) > 1 && pt > 9; ) { pt -= 0.5; h.style.fontSize = pt + 'pt'; h.querySelectorAll('.no').forEach(n => n.style.fontSize = '11pt'); } });
-    for (let pt = 16; over() && pt > 14 && body.querySelector('.ck-item'); ) { pt -= 0.5; body.querySelectorAll('.ck-item').forEach(e => e.style.fontSize = pt + 'pt'); }
+    for (let pt = 16; over() && pt > 14 && body.querySelector('.ck-item, .fl-item'); ) { pt -= 0.5; body.querySelectorAll('.ck-item, .fl-item').forEach(e => e.style.fontSize = pt + 'pt'); }
     for (let pt = 10.5; over() && pt > 9.5 && body.querySelector('.tbl'); ) { pt -= 0.5; body.querySelectorAll('.tbl').forEach(e => e.style.fontSize = pt + 'pt'); }
   }
   // labels of one figure, one row each (rows ordered by anchor height, so labels never overlap and leaders do not cross); each label

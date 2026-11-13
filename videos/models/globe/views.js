@@ -36,6 +36,16 @@ MODEL_VIEWS.globe = {
   // ④ section through the pars plana sclerotomy's meridian (right = the sclerotomy)
   pp: { title: '④ 經 pars plana 切口的子午切面（右＝切口）', win: [-6, -13.5, 16],
     draw: (state, id) => CATARACT.section({ st: state, h: (((state.cat || {}).pcr || {}).pp || {}).h ?? 9, win: _cw(state, { x: -6, y: -13.5, w: 16, h: 9.6 }), step: (state.view || {}).step || 0.03, id }).svg },
+  // ---- sutured scleral fixation of a three-piece IOL (globe/sfix.js; state under st.sfix). state.view = { hp, x, y, w, h, step }: hp = clock hour on the
+  // right of the section (default 2 o'clock, so 8 o'clock is on the left), x, y, w, h refine the window (mm)
+  sfix: { title: '鞏膜縫合固定：2–8 點切面（右＝2 點，上＝前）', win: [-8, -13.6, 16],
+    draw: (state, id) => SFIX.section({ st: state, h: (state.view || {}).hp ?? 2, win: _cw(state, { x: -8, y: -13.6, w: 16, h: 9 }), step: (state.view || {}).step || 0.03, id }).svg },
+  // close-up of the 2 o'clock fixation site (flap, sulcus, pars plicata)
+  sfixz: { title: '鞏膜縫合固定：2 點固定處放大（右＝2 點）', win: [5.0, -10.8, 3.6],
+    draw: (state, id) => SFIX.section({ st: state, h: (state.view || {}).hp ?? 2, win: _cw(state, { x: 5.0, y: -10.8, w: 3.6, h: 2.6 }), step: (state.view || {}).step || 0.008, id }).svg },
+  // microscope view, OD, surgeon at 12 (12 o'clock at the bottom, 9 temporal on the right)
+  sfixscope: { title: '鞏膜縫合固定：顯微鏡俯視（右眼 OD，術者坐 12 點）', win: [-11, -6.2, 22],
+    draw: (state, id) => SFIX.enface({ st: state, id, surgeon: state.surgeon ?? 12 }).svg },
   // microscope view for cataract states (dilated pupil, red reflex), surgeon at 12
   cscope: { title: '顯微鏡俯視（白內障，術者坐 12 點）', win: [-8, -4.5, 16],
     draw: (state, id) => CATARACT.enface({ st: state, id, surgeon: state.surgeon ?? 12 }).svg },

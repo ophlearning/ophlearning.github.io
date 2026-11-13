@@ -13,9 +13,18 @@ const cites = s => [...s.matchAll(CITE)].map(m => ({ who: m[1], year: m[2], all:
 const numbers = s => s.replace(/https?:\/\/\S+/g, ' ').replace(CITE, ' ').match(/(?<![A-Za-z0-9.])\d+(?:\.\d+)?(?:-\d+)?(?![A-Za-z0-9.])/g) || [];
 const FREE = ['院內常規', '示意', '結構', '病例'];
 
+// A series folder (no check.js of its own, e.g. videos/src/cataract-series) prints sheets that cover several videos. Its
+// print/sources.json names them: { "videos": ["cataract-1-wound-ccc", …] (sibling folders), "refs": ["full reference", …] (citations
+// only these sheets use, same format as REFS) }. Its ledger is every video's ledger (segments keyed 「<video> <segment>」), its REFS
+// every video's REFS plus "refs".
+const series = dir => { const f = path.join(dir, 'print', 'sources.json');
+  return !fs.existsSync(path.join(dir, 'check.js')) && fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+
 // the video's ledger, read from check.js without running it (check.js starts a browser when required). An object the ledger spreads in
 // (「...PED」, a shared set of entries; video ②) is read the same way from its own 「const PED = {…}」 in check.js.
 function videoLedger(dir) {
+  const S = series(dir);
+  if (S) { const out = {}; for (const v of S.videos) for (const [seg, nums] of Object.entries(videoLedger(path.join(dir, '..', v)))) out[`${v} ${seg}`] = nums; return out; }
   const src = fs.readFileSync(path.join(dir, 'check.js'), 'utf8');
   const objAt = name => { const i = src.indexOf(`const ${name} = {`); if (i < 0) throw new Error(`no ${name} in ${dir}/check.js`);
     let d = 0, j = src.indexOf('{', i);
@@ -23,7 +32,8 @@ function videoLedger(dir) {
   const led = objAt('LEDGER'), spread = [...new Set([...led.matchAll(/\.\.\.([A-Za-z_$][\w$]*)/g)].map(m => m[1]))];
   return Function('"use strict"; ' + spread.map(n => `const ${n} = ${objAt(n)};`).join(' ') + ' return (' + led + ')')();
 }
-function videoRefs(dir) { global.document = global.document || {}; return require(path.join(dir, 'anim', 'segments.js')).REFS; }
+function videoRefs(dir) { const S = series(dir); if (S) return [...S.videos.flatMap(v => videoRefs(path.join(dir, '..', v))), ...(S.refs || [])];
+  global.document = global.document || {}; return require(path.join(dir, 'anim', 'segments.js')).REFS; }
 
 // texts: [{ t, struct }] from the page; meta: window.SHEET_META. Returns [[ok, message], ...]
 function check(dir, texts, meta) {

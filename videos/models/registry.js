@@ -3,7 +3,7 @@
 // A new model is usable by the tools once it adds one line here.
 const MODEL_REGISTRY = {
   eyelid: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'eyelid/laceration.js', 'eyelid/views.js'],
-  globe: ['globe/globe.js', 'globe/cataract.js', 'globe/fluidics.js', 'globe/views.js'],   // cataract.js: optional cataract states (st.cat), its own views; fluidics.js: phaco machine panel data (②)
+  globe: ['globe/globe.js', 'globe/cataract.js', 'globe/fluidics.js', 'globe/sfix.js', 'globe/views.js'],   // cataract.js: optional cataract states (st.cat), its own views; fluidics.js: phaco machine panel data (②); sfix.js: sutured scleral fixation (st.sfix)
   hands: ['hands/hands.js', 'hands/views.js'],
   // the posterior-segment model extends the globe model's eye backwards (same outer surface, cornea, limbus, clock hours)
   posterior: ['globe/globe.js', 'posterior/posterior.js', 'posterior/views.js'],

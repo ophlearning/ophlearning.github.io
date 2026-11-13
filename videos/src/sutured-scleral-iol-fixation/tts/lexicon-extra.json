@@ -1,0 +1,29 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py。替換依序套用",
+ "replace": {
+  "MA60AC": "MA 60 AC",
+  "10-0": "十零",
+  "8-0": "八零",
+  "3-1-1": "三一一",
+  "23G": "23 gauge",
+  "°": "度",
+  "1 mm穿": "1 mm 穿",
+  "的IOL": "的 IOL"
+ },
+ "words": {
+  "haptic": "HH AE1 P T IH0 K",
+  "sulcus": "S AH1 L K AH0 S",
+  "prolene": "P R OW1 L IY2 N",
+  "trocar": "T R OW1 K AA2 R",
+  "pars": "P AA1 R Z",
+  "plana": "P L AA1 N AH0",
+  "plicata": "P L IH0 K AA1 T AH0",
+  "serrata": "S EH0 R AA1 T AH0",
+  "toric": "T AO1 R IH0 K",
+  "viscoelastic": "V IH2 S K OW0 IH0 L AE1 S T IH0 K",
+  "vitrector": "V IH0 T R EH1 K T ER0",
+  "cravit": "K R AE1 V IH0 T",
+  "tobradex": "T OW1 B R AH0 D EH2 K S",
+  "gauge": "G EY1 JH"
+ }
+}
