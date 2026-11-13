@@ -8,6 +8,10 @@ set -e
 KIT="$(cd "$(dirname "$0")" && pwd)"
 VDIR="$(cd "$1" && pwd)"; NAME="$2"; PAGE="${3:-anim/video.html}"; W="${4:-4}"
 [ -z "$NAME" ] && { echo "usage: build.sh <video dir> <output name> [page] [workers]"; exit 2; }
+# The three OR-wall sheets (videos/tools/print) come before the mp4 (CLAUDE.md): rebuild and check them, or print/SKIP gives the reason.
+if [ -s "$VDIR/print/SKIP" ]; then echo "print sheets skipped: $(head -1 "$VDIR/print/SKIP")"
+else [ -f "$VDIR/print/video.js" ] || { echo "missing $VDIR/print/ (make the three print sheets first, or write the reason in print/SKIP)"; exit 2; }
+  node "$KIT/../print/print.js" "$VDIR" --gray || { echo "print sheets failed: fix them before building the mp4"; exit 2; }; fi
 [ -f "$VDIR/anim/timeline.js" ] || { echo "missing $VDIR/anim/timeline.js (run the TTS steps first)"; exit 2; }
 [ -f "$VDIR/out/narration.wav" ] || { echo "missing $VDIR/out/narration.wav (run tts/assemble.py)"; exit 2; }
 FPS=30

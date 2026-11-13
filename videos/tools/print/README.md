@@ -21,6 +21,8 @@ node videos/tools/print/print.js videos/src/<影片> --selftest        # 另外�
 需要：Playwright（同其他工具）、`pdftoppm`、`pdfinfo`（poppler）、ImageMagick（`identify`、`convert`）、字型（`videos/models/fonts`，見 `videos/tools/README.md` 的「準備」）。
 
 ## 新影片：加三張單子
+每部手術影片都要做，順序在術前速讀包之後、出片之前；`video-kit/build.sh` 出片前會重跑 `print.js --gray`，沒有 `print/video.js` 或沒通過就不出片。確定不做的影片，在 `print/SKIP` 寫一行原因（`build.sh` 會印出來）。
+
 先讀該影片的 `anim/segments.js`（跟刀清單那一段、重點、來源）、`check.js` 的 `LEDGER`、`anim/params.js`、`anim/draw.js`（每一步結束時的狀態）與 `overview-notes.md`（哪些是示意、依院內常規）。**單子上只放影片已經查證過的內容**；影片標示意或依院內常規的，單子照樣標。
 
 在 `videos/src/<影片>/print/` 放四個檔（照範例複製最快）：
