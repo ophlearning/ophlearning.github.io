@@ -7,6 +7,8 @@
 // steps.js, anatomy.js, …). For each data file the shared page sheet.html (this folder) is opened with ?video=…&sheet=<name>; it lays the
 // sheet out (layout.js, print-kit.js, print.css). Output: vector PDF → out/print/<name>-<paper>.pdf, 300 dpi PNG (rasterised from that
 // PDF with pdftoppm) → out/print/<name>-<paper>.png (--gray also writes <name>-<paper>-gray.png for the B/W self-check). README.md: how to add a video.
+// LSs also writes out/print/<name>-lss-on-a4.pdf: the same sheet in an A4 page moved 27 mm right, which lands on the LSs paper with the
+// printer left on its A4 default (README.md); it is the file to send for printing.
 // Checks per sheet (all must pass, exit 1 otherwise):
 //   · no page errors; the PDF is one page of exactly the paper size (landscape);
 //   · numbers: numcheck.js (every number registered in the video ledger or the sheet's print ledger, cited in the footer);
@@ -25,6 +27,17 @@ const PAPERS = { lss: { w: 270, h: 210, pt: [765.35, 595.28], px: [3189, 2480] }
 const paperArg = process.argv.indexOf('--paper') > 0 ? process.argv[process.argv.indexOf('--paper') + 1] : 'lss';
 const paperList = paperArg === 'all' ? Object.keys(PAPERS) : [paperArg];
 for (const k of paperList) if (!PAPERS[k]) { console.error('unknown --paper ' + k + ' (lss | a4 | letter | all)'); process.exit(2); }
+
+// Chrome rounds the page box (e.g. 841.92 × 594.96 pt); set it to the paper exactly (same byte length, padded with spaces, so offsets stay valid)
+function fixBox(pdf, PP) {
+  const s = fs.readFileSync(pdf).toString('latin1'), box = `0 0 ${PP.pt[0]} ${PP.pt[1]}`;
+  const out = s.replace(/\/MediaBox \[([^\]]*)\]/g, (m0, inner) => { const v = inner.trim().split(/\s+/).map(Number);
+    if (v.length !== 4 || Math.abs(v[2] - PP.pt[0]) > 1.2 || Math.abs(v[3] - PP.pt[1]) > 1.2 || box.length > inner.length) return m0;
+    return '/MediaBox [' + box + ' '.repeat(inner.length - box.length) + ']'; });
+  if (out.length === s.length) fs.writeFileSync(pdf, Buffer.from(out, 'latin1'));
+}
+const pdfSize = pdf => { const info = execFileSync('pdfinfo', [pdf]).toString();
+  return [+(/Pages:\s+(\d+)/.exec(info) || [])[1], /Page size:\s+([\d.]+) x ([\d.]+) pts/.exec(info)]; };
 
 async function measure(page) {
   return page.evaluate(({ MM }) => {
@@ -94,14 +107,22 @@ function layoutChecks(m, R, PP) {
       layoutChecks(m, R, PP);
       const pdf = path.join(odir, name + '.pdf');
       await page.pdf({ path: pdf, width: PP.w + 'mm', height: PP.h + 'mm', printBackground: true, preferCSSPageSize: true });
-      // Chrome rounds the page box (e.g. 841.92 × 594.96 pt); set it to the paper exactly (same byte length, padded with spaces, so offsets stay valid)
-      { const buf = fs.readFileSync(pdf), s = buf.toString('latin1'), A4 = `0 0 ${PP.pt[0]} ${PP.pt[1]}`;
-        const out = s.replace(/\/MediaBox \[([^\]]*)\]/g, (m0, inner) => { const v = inner.trim().split(/\s+/).map(Number);
-          if (v.length !== 4 || Math.abs(v[2] - PP.pt[0]) > 1.2 || Math.abs(v[3] - PP.pt[1]) > 1.2 || A4.length > inner.length) return m0;
-          return '/MediaBox [' + A4 + ' '.repeat(inner.length - A4.length) + ']'; });
-        if (out.length === s.length) fs.writeFileSync(pdf, Buffer.from(out, 'latin1')); }
-      const info = execFileSync('pdfinfo', [pdf]).toString(), pg = +(/Pages:\s+(\d+)/.exec(info) || [])[1], sz = /Page size:\s+([\d.]+) x ([\d.]+) pts/.exec(info);
+      fixBox(pdf, PP);
+      const [pg, sz] = pdfSize(pdf);
       R.push([pg === 1 && sz && Math.abs(sz[1] - PP.pt[0]) < 0.6 && Math.abs(sz[2] - PP.pt[1]) < 0.6, `PDF: ${pg} page, ${sz ? sz[1] + ' × ' + sz[2] : '?'} pt (${paper} landscape ${PP.pt[0]} × ${PP.pt[1]})`]);
+      // LSs sheets also come as <name>-lss-on-a4.pdf: the same page in an A4 page box, moved 27 mm right. The OR printer defaults to A4, and
+      // A4 printed on the LSs paper loses its left 27 mm (2026-11-06), so this file lands on the paper with the printer left as it is:
+      // exactly at 100 %, about centred at 96 % under fit-to-page (2026-11-13: the plain LSs PDF printed with A4 + fit-to-page came out
+      // 96 % and about 15 mm to the left, blank on the right). Checks: one A4 page, nothing in the left 27 mm.
+      if (paper === 'lss') { const A = PAPERS.a4, dx = A.w - PP.w, pdfA = path.join(odir, base + '-lss-on-a4.pdf');
+        await page.addStyleTag({ content: `@page { size: ${A.w}mm ${A.h}mm; margin: 0; } body { width: ${A.w}mm !important; } .sheet { margin-left: ${dx}mm; }` });
+        await page.pdf({ path: pdfA, width: A.w + 'mm', height: A.h + 'mm', printBackground: true, preferCSSPageSize: true });
+        fixBox(pdfA, A);
+        const [pgA, szA] = pdfSize(pdfA), tmp = pdfA.replace(/\.pdf$/, '-strip');
+        execFileSync('pdftoppm', ['-r', '50', '-x', '0', '-y', '0', '-W', String(Math.floor(dx / 25.4 * 50) - 1), '-H', String(Math.floor(A.h / 25.4 * 50)), '-gray', '-singlefile', pdfA, tmp]);
+        const minV = +execFileSync('convert', [tmp + '.pgm', '-format', '%[fx:minima]', 'info:']).toString(); fs.unlinkSync(tmp + '.pgm');
+        R.push([pgA === 1 && szA && Math.abs(szA[1] - A.pt[0]) < 0.6 && Math.abs(szA[2] - A.pt[1]) < 0.6 && minV > 0.99,
+          `PDF on A4: ${pgA} page, ${szA ? szA[1] + ' × ' + szA[2] : '?'} pt, left ${dx} mm blank (min ${minV.toFixed(3)}) → ${path.basename(pdfA)}`]); }
       if (!noPng) { const png = path.join(odir, name + '.png');
         execFileSync('pdftoppm', ['-r', '300', '-scale-to-x', String(PP.px[0]), '-scale-to-y', String(PP.px[1]), '-png', '-singlefile', pdf, png.replace(/\.png$/, '')]);
         const dims = execFileSync('identify', ['-format', '%w×%h', png]).toString();

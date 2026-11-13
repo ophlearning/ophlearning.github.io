@@ -60,6 +60,11 @@ const PRINT = (() => {
     return { x: o.win.x - (vw - o.win.w) / 2, y: o.win.y - (vh - h) / 2, w: vw, h: vh }; };
   const POST = /^p(sec|head|fundus|wide|scope)$/;
   const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') r[n] = P(v); return r; };
+  // tissue opacity per view kind (o.light overrides). 2026-11-13, first printout on the OR's B/W laser printer: at 50 % the pastel
+  // fills and thin outlines of the eyelid sections almost vanished, while the coronal views stayed readable. Sections are drawn at
+  // full strength; coronal views only a little darker (at 100 % the iris turns near-black and hides black dimension lines over it).
+  // The same rule for the cataract and posterior-segment views (sections 100 %; microscope, fundus, wide-angle and head views 65 %).
+  const TISSUE = { sag: 1, lsag: 1, axial: 1, csec: 1, psec: 1, phead: 1, cor: 0.65, lcor: 0.65, cscope: 0.65, pfundus: 0.65, pwide: 0.65, pscope: 0.65 };
   let nFig = 0;
   // o: { kind, state, win: {x, y, w[, h]}, w, h (figure mm), red: 'cut' | 'inc' | 'none', blue: false to hide, light (tissue opacity),
   //      windows, upper, draw: V => svg (print overlays and labels, figure mm), cap: caption under the figure }
@@ -70,7 +75,7 @@ const PRINT = (() => {
     const post = POST.test(o.kind), cls = ['ovl', o.red === 'inc' ? 'red-inc' : o.red === 'none' ? 'no-red' : '', o.blue === false ? 'no-blue' : '', o.amber ? 'amber' : '', ...(post ? ['post'] : [])].join(' ');
     const svg = `<svg class="fig" xmlns="http://www.w3.org/2000/svg" width="${o.w}mm" height="${o.h}mm" viewBox="0 0 ${o.w} ${o.h}">` +
       `<defs><clipPath id="${id}_clip"><rect width="${o.w}" height="${o.h}"/></clipPath></defs>` +
-      `<g clip-path="url(#${id}_clip)"><g class="tis${post ? ' post' : ''}" opacity="${o.light ?? 0.5}"><g transform="${c.tf}">${a.svg}</g></g><g class="${cls}"><g transform="${c.tf}">${b.svg}</g></g></g>` +
+      `<g clip-path="url(#${id}_clip)"><g class="tis${post ? ' post' : ''}" opacity="${o.light ?? TISSUE[o.kind] ?? 0.5}"><g transform="${c.tf}">${a.svg}</g></g><g class="${cls}"><g transform="${c.tf}">${b.svg}</g></g></g>` +
       `<rect width="${o.w}" height="${o.h}" fill="none" stroke="#000" stroke-width="0.25"/>${extra}</svg>`;
     return { svg, V, html: `<div class="fig-wrap">${svg}${o.cap ? `<div class="fig-cap">${o.cap}</div>` : ''}</div>` };
   }
