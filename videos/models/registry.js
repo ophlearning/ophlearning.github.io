@@ -8,6 +8,8 @@ const MODEL_REGISTRY = {
   // the posterior-segment model extends the globe model's eye backwards (same outer surface, cornea, limbus, clock hours)
   posterior: ['globe/globe.js', 'posterior/posterior.js', 'posterior/views.js'],
   // the orbit model reuses the eyelid model (globe, lateral canthus, rim) so the two share coordinates
+  // eviscerated socket (OS) with a retained encircling band; self-contained
+  socket: ['socket/socket.js', 'socket/views.js'],
   orbit: ['eyelid/lid.js', 'eyelid/coronal.js', 'eyelid/lower.js', 'eyelid/lower-coronal.js', 'eyelid/canthus.js', 'orbit/orbit.js', 'orbit/views.js'],
 };
 const MODEL_VIEWS = {};
