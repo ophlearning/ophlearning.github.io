@@ -734,5 +734,134 @@ function sulcusOK(st) {
 { const all = [REC4, PRO4, DROP4, FIRST4, WITH4, FLT4, VIT4, PPS4, SUL14, CAPT4].map(st => sec4(st, 0.25).svg + CAT.section({ st, h: 8, cut: true, win: W4, step: 0.25 }).svg + CAT.enface({ st }).svg).join('');
   ok(!/NaN|undefined|Infinity/.test(all), `④ views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`); }
 
+// =====================================================================================================================
+// 15. sutured scleral fixation of a three-piece IOL (sfix.js; SFIX_PATH=<file> runs these on another copy — used to break a value on purpose).
+//     Sources and the 示意 list: CARD.md 鞏膜縫合固定 IOL. States as in sample-sfix.html: OD, surgeon at 12, fixation at 2 and 8 o'clock;
+//     "mm" = behind the posterior surgical limbus (PSL); section plane meridian(2): screen u = toward 2 o'clock, v = −Z.
+const G0svg = G.enface({ st: {} }).svg + G.section({ plane: planes.meridian(10), win: { x: -1, y: -14.2, w: 13, h: 9 }, st: {}, step: 0.2 }).svg, G0N = JSON.stringify(G.N);
+const SX = require(process.env.SFIX_PATH || './sfix.js')(G), SNx = SX.SN, sx = x => ({ sfix: x }), P2x = p => G.toPlane(G.planes.meridian(2), p);
+const IN15 = JSON.parse(process.env.SFIX_IN || '{}');   // inputs this section uses, overridable to break the check itself on purpose
+// 15.1 limbus definition and the sulcus: PSL = the model's posterior limbal line over the spur (Le 2018, 0.85); the 2/8 o'clock sulcus is Duffey 1989's
+//      perpendicular entry (0.83 vertical / 0.46 horizontal behind the PSL) interpolated to 60° from vertical; plicata ends 2.41 behind the PSL (Yoon 2023, 轉述)
+ok(SNx.psl === 0.85 && SNx.psl === N.spur, `sfix: the PSL is the posterior limbal line over the spur, ${SNx.psl} mm behind the visible limbus (Le 2018)`);
+ok(SNx.duffey.v === 0.83 && SNx.duffey.hz === 0.46 && near(SX.SUL - SNx.psl, 0.83 + (0.46 - 0.83) * 60 / 90, 1e-9) && SX.SUL - SNx.psl >= 0.46 - 0.1 && SX.SUL - SNx.psl <= 0.83 + 0.1,
+  `sfix: 2/8 o'clock sulcus ${(SX.SUL - SNx.psl).toFixed(3)} mm behind the PSL (Duffey 1989 0.83 vertical / 0.46 horizontal, interpolated; inside 0.36–0.93)`);
+ok(near(SX.PE, 0.85 + 2.41, 1e-9) && SX.ORA === 6.2 && SX.procH(SX.P0 - 0.01) === 0 && SX.procH(SX.PE + 0.01) === 0 && SX.procH((SX.P0 + SX.PE) / 2) > 0.3,
+  `sfix: ciliary processes only between the sulcus floor and the plicata end ${SX.PE.toFixed(2)} (PSL + 2.41, Yoon 2023); ora 6.2 (Liu 2014)`);
+{ const dia = 2 * SX.SULC.apex[0]; ok(dia > SNx.davis.dia + 2 * SNx.davis.sd && SNx.davis.dia === 11.0, `sfix: sulcus diameter ${dia.toFixed(2)} mm — Davis 1991 (cadaver) 11.0 ± 0.37 NOT reproduced, as CARD.md says (the model keeps the external position)`); }
+// 15.2 what a needle perpendicular to the sclera reaches (Duffey's mapping), 2 and 8 o'clock — the table in CARD.md
+const TABLE15 = IN15.table || [[0, 'psl', 'iris'], [0.46, 'psl', 'sulcus'], [0.583, 'psl', 'sulcus'], [0.7, 'psl', 'sulcus'], [0.83, 'psl', 'plicata'], [1, 'psl', 'plicata'], [2, 'psl', 'plicata'],
+  [2.3, 'psl', 'plicata'], [2.5, 'psl', 'plana'], [3, 'psl', 'plana'], [3.5, 'psl', 'plana'], [1, 'vis', 'iris'], [2, 'vis', 'plicata']];
+{ const bad = []; for (const [mm, from, want] of TABLE15) for (const h of [2, 8]) { const t = SX.classify(h, mm, from); if (t.cls !== want) bad.push(`${h}h ${mm} ${from}: ${t.cls} ≠ ${want}`); }
+  ok(!bad.length, `sfix: perpendicular landing table (${TABLE15.length} entries × 2 and 8 o'clock) matches CARD.md${bad.length ? ': ' + bad.join('; ') : ''}`); }
+ok(SNx.sugiura === 3.0 && SX.classify(2, SNx.sugiura).cls === 'plana', 'sfix: Sugiura 2018 pars plana fixation 3.0 mm behind the PSL is over the pars plana');
+// 15.3 the demonstrated needle angle: 1 mm (Guedes 2026) through the sulcus; the same angle at 2 mm (Kokame 2018) goes through the processes, 1 mm from the
+//      visible limbus into the chamber angle, 0.5 mm through the iris
+{ const D = SX.DIVE, want = IN15.dive || [[1, 'psl', 'sulcus'], [2, 'psl', 'plicata'], [1, 'vis', 'angle'], [0.5, 'psl', 'iris']], bad = [];
+  for (const [mm, from, w] of want) { const t = SX.track(2, SX.sAbs(mm, from), D); if (t.cls !== w) bad.push(`${mm} ${from}: ${t.cls}`); }
+  ok(SNx.guedes === 1.0 && SNx.kokame === 2.0 && D > 20 && D < 45 && !bad.length, `sfix: needle ${D.toFixed(1)}° below the iris plane: 1 mm → sulcus, 2 mm → pars plicata, 1 mm from the visible limbus → angle, 0.5 mm → iris${bad.length ? '; ' + bad.join(', ') : ''}`); }
+// 15.4 the passes go only where they should: the straight needle (2 → dock) and the 27G needle (8 → dock) cross the flap bed (under the flap) and the
+//      ciliary body, then open space — never iris, cornea, limbus, processes or retina; the pulled chord runs behind the iris and in front of the IOL plane
+const walk = (st, a, b, step = 0.01) => { const f = SX.layersFn(st), hit = {}, n = Math.ceil(G.len(G.sub(b, a)) / step); let minIris = 1e9;
+  for (let i = 0; i <= n; i++) { const q = G.add(a, G.sub(b, a), i / n), o = f(q); for (const k of ['sclera', 'limbus', 'cornea', 'iris', 'cbody', 'proc', 'retina', 'choroid', 'iol', 'old']) if (o[k] < 0) hit[k] = (hit[k] || 0) + 1; minIris = Math.min(minIris, o.iris); }
+  return { hit, minIris }; };
+const ST15 = sx({ vit: 1, peri: 1, flap: { open: 1 }, ndl: { pass: 1, g27: 1, out: 0 } });
+{ const PS = SX.passes(SX.norm(ST15)), w2 = walk(ST15, PS.E2, PS.D), w8 = walk(ST15, PS.E8, PS.D), allowed = h => Object.keys(h).every(k => k === 'sclera' || k === 'cbody');
+  const bed = q => { const W = wallOf(q[2], Math.hypot(q[0], q[1])); return W.d / T(W.s); };
+  ok(allowed(w2.hit) && allowed(w8.hit) && w2.hit.sclera > 0 && w2.hit.cbody > 0 && bed(PS.E2) >= SNx.flap.frac - 0.01 && bed(PS.E8) >= SNx.flap.frac - 0.01,
+    `sfix: straight needle and 27G needle cross only the flap bed (entry at ${(bed(PS.E2) * 100).toFixed(0)}% of the wall) and the ciliary body (${JSON.stringify(w2.hit)} / ${JSON.stringify(w8.hit)})`);
+  ok(PS.t2.cls === 'sulcus' && PS.t8.cls === 'sulcus' && near(PS.D[0], 0, 1e-6) && PS.D[2] < SX.SULC.apex[1], `sfix: both passes reach the sulcus; they dock on the axis ${(SX.SULC.apex[1] - PS.D[2]).toFixed(2)} mm behind the sulcus (示意)`);
+  const FX = sx({ vit: 1, ndl: {}, iol: {} }), PF = SX.passes(SX.norm(FX)), ch = walk(sx({ vit: 1, ndl: {} }), G.add(PF.I2, G.sub(PF.I8, PF.I2), 0.02), G.add(PF.I8, G.sub(PF.I2, PF.I8), 0.02)), IO = SX.iolOf(SX.norm(FX));
+  const chZ = PF.I2[2], optFront = IO.O[2] + SX.optHalf(0);
+  ok(!Object.keys(ch.hit).length && ch.minIris > 0.05 && chZ - optFront > 0.1, `sfix: the pulled chord crosses only open space, ${ch.minIris.toFixed(2)} mm behind the iris, ${(chZ - optFront).toFixed(2)} mm in front of the IOL optic`);
+  const HK = sx({ vit: 1, inc: 1, ndl: { hook: 1 } }), PH = SX.passes(SX.norm(HK)), inc = SX.incOf(); let bad = 0;
+  for (const j of [0, 1]) { const H = SX.hookPts(PH, j), I = j ? PH.I8 : PH.I2, segs = [[G.add(I, G.sub(H[0], I), 0.02), H[0]], [H[0], H[1]], [H[1], inc.inner]];
+    for (const [a, b] of segs) { const w = walk(HK, a, G.add(b, G.unit(G.sub(a, b)), b === inc.inner ? 0.02 : 0)); bad += Object.keys(w.hit).length; } }   // stop 0.02 mm short of the wound's inner opening
+  ok(bad === 0, `sfix: the strand hooked out of the 12 o'clock wound passes behind the iris, through the pupil and the chamber only (${bad} tissue hits)`); }
+// 15.5 the two views agree: the caliper dots, the dock, the IOL centre and the tie points are the same 3D points in the 2–8 section and the microscope view
+try { const st = sx({ vit: 1, peri: 1, marks: 1, flap: { open: 1 }, ndl: { pass: 1, g27: 1, out: 0 }, pins: [{ h: 2, mm: 1 }, { h: 8, mm: 1 }] }), e = SX.enface({ st }), s = SX.section({ st, win: { x: -9, y: -13, w: 18, h: 9 }, step: 0.2 });
+  const M = enfaceMap(12), pl = G.planes.meridian(2), back = a => G.onPlane(pl, a[0], a[1]), hs = q => { const r = Math.hypot(q[0], q[1]); let h = Math.atan2(-q[0], q[1]) / (30 * D2R); if (h <= 0) h += 12; return { h, r }; };
+  const sOfR = r => { let a = 0, b = 6; for (let i = 0; i < 50; i++) { const m = (a + b) / 2; surfAt(m).rho < r ? a = m : b = m; } return (a + b) / 2; };
+  const d2 = hs(e.A.dot2), d8 = hs(e.A.dot8), W1 = wallOf(-s.A.pin0[1], Math.abs(s.A.pin0[0])), W2 = wallOf(-s.A.pin1[1], Math.abs(s.A.pin1[0]));
+  ok(near(d2.h, 2, 0.01) && near(d8.h, 8, 0.01) && near(sOfR(d2.r), SNx.psl + 1, 0.01) && near(sOfR(d8.r), SNx.psl + 1, 0.01) && s.A.pin0[0] > 0 && s.A.pin1[0] < 0 && near(W1.s, SNx.psl + 1, 0.01) && near(W2.s, SNx.psl + 1, 0.01),
+    `sfix: the 1 mm dots are at 2 and 8 o'clock, ${(sOfR(d2.r) - SNx.psl).toFixed(3)} / ${(W1.s - SNx.psl).toFixed(3)} mm behind the PSL in the microscope / the section (2 o'clock on the section's right)`);
+  const same = (sa, ea) => G.len(G.sub(M(back(sa)), ea));
+  const F2 = sx({ vit: 1, ndl: {}, iol: {}, knot: 1, flap: { open: 0 } }), e2 = SX.enface({ st: F2 }), s2 = SX.section({ st: F2, win: { x: -9, y: -13, w: 18, h: 9 }, step: 0.2 });
+  const worst = Math.max(same(s.A.D, e.A.D), same(s2.A.iolC, e2.A.iolC), same(s2.A.tie2, e2.A.tie2), same(s2.A.tie8, e2.A.tie8));
+  ok(worst < 0.01, `sfix: dock, IOL centre and the two tie points: section ↔ microscope within ${worst.toFixed(4)} mm`); }
+catch (err) { ok(false, `sfix: the 1 mm dots in the two views (${err.message})`); ok(false, 'sfix: dock, IOL centre and the two tie points in the two views (anchors missing)'); }
+// 15.6 orientation (principle 6): OD, surgeon at 12: 12 at the bottom, 9 temporal on the right; 2 o'clock superonasal lower left, 8 inferotemporal upper right;
+//      the 2–8 section has 2 o'clock on the right, anterior up
+{ const M = enfaceMap(12), a2 = M(P3(2, 1)), a8 = M(P3(8, 1)), Or = CAT.orient({ eye: 'OD', surgeon: 12 }), Os = CAT.orient({ eye: 'OD', view: 'section', h: SNx.hours[0] });
+  ok(SNx.hours[0] === 2 && SNx.hours[1] === 8 && a2[0] < 0 && a2[1] > 0 && a8[0] > 0 && a8[1] < 0 && Or.bottom === 12 && Or.right === 9 && Or.rightAnat.horiz === 'temporal',
+    'sfix: OD, surgeon at 12: 12 o\'clock at the bottom, 9 temporal on the right; 2 o\'clock lower left, 8 upper right');
+  ok(CAT.anat('OD', 2).en === 'superonasal' && CAT.anat('OD', 8).en === 'inferotemporal' && Os.right === 2 && Os.left === 8 && G.toPlane(G.planes.meridian(2), P3(2, 1))[0] > 0 && G.toPlane(G.planes.meridian(2), [0, 0, 10])[1] === -10,
+    'sfix: 2 = superonasal, 8 = inferotemporal (OD); the section has 2 o\'clock on the right, anterior up'); }
+// 15.7 trocars: 23G (0.64 mm) 3.5 mm behind the PSL (Rajan 2025) over the pars plana, at 7 (infusion), 10 and 1 o'clock (示意), through intact conjunctiva,
+//      ≥ 1 mm (示意) from both flaps and from the 12 o'clock wound
+{ const tro = (IN15.trocarHours || SNx.trocar.hours).map(h => SX.trocarOf(h)), fd = SX.layersFn(sx({ peri: 1 })), r = SNx.trocar.od / 2, sh = [];
+  const tri = hf => { const P = []; for (let k = 0; k <= 30; k++) { const t = k / 30; P.push(SX.flapPt(hf, 0, (t - 0.5) * SNx.flap.side), SX.flapPt(hf, SX.H_TRI * t, SNx.flap.side / 2 * (1 - t)), SX.flapPt(hf, SX.H_TRI * t, -SNx.flap.side / 2 * (1 - t))); } return P; };
+  const inc = SX.incOf(), incPts = []; for (let k = 0; k <= 10; k++) incPts.push(P3(12 + (k / 10 - 0.5) * SNx.inc.w / (surfAt(SNx.inc.s).rho * 30 * D2R), SNx.inc.s));
+  let minF = 1e9, minI = 1e9, conjOK = true;
+  for (const t of tro) { for (const hf of SNx.hours) for (const q of tri(hf)) minF = Math.min(minF, G.len(G.sub(q, t.E)) - r); for (const q of incPts) minI = Math.min(minI, G.len(G.sub(q, t.E)) - r);
+    if (!(fd(G.add(t.E, t.n, 0.1)).conj < 0)) conjOK = false; sh.push(t.s); }   // conjunctiva 0.1 mm above the entry: intact (transconjunctival)
+  ok(SNx.trocar.s === 3.5 && SNx.trocar.od === 0.64 && sh.every(s => s - r > SX.PE && s + r < SX.ORA), `sfix: trocars ${SNx.trocar.s} mm behind the PSL (s ${sh[0].toFixed(2)}), the whole 0.64 mm cannula over the pars plana (${SX.PE.toFixed(2)}–${SX.ORA})`);
+  ok(minF >= 1.0 && minI >= 1.0 && conjOK && (IN15.trocarHours || SNx.trocar.hours).join() === '7,10,1', `sfix: trocars at 7 / 10 / 1 o'clock: ${minF.toFixed(2)} mm from the flaps, ${minI.toFixed(2)} mm from the 12 o'clock wound, through intact conjunctiva`); }
+// 15.8 the triangular flap (Guedes 2026): sides 3 mm, 1/3 of the scleral thickness, the limbal side (on the PSL line) left attached, apex behind; the 1 and 2 mm
+//      entries lie in its bed; the two marks are 180° apart; the lifted flap stays outside the eye wall
+{ const v = [SX.flapPt(2, 0, -SNx.flap.side / 2), SX.flapPt(2, 0, SNx.flap.side / 2), SX.flapPt(2, SX.H_TRI, 0)], sides = [[0, 1], [1, 2], [2, 0]].map(([a, b]) => G.len(G.sub(v[a], v[b])));
+  ok(sides.every(l => near(l, 3.0, 0.01)) && SNx.flap.side === 3.0, `sfix: flap sides ${sides.map(l => l.toFixed(2)).join(' / ')} mm (Guedes 2026: 3 mm)`);
+  const f = SX.layersFn(sx({ flap: { open: 1 } })), s = SNx.psl + 1.0, th = T(s);
+  ok(f(P3(2, s, th * SNx.flap.frac - 0.01)).sclera > 0 && f(P3(2, s, th * SNx.flap.frac + 0.01)).sclera < 0 && f(P3(2, s, 0.02)).sclera > 0 && SNx.flap.frac === 1 / 3,
+    'sfix: the lifted flap takes the outer 1/3 of the sclera; the bed (2/3) stays');
+  ok(SX.triG(2, SNx.psl + 0.05, 2, surfAt(SNx.psl).rho) < 0 && SX.triG(2, SNx.psl - 0.05, 2, surfAt(SNx.psl).rho) > 0 && SX.triG(2, SNx.psl + SX.H_TRI + 0.05, 2, 8) > 0,
+    `sfix: flap from the PSL line (its limbal side, the hinge) back to the apex ${SX.H_TRI.toFixed(2)} mm behind`);
+  const ins = mm => SX.triG(2, SX.sAbs(mm), 2, surfAt(SX.sAbs(mm)).rho) < -0.2; ok(ins(SNx.guedes) && ins(SNx.kokame), 'sfix: the 1 mm and the 2 mm entries are inside the flap bed');
+  const e = SX.enface({ st: sx({ marks: 1 }) }), c = e.A.centre, u = G.sub(e.A.mark2, c), w = G.sub(e.A.mark8, c), cosA = (u[0] * w[0] + u[1] * w[1]) / Math.hypot(...u) / Math.hypot(...w);
+  ok(cosA < -0.9999, `sfix: the two marks are 180° apart (${(Math.acos(Math.max(-1, Math.min(1, cosA))) / D2R).toFixed(2)}°)`);
+  const R = SX.flapRot(2, 1); let inWall = 0; for (let k = 0; k <= 20; k++) for (const fr of [0, SNx.flap.frac]) { const q = R.rot(SX.flapPt(2, SX.H_TRI * k / 20, 0, fr)), W = wallOf(q[2], Math.hypot(q[0], q[1])); if (W.d > 0.02) inWall++; }
+  ok(inWall === 0, `sfix: the lifted flap lies outside the eye wall (${inWall} points inside)`); }
+// 15.9 the MA60AC (Aydin 2025 methods; Alcon label 待核對): optic 6.0, overall 13.0, haptics angled 10°; tied at the distal third (Guedes 2026)
+{ const fr = SX.iolFree(); ok(near(fr.overall, 13.0, 0.05) && fr.optic === 6.0 && near(fr.ang, 10, 0.2) && SNx.iol.tieT > 2 / 3 && SNx.iol.tieT < 1,
+    `sfix: MA60AC free shape: overall ${fr.overall.toFixed(2)}, optic ${fr.optic}, haptic angle ${fr.ang.toFixed(1)}°, tie at ${(SNx.iol.tieT * 100).toFixed(0)}% of the haptic (distal third)`); }
+const iolTouch = st => { const c = SX.norm(st), IO = SX.iolOf(c), f = SX.layersFn(st), R = { iris: 0, cornea: 0, deep: 0, n: 0, minIris: 1e9 };
+  IO.haps.forEach(H => H.forEach((q, i) => { const a = H[Math.max(0, i - 1)], b = H[Math.min(H.length - 1, i + 1)], ax = G.unit(G.sub(b, a)), sd = G.unit(G.cross(ax, [0, 0, 1])), up = G.unit(G.cross(sd, ax));
+    for (let k = 0; k < 8; k++) { const an = 2 * Math.PI * k / 8, p = G.add(q, G.add(sd.map(v => v * Math.cos(an)), up, Math.sin(an)), SNx.iol.hd / 2 * 0.95), o = f(p); R.n++;
+      if (o.iris < 0) R.iris++; if (o.cornea < 0 || o.limbus < 0) R.cornea++; if (o.cbody < -0.05 || o.proc < -0.05 || o.sclera < 0) R.deep++; R.minIris = Math.min(R.minIris, o.iris); } }));
+  for (let r = 0; r <= 3; r += 0.25) for (let a = 0; a < 2 * Math.PI; a += 0.4) for (const sg of [1, -1]) { const p = G.add(G.add(G.add(IO.O, IO.d, r * Math.cos(a)), IO.eb, r * Math.sin(a)), IO.en, sg * SX.optHalf(r)), o = f(p); R.n++;
+    if (o.iris < 0) R.iris++; if (o.cornea < 0) R.cornea++; R.minIris = Math.min(R.minIris, o.iris); }
+  return R; };
+{ const FX = sx({ vit: 1, ndl: {}, iol: {} }), IO = SX.iolOf(SX.norm(FX)), PS = SX.passes(SX.norm(FX)), t = iolTouch(FX);
+  ok(Math.hypot(IO.O[0], IO.O[1]) < 0.01 && IO.tilt < 0.1, `sfix: equal entries and tension: optic centre ${Math.hypot(IO.O[0], IO.O[1]).toFixed(3)} mm off the axis, tilt ${IO.tilt.toFixed(2)}°`);
+  ok(G.len(G.sub(IO.ties[0], PS.I2)) < 0.15 && G.len(G.sub(IO.ties[1], PS.I8)) < 0.15 && G.len(G.sub(IO.ties[0], IO.tie[0])) < 1e-6, `sfix: each haptic's tie point is where its suture leaves the uvea (${G.len(G.sub(IO.ties[0], PS.I2)).toFixed(2)} mm)`);
+  ok(t.n > 500 && t.iris === 0 && t.cornea === 0 && t.deep === 0 && t.minIris > 0, `sfix: the fixed IOL touches neither iris nor cornea (closest to the iris ${t.minIris.toFixed(2)} mm; ${t.n} points), haptics not buried in the ciliary body`);
+  const AS = SX.iolOf(SX.norm(sx({ vit: 1, ndl: { s8: 2 }, iol: {} }))), TN = SX.iolOf(SX.norm(sx({ vit: 1, ndl: {}, iol: { ten: [1, 0.6] } }))), SL = SX.iolOf(SX.norm(sx({ vit: 1, ndl: {}, iol: { slip: 8 } })));
+  const u2 = G.clockDir(2), toward2 = TN.O[0] * u2[0] + TN.O[1] * u2[1];
+  ok(AS.tilt > 2 && TN.dec > 0.1 && toward2 > 0.1 && SL.dec > 0.3 && SL.tilt > 5, `sfix: asymmetric entries (8 o'clock at 2 mm) tilt ${AS.tilt.toFixed(1)}°; unequal tension decentres ${TN.dec.toFixed(2)} mm toward the tighter side; a slipped haptic ${SL.dec.toFixed(2)} mm, ${SL.tilt.toFixed(1)}° (amounts 示意; Zhao 2025)`);
+  const P0x = SX.iolOf(SX.norm(sx({ vit: 1, ndl: {}, iol: { pull: 0 } }))); ok(P0x.O[2] < IO.O[2] - 0.2, 'sfix: before the sutures are pulled the IOL lies further back (示意)'); }
+// 15.10 knots: tied in the bed, under the closed flap (Stem 2017 / Lewis: buried to keep the knot from eroding through the conjunctiva); the 'exposed' error uncovers one
+{ const C0 = SX.norm(sx({ ndl: {}, iol: {}, knot: 1, flap: { open: 0 } })), C1 = SX.norm(sx({ ndl: {}, iol: {}, knot: 1, flap: { open: 0 }, exposed: 2 }));
+  const K = SX.knotOf(C0, 0), W = wallOf(K.p[2], Math.hypot(K.p[0], K.p[1]));
+  ok(SX.coveredKnot(C0, 0) && SX.coveredKnot(C0, 1) && W.d > 0 && W.d < T(W.s) * SNx.flap.frac, `sfix: both knots in the bed under the closed flap (${W.d.toFixed(2)} mm deep; flap ${(T(W.s) * SNx.flap.frac).toFixed(2)} mm)`);
+  const e = SX.enface({ st: sx({ ndl: {}, iol: {}, knot: 1, flap: { open: 0 }, exposed: 2 }) });
+  ok(!SX.coveredKnot(C1, 0) && SX.coveredKnot(C1, 1) && e.A.knotCovered2 === false && e.A.knotCovered8 === true, 'sfix: the exposed error uncovers the 2 o\'clock knot only (both views)'); }
+// 15.11 the strand through the steps: before pulling it runs E2 → I2 → dock → I8 → E8; hooked out of the 12 o'clock wound; cut into two; tied to the haptics
+{ const inc = SX.incOf(), has = (pts, q) => pts.some(p => G.len(G.sub(p, q)) < 1e-6);
+  const H = SX.sutureOf(SX.norm(sx({ inc: 1, ndl: { hook: 1 } }))), Hc = SX.sutureOf(SX.norm(sx({ inc: 1, ndl: { hook: 1, cut: 1 } }))), Fx = SX.sutureOf(SX.norm(sx({ ndl: {}, iol: {} })));
+  ok(H.segs.length === 1 && has(H.segs[0], inc.inner) && has(H.segs[0], inc.outer) && Hc.segs.length === 2 && Hc.segs.every(s => has(s, inc.outer)),
+    'sfix: hooked: one loop out through the 12 o\'clock wound; cut: two strands, both through the wound');
+  ok(Fx.segs.length === 2 && Fx.segs.every((s, j) => G.len(G.sub(s[s.length - 1], Fx.IO.ties[j])) < 1e-6 && has(s, j ? Fx.PS.I8 : Fx.PS.I2)), 'sfix: fixed: each strand runs from its flap bed through its track to its haptic\'s tie point'); }
+// 15.12 the dislocated old IOL (示意) lies in the vitreous cavity, inferior; the vitrectomy leaves gel only at the vitreous base (示意); views draw; GLOBE untouched
+{ const st = sx({ vit: 0.55, old: {} }), O = SX.oldOf(SX.norm(st)), f = SX.layersFn(st); let inT = 0, n = 0;
+  for (let x = -5; x <= 5; x += 0.25) for (let y = -7; y <= 3; y += 0.25) for (let z = 3; z <= 11.5; z += 0.25) { const p = [x, y, z]; if (O.field(p) < 0) { n++; const o = f(p); if (!(o.interior < 0) || o.iris < 0 || o.cbody < 0 || o.proc < 0 || o.retina < 0) inT++; } }
+  ok(n > 50 && inT === 0 && O.O[1] < -1, `sfix: the old IOL (示意) lies in the vitreous cavity, toward 6 o'clock (${n} points, ${inT} in tissue)`);
+  const g1 = SX.layersFn(sx({ vit: 1 })), g0 = SX.layersFn(sx({ vit: 0 }));
+  ok(g1([0, 0, 2]).gel > 0 && g0([0, 0, 2]).gel < 0 && g0([0, 0, SX.SULC.apex[1] + 0.2]).gel > 0, 'sfix: vitrectomy removes the core gel (the anterior hyaloid stays behind the sulcus)');
+  const sts = [sx({ vit: 1, peri: 1, marks: 1, pins: [{ h: 2, mm: 1 }] }), ST15, sx({ vit: 1, peri: 1, flap: { open: 1 }, trocar: 1, inc: 1, ndl: { hook: 1, cut: 1 }, iol: { at: 'out' } }), sx({ ndl: { s8: 2 }, iol: { slip: 8 }, knot: 1, flap: { open: 0 }, exposed: 2, old: {} })];
+  const all = sts.map(st => SX.section({ st, win: { x: -9, y: -13, w: 18, h: 9 }, step: 0.25 }).svg + SX.enface({ st }).svg).join('');
+  ok(!/NaN|undefined|Infinity/.test(all), `sfix views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`);
+  const G1svg = G.enface({ st: {} }).svg + G.section({ plane: planes.meridian(10), win: { x: -1, y: -14.2, w: 13, h: 9 }, st: {}, step: 0.2 }).svg;
+  ok(G1svg === G0svg && JSON.stringify(G.N) === G0N, 'sfix is optional: GLOBE\'s numbers and drawings are unchanged after loading it'); }
+
 console.log(fail ? `\n${fail} check(s) FAILED` : '\nall globe checks passed');
 process.exit(fail ? 1 : 0);
