@@ -63,8 +63,8 @@ const PRINT = (() => {
   // tissue opacity per view kind (o.light overrides). 2026-11-13, first printout on the OR's B/W laser printer: at 50 % the pastel
   // fills and thin outlines of the eyelid sections almost vanished, while the coronal views stayed readable. Sections are drawn at
   // full strength; coronal views only a little darker (at 100 % the iris turns near-black and hides black dimension lines over it).
-  // Kinds not listed (cataract csec / cscope, posterior p…) keep 50 % until a printout of them is checked.
-  const TISSUE = { sag: 1, lsag: 1, axial: 1, cor: 0.65, lcor: 0.65 };
+  // The same rule for the cataract and posterior-segment views (sections 100 %; microscope, fundus, wide-angle and head views 65 %).
+  const TISSUE = { sag: 1, lsag: 1, axial: 1, csec: 1, psec: 1, phead: 1, cor: 0.65, lcor: 0.65, cscope: 0.65, pfundus: 0.65, pwide: 0.65, pscope: 0.65 };
   let nFig = 0;
   // o: { kind, state, win: {x, y, w[, h]}, w, h (figure mm), red: 'cut' | 'inc' | 'none', blue: false to hide, light (tissue opacity),
   //      windows, upper, draw: V => svg (print overlays and labels, figure mm), cap: caption under the figure }
