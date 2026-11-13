@@ -41,8 +41,24 @@ const PRINT = (() => {
     if (kind === 'csec') { const h = o.win.h || o.win.w * o.h / o.w, k = Math.min(o.w / o.win.w, o.h / h), vw = o.w / k, vh = o.h / k;
       return CATARACT.section({ st: state, h: o.hp ?? 6, off: o.off || 0, cut: !!o.cut, win: { x: o.win.x - (vw - o.win.w) / 2, y: o.win.y - (vh - h) / 2, w: vw, h: vh }, step: o.step || +(vw / 320).toFixed(4), id }); }
     if (kind === 'cscope') return CATARACT.enface({ st: state, id, surgeon: 12 });
+    // posterior segment (posterior/posterior.js, state = the model's state; 2026-11-12, RRD PPV): psec = a section computed over the whole visible
+    // figure — the meridional one through o.hp (the clock hour on its RIGHT, default 11; left = hp + 6; anterior up), or any o.plane { O, U, V }
+    // (a trocar's tunnel GLOBE.planes.across(h, s), an instrument's shaft, the head view's POSTERIOR.headPlane(st)); o.step default visible width / 400.
+    // phead = head position (the section through the tear turned so that gravity points down; the model's gravity arrow top right of the figure);
+    // pfundus = fundus chart (examiner's drawing: 12 up); pwide = the surgeon's wide-angle view (the state's surgeon, inverter, look); pscope =
+    // microscope view from above with the trocars (the state's surgeon, default 12). none = no model (print drawings only, o.draw).
+    if (kind === 'psec' || kind === 'phead') { const v = visWin(o), step = o.step || +(v.w / 400).toFixed(4);
+      return kind === 'phead' ? POSTERIOR.head({ st: state, win: v, step, id }) : POSTERIOR.section({ st: state, plane: o.plane || GLOBE.planes.meridian(o.hp ?? 11), win: v, step, id }); }
+    if (kind === 'pfundus') return POSTERIOR.fundus({ st: state, id });
+    if (kind === 'pwide') return POSTERIOR.wide({ st: state, id });
+    if (kind === 'pscope') return POSTERIOR.ext({ st: state, id });
+    if (kind === 'none') return { svg: '', A: {} };
     throw new Error('unknown view ' + kind);
   }
+  // the model window that fills the whole figure (o.win centred in a figure of o.w × o.h mm)
+  const visWin = o => { const h = o.win.h || o.win.w * o.h / o.w, k = Math.min(o.w / o.win.w, o.h / h), vw = o.w / k, vh = o.h / k;
+    return { x: o.win.x - (vw - o.win.w) / 2, y: o.win.y - (vh - h) / 2, w: vw, h: vh }; };
+  const POST = /^p(sec|head|fundus|wide|scope)$/;
   const mapA = (A, P) => { const r = {}; for (const [n, v] of Object.entries(A)) if (Array.isArray(v) && v.length === 2 && typeof v[0] === 'number') r[n] = P(v); return r; };
   let nFig = 0;
   // o: { kind, state, win: {x, y, w[, h]}, w, h (figure mm), red: 'cut' | 'inc' | 'none', blue: false to hide, light (tissue opacity),
@@ -51,10 +67,10 @@ const PRINT = (() => {
     const id = o.id || ('pf' + (++nFig)), c = cam(o.win, o.w, o.h), a = model(o.kind, o.state, id + 'a', o), b = model(o.kind, o.state, id + 'b', o);
     const V = { P: c.P, k: c.k, A: mapA(a.A, c.P), M: a.A, r: a, w: o.w, h: o.h };
     const extra = o.draw ? o.draw(V) : '';
-    const cls = ['ovl', o.red === 'inc' ? 'red-inc' : o.red === 'none' ? 'no-red' : '', o.blue === false ? 'no-blue' : '', o.amber ? 'amber' : ''].join(' ');
+    const post = POST.test(o.kind), cls = ['ovl', o.red === 'inc' ? 'red-inc' : o.red === 'none' ? 'no-red' : '', o.blue === false ? 'no-blue' : '', o.amber ? 'amber' : '', ...(post ? ['post'] : [])].join(' ');
     const svg = `<svg class="fig" xmlns="http://www.w3.org/2000/svg" width="${o.w}mm" height="${o.h}mm" viewBox="0 0 ${o.w} ${o.h}">` +
       `<defs><clipPath id="${id}_clip"><rect width="${o.w}" height="${o.h}"/></clipPath></defs>` +
-      `<g clip-path="url(#${id}_clip)"><g class="tis" opacity="${o.light ?? 0.5}"><g transform="${c.tf}">${a.svg}</g></g><g class="${cls}"><g transform="${c.tf}">${b.svg}</g></g></g>` +
+      `<g clip-path="url(#${id}_clip)"><g class="tis${post ? ' post' : ''}" opacity="${o.light ?? 0.5}"><g transform="${c.tf}">${a.svg}</g></g><g class="${cls}"><g transform="${c.tf}">${b.svg}</g></g></g>` +
       `<rect width="${o.w}" height="${o.h}" fill="none" stroke="#000" stroke-width="0.25"/>${extra}</svg>`;
     return { svg, V, html: `<div class="fig-wrap">${svg}${o.cap ? `<div class="fig-cap">${o.cap}</div>` : ''}</div>` };
   }
