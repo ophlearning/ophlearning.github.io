@@ -62,4 +62,5 @@
 - 2026-11-13 15:30　文字版跟刀清單交給站長。
 - 2026-11-13 15:50　模型（`videos/models/socket/`）、14 段畫面、影片 `check.js`（數字帳本＋旁白↔模型 M1–M6，故意改錯 15 種都會報錯）、16 張參考圖（Claude 自檢）完成；`check-all.js` 全部 PASS；術前速讀包（`brief.js`，14 張圖＋旁白）交給站長。
 - 2026-11-13 16:00　語音合成（`timeline.js`；參考圖在真實時間軸下逐像素相同）、出片（`out/sb-removal-socket.mp4`，1920×1080、6:13，ffprobe 372.6 秒），mp4 交給站長；YouTube 說明、章節、網站條目草稿在 `publish/`。
+- 2026-11-13 17:50　三張列印單（`print/`：跟刀清單 8 項、手術步驟圖 8 格、關鍵解剖與數字速查）：`print.js --gray` 全部 PASS，彩色與灰階全頁看過，交給站長（`-lss-on-a4.pdf`＋PNG）。站長指出原本漏做（repo 根目錄 `CLAUDE.md` 規定每台手術都要三張）。
 - 卡住：這個環境沒有 YOUTUBE_CLIENT_ID、YOUTUBE_CLIENT_SECRET、YOUTUBE_REFRESH_TOKEN，沒有上傳。下一步：在環境設定補上這三個環境變數後開新 session 上傳（或站長自己以不公開上傳、給影片 ID），再照 repo 根目錄 `CLAUDE.md` 同步網站（`publish/website-entry-draft.txt` 的 `yt` 換成影片 ID）。
