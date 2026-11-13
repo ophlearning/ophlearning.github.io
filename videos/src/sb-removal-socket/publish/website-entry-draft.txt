@@ -1,7 +1,7 @@
   {
     id:'sb-removal-socket', type:'youtube', yt:'[待上傳後填入影片 ID]', cat:'surgery',
     zh:'Eviscerated socket 的 scleral buckle removal：助手版', en:'Scleral buckle removal in an eviscerated socket: the assistant\'s guide',
-    dur:[待出片後用 ffprobe 實測],
+    dur:373,
     short:'站在助手的位置預習一台 scleral buckle removal（左眼 evisceration 後、沒有植入物的眼窩，暴露且感染 NTM 的 #41 encircling band）：band 在四條直肌底下、打開結膜與纖維囊、剪斷縫線與 band、勾起直肌把 band 抽出、拉不動就停、核對完整一圈、檢體送 mycobacteria 培養，以及為什麼這次不放植入物。',
     sum:'這支影片給在 scleral buckle removal 當助手的住院醫師。先看懂 band 怎麼留下來：RRD 手術時繞眼球一圈、從四條直肌底下穿過、用 Dacron 縫在鞏膜上；evisceration 保留鞏膜殼，band 跟著留下。NTM 會在植入物表面形成 biofilm，所以要拿掉 buckle 再依藥敏用藥。接著依序看拿掉 conformer、找暴露處、打開結膜與纖維囊、剪斷縫線與 band、從直肌底下抽出（助手用 muscle hook 勾起直肌）、拉不動就停、核對完整一圈、檢體與清創、收尾與 conformer；最後是感染時放植入物的文獻爭議、NTM 的藥敏與療程，以及助手要記住的六件事。',
     note:'畫面為左眼 OS、術者坐 12 點的示意動畫（子午切面＋術者視角兩圖同步），不是手術錄影，比例不精確。暴露位置、縫線的數目與位置、打開範圍為示意；中間步驟依主刀決定；藥物、器械與縫線依院內常規。',
