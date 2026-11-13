@@ -59,8 +59,8 @@
 2. 發音檢查：`python3 videos/tools/video-kit/tts/tts.py $V --check`，`MISSING` 不是空的就補 `tts/lexicon-extra.json`，重跑到空為止。
 3. 合成：`python3 videos/tools/video-kit/tts/tts.py $V`，再 `python3 videos/tools/video-kit/tts/assemble.py $V`（產生 `anim/timeline.js`；`out/` 下的 `narration.wav`、`captions.srt`、`chapters.txt`）。`timeline.js` 進 git，參考圖與檢查才和影片同一條時間軸；改了旁白要重跑 1–3 並更新參考圖。
 4. 檢查：`node videos/tools/check-all.js $V`。
-   - 有手術日期時，這一步一過就先做術前速讀包：`node videos/tools/video-kit/brief.js $V`（約 1 分鐘，`out/brief/` 下的 `旁白.md`＋每段一張圖，不需要 TTS），先傳給站長，再出片（規則見 repo 根目錄 `CLAUDE.md`）。
-5. 出片：`videos/tools/video-kit/build.sh $V <輸出檔名>`，輸出 `$V/out/<輸出檔名>.mp4`。實測見下面「出片速度」。
+   - 有手術日期時，這一步一過就先做術前速讀包：`node videos/tools/video-kit/brief.js $V`（約 1 分鐘，`out/brief/` 下的 `旁白.md`＋每段一張圖，不需要 TTS），先傳給站長；接著做三張列印單（`videos/tools/print/README.md`），再出片（規則見 repo 根目錄 `CLAUDE.md`）。
+5. 出片：`videos/tools/video-kit/build.sh $V <輸出檔名>`，輸出 `$V/out/<輸出檔名>.mp4`。實測見下面「出片速度」。開頭會先重跑 `print.js $V --gray`，沒有 `print/` 或沒通過就停；確定不做列印單的影片，在 `print/SKIP` 寫一行原因。
 6. 上傳（不公開）：`python3 videos/tools/video-kit/youtube_upload.py $V/out/<輸出檔名>.mp4 --title "…" --desc-file $V/publish/youtube-description.txt`；之後照 repo 根目錄 `CLAUDE.md` 同步網站。
 - 單張截圖：`node videos/tools/video-kit/render.js $V/anim/video.html 輸出前綴 --stills 秒數,秒數`，或照句子用 `seg-stills.js`。
 
