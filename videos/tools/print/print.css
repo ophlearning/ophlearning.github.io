@@ -84,6 +84,17 @@ svg.fig { display: block; }
 .ovl.amber [stroke="#b86e00"][vector-effect] { visibility: visible; stroke: #000; stroke-width: 1.5px; stroke-dasharray: 5 1.6 1 1.6; }   /* nerve / projection: thin dash-dot */
 .ovl.no-red [stroke="#d23c3c"],.ovl.no-red [fill="#d23c3c"] { visibility: hidden; }
 .ovl.no-blue [stroke="#2463eb"], .ovl.no-blue [fill="#2463eb"] { visibility: hidden; }
+/* posterior segment (posterior/posterior.js; print-kit.js adds class post): the model has no red / blue / purple, so its own colours are promoted:
+   instruments, cannulas and the depressor → light grey with a black rim; trocar hubs → grey; the tear, closed wounds, the vitrector's port, the
+   gravity arrow → black; laser spots → black ring; a closed trocar tunnel and the wide-angle field's rim → black line; the wide-angle field's
+   black surround is not printed */
+.tis.post [fill="#0c0d0f"] { display: none; }
+.ovl.post [fill="#a6aeb6"], .ovl.post [fill="#b4bcc4"], .ovl.post [fill="#8b97a3"], .ovl.post [fill="#6b737c"] { visibility: visible; fill: #d6d6d6; stroke: #000; stroke-width: 1.4px; }
+.ovl.post [fill="#3a6db3"], .ovl.post [fill="#9ec5e8"] { visibility: visible; fill: #8a8a8a; stroke: #000; stroke-width: 1.2px; }
+.ovl.post [fill="#c8361f"], .ovl.post [fill="#1d2a3a"], .ovl.post [fill="#c9a49c"], .ovl.post [fill="#2b3036"], .ovl.post [fill="#2b5a8a"] { visibility: visible; fill: #000; }
+.ovl.post [stroke="#7b5a2c"] { visibility: visible; fill: #fff; stroke: #000; stroke-width: 1.3px; }
+.ovl.post [stroke="#2b5a8a"], .ovl.post [stroke="#7d6a5a"], .ovl.post [stroke="#2a2d31"] { visibility: visible; stroke: #000; }
+.ovl.post [stroke="#6b737c"] { visibility: visible; stroke: #8a8a8a; }
 
 /* anatomy / numbers sheet */
 .an { display: grid; height: 100%; gap: 3mm; }

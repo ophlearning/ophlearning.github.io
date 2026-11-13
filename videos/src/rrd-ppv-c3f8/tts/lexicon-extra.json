@@ -1,0 +1,29 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py。「著」換成「着」：模型字典的「著」唸 zhù，旁白裡都是輕聲的 zhe（附著→附着有詞條，唸 fù zhuó）。百分比區間改成「百分之 A 到 B」的唸法；氣體名照開刀房習慣唸英文。",
+ "replace": {
+  "著": "着",
+  "mmHg": "毫米汞柱",
+  "1.2 到 1.6%": "百分之一點二到一點六",
+  "12 到 16%": "百分之十二到十六",
+  "C3F8": "C three F eight",
+  "SF6": "S F six",
+  "N2O": "N two O"
+ },
+ "words": {
+  "bullous": "B UH1 L AH0 S",
+  "cannula": "K AE1 N Y AH0 L AH0",
+  "endolaser": "EH1 N D OW0 L EY2 Z ER0",
+  "fovea": "F OW1 V IY0 AH0",
+  "inferotemporal": "IH2 N F ER0 OW0 T EH1 M P ER0 AH0 L",
+  "inverter": "IH0 N V ER1 T ER0",
+  "lincoff": "L IH1 N K AO2 F",
+  "plana": "P L AA1 N AH0",
+  "retinotomy": "R EH2 T IH0 N AA1 T AH0 M IY0",
+  "superonasal": "S UW2 P ER0 OW0 N EY1 Z AH0 L",
+  "superotemporal": "S UW2 P ER0 OW0 T EH1 M P ER0 AH0 L",
+  "triamcinolone": "T R AY2 AE0 M S IH1 N AH0 L OW2 N",
+  "trocar": "T R OW1 K AA2 R",
+  "vitrectomy": "V IH0 T R EH1 K T AH0 M IY0",
+  "widefield": "W AY1 D F IY2 L D"
+ }
+}

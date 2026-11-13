@@ -60,7 +60,7 @@ PRINT.sheet({ type: 'steps', title: '手術步驟圖', sub: '…', sources: […
     … ] });
 ```
 一個視角（view）的欄位：
-- `kind`：`sag`（上眼瞼矢狀切面）、`cor`（正面）、`lsag`、`lcor`、`axial`（下眼瞼與外眥，見 `videos/models/eyelid/CARD.md`）；白內障（`globe/cataract.js`，狀態寫成 `{ cat: … }`）：`csec`（子午切面，`hp`＝切面右邊的鐘點、左邊是 `hp + 6`，整張圖的範圍都會算組織）、`cscope`（顯微鏡俯視，術者坐 12 點）；`csec` 另可給 `off`（切面離中心幾 mm，例如垂直槽的橫切面）與 `cut: true`（器械畫成穿過切面的截面），不給就是原本的切面（2026-11-10 為 ② 加）；新模型在 `print-kit.js` 的 `model()` 加一行。第二個範例：`videos/src/cataract-1-wound-ccc/print/`（標籤用 `draw` 指定位置，見該資料夾 `video.js` 的 `lb`）；第三個：`videos/src/cataract-2-hydro-dc/print/`（12–6 切面＋垂直槽的橫切面＋俯視；狀態照 `anim/draw.js` 同名複製）。
+- `kind`：`sag`（上眼瞼矢狀切面）、`cor`（正面）、`lsag`、`lcor`、`axial`（下眼瞼與外眥，見 `videos/models/eyelid/CARD.md`）；白內障（`globe/cataract.js`，狀態寫成 `{ cat: … }`）：`csec`（子午切面，`hp`＝切面右邊的鐘點、左邊是 `hp + 6`，整張圖的範圍都會算組織）、`cscope`（顯微鏡俯視，術者坐 12 點）；`csec` 另可給 `off`（切面離中心幾 mm，例如垂直槽的橫切面）與 `cut: true`（器械畫成穿過切面的截面），不給就是原本的切面（2026-11-10 為 ② 加）；後段（`posterior/posterior.js`，狀態就是模型的狀態，2026-11-12 為 RRD PPV 加）：`psec`（切面，整張圖的範圍都會算組織：預設經 `hp` 點的子午切面，右＝`hp` 點、上＝前；或給 `plane`，例如 trocar 隧道的橫切面 `GLOBE.planes.across(h, s)`、經器械的平面、頭位的 `POSTERIOR.headPlane(st)`）、`phead`（頭位圖：重力朝下，模型的重力箭頭在右上）、`pfundus`（眼底圖，檢查者畫法）、`pwide`（廣角，術者位置、inverter、看向依狀態）、`pscope`（顯微鏡俯視與 trocar）；`none`＝不畫模型，只畫 `draw`（例：備氣的針筒）。後段模型沒有紅、藍、紫，黑白疊圖改由 `print.css` 的 `.post` 規則把它自己的顏色拉到上層：器械、套管、壓鞏膜器＝淺灰黑邊，hub＝灰，裂孔、關好的傷口、重力箭頭＝黑，雷射點＝黑圈，廣角的黑底不印。新模型在 `print-kit.js` 的 `model()` 加一行。第二個範例：`videos/src/cataract-1-wound-ccc/print/`（標籤用 `draw` 指定位置，見該資料夾 `video.js` 的 `lb`）；第三個：`videos/src/cataract-2-hydro-dc/print/`（12–6 切面＋垂直槽的橫切面＋俯視；狀態照 `anim/draw.js` 同名複製）；後段：`videos/src/rrd-ppv-c3f8/print/`（`video.js` 直接載入影片的 `anim/views-posterior.js`，狀態用 `VP.ST` 的名稱）。
 - `state`、`windows`（正面開窗）、`win`：模型視窗 `{ x, y, w[, h] }`（mm，左上角與寬高；圖的大小由 `grid` 算，視窗置中）。
 - 模型自己的疊圖怎麼轉成黑白：`red: 'cut'`（預設，紅色→粗黑實線）／`'inc'`（紅色→粗黑虛線）／`'none'`（不畫，改用 `overlays` 依意義自己畫）；紫色畫線一律→虛線；藍色縫線→黑點線（`blue: false` 不畫）；`amber: true` 把眶上神經的投影→細點劃線。
 - `overlays: [{ cut | inc | sut: 路徑, w }]`：路徑是 `V => [圖上的點]`、定位點陣列，或 `PRINT.along('excLoY', -12.4, 9.8)`（沿正面模型的高度函式取樣）。
@@ -106,7 +106,7 @@ PRINT.sheet({ type: 'anatomy', title: '關鍵解剖與數字速查', sub: '…',
 - **方位**：每種視角寫一次（術者視角：檢查者面對病人，左＝temporal 右＝nasal；矢狀切面：左＝前 上＝上）。
 - **號碼**：清單號碼＝步驟圖號碼；圈號的數字＝它屬於哪一步。
 - **頁尾**：「示意圖，非手術錄影；各院做法不同處依院內常規」、教學影片網址（手術名稱已在右上角，頁尾不重複，窄紙才不會折行）、這張單子數字的出處、「製作　張博淳」。不寫醫院名稱與主治代號。
-- **內容（硬規則）**：不新增醫學內容。數字必須在影片帳本登記（或在單子的 `ledger: { '數字': '出處' }` 登記，出處在 `REFS` 並列在頁尾，或是「院內常規」「示意」「結構」）；文獻出處要列在頁尾；範本與這台刀特有的值照影片標「依院內常規」或「示意」。共用模型與 `video-kit/` 不改；需要模型配合時要選用式、而且不改既有畫面（`check-all.js` 的參考圖維持 0.000%）。
+- **內容（硬規則）**：不新增醫學內容。數字必須在影片帳本登記（或在單子的 `ledger: { '數字': '出處' }` 登記，出處在 `REFS` 並列在頁尾，或是「院內常規」「示意」「結構」「病例」；「病例」＝站長確認、寫在規格書「病例情境」的病例摘要）；文獻出處要列在頁尾；範本與這台刀特有的值照影片標「依院內常規」或「示意」。共用模型與 `video-kit/` 不改；需要模型配合時要選用式、而且不改既有畫面（`check-all.js` 的參考圖維持 0.000%）。
 
 ## 自檢（每次改了資料檔或版面）
 1. `node videos/tools/print/print.js videos/src/<影片> --gray`，全部 PASS。

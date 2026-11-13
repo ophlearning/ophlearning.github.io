@@ -1,0 +1,30 @@
+// 跟刀清單 (assistant's version): what the assistant does or watches for, in the order of the video; each number is in the video's
+// ledger (check.js) and each source in the footer. Numbers = the step numbers of steps.js (made once the model exists).
+PRINT.sheet({
+  type: 'checklist', title: '跟刀清單（助手）', sub: '跟刀前看一次；號碼＝手術步驟圖的號碼',
+  sources: ['EyeWiki 2026a', 'Duker 2021', 'Warrier 2008', 'Spitznas 1987', 'Chandrakanth 2025', 'Neffendorf 2017', 'Sigler 2013',
+    'Vaziri 2016', 'Kanclerz 2018b', 'Lee 2004'],
+  ledger: { '12': '結構' },
+  items: [
+    { sec: '術前', act: '<b>左眼 OS</b>、術者坐 12 點：畫面<b>下＝12 點</b>、<b>temporal 在左</b>；<b>11 點</b>裂孔在畫面<b>下方略偏右</b>',
+      note: '鐘點是眼球本身的位置，不隨畫面翻轉' },
+    { sec: '架設', act: 'Trocar 在 <b>pars plana</b>，距角膜緣 <b>3–4 mm</b>（有水晶體用 <b>4 mm</b>）；推開結膜、<b>斜插</b>',
+      note: '斜插：拔掉後比較不漏（Warrier 2008）' },
+    { act: '開 infusion 前：<b>看到套管尖端在玻璃體腔</b>；術中不時再確認',
+      note: '本例：inferotemporal 套管下可能是剝離區' },
+    { sec: '術中', act: '廣角系統是<b>倒像</b> → 要接 <b>inverter</b>；壓的鐘點＝畫面上的<b>隆起</b>',
+      note: '隆起位置不對 → 先確認壓點與 inverter' },
+    { act: '<b>壓鞏膜</b>：主刀說幾點就壓幾點；<b>深度與時間聽口令</b>',
+      note: '助手看不到主刀的畫面（Chandrakanth 2025）' },
+    { act: '<b>馬上說</b>：視網膜被吸起、<b>新的裂孔</b>或出血、器械靠近水晶體',
+      note: '修 RRD 的醫源性裂孔：23G 約 1.9%（Neffendorf 2017）' },
+    { act: 'PFCL <b>吸乾淨</b>；視網膜下可疑小珠子要提出',
+      note: '殘留處外層視網膜會消失（Sigler 2013）' },
+    { sec: 'C3F8 與關傷口', act: '<b>備氣</b>：純氣排到需要的量，無菌空氣補到 <b>50 mL</b>；C3F8 常用 <b>14%</b>（<b>依院內常規</b>）',
+      note: '錯誤：算錯量、換供應商（Kanclerz 2018b）' },
+    { act: '<b>和主刀確認</b>氣體與濃度；拔 cannula 後<b>檢查每個傷口</b>、量眼壓',
+      note: '一直漏就縫一針（Warrier 2008）' },
+    { sec: '術後', act: '<b>不用 N2O 麻醉</b>、氣體吸收前<b>不搭機、不上山</b>、給<b>警示卡</b>；當晚到隔天<b>量眼壓</b>',
+      note: 'N2O 讓氣泡變大 → CRAO（術後 37 天，Lee 2004）' },
+  ],
+});
