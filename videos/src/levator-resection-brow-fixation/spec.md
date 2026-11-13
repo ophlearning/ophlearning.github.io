@@ -11,6 +11,11 @@
 - Conjunctivoplasty 指的是處理 levator resection 時或術後的 conjunctival prolapse（站長選項 B）。
 - 這是站長 2026-11-06 實際跟的刀。**步驟章節以刀後站長回傳的實際 OP note 為準**；主治的術式範本只當作參考。
 
+## 病例情境：第二台（站長 2026-11-13 確認）
+- 確認的摘要：**OU 上眼瞼：levator resection → internal brow fixation；沒有附加處置**；主治範本與 11-06 那份相同；手術日期 2026-11-13（當天）。
+- 站長決定：已有影片，**不重做影片**，只做貼開刀房牆壁的三張跟刀單（`print/`），並先送術前速讀包（`brief.js`）。
+- 單子的圖沿用影片的右眼 OD；OU 的寫法：清單分「術前（兩眼）」「收尾（兩眼）」，兩眼的順序依院內常規，圖例註明 OS 左右相反。
+
 ## 術式依據與保密
 - 主治的術式範本由站長提供，**不進 git**；影片、網站、這份規格書都不寫主治代號與醫院名稱。各院做法不同的地方，照舊標「依院內常規」。
 - 範本中與這台刀有關的步驟（刀後要和實際 OP note 對照）：
@@ -113,3 +118,9 @@
   - 參考圖：每章至少一張，共 19 張（Claude 自檢）；出片前總覽在 `ref/overview/`（每章一張）與 `overview-notes.md`（示意與沒有直接出處的內容）。
   - 出片：`out/levator-resection-brow-fixation.mp4`（不進 git；ffprobe 593.77 秒＝9:54，1920×1080、30 fps、AAC 48 kHz 立體聲，旁白 −16 LUFS，57 MB）；`publish/` 有 YouTube 說明欄、字幕、章節與網站條目草稿（`yt: 'TBD'`）。
 - 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」，不同處改 `params.js`／`segments.js` 後重新出片。
+- 2026-11-13：第二台（OU，同一份範本）當天開刀。`check-all` 全部通過後先送術前速讀包（`out/brief/`，17 張圖＋`旁白.md`）；新增貼牆的三張跟刀單（`print/`：`video.js`、`checklist.js`、`steps.js`、`anatomy.js`；`print.js --gray` 三張全部 PASS，LSs 210 × 270 mm；Claude 放大自檢彩色與灰階）。
+  - 內容只取影片已查證的：清單 8 項＝影片第 7 章八件事；步驟圖每格是 `draw.js` 該段結束時的狀態；速查表每列登記在 `check.js` 的 `LEDGER`。
+  - 解剖速查的 ROOF 尺寸線量在未手術的眼瞼（同 4-5 段，Manta 2025 量的是原生眼瞼）：1.88 mm。
+  - 這台沒有排 conjunctivoplasty；清單第 7 項保留「有沒有結膜脫出」當作術中要看的狀況。
+- 下一步：刀後站長若給 OP note，再對照「待刀後補」（特別是 2.5／4／4 是不是內／中／外三點高度）。
+
