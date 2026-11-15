@@ -52,6 +52,11 @@ const PRINT = (() => {
     if (kind === 'pfundus') return POSTERIOR.fundus({ st: state, id });
     if (kind === 'pwide') return POSTERIOR.wide({ st: state, id });
     if (kind === 'pscope') return POSTERIOR.ext({ st: state, id });
+    // socket (socket/socket.js; 2026-11-13, SB removal in an eviscerated socket): ssec = meridional section through o.hp (right = hp, left = hp + 6,
+    // anterior up); sfront = the surgeon's view of the OS socket, surgeon at 12. The model has none of the overlay colours: the sheet draws its
+    // black overlays itself (draw), so both views are tissue only.
+    if (kind === 'ssec') return SOCKET.sec({ state, h: o.hp ?? 12, id });
+    if (kind === 'sfront') return SOCKET.front({ state, id });
     if (kind === 'none') return { svg: '', A: {} };
     throw new Error('unknown view ' + kind);
   }
@@ -64,7 +69,7 @@ const PRINT = (() => {
   // fills and thin outlines of the eyelid sections almost vanished, while the coronal views stayed readable. Sections are drawn at
   // full strength; coronal views only a little darker (at 100 % the iris turns near-black and hides black dimension lines over it).
   // The same rule for the cataract and posterior-segment views (sections 100 %; microscope, fundus, wide-angle and head views 65 %).
-  const TISSUE = { sag: 1, lsag: 1, axial: 1, csec: 1, psec: 1, phead: 1, cor: 0.65, lcor: 0.65, cscope: 0.65, pfundus: 0.65, pwide: 0.65, pscope: 0.65 };
+  const TISSUE = { sag: 1, lsag: 1, axial: 1, csec: 1, psec: 1, phead: 1, cor: 0.65, lcor: 0.65, cscope: 0.65, pfundus: 0.65, pwide: 0.65, pscope: 0.65, ssec: 1, sfront: 0.65 };
   let nFig = 0;
   // o: { kind, state, win: {x, y, w[, h]}, w, h (figure mm), red: 'cut' | 'inc' | 'none', blue: false to hide, light (tissue opacity),
   //      windows, upper, draw: V => svg (print overlays and labels, figure mm), cap: caption under the figure }

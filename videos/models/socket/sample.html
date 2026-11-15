@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/package/400.css"><link rel="stylesheet" href="../fonts/package/700.css">
+<style>html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eceff2}svg text{font-family:'Noto Sans TC',sans-serif}</style>
+</head><body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script src="socket.js"></script>
+<script>
+// Socket model sample (OS, eviscerated socket, retained encircling band): six steps of scleral buckle removal. In each step the left panel is
+// the surgeon's view (surgeon at 12) and the right panel the meridional section through the step's clock hour (right half). Sources: CARD.md.
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cv = document.createElement('canvas').getContext('2d');
+const meas = (t, z, b) => { cv.font = `${b ? 700 : 400} ${z}px "Noto Sans TC"`; return cv.measureText(t).width; };
+function cam(px, py, k, x0, y0) { return { tf: `translate(${px} ${py}) scale(${k}) translate(${-x0} ${-y0})`, P: p => [px + (p[0] - x0) * k, py + (p[1] - y0) * k] }; }
+function lab(zh, en, tx, ty, a, o = {}) {
+  const z = o.size || 11, right = o.side === 'R', w = meas(zh, z, o.bold) + (en ? 4 + meas(en, z, false) : 0), col = o.color || '#1f2a36', lc = o.lc || '#5f6d7b';
+  const x1 = right ? tx - w - 5 : tx + w + 5, x0 = right ? tx - w : tx;
+  const ln = a ? `<line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="#fff" stroke-width="3" opacity="0.75"/><line x1="${x1}" y1="${ty - z * 0.36}" x2="${a[0]}" y2="${a[1]}" stroke="${lc}" stroke-width="1.05"/><circle cx="${a[0]}" cy="${a[1]}" r="2.3" fill="${lc}" stroke="#fff" stroke-width="1"/>` : '';
+  return `<g>${ln}<text x="${x0}" y="${ty}" font-size="${z}" stroke="#fff" stroke-width="3.2" paint-order="stroke" stroke-linejoin="round"><tspan fill="${col}" font-weight="${o.bold ? 700 : 500}">${esc(zh)}</tspan>${en ? `<tspan fill="${o.enColor || '#5b6878'}" dx="4">${esc(en)}</tspan>` : ''}</text></g>`;
+}
+const panel = (x, y, w, h, svg, tf, id, sub) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="#fff" stroke="#d3dae1"/><clipPath id="${id}"><rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="7"/></clipPath><g clip-path="url(#${id})"><g transform="${tf}">${svg}</g></g>`
+  + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="19" rx="7" fill="#fff" opacity="0.92"/><text x="${x + 7}" y="${y + 14}" font-size="10.5" fill="#5b6878">${esc(sub)}</text>`;
+const bar = (x, y, k, mm, t) => `<path d="M${x} ${y}h${k * mm}" stroke="#1d2733" stroke-width="2.2"/><path d="M${x} ${y - 3}v6M${x + k * mm} ${y - 3}v6" stroke="#1d2733" stroke-width="1.8"/><text x="${x + k * mm / 2}" y="${y - 5}" font-size="10" text-anchor="middle" fill="#1d2733">${t}</text>`;
+const o = [];
+o.push(`<text x="20" y="30" font-size="19" font-weight="700" fill="#1d2733">眼窩模型樣本：evisceration 後殘留的環扣帶 encircling band 拆除</text>`);
+o.push(`<text x="1260" y="30" font-size="12" fill="#5b6878" text-anchor="end">左眼 OS　mm 建模、多為示意（見模型卡）　正面圖半徑＝沿鞏膜殼表面到前極的距離</text>`);
+const EX = { h: 1.5, len: 6 }, OP = { h0: 7, h1: 5 }, ALL = [1.5, 4.5, 7.5, 10.5];
+const CW = 412, CH = 330, FW = 200, SW = 206, PH = 300;
+const RED = { bold: true, color: '#b3261e', lc: '#b3261e' }, GRN = { bold: true, color: '#0e7c6b', lc: '#0e7c6b' };
+let CY = 0; const y = v => CY + v;
+function cell(i, title, st, h, fLabels, sLabels) {
+  const X = 14 + (i % 3) * (CW + 9), Y = 44 + Math.floor(i / 3) * (CH + 6), id = 'c' + i; CY = Y + 24;
+  o.push(`<text x="${X + 2}" y="${Y + 15}" font-size="14" font-weight="700" fill="#1d2733">${esc(title)}</text>`);
+  const kF = FW / 42, cF = cam(X, Y + 24, kF, -21, -PH / kF / 2), fr = SOCKET.front({ state: st, id: id + 'f' });
+  o.push(panel(X, Y + 24, FW, PH, fr.svg, cF.tf, id + 'fp', '術者視角　術者坐 12 點'));
+  const hp = h => cF.P(SOCKET.fpt(h, 18.6));
+  o.push([[12, '12 點 superior', 'middle', 0], [3, '3 點 temporal', 'start', 4], [6, '6 點 inferior', 'middle', 0], [9, '9 點 nasal', 'end', -4]].map(([hh, t, an, dx]) => { const p = hp(hh), x = an === 'start' ? X + 4 : an === 'end' ? X + FW - 4 : p[0];
+    return `<text x="${x}" y="${p[1] + 4}" font-size="10" font-weight="700" fill="#0b4f8a" text-anchor="${an}" stroke="#fff" stroke-width="3" paint-order="stroke">${t}</text>`; }).join(''));
+  o.push(fLabels(cF.P, fr.A, X + 6, X + FW - 6).join(''));
+  const kS = SW / 22, cS = cam(X + FW + 6, Y + 24, kS, -3, -15), sc = SOCKET.sec({ state: st, h, id: id + 's' });
+  o.push(panel(X + FW + 6, Y + 24, SW, PH, sc.svg, cS.tf, id + 'sp', `切面經 ${SOCKET.fmtH(h)} 點（右）　上＝前`));
+  o.push(sLabels(cS.P, sc.A, X + FW + 12, X + FW + SW).join(''));
+  o.push(bar(X + FW + SW - 50, Y + 24 + PH - 10, kS, 5, '5 mm'));
+}
+cell(0, '① 術前：band 從 1:30 暴露（示意）', { conformer: 1, expose: EX }, 1.5,
+  (P, A, l, r) => [lab('眼窩模型', 'conformer', l, y(34), P(A.conformer)), lab('肉芽組織', 'granulation', l, y(270), P(A.gran), RED), lab('暴露的 band', 'exposed', r, y(285), P(A.expose), { side: 'R', bold: true })],
+  (P, A, l, r) => [lab('結膜', 'conjunctiva', l, y(68), P(A.conj)), lab('鞏膜殼', 'scleral shell', l + 4, y(225), P(A.shell)), lab('環扣帶', 'encircling band', r - 6, y(270), P(A.band), { side: 'R', bold: true }), lab('肉芽', 'granulation', r - 6, y(126), P(A.gran), { ...RED, side: 'R' })]);
+cell(1, '② 打開結膜與 Tenon（範圍示意）', { expose: EX, open: OP }, 1.5,
+  (P, A, l, r) => [lab('結膜切開', 'incision', l, y(34), P(A.open)), lab('Dacron 縫線', 'mattress suture', l, y(285), P(A.sut[1.5]), GRN)],
+  (P, A, l, r) => [lab('Tenon', 'Tenon', l, y(68), P(A.tenon)), lab('纖維囊', 'capsule', r - 6, y(225), P(A.capsule), { side: 'R' }), lab('Dacron 縫線', 'suture', r - 6, y(108), P(A.sut), { ...GRN, side: 'R' })]);
+cell(2, '③ 肌肉鉤勾起外直肌（3 點）', { expose: EX, open: OP, hook: 3 }, 3,
+  (P, A, l, r) => [lab('肌肉鉤', 'muscle hook', l, y(270), P(A.hook)), lab('外直肌', 'LR', l, y(34), P(A.hooked), { bold: true })],
+  (P, A, l, r) => [lab('外直肌', 'lateral rectus', r - 6, y(270), P(A.rectus), { side: 'R', bold: true }), lab('肌肉鉤', 'hook', r - 6, y(90), P(A.hook), { side: 'R' }), lab('band 在肌肉下', 'under the muscle', l, y(135), P(A.band), { bold: true })]);
+cell(3, '④ 剪斷四條縫線，在 1:30 剪斷 band', { expose: EX, open: OP, sutCut: ALL, cut: 1.5 }, 1.5,
+  (P, A, l, r) => [lab('剪斷處', 'cut', l, y(285), P(A.cut), RED), lab('已剪的縫線', 'cut suture', r, y(34), P(A.sut[7.5]), { ...GRN, side: 'R' })],
+  (P, A, l, r) => [lab('剪斷處', 'cut', r - 6, y(270), P(A.cut), { ...RED, side: 'R' }), lab('縫線已剪', 'suture cut', r - 6, y(99), P(A.sut), { ...GRN, side: 'R' })]);
+cell(4, '⑤ 從剪斷處抽出一半', { expose: EX, open: OP, sutCut: ALL, cut: 1.5, pull: 0.5 }, 1.5,
+  (P, A, l, r) => [lab('抽出的 band', 'pulled out', l, y(285), P(A.pulled), { bold: true }), lab('另一端', 'free end', r, y(34), P(A.bandEnd), { side: 'R', bold: true })],
+  (P, A, l, r) => [lab('抽出', 'pulled out', r - 6, y(68), P(A.pulled), { side: 'R', bold: true }), lab('鞏膜殼', 'scleral shell', l + 4, y(225), P(A.shell))]);
+cell(5, '⑥ band 取出、清創、結膜縫合', { expose: EX, open: OP, sutCut: ALL, cut: 1.5, pull: 1, debride: 1, close: 1 }, 1.5,
+  (P, A, l, r) => [lab('結膜縫合', 'closure', l, y(285), P(A.close), { bold: true })],
+  (P, A, l, r) => [lab('結膜縫合', 'closure', r - 6, y(68), P(A.close), { side: 'R', bold: true }), lab('鞏膜殼', 'scleral shell', l + 4, y(225), P(A.shell)), lab('纖維組織', 'fibrous', l + 4, y(162), P(A.fibrous))]);
+document.getElementById('stage').innerHTML = o.join('');
+</script></body></html>

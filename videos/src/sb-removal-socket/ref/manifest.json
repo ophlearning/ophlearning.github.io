@@ -1,0 +1,152 @@
+{
+  "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/sb-removal-socket；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
+  "page": "../anim/video.html",
+  "pageNote": "2026-11-13 起有影片頁，所有段落都有畫面。textBase 是旁白定稿的 commit（f50a689）；合併進 main 後改成 main 上的 commit。還沒有 timeline.js，參考圖用字數估計的時間軸，合成語音後要重做。",
+  "textBase": "f50a689",
+  "threshold": 0.0002,
+  "tol": 48,
+  "crop": [
+    0,
+    64,
+    1280,
+    656
+  ],
+  "items": [
+    {
+      "page": "../../../models/socket/sample.html",
+      "ref": "../../../models/socket/sample.jpg",
+      "dpr": 1,
+      "crop": null,
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（小助手建立時用 1 mm 格線放大看過正面圖與切面；主對話看過半解析度全圖：OS 術者坐 12 點時 3 點在左、1 點半暴露在左下、band 在直肌下、纖維囊）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "title",
+      "at": "1:0.6",
+      "ref": "title-L1-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-1",
+      "at": "3:0.6",
+      "ref": "1-1-L3-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "1-2",
+      "at": "2:0.6",
+      "ref": "1-2-L2-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-1",
+      "at": "2:0.6",
+      "ref": "2-1-L2-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-1",
+      "at": "4:0.6",
+      "ref": "2-1-L4-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "2-2",
+      "at": "2:0.9",
+      "ref": "2-2-L2-0.9.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "3-1",
+      "at": "3:0.6",
+      "ref": "3-1-L3-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "3-2",
+      "at": "1:0.9",
+      "ref": "3-2-L1-0.9.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "3-3",
+      "at": "1:0.5",
+      "ref": "3-3-L1-0.5.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "3-3",
+      "at": "2:0.6",
+      "ref": "3-3-L2-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-1",
+      "at": "1:0.9",
+      "ref": "4-1-L1-0.9.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "4-2",
+      "at": "2:0.6",
+      "ref": "4-2-L2-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "5-1",
+      "at": "2:0.6",
+      "ref": "5-1-L2-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "5-2",
+      "at": "3:0.6",
+      "ref": "5-2-L3-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "5-3",
+      "at": "2:0.6",
+      "ref": "5-3-L2-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    },
+    {
+      "page": "../anim/video.html",
+      "seg": "6",
+      "at": "3:0.6",
+      "ref": "6-L3-0.6.jpg",
+      "approved": "2026-11-13",
+      "note": "Claude 自檢（半解析度看全圖、標籤指向與兩圖鐘點一致；標籤重疊與數字由 check-video.js、check.js 檢查）"
+    }
+  ]
+}
