@@ -56,6 +56,7 @@
 3. band 在四條直肌下方、抽出時總長不變、沒剪斷的縫線會卡住 band，寫成檢查。
 4. 旁白每個數字在數字帳本都有出處；`node videos/tools/check-all.js videos/src/sb-removal-socket` 全部 PASS。
 5. 不出現病人識別資料、院內人員、主治代號與醫院名稱（commit 前 grep 檢查）。
+6. 三張列印單 PASS（跟刀清單、手術步驟圖、關鍵解剖與數字速查）：`node videos/tools/print/print.js videos/src/sb-removal-socket --gray` 全部 PASS。
 
 ## 進度
 - 2026-11-13 15:25　規格書草稿；模型由小助手建；文獻由小助手查。
