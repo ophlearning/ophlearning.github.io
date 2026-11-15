@@ -1,8 +1,8 @@
 {
   "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/sb-removal-socket；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "pageNote": "2026-11-13 起有影片頁，所有段落都有畫面。textBase 是旁白定稿的 commit（f50a689）；合併進 main 後改成 main 上的 commit。還沒有 timeline.js，參考圖用字數估計的時間軸，合成語音後要重做。",
-  "textBase": "f50a689",
+  "pageNote": "2026-11-13 起有影片頁，所有段落都有畫面。textBase 是旁白定稿的 commit（第 1 版 f50a689；2026-11-15 PR #31 squash 合併後換成 main 上的 73afee4）。2026-11-13 合成語音後有 timeline.js，參考圖在真實時間軸下逐像素相同。",
+  "textBase": "73afee4",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
