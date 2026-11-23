@@ -18,6 +18,7 @@
 - 站長確認的摘要（去識別版：原摘要的檢查數值與病程日期因 repo 公開而省略，原文只留在對話裡）：「OS tectonic PK：neurotrophic keratopathy 加 HSV 病史，DALK 兩次失敗後出現 descemetocele，做過兩次 AMG；phakic；眼壓很低；受體與供體大小、縫法、要不要合併 AMG 或 tarsorrhaphy 都等刀後確認；站長當助手」。
 - 影片用到的病程只有：neurotrophic＋HSV 的角膜 → 兩次 DALK 失敗（rejection、melting、DM rolling）→ AMG 補不住 → descemetocele；周邊有 NV；有晶體眼；眼壓很低。
 - **隱私**：網站 repo 是公開的。影片、網站、這份規格書都不寫病人姓名、病歷號、生日、年齡、性別、院內人員、主治代號與醫院名稱，也不寫病程日期、檢查數值與其他病史。
+- **院內的 PK 手術紀錄範本**（站長 2026-11-23 提供，不含病人資料；影片與列印單的步驟照它，標「院內常規」，大小欄位留白＝依主刀）：GA；Barraquer lid speculum（solid blades）；供體以 Barron vacuum punch 垂直切、內皮面朝上、內皮塗 Healon；受體以 Barron radial vacuum trephine 垂直切、取下 button；分開周邊 PAS、Healon 形成前房；不做 iridoplasty、不做白內障；16 針 10-0 nylon interrupted；TSCL、Maxitrol ointment、壓迫包紮＋金屬眼罩。範本的 OPERATIVE FINDINGS（clear、phakic、IOP high）是範本預設，不是本例。
 - 站長沒有指定、病歷也沒寫的：受體與供體 trephine 大小、縫法（interrupted／running）、針數、有沒有合併 AMG／tarsorrhaphy／縮瞳、麻醉方式。畫面標「示意」，旁白說「依主刀決定」，標「待刀後補」。
 
 ## 時程
@@ -60,3 +61,4 @@
 
 ## 進度
 - 2026-11-23　規格書草稿；刀前在對話中交純文字術前速讀（兩台共用）。模型（`globe/pk.js`）與文獻（`lit-notes.md`）交給兩個小助手並行。
+- 2026-11-23 18:50–19:10　站長提供院內 PK 手術紀錄範本，要求先出三張單：旁白加入範本步驟，帳本（`check.js`）第一版，三張列印單（`print.js --gray` 全部 PASS，彩色全頁看過）交給站長。列印工具 `print-kit.js` 加 `pksec`、`pkscope` 兩種視角。PK 模組（`globe/pk.js`）由小助手做完、`check-all` 通過後才 commit。

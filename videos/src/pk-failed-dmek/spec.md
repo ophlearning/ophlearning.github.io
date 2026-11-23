@@ -16,6 +16,7 @@
 - 站長確認的摘要（去識別版：原摘要的日期與檢查數值因 repo 公開而省略，原文只留在對話裡）：「OS PK：failed DMEK 後改做 PK（DMEK 後約一週：角膜水腫、上皮缺損、前房淺且有 pupillary block 和 hyphema、眼壓偏低）；pseudophakic（PCIOL），7 點鐘有 LI；受體與供體大小、縫法還不知道；站長當助手」。
 - 影片用到的病程只有：Fuchs、pseudophakic、DMEK 後約一週 graft 沒有發揮功能，以及上面摘要的前房狀況。主切口的鐘點不寫（病歷兩處方位寫法不同，未查證），畫面以示意呈現、標「待刀後補」。
 - **隱私**：網站 repo 是公開的。影片、網站、這份規格書都不寫病人姓名、病歷號、生日、年齡、性別、院內人員、主治代號、醫院名稱與角膜組織編號，也不寫病程日期與檢查數值。
+- **院內的 PK 手術紀錄範本**（站長 2026-11-23 提供，不含病人資料；影片與列印單的步驟照它，標「院內常規」，大小欄位留白＝依主刀）：GA；Barraquer lid speculum（solid blades）；供體以 Barron vacuum punch 垂直切、內皮面朝上、內皮塗 Healon；受體以 Barron radial vacuum trephine 垂直切、取下 button；分開周邊 PAS、Healon 形成前房；不做 iridoplasty、不做白內障；16 針 10-0 nylon interrupted；TSCL、Maxitrol ointment、壓迫包紮＋金屬眼罩。範本的 OPERATIVE FINDINGS（clear、phakic、IOP high）是範本預設，不是本例。
 - 站長沒有指定、病歷也沒寫的：trephine 大小、縫法、針數、前房實際要做哪些處理、IOL 保留與否、麻醉方式。畫面標「示意」，旁白說「依主刀決定」，標「待刀後補」。
 
 ## 時程
@@ -41,3 +42,4 @@
 
 ## 進度
 - 2026-11-23　規格書草稿；等第一部的 PK 模組與文獻完成後開始。
+- 2026-11-23 18:50–19:10　站長提供院內 PK 手術紀錄範本，要求先出三張單：旁白加入範本步驟，帳本（`check.js`）第一版，三張列印單（`print.js --gray` 全部 PASS，彩色全頁看過）交給站長。列印工具 `print-kit.js` 加 `pksec`、`pkscope` 兩種視角。PK 模組（`globe/pk.js`）由小助手做完、`check-all` 通過後才 commit。
