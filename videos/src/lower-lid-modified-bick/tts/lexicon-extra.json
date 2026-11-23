@@ -1,0 +1,14 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py",
+ "replace": {},
+ "words": {
+  "canthotomy": "K AE0 N TH AA1 T AH0 M IY0",
+  "cantholysis": "K AE0 N TH AA1 L AH0 S IH0 S",
+  "involutional": "IH2 N V AH0 L UW1 SH AH0 N AH0 L",
+  "retractor": "R IH0 T R AE1 K T ER0",
+  "retractors": "R IH0 T R AE1 K T ER0 Z",
+  "preseptal": "P R IY0 S EH1 P T AH0 L",
+  "whitnall": "W IH1 T N AO0 L",
+  "plication": "P L AY0 K EY1 SH AH0 N"
+ }
+}
