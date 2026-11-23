@@ -19,9 +19,14 @@
 
 ## 文獻
 - PubMed 查證，全文引用在 `anim/segments.js` 的 REFS；數字與來源在 `check.js` 的 LEDGER。
+- 步驟：Hurwitz 1987（Bick 的改良：外眥處全層縮短、瞼緣不留 notch，成敗取決於瞼板直接縫到外側眶緣骨膜；只讀到摘要）、Tao 2025（外眥附近全層三角形切除、切除量依 laxity；Bick 的缺點是外眥角變圓、往內移；讀全文）、Rubino 2024（先全層剪開、往外拉判斷切多少；有的改良保留外眥韌帶不切外眥；研究對象是 ectropion，讀全文）。Bick 1966 只列為原始出處（PubMed 沒有摘要），單子上沒有內容來自它。
+- 結果：Vahdani 2018（641 次、非隨機：Bick 84 次解剖成功 100%、再手術 0；LTS 89.1%、9%）、Poon 2019（內翻：Bick 治癒 100%、LTS 92%／90%）、Barrett 2012（quick strip 225 個眼瞼、內翻 54、完全矯正 92.4%）、Prendes 2020（modified Bick＋眼輪匝肌與脂肪切除 70 個眼瞼、復發 1.4%）、Auguste 2023（只做水平縮短復發 7%）。
+- 評估與解剖（照抄 revision 影片已查證的）：Pushker 2025、Beigi 2008（distraction）、Gioia 1987（Whitnall 結節在眶緣後 1.5 mm）。
+- 依院內常規：局麻、外眥切開線與楔形位置、canthotomy＋inferior cantholysis 的做法（文獻不一，做不做依院內常規）、楔形寬度、固定的縫線與針數、外眥角與皮膚的縫法。
+- 待刀後確認：斷端固定到外側眶緣骨膜（Hurwitz 1987）還是外眥韌帶殘端。
 
 ## 驗收項目
-- [ ] 三張列印單 PASS（跟刀清單、手術步驟圖、關鍵解剖與數字速查）：`node videos/tools/print/print.js videos/src/lower-lid-modified-bick --gray` 最後一行 `all 3 sheet(s) passed`，彩色與灰階全頁看過。
+- [x] 三張列印單 PASS（跟刀清單、手術步驟圖、關鍵解剖與數字速查）：`node videos/tools/print/print.js videos/src/lower-lid-modified-bick --gray` 最後一行 `all 3 sheet(s) passed`，彩色與灰階全頁看過。
 - [ ] 單子與旁白的每個數字在數字帳本有來源（文獻、院內常規、示意、結構、病例）。
 - [ ] 每一步同時顯示機轉切面與術者視角，方位寫明。
 - [ ] 不出現病人識別資料、主治代號與醫院名稱（commit 前 grep）。
@@ -29,3 +34,5 @@
 
 ## 進度
 - 2026-11-23 11:00　病例摘要確認；三張列印單由小助手做，主對話檢查。
+- 2026-11-23 11:40　三張列印單（清單 8 項、步驟圖 8 格［外眥水平切面＋正面，第 8 步矢狀切面］、速查）`print.js --gray` 全部 PASS；主對話看過彩色全頁；補上 `.gitignore`（`out/`）。三頁 PDF（A4 頁面上的 LSs 版）與 PNG 交給站長。模型沒有 Bick 的楔形切除：楔形與切線用疊圖畫（示意），斷端接骨膜借用模型的 `stripFix` 狀態（示意）。
+- 下一步：影片（旁白與畫面、`check-all`、術前速讀包、出片）。
