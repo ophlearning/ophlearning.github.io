@@ -1,5 +1,5 @@
   {
-    id:'lower-lid-hotz-fat-removal', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'lower-lid-hotz-fat-removal', type:'youtube', yt:'CYqyymgItyY', cat:'surgery',
     zh:'下眼瞼 Hotz＋去眼袋：術前預習', en:'Lower-lid Hotz procedure with partial fat removal for recurrent involutional entropion and lid bags: pre-op preview',
     dur:379,
     short:'OS 下眼瞼 Hotz＋去眼袋的術前預習：為什麼用 Hotz、血小板低時術前與術中要注意什麼、院內範本每一步動到哪一層、三團脂肪與 inferior oblique，以及術後球後出血的徵象與第一步。',
