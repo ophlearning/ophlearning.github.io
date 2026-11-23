@@ -1,0 +1,33 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py。「著」換成「着」：模型字典的「著」唸 zhù。10-0 照開刀房習慣唸 ten O；D（屈光度）與 mg 改唸中文（沿用 tectonic PK 那部的發音表，再補這部的字）。",
+ "replace": {
+  "著": "着",
+  "10-0": "ten O",
+  "1.35 D": "1.35 屈光度",
+  "0.14 D": "0.14 屈光度",
+  "mg": "毫克"
+ },
+ "words": {
+  "descemet": "D EH1 S AH0 M EY0",
+  "descemetocele": "D EH2 S AH0 M EH1 T AH0 S IY2 L",
+  "endothelial": "EH2 N D OW0 TH IY1 L IY0 AH0 L",
+  "flieringa": "F L IH1 R IH0 NG G AH0",
+  "fluorescein": "F L UH0 R EH1 S IY0 N",
+  "hyphema": "HH AY0 F IY1 M AH0",
+  "iridotomy": "IH2 R IH0 D AA1 T AH0 M IY0",
+  "keratitis": "K EH2 R AH0 T AY1 T AH0 S",
+  "keratopathy": "K EH2 R AH0 T AA1 P AH0 TH IY0",
+  "limbus": "L IH1 M B AH0 S",
+  "neurotrophic": "N UH2 R OW0 T R OW1 F IH0 K",
+  "paracentesis": "P EH2 R AH0 S EH0 N T IY1 S IH0 S",
+  "pupillary": "P Y UW1 P AH0 L EH2 R IY0",
+  "regraft": "R IY1 G R AE2 F T",
+  "suprachoroidal": "S UW2 P R AH0 K AO0 R OY1 D AH0 L",
+  "tarsorrhaphy": "T AA2 R S AO1 R AH0 F IY0",
+  "tenon": "T EH1 N AH0 N",
+  "trephine": "T R AH0 F AY1 N",
+  "urrets": "UH1 R EH0 T S",
+  "viscoelastic": "V IH2 S K OW0 IH0 L AE1 S T IH0 K",
+  "zavalia": "Z AH0 V AA1 L IY0 AH0"
+ }
+}
