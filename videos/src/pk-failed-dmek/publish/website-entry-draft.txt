@@ -1,7 +1,7 @@
   {
-    id:'pk-failed-dmek', type:'youtube', yt:'[待上傳後填入影片 ID]', cat:'surgery',
+    id:'pk-failed-dmek', type:'youtube', yt:'bcSEmVkD0qg', cat:'surgery',
     zh:'Failed DMEK 後改做 PK：助手版', en:'Penetrating keratoplasty after a failed DMEK: the assistant\'s guide',
-    dur:[待出片後以 ffprobe 實測秒數填入],
+    dur:282,
     short:'站在助手的位置預習一台 PK（左眼 Fuchs、人工水晶體眼，DMEK 約一週後 graft 沒有發揮功能）：trephine 與 open sky、打開後前房的血與沾黏、DMEK 後的 pupillary block 與 LI、cardinal 12 → 6 → 3 → 9 與 16 針、Seidel test 與術後盯眼壓。',
     sum:'這支影片給在 PK 當助手的住院醫師。先看這顆眼睛為什麼改做 PK：DMEK 只換角膜最後面的 Descemet membrane 和內皮，做完約一週仍然水腫、前房淺、有 pupillary block 和 hyphema；DMEK 失敗最常見的原因是 primary graft failure，也可以再做一次 DMEK，這台由主治決定改做 PK。接著依序看 trephine 部分深度再切完一圈、open sky 時助手不壓不扳；打開後前房的血、虹膜沾黏要先分開、DMEK 後的 pupillary block 與被堵住的 iridotomy、7 點的 LI 與 IOL；供體內皮面朝上、cardinal 12 → 6 → 3 → 9、院內範本的 16 針 10-0 nylon；Seidel test、TSCL、壓迫包紮，以及術後 24 小時盯眼壓與 regraft 的存活；最後是助手要記住的五件事。',
     note:'畫面為左眼 OS、術者坐 12 點的示意動畫（12–6 點切面＋術者視角兩圖同步），不是手術錄影，比例不精確。Trephine 大小、DMEK graft 脫離範圍、PAS、前房積血、IOL 與漏的位置為示意；前房處理依主刀決定；步驟、縫線與藥物依院內 PK 手術紀錄範本。',

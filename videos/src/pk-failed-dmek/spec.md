@@ -44,3 +44,4 @@
 - 2026-11-23　規格書草稿；等第一部的 PK 模組與文獻完成後開始。
 - 2026-11-23 18:50–19:10　站長提供院內 PK 手術紀錄範本，要求先出三張單：旁白加入範本步驟，帳本（`check.js`）第一版，三張列印單（`print.js --gray` 全部 PASS，彩色全頁看過）交給站長。列印工具 `print-kit.js` 加 `pksec`、`pkscope` 兩種視角。PK 模組（`globe/pk.js`）由小助手做完、`check-all` 通過後才 commit。
 - 2026-11-23 19:30　站長：B 台來不及，今晚先給 A 台影片。畫面（小助手，17 段）完成，`check-all` 全部 PASS（主對話重跑確認）；術前速讀包（`brief.js`，9 張圖＋旁白）交給站長；開始出片；YouTube 說明、章節、字幕、網站條目草稿在 `publish/`。
+- 2026-11-23 19:40　出片（`out/pk-failed-dmek.mp4`，1920×1080、4:42，ffprobe 282.5 秒）交給站長；YouTube 不公開上傳（影片 ID bcSEmVkD0qg，回報 privacy: unlisted）；網站 `videos/index.html` 的 `VIDEOS` 最前面加條目（dur 282、章節照 `publish/chapters.txt`）；瀏覽器開 `videos/#pk-failed-dmek` 沒有 JS 錯誤、嵌入網址正確（這台機器的網路連不到 YouTube，既有條目也一樣，畫面黑是網路的關係）。下一步：PR 合併後照 repo 根目錄 `CLAUDE.md` 把 `ref/manifest.json` 的 `textBase` 改成 main 上的 squash commit。
