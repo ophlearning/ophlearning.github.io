@@ -1,2 +1,11 @@
-# 列印單的輸出（PDF、PNG）不進 git（videos/tools/print/README.md）
+# 列印單的輸出（PDF、PNG）、術前速讀包與出片不進 git（videos/tools/print/README.md、videos/tools/README.md）
+# 語音模型（連結）與合成的中間檔不進 git；anim/timeline.js 要進 git：參考圖、檢查和影片都用同一條真實時間軸
+tts/vits-melo-tts-zh_en
+tts/wav/
+tts/lexicon_custom.txt
+tts/lines.json
+tts/lines_tts.json
+tts/segs.json
 out/
+*.mp4
+*.wav
