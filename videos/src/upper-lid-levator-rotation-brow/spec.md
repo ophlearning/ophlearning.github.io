@@ -61,4 +61,6 @@
 ## 進度
 - 2026-11-06：舊版（上下眼瞼）完成並出片、上傳（不公開）。
 - 2026-11-06：站長更正病例 → 重做。資料夾改名；下眼瞼段落全部拿掉；第 2 章改成上眼瞼前路 marginal rotation（Cruz 2015a/b）；第 3 章 levator 與眉毛（重用第一部的狀態）；電解改成上眼瞼（Elder 1997 上眼瞼 1.8 mm、碰到 95% 要 2.4 mm）；新增 Cruz 2015a、Cruz 2015b、Cruz 2023（PubMed 查證；Cruz 2015a 讀全文）；拿掉 Lim 2004、Kakizaki 2009、Singh 2024、Yip 2000。眼瞼模型加選用參數 `creaseH`（不給時畫面逐字不變，其他影片參考圖 0.000%）。旁白 78 句、全長 9:16；參考圖 15 張與每章總覽 `ref/overview/`；`publish/` 重寫（`yt: 'TBD'`）。
+- 2026-11-23（第二台，當天下午手術）：`print/` 原地改成 OS 二次手術的 marginal rotation ± levator advancement。清單 7 項、步驟圖 7 格：拿掉 internal brow fixation 與術中電解；levator 改成「轉正後看高度，主治決定要不要做」，若做沿用影片的院內常規步驟；術前加本台的手術史、MRD1、LMF（單子的 `ledger` 登記「病例」）與眼球保護蓋。沒有新增 REFS。`print.js --gray` 全部 PASS，主對話看過彩色全頁；三頁 PDF（A4 頁面上的 LSs 版）與 PNG 交給站長。
+  - 沒有出處、寫「依主治」不寫數字：二次手術的切口位置與疤痕剝離、levator 前徙量；只做 rotation 時要不要縫雙眼皮線（單子寫「有做 levator 時」才縫 6-0 Prolene ×4）。
 - 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」。
