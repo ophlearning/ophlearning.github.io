@@ -128,4 +128,6 @@
   - 解剖速查的 ROOF 尺寸線量在未手術的眼瞼（同 4-5 段，Manta 2025 量的是原生眼瞼）：1.88 mm。
   - 這台沒有排 conjunctivoplasty；清單第 7 項保留「有沒有結膜脫出」當作術中要看的狀況。
 - 下一步：刀後站長若給 OP note，再對照「待刀後補」（特別是 2.5／4／4 是不是內／中／外三點高度）。
+- 2026-11-23（第三台，當天下午手術）：`print/` 原地改成 OS、只做 levator resection（不做 internal brow fixation）。清單 7 項、步驟圖 7 格；拿掉眉毛固定一格與眉毛、ROOF、眶上切跡、browpexy 的速查列；術前加本台 MRD1 +0.5、LMF 11 mm（單子的 `ledger` 登記「病例」）；加 Hering's law（Chen 2016，影片已查證）提醒術後 OD 可能往下掉；結膜脫出改成「發生時才處理」。沒有新增 REFS。`print.js --gray` 全部 PASS，主對話看過彩色全頁；三頁 PDF（A4 頁面上的 LSs 版）與 PNG 交給站長。
+  - 沿用 11-06 範本的院內常規數字（2.5／4／4、切除寬 5 mm、4-0 vicryl ×3、6-0 Prolene ×4、7-0 ethilone）照舊標「依院內常規」；這台是否同一份範本沒有確認。
 
