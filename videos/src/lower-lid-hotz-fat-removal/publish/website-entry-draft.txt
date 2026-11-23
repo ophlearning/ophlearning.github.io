@@ -1,0 +1,23 @@
+  {
+    id:'lower-lid-hotz-fat-removal', type:'youtube', yt:'TBD', cat:'surgery',
+    zh:'下眼瞼 Hotz＋去眼袋：術前預習', en:'Lower-lid Hotz procedure with partial fat removal for recurrent involutional entropion and lid bags: pre-op preview',
+    dur:379,
+    short:'OS 下眼瞼 Hotz＋去眼袋的術前預習：為什麼用 Hotz、血小板低時術前與術中要注意什麼、院內範本每一步動到哪一層、三團脂肪與 inferior oblique，以及術後球後出血的徵象與第一步。',
+    sum:'這支影片從一位左下眼瞼內翻合併眼袋、血小板低的病人出發：先講院內範本的 Hotz 為什麼可以在同一個切口去眼袋，術前要核對的血小板與凝血（AABB 的門檻）與乾眼、角膜的基準；接著依院內常規示範切除皮膚、皮下與 orbicularis，打開眶隔露出 retractor aponeurosis，認出內側、中央、外側三團脂肪與分開它們的 inferior oblique 和 arcuate expansion，部分去脂與止血，用 6-0 Prolene 把 orbicularis 固定到 aponeurosis；最後是收尾的閉眼與瞼緣方向、術後球後出血的時間與徵象、第一步 lateral canthotomy＋inferior cantholysis，以及跟刀清單。',
+    note:'畫面為右眼 OD、亞洲人的示意動畫（下眼瞼矢狀切面＋正面；球後出血用眼窩水平切面＋正面外眥，兩圖同步），不是手術錄影，比例不精確；本台 OS，左右相反。各院做法不同的地方，影片中標「依院內常規」。',
+    tags:['眼整形'],
+    chapters:[
+      {g:'', items:[[0,'片頭'], [21,'1　臨床決策'], [57,'2　術前'], [119,'3　手術步驟'], [215,'4　收尾'], [236,'5　術後'], [297,'6　跟刀清單'], [350,'參考文獻']]},
+    ],
+    refs:[
+      {c:'Kaufman RM, et al. Platelet transfusion: a clinical practice guideline from the AABB. Ann Intern Med 2015;162(3):205-13.', doi:'10.7326/M14-1589'},
+      {c:'Hass AN, Penne RB, Stefanyszyn MA, Flanagan JC. Incidence of postblepharoplasty orbital hemorrhage and associated visual loss. Ophthalmic Plast Reconstr Surg 2004;20(6):426-32.', doi:'10.1097/01.iop.0000143711.48389.c5'},
+      {c:'Murali S, Davis C, McCrea MJ, Plewa MC. Orbital compartment syndrome: pearls and pitfalls for the emergency physician. J Am Coll Emerg Physicians Open 2021;2(2):e12372.', doi:'10.1002/emp2.12372'},
+      {c:'McCallum E, et al. Orbital compartment syndrome: an update with review of the literature. Clin Ophthalmol 2019;13:2189-94.', doi:'10.2147/OPTH.S180058'},
+      {c:'Lima V, et al. Orbital compartment syndrome: the ophthalmic surgical emergency. Surv Ophthalmol 2009;54(4):441-9.', doi:'10.1016/j.survophthal.2009.04.005'},
+      {c:'Coban I, et al. Anatomical basis for the lower eyelid rejuvenation. Aesthetic Plast Surg 2023;47(3):1059-1066.', doi:'10.1007/s00266-023-03297-z'},
+      {c:'Syniuta LA, Goldberg RA, Thacker NM, Rosenbaum AL. Acquired strabismus following cosmetic blepharoplasty. Plast Reconstr Surg 2003;111(6):2053-9.', doi:'10.1097/01.PRS.0000056840.61348.35'},
+      {c:'Prischmann J, et al. Dry eye symptoms and chemosis following blepharoplasty: a 10-year retrospective review of 892 cases in a single-surgeon series. JAMA Facial Plast Surg 2013;15(1):39-46.', doi:'10.1001/2013.jamafacial.1'},
+      {c:'Kakizaki H, et al. Microscopic anatomy of Asian lower eyelids. Ophthalmic Plast Reconstr Surg 2006;22(6):430-3.', doi:'10.1097/01.iop.0000242182.96161.78'},
+    ],
+  },
