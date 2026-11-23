@@ -16,6 +16,12 @@
 - 這台的順序：先 marginal rotation，再 levator resection，最後 internal brow fixation。
 - 這是站長 2026-11-06 實際跟的刀，步驟以刀後實際 OP note 為準。
 
+## 病例情境：第二台（站長 2026-11-23 確認）
+- 確認的摘要（原樣）：「OS 上眼瞼，二次手術（2023 年做過 upper LR 和 Hotz），LMF 3 mm：從 lid crease 切口前路做 marginal rotation → 依術中高度決定要不要做 levator advancement。附加：無。brow fixation 這次不做；術前的電解睫毛是開刀前的暫時處置，不算在手術裡。」手術日期 2026-11-23 下午（當天）。
+- 門診紀錄（站長提供；只摘和手術有關的，年齡、性別、電話、醫師代號不寫）：MRD1 OD +1.5、OS +0.5 mm；LMF OD 7、OS 3 mm；upper entropion and trichiasis OU、角膜 superior SPK；診斷 senile and congenital ptosis OU，另有 brow ptosis bilateral（這次不處理）；術前已向病人說明效果有限、可能要第二次手術；排程單註記「眼球保護蓋」。
+- 決定（Claude 提出，站長確認摘要時沒有反對）：步驟和這支影片重複，**不重做影片**；`print/` 原地改成這台的三張跟刀單（11-06 三合一的版本在 git 歷史）。圖沿用右眼 OD，單子註明本台 OS 左右相反。
+- 這支影片的重做版還沒出片上傳，網站上掛的仍是更正前的「上下眼瞼一起開」（`levator-brow-lower-lid-rotation`）；之後出片、以不公開上傳並加到網站，舊條目保留。
+
 ## 術式依據與保密
 - 主治範本不進 git，影片與網站不寫主治代號與醫院名稱；片尾用 kit 預設「製作　張博淳」。
 - Levator resection 與眉毛固定：同第一部的範本解讀（2.5／4／4 mm、切除 5 mm、4-0 vicryl ×3、4-0 vicryl ×1、MRD1 約 2.5 mm、6-0 Prolene ×4、7-0 ethilone）。
