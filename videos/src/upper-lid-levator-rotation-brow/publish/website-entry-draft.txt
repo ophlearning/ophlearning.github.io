@@ -1,7 +1,7 @@
   {
-    id:'upper-lid-levator-rotation-brow', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'upper-lid-levator-rotation-brow', type:'youtube', yt:'g3Bf3qAWVRQ', cat:'surgery',
     zh:'上眼瞼三合一：marginal rotation＋levator resection＋internal brow fixation，再加 electric epilation', en:'Upper eyelid marginal rotation through the lid crease, levator resection and internal brow fixation, with electric epilation',
-    dur:0,
+    dur:556,
     short:'同一個上眼瞼、同一條 lid crease 切口的三個步驟：先前路 marginal rotation，再 levator resection，最後 internal brow fixation；轉正後還碰到角膜的睫毛用 electric epilation。',
     sum:'先講睫毛碰到眼睛的三種機轉（entropion、misdirected、metaplastic），以及 marginal rotation 之後為什麼還要電解剩下的睫毛；三個步驟都在改同一個瞼緣：同一個切口可以一起處理 ptosis，ptosis 手術本身也可能造成 entropion，修復後也可能閉不緊。接著從 lid crease 切口掀皮膚肌肉瓣到睫毛根、瞼板全層切開、縫線把瞼緣轉出來；轉正後做 levator resection（固定後看瞼緣有沒有再內翻）與 internal brow fixation；電解的部分講上眼瞼毛囊有多深、針怎麼沿睫毛進到毛囊、效果與再處理；最後是這台的順序、術中狀況、術後追蹤與跟刀清單。',
     note:'畫面為右眼、亞洲人的示意動畫（矢狀切面＋正面兩圖同步），不是手術錄影，比例不精確。各院做法不同的地方，影片中標「依院內常規」。',
