@@ -1,5 +1,5 @@
   {
-    id:'upper-lid-wart-excision-cryo', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'upper-lid-wart-excision-cryo', type:'youtube', yt:'BMGaFqiWsN4', cat:'surgery',
     zh:'上眼瞼 wart 切除＋cryotherapy：切除送病理、基底冷凍與睫毛毛囊', en:'Upper eyelid wart: excision for histology and cryotherapy of the base',
     dur:367,
     short:'右眼上眼瞼的 wart：切下來全部送病理，再對基底做 cryotherapy；病灶在皮膚面或瞼緣要注意的地方不同，瞼緣的冰球會碰到睫毛毛囊。',

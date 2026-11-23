@@ -51,4 +51,5 @@
 - 2026-11-23 11:00　病例摘要確認；三張列印單由小助手做，主對話檢查。
 - 2026-11-23 11:05　三張列印單（清單 8 項、步驟圖 8 格、速查）`print.js --gray` 全部 PASS；主對話看過彩色全頁，拿掉 Luk 2006 的注意與速查列後重跑 PASS；三頁 PDF（A4 頁面上的 LSs 版）與 PNG 交給站長。病灶、切除線、探頭、冰球、保護片都是示意。
 - 2026-11-23 11:45　影片由小助手做到可以出片：旁白與畫面（11 段、片長 6:06）、語音與時間軸、`check-all` 全部通過、參考圖 12 張與每章總覽 8 張（Claude 自檢）、術前速讀包、`publish/` 草稿；`print.js --gray` 重跑仍 PASS。沒有新增文獻。
-- 下一步：主對話 commit → 把 `ref/manifest.json` 的 `textBase` 改成那個 commit、重跑 `check-all` → 速讀包交站長 → 出片（`build.sh`）→ 上傳與網站同步。
+- 2026-11-23 12:19　主對話：commit 後把 `ref/manifest.json` 的 `textBase` 設成影片內容的 commit（`6cb5e40`），`check-all` 全部通過；術前速讀包合成 PDF 與旁白.md 交給站長；出片 `out/upper-lid-wart-excision-cryo.mp4`（ffprobe 366.6 秒＝6:07，1920×1080、30 fps、AAC；抽格看過第 3 章）；YouTube 不公開上傳，影片 ID `BMGaFqiWsN4`（privacy: unlisted）；網站 `videos/index.html` 加在 `VIDEOS` 最前面，瀏覽器開 `videos/#upper-lid-wart-excision-cryo` 沒有 JS 錯誤、嵌入的是這支影片。
+- 下一步：PR 合併後把 `textBase` 改成 main 上的 squash commit（repo 根目錄 `CLAUDE.md`）；刀後站長給 OP note 時再校正。

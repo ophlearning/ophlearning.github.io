@@ -1,5 +1,5 @@
   {
-    id:'lower-lid-modified-bick', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'lower-lid-modified-bick', type:'youtube', yt:'LdAgKX8qTCA', cat:'surgery',
     zh:'下眼瞼 modified Bick 術前預習', en:'Modified Bick procedure for involutional lower-lid entropion with horizontal laxity: a pre-op preview',
     dur:416,
     short:'老年性下眼瞼內翻、水平鬆弛：為什麼要水平縮短、Bick 和 lateral tarsal strip 的差別與結果，以及 modified Bick 在外眥處全層楔形切除、瞼板斷端縫到外側眶緣骨膜的每一步。',

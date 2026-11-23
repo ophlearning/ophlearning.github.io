@@ -33,11 +33,12 @@
 - [x] 單子與旁白的每個數字在數字帳本有來源（文獻、院內常規、示意、結構、病例）：`check.js` 的 LEDGER 全部 PASS，`--selftest` 21 個改法全部抓到；列印單 `print.js --gray` 仍然 `all 3 sheet(s) passed`。
 - [x] 每一步同時顯示機轉切面與術者視角，方位寫明：第 3 章每段左邊外眥水平切面（從下往上看，上＝前、左＝temporal）、右邊正面外眥（術者視角），兩圖同 x；每個右眼面板標「本台 OS 左右相反」（`check.js` M10）。
 - [x] 不出現病人識別資料、主治代號與醫院名稱：2026-11-23 grep 這支影片的檔案（醫院名、年齡、性別、電話）沒有命中；片尾「製作　張博淳」。commit 前主對話再 grep 一次。
-- [ ] 影片：`check-all` 全部通過 → 術前速讀包 → 出片 → 不公開上傳 → 網站同步。（前兩步已完成：`check-all` 全部 PASS、速讀包在 `out/brief/`；出片、上傳、網站同步未做）
+- [x] 影片：`check-all` 全部通過 → 術前速讀包 → 出片 → 不公開上傳 → 網站同步（2026-11-23）。（前兩步已完成：`check-all` 全部 PASS、速讀包在 `out/brief/`；出片、上傳、網站同步未做）
 
 ## 進度
 - 2026-11-23 11:00　病例摘要確認；三張列印單由小助手做，主對話檢查。
 - 2026-11-23 11:07　三張列印單（清單 8 項、步驟圖 8 格［外眥水平切面＋正面，第 8 步矢狀切面］、速查）`print.js --gray` 全部 PASS；主對話看過彩色全頁；補上 `.gitignore`（`out/`）。三頁 PDF（A4 頁面上的 LSs 版）與 PNG 交給站長。模型沒有 Bick 的楔形切除：楔形與切線用疊圖畫（示意），斷端接骨膜借用模型的 `stripFix` 狀態（示意）。
 - 2026-11-23 11:41　影片做到可以出片（小助手）：`anim/segments.js`（14 段＋章節卡，旁白 57 句）、`anim/draw.js`、`anim/params.js`、`anim/video.html`、`anim/views-lower.js`（從 revision 影片原樣複製）、`check.js`（列印單的帳本鍵保留，加影片段落與 M1–M10、`--selftest` 21 個改法全部抓到）、語音與 `anim/timeline.js`（片長 6:56＝416 秒）、參考圖 15 張（Claude 自檢）、`ref/overview/` 8 張、`overview-notes.md`、`publish/`（`yt: 'TBD'`；`dur` 先用時間軸秒數，出片後以 ffprobe 實測為準）、`script-draft.md`、`README.md`。`node videos/tools/check-all.js videos/src/lower-lid-modified-bick` 全部 PASS；`print.js --gray` 仍然 `all 3 sheet(s) passed`；術前速讀包 `out/brief/`（`旁白.md`＋14 張圖）。新增文獻 Anderson 1979（PubMed 摘要）。
 - `ref/manifest.json` 的 `textBase` 暫時指向一個不在任何分支上的 commit 物件（小助手不能 commit；只寫入物件，沒動 index 與分支）：主對話 commit 後改成那個 commit 並重跑 `check-all`。
-- 下一步：主對話 commit → 速讀包交站長 → 出片（`build.sh`）→ 不公開上傳 → 網站同步。
+- 2026-11-23 12:19　主對話：commit 後把 `ref/manifest.json` 的 `textBase` 設成影片內容的 commit（`57d9aab`），`check-all` 全部通過；術前速讀包合成 PDF 與旁白.md 交給站長；出片 `out/lower-lid-modified-bick.mp4`（ffprobe 415.9 秒＝6:56，1920×1080、30 fps、AAC；抽格看過第 3 章）；YouTube 不公開上傳，影片 ID `LdAgKX8qTCA`（privacy: unlisted）；網站 `videos/index.html` 加在 `VIDEOS` 最前面，瀏覽器開 `videos/#lower-lid-modified-bick` 沒有 JS 錯誤、嵌入的是這支影片。
+- 下一步：PR 合併後把 `textBase` 改成 main 上的 squash commit（repo 根目錄 `CLAUDE.md`）；刀後站長給 OP note 時再校正。
