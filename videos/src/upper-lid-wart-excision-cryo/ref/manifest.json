@@ -107,6 +107,6 @@
       "note": "Claude 自檢（半解析度看全圖、可疑處放大；標籤與數字由 check-video.js、check.js 檢查）"
     }
   ],
-  "textBase": "6cb5e40def487e2ae5886ddc7afb10e1f720d1f5",
+  "textBase": "c9be6ffaa16f4623210aab12172ea399716637e6",
   "textBaseNote": "旁白、重點、來源、章節與參考文獻定稿的版本（2026-11-23）。目前的值是小助手在暫存資料夾做的 commit 物件（不在 repo 裡）：主對話 commit 這支影片後，要改成那個 commit（squash 合併後再改成 main 上的 commit），check-all 的文字比對才會通過。anim/timeline.js 進 git，參考圖用真實語音時間軸"
 }

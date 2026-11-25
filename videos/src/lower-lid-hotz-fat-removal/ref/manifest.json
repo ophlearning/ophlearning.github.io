@@ -1,7 +1,7 @@
 {
   "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/lower-lid-hotz-fat-removal；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "textBase": "02beaab62b70838bcb983ecc1ae331ac7a4a0a16",
+  "textBase": "c9be6ffaa16f4623210aab12172ea399716637e6",
   "textBaseNote": "旁白、重點、來源、章節與參考文獻第 1 版（2026-11-23）定稿後 commit，再把那個 commit 填進 textBase（check-video.js 以它比對文字）。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。anim/timeline.js 進 git，參考圖用真實語音時間軸",
   "threshold": 0.0002,
   "tol": 48,

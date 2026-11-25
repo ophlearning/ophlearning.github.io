@@ -2,7 +2,7 @@
   "about": "參考圖：檢查過、認定正確的畫面。改模型或畫面後跑 node videos/tools/check-all.js videos/src/lower-lid-modified-bick；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
   "pageNote": "2026-11-23 建立影片頁，所有段落都有畫面；合成語音後有 timeline.js，參考圖用真實時間軸。textBase 是旁白定稿的 commit：subagent 不能 commit，暫時指向一個不在任何分支上的 commit 物件（HEAD 加上這支影片的 segments.js，只寫入物件、沒動 index 與分支）；主對話 commit 後改成那個 commit，PR 合併後再改成 main 上 squash 產生的 commit。",
-  "textBase": "57d9aab3ce322ef4bddbb935beaedb923481ef8f",
+  "textBase": "c9be6ffaa16f4623210aab12172ea399716637e6",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
