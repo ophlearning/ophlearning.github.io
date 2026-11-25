@@ -57,6 +57,10 @@ const PRINT = (() => {
     // black overlays itself (draw), so both views are tissue only.
     if (kind === 'ssec') return SOCKET.sec({ state, h: o.hp ?? 12, id });
     if (kind === 'sfront') return SOCKET.front({ state, id });
+    // penetrating keratoplasty (globe/pk.js, state { pk: … }; 2026-11-23, PK videos): pksec = meridional section through o.hp (right = hp, left = hp + 6,
+    // anterior up), computed over the whole visible figure; pkscope = the surgeon's microscope view of the OS eye, surgeon at 12 (下＝12 點、左＝3 點 temporal).
+    if (kind === 'pksec') { const v = visWin(o); return PK.section({ st: state, h: o.hp ?? 6, win: v, step: o.step || +(v.w / 320).toFixed(4), id }); }
+    if (kind === 'pkscope') return PK.enface({ st: state, id, surgeon: 12 });
     if (kind === 'none') return { svg: '', A: {} };
     throw new Error('unknown view ' + kind);
   }
@@ -69,7 +73,7 @@ const PRINT = (() => {
   // fills and thin outlines of the eyelid sections almost vanished, while the coronal views stayed readable. Sections are drawn at
   // full strength; coronal views only a little darker (at 100 % the iris turns near-black and hides black dimension lines over it).
   // The same rule for the cataract and posterior-segment views (sections 100 %; microscope, fundus, wide-angle and head views 65 %).
-  const TISSUE = { sag: 1, lsag: 1, axial: 1, csec: 1, psec: 1, phead: 1, cor: 0.65, lcor: 0.65, cscope: 0.65, pfundus: 0.65, pwide: 0.65, pscope: 0.65, ssec: 1, sfront: 0.65 };
+  const TISSUE = { sag: 1, lsag: 1, axial: 1, csec: 1, psec: 1, phead: 1, cor: 0.65, lcor: 0.65, cscope: 0.65, pfundus: 0.65, pwide: 0.65, pscope: 0.65, ssec: 1, sfront: 0.65, pksec: 1, pkscope: 0.65 };
   let nFig = 0;
   // o: { kind, state, win: {x, y, w[, h]}, w, h (figure mm), red: 'cut' | 'inc' | 'none', blue: false to hide, light (tissue opacity),
   //      windows, upper, draw: V => svg (print overlays and labels, figure mm), cap: caption under the figure }

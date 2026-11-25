@@ -19,7 +19,8 @@
 - 2026-11-10 白內障系列 ③（I/A、IOL 植入、移除 OVD、切口密閉）：同樣放在 `st.cat`，見「白內障 ③」一節。
 - 2026-11-10 白內障系列 ④（PCR、左眼 OS）：`st.eye`＋`st.cat.pcr`、IOL 放 sulcus／optic capture，見「白內障 ④」一節。
 - 2026-11-12 鞏膜縫合固定 IOL（無晶體、23G TPPV、兩個三角鞏膜瓣、10-0 Prolene 雙頭針、MA60AC 縫在睫狀溝）：選用式 `st.sfix`、新檔 `globe/sfix.js`，見「鞏膜縫合固定 IOL」一節。
-- 之後可用：trabeculectomy、PK 等前段手術。眼球只建一次，後段和眼外肌模型也用這顆。
+- 2026-11-23 PK（tectonic PK：舊 DALK graft、descemetocele、有晶體軟眼；failed DMEK 後的 PK：水腫、DMEK 翹起、PAS、LI、PCIOL、hyphema）：選用式 `st.pk`、新檔 `globe/pk.js`，見「PK」一節。
+- 之後可用：trabeculectomy 等前段手術。眼球只建一次，後段和眼外肌模型也用這顆。
 
 ## 兩個同步視角與方位慣例
 - **機轉切面**，依步驟選一種：
@@ -743,6 +744,113 @@
 - **針在放大圖裡很粗**：真實粗細在 60–110 px/mm 時會蓋住標籤；測試針改成細的（示意），只留牆外 0.3 mm。
 - **標籤字寬在字型載入前量**：樣本頁的方位框照 ④ 的寫法在載入字型前量字寬，框太窄；加寬度餘量（影片的 kit 會等字型）。
 
+## PK（2026-11-23 建立；影片「DALK 失敗後 descemetocele 的 tectonic PK」與「failed DMEK 後的 PK」）
+規格見 `videos/src/pk-tectonic-descemetocele/spec.md`（B 台）與 `videos/src/pk-failed-dmek/spec.md`（A 台），文獻與數字見 `videos/src/pk-tectonic-descemetocele/lit-notes.md`。兩台都是**左眼 OS**、術者坐 12 點（PK 常規，實際坐位待刀後補）。新狀態都放在 `st.pk`，畫法在新檔 `globe/pk.js`（`PK`）。`globe.js`、`cataract.js`、`sfix.js` 沒改，其他影片也不載入這個檔，所以舊樣本的 SVG 逐位元相同、舊影片的參考圖 0.000%（`check.js` 16.26 也確認載入後 GLOBE、CATARACT、SFIX 的數字與畫面不變）。兩部影片的三張列印單（`videos/tools/print/print-kit.js` 的 `pksec`、`pkscope`）用同一個模組；定位點名稱與 `st.pk` 參數名稱改了會讓列印單壞掉，要改先改列印單。
+
+### 適用的步驟與做法
+- 已做：
+  - 術前 B（tectonic）：舊 DALK graft 與 graft–host 交界一圈、360° 周邊新生血管長到交界、角膜混濁水腫、6 點旁中央的 descemetocele（中央只剩一層、後面往前凸）、有晶體眼、軟眼（角膜下沉，trephine 壓下去沉更多；Descemet 皺褶）。
+  - 術前 A（failed DMEK）：角膜水腫增厚、後面貼不好的 DMEK graft（6 點一扇翹起）、前房淺、iris bombé（pupillary block）、周邊虹膜貼角膜（PAS）、7 點的 LI、PCIOL 在囊袋、hyphema（液面垂直重力）、角膜直徑 10 mm。
+  - Trephination：圓形 trephine 垂直切（直徑參數）、部分深度（0–1）、在一點進前房成全層、剪刀沿圓周剪完（0–360°，方向參數）；前房 viscoelastic（`ovd`）。做法依 Legeais 1993：部分深度 → 前房 viscoelastic → 再切完。
+  - Open sky：受體角膜片拿起（0→1）、拿掉後前房敞開（液面只到開口後緣）；虹膜–水晶體隔膜往前鼓（`bulge`，示範危險）。
+  - 供體：直徑參數（預設受體 +0.25 mm）；懸在上方時是真實直徑、內皮面朝下；放進開口後貼齊 host；打孔座上內皮面朝上（`endoUp`；Ward 1976：從內皮面 punch）。
+  - 縫線：16 針 interrupted，順序 12 → 6 → 3 → 9，再補其餘（每象限中點先、對角成對）；每針放射狀、從供體進、從 host 出，跨過交界，兩端都在角膜表面、深度接近全層但不穿過內皮；打結在交界上，埋結轉進 host 側。
+  - 重建前房：`ac` 0.2 → 1（BSS），cannula 從兩針之間的交界進前房。
+  - Watertight：fluorescein 塗在表面（`fl`），指定鐘點的漏水處沖淡成亮綠細流，往外（平躺時是往下坡）流。
+  - 器械（示意）：trephine（刀筒與刀刃）、彎角膜剪（上下刃沿切口、刀柄往術者）、0.12 鑷、持針器與彎針、BSS cannula。
+- 沒做（旁白一句或之後補）：麻醉與消毒、開瞼器、Flieringa ring、PI、synechiolysis 的動作（只有 `pas` 參數可以調小）、hyphema 沖洗的動作（只有液面高度）、running 縫法、拆線、AMG／tarsorrhaphy、suprachoroidal hemorrhage 的畫面、供體打孔的動作（只有朝上的姿勢）、oversize 讓 graft 變陡的形狀。
+
+### 兩個同步視角與方位
+- 機轉切面：經 12–6 點的子午切面（`section`，`views.js` 的 `pk`），**上＝前、左＝12 點、右＝6 點**（同白內障的 12–6 切面；OS 是從 9 點 nasal 那一側看）。另外：
+  - `pkz`：6 點側交界放大（約 3 mm 寬），看 trephine 深度、縫線深度、線結，附比例尺。
+  - `pk39`：3–9 點切面，從 12 點看，**右＝9 點（OS nasal）、左＝3 點（OS temporal）**，左右和顯微鏡相同。
+  - 任意鐘點：`view.hp`（例：A 台經 LI 的 1–7 點切面 `hp: 7`；BSS cannula 那一刀的切面）。
+- 術者視角：顯微鏡俯視（`enface`，`views.js` 的 `pkscope`），**左眼 OS、術者坐 12 點：下＝12 點、左＝3 點 temporal、右＝9 點 nasal、上＝6 點**（同 SB removal 與白內障 ④ 的 OS 慣例；`PK.orient({ eye: 'OS', surgeon: 12 })`）。正像、沒有鏡像；6 點的 descemetocele 在上方，7 點的 LI 在右上。
+- 換算：同一顆 3D 眼球。12–6 切面 u＝−Y、v＝−Z；俯視 x＝−X、y＝Y；同一點在兩圖 u＝−y。descemetocele、trephine 邊緣、12 與 6 點的縫線、LI、線結在兩圖是同一個 3D 點（`check.js` 16.3、16.12）。
+- 俯視圖看得到什麼：混濁的角膜蓋上一層白霧（open sky 後開口內清楚）；IOL 與 haptic 在虹膜後面，畫虛線（示意，教學用）；hyphema 依血柱厚度畫深淺。
+
+### 座標（手術的語言）
+- 鐘點 h；「離角膜中心 r mm」一律是投影的半徑（垂直的 trephine 切出來的、顯微鏡看到的），所以 trephine 直徑 7.5 mm 在兩圖都是 r＝3.75。
+- 縫線：鐘點、沿表面量的長度（跨交界兩側各一半）、深度比例（交界處、兩側取較薄的那側）。
+- 角膜這一層（host、舊 graft、descemetocele、DMEK、刀口、供體、縫線）在「材料座標」裡定義，軟眼下沉時一起移動；虹膜–水晶體隔膜不跟著沉。
+
+### 狀態（`st.pk`）
+- `eye`：只決定畫面怎麼標（預設 `'OS'`）；解剖沒有鼻顳差異，畫出來和同鐘點的 OD 一樣。
+- 術前：`kd` 透明角膜直徑（預設模型的 11.88；A 台 10，只移動角膜緣帶、不改外表面，示意）；`soft` 0→1 軟眼、`press` 0→1 trephine 壓下去；`edema`（mm，加在角膜後面，到角膜緣淡出）；`haze` 0→1；`old: { d }` 舊 DALK graft；`nv` 0→1；`dcele: { h, r, rad, thin, bulge }`；`dmek: { d, h, detach, gap }`；`lens: 'phakic' | 'iol'`；`ac` 0→1 前房深度（1＝正常）；`bombe`（mm）；`pas`（mm，從小樑網往前貼角膜的寬度；`pasH: [h0, h1]` 限在一段鐘點）；`li: { h, r, d }`；`hy: { h, pos: 'supine' | 'upright' }`（液面在前房最低點上幾 mm；平躺＝手術時，重力往後；直立＝裂隙燈，重力往下）。
+- 手術：`tre: { d, depth, enter: { h, w }, scis, dir }`；`ovd` 0→1；`open` 0→1；`bulge`（mm）；`donor: { d, place, endoUp }`；`sut: { n, len, dep, placed, tie, bury, buryTo }`（`placed` 0→n 照順序，小數＝那一針穿到一半）；`fl` 0→1；`leak: { h, amt }`；`inst: [{ kind: 'trephine' | 'scissors' | 'forceps' | 'holder' | 'cannula', … }]`。
+- 輔助函式：`sutOrder`、`sutures`、`suturePath`、`cutAt`、`hostBounds`、`leakOf`、`nvOf`、`instOf`、`layersFn`（給檢查用）、`orient`、`ctx`（隔膜、虹膜、前房表格、hyphema 液面）。
+- 定位點（列印單與樣本用，名稱不要改）：切面 `dcele`、`dceleBack`、`old`／`oldL`、`iris`／`irisL`、`root`、`lens`、`lensFront`、`tre6`／`tre12`、`treBot6`、`blade6`、`sutIn6`、`sutOut6`、`sutDeep6`、`knot6`、`donorTop`、`donorEdgeR`、`endo6`、`iol`、`dmek6`、`hy`、`ac`、`pas`／`pasL`、`li`、`hostEdge`、`limbus`、`leak`、`cannula`；俯視 `dcele`、`old`、`nvPt`、`li`、`hy`、`dmek`、`iol`、`tre3`／`tre6`／`tre9`／`tre12`、`hostEdge`、`donor`、`sutIn12`、`sutOut12`、`knot12` 等、`leak`、`scissors`、`forceps`、`cannula`。
+
+### 數值與出處
+| 項目 | 模型用的值 | 出處 |
+|---|---|---|
+| 受體 trephine | 7.5 mm（垂直切） | 影片預設：院內範本留白、依主刀、待刀後補；7.5–8.0 mm 的視力較好（Jähne 2004，PMID 15599807，摘要） |
+| 供體 | 受體 +0.25 mm（7.75） | Koo 2019（PMID 31220145，全文）：oversize 0.25 mm 的組 12 個月 SE −1.35 D，同大組 −0.14 D。**該系列排除 therapeutic graft 與低眼壓眼，B 台不能直接套用；尺寸依主刀（示意）** |
+| 供體從內皮面 punch | — | Ward 1976（PMID 793400，摘要） |
+| 部分深度 → 前房 viscoelastic → 再切完 | 樣本深度 60% | 做法：Legeais 1993（PMID 8398970，摘要）；深度數字示意 |
+| 刀口寬、進前房那一刀的全層弧長 | 0.08、1.0 mm | 示意 |
+| 拿起受體角膜片的動作 | 往上 1.6 mm、轉 25° | 示意 |
+| open sky 時隔膜往前鼓 | 樣本 1.6 mm（水晶體高過開口後緣 0.27 mm） | 示意（機轉；suprachoroidal hemorrhage 的出處見 lit-notes 第 3 節） |
+| open sky 的前房液面 | 只到開口後緣的高度 | 物理推論 |
+| 供體懸在上方 | 1.2 mm | 示意 |
+| 縫線針數、縫線 | 16 針 interrupted、10-0 nylon | Lee 2012（PMID 22942639，全文，英國問卷）：用 interrupted 的醫師 70% 縫 16 針；10-0 nylon 89% |
+| cardinal 順序 | 12 → 6 → 3 → 9 | 第一針 12 點：Lee 2012（86%）；之後 6 → 3 → 9：常規（示意，查不到出處） |
+| 其餘縫線的順序 | 每象限中點先、四個象限對角成對 | 示意 |
+| 縫線長度 | 2.0 mm（沿表面，交界兩側各 1.0） | 示意（查不到 interrupted 的數字；Hjortdal 2011 的 3.04 mm 是 running，沒用） |
+| 縫線深度 | 交界處 90%（兩側取較薄的那側），離內皮 ≥ 0.06 mm | 示意（查不到） |
+| 埋結 | 轉進 host 側（host 那半針的 92%、深度一半） | 埋起來、不要停在交界上：Lee 2012；埋哪一側醫師各半（30%／29%，Lee 2012）→ 預設 host 側是示意 |
+| 舊 DALK graft | 直徑 7.0 mm | 示意（未知、待刀後補；選在 7.5 mm trephine 內，讓「trephine 涵蓋病灶與舊交界」成立） |
+| descemetocele | 6 點、離軸 2.0 mm、半徑 0.9 mm、中央剩 0.06 mm、後面往前凸 0.15 mm | 位置與大小示意（病歷只寫下方） |
+| 360° NV | 從角膜緣長到舊交界 | 病例；畫法示意 |
+| 混濁、水腫 | B：+0.12 mm、haze 0.45；A：+0.3 mm、haze 0.3 | 示意 |
+| 軟眼 | 角膜中央下沉 0.25 mm × soft，trephine 壓下去再 0.45 mm × press | 示意（「眼壓很低」是病例，量沒有出處） |
+| A 的角膜直徑 | 10 mm | 病例；只把透明角膜邊緣移到 r 5.0，外表面不變（示意） |
+| DMEK graft | 直徑 8.0、6 點一扇（圓周 40%）翹起、邊緣最多 0.35 mm；畫成 0.03 mm 厚 | 示意 |
+| A 的前房 | `ac` 0.35（隔膜往前 0.98 mm）、bombé 0.35 mm | 示意 |
+| PAS | 從小樑網（visible limbus 後 0.6 mm）往前貼 1.0 mm | 示意 |
+| LI | 7 點、離軸 4.3 mm、直徑 0.3 mm | 鐘點：病例；位置與大小示意；通不通沒有畫（只是一個洞） |
+| PCIOL | optic 6.0、中央厚 0.7、邊緣 0.25、在囊袋、optic 中心離角膜頂點 4.55 mm | 示意（型號未知） |
+| hyphema | 液面在前房最低點上 0.8 mm | 物理（液面垂直重力）；量示意 |
+| 瞳孔 | 半徑 1.5 mm（GLOBE 預設） | 示意（有晶體眼術前縮瞳查不到出處） |
+| BSS 重建 | `ac` 0.2 → 1；cannula 在兩針之間 | 示意 |
+| Seidel | 高濃度 fluorescein 被漏出的房水沖淡成亮綠細流 | Romanchuk 1979（PMID 550919） |
+| 器械形狀 | trephine、角膜剪、0.12 鑷、持針器、cannula | 示意 |
+
+### 物理與器械
+- Trephine 是垂直的圓柱：刀口在兩圖都在 r＝3.75；部分深度時下面還有組織（角膜連續），全層的地方切面上角膜斷開。
+- 拿掉受體角膜後，開口內沒有任何角膜；前房向空氣敞開，液體只能停在開口後緣的高度（多的會流出去）。隔膜往前鼓時虹膜被擠到 host 邊緣後面，但不會穿過去。
+- 供體：懸在上方是真實直徑（比開口大），內皮面朝下；放進去後邊緣貼齊 host（oversize 讓 graft 變陡的形狀沒畫）。
+- 縫線只從角膜表面進出：從供體進、從 host 出，跨過交界；路上只經過供體或 host 的基質，離內皮 ≥ 0.03 mm；host 那一端在透明角膜內（A 的 10 mm 角膜也是）。
+- 虹膜不會穿進角膜：bombé 或往前鼓時，虹膜中心線被限制在角膜後面（沿法線量）；PAS 處虹膜疊進角膜 0.02 mm（被角膜蓋住，看起來是貼著）。前房從中央往外，到第一次碰到角膜就關起來（PAS 後面的隅角不算前房）。
+- Hyphema 是液面垂直重力的一池：平躺（手術中）重力往後，血積在前房最深的地方（瞳孔區的 IOL 前面）；直立（裂隙燈）積在 6 點。血只在前房，不進虹膜、IOL、水晶體。
+- Fluorescein 細流從漏水的交界處開始，平躺時沿表面往外（下坡）流。
+- 器械只從該進的地方進：剪刀下刃在 host 下面的前房、上刃在角膜上面；BSS cannula 從兩針之間的交界進、尖端在前房，不碰虹膜、水晶體、供體。
+
+### 必寫的檢查（`check.js` 第 16 節，31 條）
+- 方位（通用原則 6）：OS、術者坐 12 點：下 12、左 3 temporal、右 9 nasal（`PK.orient` 與 `CATARACT.orient` 一致）；畫出來的俯視圖 3 點在左、12 點在下、6 點的 descemetocele 在上、7 點的 LI 在右上；12–6 切面左＝12 點、上＝前；3–9 切面右＝9 點，和顯微鏡同一側。
+- 兩圖同一鐘點、同一位置（< 0.01 mm）：descemetocele、trephine 邊緣、12 與 6 點的縫線；LI 在 1–7 切面是同一半徑的洞；埋好的線結。
+- Trephine：部分深度 60% 在 12、6 點都切到 60%、下面有組織；進前房只在 6 點全層（切面 6 點斷、12 點連）；剪刀順時針 180° 從 6 經 9 到 12 全層、3 點沒有；360° 全圈全層；trephine 刀刃停在溝底。
+- Open sky：開口內沒有角膜（14,100 點）、前房向空氣敞開、host 邊緣就在開口；隔膜往前鼓 1.6 mm 時水晶體高過開口後緣、虹膜不穿過 host 邊緣。
+- 供體：7.75 ≥ 7.5（Koo 2019 +0.25）；懸在上方時邊緣超過開口；放進去貼齊 host；內皮面朝下（放上、懸著），打孔座上朝上。
+- 縫線：16 針每 0.75 個鐘點一針；順序 12 → 6 → 3 → 9（`placed` 2 只有 12 與 6、3 有 3 沒有 9）；B 與 A（水腫 0.3、角膜 10 mm）兩種情況下每針放射狀、從供體跨到 host、兩端在表面、整段在基質裡、交界處 90% 深、離內皮 ≥ 0.03 mm、host 端在透明角膜內；線結先在交界上、埋好後在 host 基質裡、離交界 > 0.3 mm。
+- 病灶：descemetocele 中央厚度 < 周圍的 1/4、後面往前凸 > 0.1 mm；trephine 涵蓋舊交界與 descemetocele；舊交界在兩圖同一半徑；NV 12 個鐘點都有、從角膜緣長到舊交界。
+- A 台：hyphema 平躺與直立兩種重力都是一池液面（血都在液面下、液面上的前房都是清的），平躺時積在瞳孔區、直立時在 6 點（切面右側）；PAS 處虹膜貼著角膜後面、前房在那裡關起來、虹膜不穿進角膜（含 bombé 0.6 的狀態），B 台的隅角是開的；前房比正常 pseudophakic 淺 ≥ 0.9 mm、虹膜往前鼓 ≥ 0.4 mm；IOL 在瞳孔緣後面、不碰虹膜與角膜；DMEK 在 12 點貼著、6 點翹起 > 0.2 mm、直徑 8 mm。
+- 其他：BSS 讓前房加深 ≥ 1 mm、cannula 從兩針之間進、尖端在前房；fluorescein 細流從交界的漏水鐘點開始、放射狀往外、一路下坡；軟眼的下沉量（含 trephine 壓下去）而且離水晶體 > 1 mm；A 的角膜緣在兩圖都是 5.0 mm；剪刀下刃在前房、上刃在角膜上面；畫面沒有 NaN；載入 pk.js 後 GLOBE、CATARACT、SFIX 不變。
+- 故意改錯（2026-11-23）：33 個改法（30 個改 `pk.js` 的副本 `PK_PATH=<檔案>`、3 個改 check.js 自己的輸入 `PK_IN='{…}'`），31 條每條至少被一個擋下，沒有一個改法漏掉。改法：OS 的 nasal 放錯邊、俯視圖術者改坐 6 點、切面左右標反、切面上 descemetocele 偏 0.05、LI 的洞挖在 4.7 mm、部分深度少切 20%、剪刀方向反了、open sky 不拿掉角膜片、open sky 前房液面不受邊緣限制、bulge 只推 75%、虹膜可以穿進角膜、供體比受體小 0.25、打孔座上內皮沒朝上、cardinal 順序 12→3→6→9、縫線深度用兩側較厚那側、縫線全層（輸入）、埋結只轉 10%、descemetocele 往後凸、舊 graft 7.8 mm、NV 沒長到交界、血在液面上方、直立時切面上的血不在 6 點側（輸入）、PAS 虹膜離角膜 0.05、前房淺的量只有 1/3、瞳孔緣壓進 IOL、DMEK 沒有翹起、BSS cannula 插在縫線上（輸入）、漏水細流往中央流、trephine 壓下去沒有效果、小角膜的角膜緣多 0.3、剪刀下刃在角膜裡、俯視圖出現 NaN、載入時改了 GLOBE。改錯的程式在 scratchpad，沒有進 git；做法：把 `check.js` 的第 16 節單獨抽出來跑（約 2 秒；第 1–15 節不用 pk.js、要 40 秒）。
+
+### 已知的坑（2026-11-23 做的時候踩到的）
+- **PAS 處前房碎成幾十片**：虹膜照「剛好碰到」放時，虹膜和角膜之間留下一條條細縫，前房的等高線被切成 40 片。改成虹膜疊進角膜 0.02 mm（被角膜蓋住）。
+- **bombé 的虹膜穿進角膜**：二次曲線往前鼓 0.6 mm 時，中周邊在 r 3.6 mm 穿過角膜後面（檢查的前房關閉半徑抓到）。改成虹膜中心線不得超過角膜後面；一開始用垂直距離，斜的角膜下面仍會插進 0.03 mm 以上，改成沿法線量。
+- **hyphema 的最低點算到隅角**：前房表格把 PAS 後面、被關起來的隅角也算進去，液面低了約 0.65 mm。改成前房從中央往外、第一次碰到角膜就停。
+- **open sky 的前房像一個水做的圓頂**：前房上界照原來角膜後面的形狀畫，拿掉角膜後看起來液體還撐在那裡。改成液面只到開口後緣。
+- **瞳孔緣壓進 IOL**：瞳孔緣只比 IOL 表面高 0.05 mm，比虹膜邊緣的半厚（0.08）還小。改成和 GLOBE 在水晶體上一樣的 0.12 mm。
+- **供體內皮線畫在內皮上方 0.1 mm**：把後表面的點水平推到表面的半徑，高度就錯了。改成直接沿供體後表面畫。
+- **DMEK 直徑少了 0.4 mm**：用表面的半徑決定膜的範圍，膜本身在角膜後面、半徑較小。改用膜自己的半徑。
+- **縫上供體後白色切緣環蓋住交界**：open sky 的 host 切緣環在供體縫上後還在，把縫線跨過交界的地方蓋掉。縫上後改畫細的交界線。
+- **縫線最深的地方不在交界上**：縫線是沿表面法線的半橢圓，交界是垂直的圓柱；最深點在交界內側約 0.25 mm，跨過交界的地方深度仍約 90%。照實畫，檢查量的是交界處。
+- **剪刀畫成穿過角膜的直棒**：一開始刀柄沿切口外側往外伸；改成刀刃沿切口的弧、刀柄往術者（12 點）那側。
+- **標籤字寬在字型載入前量**：樣本頁右對齊的標籤會超出面板；量到的字寬 × 1.08（同 `sample-sfix.html` 的做法）。
+
 ## 檔案
 - `globe.js`：模型本體。內容有外表面與牆厚、組織函數、切面（等高線）、俯視圖、縫線路徑、錨點。
 - `views.js`：向登記處（`videos/models/registry.js`）報到，提供三個視角：`mer` 子午切面、`across` 垂直傷口切面、`scope` 顯微鏡俯視。
@@ -756,3 +864,5 @@
 - `sample-cataract4.html`、`sample-cataract4.jpg`：④ 樣本（左眼 OS、術者坐 12 點、主切口 11 點）：OS 術者視角與方位標籤、破口＋前玻璃體面凸出＋核塊一端歪、玻璃體到 tip、核塊掉落、俯視線索、第一步 tip 不退＋OVD 對照先退出、核塊托到前房＋下墊器械（切面與俯視）、pars plana、雙手前段玻璃體切除＋TA（切面與俯視）、IOL in the bag／one-piece sulcus／3-piece optic capture。參考圖由 `videos/src/cataract-4-pcr/ref/manifest.json` 比對。
 - `sfix.js`：鞏膜縫合固定 IOL 的選用狀態與畫法（`SFIX`；node 裡是 `require('./sfix.js')(GLOBE)`）：本類別的葡萄膜（睫狀溝、睫狀突、pars plana）與無晶體的虹膜、垂直進針的落點（`classify`）、穿針（`track`、`passes`）、三角瓣、trocar、12 點切口、縫線（`sutureOf`）、MA60AC 的姿勢（`iolOf`）、線結、舊 IOL、殘留玻璃體、切面與俯視。`views.js` 另外報到 `sfix`（2–8 點切面）、`sfixz`（2 點固定處放大）、`sfixscope`（俯視）。
 - `sample-sfix.html`、`sample-sfix.jpg`：鞏膜縫合固定樣本（右眼 OD、術者坐 12 點、固定在 2 點與 8 點）：俯視的兩個固定點與量尺、2 點放大的垂直進針（0.58／1／2 mm）、2–8 全景＋放大框、量錯線、2 mm 對照、trocar 與瓣、瓣下進針、直針接 27G（切面與俯視）、勾出剪斷綁 haptic、縫好的 IOL（切面與俯視）、瓣下的線結、不對稱傾斜、滑脫與線結外露。參考圖由 `videos/src/sutured-scleral-iol-fixation/ref/manifest.json` 比對。
+- `pk.js`：PK 的選用狀態與畫法（`PK`；node 裡是 `require('./pk.js')(GLOBE)`）：術前兩種病例（舊 DALK graft 與交界、NV、混濁水腫、descemetocele、軟眼；水腫、DMEK、前房淺、bombé、PAS、LI、PCIOL、hyphema）、trephine、open sky、供體、縫線（`sutOrder`、`suturePath`）、BSS、fluorescein 漏水、器械、切面與俯視。`views.js` 另外報到 `pk`（12–6 點切面）、`pkz`（6 點側交界放大）、`pk39`（3–9 點切面）、`pkscope`（俯視）。
+- `sample-pk.html`、`sample-pk.jpg`：PK 樣本（左眼 OS、術者坐 12 點）：B 術前的俯視、12–6 切面與 descemetocele 放大、A 術前的俯視與 12–6 切面、部分深度 trephine、進前房＋剪刀、open sky 隔膜往前鼓（切面）與俯視、供體內皮面朝下、cardinal 順序、縫線深度與埋結、BSS 重建前房、Seidel、A 的 LI 與 PAS（1–7 切面）。參考圖清單還沒有（PK 影片的 `ref/manifest.json` 由影片那邊加）。

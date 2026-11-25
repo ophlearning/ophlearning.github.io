@@ -863,5 +863,161 @@ const iolTouch = st => { const c = SX.norm(st), IO = SX.iolOf(c), f = SX.layersF
   const G1svg = G.enface({ st: {} }).svg + G.section({ plane: planes.meridian(10), win: { x: -1, y: -14.2, w: 13, h: 9 }, st: {}, step: 0.2 }).svg;
   ok(G1svg === G0svg && JSON.stringify(G.N) === G0N, 'sfix is optional: GLOBE\'s numbers and drawings are unchanged after loading it'); }
 
+// =====================================================================================================================
+// 16. penetrating keratoplasty (pk.js; PK_PATH=<file> runs these on another copy — used to break a value on purpose; PK_IN='{…}' overrides this
+//     section's own inputs). Sources and the 示意 list: CARD.md PK. Both cases are left eyes (OS), surgeon at 12 (12 o'clock at the bottom, 3 o'clock
+//     temporal on the left). Section plane meridian(6): screen u = −Y (12 o'clock on the LEFT), v = −Z; the microscope has y = Y, so u = −y.
+const PK0 = [G.enface({ st: {} }).svg, CAT.enface({ st: { cat: {} } }).svg, SX.enface({ st: {} }).svg].join('');
+const PKm = require(process.env.PK_PATH || './pk.js')(G), PNk = PKm.PN, pk = x => ({ pk: x }), pl6 = planes.meridian(6), P6 = p => G.toPlane(pl6, p);
+const IN16 = JSON.parse(process.env.PK_IN || '{}');   // inputs this section uses, overridable to break the check itself on purpose
+const PKB = pk({ haze: 0.6, edema: 0.1, old: {}, nv: 1, dcele: {}, soft: 0.6 });                                                   // case B before surgery
+const PKA = pk({ kd: 10, edema: 0.3, haze: 0.3, dmek: {}, lens: 'iol', ac: 0.35, bombe: 0.35, pas: 1.0, li: {}, hy: {} });        // case A before surgery
+const pkS = (st, extra) => pk(Object.assign({}, st.pk, extra));
+const SEW = { tre: { scis: 360 }, open: 1, donor: {} };                                                                          // donor seated in the opening
+// points where the iris goes more than 0.03 mm into corneal tissue (it is laid 0.02 mm under the corneal back where it touches, hidden; CARD.md)
+const irisInCornea = st => { const f = PKm.layersFn(st); let n = 0; for (let x = -6; x <= 6; x += 0.02) for (let z = 9.6; z <= 13.3; z += 0.02) { const o = f([0, x, z]); if (o.iris < 0 && (o.cornea < -0.03 || o.limbus < -0.03 || o.donor < -0.03)) n++; } return n; };
+const hyp = (h, r, z) => [r * G.clockDir(h)[0], r * G.clockDir(h)[1], z];
+const zSurf = (st, r) => PKm.toDrawn(PKm.norm(st), P3(6, PKm.sOfR(r), 0))[2];
+// along the vertical line at clock h, radius r: depth fraction of the host cornea cut from the top (1 = through), from the field
+function cutFrac(st, h, r) { const f = PKm.layersFn(st), c = PKm.norm(st), X = PKm.ctx(c), zs = PKm.toDrawn(c, P3(h, PKm.sOfR(r), 0))[2], zb = PKm.tab(X.back, r); let first = null;
+  for (let z = zs - 0.003; z > zb + 0.003; z -= 0.003) if (f(hyp(h, r, z)).cornea < 0) { first = z; break; }
+  return first === null ? 1 : (zs - first) / (zs - zb); }
+
+// 16.1 orientation (principle 6): OS, surgeon at 12 → 12 o'clock at the bottom, 3 o'clock (OS temporal) on the left, 9 (nasal) on the right
+{ const O = PKm.orient({ eye: IN16.eye || 'OS', surgeon: 12 }), Oc = CAT.orient({ eye: 'OS', surgeon: 12 });
+  ok(O.bottom === 12 && O.left === 3 && O.leftSide === 'temporal' && O.right === 9 && O.rightSide === 'nasal' && Oc.left === 3 && Oc.leftAnat.horiz === 'temporal' && CAT.anat('OS', 3).horiz === 'temporal',
+    `pk: OS, surgeon at 12: 12 o'clock at the bottom, 3 o'clock temporal on the left, 9 nasal on the right (${O.text})`);
+  const eB = PKm.enface({ st: pkS(PKB, { tre: { depth: 0.5 } }) }), eA = PKm.enface({ st: PKA }), A = eB.A;
+  ok(A.tre3[0] < -3 && Math.abs(A.tre3[1]) < 1e-6 && A.tre12[1] > 3 && A.tre6[1] < -3 && A.dcele[1] < -1 && eA.A.li[0] > 0 && eA.A.li[1] < 0,
+    'pk: the drawn microscope view: 3 o\'clock left, 12 at the bottom, the 6 o\'clock descemetocele toward the top, the 7 o\'clock LI upper right'); }
+// 16.2 the sections: 12–6 with 12 o'clock on the left, anterior up; the 3–9 section has 9 o'clock on the right like the microscope (same side in both)
+{ const O = PKm.orient({ eye: 'OS', view: 'section', h: 6 }), M = enfaceMap(12), u9 = G.toPlane(planes.meridian(9), P3(9, 0))[0], x9 = M(P3(9, 0))[0];
+  ok(O.left === 12 && O.right === 6 && P6(P3(12, 0))[0] < 0 && P6([0, 0, 10])[1] === -10 && u9 > 0 && x9 > 0 && (IN16.right39 ?? 9) === 9,
+    'pk: 12–6 section: 12 o\'clock on the left, anterior up; 3–9 section: 9 o\'clock on the right, as in the microscope'); }
+// 16.3 the same structure at the same clock hour and place in both views (u = −y): descemetocele, trephine edges, the 12 and 6 o'clock cardinal sutures, the LI
+{ const W6 = { x: -6, y: -13.6, w: 12, h: 4 }, stB = pkS(PKB, { tre: { depth: 0.5 } }), sB = PKm.section({ st: stB, h: 6, win: W6, step: 0.1 }), eB = PKm.enface({ st: stB });
+  const dc = Math.max(Math.abs(sB.A.dcele[0] + eB.A.dcele[1]), Math.abs(eB.A.dcele[0]), Math.abs(sB.A.dcele[0] - 2.0));
+  const tr = Math.max(Math.abs(sB.A.tre6[0] + eB.A.tre6[1]), Math.abs(sB.A.tre12[0] + eB.A.tre12[1]), Math.abs(sB.A.tre6[0] - 3.75));
+  const stS = pk(Object.assign({}, SEW, { sut: { placed: 2 } })), sS = PKm.section({ st: stS, h: 6, win: W6, step: 0.1 }), eS = PKm.enface({ st: stS });
+  const pt = (A, k) => A['sut' + k] || [NaN, NaN], su = Math.max(...['In6', 'Out6', 'In12', 'Out12'].map(k => Math.abs(pt(sS.A, k)[0] + pt(eS.A, k)[1])), ...['In6', 'Out6', 'In12', 'Out12'].map(k => Math.abs(pt(eS.A, k)[0])));   // NaN (missing) fails
+  ok(dc < 0.01 && tr < 0.01 && su < 0.01, `pk: descemetocele, trephine edges and the 12 / 6 o'clock cardinal sutures at the same place in the 12–6 section and the microscope (worst ${Math.max(dc, tr, su).toFixed(4)} mm)`);
+  const cA = PKm.norm(PKA), fA = PKm.layersFn(PKA), X = PKm.ctx(cA), rL = cA.li.r, irisAt = r => { const z = PKm.tab(X.floorP, r); let hit = false; for (let dz = -0.8; dz <= 0.05; dz += 0.01) if (fA(hyp(cA.li.h, r, z + dz)).iris < 0) hit = true; return hit; };
+  const e = PKm.enface({ st: PKA }), M = enfaceMap(12), liXY = [cA.li.r * G.clockDir(cA.li.h)[0], cA.li.r * G.clockDir(cA.li.h)[1], 0], q = M(liXY);
+  ok(cA.li.h === 7 && Math.hypot(e.A.li[0] - q[0], e.A.li[1] - q[1]) < 1e-6 && near(G.clockOf(liXY[0], liXY[1]), 7, 1e-9) && !irisAt(rL) && irisAt(rL - 0.4) && irisAt(rL + 0.4),
+    `pk: the LI at 7 o'clock, ${rL} mm from the axis: a hole through the iris in the 1–7 section at the same radius as in the microscope`); }
+// 16.4 partial-depth trephination (Legeais 1993: partial depth first): the groove takes the asked fraction; the cornea stays continuous (tissue under it)
+{ const st = pkS(PKB, { tre: { depth: IN16.depth ?? 0.6 } }), a = cutFrac(st, 6, 3.75), b = cutFrac(st, 12, 3.75), s = PKm.section({ st, h: 6, win: { x: -6, y: -13.6, w: 12, h: 3 }, step: 0.1 });
+  ok(near(a, 0.6, 0.04) && near(b, 0.6, 0.04) && !s.A.full6 && !s.A.full12, `pk: partial-depth groove at 12 and 6 o'clock cuts ${(a * 100).toFixed(0)} / ${(b * 100).toFixed(0)} % of the cornea; tissue left under it (continuous)`); }
+// 16.5 into the chamber at one point, then scissors round: the cornea's continuity is broken exactly where the cut is full thickness
+{ const E = pkS(PKB, { tre: { depth: 0.6, enter: { h: 6 } } }), H = pkS(PKB, { tre: { depth: 0.6, enter: { h: 6 }, scis: 180, dir: 1 } }), R = pkS(PKB, { tre: { depth: 0.6, enter: { h: 6 }, scis: 360 } });
+  const thr = (st, h) => cutFrac(st, h, 3.75) >= 1, sE = PKm.section({ st: E, h: 6, win: { x: -6, y: -13.6, w: 12, h: 3 }, step: 0.1 });
+  const half = [6, 7.5, 9, 10.5, 12].every(h => thr(H, h)) && ![3, 4.5].some(h => thr(H, h)), all = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].every(h => thr(R, h));
+  ok(thr(E, 6) && !thr(E, 12) && !thr(E, 3) && sE.A.full6 && !sE.A.full12 && half && all, 'pk: entry at 6 o\'clock is through only there (section: broken at 6, intact at 12); scissors 180° clockwise: through from 6 via 9 to 12, not at 3; 360°: through all round'); }
+// 16.6 open sky: no cornea over the chamber inside the opening; the chamber is open to the air (its fluid stands only to the rim's back edge); the host rim ends at the opening
+{ const st = pk({ tre: { scis: 360 }, open: IN16.open ?? 1 }), f = PKm.layersFn(st), c = PKm.norm(st), X = PKm.ctx(c); let cov = 0, n = 0;
+  for (let r = 0; r < c.rJ - 0.05; r += 0.35) for (const h of [12, 2, 4, 6, 8, 10]) for (let z = PKm.tab(X.floorN, r); z < 14.5; z += 0.02) { n++; const o = f(hyp(h, r, z)); if (o.cornea < 0 || o.button < 0 || o.donor < 0 || o.limbus < 0) cov++; }
+  const air = f([0, -0.5, X.zRim + 0.05]), mid = r => f(hyp(6, r, zSurf(st, r) - 0.25));
+  ok(cov === 0 && air.ac > 0 && air.interior > 0 && mid(c.rJ + 0.05).cornea < 0 && mid(c.rJ - 0.05).cornea > 0, `pk: open sky: no cornea over the chamber inside the ${(2 * c.rJ).toFixed(2)} mm opening (${n} points), the chamber open to the air, the host rim ends at the opening`); }
+// 16.7 the open-sky danger (示意 amount): the lens–iris diaphragm domes forward by `bulge`; at 1.6 mm the lens rises above the opening's back edge and the
+//      iris is pressed against the host rim from behind (never through it)
+{ const st1 = pk({ tre: { scis: 360 }, open: 1, bulge: IN16.bulge ?? 1.6 }), c0 = PKm.norm(pk({ tre: { scis: 360 }, open: 1 })), c1 = PKm.norm(st1), X0 = PKm.ctx(c0), X1 = PKm.ctx(c1);
+  const z0 = PKm.lensFront(X0.D, 0), z1 = PKm.lensFront(X1.D, 0), bad = irisInCornea(st1);
+  ok(near(z1 - z0, 1.6, 1e-9) && z1 > X1.zRim + 0.1 && z0 < X0.zRim - 1.0 && bad === 0, `pk: open sky: the lens front rises ${(z1 - z0).toFixed(2)} mm with bulge and stands ${(z1 - X1.zRim).toFixed(2)} mm above the opening's back edge (without: ${(X0.zRim - z0).toFixed(2)} mm below); iris never through the rim (${bad})`); }
+// 16.8 the donor (Koo 2019: +0.25 mm): diameter ≥ the recipient's; held above it overhangs the opening; seated it fills the opening with no gap
+{ const c = PKm.norm(pk(Object.assign({}, SEW))), free = PKm.section({ st: pk({ tre: { scis: 360 }, open: 1, donor: { place: 0 } }), h: 6, win: { x: -6, y: -14.6, w: 12, h: 4 }, step: 0.1 });
+  const f = PKm.layersFn(pk(Object.assign({}, SEW))), z = r => zSurf(pk(SEW), r) - 0.25;
+  ok(PNk.over === 0.25 && near(c.donor.d - c.tre.d, 0.25, 1e-9) && c.donor.d >= c.tre.d && free.A.donorEdge >= c.rJ + 0.05 && f(hyp(6, c.rJ - 0.01, z(c.rJ - 0.01))).donor < 0 && f(hyp(6, c.rJ + 0.03, z(c.rJ + 0.03))).cornea < 0,
+    `pk: donor ${c.donor.d} mm ≥ recipient ${c.tre.d} mm (Koo 2019 +0.25); held above, its edge (${free.A.donorEdge.toFixed(3)}) overhangs the ${c.rJ.toFixed(3)} mm opening; seated, it meets the host`); }
+// 16.9 the donor's endothelium faces down (into the chamber) when it goes on; on the punch block (endoUp) it faces up (Ward 1976: punched from the endothelial side)
+{ const zr = st => { const f = PKm.layersFn(st); let top = -1e9, endo = null; for (let z = 15; z > 11.5; z -= 0.002) { const o = f([0, 0, z]); if (o.donor < 0 && top < -1e8) top = z; if (o.endo < 0 && endo === null) endo = z; } return { top, endo }; };
+  const seat = zr(pk(SEW)), held = zr(pk({ tre: { scis: 360 }, open: 1, donor: { place: 0 } })), flip = zr(pk({ tre: { scis: 360 }, open: 1, donor: { place: 0, endoUp: IN16.endoUp ?? true } }));
+  ok(seat.endo !== null && seat.endo < seat.top - 0.4 && held.endo < held.top - 0.4 && flip.endo > flip.top - 0.05, `pk: donor endothelium faces down seated (${(seat.top - seat.endo).toFixed(2)} mm below its front) and held above; on the punch block it faces up`); }
+// 16.10 sutures: 16 equally spaced (Lee 2012: 16 interrupted); cardinals first in the order 12 → 6 → 3 → 9 (12 first: Lee 2012; the rest of the order 常規, 示意)
+{ const O = PKm.sutOrder(IN16.n ?? 16), hs = O.map(o => o.h).sort((a, b) => a - b), gaps = hs.map((h, i) => (i ? h - hs[i - 1] : h + 12 - hs[hs.length - 1]));
+  const e2 = PKm.enface({ st: pk(Object.assign({}, SEW, { sut: { placed: 2 } })) }).A, e3 = PKm.enface({ st: pk(Object.assign({}, SEW, { sut: { placed: 3 } })) }).A;
+  ok(PNk.sut.n === 16 && O.length === 16 && O.slice(0, 4).map(o => o.h).join() === '12,6,3,9' && gaps.every(g => near(g, 0.75, 1e-9)) && e2.sutIn12 && e2.sutIn6 && !e2.sutIn3 && !e2.sutIn9 && e3.sutIn3 && !e3.sutIn9,
+    `pk: 16 sutures every ${gaps[0]} clock hours; placed in the order ${O.slice(0, 4).map(o => o.h).join(' → ')}, then the rest`); }
+// 16.11 every suture: radial, across the junction (donor → host), both ends on the corneal surface, the track inside donor or host tissue, deep (≥ 80 % at the
+//       junction, 示意 90 %) but never through the endothelium (≥ 0.03 mm from the back), the host end inside the clear cornea — both cases
+for (const [nm, base] of [['B (no oedema)', {}], ['A (oedema 0.3, cornea 10 mm)', { kd: 10, edema: 0.3 }]]) {
+  const st = pk(Object.assign({}, base, SEW, { sut: { placed: 16, dep: IN16.dep ?? 0.9 } })), c = PKm.norm(st), f = PKm.layersFn(st), M = enfaceMap(12); let bad = [], minBack = 1e9, minDeep = 1e9;
+  for (const su of PKm.sutures(c)) { const rIn = Math.hypot(su.entry[0], su.entry[1]), rOut = Math.hypot(su.exit[0], su.exit[1]), hIn = G.clockOf(su.entry[0], su.entry[1]), hOut = G.clockOf(su.exit[0], su.exit[1]);
+    if (Math.abs(PKm.dH(hIn, su.h)) > 0.01 || Math.abs(PKm.dH(hOut, su.h)) > 0.01) bad.push(su.h + ' not radial');
+    if (!(rIn < c.rJ && rOut > c.rJ)) bad.push(su.h + ' not across');
+    if (!(rOut < c.rK - 0.1)) bad.push(su.h + ' host end outside the clear cornea');
+    for (const q of [su.entry, su.exit]) { const W = wallOf(q[2] + PKm.dzC(c, Math.hypot(q[0], q[1])), Math.hypot(q[0], q[1])); if (Math.abs(W.d) > 0.005) bad.push(su.h + ' end off the surface'); }
+    for (let k = 2; k <= 38; k++) { const q = su.track[k], o = f(q); if (!(o.donor < 0 || o.cornea < 0)) { bad.push(su.h + ' leaves the cornea at ' + k); break; }
+      const back = o.donor < 0 ? G.T(o.W.s) - o.W.d : o.bot - o.W.d; minBack = Math.min(minBack, back); }   // the seated donor's material frame is the host's
+    const Tj = Math.min(G.T(su.sJ), PKm.Th(c, su.sJ)); minDeep = Math.min(minDeep, su.D / Tj); }
+  ok(!bad.length && minBack >= 0.03 && minDeep >= 0.8, `pk ${nm}: 16 sutures radial, donor → host across the junction, ends on the surface, inside the cornea, depth ${(minDeep * 100).toFixed(0)} % at the junction, ≥ ${minBack.toFixed(3)} mm from the endothelium${bad.length ? ': ' + bad.slice(0, 3).join('; ') : ''}`); }
+// 16.12 knots: tied on the junction, then turned in and buried on the host side — not left on the junction (Lee 2012); the same place in both views
+{ const st0 = pk(Object.assign({}, SEW, { sut: { placed: 16, bury: 0 } })), st1 = pk(Object.assign({}, SEW, { sut: { placed: 16, bury: IN16.bury ?? 1 } })), c1 = PKm.norm(st1), f1 = PKm.layersFn(st1);
+  const K0 = PKm.sutures(PKm.norm(st0)).find(s => s.h === 6).knot, K1 = PKm.sutures(c1).find(s => s.h === 6).knot, r1 = Math.hypot(K1[0], K1[1]), r0 = Math.hypot(K0[0], K0[1]);
+  const s1 = PKm.section({ st: st1, h: 6, win: { x: -6, y: -13.6, w: 12, h: 3 }, step: 0.1 }), e1 = PKm.enface({ st: st1 });
+  ok(Math.abs(r0 - c1.rJ) < 0.3 && r1 > c1.rJ + 0.3 && f1(K1).cornea < 0 && f1(K1).donor > 0 && Math.abs(s1.A.knot6[0] + e1.A.knot6[1]) < 0.01,
+    `pk: knots tied at the junction (${(r0 - c1.rJ).toFixed(2)} mm off it), buried ${(r1 - c1.rJ).toFixed(2)} mm into the host (inside its tissue); the same place in both views`); }
+// 16.13 the descemetocele (示意 size): only a thin layer left at its centre, thinner than around it, and its back bowed forward
+{ const st = PKB, f = PKm.layersFn(st), c = PKm.norm(st), D = c.dcele, th = r => { let top = null, bot = null; const zs = zSurf(st, r) + 0.05;
+    for (let z = zs; z > zs - 1.2; z -= 0.002) { const o = f(hyp(D.h, r, z)); if (o.cornea < 0) { if (top === null) top = z; bot = z; } } return { t: top - bot, bot }; };
+  const mid = th(D.r), side = th(D.r + 1.5), ref = th(D.r - 1.5), c0 = PKm.norm(pk({})), back0 = PKm.tab(PKm.ctx(PKm.norm(pkS(PKB, { dcele: null }))).back, D.r);
+  ok(mid.t < 0.25 * Math.min(side.t, ref.t) && mid.bot > back0 + 0.1 && D.h === 6 && D.r + D.rad < 3.75, `pk: descemetocele at 6 o'clock, ${D.r} mm from the axis: ${mid.t.toFixed(2)} mm thick vs ${ref.t.toFixed(2)} / ${side.t.toFixed(2)} mm around it, the back bowed ${(mid.bot - back0).toFixed(2)} mm forward`); }
+// 16.14 the trephine covers the lesion and the old DALK junction (spec; sizes 示意): old junction and descemetocele inside rT; the junction ring in both views
+{ const c = PKm.norm(PKB), s = PKm.section({ st: PKB, h: 6, win: { x: -6, y: -13.6, w: 12, h: 3 }, step: 0.1 }), e = PKm.enface({ st: PKB }), rT = (IN16.treD ?? PNk.tre.d) / 2;
+  ok(c.old.d / 2 < rT - 0.1 && c.dcele.r + c.dcele.rad < rT - 0.1 && near(Math.abs(s.A.old[0]), c.old.d / 2, 0.01) && near(e.A.oldR, c.old.d / 2, 1e-9),
+    `pk: the ${PNk.tre.d} mm trephine covers the old ${c.old.d} mm junction and the descemetocele; the junction at ${(c.old.d / 2).toFixed(2)} mm in both views`); }
+// 16.15 360° peripheral vessels from the limbus in to the old graft–host junction (示意 drawing)
+{ const c = PKm.norm(PKB), V = PKm.nvOf(c), sec = new Set(V.map(v => Math.floor(G.clockOf(Math.sin(v.h * 30 * D2R), Math.cos(v.h * 30 * D2R)) % 12)));
+  ok(sec.size === 12 && V.every(v => v.r0 >= c.rK && near(v.r1, c.old.d / 2 + 0.12, 0.05)), `pk: peripheral vessels in all 12 clock hours, from the limbus (${c.rK.toFixed(2)}) to the old junction (${(c.old.d / 2).toFixed(2)})`); }
+// 16.16 hyphema under gravity: supine (the operation) → a level surface at the back of the chamber (pooled over the pupil); upright → at 6 o'clock
+for (const pos of ['supine', 'upright']) { const st = pkS(PKA, { hy: { pos, h: 0.8 } }), f = PKm.layersFn(st), X = PKm.ctx(PKm.norm(st)), up = X.hyUp; let blood = 0, maxB = -1e9, minC = 1e9;
+  for (let x = -5; x <= 5; x += 0.25) for (let y = -5; y <= 5; y += 0.25) for (let z = 9.2; z <= 12.6; z += 0.05) { const p = [x, y, z], o = f(p); if (o.ac < 0 && o.iris > 0 && o.iol > 0) { const hgt = G.dot(p, up); if (o.hy < 0) { blood++; maxB = Math.max(maxB, hgt); } else minC = Math.min(minC, hgt); } }
+  const s = PKm.section({ st, h: 6, win: { x: -6, y: -13.6, w: 12, h: 5 }, step: 0.1 }), e = PKm.enface({ st });
+  const xy = e.A.hyXY || [NaN, NaN], where = pos === 'supine' ? Math.hypot(...xy) < 1.8 : (IN16.hyRight ?? (s.A.hy || [NaN])[0]) > 2 && xy[1] < -2;   // missing anchors fail
+  ok(blood > 20 && maxB <= X.hyLevel + 1e-9 && minC >= X.hyLevel - 0.06 && where, `pk: hyphema (${pos}): ${blood} points, all below the level and the clear chamber above it (gravity ${pos === 'supine' ? 'backward: pooled over the pupil' : 'down: at 6 o\'clock, right side of the 12–6 section'})`); }
+// 16.17 peripheral iris on the cornea (case A, 示意 width): along the contact the iris front touches the corneal back; the chamber closes there; case B has an open angle
+{ const touch = st => { const c = PKm.norm(st), f = PKm.layersFn(st), out = []; for (const s of [-0.2, 0.0, 0.2]) { const f0 = G.surfAt(s), t = PKm.Th(c, s) + 0.01, q = PKm.toDrawn(c, [ (f0.rho - f0.nr * t) * G.clockDir(4)[0], (f0.rho - f0.nr * t) * G.clockDir(4)[1], f0.z - f0.nz * t]); out.push(f(q).iris); } return out; };
+  const tA = touch(PKA), tB = touch(PKB), XA = PKm.ctx(PKm.norm(PKA)), XB = PKm.ctx(PKm.norm(PKB));
+  const inA = irisInCornea(PKA) + irisInCornea(pkS(PKA, { bombe: 0.6 }));   // a stronger bombé would reach the cornea: pressed against it, never through
+  ok(tA.every(v => v < 0) && tB.every(v => v > 0.3) && XA.acRP > 4.6 && XA.acRP < 5.3 && XB.acRN > 5.8 && inA === 0, `pk: case A: the peripheral iris touches the corneal back along the contact (chamber closed at ${XA.acRP.toFixed(2)} mm), never through it (${inA}); case B: open angle (chamber to ${XB.acRN.toFixed(2)} mm)`); }
+// 16.18 case A: a shallow chamber and iris bombé (pupillary block; amounts 示意)
+{ const cA = PKm.norm(PKA), XA = PKm.ctx(cA), c1 = PKm.norm(pk({ kd: 10, edema: 0.3, lens: 'iol' })), X1 = PKm.ctx(c1), acd = (X, c) => PKm.tab(X.back, 0) - PKm.lensFront(X.D, 0);
+  const L = XA.Gp.L, a = L[0], b = L[40]; let dev = 0; for (let k = 5; k < 36; k++) { const q = L[k], t = ((q[1] - a[1]) * (b[1] - a[1]) + (q[0] - a[0]) * (b[0] - a[0])) / ((b[1] - a[1]) ** 2 + (b[0] - a[0]) ** 2); dev = Math.max(dev, q[0] - G.lerp(a[0], b[0], t)); }
+  ok(acd(X1, c1) - acd(XA, cA) >= 0.9 && dev >= 0.4, `pk: case A: central chamber ${acd(XA, cA).toFixed(2)} mm (normal pseudophakic in this model ${acd(X1, c1).toFixed(2)}), iris bowed ${dev.toFixed(2)} mm forward`); }
+// 16.19 the PCIOL (case A, 示意 design): in the bag behind the iris; touches neither iris nor cornea
+{ const st = PKA, f = PKm.layersFn(st), c = PKm.norm(st), X = PKm.ctx(c); let hit = 0, n = 0;
+  for (let r = 0; r <= 3; r += 0.15) for (let a = 0; a < 2 * Math.PI; a += 0.5) for (let z = X.D.iol.zc - 0.4; z <= X.D.iol.zc + 0.4; z += 0.02) { const p = [r * Math.cos(a), r * Math.sin(a), z], o = f(p); if (o.iol < 0) { n++; if (o.iris < 0 || o.cornea < 0 || o.donor < 0) hit++; } }
+  ok(n > 100 && hit === 0 && X.D.pm[0] - 0.02 > PKm.lensFront(X.D, X.D.pr), `pk: case A: the IOL (${n} points) sits behind the pupil margin and touches neither iris nor cornea`); }
+// 16.20 the poorly attached DMEK graft (示意): attached on the corneal back away from the detached sector, separated in it (6 o'clock), never inside the cornea
+{ const st = PKA, f = PKm.layersFn(st), c = PKm.norm(st), gapAt = (h, r) => { const s = PKm.sOfR(r + 0.3), f0 = G.surfAt(s); let back = null, mem = null;
+    for (let d = 0.3; d < 1.6; d += 0.002) { const q = PKm.toDrawn(c, P3(h, s, d)), o = f(q); if (back === null && o.cornea > 0 && o.limbus > 0) back = d; if (o.dmek < 0 && mem === null) mem = d; } return mem === null ? null : mem - back; };
+  const g12 = gapAt(12, 2.0), g6 = gapAt(c.dmek.h, 3.4), edge = r => f(PKm.toDrawn(c, [0, r, PKm.tab(PKm.ctx(c).back, r) - 0.015])).dmek < 0;   // at 12 o'clock (attached)
+  ok(g12 !== null && g12 < 0.02 && g6 > 0.2 && edge(c.dmek.d / 2 - 0.15) && !edge(c.dmek.d / 2 + 0.1), `pk: DMEK graft: on the corneal back at 12 o'clock (gap ${g12 === null ? '—' : g12.toFixed(3)}), lifted ${g6 === null ? '—' : g6.toFixed(2)} mm at 6 o'clock, ${c.dmek.d} mm across`); }
+// 16.21 reforming the chamber with BSS (示意 amounts): ac 0.2 → 1 deepens it; the cannula enters between two sutures and its tip is in the chamber
+{ const base = Object.assign({}, SEW, { sut: { placed: 16 } }), a0 = PKm.norm(pk(Object.assign({}, base, { ac: 0.2 }))), a1 = PKm.norm(pk(Object.assign({}, base, { ac: 1 }))), d = c => PKm.tab(PKm.ctx(c).back, 0) - PKm.lensFront(PKm.ctx(c).D, 0);
+  const hC = IN16.cannulaH ?? 9.375, st = pk(Object.assign({}, base, { ac: 0.6, inst: [{ kind: 'cannula', h: hC }] })), c = PKm.norm(st), g = PKm.instOf(c, c.inst[0]), o = PKm.layersFn(st)(g.tip);
+  const gapH = Math.min(...PKm.sutOrder(16).map(s => Math.abs(PKm.dH(s.h, hC))));
+  ok(d(a1) - d(a0) >= 1.0 && o.ac < 0 && o.iris > 0 && o.lens > 0 && o.donor > 0 && gapH >= 0.2, `pk: BSS deepens the chamber ${d(a0).toFixed(2)} → ${d(a1).toFixed(2)} mm; the cannula enters ${gapH.toFixed(3)} h from the nearest suture, its tip in the chamber`); }
+// 16.22 Seidel (Romanchuk 1979): the stream starts on the junction at the leak's clock hour and runs radially outward = downhill on a supine eye
+{ const st = pk(Object.assign({}, SEW, { sut: { placed: 16 }, fl: 1, leak: { h: IN16.leakH ?? 10.5 } })), c = PKm.norm(st), L = PKm.leakOf(c), e = PKm.enface({ st }), M = enfaceMap(12), r0 = Math.hypot(L.start[0], L.start[1]);
+  let down = true, radial = true; for (let k = 1; k < L.pts.length; k++) { if (!(L.pts[k][2] < L.pts[k - 1][2])) down = false; if (Math.abs(PKm.dH(G.clockOf(L.pts[k][0], L.pts[k][1]), 10.5)) > 0.01) radial = false; }
+  ok(near(r0, c.rJ, 0.01) && near(G.clockOf(L.start[0], L.start[1]), 10.5, 0.01) && down && radial && Math.hypot(e.A.leak[0] - M(L.start)[0], e.A.leak[1] - M(L.start)[1]) < 1e-6, `pk: fluorescein leak at 10:30 on the junction (${r0.toFixed(2)} mm), the stream runs outward and downhill`); }
+// 16.23 a soft eye (示意 amounts): the cornea sinks, more while the trephine presses; it stays clear of the lens
+{ const z = st => zSurf(st, 0), s0 = z(pk({})), s1 = z(pk({ soft: 1 })), s2 = z(pk({ soft: 1, press: 1 })), X = PKm.ctx(PKm.norm(pk({ soft: 1, press: 1 })));
+  ok(near(s0 - s1, PNk.sag, 1e-9) && near(s0 - s2, PNk.sag + PNk.indent, 1e-9) && PKm.tab(X.back, 0) - PKm.lensFront(X.D, 0) > 1.0, `pk: soft eye: the cornea sinks ${(s0 - s1).toFixed(2)} mm, ${(s0 - s2).toFixed(2)} mm under the trephine, still ${(PKm.tab(X.back, 0) - PKm.lensFront(X.D, 0)).toFixed(2)} mm from the lens`); }
+// 16.24 case A's smaller cornea: the limbus at 5.0 mm in both views
+{ const e = PKm.enface({ st: PKA }), s = PKm.section({ st: PKA, h: 6, win: { x: -6, y: -13.6, w: 12, h: 3 }, step: 0.1 }), lr = Math.hypot(...s.A.limbus);
+  ok(near(e.A.limbusR, 5.0, 1e-9) && near(Math.abs(s.A.limbus[0]), 5.0, 0.01) && near(G.surfAt(PKm.norm(PKA).sK).rho, 5.0, 1e-6), `pk: case A: clear cornea 10 mm across, the limbus at 5.0 mm in the microscope and the section`); }
+// 16.25 instruments (示意 shapes): the trephine blade stops at the groove's bottom; the scissors' lower blade is in the chamber under the host, the upper one above it
+{ const st = pkS(PKB, { tre: { depth: 0.6, enter: { h: 6 }, scis: 120 }, inst: [{ kind: 'trephine' }, { kind: 'scissors', h: 10, dir: 1 }] }), s = PKm.section({ st, h: 6, win: { x: -6, y: -14.6, w: 12, h: 4 }, step: 0.1 }), c = PKm.norm(st), g = PKm.instOf(c, c.inst[1]), f = PKm.layersFn(st);
+  const lo = f(g.tipLow), up = f(g.tipUp);
+  ok(Math.abs(s.A.blade12[1] - s.A.treBot12[1]) < 0.01 && lo.ac < 0 && lo.iris > 0 && lo.lens > 0 && up.interior > 0 && up.cornea > 0 && up.conj > 0, 'pk: trephine blade at the groove bottom; scissors: lower blade in the chamber under the host, upper blade above the cornea'); }
+// 16.26 optional and clean: the views draw without NaN; GLOBE, CATARACT and SFIX draw exactly as before pk.js was loaded
+{ const sts = [PKB, PKA, pkS(PKB, { tre: { depth: 0.6, enter: { h: 6 }, scis: 120 }, inst: [{ kind: 'trephine' }, { kind: 'scissors', h: 10 }] }), pk({ tre: { scis: 360 }, open: 0.5, ovd: 1 }), pk({ tre: { scis: 360 }, open: 1, bulge: 1.6, inst: [{ kind: 'forceps', h: 12 }] }),
+    pk({ tre: { scis: 360 }, open: 1, donor: { place: 0.3 } }), pk(Object.assign({}, SEW, { sut: { placed: 16, bury: 1 }, fl: 1, leak: {}, inst: [{ kind: 'holder', h: 6 }, { kind: 'cannula', h: 9.375 }] }))];
+  const all = sts.map(st => PKm.section({ st, h: 6, win: { x: -8.5, y: -14.6, w: 17, h: 10.2 }, step: 0.25 }).svg + PKm.enface({ st }).svg).join('');
+  ok(!/NaN|undefined|Infinity/.test(all), `pk views: no NaN/undefined (${(all.length / 1024).toFixed(0)} KB)`);
+  const PK1 = [G.enface({ st: {} }).svg, CAT.enface({ st: { cat: {} } }).svg, SX.enface({ st: {} }).svg].join('');
+  ok(PK1 === PK0 && JSON.stringify(G.N) === G0N, 'pk is optional: GLOBE\'s, CATARACT\'s and SFIX\'s numbers and drawings are unchanged after loading it'); }
+
 console.log(fail ? `\n${fail} check(s) FAILED` : '\nall globe checks passed');
 process.exit(fail ? 1 : 0);

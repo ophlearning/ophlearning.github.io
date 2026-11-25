@@ -160,6 +160,31 @@ const CATS = [
    dur 是片長（秒）；chapters 的時間以秒為單位；refs 的 doi 或 url 擇一 */
 const VIDEOS = [
   {
+    id:'pk-failed-dmek', type:'youtube', yt:'bcSEmVkD0qg', cat:'surgery',
+    zh:'Failed DMEK 後改做 PK：助手版', en:'Penetrating keratoplasty after a failed DMEK: the assistant\'s guide',
+    dur:282,
+    short:'站在助手的位置預習一台 PK（左眼 Fuchs、人工水晶體眼，DMEK 約一週後 graft 沒有發揮功能）：trephine 與 open sky、打開後前房的血與沾黏、DMEK 後的 pupillary block 與 LI、cardinal 12 → 6 → 3 → 9 與 16 針、Seidel test 與術後盯眼壓。',
+    sum:'這支影片給在 PK 當助手的住院醫師。先看這顆眼睛為什麼改做 PK：DMEK 只換角膜最後面的 Descemet membrane 和內皮，做完約一週仍然水腫、前房淺、有 pupillary block 和 hyphema；DMEK 失敗最常見的原因是 primary graft failure，也可以再做一次 DMEK，這台由主治決定改做 PK。接著依序看 trephine 部分深度再切完一圈、open sky 時助手不壓不扳；打開後前房的血、虹膜沾黏要先分開、DMEK 後的 pupillary block 與被堵住的 iridotomy、7 點的 LI 與 IOL；供體內皮面朝上、cardinal 12 → 6 → 3 → 9、院內範本的 16 針 10-0 nylon；Seidel test、TSCL、壓迫包紮，以及術後 24 小時盯眼壓與 regraft 的存活；最後是助手要記住的五件事。',
+    note:'畫面為左眼 OS、術者坐 12 點的示意動畫（12–6 點切面＋術者視角兩圖同步），不是手術錄影，比例不精確。Trephine 大小、DMEK graft 脫離範圍、PAS、前房積血、IOL 與漏的位置為示意；前房處理依主刀決定；步驟、縫線與藥物依院內 PK 手術紀錄範本。',
+    tags:['角膜移植'],
+    chapters:[
+      {g:'', items:[[0,'片頭'], [19,'1　為什麼改 PK'], [68,'2　Trephine 與 open sky'], [101,'3　前房的處理'], [157,'4　供體與縫合'], [185,'5　收尾與術後'], [221,'6　助手清單'], [249,'參考文獻']]},
+    ],
+    refs:[
+      {c:'Gómez-Benlloch A, Montesel A, Pareja-Aricò L, et al. Causes of corneal transplant failure: a multicentric study. Acta Ophthalmol 2021;99(6):e922-e928.', doi:'10.1111/aos.14708'},
+      {c:'Price MO, Feng MT, McKee Y, Price FW. Repeat Descemet membrane endothelial keratoplasty: secondary grafts with early intervention are comparable with fellow-eye primary grafts. Ophthalmology 2015;122(8):1639-44.', doi:'10.1016/j.ophtha.2015.04.037'},
+      {c:'Legeais JM, Parel JM, Simon G, Ren Q, Denham D. Endothelial damage by the corneal Hessburg-Barron vacuum trephine. Refract Corneal Surg 1993;9(4):255-8.', url:'https://pubmed.ncbi.nlm.nih.gov/8398970/'},
+      {c:'Ingraham HJ, Donnenfeld ED, Perry HD. Massive suprachoroidal hemorrhage in penetrating keratoplasty. Am J Ophthalmol 1989;108(6):670-5.', doi:'10.1016/0002-9394(89)90859-3'},
+      {c:'Lee RM, Lam FC, Georgiou T, et al. Suturing techniques and postoperative management in penetrating keratoplasty in the United Kingdom. Clin Ophthalmol 2012;6:1335-40.', doi:'10.2147/OPTH.S35460'},
+      {c:'Deshmukh R, Stevenson LJ, Vajpayee R. Management of corneal perforations: an update. Indian J Ophthalmol 2020;68(1):7-14.', doi:'10.4103/ijo.IJO_1151_19'},
+      {c:'Gonzalez A, Price FW, Price MO, Feng MT. Prevention and management of pupil block after Descemet membrane endothelial keratoplasty. Cornea 2016;35(11):1391-5.', doi:'10.1097/ICO.0000000000001015'},
+      {c:'Ward DE, Nesburn AB. An artificial anterior chamber. Am J Ophthalmol 1976;82(5):796-8.', doi:'10.1016/0002-9394(76)90021-0'},
+      {c:'Romanchuk KG. Seidel\'s test using 10% fluorescein. Can J Ophthalmol 1979;14(4):253-6.', url:'https://pubmed.ncbi.nlm.nih.gov/550919/'},
+      {c:'Figueiredo GS, Kolli SS, Ahmad S, Gales K, Figueiredo FC. Urrets-Zavalia syndrome following penetrating keratoplasty for keratoconus. Graefes Arch Clin Exp Ophthalmol 2013;251(3):809-15.', doi:'10.1007/s00417-012-2148-8'},
+      {c:'Thompson RW, Price MO, Bowers PJ, Price FW. Long-term graft survival after penetrating keratoplasty. Ophthalmology 2003;110(7):1396-402.', doi:'10.1016/S0161-6420(03)00463-9'},
+    ],
+  },
+  {
     id:'lower-lid-modified-bick', type:'youtube', yt:'LdAgKX8qTCA', cat:'surgery',
     zh:'下眼瞼 modified Bick 術前預習', en:'Modified Bick procedure for involutional lower-lid entropion with horizontal laxity: a pre-op preview',
     dur:416,
