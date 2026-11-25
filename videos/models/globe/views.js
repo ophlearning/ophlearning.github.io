@@ -46,6 +46,19 @@ MODEL_VIEWS.globe = {
   // microscope view, OD, surgeon at 12 (12 o'clock at the bottom, 9 temporal on the right)
   sfixscope: { title: '鞏膜縫合固定：顯微鏡俯視（右眼 OD，術者坐 12 點）', win: [-11, -6.2, 22],
     draw: (state, id) => SFIX.enface({ st: state, id, surgeon: state.surgeon ?? 12 }).svg },
+  // ---- penetrating keratoplasty (globe/pk.js; state under st.pk). Both cases are left eyes (OS), surgeon at 12. state.view = { hp, x, y, w, h, step }:
+  // hp = clock hour on the right of the section (default 6: the 12–6 section with 12 o'clock on the LEFT, as the cataract views), x, y, w, h refine the window
+  pk: { title: 'PK：12–6 點切面（左＝12 點，上＝前）', win: [-8.5, -14.6, 17],
+    draw: (state, id) => PK.section({ st: state, h: (state.view || {}).hp ?? 6, win: _cw(state, { x: -8.5, y: -14.6, w: 17, h: 10.2 }), step: (state.view || {}).step || 0.03, id }).svg },
+  // close-up of the graft–host junction on the 6 o'clock side (trephine groove, suture depth, knots)
+  pkz: { title: 'PK：6 點側交界放大（右＝6 點）', win: [2.2, -13.0, 3.2],
+    draw: (state, id) => PK.section({ st: state, h: (state.view || {}).hp ?? 6, win: _cw(state, { x: 2.2, y: -13.0, w: 3.2, h: 2.0 }), step: (state.view || {}).step || 0.008, id }).svg },
+  // 3–9 section seen from 12 o'clock: right = 9 o'clock (OS nasal), left = 3 (OS temporal), as in the microscope view
+  pk39: { title: 'PK：3–9 點切面（右＝9 點，從 12 點看）', win: [-8.5, -14.6, 17],
+    draw: (state, id) => PK.section({ st: state, h: 9, win: _cw(state, { x: -8.5, y: -14.6, w: 17, h: 10.2 }), step: (state.view || {}).step || 0.03, id }).svg },
+  // microscope view, OS, surgeon at 12 (12 o'clock at the bottom, 3 o'clock temporal on the left)
+  pkscope: { title: 'PK：顯微鏡俯視（左眼 OS，術者坐 12 點）', win: [-9, -5.2, 18],
+    draw: (state, id) => PK.enface({ st: state, id, surgeon: state.surgeon ?? 12 }).svg },
   // microscope view for cataract states (dilated pupil, red reflex), surgeon at 12
   cscope: { title: '顯微鏡俯視（白內障，術者坐 12 點）', win: [-8, -4.5, 16],
     draw: (state, id) => CATARACT.enface({ st: state, id, surgeon: state.surgeon ?? 12 }).svg },
