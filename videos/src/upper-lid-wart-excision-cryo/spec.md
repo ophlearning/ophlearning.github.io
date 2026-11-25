@@ -1,0 +1,55 @@
+# 上眼瞼 wart 切除＋cryotherapy：術前預習（規格書）
+
+2026-11-23 訂（草稿）。手術當天下午，先做三張列印單，影片之後做。
+
+## 目標與觀眾
+- 觀眾：跟這台刀的眼科住院醫師。看完要知道：切除與送病理的理由、cryotherapy 怎麼做與怎麼保護眼球、病灶在皮膚面或靠近瞼緣時哪裡不同（睫毛毛囊），以及術後要注意什麼。
+- 畫面：右眼、亞洲人、`videos/models/eyelid/` 的 mm 模型（上眼瞼矢狀切面＋正面）；病灶、切除線、冷凍探頭與冰球是示意。本台 OD，和模型同側。
+
+## 病例情境（站長 2026-11-23 確認）
+- 確認的摘要（原樣）：「OD 上眼瞼 wart，2 週，位置 [瞼緣／皮膚面]、大小 [ ] mm：切除後送病理 → 基底做 cryotherapy。附加：無。」
+- 門診紀錄（站長提供；只摘和手術有關的，年齡、性別、電話、醫師代號不寫）：upper lid mass OD noted for 2 weeks；impression upper lid warts OD；診斷碼為 benign neoplasm of skin of right upper eyelid。位置與大小紀錄沒寫，單子留 [ ]。
+
+## 時程
+- 手術 2026-11-23 下午。順序：三張列印單 → 影片（旁白與畫面、`check-all`、術前速讀包、出片）。
+
+## 術式依據與保密
+- 主治沒有提供院內範本：切除方式（shave 或 excision）、冷凍次數與時間沒有出處時標「依院內常規」。
+- 影片、網站、這份規格書都不寫主治代號與醫院名稱。
+
+## 文獻
+- PubMed 查證，全文引用在 `anim/segments.js` 的 REFS；數字與來源在 `check.js` 的 LEDGER。
+- Kersten 1997（臨床看似良性的 692 個眼瞼病灶，13 個［1.9%］是惡性、其中 10 個 BCC → 切下的都送病理）；Custer 2024（瞼緣 nevus 150 個 superficial excision＋cauterization，術後可見 trichiasis）；Sullivan 1976（瞼緣 2 個 freeze–thaw 到 −30 °C 破壞睫毛，治 trichiasis 的做法）；Fraunfelder 1979（色素深的人瞼緣冷凍治 trichiasis 列為禁忌）；Wingfield 1979（冷凍的早期、晚期副作用；眼球受傷見於治療結膜、角膜病灶時）；Elder 1997（上眼瞼睫毛毛囊 1.8 mm、碰到 95% 要 2.4 mm，沿用三合一影片已查證的帳本）。
+- Luk 2006（皮膚 common wart 液態氮 10 秒 × 2 個 freeze–thaw）留在 REFS 與帳本，但 2026-11-23 從單子拿掉：非眼瞼的劑量貼在牆上容易被當成眼瞼劑量。
+- 沒有出處、標「依院內常規」：保護眼球的方式、局麻藥量、shave 或 excision、冷凍機器與 freeze–thaw 次數時間、止血與縫合。
+
+## 影片（2026-11-23 做；片長 6:06，`anim/timeline.js`）
+| 章 | 開始 | 段落 |
+|---|---|---|
+| 片頭 | 0:00 | 這台刀的兩步；位置與大小沒寫，所以皮膚面與瞼緣都講 |
+| 1 臨床決策 | 0:20 | 1-1 切下來的病灶都要送病理（Kersten 1997）；1-2 病灶在皮膚面還是瞼緣（Custer 2024） |
+| 2 切除送病理 | 1:32 | 2-1 核對、畫範圍、局部麻醉；2-2 shave 或 excision、標本送病理 |
+| 3 Cryotherapy | 2:18 | 3-1 先保護眼球（Wingfield 1979）；3-2 冰球蓋過整個基底、freeze–thaw（Luk 2006 的皮膚劑量不能直接套用，影片不講數字） |
+| 4 靠近瞼緣：睫毛毛囊 | 3:09 | 4-1 上眼瞼毛囊多深（Elder 1997）；4-2 冰球碰到毛囊、睫毛會掉（Sullivan 1976） |
+| 5 術後與副作用 | 4:05 | 收尾依院內常規；早期與晚期副作用（Wingfield 1979）；色素深（Fraunfelder 1979）；追病理報告 |
+| 6 跟刀清單 | 4:41 | 八件事（和跟刀清單那張單子同順序） |
+| 參考文獻 | 5:39 | 7 篇 |
+- 每段左＝矢狀切面（瞳孔中央）、右＝術者視角（右眼 OD 正面），同一時刻；第 4 章用上瞼緣放大＋正面瞼緣特寫。病灶、切除線、局麻針、保護片、探頭、冰球畫在影片自己的 `anim/geo.js`（和 `check.js` 共用），標「示意」。
+- 和列印單不同的畫法（都是示意，理由見 `overview-notes.md`）：冰球只留在眼瞼裡、局麻針從病灶下方（睫毛側）進去、保護片往上多延伸 10°、切除線較低那一端維持在 orbicularis 之上。
+- 4-2 第 4 句「皮膚面的病灶離睫毛線近時，冰球深處還是可能碰到毛囊根部」是模型幾何的推論（冰球大小示意），已列在 `overview-notes.md`。
+
+## 驗收項目
+- [x] 三張列印單 PASS（跟刀清單、手術步驟圖、關鍵解剖與數字速查）：`node videos/tools/print/print.js videos/src/upper-lid-wart-excision-cryo --gray` 最後一行 `all 3 sheet(s) passed`，彩色與灰階全頁看過。
+- [x] 單子與旁白的每個數字在數字帳本有來源（文獻、院內常規、示意、結構、病例）：`check.js` 全部通過，`--selftest` 30 個改法全部抓到；`print.js --gray` 仍然 `all 3 sheet(s) passed`。
+- [x] 每一步同時顯示機轉切面與術者視角，方位寫明（`check.js` 檢查 9 段手術畫面）。
+- [ ] 不出現病人識別資料、主治代號與醫院名稱（commit 前 grep）：影片檔裡沒有寫，commit 前由主對話 grep。
+- [x] 影片：`check-all` 全部通過（2026-11-23；文字基準暫用小助手在暫存區做的 commit 物件，commit 後改成真的 commit 再跑一次）。
+- [x] 術前速讀包：`out/brief/`（`旁白.md`＋11 張）。
+- [ ] 出片 → 不公開上傳 → 網站同步。
+
+## 進度
+- 2026-11-23 11:00　病例摘要確認；三張列印單由小助手做，主對話檢查。
+- 2026-11-23 11:05　三張列印單（清單 8 項、步驟圖 8 格、速查）`print.js --gray` 全部 PASS；主對話看過彩色全頁，拿掉 Luk 2006 的注意與速查列後重跑 PASS；三頁 PDF（A4 頁面上的 LSs 版）與 PNG 交給站長。病灶、切除線、探頭、冰球、保護片都是示意。
+- 2026-11-23 11:45　影片由小助手做到可以出片：旁白與畫面（11 段、片長 6:06）、語音與時間軸、`check-all` 全部通過、參考圖 12 張與每章總覽 8 張（Claude 自檢）、術前速讀包、`publish/` 草稿；`print.js --gray` 重跑仍 PASS。沒有新增文獻。
+- 2026-11-23 12:19　主對話：commit 後把 `ref/manifest.json` 的 `textBase` 設成影片內容的 commit（`6cb5e40`），`check-all` 全部通過；術前速讀包合成 PDF 與旁白.md 交給站長；出片 `out/upper-lid-wart-excision-cryo.mp4`（ffprobe 366.6 秒＝6:07，1920×1080、30 fps、AAC；抽格看過第 3 章）；YouTube 不公開上傳，影片 ID `BMGaFqiWsN4`（privacy: unlisted）；網站 `videos/index.html` 加在 `VIDEOS` 最前面，瀏覽器開 `videos/#upper-lid-wart-excision-cryo` 沒有 JS 錯誤、嵌入的是這支影片。
+- 下一步：PR 合併後把 `textBase` 改成 main 上的 squash commit（repo 根目錄 `CLAUDE.md`）；刀後站長給 OP note 時再校正。

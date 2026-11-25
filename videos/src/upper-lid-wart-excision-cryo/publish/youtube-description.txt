@@ -1,0 +1,22 @@
+右眼上眼瞼的 wart：先把病灶切下來送病理，再對基底做 cryotherapy。臨床看起來像 wart 不代表病理一定是 wart（Kersten 1997），所以切下來的都送病理；病灶長在皮膚面或瞼緣，要注意的地方不同：瞼緣的病灶正下方就是睫毛毛囊（上眼瞼約 1.8 mm 深），冷凍會破壞毛囊、睫毛可能會掉。也講冷凍前先保護眼球、冰球蓋過整個基底、freeze–thaw 的意思，以及冷凍的早期與晚期副作用、色素深的人要注意色素脫失，最後是跟刀清單。
+
+示意動畫，不是手術錄影；病灶位置與大小、切除深度、冰球大小為示意。切除方式、局麻、保護眼球、冷凍機器與 freeze–thaw 次數時間、止血與縫合依院內常規。畫面為右眼、亞洲人（矢狀切面＋術者視角兩圖同步），比例不精確。
+
+章節
+0:00 片頭
+0:20 1 臨床決策
+1:32 2 切除送病理
+2:18 3 Cryotherapy
+3:09 4 靠近瞼緣：睫毛毛囊
+4:05 5 術後與副作用
+4:41 6 跟刀清單
+5:39 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Kersten 1997. Ophthalmology 104:479-84
+2. Custer 2024. Orbit 43:8-15
+3. Sullivan 1976. Am J Ophthalmol 82:117-21
+4. Fraunfelder 1979. Ophthalmic Surg 10:42-6
+5. Wingfield 1979. Ophthalmic Surg 10:47-55
+6. Luk 2006. Clin Exp Dermatol 31:394-7
+7. Elder 1997. Ophthalmic Plast Reconstr Surg 13:21-5

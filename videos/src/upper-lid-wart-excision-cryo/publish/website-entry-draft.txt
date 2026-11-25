@@ -1,0 +1,21 @@
+  {
+    id:'upper-lid-wart-excision-cryo', type:'youtube', yt:'BMGaFqiWsN4', cat:'surgery',
+    zh:'上眼瞼 wart 切除＋cryotherapy：切除送病理、基底冷凍與睫毛毛囊', en:'Upper eyelid wart: excision for histology and cryotherapy of the base',
+    dur:367,
+    short:'右眼上眼瞼的 wart：切下來全部送病理，再對基底做 cryotherapy；病灶在皮膚面或瞼緣要注意的地方不同，瞼緣的冰球會碰到睫毛毛囊。',
+    sum:'先講為什麼切下來的眼瞼病灶都要送病理（臨床判斷良性的 692 個病灶中 13 個是惡性），以及病灶長在皮膚面或瞼緣的差別：瞼緣的病灶正下方就是睫毛毛囊。接著是核對、畫切除範圍、局部麻醉、shave 或 excision（切在 orbicularis 之上、整顆拿下送病理）；cryotherapy 前先保護眼球，探頭放在基底、冰球蓋過整個基底，freeze–thaw 的次數與時間依院內常規；上眼瞼毛囊約 1.8 mm 深，瞼緣冷凍本來就是破壞睫毛的 trichiasis 療法，所以靠近瞼緣時睫毛可能會掉；最後是冷凍的早期與晚期副作用、色素深的人要注意色素脫失、追病理報告與跟刀清單。',
+    note:'畫面為右眼、亞洲人的示意動畫（矢狀切面＋術者視角兩圖同步），不是手術錄影，比例不精確。病灶位置與大小、切除深度、冰球大小為示意；各院做法不同的地方，影片中標「依院內常規」。',
+    tags:['眼整形'],
+    chapters:[
+      {g:'', items:[[0,'片頭'], [20,'1　臨床決策'], [92,'2　切除送病理'], [138,'3　Cryotherapy'], [189,'4　靠近瞼緣：睫毛毛囊'], [245,'5　術後與副作用'], [281,'6　跟刀清單'], [339,'參考文獻']]},
+    ],
+    refs:[
+      {c:'Kersten RC, Ewing-Chow D, Kulwin DR, Gallon M. Accuracy of clinical diagnosis of cutaneous eyelid lesions. Ophthalmology 1997;104(3):479-84.', doi:'10.1016/s0161-6420(97)30288-7'},
+      {c:'Custer PL, Council ML. Clinical features and management of eyelid margin nevi. Orbit 2024;43(1):8-15.', doi:'10.1080/01676830.2023.2169717'},
+      {c:'Sullivan JH, Beard C, Bullock JD. Cryosurgery for treatment of trichiasis. Am J Ophthalmol 1976;82(1):117-21.', doi:'10.1016/0002-9394(76)90676-0'},
+      {c:'Fraunfelder FT, Petursson GJ. The use of liquid nitrogen cryospray for treatment of trichiasis. Ophthalmic Surg 1979;10(8):42-6.', url:'https://pubmed.ncbi.nlm.nih.gov/492669/'},
+      {c:'Wingfield DL, Fraunfelder FT. Possible complications secondary to cryotherapy. Ophthalmic Surg 1979;10(8):47-55.', url:'https://pubmed.ncbi.nlm.nih.gov/492670/'},
+      {c:'Luk NM, Tang WYM, Tang NLS, Chan SW, Wong JKW, Hon KLE, Lo KK. Topical 5-fluorouracil has no additional benefit in treating common warts with cryotherapy: a single-centre, double-blind, randomized, placebo-controlled trial. Clin Exp Dermatol 2006;31(3):394-7.', doi:'10.1111/j.1365-2230.2006.02105.x'},
+      {c:'Elder MJ. Anatomy and physiology of eyelash follicles: relevance to lash ablation procedures. Ophthalmic Plast Reconstr Surg 1997;13(1):21-5.', doi:'10.1097/00002341-199703000-00004'},
+    ],
+  },

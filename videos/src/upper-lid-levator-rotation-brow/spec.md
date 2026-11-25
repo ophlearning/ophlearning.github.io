@@ -16,6 +16,12 @@
 - 這台的順序：先 marginal rotation，再 levator resection，最後 internal brow fixation。
 - 這是站長 2026-11-06 實際跟的刀，步驟以刀後實際 OP note 為準。
 
+## 病例情境：第二台（站長 2026-11-23 確認）
+- 確認的摘要（原樣）：「OS 上眼瞼，二次手術（2023 年做過 upper LR 和 Hotz），LMF 3 mm：從 lid crease 切口前路做 marginal rotation → 依術中高度決定要不要做 levator advancement。附加：無。brow fixation 這次不做；術前的電解睫毛是開刀前的暫時處置，不算在手術裡。」手術日期 2026-11-23 下午（當天）。
+- 門診紀錄（站長提供；只摘和手術有關的，年齡、性別、電話、醫師代號不寫）：MRD1 OD +1.5、OS +0.5 mm；LMF OD 7、OS 3 mm；upper entropion and trichiasis OU、角膜 superior SPK；診斷 senile and congenital ptosis OU，另有 brow ptosis bilateral（這次不處理）；術前已向病人說明效果有限、可能要第二次手術；排程單註記「眼球保護蓋」。
+- 決定（Claude 提出，站長確認摘要時沒有反對）：步驟和這支影片重複，**不重做影片**；`print/` 原地改成這台的三張跟刀單（11-06 三合一的版本在 git 歷史）。圖沿用右眼 OD，單子註明本台 OS 左右相反。
+- 這支影片的重做版還沒出片上傳，網站上掛的仍是更正前的「上下眼瞼一起開」（`levator-brow-lower-lid-rotation`）；之後出片、以不公開上傳並加到網站，舊條目保留。
+
 ## 術式依據與保密
 - 主治範本不進 git，影片與網站不寫主治代號與醫院名稱；片尾用 kit 預設「製作　張博淳」。
 - Levator resection 與眉毛固定：同第一部的範本解讀（2.5／4／4 mm、切除 5 mm、4-0 vicryl ×3、4-0 vicryl ×1、MRD1 約 2.5 mm、6-0 Prolene ×4、7-0 ethilone）。
@@ -50,9 +56,12 @@
 - [x] 每段手術步驟同時顯示兩個視角並寫明方位；同一結構兩圖一致（切口高度、瞼板切開高度 < 0.3 mm）。
 - [x] 旁白與畫面每個數字都在數字帳本有出處；沒有出處的標「示意」或說「依院內常規」，列在 `overview-notes.md`。
 - [x] `node videos/tools/check-all.js videos/src/upper-lid-levator-rotation-brow` 全部通過；每段一張參考圖（Claude 自檢）。
-- [ ] 出片前交總覽；上傳為不公開並同步網站（不在這次的範圍）。
+- [x] 出片前交總覽；上傳為不公開並同步網站（2026-11-23）。
 
 ## 進度
 - 2026-11-06：舊版（上下眼瞼）完成並出片、上傳（不公開）。
 - 2026-11-06：站長更正病例 → 重做。資料夾改名；下眼瞼段落全部拿掉；第 2 章改成上眼瞼前路 marginal rotation（Cruz 2015a/b）；第 3 章 levator 與眉毛（重用第一部的狀態）；電解改成上眼瞼（Elder 1997 上眼瞼 1.8 mm、碰到 95% 要 2.4 mm）；新增 Cruz 2015a、Cruz 2015b、Cruz 2023（PubMed 查證；Cruz 2015a 讀全文）；拿掉 Lim 2004、Kakizaki 2009、Singh 2024、Yip 2000。眼瞼模型加選用參數 `creaseH`（不給時畫面逐字不變，其他影片參考圖 0.000%）。旁白 78 句、全長 9:16；參考圖 15 張與每章總覽 `ref/overview/`；`publish/` 重寫（`yt: 'TBD'`）。
-- 下一步：站長看總覽；上傳 YouTube（不公開）並同步網站；刀後依 OP note 對照「待刀後補」。
+- 2026-11-23（第二台，當天下午手術）：`print/` 原地改成 OS 二次手術的 marginal rotation ± levator advancement。清單 7 項、步驟圖 7 格：拿掉 internal brow fixation 與術中電解；levator 改成「轉正後看高度，主治決定要不要做」，若做沿用影片的院內常規步驟；術前加本台的手術史、MRD1、LMF（單子的 `ledger` 登記「病例」）與眼球保護蓋。沒有新增 REFS。`print.js --gray` 全部 PASS，主對話看過彩色全頁；三頁 PDF（A4 頁面上的 LSs 版）與 PNG 交給站長。
+  - 沒有出處、寫「依主治」不寫數字：二次手術的切口位置與疤痕剝離、levator 前徙量；只做 rotation 時要不要縫雙眼皮線（單子寫「有做 levator 時」才縫 6-0 Prolene ×4）。
+- 2026-11-23：重新合成語音（語音套件版本不同，每句長短差 0.6 秒以內，`timeline.js` 跟著更新；`check-all` 全部通過、參考圖逐像素相同）；`publish/` 改寫成上眼瞼三合一的內容與 11 篇文獻；出片前總覽交給站長；出片 `out/upper-lid-levator-rotation-brow.mp4`（ffprobe 555.5 秒＝9:16，1920×1080、30 fps、AAC 48 kHz；抽格看過第 2、5 章）；YouTube 不公開上傳，影片 ID `g3Bf3qAWVRQ`（privacy: unlisted）；網站 `videos/index.html` 加在 `VIDEOS` 最前面，瀏覽器開 `videos/#upper-lid-levator-rotation-brow` 沒有 JS 錯誤、嵌入的是這支影片。舊條目 `levator-brow-lower-lid-rotation` 保留。
+- 下一步：PR 合併後把 `ref/manifest.json` 的 `textBase` 改成 main 上的 squash commit（repo 根目錄 `CLAUDE.md`）；刀後站長給 OP note 時再對照「待刀後補」。

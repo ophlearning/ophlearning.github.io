@@ -1,0 +1,21 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py",
+ "replace": {
+  "50 × 10⁹/L": "50 乘 10 的 9 次方每公升",
+  "aPTT": "APTT",
+  "2 小時": "兩小時"
+ },
+ "words": {
+  "aponeurosis": "AE2 P OW0 N UH0 R OW1 S IH0 S",
+  "arcuate": "AA1 R K Y UW0 EY2 T",
+  "cantholysis": "K AE0 N TH AA1 L AH0 S IH0 S",
+  "canthotomy": "K AE0 N TH AA1 T AH0 M IY0",
+  "capsulopalpebral": "K AE2 P S Y AH0 L OW0 P AE1 L P AH0 B R AH0 L",
+  "fascia": "F AE1 SH AH0",
+  "neuraxial": "N UH0 R AE1 K S IY0 AH0 L",
+  "pancytopenia": "P AE2 N S AY2 T OW0 P IY1 N IY0 AH0",
+  "prolene": "P R OW1 L IY2 N",
+  "retractor": "R IH0 T R AE1 K T ER0",
+  "thrombocytopenia": "TH R AA2 M B OW0 S AY2 T OW0 P IY1 N IY0 AH0"
+ }
+}
