@@ -1,8 +1,8 @@
 {
   "about": "Failed DMEK 後的 PK（助手版，左眼 OS）的檢查：模型樣本 globe/sample-pk.html 與影片頁 anim/video.html 每段一張參考圖（片頭、第 1–6 章）。改了 globe/pk.js、樣本頁或影片畫面後跑 node videos/tools/check-all.js videos/src/pk-failed-dmek；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update --only <段落> 更新（不要不加 --only：會連模型樣本一起改），approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "textBase": "159735b",
-  "textBaseNote": "旁白、重點、來源、章節與參考文獻的基準 commit（159735b：旁白加入院內範本步驟的那一版；之後 7ecbd50 只重新合成語音時間軸）。改旁白時：改 segments.js、重新合成語音、重做參考圖，commit 後把 textBase 換成那個 commit。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。",
+  "textBase": "fc2d63e",
+  "textBaseNote": "旁白、重點、來源、章節與參考文獻的基準 commit（159735b：旁白加入院內範本步驟的那一版；之後 7ecbd50 只重新合成語音時間軸）。改旁白時：改 segments.js、重新合成語音、重做參考圖，commit 後把 textBase 換成那個 commit。PR 合併後照 repo 根目錄 CLAUDE.md 改成 main 上 squash merge 的 commit。2026-11-25 PR #35 合併後改成 main 上的 squash commit fc2d63e（segments.js 和 159735b 逐字相同）。",
   "threshold": 0.0002,
   "tol": 48,
   "crop": [
