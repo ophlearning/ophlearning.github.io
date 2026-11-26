@@ -174,7 +174,7 @@ const SEGS = [
   src: [[1, 'Goel 2022'], [3, 'Ernest 1994'], [4, 'Gimbel 1995']] },
 
 // ---------------------------------------------------------------- 參考文獻
-{ id: 'refs', ch: 8, layout: 'refs', lines: ['參考文獻。'] },
+{ id: 'refs', ch: 8, title: '參考文獻', layout: 'refs', dur: 34, lines: [] },
 ];
 
 const REFS = [
