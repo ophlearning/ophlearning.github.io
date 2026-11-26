@@ -49,7 +49,7 @@
         { kind: 'csec', hp: HP, state: S3, win: W_TUN, labelOpts: { sides: true },
           draw: all(lb('角膜緣', 'limbus', 'R', 6, V => P3(V, W3(0))), lb('鞏膜露出', 'bare sclera', 'L', 12, V => P3(V, W3(1.6, 0.02))), lb('結膜掀開', 'conjunctiva', 'L', 36, V => P3(V, W3(3.0, -0.13)))) },
         { kind: 'cscope', surgeon: SG, state: S3, win: W_EYE, overlays: [{ cut: path3(periCut), w: 0.8 }], labelOpts: { sides: true },
-          draw: V => thin(path3(periBack)(V)), labels: [['沿角膜緣剪開', 'peritomy', V => P3(V, W3(0.25, 0, MH - 0.5)), Ls], ['掀開範圍', '', V => P3(V, W3(3.0, 0, MH + 0.4)), Rs]] }] },
+          draw: all(V => thin(path3(periBack)(V)), lb('沿角膜緣剪開', 'peritomy', 'L', 6, V => P3(V, W3(0.25, 0, MH - 0.5))), lb('掀開範圍', '', 'R', 36, V => P3(V, W3(3.0, 0, MH + 0.4)))) }] },
       { hd: '外口 角膜緣後 1–2 mm → 內口 角膜內約 1.5 mm', views: [
         { kind: 'csec', hp: HP, state: S5, win: W_TUN, overlays: [{ inc: tunnel(MAIN) }], scale: { mm: 1 },
           draw: all(lb('內口', 'inner', 'R', 6, V => P3(V, tnM.to3(tnM.int))), lb('角膜緣', 'limbus', 'L', 12, V => P3(V, W3(0))), lb('外口', 'outer', 'L', 36, V => P3(V, tnM.to3(tnM.ext)))) },
@@ -66,7 +66,7 @@
           draw: all(lb('主切口', 'main', 'L', 5, 'mainExt'), lb('DuoVisc', '', 'R', 5, [-2.6, -(L0.za + 1.3)]), lb('撕囊開口', 'CCC', 'R', 36, [-1.2, -(L0.za + 0.02)])) },
         { kind: 'cscope', surgeon: SG, state: S6, win: W_EYE, overlays: [{ cut: V => circle(V, CASE.ccc.r) }, { inc: mouth(MAIN), w: 0.9 }], labelOpts: { sides: true },
           dims: [{ from: V => V.P(V.r.M([-CASE.ccc.r, 0, 0])), to: V => V.P(V.r.M([CASE.ccc.r, 0, 0])) }],
-          labels: [['5.0–5.5 mm', '', V => V.P(V.r.M([0, 0, 0])), Rs], ['360° 蓋住 optic', '', V => V.P(V.r.M([0, CASE.ccc.r, 0])), Ls]] }] },
+          draw: all(lb('5.0–5.5 mm', '', 'R', 36, V => V.P(V.r.M([0, 0, 0]))), lb('360° 蓋住 optic', '', 'L', 6, V => V.P(V.r.M([0, CASE.ccc.r, 0])))) }] },
       { hd: 'ZMB00 +6.5 D in the bag、置中', views: [
         { kind: 'csec', hp: HP, state: S8, win: W_HALF, overlays: [{ inc: tunnel(MAIN) }], labelOpts: { sides: true },
           draw: all(lb('主切口', 'main', 'L', 5, 'mainExt'), lb('IOL in the bag', '', 'R', 36, [-1.0, -(L0.za - 0.6)])) },
