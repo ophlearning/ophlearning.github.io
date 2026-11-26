@@ -40,7 +40,7 @@ const PRINT = (() => {
     // cscope = microscope view, surgeon at 12 (下＝12 點、右＝temporal for OD)
     if (kind === 'csec') { const h = o.win.h || o.win.w * o.h / o.w, k = Math.min(o.w / o.win.w, o.h / h), vw = o.w / k, vh = o.h / k;
       return CATARACT.section({ st: state, h: o.hp ?? 6, off: o.off || 0, cut: !!o.cut, win: { x: o.win.x - (vw - o.win.w) / 2, y: o.win.y - (vh - h) / 2, w: vw, h: vh }, step: o.step || +(vw / 320).toFixed(4), id }); }
-    if (kind === 'cscope') return CATARACT.enface({ st: state, id, surgeon: 12 });
+    if (kind === 'cscope') return CATARACT.enface({ st: state, id, surgeon: o.surgeon ?? 12 });   // o.surgeon: optional clock hour of the surgeon (2026-11-26, scleral tunnel OS at upper-temporal)
     // posterior segment (posterior/posterior.js, state = the model's state; 2026-11-12, RRD PPV): psec = a section computed over the whole visible
     // figure — the meridional one through o.hp (the clock hour on its RIGHT, default 11; left = hp + 6; anterior up), or any o.plane { O, U, V }
     // (a trocar's tunnel GLOBE.planes.across(h, s), an instrument's shaft, the head view's POSTERIOR.headPlane(st)); o.step default visible width / 400.
