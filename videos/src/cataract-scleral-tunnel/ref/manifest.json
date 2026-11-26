@@ -1,7 +1,7 @@
 {
   "about": "scleral tunnel 白內障（左眼 OS、術者坐 upper-temporal）的檢查：影片頁 anim/video.html 每段一張參考圖。改了影片畫面或共用模型後跑 node videos/tools/check-all.js videos/src/cataract-scleral-tunnel；有差異先放大自檢，確認是預期中的變化才用 ref-check.js --update --only <段落> 更新，approved 填日期、note 註記檢查方式。",
   "page": "../anim/video.html",
-  "textBase": "TBD",
+  "textBase": "0abb7a4",
   "textBaseNote": "旁白、重點、來源、章節與參考文獻的基準 commit。改旁白時：改 segments.js、重新合成語音、重做參考圖，commit 後把 textBase 換成那個 commit。",
   "threshold": 0.0002,
   "tol": 48,
