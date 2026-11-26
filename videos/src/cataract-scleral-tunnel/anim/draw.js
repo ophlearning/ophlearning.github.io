@@ -59,7 +59,7 @@ function scope(st, win, id) {
 const base2 = (st, id) => { const a = sec(st, W_TUN, id + 'L'), b = scope(st, W_EYE, id + 'R');
   return { L: { svg: a.svg, extra: '', P: SEC_T }, R: { svg: b.svg, extra: '', P: SCOPE_T } }; };
 const ST0 = { cat: { ...BASE } };
-for (const id of ['4-1', '4-2', '5-1', '5-2', '6-1', '6-2', '6-3']) DRAW2[id] = T => base2(ST0, 'p' + id.replace('-', ''));
+for (const id of ['6-1', '6-2', '6-3']) DRAW2[id] = T => base2(ST0, 'p' + id.replace('-', ''));
 DRAW2['7'] = T => ({ F: { svg: '', extra: '', P: { title: '練習清單', orient: '' } } });
 
 // ---------------------------------------------------------------- shared by 片頭 and chapters 1–2
@@ -480,3 +480,293 @@ DRAW2['3-3'] = T => {
   S.int = int; S.iop = kA > 0 ? AR : []; S.card = k2 > 0 ? E.sync : null;
   return { L: { svg: l, extra: lx, P: SEC_T }, R: { svg: r, extra: rx, P: RP } };
 };
+
+// ---------------------------------------------------------------- 4 隧道出錯時: the two wrong tunnels of print/steps.js cell 5 (paths 示意)
+// Too shallow (4-1): from the outer opening the keratome stays in the roof and comes out through the outer surface between the outer opening and
+// the limbus (buttonhole); withdrawn, the deeper plane (the model's tunnel) appears. Too deep / turned down too early (4-2): the model's tunnel with
+// a short chord (L 1.2, 示意): its inner opening lies 0.4 mm behind the limbus, over the angle near the iris root, instead of 1.5 mm into clear
+// cornea; then the iris out through the wound and bleeding (shapes 示意). The keratome of chapter 3 follows these paths: tip on the path, blade levered
+// about a point in the cut near the outer opening (4-1: in the groove; 4-2: the model's tunnel pivot), the same 45° neck. A straight blade cannot lie
+// in a cut that comes back out through the convex surface: the roof it lifts (0.1 mm or less here) is not drawn (標示意, as chapter 3).
+const cumLen = q => { const S = [0]; for (let i = 1; i < q.length; i++) S.push(S[i - 1] + Math.hypot(q[i][0] - q[i - 1][0], q[i][1] - q[i - 1][1], q[i][2] - q[i - 1][2])); return S; };
+const SHALLOW_SD = [[1.5, 0], [1.42, 0.14], [1.05, 0.1], [0.75, 0]], SHQ = wallPath(SHALLOW_SD), SHL = cumLen(SHQ), PV_SH = W3(1.47, 0.06);
+const EARLY = { ...MAIN, L: 1.2 }, tnE = K.tunnelOf(EARLY), EQ = tnE.pts.map(p => tnE.to3(p));
+const KG = K.instGeom(KN, { kind: 'keratome', adv: 0.5 });
+const W4 = { x: -7.75, y: -11.6, w: 4.0 };             // chapter 4 sections: outer opening, limbus, both inner openings, the angle and the iris root
+const sbarTL = (k, op = 1) => `<g transform="translate(0 ${-(PH - 60)})">${VIEWS.sbar(k, op, 1)}</g>`;   // 1 mm scale bar at the top left (air)
+function ptAlong(q, S, t) {      // t mm along q from q[0]; before q[0] / past its end along the first / last segment
+  const n = q.length - 1;
+  if (t <= 0) return add3(q[0], nrm3(add3(q[0], q[1], -1)), -t);
+  if (t >= S[n]) return add3(q[n], nrm3(add3(q[n], q[n - 1], -1)), t - S[n]);
+  let i = 1; while (S[i] < t) i++; const k = (t - S[i - 1]) / ((S[i] - S[i - 1]) || 1); return q[i - 1].map((v, j) => v + (q[i][j] - v) * k); }
+const partPath = (q, S, t) => { const r = [q[0]]; for (let i = 1; i < q.length && S[i] < t; i++) r.push(q[i]); r.push(ptAlong(q, S, t)); return r; };
+// tip t mm along q (t < 0: outside, coming in along the entry q[0] → tE); from tE to tA it turns about its tip, from tA on it passes through Pv
+function pivotBlade(q, S, t, Pv, tE, tA) {
+  const Ain = nrm3(add3(q[0], ptAlong(q, S, tE), -1)), tip = t < 0 ? add3(q[0], Ain, -t) : ptAlong(q, S, t), lev = nrm3(add3(Pv, tip, -1)), k = ss(tE, tA, t);
+  const ax = nrm3(Ain.map((v, i) => v + (lev[i] - v) * k)), a = add3(tip, ax, KG.blade.L);
+  return { ...KG, tip, axis: ax, adv: t, segs: [{ a, b: add3(a, neck(ax, NECK), 30), r: KG.segs[0].r }] }; }
+// the cut a path makes seen through the microscope: from the outer opening to the tip's point, the incision's width (KG.lat)
+const footprint = (w, p3) => { const m = mouth3(MAIN), sg = (a, b) => [a, b].map(x => w.Q(x));
+  return [...sg(m[0], m[1]), w.Q(add3(p3, KG.lat, MAIN.w / 2)), w.Q(add3(p3, KG.lat, -MAIN.w / 2))]; };
+const rEnd = q => q[0][0] > q[1][0] ? q[0] : q[1], lEnd = q => q[0][0] > q[1][0] ? q[1] : q[0];
+const fillPoly = (q, col, op, extra = '') => op > 0 ? `<path d="${pathOf(q)}Z" fill="${col}" opacity="${op.toFixed(3)}"${extra}/>` : '';
+// chapter 4 cards (right panel): percentages as bars on one scale, PCT px per %, the whole (100 %) as a light bar behind
+const PCT = 5, BX = 40;
+const pctBar = (y, pct, col, op, k = 1) => `<g opacity="${op}"><rect x="${BX}" y="${y}" width="${100 * PCT}" height="26" rx="3" fill="#e6eaee"/><rect x="${BX}" y="${y}" width="${(pct * PCT * k).toFixed(1)}" height="26" rx="3" fill="${col}" opacity="0.88"/>` +
+  text(BX + pct * PCT + 10, y + 20, pct + '%', { size: 19, bold: true, color: col }) + '</g>';
+function subudhiCard(o) {    // Subudhi 2021: 339 resident MSICS; o: { what, en, pct, op, k }
+  return `<rect width="${PW}" height="${PH}" fill="#fff"/>` + htext(24, 40, '住院醫師的手動小切口手術', { size: 18, bold: true }) +
+    text(24, 66, 'MSICS，339 例', { size: 14.5, color: COL.sub }) + text(BX, 118, o.what, { size: 16, bold: true }) + text(BX, 140, o.en, { size: 13.5, color: COL.sub }) +
+    pctBar(152, o.pct, WARN, 1, o.k) + text(BX, 206, '灰色長條＝全部的例數', { size: 13, color: COL.sub });
+}
+window.PRELOAD_EXTRA += String(subudhiCard) + String(pctBar);
+
+DRAW2['4-1'] = T => {
+  // line 0: in through the outer opening, along the roof, out through the surface (tip 0.4 mm past it); line 1: withdrawn, then the deeper plane
+  // (the model's tunnel) appears, faint; line 2: Subudhi 2021 (right)
+  const SL = SHL, Lsh = SL[SL.length - 1], over = 0.4, E = SHQ[SHQ.length - 1];
+  const kIn = T.p(0, 0.06, 0.82), kOut = T.p(1, 0.02, 0.36), t = kOut > 0 ? lerp(Lsh + over, -1.3, kOut) : lerp(-1.3, Lsh + over, kIn);
+  const opB = T.p(0, 0, 0.08) * (1 - T.p(1, 0.28, 0.4)), cutT = kOut > 0 ? Lsh : Math.max(0, Math.min(Lsh, t)), g = pivotBlade(SHQ, SL, t, PV_SH, SL[12], 0.4);
+  const hole = kOut > 0 ? 1 : clamp01((t - Lsh) / over), kD = T.p(1, 0.42, 0.72), k0 = T.on(0), kR = 1 - T.on(2, 0.3);
+  const st = { cat: { main: { ...MAIN, cut: 0 }, side: SIDE, globe: PERI } }, v = sec(st, W4, 'a41'), Q = v.Q;
+  let l = v.svg + limbTick(v, 1);
+  if (kD > 0) l += line2(tunnel3(MAIN).map(Q), COL.accent, 3.2, '', 0.55 * kD);
+  if (cutT > 0) l += line2(partPath(SHQ, SL, cutT).map(Q), WARN, 3.2);
+  l += bladeSec(g, v, opB);
+  const lx = lab('角膜緣', 'limbus', PW - 12, 92, upS(v, 0, 0.75), { side: 'R' }) +
+    lab('角膜刀', 'keratome', 14, 92, Q(add3(g.tip, g.axis, 1.5)), { bold: true, op: opB }) +
+    lab('頂蓋', 'roof', 14, 150, Q(W3(1.2, 0.03)), { op: kR * T.p(1, 0.3, 0.45) }) +
+    lab('從頂蓋穿出', 'buttonhole', PW - 12, 160, Q(E), { side: 'R', bold: true, color: WARN, lc: WARN, op: hole }) +
+    lab('深一點的平面', 'deeper plane', PW - 12, 330, Q(tnM.to3(tnM.at(0.45))), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: kD }) +
+    tag('太淺：刀一直在頂蓋裡', T.p(0, 0.3, 0.45) * (1 - T.on(1, 0.3)), WARN) + tag('停 → 退回 → 換深一點的平面', T.p(1, 0.1, 0.3)) +
+    sbarTL(v.k) + note('路徑、穿出的位置：示意（刀抬起頂蓋的變形沒畫）', 1);
+  // right: the microscope on the main incision: the shallow cut (WARN), the blade, the hole in the roof (示意); the deeper plane's footprint
+  const kC = T.on(2, 0.5), w = scope(st, W_MOUTH, 'b41'), R = w.Q, mS = mouth3(MAIN).map(R), tipC = ptAlong(SHQ, SL, cutT);
+  const rad = nrm3(add3(W3(0.85), W3(0.65), -1)), hw = Math.min(1, over / KG.blade.tipL) * MAIN.w / 2 * hole;
+  const holeQ = []; for (let k = 0; k < 36; k++) { const a = 2 * Math.PI * k / 36; holeQ.push(R(add3(add3(E, KG.lat, hw * Math.cos(a)), rad, 0.13 * Math.sin(a)))); }
+  let r = w.svg + bareSclera(w);
+  if (kD > 0) { const iS = inner3(MAIN).map(R); r += fillPoly([mS[0], mS[1], iS[1], iS[0]], COL.accent, 0.14 * kD) + thin(iS, COL.accent, 2.4, '6 4', kD); }
+  if (cutT > 0) r += fillPoly(footprint(w, tipC), WARN, 0.22);
+  r += line2(mS, COL.accent, 4) + bladeTop(g, w, opB);
+  if (hole > 0) r += fillPoly(holeQ, '#2b1d18', 0.6, ` stroke="${WARN}" stroke-width="2.2"`);
+  let rx = '', RP = SCOPE_T;
+  if (kC < 1) { r = `<g opacity="${(1 - kC).toFixed(3)}">${r}</g>`;
+    rx += lab('角膜緣', 'limbus', 14, 60, R(W3(0, 0, MH + 0.42)), { op: 1 - kC }) +
+      lab('外口', 'outer incision', 14, YB, mS[0][0] < mS[1][0] ? mS[0] : mS[1], { bold: true, color: COL.accent, lc: COL.accent, op: k0 * (1 - kC) }) +
+      lab('角膜刀', 'keratome', PW - 12, YB, R(add3(add3(g.tip, g.axis, 2.6), g.lat, MAIN.w / 2 - 0.2)), { side: 'R', bold: true, op: opB * (1 - kC) }) +
+      lab('頂蓋穿破（示意）', 'buttonhole', PW - 12, 300, R(add3(E, KG.lat, hw)), { side: 'R', bold: true, color: WARN, lc: WARN, op: hole * (1 - kC) }) +
+      lab('深一點的平面', 'deeper plane', PW - 12, 92, rEnd(inner3(MAIN).map(R)), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: kD * (1 - kC) }) +
+      note('結膜掀開的範圍、穿破的位置：示意', 1 - kC); }
+  const C = { what: '隧道相關的併發症', en: 'premature entry、buttonhole', pct: 12.6, k: T.p(2, 0.15, 0.5) };
+  if (kC > 0) { r += `<g opacity="${kC.toFixed(3)}">${subudhiCard(C)}</g>`; if (kC > 0.5) RP = { title: '住院醫師的併發症', orient: '' }; }
+  const S = window.SYNC['4-1'] = window.SYNC['4-1'] || { tips: {} };
+  Object.assign(S, { win: W4, k: v.k, path: SHQ.filter((_, i) => i % 3 === 0 || i === SHQ.length - 1).map(Q), deeper: kD > 0.99 ? tunnel3(MAIN).map(Q) : S.deeper || null,
+    scope: { centre: w.A.centre, k: w.k, hole: hole > 0.99 ? mid2([R(add3(E, KG.lat, hw)), R(add3(E, KG.lat, -hw))]) : S.scope && S.scope.hole || null },
+    card: kC > 0.5 && C.k > 0.99 ? { px: PCT, bar: C.pct * PCT * C.k } : S.card || null });
+  if (opB > 0.5) S.tips[t.toFixed(3)] = Q(g.tip);
+  return { L: { svg: l, extra: lx, P: SEC_T }, R: { svg: r, extra: rx, P: RP } };
+};
+
+// 4-2: the iris out through the wound (示意): a strand from the iris near its root up through the early inner opening, along the tunnel, and a knuckle
+// over the outer opening; bleeding (示意) in the angle near the iris root
+const NC0 = K.norm({ cat: { main: { ...EARLY, cut: 1 }, side: SIDE, globe: PERI } }), IR = K.irisOf(NC0), DM = G.clockDir(MH);
+const mid3 = (a, b) => a.map((v, i) => (v + b[i]) / 2);
+const irisP3 = t => { const q = IR.L[Math.round(t * (IR.L.length - 1))]; return [q[1] * DM[0], q[1] * DM[1], q[0]]; };
+const ROOT3 = irisP3(1), KNUCK = W3(CASE.main.s, -0.08), INT_E3 = tnE.to3(tnE.int), IRA = irisP3(0.84), IRC = add3(mid3(IRA, INT_E3), [DM[0], DM[1], 0], 0.12);
+// the keratome levers about the groove (mid-depth of the outer opening) and goes on into the chamber along that line (EQX)
+const PV_E = W3(1.47, 0.08), EQX = [...EQ, add3(INT_E3, nrm3(add3(INT_E3, PV_E, -1)), 1.0)], SEX = cumLen(EQX);
+const bez3 = (a, c, b) => { const q = []; for (let k = 0; k <= 12; k++) { const t = k / 12, u = 1 - t; q.push(a.map((v, i) => u * u * v + 2 * u * t * c[i] + t * t * b[i])); } return q; };
+const PRO3 = [...bez3(IRA, IRC, INT_E3), ...EQ.slice(0, -1).reverse(), KNUCK], PROL = cumLen(PRO3);
+const BLOOD = [[0.18, 0.12], [0.4, 0.15], [0.62, 0.1]];   // (fraction from the iris root to the early inner opening, radius mm): 示意
+// a band of half-widths hw (px) along the polyline q (px): the prolapsed iris in the section
+function tongue(q, hw) {
+  const L = [], Rr = [];
+  q.forEach((p, i) => { const a = q[Math.max(0, i - 1)], b = q[Math.min(q.length - 1, i + 1)], d = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, n = [-(b[1] - a[1]) / d, (b[0] - a[0]) / d];
+    L.push([p[0] + n[0] * hw[i], p[1] + n[1] * hw[i]]); Rr.push([p[0] - n[0] * hw[i], p[1] - n[1] * hw[i]]); });
+  return `<path d="${pathOf([...L, ...Rr.reverse()])}Z" fill="#6a4128" stroke="#4a2b19" stroke-width="1.2" stroke-linejoin="round"/>`;
+}
+const tiltOf = v => { const a = v.Q(W3(1.3)), b = v.Q(W3(1.7)); return Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI; };   // the outer surface's angle at the outer opening (px)
+function premCard(k2, k3, k4, kb2, kb3) {    // Subudhi 2021 iris prolapse, John 1992 hyphema on day 1 (deep vs shallow pocket), the first step
+  return `<rect width="${PW}" height="${PH}" fill="#fff"/>` + htext(24, 40, '太早進前房的代價', { size: 18, bold: true }) +
+    `<g opacity="${k2}">` + text(BX, 78, '住院醫師 339 例（MSICS）', { size: 14.5, color: COL.sub }) + text(BX, 104, '虹膜脫出 iris prolapse', { size: 16, bold: true }) + '</g>' +
+    pctBar(114, 10.6, WARN, k2, kb2) +
+    `<g opacity="${k3}">` + text(BX, 182, '隨機試驗：隧道剝得深 vs 淺', { size: 16, bold: true }) + text(BX, 204, '術後第 1 天的 hyphema', { size: 14.5, color: COL.sub }) +
+    text(BX, 234, '深 deep', { size: 15, bold: true, color: COL.red }) + text(BX, 290, '淺 shallow', { size: 15, bold: true, color: COL.accent }) + '</g>' +
+    pctBar(242, 34, COL.red, k3, kb3) + pctBar(298, 6, COL.accent, k3, kb3) +
+    card(20, PH - 62, PW - 40, 48, { op: k4 }) + text(PW / 2, PH - 31, '關不緊 → 縫合的門檻放低', { size: 16, bold: true, anchor: 'middle', color: COL.accent, op: k4 });
+}
+window.PRELOAD_EXTRA += String(premCard);
+
+DRAW2['4-2'] = T => {
+  // line 0: the keratome along the early tunnel, its tip into the chamber at the limbus; line 1: out, the iris comes out through the wound, bleeding;
+  // lines 2–3: Subudhi 2021, John 1992 (right); line 4: 縫合門檻放低
+  const SE = cumLen(EQ), Le = SE[SE.length - 1], over = 0.35;
+  const kIn = T.p(0, 0.05, 0.72), kOut = T.p(1, 0.0, 0.25), t = kOut > 0 ? lerp(Le + over, -1.3, kOut) : lerp(-1.3, Le + over, kIn);
+  const opB = T.p(0, 0, 0.08) * (1 - T.p(1, 0.18, 0.3)), cutT = kOut > 0 ? Le : Math.max(0, Math.min(Le, t)), g = pivotBlade(EQX, SEX, t, PV_E, SEX[12], SEX[12] + 0.22);
+  const kP = T.p(1, 0.28, 0.75), kB = T.p(1, 0.55, 0.85), k1 = T.on(1), k4 = T.on(4), kAC = clamp01((t - Le) / 0.15) * (1 - kOut);
+  const st = { cat: { main: { ...MAIN, cut: 0 }, side: SIDE, globe: PERI } }, v = sec(st, W4, 'a42'), Q = v.Q;
+  const int = Q(tnE.to3(tnE.int)), root = Q(ROOT3);
+  let l = v.svg + limbTick(v, 1) + line2(tunnel3(MAIN).map(Q), COL.accent, 2, '5 4', 0.6);
+  if (kB > 0) l += BLOOD.map(([f, r]) => `<circle cx="${lerp(root[0], int[0], f).toFixed(1)}" cy="${(lerp(root[1], int[1], f) + 0.06 * v.k).toFixed(1)}" r="${(r * v.k * (0.4 + 0.6 * kB)).toFixed(1)}" fill="${WARN}" opacity="${(0.42 * kB).toFixed(3)}"/>`).join('');
+  if (cutT > 0) l += line2(partPath(EQ, SE, cutT).map(Q), WARN, 3.2);
+  let pro = null;
+  if (kP > 0) { const tl = PROL[PROL.length - 1] * kP, q = partPath(PRO3, PROL, tl), kn = Q(KNUCK), a = ss(0.85, 1, kP);
+    l += tongue(q.map(Q), q.map((_, i) => v.k * lerp(0.13, 0.075, ss(0, 0.45, Math.min(1, cumLen(q)[i] / PROL[PROL.length - 1])))));
+    if (a > 0) l += `<ellipse cx="${kn[0].toFixed(1)}" cy="${kn[1].toFixed(1)}" rx="${(0.3 * v.k * a).toFixed(1)}" ry="${(0.15 * v.k * a).toFixed(1)}" transform="rotate(${tiltOf(v).toFixed(1)} ${kn[0].toFixed(1)} ${kn[1].toFixed(1)})" fill="#6a4128" stroke="#4a2b19" stroke-width="1.2"/>`;
+    pro = { path: q.map(Q), knuck: kn }; }
+  l += bladeSec(g, v, opB);
+  const lx = lab('角膜緣', 'limbus', PW - 12, 92, upS(v, 0, 0.75), { side: 'R' }) +
+    lab('角膜刀', 'keratome', 14, 92, Q(add3(g.tip, g.axis, 1.5)), { bold: true, op: opB }) +
+    lab('正確的隧道', 'correct', PW - 12, 160, Q(tnM.to3(tnM.at(0.55))), { side: 'R', color: COL.accent, lc: COL.accent, op: 1 - k1 }) +
+    lab('內口在角膜緣附近', 'premature entry', PW - 12, 300, int, { side: 'R', bold: true, color: WARN, lc: WARN, op: T.p(0, 0.6, 0.75) }) +
+    lab('虹膜根部', 'iris root', 14, YB, root, { bold: true, op: T.p(0, 0.7, 0.85) * (1 - kB) }) +
+    lab('虹膜脫出（示意）', 'iris prolapse', 14, 150, Q(KNUCK), { bold: true, color: '#6a4128', lc: '#6a4128', op: T.p(1, 0.7, 0.85) }) +
+    lab('出血（示意）', 'bleeding', PW - 12, YB, [lerp(root[0], int[0], 0.25), lerp(root[1], int[1], 0.25) + 0.06 * v.k], { side: 'R', bold: true, color: WARN, lc: WARN, op: kB }) +
+    tag('太早往下：內口落在角膜緣附近', T.p(0, 0.35, 0.5) * (1 - T.on(1, 0.3)), WARN) + tag('虹膜脫出、出血', T.p(1, 0.3, 0.45) * (1 - T.on(4, 0.3)), WARN) +
+    tag('這種切口關不緊 → 縫合的門檻放低', k4) + sbarTL(v.k) + note('路徑、虹膜與出血的形狀：示意', 1);
+  // right: the microscope on the main incision: the early cut and its inner opening at the limbus (WARN), the correct inner opening (dashed),
+  // the blade; the iris knuckle in the outer opening, blood (示意); from line 2 the cards
+  const kC = T.on(2, 0.5), w = scope(st, W_MOUTH, 'b42'), R = w.Q, mS = mouth3(MAIN).map(R), iS = inner3(MAIN).map(R), iE = inner3(EARLY).map(R);
+  let r = w.svg + bareSclera(w) + fillPoly([mS[0], mS[1], iS[1], iS[0]], COL.accent, 0.08) + thin(iS, COL.accent, 2.4, '6 4', 0.8);
+  if (kB > 0) { const c = R(W3(-0.3, 0)), c2 = R(W3(0.9, 0)), ky = w.k;
+    r += `<g opacity="${(0.5 * kB).toFixed(3)}" fill="${WARN}"><ellipse cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" rx="${(1.0 * ky).toFixed(1)}" ry="${(0.32 * ky).toFixed(1)}"/>` +
+      `<ellipse cx="${c2[0].toFixed(1)}" cy="${c2[1].toFixed(1)}" rx="${(0.5 * ky).toFixed(1)}" ry="${(0.22 * ky).toFixed(1)}"/></g>`; }
+  if (cutT > 0) { r += fillPoly(footprint(w, ptAlong(EQ, SE, cutT)), WARN, 0.24); if (cutT >= Le) r += thin(iE, WARN, 2.6, '6 4'); }
+  r += line2(mS, COL.accent, 4) + bladeTop(g, w, opB);
+  let kq = null;
+  if (kP > 0.85) { const a = ss(0.85, 1, kP), c = mid2(mS), rx = 0.75 * w.k * a, ry = 0.3 * w.k * a;
+    r += `<ellipse cx="${c[0].toFixed(1)}" cy="${(c[1] - 0.05 * w.k).toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="#6a4128" stroke="#4a2b19" stroke-width="1.2"/>` +
+      `<ellipse cx="${(c[0] - 0.2 * w.k).toFixed(1)}" cy="${(c[1] - 0.12 * w.k).toFixed(1)}" rx="${(rx * 0.35).toFixed(1)}" ry="${(ry * 0.3).toFixed(1)}" fill="#a07656" opacity="0.6"/>`;
+    kq = [c[0], c[1] - 0.05 * w.k]; }
+  let rx = '', RP = SCOPE_T;
+  if (kC < 1) { r = `<g opacity="${(1 - kC).toFixed(3)}">${r}</g>`; const o = 1 - kC;
+    rx += lab('外口', 'outer incision', 14, YB, lEnd(mS), { bold: true, color: COL.accent, lc: COL.accent, op: o * (1 - T.p(1, 0.7, 0.85)) }) +
+      lab('正確的內口', 'internal incision', PW - 12, 92, rEnd(iS), { side: 'R', color: COL.accent, lc: COL.accent, op: o }) +
+      lab('內口（太早）', 'premature entry', PW - 12, 160, rEnd(iE), { side: 'R', bold: true, color: WARN, lc: WARN, op: o * T.p(0, 0.6, 0.75) }) +
+      lab('角膜刀', 'keratome', PW - 12, YB, R(add3(add3(g.tip, g.axis, 2.6), g.lat, MAIN.w / 2 - 0.2)), { side: 'R', bold: true, op: opB * o }) +
+      lab('虹膜脫出（示意）', 'iris prolapse', 14, YB, kq || mid2(mS), { bold: true, color: '#6a4128', lc: '#6a4128', op: o * T.p(1, 0.7, 0.85) }) +
+      lab('角膜緣', 'limbus', 14, 60, R(W3(0, 0, MH + 0.42)), { op: o }) +
+      note('結膜掀開的範圍、虹膜與出血的形狀：示意', o); }
+  const k2 = T.on(2), k3 = T.on(3), kb2 = T.p(2, 0.1, 0.45), kb3 = T.p(3, 0.1, 0.45);
+  if (kC > 0) { r += `<g opacity="${kC.toFixed(3)}">${premCard(k2, k3, T.on(4), kb2, kb3)}</g>`; if (kC > 0.5) RP = { title: '併發症的數字', orient: '' }; }
+  const S = window.SYNC['4-2'] = window.SYNC['4-2'] || { tips: {} };
+  Object.assign(S, { win: W4, k: v.k, int, intOK: Q(tnM.to3(tnM.int)), ext: Q(tnE.to3(tnE.ext)), root, pro: kP > 0.99 ? pro : S.pro || null,
+    scope: { centre: w.A.centre, k: w.k, knuck: kq || (S.scope && S.scope.knuck) || null, mouth: mid2(mS) },
+    card: kb2 > 0.99 && kb3 > 0.99 ? { px: PCT, iris: 10.6 * PCT * kb2, deep: 34 * PCT * kb3, shallow: 6 * PCT * kb3 } : S.card || null });
+  if (opB > 0.5) S.tips[t.toFixed(3)] = { tip: Q(g.tip), inAC: kAC };
+  return { L: { svg: l, extra: lx, P: SEC_T }, R: { svg: r, extra: rx, P: RP } };
+};
+
+// ---------------------------------------------------------------- 5 本例和系列不同的地方: the states of print/steps.js cells 6–7 (DuoVisc + CCC, the groove with
+// phaco through the scleral tunnel) and the end state (IOL in the bag). OVD, nucleus, instruments and IOL: the model's shapes (示意).
+const W5 = { x: -8.4, y: -12.75, w: 9.6 };            // section: the scleral tunnel, the anterior chamber and the lens (bag) to past the axis
+const WC = { x: -6.6, y: -4.6, w: 13.2 };             // microscope on the pupil (CCC, IOL)
+const NUC7 = { groove: { h: MH, dep: 0.9, over: 0 }, rot: 0, quads: [] }, G7 = { cat: { ...BASE, ccc: CCC, nuc: NUC7 } };
+const P7 = K.groovePt(G7, 1, -1.0, K.nucOf(K.norm(G7)).g1.hw - 0.47, 0.45), PHACO = { kind: 'phaco', via: 'main', p: P7, bevel: 'up', occl: 0 };
+const rimAt = (h, r = CASE.ccc.r) => { const d = G.clockDir(h); return [r * d[0], r * d[1], 0]; };   // a point at radius r, clock h (microscope)
+// the path of phaco in the section (示意): outer opening → along the tunnel → inner opening → curving down to the tip in the groove (P7)
+const phacoPath = () => { const q = tunnel3(MAIN), i = q[q.length - 1], d = nrm3(add3(i, q[q.length - 4], -1)), c = add3(i, d, 1.4);
+  return [...q, ...bez3(i, c, P7).slice(1)]; };
+const FIN = { ...BASE, ccc: CCC, bag: { ...CLEAN, collapse: 1 }, ovdBag: 1, ovdOut: { behind: 1, front: 1 }, ovd: 0, iol: { rot: -50 } };   // print/steps.js S8
+
+DRAW2['5-1'] = T => {
+  // line 0: DuoVisc fills the chamber; line 1: CCC torn round (no instrument drawn), the disc out, 5.0–5.5 mm across the centre; line 2: the groove
+  // with phaco through the scleral tunnel (print/steps.js cell 7 state), the microscope zooming out to show where it comes in
+  const kO = T.p(0, 0.05, 0.6), kT = T.p(1, 0.02, 0.45), kX = T.p(1, 0.48, 0.62), kDm = T.p(1, 0.6, 0.78), kPh = T.on(2, 0.6), k2 = T.on(2);
+  const ccc = { ...CASE.ccc, cut: kT > 0 ? 1 : 0, prog: kT, fold: kT > 0 ? 1 : 0, out: kX };
+  const stA = { cat: { ...BASE, ovd: kO, ...(kT > 0 ? { ccc } : {}) } }, stB = { cat: { ...G7.cat, inst: [PHACO] } };
+  let l = '', lx = '';
+  const vA = sec(stA, W5, 'a51'), QA = vA.Q, vB = kPh > 0 ? sec(G7, W5, 'b51') : null;
+  l += kPh < 1 ? `<g opacity="${(1 - kPh).toFixed(3)}">${vA.svg}</g>` : '';
+  if (vB) l += `<g opacity="${kPh.toFixed(3)}">${vB.svg}</g>`;
+  l += line2(tunnel3(MAIN).map(QA), COL.accent, 2.4, '', 0.8 * (1 - kPh));
+  const ac = QA([1.2 * DM[0], 1.2 * DM[1], L0.za + 1.1]), oA = 1 - kPh, rimS = QA(add3(rimAt(MH), [0, 0, L0.zAnt(CASE.ccc.r)]));
+  lx += lab('主切口（鞏膜隧道）', 'scleral tunnel', 14, 60, QA(tnM.to3(tnM.at(0.3))), { bold: true, color: COL.accent, lc: COL.accent }) +
+    lab('DuoVisc', 'OVD', PW - 12, 110, ac, { side: 'R', bold: true, color: COL.purple, lc: COL.purple, op: T.p(0, 0.3, 0.45) * oA }) +
+    lab('撕囊邊緣', 'CCC', 14, 300, rimS, { bold: true, op: kDm * oA });
+  // DuoVisc: what each half does (Arshinoff 1999); which one goes in first is not in the abstract (spec.md 文獻) → not drawn
+  const kL = T.p(0, 0.35, 0.55) * (1 - T.on(1, 0.4)), duo = kL > 0 ? card(14, 14, 262, 84, { op: kL, fill: '#ffffff' }) + `<g opacity="${kL.toFixed(3)}">` +
+    text(30, 46, 'dispersive　留得住', { size: 15.5, bold: true, color: COL.purple }) + text(30, 80, 'cohesive　撐得開空間', { size: 15.5, bold: true, color: COL.purple }) + '</g>' : '';
+  let ph = null;
+  // the model's straight phaco cannot lie in this 3 mm tunnel without deforming the wall beyond anything real (its outer opening is 1.4 mm
+  // posterior to the inner one): the section shows the path instead (outer opening → along the tunnel → inner opening → the groove; 示意)
+  if (vB) { const QB = vB.Q, kA = T.p(2, 0.1, 0.55), q = phacoPath(), qa = partPath(q, cumLen(q), cumLen(q).slice(-1)[0] * kA).map(QB);
+    l += `<g opacity="${kPh.toFixed(3)}">${line2(tunnel3(MAIN).map(QB), COL.accent, 3.2)}</g>`;
+    if (kA > 0) l += `<path d="${pathOf(qa)}" stroke="#fff" stroke-width="6.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
+      `<path d="${pathOf(qa)}" stroke="${COL.accent}" stroke-width="3" fill="none" stroke-dasharray="9 6" stroke-linejoin="round" marker-end="url(#arrA)"/>`;
+    lx += lab('phaco 的路徑（示意）', 'via the scleral tunnel', PW - 12, 92, QB(q[Math.round(q.length * 0.3)]), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.p(2, 0.3, 0.45) }) +
+      lab('刻槽', 'groove', PW - 12, 230, QB(K.groovePt(G7, 1, 0, 0, 0)), { side: 'R', bold: true, op: k2 });
+    ph = { path: q.map(QB), ext: QB(tnM.to3(tnM.ext)), int: QB(tnM.to3(tnM.int)), tip: QB(P7) }; }
+  lx += tag('hydro、divide and conquer、I/A：都經這條隧道', k2) + VIEWS.sbar(vA.k, 1, 1) + note(k2 > 0 ? 'Signature（病例）；核的形狀、器械的路徑：示意' : 'OVD 的範圍與顏色：示意', 1);
+  // right: the microscope on the pupil: OVD, the CCC and its size; from line 2 zooming out to the whole eye with phaco coming in from the bottom
+  const kZ = T.on(2, 0.8), win = VIEWS.zwin(WC, W_FULL, kZ), wA = scope(stA, win, 'c51'), wB = kPh > 0 ? scope(stB, win, 'd51') : null, R = wA.Q;
+  let r = kPh < 1 ? `<g opacity="${(1 - kPh).toFixed(3)}">${wA.svg}</g>` : '';
+  if (wB) r += `<g opacity="${kPh.toFixed(3)}">${wB.svg}${bareSclera(wB)}${line2(mouth3(MAIN).map(wB.Q), COL.accent, 3.4)}</g>`;
+  const d0 = R(rimAt(4.5)), d1 = R(rimAt(10.5)), c = wA.A.centre, kD2 = kDm * (1 - kPh);
+  if (kD2 > 0) r += `<g opacity="${kD2.toFixed(3)}">${VIEWS.dim(d0, d1, '#fff', 1).replace('stroke-width="2"', 'stroke-width="5"')}${VIEWS.dim(d0, d1, COL.accent, 1)}</g>` +
+    `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="4" fill="#fff" stroke="${COL.ink}" stroke-width="1.5" opacity="${kD2.toFixed(3)}"/>`;
+  r += duo;
+  let rx = lab('撕囊邊緣', 'CCC', 14, 160, wA.A.edge9 || c, { bold: true, op: T.p(1, 0.3, 0.45) * (1 - kPh) }) +
+    lab('5.0–5.5 mm', '置中', PW - 12, 300, mid2([d0, d1]), { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: kD2 }) +
+    note(kPh > 0.5 ? '結膜掀開的範圍、器械的形狀：示意' : 'OVD 的顏色：示意', 1);
+  if (wB) rx += lab('phaco', '從主切口進來', 14, YB, wB.A.tip0, { bold: true, color: COL.accent, lc: COL.accent, op: T.on(2, 0.6, 0.6) });
+  const S = window.SYNC['5-1'] = window.SYNC['5-1'] || {};
+  if (kD2 > 0.99) S.ccc = { k: wA.k, centre: c, dim: [d0, d1], edge3: wA.A.edge3, edge9: wA.A.edge9 };
+  if (ph && kPh > 0.99 && T.p(2, 0.1, 0.55) > 0.99) { Object.assign(ph, { win: W5, k: vB.k, via: PHACO.via, tipS: wB.A.tip0, cS: wB.A.centre, kS: wB.k }); S.phaco = ph; }
+  return { L: { svg: l, extra: lx, P: SEC_T }, R: { svg: r, extra: rx, P: SCOPE_T } };
+};
+
+// 5-2 right from line 2: two small microscope views side by side, the eye centre at (cx, MINI_Y), each clipped to its half of the panel
+const MINI_K = PW / 2 / 9.2, MINI_Y = PH / 2 + 22, IOL_R = K.CN.iol.optic / 2;
+function miniScope(st, half, id) {
+  const cx = PW / 4 + half * PW / 2, w = scope(st, { x: -cx / MINI_K, y: -MINI_Y / MINI_K, w: PW / MINI_K }, id);
+  return { ...w, svg: `<defs><clipPath id="${id}h"><rect x="${half * PW / 2}" y="0" width="${PW / 2}" height="${PH}"/></clipPath></defs><g clip-path="url(#${id}h)">${w.svg}</g>` };
+}
+const cross = (p, col = COL.ink) => `<path d="M${p[0] - 9} ${p[1]}h18M${p[0]} ${p[1] - 9}v18" stroke="#fff" stroke-width="5"/><path d="M${p[0] - 9} ${p[1]}h18M${p[0]} ${p[1] - 9}v18" stroke="${col}" stroke-width="2"/>`;
+const dot = (p, col) => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4.5" fill="${col}" stroke="#fff" stroke-width="1.5"/>`;
+const ring = (c, r, col, w = 2, dash = '6 4', op = 1) => `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${r.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-dasharray="${dash}" opacity="${op}"/>`;
+
+DRAW2['5-2'] = T => {
+  // line 0: ZMB00 in the bag (print/steps.js S8, the model's end state); line 1: its diffractive rings (示意: number and spacing), near 4.0 D;
+  // line 2: right: the optic centred and decentred 0.75 mm side by side (positions only, 示意; no image quality drawn)
+  const k1 = T.on(1), kR = T.p(1, 0.1, 0.45), kM = T.on(2, 0.6), kS = T.p(2, 0.25, 0.6), kDm = T.p(2, 0.6, 0.75);
+  const st = { cat: FIN }, v = sec(st, W5, 'a52'), Q = v.Q, A = v.A;
+  let l = v.svg + line2(tunnel3(MAIN).map(Q), COL.accent, 2.4, '', 0.8);
+  const lx = lab('主切口（鞏膜隧道）', 'scleral tunnel', 14, 60, Q(tnM.to3(tnM.at(0.3))), { bold: true, color: COL.accent, lc: COL.accent }) +
+    lab('ZMB00 +6.5 D', 'in the bag', PW - 12, 160, A.iolC, { side: 'R', bold: true, color: COL.accent, lc: COL.accent, op: T.p(0, 0.15, 0.3) }) +
+    lab('囊袋', 'capsular bag', 14, 340, A['eq-'], { bold: true, op: T.p(0, 0.35, 0.5) }) +
+    tag('diffractive multifocal：near 4.0 D', k1) + VIEWS.sbar(v.k, 1, 1) + note('IOL 的形狀：示意', 1);
+  // right, lines 0–1: the microscope on the pupil: the optic in the bag, the CCC over its edge; the diffractive rings (示意)
+  let r = '', rx = '', RP = SCOPE_T;
+  const w = scope(st, WC, 'b52'), c = w.A.iolC, oA = 1 - kM;
+  if (kM < 1) {
+    let s1 = w.svg + ring(c, IOL_R * w.k, '#fff', 1.6, '7 5', 0.8);
+    if (kR > 0) for (let n = 1; n <= 8; n++) s1 += ring(c, 0.75 * Math.sqrt(n) * w.k, '#fff3e6', 1.1, '', 0.45 * kR);
+    r += `<g opacity="${oA.toFixed(3)}">${s1}</g>`;
+    rx += lab('optic', '置中', 14, 160, [c[0] - IOL_R * w.k * 0.71, c[1] - IOL_R * w.k * 0.71], { bold: true, op: T.p(0, 0.2, 0.35) * oA }) +
+      lab('繞射環（示意）', 'diffractive rings', PW - 12, 300, [c[0] + 0.75 * Math.sqrt(5) * w.k * 0.71, c[1] + 0.75 * Math.sqrt(5) * w.k * 0.71], { side: 'R', bold: true, op: kR * oA }) +
+      note('IOL 的形狀、繞射環的數目：示意', oA);
+  }
+  // line 2: centred vs decentred 0.75 mm toward 10:30 (screen right; direction 示意)
+  let mini = null;
+  if (kM > 0) {
+    const d = G.clockDir(10.5), sd = 0.75 * kS, a = miniScope(st, 0, 'm52a'), b = miniScope({ cat: { ...FIN, iol: { ...FIN.iol, dx: sd * d[0], dy: sd * d[1] } } }, 1, 'm52b');
+    const ea = a.A.centre, eb = b.A.centre, oa = a.A.iolC, ob = b.A.iolC;
+    let s2 = `<rect width="${PW}" height="${PH}" fill="#fff"/>` + a.svg + b.svg + `<path d="M${PW / 2} 0V${PH}" stroke="#fff" stroke-width="4"/>` +
+      ring(oa, IOL_R * MINI_K, '#fff', 2, '7 5') + ring(ob, IOL_R * MINI_K, '#fff', 2, '7 5') + cross(ea) + cross(eb) + dot(oa, COL.accent) + dot(ob, WARN);
+    if (kDm > 0) s2 += `<g opacity="${kDm.toFixed(3)}">${VIEWS.dim([eb[0], eb[1] - 26], [ob[0], ob[1] - 26], '#fff').replace('stroke-width="2"', 'stroke-width="5"')}${VIEWS.dim([eb[0], eb[1] - 26], [ob[0], ob[1] - 26], WARN)}</g>`;
+    s2 += htext(PW / 4, 36, '置中 centred', { size: 17, bold: true, anchor: 'middle', color: COL.accent }) + htext(3 * PW / 4, 36, '偏心 0.75 mm（示意）', { size: 17, bold: true, anchor: 'middle', color: WARN }) +
+      htext(eb[0] + 14, eb[1] - 40, '0.75 mm', { size: 15, bold: true, color: WARN, op: kDm });
+    r += `<g opacity="${kM.toFixed(3)}">${s2}</g>`;
+    rx += lab('瞳孔中心', 'pupil centre', 14, YB, ea, { bold: true, op: kM }) + lab('optic 中心', 'optic centre', PW - 12, YB, ob, { side: 'R', bold: true, color: WARN, lc: WARN, op: kM }) +
+      note('只畫位置，不畫成像；偏心的方向：示意', kM);
+    if (kM > 0.5) RP = { title: 'optic 的位置（示意）', orient: '術者視角　左眼 OS' };
+    mini = { k: MINI_K, cen: { eye: ea, optic: oa }, dec: { eye: eb, optic: ob, dim: [eb, ob], on: kDm } };
+  }
+  const S = window.SYNC['5-2'] = window.SYNC['5-2'] || {};
+  S.sec = { win: W5, k: v.k, iolC: A.iolC, pm: A['pm+'], pm2: A['pm-'], bagPost: A.bagPost, antPole: A.antPole };
+  S.scope = { k: w.k, centre: w.A.centre, iolC: w.A.iolC };
+  if (mini && kS > 0.99 && kDm > 0.99) S.mini = mini;
+  return { L: { svg: l, extra: lx, P: SEC_T }, R: { svg: r, extra: rx, P: RP } };
+};
+window.PRELOAD_EXTRA += String(miniScope);

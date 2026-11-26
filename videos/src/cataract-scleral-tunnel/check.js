@@ -12,6 +12,10 @@
 //    the side port and the conjunctiva the same in both views; chapter 3 the keratome: in through the outer opening 1.5 mm behind the limbus,
 //    partial thickness, flat, only along the tunnel, into the chamber only in 3-3 through the inner opening, the same point in both views; the lip
 //    dimension; the pressure arrows; Ernest's incisions in proportion). Blade positions are read from every frame the page drew (SYNC[id].track).
+//    Chapters 4–5 (M19–M27): the too-shallow path comes out through the roof between the outer opening and the limbus, the deeper plane is deeper
+//    and inside the wall, the buttonhole at the same place in the microscope; the early inner opening near the limbus (not clear cornea), the
+//    prolapsed iris through it and out of the outer opening; the percentage bars in proportion; the CCC 5.0–5.5 mm and centred; phaco's path
+//    through the scleral tunnel into the lens inside the rhexis; the IOL centred in the bag; the decentred optic 0.75 mm off.
 // 3. Self-test (every run): each check is broken once on purpose (a mutation) and must then fail; a mutation not caught fails the run.
 // --list prints the numbers found per segment (to fill the ledger).
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
@@ -184,9 +188,45 @@ const MODEL_CHECKS = [
   (ctx, ok) => { const C = need(ctx, '3-3').card, r = (a, b) => Math.abs(a / b - 1) < 0.01;
     ok('M18', !!C && r(C.sc[0] / C.sc[1], 3.2 / 3.2) && r(C.cc[0] / C.cc[1], 3.2 / 2.0) && r(C.lip / C.sc[1], 1.5 / 3.2) && r(C.sc[0] / 3.2, C.px) && r(C.cc[0] / 3.2, C.px),
       `3-3 card: the two incisions in proportion at one scale — scleral 3.2 × 3.2 mm with a 1.5 mm lip, clear corneal 3.2 × 2.0 mm (Ernest 1994)`); },
+  (ctx, ok) => { const S = need(ctx, '4-1'), P = S.path.map(p => sdOfPx(S, p)), ex = P[P.length - 1], inner = P.slice(1, -1), D = (S.deeper || []).map(p => sdOfPx(S, p));
+    const roof = inner.every(([s, d]) => d > 0 && d < 0.35 * G.T(s)), out = Math.abs(ex[1]) < 0.03 && ex[0] > 0.1 && ex[0] < ctx.case.main.s - 0.3;
+    const tipOut = Object.values(S.tips).some(p => { const [s, d] = sdOfPx(S, p); return d < -0.05 && s > 0 && s < ex[0]; });
+    const flat = inner.filter(([s]) => s < 1.3 && s > ex[0]), deeper = D.length > 2 && D.slice(1, -1).every(([s, d]) => d > 0 && d < G.T(s)) && flat.length > 3 && flat.every(([s, d]) => depthAt(D, s) > d + 0.05);
+    ok('M19', roof && out && tipOut && deeper, `4-1 section: the too-shallow path stays in the roof (≤ ${(100 * Math.max(...inner.map(([s, d]) => d / G.T(s)))).toFixed(0)} % of the wall) and comes out through the outer surface ${ex[0].toFixed(2)} mm behind the limbus (between the limbus and the outer opening), the blade tip drawn above the surface there; the deeper plane inside the wall and deeper than it`); },
+  (ctx, ok) => { const S = need(ctx, '4-1'), C = S.scope, h = C.hole, ex = sdOfPx(S, S.path[S.path.length - 1]), sH = h ? sOfRho(dist(h, C.centre) / C.k) : NaN;
+    ok('M20', !!h && Math.abs(h[0] - C.centre[0]) < 1 && h[1] > C.centre[1] && Math.abs(sH - ex[0]) < 0.05, `4-1 microscope: the buttonhole drawn on the main incision's meridian ${sH.toFixed(2)} mm behind the limbus = where the path comes out in the section (${ex[0].toFixed(2)})`); },
+  (ctx, ok) => { const S = need(ctx, '4-2'), e = sdOfPx(S, S.int), c = sdOfPx(S, S.intOK), ac = Object.values(S.tips).filter(t => t.inAC > 0.5).map(t => sdOfPx(S, t.tip));
+    ok('M21', e[0] >= 0 && e[0] < 0.5 && Math.abs(e[1] - G.T(e[0])) < 0.05 && c[0] < -1 && e[0] - c[0] > 1 && ac.length > 0 && ac.every(([s, d]) => d > G.T(s) + 0.02 && s > -0.5),
+      `4-2 section: the early inner opening drawn ${e[0].toFixed(2)} mm behind the limbus on the inner surface (narration: 角膜緣附近, not clear cornea), ${(e[0] - c[0]).toFixed(2)} mm more peripheral than the right one (${(-c[0]).toFixed(2)} mm into clear cornea); the keratome tip in the chamber there (${ac.length} frames)`); },
+  (ctx, ok) => { const S = need(ctx, '4-2'), R = S.pro, C = S.scope; if (!R) return ok('M22', false, '4-2: the prolapsed iris was drawn');
+    const near = (q, p) => Math.min(...q.map(x => dist(x, p))) / S.k, kn = sdOfPx(S, R.knuck), ext = sdOfPx(S, S.ext), b = R.path[0], bz = -(b[1] / S.k + S.win.y), iz = -(S.int[1] / S.k + S.win.y);
+    ok('M22', near(R.path, S.int) < 0.05 && near(R.path, S.ext) < 0.05 && dist(b, S.root) / S.k < 1.5 && bz < iz && kn[1] < 0 && Math.abs(kn[0] - ext[0]) < 0.2 && !!C.knuck && Math.abs(C.knuck[0] - C.mouth[0]) < 1 && Math.abs(C.knuck[1] - C.mouth[1]) / C.k < 0.1,
+      `4-2: the prolapsed iris (示意) comes from the iris ${(dist(b, S.root) / S.k).toFixed(2)} mm from its root, through the early inner opening and the outer opening, its knuckle outside the surface at the outer opening; in the microscope in the outer opening`); },
+  (ctx, ok) => { const a = need(ctx, '4-1').card, b = need(ctx, '4-2').card, r = (x, y) => Math.abs(x / y - 1) < 0.005;
+    ok('M23', !!a && !!b && r(a.bar, 12.6 * a.px) && r(b.iris, 10.6 * b.px) && r(b.deep, 34 * b.px) && r(b.shallow, 6 * b.px) && r(b.deep / b.shallow, 34 / 6),
+      `chapter 4 cards: bars on one scale — tunnel complications 12.6 %, iris prolapse 10.6 % (Subudhi 2021), hyphema deep 34 % vs shallow 6 % (John 1992)`); },
+  (ctx, ok) => { const S = need(ctx, '5-1').ccc; if (!S) return ok('M24', false, '5-1: the CCC dimension was drawn');
+    const len = dist(S.dim[0], S.dim[1]) / S.k, m = mid2(S.dim), off = dist(m, S.centre) / S.k, rr = [S.edge3, S.edge9].map(p => dist(p, S.centre) / S.k);
+    ok('M24', len >= 5.0 && len <= 5.5 && off < 0.1 && rr.every(x => Math.abs(x - len / 2) < 0.03),
+      `5-1 microscope: the CCC drawn ${len.toFixed(2)} mm across (narration 5.0–5.5 mm, Hollick 1999), centred (${off.toFixed(2)} mm off), the dimension on the drawn rim (radius ${rr.map(x => x.toFixed(2)).join(' / ')} mm)`); },
+  (ctx, ok) => { const S = need(ctx, '5-1').phaco; if (!S) return ok('M25', false, '5-1: phaco was drawn');
+    const e = sdOfPx(S, S.ext), i = sdOfPx(S, S.int), P = S.path, k0 = P.findIndex(p => dist(p, S.int) < 1), wall = P.slice(1, k0).map(p => sdOfPx(S, p));
+    const u = S.tip[0] / S.k + S.win.x, z = -(S.tip[1] / S.k + S.win.y), uS = (S.tipS[1] - S.cS[1]) / S.kS;
+    ok('M25', S.via === 'main' && dist(P[0], S.ext) < 1 && e[0] >= 1 && e[0] <= 2 && Math.abs(e[1]) < 0.05 && k0 > 0 && i[0] < -1 && Math.abs(i[1] - G.T(i[0])) < 0.05 &&
+      wall.every(([s, d]) => d > 0 && d < G.T(s)) && dist(P[P.length - 1], S.tip) < 1 && Math.abs(u) < ctx.case.ccc.r && z < K.LENS.zAnt(Math.abs(u)) && Math.abs(uS + u) < 0.03,
+      `5-1: phaco through the main incision — its path starts at the outer opening on the sclera (${e[0].toFixed(2)} mm behind the limbus), runs inside the wall to the inner opening in clear cornea (${(-i[0]).toFixed(2)} mm), ends in the groove ${Math.abs(u).toFixed(2)} mm from the axis (inside the CCC), the same point as the microscope's phaco tip`); },
+  (ctx, ok) => { const S = need(ctx, '5-2'), A = S.sec, C = S.scope, u = A.iolC[0] / A.k + A.win.x, off = dist(C.iolC, C.centre) / C.k;
+    ok('M26', Math.abs(u) < 0.1 && A.iolC[1] > Math.max(A.pm[1], A.pm2[1]) && A.iolC[1] < A.bagPost[1] && off < 0.1,
+      `5-2: the IOL drawn in the bag — its centre ${Math.abs(u).toFixed(2)} mm from the axis in the section, behind the pupil margins and in front of the posterior capsule; ${off.toFixed(2)} mm off centre in the microscope (置中)`); },
+  (ctx, ok) => { const M = need(ctx, '5-2').mini; if (!M) return ok('M27', false, '5-2: the two optic positions were drawn');
+    const c = dist(M.cen.optic, M.cen.eye) / M.k, d = dist(M.dec.optic, M.dec.eye) / M.k;
+    ok('M27', c < 0.1 && Math.abs(d - 0.75) < 0.02 && dist(M.dec.dim[0], M.dec.eye) < 0.5 && dist(M.dec.dim[1], M.dec.optic) < 0.5,
+      `5-2: the centred optic ${c.toFixed(2)} mm off the pupil centre, the decentred one ${d.toFixed(2)} mm (narration 0.75 mm, Soda 2012), with its dimension line between the two centres`); },
 ];
 // helpers of M11–M18: s (mm behind the limbus) of a horizontal radius in the microscope; the blade's angle to the outer surface at its tip (section)
 const sOfRho = rho => { let a = -3, b = 8; for (let i = 0; i < 50; i++) { const m = (a + b) / 2; G.surfAt(m).rho < rho ? a = m : b = m; } return (a + b) / 2; };
+const mid2 = q => [(q[0][0] + q[1][0]) / 2, (q[0][1] + q[1][1]) / 2];
+const depthAt = (D, s) => { const q = D.slice().sort((a, b) => a[0] - b[0]); for (let i = 1; i < q.length; i++) if (q[i][0] >= s) { const k = (s - q[i - 1][0]) / ((q[i][0] - q[i - 1][0]) || 1); return q[i - 1][1] + (q[i][1] - q[i - 1][1]) * k; } return NaN; };   // depth of a (s, d) path at s
 const angSurf = (S, t) => { const f = G.surfAt(sdOfPx(S, t.tip)[0]); return Math.asin(Math.min(1, Math.abs(t.ax[0] * f.nr + t.ax[1] * f.nz))) * 180 / Math.PI; };
 function modelChecks(ctx) { const R = [], ok = (id, c, m) => R.push([!!c, `${id} ${m}`]); for (const f of [...CASE_CHECKS, ...MODEL_CHECKS]) f(ctx, ok); return R; }
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
@@ -225,6 +265,15 @@ const MUTATIONS = [
   ['3-2: tip drawn 0.8 mm deeper, in the chamber', c => { const S = c.sync['3-2'], t = Object.values(S.track).find(x => x.op > 0.5); t.tip[1] += 0.8 * S.k; }, 'M16'],
   ['3-3: pressure arrows reversed', c => { const S = c.sync['3-3']; S.iop = S.iop.map(([a, b]) => [b, a]); }, 'M17'],
   ['3-3: clear corneal incision drawn square', c => { const C = c.sync['3-3'].card; C.cc[1] = C.cc[0]; }, 'M18'],
+  ['4-1: shallow path ends 0.2 mm under the surface', c => { const S = c.sync['4-1'], p = S.path[S.path.length - 1]; p[1] += 0.2 * S.k; }, 'M19'],
+  ['4-1 microscope: buttonhole drawn at the outer opening', c => { const S = c.sync['4-1'].scope; S.hole[1] += 0.75 * S.k; }, 'M20'],
+  ['4-2: early inner opening drawn in clear cornea', c => { const S = c.sync['4-2']; S.int = S.intOK.slice(); }, 'M21'],
+  ['4-2: prolapsed iris stops inside the tunnel', c => { const S = c.sync['4-2']; S.pro.knuck = S.pro.path[Math.round(S.pro.path.length * 0.7)].slice(); }, 'M22'],
+  ['4-2 card: deep-tunnel hyphema bar drawn 24 %', c => { c.sync['4-2'].card.deep *= 24 / 34; }, 'M23'],
+  ['5-1: CCC drawn 6.0 mm', c => { const S = c.sync['5-1'].ccc, f = 6.0 / 5.25; S.dim = S.dim.map(p => [S.centre[0] + (p[0] - S.centre[0]) * f, S.centre[1] + (p[1] - S.centre[1]) * f]); }, 'M24'],
+  ['5-1: phaco path starts at the inner opening (clear corneal)', c => { const S = c.sync['5-1'].phaco, k = S.path.findIndex(p => Math.hypot(p[0] - S.int[0], p[1] - S.int[1]) < 1); S.path = S.path.slice(k); }, 'M25'],
+  ['5-2: IOL drawn in front of the iris', c => { const A = c.sync['5-2'].sec; A.iolC[1] = Math.min(A.pm[1], A.pm2[1]) - 0.3 * A.k; }, 'M26'],
+  ['5-2: decentred optic drawn 1.0 mm off', c => { const M = c.sync['5-2'].mini; M.dec.optic[0] = M.dec.eye[0] + 1.0 * M.k; }, 'M27'],
 ];
 
 (async () => {
