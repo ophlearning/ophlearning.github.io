@@ -6,9 +6,12 @@
 //    used fails too (結構 excepted). The print sheets (print/) read this LEDGER as text (videos/tools/print/numcheck.js).
 // 2. Case geometry (C…, on anim/params.js and the globe model): the tunnel the narration describes (outer opening 1–2 mm behind the limbus,
 //    lip ≈ 1.5 mm in clear cornea, inside the wall), the 2.65 mm keratome, the surgeon at 1–2 o'clock with the incision in front, the side port
-//    on the surgeon's left. Narration ↔ drawing checks (M…) on window.SYNC, added chapter by chapter (spec.md 進度): 片頭 and chapters 1–2 so far
+//    on the surgeon's left. Narration ↔ drawing checks (M…) on window.SYNC, added chapter by chapter (spec.md 進度): 片頭 and chapters 1–3 so far
 //    (outer / inner opening and lip in the 1-1 section, read back from the drawn panel points; both openings vs the limbus in the microscope;
-//    bars in proportion; the microscope's orientation in 2-1 and the orientation map; the radial suture of the title).
+//    bars in proportion; the microscope's orientation in 2-1 and the orientation map; the radial suture of the title; 2-2 the 15° blade through
+//    the side port and the conjunctiva the same in both views; chapter 3 the keratome: in through the outer opening 1.5 mm behind the limbus,
+//    partial thickness, flat, only along the tunnel, into the chamber only in 3-3 through the inner opening, the same point in both views; the lip
+//    dimension; the pressure arrows; Ernest's incisions in proportion). Blade positions are read from every frame the page drew (SYNC[id].track).
 // 3. Self-test (every run): each check is broken once on purpose (a mutation) and must then fail; a mutation not caught fails the run.
 // --list prints the numbers found per segment (to fill the ledger).
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
@@ -138,7 +141,53 @@ const MODEL_CHECKS = [
     const ang = Math.acos(Math.abs(u[0] * v[0] + u[1] * v[1]) / Math.hypot(...u) / Math.hypot(...v)) * 180 / Math.PI;
     const side = (o, x, y) => Math.sign((y[0] - x[0]) * (o[1] - x[1]) - (y[1] - x[1]) * (o[0] - x[0])), crosses = side(p, a, b) !== side(q, a, b) && side(a, p, q) !== side(b, p, q);
     ok('M10', crosses && ang > 87, `片頭 microscope: the 10-0 nylon crosses the outer opening at ${ang.toFixed(1)}° (radial)`); },
+  (ctx, ok) => { const S = need(ctx, '2-2'), sd = S.side, tr = Object.values(S.track), on = tr.filter(t => t.op > 0.5), sI = K.tunnelOf(ctx.case.side).sI;
+    const inAC = t => { const [s, d] = sdOfPx(sd, t.tip); return s < sI && d > G.T(s) + 0.02; }, ang = (c, p) => Math.atan2(p[0] - c[0], -(p[1] - c[1]));
+    const plane = Math.abs(((sd.hp + 6) % 12) - ctx.case.side.h) < 1e-9, via = on.length > 0 && on.every(t => t.via === 'side' && Math.abs(t.h - ctx.case.side.h) < 1e-9);
+    const scopeOK = on.every(t => Math.abs(ang(t.cS, t.tipS) - ang(t.cS, t.sideS)) < 0.02), gone = tr.filter(t => t.sw > 0).every(t => t.op === 0);
+    ok('M11', plane && via && on.some(inAC) && scopeOK && gone, `2-2: the 15° blade drawn in the section through the side port (left = ${ctx.case.side.h} o'clock), through the side port's tunnel, its tip in the chamber past the inner opening (${on.filter(inAC).length} frames), on the side port's meridian in the microscope, gone before the conjunctiva`); },
+  (ctx, ok) => { const S = need(ctx, '2-2'), m = S.main, c = S.conj, sOf = p => sOfRho(dist(p, c.centre) / c.k), a = p => Math.atan2(p[0] - c.centre[0], p[1] - c.centre[1]) * 180 / Math.PI;
+    const sCut = sOf(c.cutMid), sBack = sOf(c.backMid), back = 0.25 + (7.2 - 0.25) * m.peri;   // globe.js: st.peri360 ends the conjunctiva at lerp(0.25, 7.2, peri360)
+    const caut = c.caut.length > 0 && c.caut.every(p => sOf(p) > sCut && sOf(p) < sBack && Math.abs(a(p)) < 22.5);
+    ok('M12', Math.abs(((m.hp + 6) % 12) - ctx.case.main.h) < 1e-9 && Math.abs(sCut - 0.25) < 0.05 && Math.abs(a(c.cutMid)) < 0.5 && Math.abs(sBack - back) < 0.05 && caut,
+      `2-2: conjunctiva cut along the limbus (s ${sCut.toFixed(2)}) centred on the main incision, rolled back to ${sBack.toFixed(2)} mm in the microscope = ${back.toFixed(2)} mm in the section through the main incision; cautery points on the bare sclera`); },
+  (ctx, ok) => { const S = need(ctx, '3-1'), e = sdOfPx(S, S.ext), l = sdOfPx(S, S.limbus), s = p => sdOfPx(S, p)[0], tr = Object.values(S.track).filter(t => t.op > 0.5 && t.adv >= 0);
+    const dep = tr.map(t => { const [ss, dd] = sdOfPx(S, t.tip); return dd / G.T(ss); }), last = tr.reduce((a, t) => t.adv > a.adv ? t : a, tr[0]);
+    ok('M13', Math.abs(e[0] - 1.5) < 0.05 && Math.abs(e[1]) < 0.05 && Math.abs(l[0]) < 0.05 && Math.abs(l[1]) < 0.05 && S.dimOn > 0.99 && Math.abs(s(S.dim[0])) < 0.05 && Math.abs(s(S.dim[1]) - e[0]) < 0.05 &&
+      Math.max(...dep) > 0.2 && Math.max(...dep) < 0.8 && angSurf(S, last) < 10,
+      `3-1 section: outer opening drawn ${e[0].toFixed(2)} mm behind the limbus (narration 1–2, drawn 1.5 示意) with its dimension line; the cut reaches ${(100 * Math.max(...dep)).toFixed(0)} % of the wall (partial thickness); then the blade lies at ${angSurf(S, last).toFixed(1)}° to the surface (flat)`); },
+  (ctx, ok) => { const S = need(ctx, '3-2'), s = p => sdOfPx(S, p)[0], len = s(S.dim[0]) - s(S.dim[1]), tr = Object.values(S.track).filter(t => t.op > 0.5), sd = tr.map(t => sdOfPx(S, t.tip));
+    const flat = Math.max(...tr.map(t => angSurf(S, t)));
+    ok('M14', S.dimOn > 0.99 && Math.abs(s(S.dim[0])) < 0.05 && Math.abs(s(S.dim[1]) - s(S.int)) < 0.05 && Math.abs(len - 1.5) <= 0.1 && flat < 10 &&
+      sd.every(([ss, dd]) => dd > 0 && dd < G.T(ss)) && sd.some(x => x[0] > 0) && sd.some(x => x[0] < 0),
+      `3-2 section: the blade at most ${flat.toFixed(1)}° to the surface (narration: 平行), inside the wall, past the limbus; the dimension limbus → inner opening ${len.toFixed(2)} mm (narration 約 1.5 mm, Ernest 1994)`); },
+  (ctx, ok) => { let n = 0, worst = 0;
+    for (const id of ['3-1', '3-2', '3-3']) { const S = need(ctx, id);
+      for (const t of Object.values(S.track)) { if (!(t.op > 0.5)) continue; n++; const u = t.tip[0] / S.k + S.win.x, rS = dist(t.tipS, S.scope.centre) / S.scope.k;
+        worst = Math.max(worst, Math.abs(rS - Math.abs(u)), Math.abs(t.tipS[0] - S.scope.centre[0]) / S.scope.k + (t.tipS[1] > S.scope.centre[1] ? 0 : 9)); } }
+    ok('M15', n >= 6 && worst < 0.02, `chapter 3: the keratome tip at the same place in both views in ${n} frames (worst ${worst.toFixed(3)} mm: distance from the axis, on the main incision's meridian)`); },
+  (ctx, ok) => { const tn = K.tunnelOf(ctx.case.main); let bad = [];
+    const px = (S, rz) => [(-rz[0] - S.win.x) * S.k, (-rz[1] - S.win.y) * S.k], poly = S => tn.pts.map(p => px(S, p));
+    const offPoly = (q, P) => Math.min(...P.slice(1).map((b, i) => { const a = P[i], d = [b[0] - a[0], b[1] - a[1]], t = Math.max(0, Math.min(1, ((q[0] - a[0]) * d[0] + (q[1] - a[1]) * d[1]) / (d[0] ** 2 + d[1] ** 2))); return dist(q, [a[0] + d[0] * t, a[1] + d[1] * t]); }));
+    let inAC = { '3-1': 0, '3-2': 0, '3-3': 0 }, outside = 0;
+    for (const id of ['3-1', '3-2', '3-3']) { const S = need(ctx, id), P = poly(S), ext = px(S, tn.ext);
+      for (const t of Object.values(S.track)) { if (!(t.op > 0.5)) continue; const [s, d] = sdOfPx(S, t.tip);
+        if (t.adv < 0) { outside++; const c = Math.abs((ext[0] - t.tip[0]) * t.ax[1] - (ext[1] - t.tip[1]) * t.ax[0]); if (!(d < 0 && c < 1.5)) bad.push(`${id} coming in`); }
+        else if (t.adv <= 1) { if (offPoly(t.tip, P) > 1) bad.push(`${id} off the tunnel (adv ${t.adv.toFixed(2)})`); }
+        else { inAC[id]++; if (!(s < tn.sI && d > G.T(s))) bad.push(`${id} past the inner opening but not in the chamber`); } } }
+    const S3 = need(ctx, '3-3'), i3 = sdOfPx(S3, S3.int);
+    ok('M16', !bad.length && outside > 0 && inAC['3-1'] === 0 && inAC['3-2'] === 0 && inAC['3-3'] > 0 && i3[0] < -1 && Math.abs(i3[1] - G.T(i3[0])) < 0.05,
+      `chapter 3: the keratome comes in through the outer opening, its tip only along the tunnel, into the chamber only in 3-3 (${inAC['3-3']} frames) through the inner opening ${(-i3[0]).toFixed(2)} mm into clear cornea${bad.length ? ' — ' + bad.slice(0, 3).join(', ') : ''}`); },
+  (ctx, ok) => { const S = need(ctx, '3-3'), tn = K.tunnelOf(ctx.case.main), A = S.iop.map(([a, b]) => [sdOfPx(S, a), sdOfPx(S, b)]);
+    ok('M17', A.length > 0 && A.every(([a, b]) => a[1] > G.T(a[0]) && b[0] > tn.sI && b[0] < 0 && Math.abs(b[1] - G.T(b[0])) < 0.1 && b[1] < a[1]),
+      `3-3: ${A.length} pressure arrows from the chamber up against the posterior surface under the lip (in clear cornea, between the inner opening and the limbus), toward the roof (示意)`); },
+  (ctx, ok) => { const C = need(ctx, '3-3').card, r = (a, b) => Math.abs(a / b - 1) < 0.01;
+    ok('M18', !!C && r(C.sc[0] / C.sc[1], 3.2 / 3.2) && r(C.cc[0] / C.cc[1], 3.2 / 2.0) && r(C.lip / C.sc[1], 1.5 / 3.2) && r(C.sc[0] / 3.2, C.px) && r(C.cc[0] / 3.2, C.px),
+      `3-3 card: the two incisions in proportion at one scale — scleral 3.2 × 3.2 mm with a 1.5 mm lip, clear corneal 3.2 × 2.0 mm (Ernest 1994)`); },
 ];
+// helpers of M11–M18: s (mm behind the limbus) of a horizontal radius in the microscope; the blade's angle to the outer surface at its tip (section)
+const sOfRho = rho => { let a = -3, b = 8; for (let i = 0; i < 50; i++) { const m = (a + b) / 2; G.surfAt(m).rho < rho ? a = m : b = m; } return (a + b) / 2; };
+const angSurf = (S, t) => { const f = G.surfAt(sdOfPx(S, t.tip)[0]); return Math.asin(Math.min(1, Math.abs(t.ax[0] * f.nr + t.ax[1] * f.nz))) * 180 / Math.PI; };
 function modelChecks(ctx) { const R = [], ok = (id, c, m) => R.push([!!c, `${id} ${m}`]); for (const f of [...CASE_CHECKS, ...MODEL_CHECKS]) f(ctx, ok); return R; }
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
 const clone = o => JSON.parse(JSON.stringify(o));
@@ -168,6 +217,14 @@ const MUTATIONS = [
   ['2-1: side port on the right', c => { const S = c.sync['2-1']; S.side[0] = 2 * S.centre[0] - S.side[0]; }, 'M8'],
   ['2-1 map: surgeon at 10:30', c => { const m = c.sync['2-1'].map; m.surgeon[0] = 2 * m.centre[0] - m.surgeon[0]; }, 'M9'],
   ['片頭: suture along the incision', c => { const S = c.sync.title; S.suture = S.mouth.map(p => p.slice()); }, 'M10'],
+  ['2-2: the 15° blade shown in the section through the main incision', c => { c.sync['2-2'].side.hp = (c.case.main.h + 6) % 12; }, 'M11'],
+  ['2-2: conjunctiva rolled back half as far in the section', c => { c.sync['2-2'].main.peri /= 2; }, 'M12'],
+  ['3-1: outer opening drawn at the limbus', c => { const S = c.sync['3-1']; S.ext = S.limbus.slice(); }, 'M13'],
+  ['3-2: blade tilted 25° to the surface', c => { for (const t of Object.values(c.sync['3-2'].track)) { const a = 25 * Math.PI / 180, [x, y] = t.ax; t.ax = [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)]; } }, 'M14'],
+  ['3-2: microscope tip 1 mm off', c => { const S = c.sync['3-2'], t = Object.values(S.track).find(x => x.op > 0.5); t.tipS[1] -= S.scope.k; }, 'M15'],
+  ['3-2: tip drawn 0.8 mm deeper, in the chamber', c => { const S = c.sync['3-2'], t = Object.values(S.track).find(x => x.op > 0.5); t.tip[1] += 0.8 * S.k; }, 'M16'],
+  ['3-3: pressure arrows reversed', c => { const S = c.sync['3-3']; S.iop = S.iop.map(([a, b]) => [b, a]); }, 'M17'],
+  ['3-3: clear corneal incision drawn square', c => { const C = c.sync['3-3'].card; C.cc[1] = C.cc[0]; }, 'M18'],
 ];
 
 (async () => {
