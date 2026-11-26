@@ -1,7 +1,7 @@
   {
-    id:'cataract-scleral-tunnel', type:'youtube', yt:'TBD', cat:'surgery',
+    id:'cataract-scleral-tunnel', type:'youtube', yt:'6SkJ6HSJtxk', cat:'surgery',
     zh:'白內障：scleral tunnel 主切口與縫合', en:'Cataract surgery: the scleral tunnel incision and its closure',
-    dur:TBD,
+    dur:373,
     short:'左眼、術者坐 upper-temporal 的 scleral tunnel：外口在角膜緣後 1–2 mm、同一層往前剝、進透明角膜約 1.5 mm 再進前房；internal corneal lip 為什麼自閉、buttonhole 與 premature entry 的第一步、fishmouthing、radial 10-0 nylon 與前房 cefuroxime。',
     sum:'這支影片補白內障系列沒有的 scleral tunnel 主切口。先比較外口放在角膜和鞏膜的差別：隨機試驗裡 scleral tunnel 的術後散光較少（切口縮到 2.0 mm 時就沒有差別），ESCRS 研究中 clear corneal 的 endophthalmitis 風險較高，代價是要切開結膜、止血。接著看左眼、術者坐 upper-temporal 時的方位（3 點是 temporal），peribulbar 麻醉，15° 刀做 side port，沿角膜緣剪開結膜、燒灼止血。隧道的三步：2.65 mm keratome 在角膜緣後 1–2 mm 的鞏膜切入部分厚度，刀面平行眼球表面、同一層往前剝，進透明角膜約 1.5 mm 再進前房；內口前面這段角膜（internal corneal lip）被眼壓推向頂蓋，所以能自閉，屍眼研究裡帶 1.5 mm lip 的切口耐壓遠高於長方形的 clear corneal 切口。出錯時：太淺會穿破頂蓋（buttonhole），要退回換深一點的平面；太深或太早往下會讓內口落在角膜緣、靠近虹膜根部（premature entry），虹膜容易脫出、出血，縫合的門檻要放低。本例和系列不同的地方：DuoVisc、器械都經鞏膜隧道進出、ZMB00 multifocal IOL 要放進囊袋並置中。最後檢查內口有沒有張開（fishmouthing），先經 side port 打 BSS，不行再縫；radial 10-0 nylon、前房 cefuroxime 1 mg/0.1 mL，以及 wet lab 要練的四件事。',
     note:'畫面為左眼 OS、術者坐 upper-temporal（約 1–2 點）的示意動畫（經主切口的切面＋術者視角兩圖同步），不是手術錄影，比例不精確。結膜掀開的範圍、side port 的位置、縫幾針、虹膜脫出與出血的形狀為示意或依主刀；步驟、器械與藥物依這台的 OP note。各院做法不同的地方，依院內常規。',
