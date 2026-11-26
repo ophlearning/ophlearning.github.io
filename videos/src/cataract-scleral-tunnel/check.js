@@ -16,6 +16,11 @@
 //    and inside the wall, the buttonhole at the same place in the microscope; the early inner opening near the limbus (not clear cornea), the
 //    prolapsed iris through it and out of the outer opening; the percentage bars in proportion; the CCC 5.0–5.5 mm and centred; phaco's path
 //    through the scleral tunnel into the lens inside the rhexis; the IOL centred in the bag; the decentred optic 0.75 mm off.
+//    Chapters 6–7 (M28–M37): 6-1 the gaping is the inner opening (the lip bends down from inside the limbus, the roof and the outer opening stay), the
+//    lip back against the roof and the chamber deeper after BSS, the BSS cannula through the side port (not the main incision); 6-2 the suture enters
+//    the sclera behind the outer opening, passes under it and comes out through the roof still on the sclera, radial in the microscope at the same
+//    place as in the section; Azar's card highlights one suture; 6-3 the cefuroxime cannula through the side port in both views; ESCRS bars 4.92;
+//    7 the four cards light in the narration's order, with the narration's numbers, the small sections 1–2 mm and about 1.5 mm.
 // 3. Self-test (every run): each check is broken once on purpose (a mutation) and must then fail; a mutation not caught fails the run.
 // --list prints the numbers found per segment (to fill the ledger).
 global.document = { createElement: () => ({ getContext: () => ({ measureText: () => ({ width: 10 }) }) }) };
@@ -43,9 +48,9 @@ const LEDGER = {
   '5-1': { ...CLK, ...SB, '5.0': 'Hollick 1999', '5.5': 'Hollick 1999' },
   '5-2': { ...CLK, ...SB, '6.5': '病例', '4.0': 'Ye 2021', '0.75': 'Soda 2012' },
   '6-1': { ...CLK, ...SB },
-  '6-2': { ...CLK, '10-0': '病例', '4': 'Azar 1997', '8': 'Azar 1997' },
+  '6-2': { ...CLK, ...SB, '10-0': '病例', '4': 'Azar 1997', '8': 'Azar 1997' },
   '6-3': { ...CLK, '1': 'ESCRS 2007', '0.1': 'ESCRS 2007', '4.92': 'ESCRS 2007' },
-  '7': { ...CLK, '1': 'Goel 2022', '2': 'Goel 2022', '1.5': 'Ernest 1994' },
+  '7': { ...CLK, '1': 'Goel 2022', '2': 'Goel 2022', '1.5': 'Ernest 1994', '4': '結構' },   // 1–4: the cards' list numbers too
 };
 const FREE = ['病例', '結構', '示意', '院內常規'];
 const CITE = /([A-Z][A-Za-zÀ-ž'\-]+) (\d{4})([a-z])?/g;
@@ -222,11 +227,55 @@ const MODEL_CHECKS = [
     const c = dist(M.cen.optic, M.cen.eye) / M.k, d = dist(M.dec.optic, M.dec.eye) / M.k;
     ok('M27', c < 0.1 && Math.abs(d - 0.75) < 0.02 && dist(M.dec.dim[0], M.dec.eye) < 0.5 && dist(M.dec.dim[1], M.dec.optic) < 0.5,
       `5-2: the centred optic ${c.toFixed(2)} mm off the pupil centre, the decentred one ${d.toFixed(2)} mm (narration 0.75 mm, Soda 2012), with its dimension line between the two centres`); },
+  (ctx, ok) => { const A = need(ctx, '6-1').at[0], r = sdOfPx(A, A.roof), t = sdOfPx(A, A.tip), h = sdOfPx(A, A.hinge), e = sdOfPx(A, A.ext), sI = K.tunnelOf(ctx.case.main).sI, gap = dist(A.tip, A.roof) / A.k;
+    ok('M28', gap >= 0.25 && Math.abs(r[0] - sI) < 0.05 && Math.abs(r[1] - G.T(r[0])) < 0.05 && t[1] > G.T(t[0]) + 0.2 && h[0] < 0 && Math.abs(e[0] - ctx.case.main.s) < 0.05 && Math.abs(e[1]) < 0.05,
+      `6-1 section: the inner opening gapes ${gap.toFixed(2)} mm (fishmouthing, 示意 ≥ 0.25) — the roof's edge stays at the inner opening (${(-r[0]).toFixed(2)} mm into clear cornea), the lip's tip ${(t[1] - G.T(t[0])).toFixed(2)} mm below the inner surface (down, away from the roof), bending from inside the limbus (s ${h[0].toFixed(2)}); the outer opening on the surface ${e[0].toFixed(2)} mm behind the limbus`); },
+  (ctx, ok) => { const S = need(ctx, '6-1'), A = S.at[0], B = S.at[1], gap = B ? dist(B.tip, B.roof) / B.k : NaN;
+    ok('M29', !!B && gap < 0.01 && B.push === 0 && A.push === 1 && B.ac - A.ac > 0.3,
+      `6-1: after BSS (end of line 1) the lip is back against the roof (gap ${gap.toFixed(3)} mm) and the chamber over the pupil margin deeper (${A.ac.toFixed(2)} → ${B ? B.ac.toFixed(2) : '?'} mm; shallow before 示意)`); },
+  (ctx, ok) => { const B = need(ctx, '6-1').at[1], c = B && B.can; if (!c) return ok('M30', false, '6-1: the BSS cannula was drawn during line 1');
+    const off = p => { const d = unit2(c.tipS, c.shaftS); return Math.abs((p[0] - c.tipS[0]) * d[1] - (p[1] - c.tipS[1]) * d[0]) / c.k; };
+    ok('M30', c.via === 'side' && Math.abs(c.h - ctx.case.side.h) < 1e-9 && off(c.sideS) < 0.2 && dist(c.sideS, c.mainS) / c.k > 3 && off(c.mainS) > 2 && dist(c.tipS, c.centre) < c.limbusR,
+      `6-1 microscope: the BSS cannula through the side port (${ctx.case.side.h} o'clock; its shaft ${off(c.sideS).toFixed(2)} mm from the side port's opening, ${off(c.mainS).toFixed(1)} mm from the main incision), its tip in the chamber inside the limbus`); },
+  (ctx, ok) => { const S = need(ctx, '6-2').sec; if (!S) return ok('M31', false, '6-2: the tied suture was drawn');
+    const P = S.path.map(p => sdOfPx(S, p)), a = P[0], b = P[P.length - 1], sE = K.tunnelOf(ctx.case.main).sE, TS = tunnelSD(ctx);
+    const under = P.reduce((x, p) => Math.abs(p[0] - sE) < Math.abs(x[0] - sE) ? p : x, P[0]), tun = s => depthAt(TS, s);
+    const below = P.some(([s, d]) => s <= sE && d > tun(s) + 0.05), above = P.some(([s, d]) => s <= sE && s > 0 && d < tun(s) - 0.05);
+    ok('M31', a[0] > sE + 0.3 && b[0] < sE - 0.3 && b[0] > 0 && Math.abs(a[1]) < 0.03 && Math.abs(b[1]) < 0.03 && under[1] >= 0.2 && below && above && P.every(([s, d]) => d > -0.03 && d < G.T(s)),
+      `6-2 section: the 10-0 nylon in through the sclera ${a[0].toFixed(2)} mm behind the limbus (behind the outer opening at ${sE.toFixed(2)}), ${under[1].toFixed(2)} mm deep under the outer opening, across the tunnel, out through the roof ${b[0].toFixed(2)} mm behind the limbus (still sclera), inside the wall`); },
+  (ctx, ok) => { const S = need(ctx, '6-2'), C = S.scope, P = S.sec; if (!C || !P) return ok('M32', false, '6-2: the tied suture was drawn in both views');
+    const [m0, m1] = C.mouth, [p, q] = C.ends, u = [m1[0] - m0[0], m1[1] - m0[1]], v = [q[0] - p[0], q[1] - p[1]];
+    const ang = Math.acos(Math.abs(u[0] * v[0] + u[1] * v[1]) / Math.hypot(...u) / Math.hypot(...v)) * 180 / Math.PI;
+    const side = (o, x, y) => Math.sign((y[0] - x[0]) * (o[1] - x[1]) - (y[1] - x[1]) * (o[0] - x[0])), crosses = side(p, m0, m1) !== side(q, m0, m1) && side(m0, p, q) !== side(m1, p, q);
+    const sec = [P.path[0], P.path[P.path.length - 1]].map(x => sdOfPx(P, x)[0]), sc = C.ends.map(x => sOfRho(dist(x, C.centre) / C.k)), dS = Math.max(...sc.map((x, i) => Math.abs(x - sec[i])));
+    ok('M32', crosses && ang > 87 && dS < 0.03 && C.ends.every(x => Math.abs(x[0] - C.centre[0]) < 1 && x[1] > C.centre[1]),
+      `6-2 microscope: the suture crosses the outer opening at ${ang.toFixed(1)}° (radial), its ends ${sc.map(x => x.toFixed(2)).join(' / ')} mm behind the limbus on the main incision's meridian = the section's (${sec.map(x => x.toFixed(2)).join(' / ')}; ${dS.toFixed(3)} mm)`); },
+  (ctx, ok) => { const C = need(ctx, '6-2').card;
+    ok('M33', !!C && JSON.stringify(C.best) === '[1]' && JSON.stringify(C.shown) === '[1,3,0]', `6-2 card (Azar 1997): one, three and no sutures shown, the one-suture group highlighted as the least astigmatism`); },
+  (ctx, ok) => { const c = need(ctx, '6-3').can; if (!c) return ok('M34', false, '6-3: the cefuroxime cannula was drawn');
+    const sI = K.tunnelOf(ctx.case.side).sI, [s, d] = sdOfPx(c, c.tip), dU = unit2(c.tip, c.shaft), off = p => Math.abs((p[0] - c.tip[0]) * dU[1] - (p[1] - c.tip[1]) * dU[0]) / c.k;
+    const sc = c.scope, ang = (o, x) => Math.atan2(x[0] - o[0], -(x[1] - o[1])), u = c.tip[0] / c.k + c.win.x, rS = dist(sc.tipS, sc.centre) / sc.k;
+    ok('M34', Math.abs(((c.hp + 6) % 12) - ctx.case.side.h) < 1e-9 && c.via === 'side' && Math.abs(c.h - ctx.case.side.h) < 1e-9 && s < sI && d > G.T(s) + 0.02 && off(c.sideExt) < 0.15 && off(c.sideInt) < 0.15 &&
+      Math.abs(ang(sc.centre, sc.tipS) - ang(sc.centre, sc.sideS)) < 0.02 && Math.abs(rS - Math.abs(u)) < 0.02,
+      `6-3: the cefuroxime cannula drawn in the section through the side port (${ctx.case.side.h} o'clock), through the side port's tunnel (${off(c.sideExt).toFixed(2)} / ${off(c.sideInt).toFixed(2)} mm from its openings), its tip in the chamber; in the microscope on the side port's meridian at the same distance from the axis (${Math.abs(rS - Math.abs(u)).toFixed(3)} mm)`); },
+  (ctx, ok) => { const C = need(ctx, '6-3').card, r = C ? C.untreated / C.treated : NaN;
+    ok('M35', Math.abs(r / 4.92 - 1) < 0.01, `6-3 card: bars in proportion — no cefuroxime / cefuroxime ${r.toFixed(2)} (4.92, ESCRS 2007)`); },
+  (ctx, ok) => { const L = need(ctx, '7').lit, good = [0, 1, 2, 3, 4].every(j => JSON.stringify(L[j]) === JSON.stringify([0, 1, 2, 3].map(i => i < j)));
+    ok('M36', good, `7: the four cards light one by one with narration lines 1–4 (none during line 0)`); },
+  (ctx, ok) => { const S = need(ctx, '7'), segL = ctx.segs.find(s => s.id === '7').lines, same = (a, b) => JSON.stringify([...new Set(numbers(a))].sort()) === JSON.stringify([...new Set(numbers(b))].sort());
+    const nums = S.cards.every((c, i) => same(c, segL[i + 1])), m1 = S.mini1, m3 = S.mini3; if (!m1 || !m3) return ok('M37', false, '7: the small sections of cards 1 and 3 were drawn');
+    const e = sdOfPx(m1, m1.ext), l = sdOfPx(m1, m1.limbus), s = (m, p) => sdOfPx(m, p)[0], len = s(m3, m3.dim[0]) - s(m3, m3.dim[1]), i3 = sdOfPx(m3, m3.int);
+    ok('M37', nums && e[0] >= 1 && e[0] <= 2 && Math.abs(e[1]) < 0.05 && Math.abs(l[0]) < 0.05 && Math.abs(s(m1, m1.dim[0])) < 0.05 && Math.abs(s(m1, m1.dim[1]) - e[0]) < 0.05 &&
+      Math.abs(len - 1.5) <= 0.1 && Math.abs(s(m3, m3.dim[1]) - i3[0]) < 0.05 && Math.abs(i3[1] - G.T(i3[0])) < 0.05,
+      `7: each card's numbers = its narration line's; card 1's section: outer opening ${e[0].toFixed(2)} mm behind the limbus with its 「1–2 mm」 dimension; card 3's: limbus → inner opening ${len.toFixed(2)} mm (約 1.5 mm)`); },
 ];
 // helpers of M11–M18: s (mm behind the limbus) of a horizontal radius in the microscope; the blade's angle to the outer surface at its tip (section)
 const sOfRho = rho => { let a = -3, b = 8; for (let i = 0; i < 50; i++) { const m = (a + b) / 2; G.surfAt(m).rho < rho ? a = m : b = m; } return (a + b) / 2; };
 const mid2 = q => [(q[0][0] + q[1][0]) / 2, (q[0][1] + q[1][1]) / 2];
 const depthAt = (D, s) => { const q = D.slice().sort((a, b) => a[0] - b[0]); for (let i = 1; i < q.length; i++) if (q[i][0] >= s) { const k = (s - q[i - 1][0]) / ((q[i][0] - q[i - 1][0]) || 1); return q[i - 1][1] + (q[i][1] - q[i - 1][1]) * k; } return NaN; };   // depth of a (s, d) path at s
+const unit2 = (a, b) => { const d = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [(b[0] - a[0]) / d, (b[1] - a[1]) / d]; };
+const tunnelSD = ctx => { const tn = K.tunnelOf(ctx.case.main); return tn.pts.map(([rho, z]) => { let best = 1e9, r = null;   // (s, d) of the main tunnel
+  for (let s = -2; s <= 2; s += 0.002) { const f = G.surfAt(s), d = (f.rho - rho) * f.nr + (f.z - z) * f.nz, off = Math.hypot(f.rho - f.nr * d - rho, f.z - f.nz * d - z); if (off < best) { best = off; r = [s, d]; } } return r; }); };
 const angSurf = (S, t) => { const f = G.surfAt(sdOfPx(S, t.tip)[0]); return Math.asin(Math.min(1, Math.abs(t.ax[0] * f.nr + t.ax[1] * f.nz))) * 180 / Math.PI; };
 function modelChecks(ctx) { const R = [], ok = (id, c, m) => R.push([!!c, `${id} ${m}`]); for (const f of [...CASE_CHECKS, ...MODEL_CHECKS]) f(ctx, ok); return R; }
 const runAll = ctx => [...ledgerChecks(ctx), ...modelChecks(ctx)];
@@ -274,6 +323,17 @@ const MUTATIONS = [
   ['5-1: phaco path starts at the inner opening (clear corneal)', c => { const S = c.sync['5-1'].phaco, k = S.path.findIndex(p => Math.hypot(p[0] - S.int[0], p[1] - S.int[1]) < 1); S.path = S.path.slice(k); }, 'M25'],
   ['5-2: IOL drawn in front of the iris', c => { const A = c.sync['5-2'].sec; A.iolC[1] = Math.min(A.pm[1], A.pm2[1]) - 0.3 * A.k; }, 'M26'],
   ['5-2: decentred optic drawn 1.0 mm off', c => { const M = c.sync['5-2'].mini; M.dec.optic[0] = M.dec.eye[0] + 1.0 * M.k; }, 'M27'],
+  ['6-1: the outer opening drawn gaping instead of the inner one', c => { const A = c.sync['6-1'].at[0]; A.roof = A.ext.slice(); A.tip = [A.ext[0] + 0.3 * A.k, A.ext[1] + 0.2 * A.k]; }, 'M28'],
+  ['6-1: the lip still open after BSS', c => { const S = c.sync['6-1']; S.at[1].tip = S.at[0].tip.slice(); S.at[1].roof = S.at[0].roof.slice(); }, 'M29'],
+  ['6-1: the BSS cannula through the main incision', c => { const C = c.sync['6-1'].at[1].can; C.shaftS = C.mainS.slice(); }, 'M30'],
+  ['6-2: the suture comes out inside the posterior lip (does not cross)', c => { const S = c.sync['6-2'].sec; S.path = S.path.slice(0, Math.round(S.path.length * 0.45)); }, 'M31'],
+  ['6-2 microscope: suture drawn along the incision', c => { const C = c.sync['6-2'].scope, m = [(C.ends[0][0] + C.ends[1][0]) / 2, (C.ends[0][1] + C.ends[1][1]) / 2], h = (C.ends[1][1] - C.ends[0][1]) / 2;
+    C.ends = [[m[0] - h, m[1]], [m[0] + h, m[1]]]; }, 'M32'],
+  ['6-2 card: three sutures highlighted', c => { c.sync['6-2'].card.best = [3]; }, 'M33'],
+  ['6-3: the cefuroxime cannula in the section through the main incision', c => { c.sync['6-3'].can.hp = (c.case.main.h + 6) % 12; }, 'M34'],
+  ['6-3 card: untreated bar 20 % too long', c => { c.sync['6-3'].card.untreated *= 1.2; }, 'M35'],
+  ['7: card 3 lit before card 2', c => { c.sync['7'].lit[2] = [true, false, true, false]; }, 'M36'],
+  ['7: card 1 says 2–3 mm', c => { c.sync['7'].cards[0] = '外口：角膜緣後 2–3 mm'; }, 'M37'],
 ];
 
 (async () => {
