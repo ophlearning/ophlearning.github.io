@@ -1016,7 +1016,7 @@ DRAW2['7'] = T => {
       const AR = [-0.6, -1.0].map(s0 => { const d = G.T(s0) + D * gLip(s0); return [Q(W3(s0, d + 0.55)), Q(W3(s0, d + 0.06))]; });
       m = v.svg + lg.svg + line2(tunnel3(MAIN).map(Q), COL.accent, 2.4) + AR.map(([a, b]) => arrow(a, b, BSS_COL, ss(0.2, 0.6, kB), 'arrA', 2.6)).join('');
       ex += lab(kB > 0.5 ? '內口貼回' : '內口張開', kB > 0.5 ? 'closed' : 'gaping', box.x + box.w - 6, box.y + 26, mid2([lg.tip, lg.roof]), { side: 'R', bold: true, color: kB > 0.5 ? COL.accent : WARN, lc: kB > 0.5 ? COL.accent : WARN, op: h }) +
-        lab('BSS', '經側切口', box.x + 6, box.y + box.h - 14, AR[1][0], { bold: true, color: BSS_COL, lc: BSS_COL, op: h * ss(0.2, 0.6, kB) });
+        lab('前房加深', 'BSS via side port', box.x + 6, box.y + box.h - 14, AR[1][0], { bold: true, color: BSS_COL, lc: BSS_COL, op: h * ss(0.2, 0.6, kB) });
       mi = { D }; }
     s += `<g opacity="${h.toFixed(3)}"><g clip-path="url(#q7${i + 1}b)">${m}</g></g>`;
     if (h > 0.99) S['mini' + (i + 1)] = mi;
