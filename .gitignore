@@ -5,3 +5,8 @@ agent-browser-state/
 *.har
 # 手術錄影原始檔與抽出的影格（可能含病人資訊），不進 git
 videos/src/*/footage/
+# 列印單與出片的輸出（PDF、PNG、mp4），由工具重新產生，不進 git（videos/tools/print/README.md）
+videos/src/*/out/
+# 語音合成的暫存檔（tts.py、export_lines.js 產生）；每支影片只有發音字典進 git
+videos/src/*/tts/*
+!videos/src/*/tts/lexicon-extra.json

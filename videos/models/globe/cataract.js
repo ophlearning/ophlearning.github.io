@@ -929,7 +929,7 @@ function CATARACT_MAKE(G) {
   const SEC = new Map();
   // per-point tissue values (negative inside), shared by the section and the checks
   const LAYERS = ['interior', 'aqueous', 'ovd', 'lens', 'nuc', 'ovdb', 'iol', 'retina', 'choroid', 'ciliary', 'iris', 'sclera', 'limbus', 'cornea', 'conj', 'frag', 'ovdd', 'vitp', 'hyal'];
-  const fieldCtx = (c, def) => ({ c, fd: G.makeField({}), I: irisOf(c), S: lensShift(c), ovdC: c.ovdAt || [0, 0, LENS.za + 0.9], ovdR: 9.5 * clamp(c.ovd, 0, 1), def, N: nucOf(c), B: bagOf(c), IOL: iolOf(c), PC: pcrOf(c) });
+  const fieldCtx = (c, def) => ({ c, fd: G.makeField(c.globe || {}), I: irisOf(c), S: lensShift(c), ovdC: c.ovdAt || [0, 0, LENS.za + 0.9], ovdR: 9.5 * clamp(c.ovd, 0, 1), def, N: nucOf(c), B: bagOf(c), IOL: iolOf(c), PC: pcrOf(c) });
   function fieldAt(X, p0) {
     let p = p0, gap = -1, bend = false; if (X.def) { const w = X.def(p0); p = w.q; gap = w.gap; bend = !!w.bend; }
     // ② bend mode moves only the wall (cornea, limbus): lens, iris and chamber contents are taken at the unmoved point
@@ -1028,7 +1028,7 @@ function CATARACT_MAKE(G) {
   }
   function section(opt) {
     const st = opt.st || {}, c = norm(st), hp = opt.h ?? 6, win = opt.win, step = opt.step || 0.03, id = opt.id || 'cs', off = opt.off || 0;
-    const def = deformer(c), key = JSON.stringify([hp, win, step, c.pupil, c.ovd, c.ovdAt, c.zonule, c.ccc && lensShift(c).LO, def ? c.inst : null, c.main, c.side, c.push, c.folds, c.hydro, c.nuc, c.surge, off, c.bag, c.ovdBag, c.ovdOut, c.iol, c.bag || c.iol ? c.inst : null, c.pcr, c.pcr ? c.inst : null, c.ccc && c.ccc.oval]);   // ④ PCR states (instruments: the gel's target)
+    const def = deformer(c), key = JSON.stringify([hp, win, step, c.pupil, c.ovd, c.ovdAt, c.zonule, c.ccc && lensShift(c).LO, def ? c.inst : null, c.main, c.side, c.push, c.folds, c.hydro, c.nuc, c.surge, off, c.bag, c.ovdBag, c.ovdOut, c.iol, c.bag || c.iol ? c.inst : null, c.pcr, c.pcr ? c.inst : null, c.ccc && c.ccc.oval, c.globe]);   // ④ PCR states (instruments: the gel's target)
     let tis = SEC.get(key); if (!tis) { tis = sectionTissue(c, hp, win, step, def, off); if (SEC.size > 40) SEC.delete(SEC.keys().next().value); SEC.set(key, tis); }
     const pl = tis.pl, P2 = p3 => G.toPlane(pl, p3), o = [tis.pre], A = {};
     if (c.pcr) o.push(sectionHyal(c, tis, pl, P2, win, id));   // ④ anterior hyaloid face (clipped to the bag's span), drawn under the piece

@@ -1,0 +1,33 @@
+{
+ "about": "這支影片補的英文發音（ARPAbet＋重音）與念之前的文字替換；共用的發音在 videos/tools/video-kit/tts/tts.py",
+ "replace": {
+  "psi": "PSI",
+  "ZMB00": "Z M B 零 零",
+  "mg/0.1 mL": "毫克 每 零點一 毫升",
+  "DuoVisc": "duovisc",
+  "Tobradex": "tobradex",
+  "10-0": "ten O",
+  "0.72 D": "0.72 屈光度",
+  "0.36 D": "0.36 屈光度",
+  "+6.5 D": "正 6.5 屈光度",
+  "4.0 D": "4.0 屈光度",
+  "① 到 ③": "一 到 三",
+  "15°": "15 度",
+  " × ": " 乘 "
+ },
+ "words": {
+  "cefuroxime": "S EH2 F Y UH0 R AA1 K S IY0 M",
+  "diffractive": "D IH0 F R AE1 K T IH0 V",
+  "duovisc": "D UW1 OW0 V IH2 S K",
+  "endophthalmitis": "EH2 N D AA0 F TH AE0 L M AY1 T AH0 S",
+  "fishmouthing": "F IH1 SH M AW2 TH IH0 NG",
+  "hydrodissection": "HH AY2 D R OW0 D AY0 S EH1 K SH AH0 N",
+  "hyphema": "HH AY0 F IY1 M AH0",
+  "keratome": "K EH1 R AH0 T OW2 M",
+  "multifocal": "M AH2 L T IY0 F OW1 K AH0 L",
+  "peribulbar": "P EH2 R IY0 B AH1 L B ER0",
+  "retrobulbar": "R EH2 T R OW0 B AH1 L B ER0",
+  "scleral": "S K L EH1 R AH0 L",
+  "tobradex": "T OW1 B R AH0 D EH2 K S"
+ }
+}

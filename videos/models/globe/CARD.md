@@ -856,7 +856,7 @@
 - `views.js`：向登記處（`videos/models/registry.js`）報到，提供三個視角：`mer` 子午切面、`across` 垂直傷口切面、`scope` 顯微鏡俯視。
 - `check.js`：自我檢查。`GLOBE_PATH=<檔案>` 可以拿另一份 `globe.js` 來跑，用在故意改錯的測試。
 - `sample.html`、`sample.jpg`：模型樣本，內容是修補前的子午切面、顯微鏡俯視、角膜一針的垂直切面。參考圖由影片的 `ref/manifest.json` 比對。
-- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角，② 加 `cross`（3–9 切面），④ 加 `pcr`（經主切口的子午切面）、`pp`（經 pars plana 切口）。
+- `cataract.js`：白內障的選用狀態與畫法（`CATARACT`，在 node 裡是 `require('./cataract.js')(GLOBE)`）：水晶體、囊袋、zonule、散瞳虹膜、隧道、CCC、前囊瓣、器械、zonule 弱、後方壓力、器械撐開隧道的變形（`deformer`，`parts` 有抬起量、下壓量與正向映射 `fwd`）、切面與俯視；`layersFn` 給檢查一次取很多點。`views.js` 另外報到 `cat`、`tunnel`、`tear`、`capzoom`、`cscope` 五個視角，② 加 `cross`（3–9 切面），④ 加 `pcr`（經主切口的子午切面）、`pp`（經 pars plana 切口）。2026-11-26 加選用欄位 `st.cat.globe`：放眼球模型自己的狀態（例 `{ peri360: 0.4 }`＝結膜往後掀到角膜緣後約 3 mm），只影響切面裡 GLOBE 的組織（結膜等）；沒給時和原本逐字相同（scleral tunnel 影片的列印單用）。
 - `sample-cataract.html`、`sample-cataract.jpg`：白內障樣本（keratome 在隧道裡的切面與俯視、撕囊進行中的 12–6 切面、run-out 的前緣切面、正常／run-out／zonule 弱三張俯視）。參考圖由 `videos/src/cataract-1-wound-ccc/ref/manifest.json` 比對。
 - `fluidics.js`：② 的流體面板資料（`FLUIDICS`；node 裡是 `require('./fluidics.js')`）：腳踏、occlusion、設定 → 灌流、流量、vacuum、US、IOP；`surge(t)` 給前房深度的減少。
 - `sample-cataract2.html`、`sample-cataract2.jpg`：② 樣本（hydrodissection 切面與俯視、capsular block、槽底亮度、刻槽深度、刻太深、分核、四象限＋流體面板）。參考圖由 `videos/src/cataract-2-hydro-dc/ref/manifest.json` 比對。

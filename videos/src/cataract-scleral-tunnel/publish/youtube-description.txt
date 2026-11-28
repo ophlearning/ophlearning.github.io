@@ -1,0 +1,33 @@
+白內障手術的 scleral tunnel 主切口：左眼、術者坐 upper-temporal，2.65 mm keratome、10-0 nylon 縫合。為什麼把外口從角膜移到鞏膜（散光與 endophthalmitis 的比較）；peribulbar 麻醉與左眼的方位；15° 刀做 side port、結膜切開與止血；外口在角膜緣後 1–2 mm、同一層往前剝、進透明角膜約 1.5 mm 再進前房，internal corneal lip 為什麼能自閉；太淺穿破頂蓋（buttonhole）與太早進前房（premature entry）怎麼認、第一步怎麼做；DuoVisc、CCC 與 ZMB00 multifocal IOL 要置中；檢查內口有沒有張開（fishmouthing）、radial 縫合與前房 cefuroxime；最後是 wet lab 要練的四件事。CCC 到 IOL 的細節見白內障系列 ①–③。
+
+畫面為左眼 OS、術者坐 upper-temporal 的示意動畫（經主切口的切面＋術者視角兩圖同步），不是手術錄影，比例不精確。結膜掀開的範圍、side port 的位置、縫幾針為示意或依主刀；各院做法不同的地方，依院內常規。
+
+章節
+0:00 片頭
+0:16 1 為什麼走鞏膜
+1:06 2 定位、side port 與結膜
+1:53 3 鞏膜隧道
+2:56 4 隧道出錯時
+3:44 5 本例和系列不同的地方
+4:23 6 關閉
+5:15 7 練習清單
+5:39 參考文獻
+
+參考文獻（完整書目見 https://ophlearning.github.io/videos/ ）
+1. Goel 2022. Indian J Ophthalmol 70:3803-3811
+2. Ernest 1994. J Cataract Refract Surg 20:626-9
+3. Ernest 1993. J Cataract Refract Surg 19:457-61
+4. Olsen 1997. J Cataract Refract Surg 23:337-41
+5. Hayashi 2010. Ophthalmology 117:1313-23
+6. Subudhi 2021. Clin Ophthalmol 15:1667-1676
+7. John 1992. J Cataract Refract Surg 18:495-9
+8. Azar 1997. J Cataract Refract Surg 23:1164-73
+9. Gimbel 1995. J Cataract Refract Surg 21:121-4
+10. ESCRS 2007. J Cataract Refract Surg 33:978-88
+11. Arshinoff 1999. J Cataract Refract Surg 25:167-73
+12. Hollick 1999. Am J Ophthalmol 128:271-9
+13. Ye 2021. Ann Transl Med 9:144
+14. Soda 2012. Ophthalmologica 227:197-204
+15. Friedman 2001. Ophthalmology 108:519-29
+
+製作　張博淳
